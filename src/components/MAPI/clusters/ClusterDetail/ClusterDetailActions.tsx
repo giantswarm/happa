@@ -1,8 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Heading } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { filterUserInstalledApps } from 'MAPI/apps/utils';
 import { Cluster, ProviderCluster } from 'MAPI/types';
 import {
@@ -26,6 +23,9 @@ import useSWR from 'swr';
 import ClusterDetailDeleteAction, {
   ClusterDetailDeleteActionNameVariant,
 } from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailDeleteAction';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import DeleteClusterGuide from '../guides/DeleteClusterGuide';
 import { getWorkerNodesCount } from '../utils';

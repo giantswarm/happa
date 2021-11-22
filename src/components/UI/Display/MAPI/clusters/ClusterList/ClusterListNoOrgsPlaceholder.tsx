@@ -1,7 +1,7 @@
 import { Box, Heading, Paragraph } from 'grommet';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 
 interface IClusterListNoOrgsPlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}

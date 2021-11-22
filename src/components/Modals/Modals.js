@@ -1,14 +1,14 @@
 import { Box } from 'grommet';
-import React from 'react';
-import { connect } from 'react-redux';
-import { batchedOrganizationDeleteConfirmed } from 'stores/batchActions';
-import { modalHide } from 'stores/modal/actions';
-import { nodePoolDeleteConfirmed } from 'stores/nodepool/actions';
+import { batchedOrganizationDeleteConfirmed } from 'model/stores/batchActions';
+import { modalHide } from 'model/stores/modal/actions';
+import { nodePoolDeleteConfirmed } from 'model/stores/nodepool/actions';
 import {
   organizationAddMemberConfirmed,
   organizationCreateConfirmed,
   organizationRemoveMemberConfirmed,
-} from 'stores/organization/actions';
+} from 'model/stores/organization/actions';
+import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';

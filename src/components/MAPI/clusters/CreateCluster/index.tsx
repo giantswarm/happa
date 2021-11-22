@@ -2,10 +2,6 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading, Text } from 'grommet';
 import produce from 'immer';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import RoutePath from 'lib/routePath';
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -14,18 +10,21 @@ import {
   getClusterReleaseVersion,
   getNamespaceFromOrgName,
 } from 'MAPI/utils';
+import { Providers } from 'model/constants';
+import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useReducer, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
-import { Providers } from 'shared/constants';
-import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { PropertiesOf } from 'shared/types';
-import { selectOrganizations } from 'stores/organization/selectors';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import RoutePath from 'utils/routePath';
 
 import {
   computeControlPlaneNodesStats,

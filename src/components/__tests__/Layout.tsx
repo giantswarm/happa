@@ -5,15 +5,15 @@ import {
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import Layout from 'Layout';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import { StatusCodes } from 'model/constants';
+import { mapOAuth2UserToUser } from 'model/stores/main/utils';
 import nock from 'nock';
 import * as React from 'react';
-import { StatusCodes } from 'shared/constants';
-import { mapOAuth2UserToUser } from 'stores/main/utils';
 import { SWRConfig } from 'swr';
 import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
 import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 function getComponent(props: React.ComponentPropsWithoutRef<typeof Layout>) {
   const Component = (p: typeof props) => (

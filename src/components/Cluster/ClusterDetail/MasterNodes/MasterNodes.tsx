@@ -1,10 +1,10 @@
 import MasterNodeConverter from 'Cluster/ClusterDetail/MasterNodes/MasterNodesConverter';
 import MasterNodesInfo from 'Cluster/ClusterDetail/MasterNodes/MasterNodesInfo';
-import ErrorReporter from 'lib/errors/ErrorReporter';
+import { Constants } from 'model/constants';
 import React, { useEffect, useRef, useState } from 'react';
-import { Constants } from 'shared/constants';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 
 const Wrapper = styled.div`
   display: flex;

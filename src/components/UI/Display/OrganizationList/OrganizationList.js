@@ -1,4 +1,3 @@
-import { clustersForOrg } from 'lib/helpers';
 import React from 'react';
 import styled from 'styled-components';
 import {
@@ -8,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from 'UI/Display/Table';
+import { clustersForOrg } from 'utils/helpers';
 
 import Row from './OrganizationListRow';
 

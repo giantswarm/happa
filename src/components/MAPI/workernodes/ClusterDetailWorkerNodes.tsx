@@ -1,8 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Heading, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { NodePool, ProviderCluster } from 'MAPI/types';
 import { Cluster } from 'MAPI/types';
 import {
@@ -18,6 +15,7 @@ import {
   isNodePoolMngmtReadOnly,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { Providers } from 'model/constants';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
@@ -27,15 +25,16 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useLocation, useParams } from 'react-router';
 import { TransitionGroup } from 'react-transition-group';
-import { Providers } from 'shared/constants';
 import DocumentTitle from 'shared/DocumentTitle';
-import { PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolListPlaceholder from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolListPlaceholder';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import DeleteNodePoolGuide from './guides/DeleteNodePoolGuide';
 import ListNodePoolsGuide from './guides/ListNodePoolsGuide';

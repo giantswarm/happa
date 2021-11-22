@@ -1,7 +1,7 @@
 import { Text } from 'grommet';
-import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
+import * as docs from 'model/constants/docs';
 import React from 'react';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';

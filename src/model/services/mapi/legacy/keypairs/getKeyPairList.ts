@@ -1,6 +1,6 @@
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import {
   createKeyPairStorageKey,

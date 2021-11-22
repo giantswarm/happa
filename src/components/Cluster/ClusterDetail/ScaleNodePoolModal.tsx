@@ -1,20 +1,19 @@
 import { Box } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
+import * as nodePoolActions from 'model/stores/nodepool/actions';
+import { IState } from 'model/stores/state';
 import React from 'react';
 import { connect, DispatchProp } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators, Dispatch } from 'redux';
 import NodeCountSelector from 'shared/NodeCountSelector';
-import { INodePool } from 'shared/types';
-import * as nodePoolActions from 'stores/nodepool/actions';
-import { IState } from 'stores/state';
 import { FlashMessageType } from 'styles';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import Modal from 'UI/Layout/Modal';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 import { extractMessageFromError } from 'utils/errorUtils';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 interface IDispatchProps extends DispatchProp {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

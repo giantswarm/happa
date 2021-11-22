@@ -1,13 +1,12 @@
 import { Box, Text } from 'grommet';
-import { formatDate } from 'lib/helpers';
 import { ProviderCluster } from 'MAPI/types';
+import { Providers } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useMemo } from 'react';
-import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import { useTheme } from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
+import { formatDate } from 'utils/helpers';
 
 import {
   getClusterConditions,

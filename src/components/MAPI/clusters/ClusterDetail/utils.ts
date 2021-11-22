@@ -1,7 +1,4 @@
 import produce from 'immer';
-import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import { compare } from 'lib/semver';
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import {
   fetchCluster,
@@ -13,16 +10,18 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
+import { Constants, Providers } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import * as metav1 from 'model/services/mapi/metav1';
-import { Constants, Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
-import { filterLabels } from 'stores/cluster/utils';
-import { supportsHACPNodes } from 'stores/nodepool/utils';
+import { filterLabels } from 'model/stores/cluster/utils';
+import { supportsHACPNodes } from 'model/stores/nodepool/utils';
 import { mutate } from 'swr';
+import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import { compare } from 'utils/semver';
 
 import { getClusterConditions } from '../utils';
 

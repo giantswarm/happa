@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import theme from 'styles/theme';
-import ThemeProvider from 'styles/ThemeProvider';
+import ThemeProvider from 'ThemeProvider';
 
 import PortMappingsRow from '../PortMappingsRow';
 

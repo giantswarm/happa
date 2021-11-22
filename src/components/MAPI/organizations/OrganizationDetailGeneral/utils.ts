@@ -1,7 +1,3 @@
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import { compare } from 'lib/semver';
 import { ControlPlaneNode, NodePool, ProviderNodePool } from 'MAPI/types';
 import {
   fetchControlPlaneNodesForCluster,
@@ -16,6 +12,10 @@ import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as ui from 'UI/Display/Organizations/types';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import { compare } from 'utils/semver';
 
 /**
  * Get various statistics about the given clusters.

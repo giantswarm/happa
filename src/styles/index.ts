@@ -1,4 +1,4 @@
-import { CSSBreakpoints } from 'shared/constants';
+import { CSSBreakpoints } from 'model/constants';
 import { css } from 'styled-components';
 import styled from 'styled-components';
 

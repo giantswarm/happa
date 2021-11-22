@@ -1,12 +1,11 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
-import RoutePath from 'lib/routePath';
+import { Providers, StatusCodes } from 'model/constants';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import { getConfiguration } from 'model/services/metadata/configuration';
+import { getNumberOfNodes } from 'model/stores/cluster/utils';
 import nock from 'nock';
-import { Providers, StatusCodes } from 'shared/constants';
-import { OrganizationsRoutes } from 'shared/constants/routes';
-import { getNumberOfNodes } from 'stores/cluster/utils';
 import {
   API_ENDPOINT,
   appCatalogsResponse,
@@ -25,6 +24,7 @@ import {
   v4KVMClusterStatusResponse,
 } from 'test/mockHttpCalls';
 import { renderRouteWithStore } from 'test/renderUtils';
+import RoutePath from 'utils/routePath';
 
 const minNodesCount = 3;
 

@@ -1,13 +1,11 @@
 import { screen } from '@testing-library/react';
-import { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import { MainRoutes } from 'model/constants/routes';
 import {
   createSelfSubjectAccessReview,
   createSelfSubjectRulesReview,
 } from 'model/services/mapi/authorizationv1';
 import { getOrganizationList } from 'model/services/mapi/securityv1alpha1/getOrganizationList';
 import { getConfiguration } from 'model/services/metadata/configuration';
-import { MainRoutes } from 'shared/constants/routes';
 import {
   getMockCall,
   getOrganizationListResponse,
@@ -17,6 +15,8 @@ import {
   selfSubjectRulesReviewWithSomeOrgs,
 } from 'test/mockHttpCalls';
 import { createInitialHistory, renderRouteWithStore } from 'test/renderUtils';
+import { MapiAuthConnectors } from 'utils/MapiAuth/MapiAuth';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 describe('AdminLogin', () => {
   it('performs the admin login flow via OAuth2', async () => {

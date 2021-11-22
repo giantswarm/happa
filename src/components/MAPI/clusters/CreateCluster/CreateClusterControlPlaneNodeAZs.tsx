@@ -6,8 +6,8 @@ import {
   IUpdateZoneLabelsPayload,
 } from 'Cluster/AZSelection/AZSelectionUtils';
 import { determineRandomAZs, getSupportedAvailabilityZones } from 'MAPI/utils';
+import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { useEffect, useMemo, useState } from 'react';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import InputGroup from 'UI/Inputs/InputGroup';
 
 import { computeControlPlaneNodesStats } from '../ClusterDetail/utils';

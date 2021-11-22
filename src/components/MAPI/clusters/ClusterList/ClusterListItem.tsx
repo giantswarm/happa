@@ -3,9 +3,6 @@ import { push } from 'connected-react-router';
 import differenceInHours from 'date-fns/fp/differenceInHours';
 import toDate from 'date-fns-tz/toDate';
 import { Box, Card, CardBody, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import RoutePath from 'lib/routePath';
 import { ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -16,13 +13,13 @@ import {
   getClusterDescription,
   getMachineTypes,
 } from 'MAPI/utils';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { getUserIsAdmin } from 'model/stores/main/selectors';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { OrganizationsRoutes } from 'shared/constants/routes';
-import { getUserIsAdmin } from 'stores/main/selectors';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
@@ -33,6 +30,9 @@ import FormattedDate from 'UI/Display/Date';
 import ClusterListItemMainInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemMainInfo';
 import ClusterListItemNodeInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemNodeInfo';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import RoutePath from 'utils/routePath';
 
 import {
   getWorkerNodesCount,

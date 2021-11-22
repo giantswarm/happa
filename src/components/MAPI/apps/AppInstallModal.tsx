@@ -5,11 +5,6 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import yaml from 'js-yaml';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import useDebounce from 'lib/hooks/useDebounce';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import RoutePath from 'lib/routePath';
 import {
   IProviderClusterForCluster,
   mapClustersToProviderClusters,
@@ -24,19 +19,24 @@ import {
   IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
+import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { selectOrganizations } from 'model/stores/organization/selectors';
+import { IState } from 'model/stores/state';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { OrganizationsRoutes } from 'shared/constants/routes';
-import { IAsynchronousDispatch } from 'stores/asynchronousAction';
-import { selectOrganizations } from 'stores/organization/selectors';
-import { IState } from 'stores/state';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import Modal from 'UI/Layout/Modal';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import useDebounce from 'utils/hooks/useDebounce';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import RoutePath from 'utils/routePath';
 
 import { createApp, filterClusters, formatYAMLError } from './utils';
 

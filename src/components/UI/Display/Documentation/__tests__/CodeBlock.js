@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import React from 'react';
 import { getComponentWithTheme } from 'test/renderUtils';
 import { CodeBlock, Output, Prompt } from 'UI/Display/Documentation/CodeBlock';
+import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
 
-jest.mock('lib/hooks/useCopyToClipboard');
+jest.mock('utils/hooks/useCopyToClipboard');
 
 let setClipboardContentMockFn = null;
 

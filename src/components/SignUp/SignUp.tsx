@@ -1,19 +1,19 @@
 import { push } from 'connected-react-router';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import Passage from 'lib/passageClient';
-import { validatePassword } from 'lib/passwordValidation';
+import { MainRoutes } from 'model/constants/routes';
+import * as mainActions from 'model/stores/main/actions';
 import React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { Dispatch } from 'redux';
-import { MainRoutes } from 'shared/constants/routes';
-import * as mainActions from 'stores/main/actions';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import Passage from 'utils/passageClient';
+import { validatePassword } from 'utils/passwordValidation';
 
 import StatusMessage from './StatusMessage';
 import TermsOfService from './TermsOfService';

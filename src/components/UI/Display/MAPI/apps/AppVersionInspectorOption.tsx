@@ -1,10 +1,10 @@
 import { Box, Text } from 'grommet';
-import { getRelativeDateFromNow } from 'lib/helpers';
 import React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import Truncated from 'UI/Util/Truncated';
+import { getRelativeDateFromNow } from 'utils/helpers';
 
 const StyledText = styled(Text)`
   line-height: unset;

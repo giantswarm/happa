@@ -1,7 +1,7 @@
 import { Text } from 'grommet';
-import { formatDate, getRelativeDateFromNow } from 'lib/helpers';
 import React, { useMemo } from 'react';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
+import { formatDate, getRelativeDateFromNow } from 'utils/helpers';
 
 import NotAvailable from '../NotAvailable';
 

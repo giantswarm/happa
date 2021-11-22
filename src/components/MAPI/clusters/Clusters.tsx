@@ -1,8 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Keyboard, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import RoutePath from 'lib/routePath';
 import { ClusterList } from 'MAPI/types';
 import {
   fetchClusterList,
@@ -12,15 +9,15 @@ import {
   IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { selectOrganizations } from 'model/stores/organization/selectors';
+import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { TransitionGroup } from 'react-transition-group';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import DocumentTitle from 'shared/DocumentTitle';
-import { selectOrganizations } from 'stores/organization/selectors';
-import { IState } from 'stores/state';
 import styled from 'styled-components';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import useSWR from 'swr';
@@ -28,6 +25,9 @@ import Button from 'UI/Controls/Button';
 import ClusterListEmptyPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/ClusterListEmptyPlaceholder';
 import ClusterListErrorPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/ClusterListErrorPlaceholder';
 import ClusterListNoOrgsPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/ClusterListNoOrgsPlaceholder';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import RoutePath from 'utils/routePath';
 
 import ClusterListItem from './ClusterList/ClusterListItem';
 import ListClustersGuide from './guides/ListClustersGuide';

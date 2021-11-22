@@ -6,17 +6,17 @@ import {
   showUpdateToast,
 } from 'Footer/FooterUtils';
 import FooterVersion from 'Footer/FooterVersion';
-import React, { useCallback, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import { getLoggedInUser } from 'stores/main/selectors';
-import * as metadataActions from 'stores/metadata/actions';
-import { METADATA_UPDATE_EXECUTE_REQUEST } from 'stores/metadata/constants';
+import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
+import { getLoggedInUser } from 'model/stores/main/selectors';
+import * as metadataActions from 'model/stores/metadata/actions';
+import { METADATA_UPDATE_EXECUTE_REQUEST } from 'model/stores/metadata/constants';
 import {
   getMetadataCurrentVersion,
   getMetadataNewVersion,
-} from 'stores/metadata/selectors';
-import { IState } from 'stores/state';
+} from 'model/stores/metadata/selectors';
+import { IState } from 'model/stores/state';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 

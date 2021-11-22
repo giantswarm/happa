@@ -1,5 +1,5 @@
+import { FallbackMessages } from 'model/constants';
 import React from 'react';
-import { FallbackMessages } from 'shared/constants';
 import { FallbackSpan } from 'styles';
 
 interface IClusterDashboardNodesProps {

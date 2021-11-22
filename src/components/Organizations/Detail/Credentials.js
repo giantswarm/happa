@@ -1,10 +1,10 @@
-import React from 'react';
-import { connect } from 'react-redux';
 import {
   organizationCredentialsDiscard,
   organizationCredentialsSet,
   organizationCredentialsSetConfirmed,
-} from 'stores/organization/actions';
+} from 'model/stores/organization/actions';
+import React from 'react';
+import { connect } from 'react-redux';
 
 import CredentialsDisplay from './CredentialsDisplay';
 import CredentialsForm from './CredentialsForm';

@@ -1,5 +1,4 @@
 import { Box, Keyboard, Text } from 'grommet';
-import useValidatingInternalValue from 'lib/hooks/useValidatingInternalValue';
 import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
@@ -7,6 +6,7 @@ import ValidationError from 'UI/Display/Cluster/ClusterLabels/ValidationError';
 import { Tooltip } from 'UI/Display/Tooltip';
 import ValueLabel from 'UI/Display/ValueLabel';
 import TextInput from 'UI/Inputs/TextInput';
+import useValidatingInternalValue from 'utils/hooks/useValidatingInternalValue';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
 
 interface IEditLabelTooltip {

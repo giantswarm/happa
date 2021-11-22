@@ -1,13 +1,12 @@
 import { Box } from 'grommet';
-import RoutePath from 'lib/routePath';
+import { OrganizationsRoutes } from 'model/constants/routes';
+import * as clusterActions from 'model/stores/cluster/actions';
+import { getLoggedInUser } from 'model/stores/main/selectors';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { OrganizationsRoutes } from 'shared/constants/routes';
-import * as clusterActions from 'stores/cluster/actions';
-import { getLoggedInUser } from 'stores/main/selectors';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
@@ -15,6 +14,7 @@ import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 import Aside from 'UI/Layout/Aside';
+import RoutePath from 'utils/routePath';
 
 import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';
 

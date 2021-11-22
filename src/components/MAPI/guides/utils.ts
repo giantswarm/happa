@@ -1,4 +1,4 @@
-import { Constants } from 'shared/constants';
+import { Constants } from 'model/constants';
 
 export function getCurrentInstallationContextName(): string {
   const codeName = window.config.info.general.installationName;

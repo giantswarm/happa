@@ -1,8 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import {
   computeAppCatalogUITitle,
   getCatalogNamespace,
@@ -17,6 +14,9 @@ import styled from 'styled-components';
 import useSWR, { useSWRConfig } from 'swr';
 import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppListWidget';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 const CatalogType = styled(Text)`
   text-transform: uppercase;

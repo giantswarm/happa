@@ -1,6 +1,4 @@
 import produce from 'immer';
-import { HttpClientFactory } from 'lib/hooks/useHttpClientFactory';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { BootstrapConfig, NodePool, ProviderNodePool } from 'MAPI/types';
 import {
   compareNodePools,
@@ -9,6 +7,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
+import { Constants, Providers } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
@@ -16,9 +15,9 @@ import * as corev1 from 'model/services/mapi/corev1';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
-import { Constants, Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import { mutate } from 'swr';
+import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 export async function updateNodePoolDescription(
   httpClientFactory: HttpClientFactory,

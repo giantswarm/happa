@@ -1,7 +1,7 @@
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { credentialsNamespace, ICredential, ICredentialList } from './';
 import { decodeCredential, extractIDFromARN } from './key';

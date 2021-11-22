@@ -4,19 +4,19 @@ import MapiAuthProvider from 'Auth/MAPI/MapiAuthProvider';
 import { ConnectedRouter } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
 import { History } from 'history';
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
+import { MainRoutes } from 'model/constants/routes';
+import configureStore from 'model/stores/configureStore';
+import { LoggedInUserTypes } from 'model/stores/main/types';
+import { IState } from 'model/stores/state';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { MainRoutes } from 'shared/constants/routes';
-import configureStore from 'stores/configureStore';
-import { LoggedInUserTypes } from 'stores/main/types';
-import { IState } from 'stores/state';
 import theme from 'styles/theme';
-import ThemeProvider from 'styles/ThemeProvider';
 import { SWRConfig } from 'swr';
+import ThemeProvider from 'ThemeProvider';
 import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
 import FlashMessagesProvider from 'UI/Util/FlashMessages/FlashMessagesProvider';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 type PropsOf<C> = C extends React.ComponentType<infer P> ? P : never;
 

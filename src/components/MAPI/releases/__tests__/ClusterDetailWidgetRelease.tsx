@@ -7,16 +7,16 @@ import {
 import add from 'date-fns/fp/add';
 import format from 'date-fns/fp/format';
 import { createMemoryHistory } from 'history';
-import TestOAuth2 from 'lib/OAuth2/TestOAuth2';
 import * as releasesUtils from 'MAPI/releases/utils';
+import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
-import { StatusCodes } from 'shared/constants';
 import { SWRConfig } from 'swr';
 import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
 import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
 import * as ui from 'UI/Display/MAPI/releases/types';
+import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailWidgetRelease from '../ClusterDetailWidgetRelease';
 import { getReleaseComponentsDiff } from '../utils';

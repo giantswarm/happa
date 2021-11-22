@@ -1,13 +1,13 @@
 import { push } from 'connected-react-router';
 import { Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import { extractErrorMessage } from 'MAPI/utils';
+import { OrganizationsRoutes } from 'model/constants/routes';
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { OrganizationsRoutes } from 'shared/constants/routes';
 import Button from 'UI/Controls/Button';
 import ConfirmationPrompt from 'UI/Controls/ConfirmationPrompt';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 interface IOrganizationDetailDeleteProps
   extends React.ComponentPropsWithoutRef<typeof Box> {

@@ -1,6 +1,6 @@
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { deleteResource } from '../generic/deleteResource';
 import { IOrganization } from './types';

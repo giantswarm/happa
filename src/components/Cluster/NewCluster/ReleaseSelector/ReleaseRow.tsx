@@ -1,7 +1,7 @@
 import { Box, Keyboard, Text } from 'grommet';
+import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { FC, useState } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';

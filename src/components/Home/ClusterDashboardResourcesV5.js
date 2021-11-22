@@ -1,12 +1,12 @@
-import React from 'react';
-import { connect } from 'react-redux';
 import {
   CLUSTER_LOAD_STATUS_REQUEST,
   CLUSTERS_DETAILS_REQUEST,
-} from 'stores/cluster/constants';
-import { selectLoadingFlagByAction } from 'stores/loading/selectors';
-import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'stores/nodepool/constants';
-import { makeV5ResourcesSelector } from 'stores/nodepool/selectors';
+} from 'model/stores/cluster/constants';
+import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
+import { NODEPOOL_MULTIPLE_LOAD_REQUEST } from 'model/stores/nodepool/constants';
+import { makeV5ResourcesSelector } from 'model/stores/nodepool/selectors';
+import React from 'react';
+import { connect } from 'react-redux';
 import { Dot } from 'styles';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
 

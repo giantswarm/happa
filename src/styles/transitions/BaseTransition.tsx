@@ -1,6 +1,6 @@
-import useDelayedChange from 'lib/hooks/useDelayedChange';
 import React from 'react';
 import { CSSTransition } from 'react-transition-group';
+import useDelayedChange from 'utils/hooks/useDelayedChange';
 
 type BaseTransitionProps = React.ComponentPropsWithoutRef<
   typeof CSSTransition

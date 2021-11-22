@@ -1,7 +1,7 @@
 import { Keyboard } from 'grommet';
+import { RUMActions } from 'model/constants/realUserMonitoring';
 import React from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import styled from 'styled-components';
 
 const azColors = [

@@ -1,6 +1,6 @@
-import { IOAuth2Provider } from 'lib/OAuth2/OAuth2';
 import { HttpRequestMethods, IHttpClient } from 'model/clients/HttpClient';
 import * as metav1 from 'model/services/mapi/metav1';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { executeRequest } from './executeRequest';
 

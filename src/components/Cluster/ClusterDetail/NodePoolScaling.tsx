@@ -1,7 +1,6 @@
 import { Text } from 'grommet';
+import { Providers } from 'model/constants';
 import * as React from 'react';
-import { Providers } from 'shared/constants';
-import { INodePool, PropertiesOf } from 'shared/types';
 import styled from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 

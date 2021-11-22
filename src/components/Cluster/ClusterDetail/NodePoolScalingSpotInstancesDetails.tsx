@@ -1,6 +1,5 @@
+import { Providers } from 'model/constants';
 import * as React from 'react';
-import { Providers } from 'shared/constants';
-import { INodePool, PropertiesOf } from 'shared/types';
 import NotAvailable from 'UI/Display/NotAvailable';
 
 interface INodePoolScalingSpotInstancesDetailsProps {

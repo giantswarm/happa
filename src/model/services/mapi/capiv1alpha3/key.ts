@@ -1,5 +1,5 @@
+import { Constants } from 'model/constants';
 import * as corev1 from 'model/services/mapi/corev1';
-import { Constants } from 'shared/constants';
 
 import { ICluster, ICondition } from './';
 

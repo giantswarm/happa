@@ -1,8 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClient } from 'lib/hooks/useHttpClient';
 import { ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -11,16 +8,19 @@ import {
 } from 'MAPI/utils';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { selectOrganizations } from 'stores/organization/selectors';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import useSWR from 'swr';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import { usePermissionsForOrgCredentials } from '../permissions/usePermissionsForOrgCredentials';
 import { getCredentialsAccountID } from './utils';

@@ -1,5 +1,4 @@
 import { Text } from 'grommet';
-import * as docs from 'lib/docs';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import {
   getCurrentInstallationContextName,
@@ -7,9 +6,9 @@ import {
   withFormatting,
   withTemplateCluster,
 } from 'MAPI/guides/utils';
+import { Providers } from 'model/constants';
+import * as docs from 'model/constants/docs';
 import React from 'react';
-import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';

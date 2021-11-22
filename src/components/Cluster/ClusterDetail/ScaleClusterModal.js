@@ -1,18 +1,18 @@
 import { Box } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { compare } from 'lib/semver';
+import { Providers } from 'model/constants';
+import * as clusterActions from 'model/stores/cluster/actions';
 import React from 'react';
 import { connect } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { bindActionCreators } from 'redux';
-import { Providers } from 'shared/constants';
 import NodeCountSelector from 'shared/NodeCountSelector';
-import * as clusterActions from 'stores/cluster/actions';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import Modal from 'UI/Layout/Modal';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { compare } from 'utils/semver';
 
 class ScaleClusterModal extends React.Component {
   // eslint-disable-next-line no-magic-numbers

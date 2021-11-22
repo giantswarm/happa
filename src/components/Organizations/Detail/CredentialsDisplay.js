@@ -1,6 +1,6 @@
 import { spinner } from 'images';
+import { Providers } from 'model/constants';
 import React from 'react';
-import { Providers } from 'shared/constants';
 import Button from 'UI/Controls/Button';
 import AWSAccountID from 'UI/Display/Cluster/AWSAccountID';
 

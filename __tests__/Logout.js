@@ -1,10 +1,10 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor } from '@testing-library/react';
+import { StatusCodes } from 'model/constants';
+import { MainRoutes } from 'model/constants/routes';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
-import { StatusCodes } from 'shared/constants';
-import { MainRoutes } from 'shared/constants/routes';
 import {
   API_ENDPOINT,
   getMockCall,

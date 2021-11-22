@@ -1,10 +1,10 @@
 import { Box, Keyboard } from 'grommet';
-import { hasAppropriateLength } from 'lib/helpers';
+import { Constants } from 'model/constants';
 import React, { Component, FormEvent, GetDerivedStateFromProps } from 'react';
-import { Constants } from 'shared/constants';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
+import { hasAppropriateLength } from 'utils/helpers';
 
 import TextInput from './TextInput';
 

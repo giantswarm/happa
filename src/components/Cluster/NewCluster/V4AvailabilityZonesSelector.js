@@ -1,9 +1,9 @@
 import AvailabilityZonesParser from 'Cluster/ClusterDetail/AvailabilityZonesParser';
-import { compare } from 'lib/semver';
 import React from 'react';
 import styled from 'styled-components';
 import InputGroup from 'UI/Inputs/InputGroup';
 import NumberPicker from 'UI/Inputs/NumberPicker';
+import { compare } from 'utils/semver';
 
 const AZWrapper = styled.div`
   display: flex;

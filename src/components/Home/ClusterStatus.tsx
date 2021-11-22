@@ -1,15 +1,15 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
 import {
   selectCanClusterUpgrade,
   selectIsClusterAwaitingUpgrade,
-} from 'stores/cluster/selectors';
+} from 'model/stores/cluster/selectors';
 import {
   isClusterCreating,
   isClusterDeleting,
   isClusterUpdating,
-} from 'stores/cluster/utils';
-import { IState } from 'stores/state';
+} from 'model/stores/cluster/utils';
+import { IState } from 'model/stores/state';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';

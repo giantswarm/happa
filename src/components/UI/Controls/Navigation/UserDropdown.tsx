@@ -1,8 +1,8 @@
+import { AuthorizationTypes } from 'model/constants';
+import { AccountSettingsRoutes, MainRoutes } from 'model/constants/routes';
 import React from 'react';
 import Gravatar from 'react-gravatar';
 import { NavLink } from 'react-router-dom';
-import { AuthorizationTypes } from 'shared/constants';
-import { AccountSettingsRoutes, MainRoutes } from 'shared/constants/routes';
 import styled from 'styled-components';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/Controls/DropdownMenu';
 import Truncated from 'UI/Util/Truncated';

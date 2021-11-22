@@ -7,8 +7,6 @@ import {
   IUpdateZoneLabelsPayload,
   IUpdateZonePickerPayload,
 } from 'Cluster/AZSelection/AZSelectionUtils';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { computeControlPlaneNodesStats } from 'MAPI/clusters/ClusterDetail/utils';
 import { Cluster, ControlPlaneNode } from 'MAPI/types';
 import {
@@ -18,10 +16,12 @@ import {
   getSupportedAvailabilityZones,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { useEffect, useMemo, useState } from 'react';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
 import useSWR from 'swr';
 import InputGroup from 'UI/Inputs/InputGroup';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import {
   INodePoolPropertyProps,

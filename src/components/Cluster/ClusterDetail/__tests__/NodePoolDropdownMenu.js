@@ -5,7 +5,7 @@ import { fireEvent, render } from '@testing-library/react';
 import NodePoolDropdownMenu from 'Cluster/ClusterDetail/NodePoolDropdownMenu';
 import React from 'react';
 import theme from 'styles/theme';
-import ThemeProvider from 'styles/ThemeProvider';
+import ThemeProvider from 'ThemeProvider';
 // Not really needed actually. Keeping it by now as an example of simple test without store.
 it('shows the dropdown when the three dots button is clicked', () => {
   const { getByText, getByRole } = render(

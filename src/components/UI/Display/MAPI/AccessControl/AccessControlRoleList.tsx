@@ -1,9 +1,9 @@
 import { Box, InfiniteScroll, Keyboard, Sidebar } from 'grommet';
-import useDebounce from 'lib/hooks/useDebounce';
 import { filterRoles } from 'MAPI/organizations/AccessControl/utils';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import TextInput from 'UI/Inputs/TextInput';
+import useDebounce from 'utils/hooks/useDebounce';
 
 import AccessControlRoleListItem from './AccessControlRoleListItem';
 import AccessControlRoleListItemLoadingPlaceholder from './AccessControlRoleListItemLoadingPlaceholder';

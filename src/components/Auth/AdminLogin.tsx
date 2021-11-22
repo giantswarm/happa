@@ -1,12 +1,12 @@
 import { spinner } from 'images';
-import { clearQueues } from 'lib/flashMessage';
-import MapiAuth, { MapiAuthConnectors } from 'lib/MapiAuth/MapiAuth';
+import * as mainActions from 'model/stores/main/actions';
+import { getLoggedInUser } from 'model/stores/main/selectors';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ShadowMask from 'shared/ShadowMask';
-import * as mainActions from 'stores/main/actions';
-import { getLoggedInUser } from 'stores/main/selectors';
 import styled from 'styled-components';
+import { clearQueues } from 'utils/flashMessage';
+import MapiAuth, { MapiAuthConnectors } from 'utils/MapiAuth/MapiAuth';
 
 import { useAuthProvider } from './MAPI/MapiAuthProvider';
 

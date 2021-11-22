@@ -1,8 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { AccordionPanel, Box, Text } from 'grommet';
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
-import { useHttpClientFactory } from 'lib/hooks/useHttpClientFactory';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -12,6 +9,9 @@ import useSWR, { useSWRConfig } from 'swr';
 import Date from 'UI/Display/Date';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import Truncated from 'UI/Util/Truncated';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import ClusterDetailAppListItemStatus from './ClusterDetailAppListItemStatus';
 import ClusterDetailAppListWidgetCatalog from './ClusterDetailAppListWidgetCatalog';

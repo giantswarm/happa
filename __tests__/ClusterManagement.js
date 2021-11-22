@@ -1,11 +1,10 @@
 import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, waitFor, within } from '@testing-library/react';
-import RoutePath from 'lib/routePath';
+import { StatusCodes } from 'model/constants';
+import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import { getConfiguration } from 'model/services/metadata/configuration';
 import nock from 'nock';
-import { StatusCodes } from 'shared/constants';
-import { MainRoutes, OrganizationsRoutes } from 'shared/constants/routes';
 import { withMarkup } from 'test/assertUtils';
 import {
   API_ENDPOINT,
@@ -30,6 +29,7 @@ import {
   v5ClustersResponse,
 } from 'test/mockHttpCalls';
 import { renderRouteWithStore } from 'test/renderUtils';
+import RoutePath from 'utils/routePath';
 
 describe('ClusterManagement', () => {
   jest.setTimeout(15000);

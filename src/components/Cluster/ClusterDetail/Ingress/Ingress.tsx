@@ -1,9 +1,8 @@
 import InstallIngressButton from 'Cluster/ClusterDetail/Ingress/InstallIngressButton';
 import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
+import { Providers } from 'model/constants';
+import { selectIngressAppFromCluster } from 'model/stores/appcatalog/selectors';
 import React from 'react';
-import { Providers } from 'shared/constants';
-import { PropertiesOf } from 'shared/types';
-import { selectIngressAppFromCluster } from 'stores/appcatalog/selectors';
 import styled from 'styled-components';
 
 import { Text } from './Components';

@@ -1,5 +1,5 @@
+import { Constants, FallbackMessages } from 'model/constants';
 import React from 'react';
-import { Constants, FallbackMessages } from 'shared/constants';
 import { FallbackSpan } from 'styles';
 import Button from 'UI/Controls/Button';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';

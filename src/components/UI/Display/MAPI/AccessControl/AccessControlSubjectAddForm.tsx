@@ -1,5 +1,4 @@
 import { Box, Keyboard } from 'grommet';
-import useDebounce from 'lib/hooks/useDebounce';
 import {
   appendSubjectSuggestionToValue,
   filterSubjectSuggestions,
@@ -10,6 +9,7 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import TextInput from 'UI/Inputs/TextInput';
+import useDebounce from 'utils/hooks/useDebounce';
 
 const VISIBLE_SUGGESTION_COUNT = 10;
 const FILTER_DEBOUNCE_RATE = 250;

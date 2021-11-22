@@ -4,20 +4,20 @@ import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'styles/app.sass';
 
-import ErrorReporter from 'lib/errors/ErrorReporter';
-import { SentryErrorNotifier } from 'lib/errors/SentryErrorNotifier';
-import { makeDefaultConfig } from 'lib/MapiAuth/makeDefaultConfig';
-import MapiAuth from 'lib/MapiAuth/MapiAuth';
-import { RUMService } from 'lib/RUMService';
+import * as featureFlags from 'model/featureFlags';
+import configureStore from 'model/stores/configureStore';
+import history from 'model/stores/history';
+import { IState } from 'model/stores/state';
 import React from 'react';
 import { render } from 'react-dom';
 import { Store } from 'redux';
-import * as featureFlags from 'shared/featureFlags';
-import configureStore from 'stores/configureStore';
-import history from 'stores/history';
-import { IState } from 'stores/state';
 import theme from 'styles/theme';
 import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { SentryErrorNotifier } from 'utils/errors/SentryErrorNotifier';
+import { makeDefaultConfig } from 'utils/MapiAuth/makeDefaultConfig';
+import MapiAuth from 'utils/MapiAuth/MapiAuth';
+import { RUMService } from 'utils/RUMService';
 
 import App from './App';
 

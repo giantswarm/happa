@@ -3,30 +3,29 @@ import V5ClusterDetailTableNodePoolScaling from 'Cluster/ClusterDetail/V5Cluster
 import formatDistance from 'date-fns/fp/formatDistance';
 import { Box } from 'grommet';
 import produce from 'immer';
-import { nodePoolsURL } from 'lib/docs';
-import ErrorReporter from 'lib/errors/ErrorReporter';
+import { CSSBreakpoints } from 'model/constants';
+import { nodePoolsURL } from 'model/constants/docs';
+import * as Providers from 'model/constants/providers';
+import { RUMActions } from 'model/constants/realUserMonitoring';
+import * as clusterActions from 'model/stores/cluster/actions';
+import { isClusterCreating } from 'model/stores/cluster/utils';
+import { updateClusterLabels } from 'model/stores/clusterlabels/actions';
+import {
+  getClusterLabelsError,
+  getClusterLabelsLoading,
+} from 'model/stores/clusterlabels/selectors';
+import { selectLoadingFlagByIdAndAction } from 'model/stores/entityloading/selectors';
+import { nodePoolsCreate } from 'model/stores/nodepool/actions';
+import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'model/stores/nodepool/constants';
+import {
+  makeV5ResourcesSelector,
+  selectClusterNodePools,
+} from 'model/stores/nodepool/selectors';
 import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
 import RUMActionTarget from 'RUM/RUMActionTarget';
-import { CSSBreakpoints } from 'shared/constants';
-import * as Providers from 'shared/constants/providers';
-import { RUMActions } from 'shared/constants/realUserMonitoring';
-import * as clusterActions from 'stores/cluster/actions';
-import { isClusterCreating } from 'stores/cluster/utils';
-import { updateClusterLabels } from 'stores/clusterlabels/actions';
-import {
-  getClusterLabelsError,
-  getClusterLabelsLoading,
-} from 'stores/clusterlabels/selectors';
-import { selectLoadingFlagByIdAndAction } from 'stores/entityloading/selectors';
-import { nodePoolsCreate } from 'stores/nodepool/actions';
-import { CLUSTER_NODEPOOLS_LOAD_REQUEST } from 'stores/nodepool/constants';
-import {
-  makeV5ResourcesSelector,
-  selectClusterNodePools,
-} from 'stores/nodepool/selectors';
 import { css } from 'styled-components';
 import styled from 'styled-components';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
@@ -34,6 +33,7 @@ import BaseTransition from 'styles/transitions/BaseTransition';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
 import { FlexColumn, FlexWrapperDiv } from 'UI/Layout/FlexDivs';
+import ErrorReporter from 'utils/errors/ErrorReporter';
 
 import AddNodePool from './AddNodePool/AddNodePool';
 import ClusterLabels from './ClusterLabels/ClusterLabels';

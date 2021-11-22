@@ -1,10 +1,10 @@
 import { fireEvent, render } from '@testing-library/react';
-import useCopyToClipboard from 'lib/hooks/useCopyToClipboard';
 import { getComponentWithTheme } from 'test/renderUtils';
+import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
 
 import URIBlock from '../URIBlock';
 
-jest.mock('lib/hooks/useCopyToClipboard');
+jest.mock('utils/hooks/useCopyToClipboard');
 
 let setClipboardContentMockFn = null;
 

@@ -1,8 +1,8 @@
 import { Box, Text } from 'grommet';
-import useDebounce from 'lib/hooks/useDebounce';
 import React, { useState } from 'react';
 import Button from 'UI/Controls/Button';
 import ConfirmationPrompt from 'UI/Controls/ConfirmationPrompt';
+import useDebounce from 'utils/hooks/useDebounce';
 
 import ClusterDetailDeleteActionClusterDetails from './ClusterDetailDeleteActionClusterDetails';
 import ClusterDetailDeleteActionClusterName from './ClusterDetailDeleteActionClusterName';

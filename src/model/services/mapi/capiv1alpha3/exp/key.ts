@@ -1,4 +1,4 @@
-import { Constants } from 'shared/constants';
+import { Constants } from 'model/constants';
 
 import { IMachinePool } from './types';
 

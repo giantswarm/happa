@@ -1,10 +1,10 @@
 import { Story } from '@storybook/react';
 import { Box, Heading } from 'grommet';
-import { FlashMessage, messageTTL, messageType } from 'lib/flashMessage';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 import Select from 'UI/Inputs/Select';
 import TextInput from 'UI/Inputs/TextInput';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 import { FlashMessagesController } from '../FlashMessagesController';
 import FlashMessagesProvider from '../FlashMessagesProvider';
