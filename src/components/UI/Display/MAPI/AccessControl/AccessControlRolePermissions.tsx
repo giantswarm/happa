@@ -83,7 +83,6 @@ const AccessControlRolePermissions: React.FC<IAccessControlRolePermissionsProps>
         </TableHeader>
         <TableBody>
           <InfiniteScroll
-            scrollableAncestor='window'
             replace={true}
             items={permissions}
             step={50}

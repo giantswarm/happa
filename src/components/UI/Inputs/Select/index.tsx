@@ -71,7 +71,7 @@ interface ISelectProps extends React.ComponentPropsWithoutRef<typeof Input> {
   /**
    * Whether the input is required or not.
    */
-  required?: FormFieldProps['required'];
+  required?: Exclude<FormFieldProps['required'], { indicator: boolean }>;
   /**
    * An error to be displayed below the input.
    */

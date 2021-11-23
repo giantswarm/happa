@@ -8,11 +8,11 @@ exports[`CLIGuide renders the contents when open 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ioIPqW CLIGuide__StyledAccordion-sc-1q6mc5x-0 eBAeQV"
+      class="StyledBox-sc-13pk1d4-0 cdNRLn CLIGuide__StyledAccordion-sc-1q6mc5x-0 eBAeQV"
       role="tablist"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 jlvRUZ"
+        class="StyledBox-sc-13pk1d4-0 hDxjsI"
       >
         <button
           aria-expanded="true"
@@ -22,10 +22,10 @@ exports[`CLIGuide renders the contents when open 1`] = `
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 dqTCA"
+            class="StyledBox-sc-13pk1d4-0 bBHevx"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 bbvqwX"
+              class="StyledBox-sc-13pk1d4-0 gBqsaO"
             >
               <span
                 aria-hidden="true"
@@ -42,7 +42,7 @@ exports[`CLIGuide renders the contents when open 1`] = `
               </span>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 BgUwG"
+              class="StyledBox-sc-13pk1d4-0 dvTQWz"
             >
               <svg
                 aria-label="FormUp"
@@ -60,17 +60,17 @@ exports[`CLIGuide renders the contents when open 1`] = `
           </div>
         </button>
         <div
-          class="StyledBox-sc-13pk1d4-0 hpSXsQ"
+          class="StyledBox-sc-13pk1d4-0 jLMOlN"
           style=""
         >
           <div
             aria-hidden="false"
-            class="StyledBox-sc-13pk1d4-0 hpSXsQ Collapsible__AnimatedBox-sc-15kniua-0 hnJGLq"
+            class="StyledBox-sc-13pk1d4-0 jLMOlN Collapsible__AnimatedBox-sc-15kniua-0 hnJGLq"
             open=""
             style="max-height: 0;"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 gqBRod"
+              class="StyledBox-sc-13pk1d4-0 juQWaQ"
             >
               Just some content
             </div>
@@ -90,11 +90,11 @@ exports[`CLIGuide renders without crashing 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ioIPqW CLIGuide__StyledAccordion-sc-1q6mc5x-0 eBAeQV"
+      class="StyledBox-sc-13pk1d4-0 cdNRLn CLIGuide__StyledAccordion-sc-1q6mc5x-0 eBAeQV"
       role="tablist"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 jlvRUZ"
+        class="StyledBox-sc-13pk1d4-0 hDxjsI"
       >
         <button
           aria-expanded="false"
@@ -104,10 +104,10 @@ exports[`CLIGuide renders without crashing 1`] = `
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 dqTCA"
+            class="StyledBox-sc-13pk1d4-0 bBHevx"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 bbvqwX"
+              class="StyledBox-sc-13pk1d4-0 gBqsaO"
             >
               <span
                 aria-hidden="true"
@@ -124,7 +124,7 @@ exports[`CLIGuide renders without crashing 1`] = `
               </span>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 BgUwG"
+              class="StyledBox-sc-13pk1d4-0 dvTQWz"
             >
               <svg
                 aria-label="FormDown"
@@ -142,11 +142,11 @@ exports[`CLIGuide renders without crashing 1`] = `
           </div>
         </button>
         <div
-          class="StyledBox-sc-13pk1d4-0 hpSXsQ"
+          class="StyledBox-sc-13pk1d4-0 jLMOlN"
         >
           <div
             aria-hidden="true"
-            class="StyledBox-sc-13pk1d4-0 hpSXsQ Collapsible__AnimatedBox-sc-15kniua-0 jtbjrr"
+            class="StyledBox-sc-13pk1d4-0 jLMOlN Collapsible__AnimatedBox-sc-15kniua-0 jtbjrr"
           />
         </div>
       </div>

@@ -9,7 +9,7 @@ exports[`ConfirmationPrompt renders a component with a title 1`] = `
   >
     <div
       aria-hidden="true"
-      class="StyledBox-sc-13pk1d4-0 hpSXsQ Collapsible__AnimatedBox-sc-15kniua-0 jtbjrr"
+      class="StyledBox-sc-13pk1d4-0 jLMOlN Collapsible__AnimatedBox-sc-15kniua-0 jtbjrr"
     />
   </div>
 </div>
@@ -24,7 +24,7 @@ exports[`ConfirmationPrompt renders a component with buttons 1`] = `
   >
     <div
       aria-hidden="true"
-      class="StyledBox-sc-13pk1d4-0 hpSXsQ Collapsible__AnimatedBox-sc-15kniua-0 jtbjrr"
+      class="StyledBox-sc-13pk1d4-0 jLMOlN Collapsible__AnimatedBox-sc-15kniua-0 jtbjrr"
     />
   </div>
 </div>
@@ -39,7 +39,7 @@ exports[`ConfirmationPrompt renders a simple component 1`] = `
   >
     <div
       aria-hidden="true"
-      class="StyledBox-sc-13pk1d4-0 hpSXsQ Collapsible__AnimatedBox-sc-15kniua-0 jtbjrr"
+      class="StyledBox-sc-13pk1d4-0 jLMOlN Collapsible__AnimatedBox-sc-15kniua-0 jtbjrr"
     />
   </div>
 </div>
