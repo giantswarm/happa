@@ -604,7 +604,7 @@ export function fetchProviderClustersForClustersKey(clusters?: Cluster[]) {
 
 export function getNodePoolDescription(
   nodePool: NodePool,
-  providerNodePool: ProviderNodePool,
+  providerNodePool: ProviderNodePool | null,
   defaultValue = Constants.DEFAULT_NODEPOOL_DESCRIPTION
 ): string {
   switch (nodePool.apiVersion) {
@@ -752,7 +752,7 @@ interface INodesStatus {
 
 export function getNodePoolScaling(
   nodePool: NodePool,
-  providerNodePool: ProviderNodePool
+  providerNodePool: ProviderNodePool | null
 ): INodesStatus {
   switch (nodePool.apiVersion) {
     case 'exp.cluster.x-k8s.io/v1alpha3': {
