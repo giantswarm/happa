@@ -4,7 +4,6 @@ import {
   ControlPlaneNode,
   NodePool,
   ProviderCluster,
-  ProviderNodePool,
 } from 'MAPI/types';
 import {
   determineRandomAZs,
@@ -16,6 +15,7 @@ import {
   IMachineType,
   IProviderClusterForClusterName,
 } from 'MAPI/utils';
+import { IProviderNodePoolForNodePool } from 'MAPI/workernodes/utils';
 import { Constants, Providers } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
@@ -44,23 +44,20 @@ export function getWorkerNodesCount(nodePools?: NodePool[]) {
 }
 
 export function getWorkerNodesCPU(
-  nodePools?: NodePool[],
-  providerNodePools?: ProviderNodePool[],
+  nodePoolsWithProviderNodePools?: IProviderNodePoolForNodePool[],
   machineTypes?: Record<string, IMachineType>
 ) {
-  if (!nodePools || !providerNodePools || !machineTypes) return undefined;
+  if (!nodePoolsWithProviderNodePools || !machineTypes) return undefined;
 
   let count = 0;
 
-  for (let i = 0; i < providerNodePools.length; i++) {
-    const providerNp = providerNodePools[i];
-
-    switch (providerNp?.apiVersion) {
+  for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
+    switch (providerNodePool?.apiVersion) {
       case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       case 'infrastructure.cluster.x-k8s.io/v1alpha4':
         {
-          const vmSize = providerNp.spec?.template.vmSize;
-          const readyReplicas = nodePools[i].status?.readyReplicas;
+          const vmSize = providerNodePool.spec?.template.vmSize;
+          const readyReplicas = nodePool.status?.readyReplicas;
 
           if (!vmSize) return -1;
 
@@ -78,8 +75,8 @@ export function getWorkerNodesCPU(
 
       case 'infrastructure.giantswarm.io/v1alpha2':
       case 'infrastructure.giantswarm.io/v1alpha3': {
-        const instanceType = providerNp.spec.provider.worker.instanceType;
-        const readyReplicas = nodePools[i].status?.readyReplicas;
+        const instanceType = providerNodePool.spec.provider.worker.instanceType;
+        const readyReplicas = nodePool.status?.readyReplicas;
 
         if (typeof readyReplicas !== 'undefined') {
           const machineTypeProperties = machineTypes[instanceType];
@@ -102,22 +99,19 @@ export function getWorkerNodesCPU(
 }
 
 export function getWorkerNodesMemory(
-  nodePools?: NodePool[],
-  providerNodePools?: ProviderNodePool[],
+  nodePoolsWithProviderNodePools?: IProviderNodePoolForNodePool[],
   machineTypes?: Record<string, IMachineType>
 ) {
-  if (!nodePools || !providerNodePools || !machineTypes) return undefined;
+  if (!nodePoolsWithProviderNodePools || !machineTypes) return undefined;
 
   let count = 0;
 
-  for (let i = 0; i < providerNodePools.length; i++) {
-    const providerNp = providerNodePools[i];
-
-    switch (providerNp?.apiVersion) {
+  for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
+    switch (providerNodePool?.apiVersion) {
       case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
-        const vmSize = providerNp.spec?.template.vmSize;
-        const readyReplicas = nodePools[i].status?.readyReplicas;
+        const vmSize = providerNodePool.spec?.template.vmSize;
+        const readyReplicas = nodePool.status?.readyReplicas;
 
         if (!vmSize) return -1;
 
@@ -135,8 +129,8 @@ export function getWorkerNodesMemory(
 
       case 'infrastructure.giantswarm.io/v1alpha2':
       case 'infrastructure.giantswarm.io/v1alpha3': {
-        const instanceType = providerNp.spec.provider.worker.instanceType;
-        const readyReplicas = nodePools[i].status?.readyReplicas;
+        const instanceType = providerNodePool.spec.provider.worker.instanceType;
+        const readyReplicas = nodePool.status?.readyReplicas;
 
         if (typeof readyReplicas !== 'undefined') {
           const machineTypeProperties = machineTypes[instanceType];

@@ -10,6 +10,8 @@ import {
   fetchNodePoolListForClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
+  fetchProviderNodePoolsForNodePools,
+  fetchProviderNodePoolsForNodePoolsKey,
   isNodePoolMngmtReadOnly,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -38,12 +40,7 @@ import DeleteNodePoolGuide from './guides/DeleteNodePoolGuide';
 import ListNodePoolsGuide from './guides/ListNodePoolsGuide';
 import ModifyNodePoolGuide from './guides/ModifyNodePoolGuide';
 import { IWorkerNodesAdditionalColumn } from './types';
-import {
-  fetchProviderNodePoolsWithNodePoolNames,
-  fetchProviderNodePoolsWithNodePoolNamesKey,
-  IProviderNodePoolForNodePoolName,
-  mapNodePoolsToProviderNodePools,
-} from './utils';
+import { mapNodePoolsToProviderNodePools } from './utils';
 import WorkerNodesCreateNodePool from './WorkerNodesCreateNodePool';
 import WorkerNodesNodePoolItem from './WorkerNodesNodePoolItem';
 import WorkerNodesSpotInstancesAWS from './WorkerNodesSpotInstancesAWS';
@@ -293,15 +290,14 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const hasNoNodePools = nodePoolList?.items.length === 0;
 
-    const { data: providerNodePools, error: providerNodePoolsError } = useSWR<
-      IProviderNodePoolForNodePoolName[],
-      GenericResponseError
-    >(fetchProviderNodePoolsWithNodePoolNamesKey(nodePoolList?.items), () =>
-      fetchProviderNodePoolsWithNodePoolNames(
-        clientFactory,
-        auth,
-        nodePoolList!.items
-      )
+    const { data: providerNodePools, error: providerNodePoolsError } = useSWR(
+      fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items),
+      () =>
+        fetchProviderNodePoolsForNodePools(
+          clientFactory,
+          auth,
+          nodePoolList!.items
+        )
     );
 
     useEffect(() => {

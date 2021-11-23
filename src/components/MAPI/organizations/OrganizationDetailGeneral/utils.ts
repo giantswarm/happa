@@ -1,4 +1,4 @@
-import { ControlPlaneNode, NodePool, ProviderNodePool } from 'MAPI/types';
+import { ControlPlaneNode, NodePool } from 'MAPI/types';
 import {
   fetchControlPlaneNodesForCluster,
   fetchNodePoolListForCluster,
@@ -6,6 +6,10 @@ import {
   getMachineTypes,
   IMachineType,
 } from 'MAPI/utils';
+import {
+  IProviderNodePoolForNodePool,
+  mapNodePoolsToProviderNodePools,
+} from 'MAPI/workernodes/utils';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
@@ -85,9 +89,13 @@ async function fetchSingleClusterSummary(
       nodePoolList.items
     );
 
-    appendProviderNodePoolsStats(
+    const nodePoolsWithProviderNodePools = mapNodePoolsToProviderNodePools(
       nodePoolList.items,
-      providerSpecificNodePools,
+      providerSpecificNodePools
+    );
+
+    appendProviderNodePoolsStats(
+      nodePoolsWithProviderNodePools,
       machineTypes,
       summary
     );
@@ -172,19 +180,16 @@ function appendNodePoolsStats(
 }
 
 function appendProviderNodePoolsStats(
-  nodePools: NodePool[],
-  providerNodePools: ProviderNodePool[],
+  nodePoolsWithProviderNodePools: IProviderNodePoolForNodePool[],
   machineTypes: Record<string, IMachineType>,
   summary: ui.IOrganizationDetailClustersSummary
 ) {
-  for (let i = 0; i < providerNodePools.length; i++) {
-    const providerNp = providerNodePools[i];
-
-    switch (providerNp?.apiVersion) {
+  for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
+    switch (providerNodePool?.apiVersion) {
       case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
-        const vmSize = providerNp.spec?.template.vmSize;
-        const readyReplicas = nodePools[i].status?.readyReplicas;
+        const vmSize = providerNodePool.spec?.template.vmSize;
+        const readyReplicas = nodePool.status?.readyReplicas;
 
         if (
           typeof vmSize !== 'undefined' &&
@@ -208,8 +213,8 @@ function appendProviderNodePoolsStats(
 
       case 'infrastructure.giantswarm.io/v1alpha2':
       case 'infrastructure.giantswarm.io/v1alpha3': {
-        const instanceType = providerNp.spec.provider.worker.instanceType;
-        const readyReplicas = nodePools[i].status?.readyReplicas;
+        const instanceType = providerNodePool.spec.provider.worker.instanceType;
+        const readyReplicas = nodePool.status?.readyReplicas;
 
         if (typeof readyReplicas !== 'undefined') {
           const machineTypeProperties = machineTypes[instanceType];
