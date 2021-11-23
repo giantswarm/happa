@@ -2,8 +2,9 @@ import produce from 'immer';
 import { BootstrapConfig, NodePool, ProviderNodePool } from 'MAPI/types';
 import {
   compareNodePools,
-  fetchProviderNodePoolsForNodePools,
+  fetchProviderNodePoolForNodePool,
   fetchProviderNodePoolsForNodePoolsKey,
+  IProviderNodePoolForNodePoolName,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
@@ -75,10 +76,10 @@ export async function updateNodePoolDescription(
     }
 
     case 'cluster.x-k8s.io/v1alpha3': {
-      let [providerNodePool] = await fetchProviderNodePoolsForNodePools(
+      let providerNodePool = await fetchProviderNodePoolForNodePool(
         httpClientFactory,
         auth,
-        [nodePool]
+        nodePool
       );
 
       const apiVersion = providerNodePool?.apiVersion;
@@ -126,12 +127,12 @@ export async function updateNodePoolDescription(
 
       mutate(
         fetchProviderNodePoolsForNodePoolsKey(nodePoolList.items),
-        produce((draft?: ProviderNodePool[]) => {
+        produce((draft?: IProviderNodePoolForNodePoolName[]) => {
           if (!draft) return;
 
           for (let i = 0; i < draft.length; i++) {
-            if (draft[i]!.metadata.name === providerNodePool!.metadata.name) {
-              draft[i] = providerNodePool;
+            if (draft[i]!.nodePoolName === providerNodePool!.metadata.name) {
+              draft[i] = { ...draft[i], providerNodePool };
             }
           }
         }),
@@ -266,10 +267,10 @@ export async function deleteProviderNodePool(
   auth: IOAuth2Provider,
   nodePool: NodePool
 ) {
-  let [providerNodePool] = await fetchProviderNodePoolsForNodePools(
+  let providerNodePool = await fetchProviderNodePoolForNodePool(
     httpClientFactory,
     auth,
-    [nodePool]
+    nodePool
   );
 
   switch (providerNodePool?.apiVersion) {
@@ -294,7 +295,7 @@ export async function deleteProviderNodePool(
 
       mutate(
         fetchProviderNodePoolsForNodePoolsKey([nodePool]),
-        providerNodePool,
+        { nodePoolName: nodePool.metadata.name, providerNodePool },
         false
       );
 
@@ -417,10 +418,10 @@ export async function updateNodePoolScaling(
     }
 
     case 'cluster.x-k8s.io/v1alpha3': {
-      let [providerNodePool] = await fetchProviderNodePoolsForNodePools(
+      let providerNodePool = await fetchProviderNodePoolForNodePool(
         httpClientFactory,
         auth,
-        [nodePool]
+        nodePool
       );
 
       const apiVersion = providerNodePool?.apiVersion;
@@ -475,12 +476,12 @@ export async function updateNodePoolScaling(
 
       mutate(
         fetchProviderNodePoolsForNodePoolsKey(nodePoolList.items),
-        produce((draft?: ProviderNodePool[]) => {
+        produce((draft?: IProviderNodePoolForNodePoolName[]) => {
           if (!draft) return;
 
           for (let i = 0; i < draft.length; i++) {
-            if (draft[i]!.metadata.name === providerNodePool!.metadata.name) {
-              draft[i] = providerNodePool;
+            if (draft[i]!.nodePoolName === providerNodePool!.metadata.name) {
+              draft[i] = { ...draft[i], providerNodePool };
             }
           }
         }),
@@ -886,48 +887,6 @@ export async function createNodePool(
     default:
       return Promise.reject(new Error('Unsupported provider.'));
   }
-}
-
-export interface IProviderNodePoolForNodePoolName {
-  nodePoolName: string;
-  providerNodePool: ProviderNodePool;
-}
-
-export async function fetchProviderNodePoolsWithNodePoolNames(
-  httpClientFactory: HttpClientFactory,
-  auth: IOAuth2Provider,
-  nodePools: NodePool[]
-): Promise<IProviderNodePoolForNodePoolName[]> {
-  const definedNodePools = nodePools.filter(
-    (nodePool) => typeof nodePool !== 'undefined'
-  );
-  const providerNodePools = await fetchProviderNodePoolsForNodePools(
-    httpClientFactory,
-    auth,
-    definedNodePools
-  );
-
-  return definedNodePools.map((nodePool, i) => {
-    return {
-      nodePoolName: nodePool.metadata.name,
-      providerNodePool: providerNodePools[i],
-    };
-  });
-}
-
-export function fetchProviderNodePoolsWithNodePoolNamesKey(
-  nodePools?: NodePool[]
-) {
-  if (!nodePools) return null;
-
-  const keys = ['fetchProviderNodePoolsWithNodePools/'];
-  for (const np of nodePools) {
-    if (np.spec?.template.spec?.infrastructureRef) {
-      keys.push(np.metadata.name);
-    }
-  }
-
-  return keys.sort().join();
 }
 
 export interface IProviderNodePoolForNodePool {
