@@ -1,6 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Heading, Text } from 'grommet';
-import { NodePool, ProviderCluster } from 'MAPI/types';
+import { ProviderCluster } from 'MAPI/types';
 import { Cluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -10,8 +10,6 @@ import {
   fetchNodePoolListForClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
-  fetchProviderNodePoolsForNodePools,
-  fetchProviderNodePoolsForNodePoolsKey,
   isNodePoolMngmtReadOnly,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -40,6 +38,12 @@ import DeleteNodePoolGuide from './guides/DeleteNodePoolGuide';
 import ListNodePoolsGuide from './guides/ListNodePoolsGuide';
 import ModifyNodePoolGuide from './guides/ModifyNodePoolGuide';
 import { IWorkerNodesAdditionalColumn } from './types';
+import {
+  fetchProviderNodePoolsWithNodePoolNames,
+  fetchProviderNodePoolsWithNodePoolNamesKey,
+  IProviderNodePoolForNodePoolName,
+  mapNodePoolsToProviderNodePools,
+} from './utils';
 import WorkerNodesCreateNodePool from './WorkerNodesCreateNodePool';
 import WorkerNodesNodePoolItem from './WorkerNodesNodePoolItem';
 import WorkerNodesSpotInstancesAWS from './WorkerNodesSpotInstancesAWS';
@@ -289,14 +293,15 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const hasNoNodePools = nodePoolList?.items.length === 0;
 
-    const { data: providerNodePools, error: providerNodePoolsError } = useSWR(
-      fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items),
-      () =>
-        fetchProviderNodePoolsForNodePools(
-          clientFactory,
-          auth,
-          nodePoolList!.items
-        )
+    const { data: providerNodePools, error: providerNodePoolsError } = useSWR<
+      IProviderNodePoolForNodePoolName[],
+      GenericResponseError
+    >(fetchProviderNodePoolsWithNodePoolNamesKey(nodePoolList?.items), () =>
+      fetchProviderNodePoolsWithNodePoolNames(
+        clientFactory,
+        auth,
+        nodePoolList!.items
+      )
     );
 
     useEffect(() => {
@@ -311,6 +316,15 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
         ErrorReporter.getInstance().notify(providerNodePoolsError);
       }
     }, [providerNodePoolsError]);
+
+    const nodePoolsWithProviderNodePools = useMemo(() => {
+      if (!nodePoolList?.items || !providerNodePools) return [];
+
+      return mapNodePoolsToProviderNodePools(
+        nodePoolList.items,
+        providerNodePools
+      );
+    }, [nodePoolList?.items, providerNodePools]);
 
     const additionalColumns = useMemo(
       () => getAdditionalColumns(provider),
@@ -422,25 +436,27 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                   <AnimationWrapper>
                     <TransitionGroup>
                       {!nodePoolListIsLoading &&
-                        nodePoolList?.items.map((np: NodePool, idx: number) => (
-                          <BaseTransition
-                            in={false}
-                            key={np.metadata.name}
-                            appear={false}
-                            exit={true}
-                            timeout={{ enter: 200, exit: 200 }}
-                            delayTimeout={0}
-                            classNames='nodepool-list-item'
-                          >
-                            <WorkerNodesNodePoolItem
-                              nodePool={np}
-                              providerNodePool={providerNodePools?.[idx]}
-                              additionalColumns={additionalColumns}
-                              margin={{ bottom: 'small' }}
-                              readOnly={isReadOnly}
-                            />
-                          </BaseTransition>
-                        ))}
+                        nodePoolsWithProviderNodePools.map(
+                          ({ nodePool, providerNodePool }) => (
+                            <BaseTransition
+                              in={false}
+                              key={nodePool.metadata.name}
+                              appear={false}
+                              exit={true}
+                              timeout={{ enter: 200, exit: 200 }}
+                              delayTimeout={0}
+                              classNames='nodepool-list-item'
+                            >
+                              <WorkerNodesNodePoolItem
+                                nodePool={nodePool}
+                                providerNodePool={providerNodePool}
+                                additionalColumns={additionalColumns}
+                                margin={{ bottom: 'small' }}
+                                readOnly={isReadOnly}
+                              />
+                            </BaseTransition>
+                          )
+                        )}
                     </TransitionGroup>
                   </AnimationWrapper>
                 </Box>

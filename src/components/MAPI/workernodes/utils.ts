@@ -887,3 +887,87 @@ export async function createNodePool(
       return Promise.reject(new Error('Unsupported provider.'));
   }
 }
+
+export interface IProviderNodePoolForNodePoolName {
+  nodePoolName: string;
+  providerNodePool: ProviderNodePool;
+}
+
+export async function fetchProviderNodePoolsWithNodePoolNames(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  nodePools: NodePool[]
+): Promise<IProviderNodePoolForNodePoolName[]> {
+  const definedNodePools = nodePools.filter(
+    (nodePool) => typeof nodePool !== 'undefined'
+  );
+  const providerNodePools = await fetchProviderNodePoolsForNodePools(
+    httpClientFactory,
+    auth,
+    definedNodePools
+  );
+
+  return definedNodePools.map((nodePool, i) => {
+    return {
+      nodePoolName: nodePool.metadata.name,
+      providerNodePool: providerNodePools[i],
+    };
+  });
+}
+
+export function fetchProviderNodePoolsWithNodePoolNamesKey(
+  nodePools?: NodePool[]
+) {
+  if (!nodePools) return null;
+
+  const keys = ['fetchProviderNodePoolsWithNodePools/'];
+  for (const np of nodePools) {
+    if (np.spec?.template.spec?.infrastructureRef) {
+      keys.push(np.metadata.name);
+    }
+  }
+
+  return keys.sort().join();
+}
+
+export interface IProviderNodePoolForNodePool {
+  nodePool: NodePool;
+  providerNodePool: ProviderNodePool | null;
+}
+
+export function mapNodePoolsToProviderNodePools(
+  nodePools: NodePool[],
+  providerNodePoolsForNodePoolNames: IProviderNodePoolForNodePoolName[]
+): IProviderNodePoolForNodePool[] {
+  const nodePoolNamesToProviderNodePools: Record<
+    string,
+    ProviderNodePool | null
+  > = {};
+
+  for (const {
+    nodePoolName,
+    providerNodePool,
+  } of providerNodePoolsForNodePoolNames) {
+    nodePoolNamesToProviderNodePools[nodePoolName] = providerNodePool ?? null;
+  }
+
+  const nodePoolsToProviderNodePools: IProviderNodePoolForNodePool[] =
+    new Array(nodePools.length);
+
+  for (let i = 0; i < nodePools.length; i++) {
+    const nodePoolName = nodePools[i].metadata.name;
+
+    const providerNodePool = nodePoolNamesToProviderNodePools.hasOwnProperty(
+      nodePoolName
+    )
+      ? nodePoolNamesToProviderNodePools[nodePoolName]
+      : undefined;
+
+    nodePoolsToProviderNodePools[i] = {
+      nodePool: nodePools[i],
+      providerNodePool,
+    };
+  }
+
+  return nodePoolsToProviderNodePools;
+}
