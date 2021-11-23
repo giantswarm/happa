@@ -181,6 +181,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   const { orgId } = match.params;
   const organizations = useSelector(selectOrganizations());
   const selectedOrg = orgId ? organizations[orgId] : undefined;
+  const organizationID = selectedOrg?.name ?? selectedOrg?.id ?? orgId;
 
   const namespace = selectedOrg?.namespace ?? getNamespaceFromOrgName(orgId);
 
@@ -190,7 +191,7 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     reducer,
     makeInitialState(provider, {
       namespace,
-      organization: orgId,
+      organization: organizationID,
       orgNamespace: namespace,
     })
   );
