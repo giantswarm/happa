@@ -293,9 +293,9 @@ export async function deleteProviderNodePool(
 
       providerNodePool.metadata.deletionTimestamp = new Date().toISOString();
 
-      mutate(
+      mutate<IProviderNodePoolForNodePoolName[]>(
         fetchProviderNodePoolsForNodePoolsKey([nodePool]),
-        { nodePoolName: nodePool.metadata.name, providerNodePool },
+        [{ nodePoolName: nodePool.metadata.name, providerNodePool }],
         false
       );
 
