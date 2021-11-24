@@ -63,9 +63,6 @@ const Buttons = styled(GridCell)`
 `;
 
 const Editable = styled.span<{ allowInteraction?: boolean }>`
-  text-decoration: ${({ allowInteraction }) =>
-    allowInteraction ? 'underline' : 'none'};
-  text-decoration-style: dotted;
   cursor: ${({ allowInteraction }) =>
     allowInteraction ? 'pointer' : 'default'};
   opacity: ${({ allowInteraction }) => (allowInteraction ? '1' : '0.6')};
