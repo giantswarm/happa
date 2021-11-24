@@ -18,7 +18,6 @@ const LabelsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 15px;
 `;
 
 const LabelsTitle = styled.span`
@@ -29,12 +28,6 @@ const LabelsTitle = styled.span`
 const BottomAreaText = styled.span`
   grid-area: bottom;
   font-size: 13px;
-`;
-
-const HelpText = styled(BottomAreaText)`
-  u {
-    text-decoration-style: dotted;
-  }
 `;
 
 const ErrorText = styled(BottomAreaText)`
@@ -50,10 +43,6 @@ const NoLabels = styled.div`
 
 const NoLabelsEditLabelTooltip = styled(EditLabelTooltip)`
   margin-left: ${({ theme }) => theme.global.edgeSize.medium};
-`;
-
-const Dotted = styled.span`
-  border-bottom: 1px dotted;
 `;
 
 interface IClusterLabelsProps
@@ -125,13 +114,8 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
               value=''
             />
           </LabelsWrapper>
-          {errorMessage ? (
+          {errorMessage && (
             <ErrorText>Could not save labels. Please try again.</ErrorText>
-          ) : (
-            <HelpText>
-              Click the <Dotted>underlined</Dotted> text to modify label keys
-              and values.
-            </HelpText>
           )}
         </>
       )}
