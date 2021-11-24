@@ -543,7 +543,7 @@ export async function ensureServiceAccount(
   auth: IOAuth2Provider,
   name: string,
   namespace: string
-): Promise<ui.IAccessControlServiceAccount> {
+): Promise<ui.IAccessControlRoleSubjectStatus> {
   try {
     await corev1.getServiceAccount(client, auth, name, namespace);
 

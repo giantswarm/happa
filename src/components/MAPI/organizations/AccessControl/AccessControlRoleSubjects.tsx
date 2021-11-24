@@ -160,7 +160,7 @@ const formatAccountNames = (accountNames: string[]): React.ReactNode => {
 };
 
 const getBindServiceAccountSuccessMessages = (
-  accounts: ui.IAccessControlServiceAccount[]
+  accounts: ui.IAccessControlRoleSubjectStatus[]
 ): React.ReactNode[] => {
   const accountsByStatus = {} as Record<
     ui.AccessControlRoleSubjectStatus,
@@ -236,7 +236,7 @@ interface IAccessControlRoleSubjectsProps
   onAdd: (
     type: ui.AccessControlSubjectTypes,
     names: string[]
-  ) => Promise<ui.IAccessControlServiceAccount[]>;
+  ) => Promise<ui.IAccessControlRoleSubjectStatus[]>;
   onDelete: (type: ui.AccessControlSubjectTypes, name: string) => Promise<void>;
 }
 

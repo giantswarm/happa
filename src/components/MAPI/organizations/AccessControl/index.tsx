@@ -72,10 +72,23 @@ const AccessControl: React.FC<IAccessControlProps> = ({
     try {
       if (!activeRole || !data) return Promise.resolve([]);
 
-      const creationRequests = names.map((name) =>
-        ensureServiceAccount(clientFactory(), auth, name, organizationNamespace)
-      );
-      const serviceAccountStatuses = await Promise.all(creationRequests);
+      let subjectStatuses: ui.IAccessControlRoleSubjectStatus[] = [];
+      if (type === ui.AccessControlSubjectTypes.ServiceAccount) {
+        const creationRequests = names.map((name) =>
+          ensureServiceAccount(
+            clientFactory(),
+            auth,
+            name,
+            organizationNamespace
+          )
+        );
+        subjectStatuses = await Promise.all(creationRequests);
+      } else {
+        subjectStatuses = names.map((n) => ({
+          name: n,
+          status: ui.AccessControlRoleSubjectStatus.Bound,
+        }));
+      }
 
       const newRoleBinding = await createRoleBindingWithSubjects(
         clientFactory,
@@ -96,7 +109,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       }, data);
       mutate(newData, false);
 
-      return Promise.resolve(serviceAccountStatuses);
+      return Promise.resolve(subjectStatuses);
     } catch (err) {
       ErrorReporter.getInstance().notify(err as Error);
 
