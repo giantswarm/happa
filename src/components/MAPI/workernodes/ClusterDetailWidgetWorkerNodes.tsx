@@ -25,6 +25,7 @@ import {
   getWorkerNodesCPU,
   getWorkerNodesMemory,
 } from '../clusters/utils';
+import { mapNodePoolsToProviderNodePools } from './utils';
 
 function formatMemory(value?: number) {
   if (typeof value === 'undefined') return undefined;
@@ -98,18 +99,23 @@ const ClusterDetailWidgetWorkerNodes: React.FC<IClusterDetailWidgetWorkerNodesPr
     const workerNodesCount = nodePoolsError
       ? -1
       : getWorkerNodesCount(nodePoolList?.items);
+
+    const nodePoolsWithProviderNodePools = useMemo(() => {
+      if (!nodePoolList?.items || !providerNodePools) return undefined;
+
+      return mapNodePoolsToProviderNodePools(
+        nodePoolList.items,
+        providerNodePools
+      );
+    }, [nodePoolList?.items, providerNodePools]);
+
     const workerNodesCPU = nodePoolsError
       ? -1
-      : getWorkerNodesCPU(
-          nodePoolList?.items,
-          providerNodePools,
-          machineTypes.current
-        );
+      : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
     const workerNodesMemory = nodePoolsError
       ? -1
       : getWorkerNodesMemory(
-          nodePoolList?.items,
-          providerNodePools,
+          nodePoolsWithProviderNodePools,
           machineTypes.current
         );
 

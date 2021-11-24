@@ -62,7 +62,7 @@ const StyledDescriptionWrapper = styled(Box)<{ full?: boolean }>`
 interface IWorkerNodesNodePoolItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   nodePool?: NodePool;
-  providerNodePool?: ProviderNodePool;
+  providerNodePool?: ProviderNodePool | null;
   additionalColumns?: IWorkerNodesAdditionalColumn[];
   readOnly?: boolean;
 }
@@ -77,16 +77,17 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const description =
-    nodePool && providerNodePool
-      ? getNodePoolDescription(nodePool, providerNodePool)
-      : undefined;
+  const description = useMemo(() => {
+    if (!nodePool || typeof providerNodePool === 'undefined') return undefined;
+
+    return getNodePoolDescription(nodePool, providerNodePool, '');
+  }, [nodePool, providerNodePool]);
   const availabilityZones =
     nodePool && providerNodePool
       ? getNodePoolAvailabilityZones(nodePool, providerNodePool)
       : undefined;
   const scaling = useMemo(() => {
-    if (!nodePool) return undefined;
+    if (!nodePool || typeof providerNodePool === 'undefined') return undefined;
 
     return getNodePoolScaling(nodePool, providerNodePool);
   }, [nodePool, providerNodePool]);
@@ -244,7 +245,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
           <>
             <WorkerNodesNodePoolItemMachineType
               nodePool={nodePool}
-              providerNodePool={providerNodePool}
+              providerNodePool={providerNodePool ?? undefined}
             />
             <Box align='center'>
               <OptionalValue value={availabilityZones} loaderHeight={26}>
@@ -318,7 +319,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
 
             {additionalColumns?.map((column) => (
               <Box key={column.title} align='center'>
-                {column.render(nodePool, providerNodePool)}
+                {column.render(nodePool, providerNodePool ?? undefined)}
               </Box>
             ))}
 

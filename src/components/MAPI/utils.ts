@@ -220,61 +220,80 @@ export function fetchNodePoolListForClusterKey(
   }
 }
 
+export async function fetchProviderNodePoolForNodePool(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  nodePool: NodePool
+): Promise<ProviderNodePool> {
+  const infrastructureRef = nodePool.spec?.template.spec?.infrastructureRef;
+  if (!infrastructureRef) {
+    return Promise.reject(
+      new Error('There is no infrastructure reference defined.')
+    );
+  }
+
+  switch (infrastructureRef.apiVersion) {
+    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+      return capzexpv1alpha3.getAzureMachinePool(
+        httpClientFactory(),
+        auth,
+        nodePool.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+      return capzv1alpha4.getAzureMachinePool(
+        httpClientFactory(),
+        auth,
+        nodePool.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    case 'infrastructure.giantswarm.io/v1alpha2':
+    case 'infrastructure.giantswarm.io/v1alpha3':
+      return infrav1alpha3.getAWSMachineDeployment(
+        httpClientFactory(),
+        auth,
+        nodePool.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    default:
+      return Promise.reject(new Error('Unsupported provider.'));
+  }
+}
+
+export interface IProviderNodePoolForNodePoolName {
+  nodePoolName: string;
+  providerNodePool: ProviderNodePool;
+}
+
 export async function fetchProviderNodePoolsForNodePools(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   nodePools: NodePool[]
-): Promise<ProviderNodePool[]> {
-  const responses = await Promise.allSettled(
-    nodePools.map((np: NodePool) => {
-      const infrastructureRef = np.spec?.template.spec?.infrastructureRef;
-      if (!infrastructureRef) {
-        return Promise.reject(
-          new Error('There is no infrastructure reference defined.')
+): Promise<IProviderNodePoolForNodePoolName[]> {
+  return Promise.all(
+    nodePools.map(async (nodePool) => {
+      try {
+        const providerNodePool = await fetchProviderNodePoolForNodePool(
+          httpClientFactory,
+          auth,
+          nodePool
         );
-      }
 
-      switch (infrastructureRef.apiVersion) {
-        case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
-          return capzexpv1alpha3.getAzureMachinePool(
-            httpClientFactory(),
-            auth,
-            np.metadata.namespace!,
-            infrastructureRef.name
-          );
-
-        case 'infrastructure.cluster.x-k8s.io/v1alpha4':
-          return capzv1alpha4.getAzureMachinePool(
-            httpClientFactory(),
-            auth,
-            np.metadata.namespace!,
-            infrastructureRef.name
-          );
-
-        case 'infrastructure.giantswarm.io/v1alpha2':
-        case 'infrastructure.giantswarm.io/v1alpha3':
-          return infrav1alpha3.getAWSMachineDeployment(
-            httpClientFactory(),
-            auth,
-            np.metadata.namespace!,
-            infrastructureRef.name
-          );
-
-        default:
-          return Promise.reject(new Error('Unsupported provider.'));
+        return {
+          nodePoolName: nodePool.metadata.name,
+          providerNodePool,
+        };
+      } catch {
+        return {
+          nodePoolName: nodePool.metadata.name,
+          providerNodePool: undefined,
+        };
       }
     })
   );
-
-  const providerNodePools: ProviderNodePool[] = responses.map((r) => {
-    if (r.status === 'rejected') {
-      return undefined;
-    }
-
-    return r.value;
-  });
-
-  return providerNodePools;
 }
 
 export function fetchProviderNodePoolsForNodePoolsKey(nodePools?: NodePool[]) {
@@ -604,7 +623,7 @@ export function fetchProviderClustersForClustersKey(clusters?: Cluster[]) {
 
 export function getNodePoolDescription(
   nodePool: NodePool,
-  providerNodePool: ProviderNodePool,
+  providerNodePool: ProviderNodePool | null,
   defaultValue = Constants.DEFAULT_NODEPOOL_DESCRIPTION
 ): string {
   switch (nodePool.apiVersion) {
@@ -752,7 +771,7 @@ interface INodesStatus {
 
 export function getNodePoolScaling(
   nodePool: NodePool,
-  providerNodePool: ProviderNodePool
+  providerNodePool: ProviderNodePool | null
 ): INodesStatus {
   switch (nodePool.apiVersion) {
     case 'exp.cluster.x-k8s.io/v1alpha3': {
