@@ -2,8 +2,9 @@ import produce from 'immer';
 import { BootstrapConfig, NodePool, ProviderNodePool } from 'MAPI/types';
 import {
   compareNodePools,
-  fetchProviderNodePoolsForNodePools,
+  fetchProviderNodePoolForNodePool,
   fetchProviderNodePoolsForNodePoolsKey,
+  IProviderNodePoolForNodePoolName,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
@@ -75,10 +76,10 @@ export async function updateNodePoolDescription(
     }
 
     case 'cluster.x-k8s.io/v1alpha3': {
-      let [providerNodePool] = await fetchProviderNodePoolsForNodePools(
+      let providerNodePool = await fetchProviderNodePoolForNodePool(
         httpClientFactory,
         auth,
-        [nodePool]
+        nodePool
       );
 
       const apiVersion = providerNodePool?.apiVersion;
@@ -126,12 +127,12 @@ export async function updateNodePoolDescription(
 
       mutate(
         fetchProviderNodePoolsForNodePoolsKey(nodePoolList.items),
-        produce((draft?: ProviderNodePool[]) => {
+        produce((draft?: IProviderNodePoolForNodePoolName[]) => {
           if (!draft) return;
 
           for (let i = 0; i < draft.length; i++) {
-            if (draft[i]!.metadata.name === providerNodePool!.metadata.name) {
-              draft[i] = providerNodePool;
+            if (draft[i]!.nodePoolName === providerNodePool!.metadata.name) {
+              draft[i] = { ...draft[i], providerNodePool };
             }
           }
         }),
@@ -266,10 +267,10 @@ export async function deleteProviderNodePool(
   auth: IOAuth2Provider,
   nodePool: NodePool
 ) {
-  let [providerNodePool] = await fetchProviderNodePoolsForNodePools(
+  let providerNodePool = await fetchProviderNodePoolForNodePool(
     httpClientFactory,
     auth,
-    [nodePool]
+    nodePool
   );
 
   switch (providerNodePool?.apiVersion) {
@@ -292,9 +293,9 @@ export async function deleteProviderNodePool(
 
       providerNodePool.metadata.deletionTimestamp = new Date().toISOString();
 
-      mutate(
+      mutate<IProviderNodePoolForNodePoolName[]>(
         fetchProviderNodePoolsForNodePoolsKey([nodePool]),
-        providerNodePool,
+        [{ nodePoolName: nodePool.metadata.name, providerNodePool }],
         false
       );
 
@@ -417,10 +418,10 @@ export async function updateNodePoolScaling(
     }
 
     case 'cluster.x-k8s.io/v1alpha3': {
-      let [providerNodePool] = await fetchProviderNodePoolsForNodePools(
+      let providerNodePool = await fetchProviderNodePoolForNodePool(
         httpClientFactory,
         auth,
-        [nodePool]
+        nodePool
       );
 
       const apiVersion = providerNodePool?.apiVersion;
@@ -475,12 +476,12 @@ export async function updateNodePoolScaling(
 
       mutate(
         fetchProviderNodePoolsForNodePoolsKey(nodePoolList.items),
-        produce((draft?: ProviderNodePool[]) => {
+        produce((draft?: IProviderNodePoolForNodePoolName[]) => {
           if (!draft) return;
 
           for (let i = 0; i < draft.length; i++) {
-            if (draft[i]!.metadata.name === providerNodePool!.metadata.name) {
-              draft[i] = providerNodePool;
+            if (draft[i]!.nodePoolName === providerNodePool!.metadata.name) {
+              draft[i] = { ...draft[i], providerNodePool };
             }
           }
         }),
@@ -886,4 +887,46 @@ export async function createNodePool(
     default:
       return Promise.reject(new Error('Unsupported provider.'));
   }
+}
+
+export interface IProviderNodePoolForNodePool {
+  nodePool: NodePool;
+  providerNodePool: ProviderNodePool | null;
+}
+
+export function mapNodePoolsToProviderNodePools(
+  nodePools: NodePool[],
+  providerNodePoolsForNodePoolNames: IProviderNodePoolForNodePoolName[]
+): IProviderNodePoolForNodePool[] {
+  const nodePoolNamesToProviderNodePools: Record<
+    string,
+    ProviderNodePool | null
+  > = {};
+
+  for (const {
+    nodePoolName,
+    providerNodePool,
+  } of providerNodePoolsForNodePoolNames) {
+    nodePoolNamesToProviderNodePools[nodePoolName] = providerNodePool ?? null;
+  }
+
+  const nodePoolsToProviderNodePools: IProviderNodePoolForNodePool[] =
+    new Array(nodePools.length);
+
+  for (let i = 0; i < nodePools.length; i++) {
+    const nodePoolName = nodePools[i].metadata.name;
+
+    const providerNodePool = nodePoolNamesToProviderNodePools.hasOwnProperty(
+      nodePoolName
+    )
+      ? nodePoolNamesToProviderNodePools[nodePoolName]
+      : undefined;
+
+    nodePoolsToProviderNodePools[i] = {
+      nodePool: nodePools[i],
+      providerNodePool,
+    };
+  }
+
+  return nodePoolsToProviderNodePools;
 }

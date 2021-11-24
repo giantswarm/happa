@@ -13,6 +13,7 @@ import {
   getClusterDescription,
   getMachineTypes,
 } from 'MAPI/utils';
+import { mapNodePoolsToProviderNodePools } from 'MAPI/workernodes/utils';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -162,18 +163,22 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 
   const machineTypes = useRef(getMachineTypes());
 
+  const nodePoolsWithProviderNodePools = useMemo(() => {
+    if (!nodePoolList?.items || !providerNodePools) return undefined;
+
+    return mapNodePoolsToProviderNodePools(
+      nodePoolList.items,
+      providerNodePools
+    );
+  }, [nodePoolList?.items, providerNodePools]);
+
   const workerNodesCPU = providerNodePoolsError
     ? -1
-    : getWorkerNodesCPU(
-        nodePoolList?.items,
-        providerNodePools,
-        machineTypes.current
-      );
+    : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
   const workerNodesMemory = providerNodePoolsError
     ? -1
     : getWorkerNodesMemory(
-        nodePoolList?.items,
-        providerNodePools,
+        nodePoolsWithProviderNodePools,
         machineTypes.current
       );
 
