@@ -108,32 +108,28 @@ const ClusterLabel: React.FC<IClusterLabelProps> = ({
         </TooltipContainer>
       </Keyboard>
       {onRemove && (
-        <TooltipContainer
-          content={<StyledTooltip>Delete this label</StyledTooltip>}
+        <Box
+          className='cluster-label__delete'
+          height='100%'
+          justify='center'
+          background='text-weak'
+          pad={{ horizontal: 'small', top: 'xsmall' }}
+          round={{ size: 'large', corner: 'right' }}
         >
-          <Box
-            className='cluster-label__delete'
-            height='100%'
-            justify='center'
-            background='text-weak'
-            pad={{ horizontal: 'small', top: 'xsmall' }}
-            round={{ size: 'large', corner: 'right' }}
-          >
-            {removeButton ? (
-              // eslint-disable-next-line react/jsx-no-useless-fragment
-              <>{removeButton}</>
-            ) : (
-              <StyledAnchor
-                size='large'
-                color='background-light'
-                onClick={onRemove}
-                tabIndex={0}
-              >
-                <i className='fa fa-close' role='presentation' title='Delete' />
-              </StyledAnchor>
-            )}
-          </Box>
-        </TooltipContainer>
+          {removeButton ? (
+            // eslint-disable-next-line react/jsx-no-useless-fragment
+            <>{removeButton}</>
+          ) : (
+            <StyledAnchor
+              size='large'
+              color='background-light'
+              onClick={onRemove}
+              tabIndex={0}
+            >
+              <i className='fa fa-close' role='presentation' title='Delete' />
+            </StyledAnchor>
+          )}
+        </Box>
       )}
     </StyledBox>
   );
