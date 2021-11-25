@@ -186,6 +186,7 @@ const theme = deepMerge(generate(16), {
       'input-highlight': '#41B5F2',
       'tooltip-background': '#000000E6',
       'background-weak': '#4c6c7e',
+      'label-background': '#1c3c4f',
 
       focus: {
         light: 'text-strong',
