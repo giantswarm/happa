@@ -396,23 +396,6 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     };
   }, [roleName]);
 
-  const client = useHttpClient();
-  const auth = useAuthProvider();
-
-  const {
-    data: serviceAccountSuggestions,
-    error: serviceAccountSuggestionsError,
-  } = useSWR<string[], GenericResponseError>(
-    fetchServiceAccountSuggestionsKey(namespace),
-    () => fetchServiceAccountSuggestions(client, auth, namespace)
-  );
-
-  useEffect(() => {
-    if (serviceAccountSuggestionsError) {
-      ErrorReporter.getInstance().notify(serviceAccountSuggestionsError);
-    }
-  }, [serviceAccountSuggestionsError]);
-
   const groupCollection = Object.values(groups).sort(compareSubjects);
   const userCollection = Object.values(users).sort(compareSubjects);
   const serviceAccountCollection =
@@ -428,6 +411,28 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     permissions.subjects[ui.AccessControlSubjectTypes.User];
   const serviceAccountPermissions =
     permissions.subjects[ui.AccessControlSubjectTypes.ServiceAccount];
+
+  const client = useHttpClient();
+  const auth = useAuthProvider();
+
+  const serviceAccountSuggestionsKey =
+    serviceAccountPermissions.canBind &&
+    canListSubjects(serviceAccountCollection, serviceAccountPermissions)
+      ? fetchServiceAccountSuggestionsKey(namespace)
+      : null;
+
+  const {
+    data: serviceAccountSuggestions,
+    error: serviceAccountSuggestionsError,
+  } = useSWR<string[], GenericResponseError>(serviceAccountSuggestionsKey, () =>
+    fetchServiceAccountSuggestions(client, auth, namespace)
+  );
+
+  useEffect(() => {
+    if (serviceAccountSuggestionsError) {
+      ErrorReporter.getInstance().notify(serviceAccountSuggestionsError);
+    }
+  }, [serviceAccountSuggestionsError]);
 
   return (
     <Box direction='column' gap='medium' pad={{ top: 'small' }} {...props}>
