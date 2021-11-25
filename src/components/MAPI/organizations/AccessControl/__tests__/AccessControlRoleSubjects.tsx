@@ -249,10 +249,45 @@ describe('AccessControlRoleSubjects', () => {
 
   it('can add subjects', async () => {
     jest.useFakeTimers();
-    const onAddMockfn = jest.fn(() => {
+    const onAddMockfn = jest.fn();
+
+    onAddMockfn.mockImplementationOnce(() => {
       return new Promise<ui.IAccessControlRoleSubjectStatus[]>((resolve) =>
-        // eslint-disable-next-line no-magic-numbers
-        setTimeout(resolve, 1000)
+        setTimeout(
+          () =>
+            resolve([
+              {
+                name: 'group1',
+                status: ui.AccessControlRoleSubjectStatus.Bound,
+              },
+              {
+                name: 'group2',
+                status: ui.AccessControlRoleSubjectStatus.Bound,
+              },
+              {
+                name: 'group3',
+                status: ui.AccessControlRoleSubjectStatus.Bound,
+              },
+            ]),
+          // eslint-disable-next-line no-magic-numbers
+          1000
+        )
+      );
+    });
+
+    onAddMockfn.mockImplementationOnce(() => {
+      return new Promise<ui.IAccessControlRoleSubjectStatus[]>((resolve) =>
+        setTimeout(
+          () =>
+            resolve([
+              {
+                name: 'group1',
+                status: ui.AccessControlRoleSubjectStatus.Bound,
+              },
+            ]),
+          // eslint-disable-next-line no-magic-numbers
+          1000
+        )
       );
     });
 
@@ -309,7 +344,9 @@ describe('AccessControlRoleSubjects', () => {
     expect(input).not.toBeInTheDocument();
 
     expect(
-      screen.getByText(/Subjects added successfully./)
+      await withMarkup(screen.findByText)(
+        'Groups group1, group2, group3 have been bound to the role.'
+      )
     ).toBeInTheDocument();
 
     fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
@@ -332,7 +369,11 @@ describe('AccessControlRoleSubjects', () => {
       expect(input).not.toBeInTheDocument();
     });
 
-    screen.getByText(/Subject added successfully./);
+    expect(
+      await withMarkup(screen.findByText)(
+        'Group group1 has been bound to the role.'
+      )
+    ).toBeInTheDocument();
 
     jest.useRealTimers();
   });
@@ -391,7 +432,9 @@ describe('AccessControlRoleSubjects', () => {
     });
 
     expect(
-      withMarkup(screen.getByText)('Subject test-group1 deleted successfully.')
+      await withMarkup(screen.findByText)(
+        'The binding for group test-group1 has been removed.'
+      )
     ).toBeInTheDocument();
 
     jest.useRealTimers();
@@ -473,7 +516,9 @@ describe('AccessControlRoleSubjects', () => {
     fireEvent.click(submitButton);
 
     expect(
-      await screen.findByText(/Could not add subjects:/)
+      await withMarkup(screen.findByText)(
+        'Could not bind groups group1, group2, group3 :'
+      )
     ).toBeInTheDocument();
     expect(
       screen.getByText(/There was a huge error. Abort the mission./)
@@ -486,7 +531,7 @@ describe('AccessControlRoleSubjects', () => {
     fireEvent.click(submitButton);
 
     expect(
-      await screen.findByText(/Could not add subject:/)
+      await withMarkup(screen.findByText)('Could not bind group group1 :')
     ).toBeInTheDocument();
     expect(
       screen.getAllByText(/There was a huge error. Abort the mission./)
@@ -533,7 +578,9 @@ describe('AccessControlRoleSubjects', () => {
     fireEvent.click(screen.getByText('Remove'));
 
     expect(
-      await screen.findByText(/Could not delete subject test-group1/)
+      await withMarkup(screen.findByText)(
+        'Could not delete binding for group test-group1 .'
+      )
     ).toBeInTheDocument();
     expect(
       screen.getByText(/There was a huge error. Abort the mission./)

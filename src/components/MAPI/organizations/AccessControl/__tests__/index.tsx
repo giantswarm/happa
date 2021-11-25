@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
+import { usePermissionsForAccessControl } from 'MAPI/organizations/permissions/usePermissionsForAccessControl';
 import { StatusCodes } from 'model/constants';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -10,6 +11,7 @@ import { withMarkup } from 'test/assertUtils';
 import * as corev1Mocks from 'test/mockHttpCalls/corev1';
 import * as rbacv1Mocks from 'test/mockHttpCalls/rbacv1';
 import { getComponentWithStore } from 'test/renderUtils';
+import * as ui from 'UI/Display/MAPI/AccessControl/types';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import AccessControl from '..';
@@ -36,6 +38,8 @@ function getComponent(
   );
 }
 
+jest.mock('../../permissions/usePermissionsForAccessControl');
+
 describe('AccessControl', () => {
   beforeEach(() => {
     nock(window.config.mapiEndpoint)
@@ -53,6 +57,37 @@ describe('AccessControl', () => {
         '/apis/rbac.authorization.k8s.io/v1/namespaces/org-giantswarm/rolebindings/'
       )
       .reply(StatusCodes.Ok, rbacv1Mocks.roleBindingList);
+
+    (usePermissionsForAccessControl as jest.Mock).mockReturnValue({
+      roles: {
+        '': {
+          canList: true,
+        },
+        'org-giantswarm': {
+          canList: true,
+        },
+      },
+      subjects: {
+        [ui.AccessControlSubjectTypes.Group]: {
+          canCreate: true,
+          canBind: true,
+          canDelete: true,
+          canList: true,
+        },
+        [ui.AccessControlSubjectTypes.User]: {
+          canCreate: true,
+          canBind: true,
+          canDelete: true,
+          canList: true,
+        },
+        [ui.AccessControlSubjectTypes.ServiceAccount]: {
+          canCreate: true,
+          canBind: true,
+          canDelete: true,
+          canList: true,
+        },
+      },
+    } as ui.IAccessControlPermissions);
   });
 
   it('fetches, formats and renders a cluster role', async () => {
@@ -216,7 +251,7 @@ describe('AccessControl', () => {
     ).toBeInTheDocument();
   });
 
-  it.skip('can create groups', async () => {
+  it('can create groups', async () => {
     const now = 1617189262247;
     // @ts-expect-error
     Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
@@ -324,7 +359,9 @@ describe('AccessControl', () => {
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/Subjects added successfully./)
+      await withMarkup(screen.findByText)(
+        'Groups subject1, subject2, subject3 have been bound to the role.'
+      )
     ).toBeInTheDocument();
 
     expect(within(section).getByLabelText('subject1')).toBeInTheDocument();
@@ -334,7 +371,7 @@ describe('AccessControl', () => {
     (Date.now as unknown as jest.SpyInstance).mockClear();
   });
 
-  it.skip('displays an error if creating groups fails', async () => {
+  it('displays an error if creating groups fails', async () => {
     const now = 1617189262247;
     // @ts-expect-error
     Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
@@ -416,7 +453,9 @@ describe('AccessControl', () => {
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/Could not add subjects:/)
+      await withMarkup(screen.findByText)(
+        'Could not bind groups subject1, subject2, subject3 :'
+      )
     ).toBeInTheDocument();
     expect(screen.getByText(/There was a huge problem./)).toBeInTheDocument();
 
@@ -433,7 +472,7 @@ describe('AccessControl', () => {
     (Date.now as unknown as jest.SpyInstance).mockClear();
   });
 
-  it.skip('can create users', async () => {
+  it('can create users', async () => {
     const now = 1617189262247;
     // @ts-expect-error
     Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
@@ -531,7 +570,9 @@ describe('AccessControl', () => {
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/Subjects added successfully./)
+      await withMarkup(screen.findByText)(
+        'Users subject1@example.com, subject2 have been bound to the role.'
+      )
     ).toBeInTheDocument();
 
     expect(
@@ -542,7 +583,7 @@ describe('AccessControl', () => {
     (Date.now as unknown as jest.SpyInstance).mockClear();
   });
 
-  it.skip('displays an error if creating users fails', async () => {
+  it('displays an error if creating users fails', async () => {
     const now = 1617189262247;
     // @ts-expect-error
     Date.now = jest.spyOn(Date, 'now').mockImplementation(() => now);
@@ -619,7 +660,9 @@ describe('AccessControl', () => {
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
     expect(
-      await screen.findByText(/Could not add subjects:/)
+      await withMarkup(screen.findByText)(
+        'Could not bind users subject1@example.com, subject2 :'
+      )
     ).toBeInTheDocument();
     expect(screen.getByText(/There was a huge problem./)).toBeInTheDocument();
 
@@ -633,7 +676,7 @@ describe('AccessControl', () => {
     (Date.now as unknown as jest.SpyInstance).mockClear();
   });
 
-  it.skip('can delete a group', async () => {
+  it('can delete a group', async () => {
     const putRequest = {
       metadata: {
         name: 'edit-all-group',
@@ -742,13 +785,15 @@ describe('AccessControl', () => {
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
-      await screen.findByText(/Subject Admins deleted successfully./)
+      await withMarkup(screen.findByText)(
+        'The binding for group Admins has been removed.'
+      )
     ).toBeInTheDocument();
 
     expect(within(section).queryByLabelText('Admins')).not.toBeInTheDocument();
   });
 
-  it.skip('displays an error if deleting a group fails', async () => {
+  it('displays an error if deleting a group fails', async () => {
     const putRequest = {
       metadata: {
         name: 'edit-all-group',
@@ -830,14 +875,16 @@ describe('AccessControl', () => {
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
-      await screen.findByText(/Could not delete subject Admins/)
+      await withMarkup(screen.findByText)(
+        'Could not delete binding for group Admins .'
+      )
     ).toBeInTheDocument();
     expect(screen.getByText(/There was a huge problem./)).toBeInTheDocument();
 
     expect(within(section).getByLabelText('Admins')).toBeInTheDocument();
   });
 
-  it.skip('can delete a user', async () => {
+  it('can delete a user', async () => {
     const putRequest = {
       metadata: {
         name: 'cool',
@@ -934,7 +981,9 @@ describe('AccessControl', () => {
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
-      await screen.findByText(/Subject test@test.com deleted successfully./)
+      await withMarkup(screen.findByText)(
+        'The binding for user test@test.com has been removed.'
+      )
     ).toBeInTheDocument();
 
     expect(
@@ -942,7 +991,7 @@ describe('AccessControl', () => {
     ).not.toBeInTheDocument();
   });
 
-  it.skip('displays an error if deleting a user fails', async () => {
+  it('displays an error if deleting a user fails', async () => {
     const putRequest = {
       metadata: {
         name: 'cool',
@@ -1017,7 +1066,9 @@ describe('AccessControl', () => {
     fireEvent.click(screen.getByText('Remove'));
 
     expect(
-      await screen.findByText(/Could not delete subject test@test.com/)
+      await withMarkup(screen.findByText)(
+        'Could not delete binding for user test@test.com .'
+      )
     ).toBeInTheDocument();
     expect(screen.getByText(/There was a huge problem./)).toBeInTheDocument();
 
@@ -1631,7 +1682,9 @@ describe('AccessControl', () => {
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
     expect(
-      await screen.findByText(/Could not delete subject el-toro/)
+      await withMarkup(screen.findByText)(
+        'Could not delete binding for service account el-toro .'
+      )
     ).toBeInTheDocument();
     expect(screen.getByText(/There was a huge problem./)).toBeInTheDocument();
 

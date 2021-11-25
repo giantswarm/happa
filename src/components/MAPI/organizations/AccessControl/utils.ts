@@ -579,7 +579,7 @@ export async function ensureServiceAccount(
   try {
     await corev1.getServiceAccount(client, auth, name, namespace);
 
-    return { name, status: ui.AccessControlRoleSubjectStatus.Updated };
+    return { name, status: ui.AccessControlRoleSubjectStatus.Bound };
   } catch (err) {
     // If the service account is not found, we'll create it.
     if (
@@ -715,4 +715,35 @@ export function canListSubjects(
   if (!subjectPermissions.canBind && subjectCollection.length < 1) return false;
 
   return subjectPermissions.canList;
+}
+
+export function formatSubjectType(
+  subject: ui.AccessControlSubjectTypes,
+  pluralize?: boolean
+): string {
+  switch (subject) {
+    case ui.AccessControlSubjectTypes.Group:
+      if (pluralize) {
+        return 'Groups';
+      }
+
+      return 'Group';
+
+    case ui.AccessControlSubjectTypes.User:
+      if (pluralize) {
+        return 'Users';
+      }
+
+      return 'User';
+
+    case ui.AccessControlSubjectTypes.ServiceAccount:
+      if (pluralize) {
+        return 'Service accounts';
+      }
+
+      return 'Service account';
+
+    default:
+      return '';
+  }
 }
