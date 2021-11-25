@@ -2,12 +2,15 @@ import { Box, Keyboard, Text } from 'grommet';
 import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
+import AddClusterLabelButton from 'UI/Display/Cluster/ClusterLabels/AddClusterLabelButton';
+import ClusterLabel from 'UI/Display/Cluster/ClusterLabels/ClusterLabel';
 import ValidationError from 'UI/Display/Cluster/ClusterLabels/ValidationError';
 import { Tooltip } from 'UI/Display/Tooltip';
-import ValueLabel from 'UI/Display/ValueLabel';
 import TextInput from 'UI/Inputs/TextInput';
 import useValidatingInternalValue from 'utils/hooks/useValidatingInternalValue';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
+
+import DeleteLabelButton from './DeleteLabelButton';
 
 interface IEditLabelTooltip {
   label: string;
@@ -21,10 +24,6 @@ interface IEditLabelTooltip {
 
 const EditLabelTooltipWrapper = styled.div`
   display: inline-block;
-`;
-
-const StyledValueLabel = styled(ValueLabel)`
-  margin-bottom: 0;
 `;
 
 const FormWrapper = styled.div`
@@ -144,18 +143,17 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
   return (
     <EditLabelTooltipWrapper ref={divElement} className={className}>
       {label === '' ? (
-        <Button
+        <AddClusterLabelButton
           disabled={!allowInteraction || currentlyEditing}
           onClick={open}
           data-testid='add-label-button'
           icon={<i className='fa fa-add-circle' />}
-          margin={{ left: 'small' }}
         >
-          Add label
-        </Button>
+          Add
+        </AddClusterLabelButton>
       ) : (
         <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
-          <StyledValueLabel
+          <ClusterLabel
             onClick={open}
             label={
               <Editable allowInteraction={allowInteraction}>{label}</Editable>
@@ -163,9 +161,17 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
             value={
               <Editable allowInteraction={allowInteraction}>{value}</Editable>
             }
-            tabIndex={0}
-            aria-label={`Label ${label} with value ${value}`}
-            role='button'
+            removeButton={
+              <DeleteLabelButton
+                allowInteraction={allowInteraction}
+                onOpen={onOpen}
+                onDelete={() => {
+                  onSave({ key: label, value: null });
+                }}
+                role='button'
+                aria-label={`Delete '${label}' label`}
+              />
+            }
           />
         </Keyboard>
       )}

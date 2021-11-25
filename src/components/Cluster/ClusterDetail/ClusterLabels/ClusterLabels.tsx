@@ -2,7 +2,6 @@ import React, { ComponentPropsWithoutRef, FC, useState } from 'react';
 import styled from 'styled-components';
 import LabelWrapper from 'UI/Display/Cluster/ClusterLabels/LabelWrapper';
 
-import DeleteLabelButton from './DeleteLabelButton';
 import EditLabelTooltip from './EditLabelTooltip';
 
 const ClusterLabelsWrapper = styled.div<{ showTitle?: boolean }>`
@@ -93,17 +92,6 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
                     onSave={onChange}
                     value={value}
                   />
-                  <DeleteLabelButton
-                    allowInteraction={!isLoading && allowEditing}
-                    onOpen={(isOpen) => setAllowEditing(isOpen)}
-                    onDelete={() => {
-                      onChange({ key: label, value: null });
-                    }}
-                    role='button'
-                    aria-label={`Delete '${label}' label`}
-                  >
-                    &times;
-                  </DeleteLabelButton>
                 </LabelWrapper>
               ))}
             <EditLabelTooltip
