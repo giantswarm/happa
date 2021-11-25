@@ -434,6 +434,21 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     }
   }, [serviceAccountSuggestionsError]);
 
+  const validateServiceAccountSubjects = (values: string[]): string => {
+    if (serviceAccountPermissions.canCreate) return '';
+
+    if (!serviceAccountSuggestions) {
+      return `You don't have the required permissions to create new service accounts. You can only bind existing ones.`;
+    }
+
+    const uniqueSuggestions = new Set(serviceAccountSuggestions);
+    if (values.some((v) => !uniqueSuggestions.has(v))) {
+      return `You don't have the required permissions to create new service accounts. You can only bind existing ones.`;
+    }
+
+    return '';
+  };
+
   return (
     <Box direction='column' gap='medium' pad={{ top: 'small' }} {...props}>
       {canListSubjects(groupCollection, groupPermissions) && (
@@ -557,6 +572,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
             isAdding={serviceAccountType.isAdding}
             isLoading={serviceAccountType.isLoading}
             inputSuggestions={serviceAccountSuggestions}
+            onValidate={validateServiceAccountSubjects}
           />
           {serviceAccountType.isAdding && (
             <Box>
