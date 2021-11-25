@@ -237,7 +237,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
             <Text size='small'>
               {[keyValidationError, valueValidationError]
                 .filter((err) => err)
-                .join(',')}
+                .join(', ')}
             </Text>
           </ValidationError>
         </Tooltip>
