@@ -114,7 +114,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
         </React.Fragment>
       ))}
 
-      {permissions.canAdd && (
+      {permissions.canBind && (
         <AccessControlSubjectAddForm
           margin={{ right: 'small', bottom: 'small' }}
           isAdding={isAdding}

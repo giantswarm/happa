@@ -44,17 +44,20 @@ function getComponent(
 const defaultPermissions: ui.IAccessControlPermissions = {
   subjects: {
     [ui.AccessControlSubjectTypes.Group]: {
-      canAdd: true,
+      canCreate: true,
+      canBind: true,
       canDelete: true,
       canList: true,
     },
     [ui.AccessControlSubjectTypes.User]: {
-      canAdd: true,
+      canCreate: true,
+      canBind: true,
       canDelete: true,
       canList: true,
     },
     [ui.AccessControlSubjectTypes.ServiceAccount]: {
-      canAdd: true,
+      canCreate: true,
+      canBind: true,
       canDelete: true,
       canList: true,
     },

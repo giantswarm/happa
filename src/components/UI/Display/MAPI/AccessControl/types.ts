@@ -44,7 +44,8 @@ export interface IAccessControlRoleItem {
 }
 
 export interface IAccessControlSubjectPermissions {
-  canAdd: boolean;
+  canCreate: boolean;
+  canBind: boolean;
   canDelete: boolean;
   canList: boolean;
 }
