@@ -108,7 +108,7 @@ describe('AccessControlRoleDetail', () => {
     const { rerender } = renderWithStore(AccessControlRoleDetail, {
       namespace: 'org-test',
       permissions: defaultPermissions,
-      activeRole: undefined,
+      isLoading: true,
       onAdd: jest.fn(),
       onDelete: jest.fn(),
     });
