@@ -202,7 +202,7 @@ export function hasNamespacePermission(
 export function hasPermission(
   permissions: IPermissionMap,
   namespace: string,
-  verb: string,
+  verb: PermissionVerb,
   group: string,
   resource: string,
   resourceName?: string

@@ -13,12 +13,12 @@ import * as ui from 'UI/Display/MAPI/AccessControl/types';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
+import { usePermissionsForAccessControl } from '../permissions/usePermissionsForAccessControl';
 import BindRolesToSubjectsGuide from './guides/BindRolesToSubjectsGuide';
 import InspectRoleGuide from './guides/InspectRoleGuide';
 import ListRolesGuide from './guides/ListRolesGuide';
 import {
   appendSubjectsToRoleItem,
-  computePermissions,
   createRoleBindingWithSubjects,
   deleteSubjectFromRole,
   ensureServiceAccount,
@@ -37,7 +37,11 @@ const AccessControl: React.FC<IAccessControlProps> = ({
   organizationNamespace,
   ...props
 }) => {
-  const permissions = computePermissions(organizationNamespace);
+  const provider = window.config.info.general.provider;
+  const permissions = usePermissionsForAccessControl(
+    provider,
+    organizationNamespace
+  );
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();

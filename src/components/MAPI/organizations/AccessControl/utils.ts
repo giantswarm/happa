@@ -708,41 +708,6 @@ export function fetchServiceAccountSuggestionsKey(
   return corev1.getServiceAccountListKey(namespace);
 }
 
-export function computePermissions(
-  namespace: string
-): ui.IAccessControlPermissions {
-  return {
-    roles: {
-      '': {
-        canList: true,
-      },
-      [namespace]: {
-        canList: true,
-      },
-    },
-    subjects: {
-      [ui.AccessControlSubjectTypes.Group]: {
-        canCreate: false,
-        canBind: false,
-        canDelete: false,
-        canList: true,
-      },
-      [ui.AccessControlSubjectTypes.User]: {
-        canCreate: false,
-        canBind: false,
-        canDelete: false,
-        canList: true,
-      },
-      [ui.AccessControlSubjectTypes.ServiceAccount]: {
-        canCreate: true,
-        canBind: true,
-        canDelete: true,
-        canList: true,
-      },
-    },
-  };
-}
-
 export function canListSubjects(
   subjectCollection: ui.IAccessControlRoleSubjectItem[],
   subjectPermissions: ui.IAccessControlSubjectPermissions
