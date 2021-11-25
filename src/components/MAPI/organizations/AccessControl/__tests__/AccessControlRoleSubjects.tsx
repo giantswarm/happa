@@ -42,6 +42,14 @@ function getComponent(
 }
 
 const defaultPermissions: ui.IAccessControlPermissions = {
+  roles: {
+    '': {
+      canList: true,
+    },
+    'org-test': {
+      canList: true,
+    },
+  },
   subjects: {
     [ui.AccessControlSubjectTypes.Group]: {
       canCreate: true,

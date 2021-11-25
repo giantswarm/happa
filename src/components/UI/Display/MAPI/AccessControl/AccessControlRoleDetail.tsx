@@ -29,6 +29,7 @@ interface IAccessControlRoleDetailProps
   ) => Promise<IAccessControlRoleSubjectStatus[]>;
   onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
   activeRole?: IAccessControlRoleItem;
+  isLoading?: boolean;
 }
 
 const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
@@ -37,13 +38,14 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
   activeRole,
   onAdd,
   onDelete,
+  isLoading,
   ...props
 }) => {
   return (
     <Box role='main' aria-label='Role details' {...props}>
-      {!activeRole && <AccessControlRoleDetailLoadingPlaceholder />}
+      {isLoading && <AccessControlRoleDetailLoadingPlaceholder />}
 
-      {activeRole && (
+      {!isLoading && activeRole && (
         <>
           <Box>
             <Heading level={4}>{activeRole.name}</Heading>

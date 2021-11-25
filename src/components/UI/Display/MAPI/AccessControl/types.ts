@@ -50,7 +50,12 @@ export interface IAccessControlSubjectPermissions {
   canList: boolean;
 }
 
+export interface IAccessControlRolePermissions {
+  canList: boolean;
+}
+
 export interface IAccessControlPermissions {
+  roles: Record<string, IAccessControlRolePermissions>;
   subjects: Record<AccessControlSubjectTypes, IAccessControlSubjectPermissions>;
 }
 

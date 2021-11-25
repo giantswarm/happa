@@ -5,6 +5,14 @@ import AccessControlRoleDetail from '../AccessControlRoleDetail';
 import { AccessControlSubjectTypes, IAccessControlPermissions } from '../types';
 
 const defaultPermissions: IAccessControlPermissions = {
+  roles: {
+    '': {
+      canList: true,
+    },
+    'org-test': {
+      canList: true,
+    },
+  },
   subjects: {
     [AccessControlSubjectTypes.Group]: {
       canCreate: true,

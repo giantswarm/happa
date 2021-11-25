@@ -3,9 +3,9 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { getResource } from '../generic/getResource';
-import { IClusterRoleBindingList } from './types';
+import { ClusterRoleBinding, IClusterRoleBindingList } from './types';
 
-export function getClusterRoleBindingList(
+export async function getClusterRoleBindingList(
   client: IHttpClient,
   auth: IOAuth2Provider
 ) {
@@ -15,7 +15,17 @@ export function getClusterRoleBindingList(
     kind: 'clusterrolebindings',
   });
 
-  return getResource<IClusterRoleBindingList>(client, auth, url.toString());
+  const list = await getResource<IClusterRoleBindingList>(
+    client,
+    auth,
+    url.toString()
+  );
+  for (const item of list.items) {
+    item.kind = ClusterRoleBinding;
+    item.apiVersion = 'rbac.authorization.k8s.io/v1';
+  }
+
+  return list;
 }
 
 export function getClusterRoleBindingListKey() {
