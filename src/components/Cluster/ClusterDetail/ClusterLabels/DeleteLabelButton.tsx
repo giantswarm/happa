@@ -1,4 +1,4 @@
-import { Keyboard } from 'grommet';
+import { Box, Keyboard } from 'grommet';
 import React, {
   ComponentPropsWithoutRef,
   FC,
@@ -83,24 +83,26 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
         >
           <Keyboard onEsc={close}>
             <DeleteLabelTooltipInner>
-              <span>Are you sure you want to delete this label?</span>
-              <Button
-                danger={true}
-                onClick={() => {
-                  close();
-                  onDelete();
-                }}
-              >
-                Delete
-              </Button>
-              <Button
-                link={true}
-                onClick={close}
-                ref={cancelButtonRef}
-                className='cancel-button'
-              >
-                Cancel
-              </Button>
+              <Box gap='small' direction='row' align='end'>
+                <span>Are you sure you want to delete this label?</span>
+                <Button
+                  danger={true}
+                  onClick={() => {
+                    close();
+                    onDelete();
+                  }}
+                >
+                  Delete
+                </Button>
+                <Button
+                  link={true}
+                  onClick={close}
+                  ref={cancelButtonRef}
+                  className='cancel-button'
+                >
+                  Cancel
+                </Button>
+              </Box>
             </DeleteLabelTooltipInner>
           </Keyboard>
         </Tooltip>
