@@ -175,7 +175,6 @@ const getStatusMessages = (
     {
       [ui.AccessControlRoleSubjectStatus.Created]: [],
       [ui.AccessControlRoleSubjectStatus.Bound]: [],
-      [ui.AccessControlRoleSubjectStatus.Updated]: [],
     }
   );
 
