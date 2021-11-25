@@ -29,6 +29,7 @@ const AddClusterLabelButton: React.FC<IAddClusterLabelButtonProps> = ({
       round='large'
       background='label-background'
       role='button'
+      aria-label='Add label'
       onClick={onClick}
       {...props}
     >
