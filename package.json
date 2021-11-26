@@ -215,7 +215,7 @@
     "babel-plugin-transform-react-jsx": "6.24.1",
     "babel-preset-env": "1.7.0",
     "browserlist": "1.0.1",
-    "chalk": "4.1.2",
+    "chalk": "5.0.0",
     "clean-webpack-plugin": "4.0.0",
     "command-line-args": "5.2.0",
     "copy-webpack-plugin": "10.0.0",
