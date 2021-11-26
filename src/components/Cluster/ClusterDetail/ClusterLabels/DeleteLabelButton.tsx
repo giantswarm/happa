@@ -47,6 +47,14 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
     onOpen(isOpen);
   };
 
+  const handleDelete = (
+    e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
+  ) => {
+    e.stopPropagation();
+    setIsOpen(true);
+    onOpen(isOpen);
+  };
+
   useEffect(() => {
     /**
      * Focus the cancel button after the confirmation is opened and
@@ -65,16 +73,13 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
 
   return (
     <DeleteLabelButtonWrapper ref={divElement}>
-      <StyledDeleteButton
-        disabled={!allowInteraction}
-        onClick={() => {
-          setIsOpen(true);
-          onOpen(isOpen);
-        }}
-        {...restProps}
-      >
-        &times;
-      </StyledDeleteButton>
+      <Keyboard onSpace={handleDelete} onEnter={handleDelete}>
+        <StyledDeleteButton
+          disabled={!allowInteraction}
+          onClick={handleDelete}
+          {...restProps}
+        />
+      </Keyboard>
       {isOpen && (
         <Tooltip
           id='delete-label'
