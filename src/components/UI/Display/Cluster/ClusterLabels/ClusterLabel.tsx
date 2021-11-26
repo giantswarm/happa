@@ -23,23 +23,6 @@ const StyledAnchor = styled(Anchor)`
   }
 `;
 
-const StyledBox = styled(Box)`
-  :hover {
-    border-color: ${({ theme }) => theme.colors.darkBlueDarker3};
-
-    .cluster-label__label {
-      background-color: ${({ theme }) => theme.colors.darkBlueDarker3};
-      color: ${({ theme }) => theme.colors.white4};
-    }
-
-    .cluster-label__key,
-    .cluster-label__delete {
-      background-color: ${({ theme }) => theme.colors.white4};
-      color: ${({ theme }) => theme.colors.darkBlueLighter3};
-    }
-  }
-`;
-
 const StyledLabelBox = styled(Box)`
   > * {
     color: ${({ theme }) => theme.colors.white5};
@@ -52,13 +35,32 @@ const StyledValueBox = styled(Box)`
   }
 `;
 
+const StyledDeleteBox = styled(Box)``;
+
+const StyledBox = styled(Box)`
+  :hover {
+    border-color: ${({ theme }) => theme.colors.darkBlueDarker3};
+
+    ${StyledLabelBox} {
+      background-color: ${({ theme }) => theme.colors.darkBlueDarker3};
+      color: ${({ theme }) => theme.colors.white4};
+    }
+
+    ${StyledValueBox},
+    ${StyledDeleteBox} {
+      background-color: ${({ theme }) => theme.colors.white4};
+      color: ${({ theme }) => theme.colors.darkBlueLighter3};
+    }
+  }
+`;
+
 const StyledTooltip = styled(Tooltip)`
   z-index: 1069 !important;
 `;
 
 interface IClusterLabelProps {
-  label: React.ReactNode | string;
-  value: React.ReactNode | string;
+  label: React.ReactNode;
+  value: React.ReactNode;
   removeButton?: React.ReactNode;
   onRemove?: () => void;
   onClick?: () => void;
@@ -113,8 +115,7 @@ const ClusterLabel: React.FC<IClusterLabelProps> = ({
         </TooltipContainer>
       </Keyboard>
       {onRemove && (
-        <Box
-          className='cluster-label__delete'
+        <StyledDeleteBox
           height='100%'
           justify='center'
           background='label-background-bright'
@@ -122,8 +123,7 @@ const ClusterLabel: React.FC<IClusterLabelProps> = ({
           round={{ size: 'large', corner: 'right' }}
         >
           {removeButton ? (
-            // eslint-disable-next-line react/jsx-no-useless-fragment
-            <>{removeButton}</>
+            removeButton
           ) : (
             <StyledAnchor
               size='large'
@@ -135,7 +135,7 @@ const ClusterLabel: React.FC<IClusterLabelProps> = ({
               <i className='fa fa-close' role='presentation' title='Delete' />
             </StyledAnchor>
           )}
-        </Box>
+        </StyledDeleteBox>
       )}
     </StyledBox>
   );
