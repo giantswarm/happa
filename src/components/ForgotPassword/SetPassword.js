@@ -33,6 +33,11 @@ const TokenValidatingBox = styled.div`
   background-color: #4e5962;
 `;
 
+const Wrapper = styled.div`
+  z-index: 1;
+  position: relative;
+`;
+
 class SetPassword extends React.Component {
   state = {
     email: '',
@@ -332,10 +337,10 @@ class SetPassword extends React.Component {
         <ShadowMask />
 
         <SlideTransition in={true} appear={true} direction='down'>
-          <div className='login_form--container'>
+          <Wrapper>
             <h1>Set your new password</h1>
             {this.state.email ? this.setPasswordForm() : this.setEmailForm()}
-          </div>
+          </Wrapper>
         </SlideTransition>
       </>
     );
