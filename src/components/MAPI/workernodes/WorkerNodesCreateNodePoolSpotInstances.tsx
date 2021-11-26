@@ -50,78 +50,77 @@ interface IWorkerNodesCreateNodePoolSpotInstancesProps
       'onChange' | 'id'
     > {}
 
-const WorkerNodesCreateNodePoolSpotInstances: React.FC<IWorkerNodesCreateNodePoolSpotInstancesProps> =
-  ({ id, providerNodePool, onChange, readOnly, disabled, ...props }) => {
-    const provider = window.config.info.general.provider;
+const WorkerNodesCreateNodePoolSpotInstances: React.FC<
+  IWorkerNodesCreateNodePoolSpotInstancesProps
+> = ({ id, providerNodePool, onChange, readOnly, disabled, ...props }) => {
+  const provider = window.config.info.general.provider;
 
-    const value = getProviderNodePoolSpotInstances(providerNodePool);
-    const [featureEnabled, setFeatureEnabled] = useState(
-      value?.enabled ?? false
-    );
+  const value = getProviderNodePoolSpotInstances(providerNodePool);
+  const [featureEnabled, setFeatureEnabled] = useState(value?.enabled ?? false);
 
-    const [validationError, setValidationError] = useState('');
+  const [validationError, setValidationError] = useState('');
 
-    const appendChanges = (
-      config: NodePoolSpotInstancesConfig,
-      errorMessage = ''
-    ) => {
-      setValidationError(errorMessage);
+  const appendChanges = (
+    config: NodePoolSpotInstancesConfig,
+    errorMessage = ''
+  ) => {
+    setValidationError(errorMessage);
 
-      onChange({
-        isValid: errorMessage.length < 1,
-        patch: withNodePoolSpotInstances(config),
-      });
-    };
-
-    const handleToggleFeature = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValidationError('');
-      setFeatureEnabled(e.target.checked);
-
-      switch (provider) {
-        case Providers.AZURE:
-          appendChanges({ enabled: e.target.checked, maxPrice: '' });
-          break;
-        case Providers.AWS:
-          appendChanges({
-            enabled: e.target.checked,
-            onDemandBaseCapacity: 0,
-            // eslint-disable-next-line no-magic-numbers
-            onDemandPercentageAboveBaseCapacity: e.target.checked ? 0 : 100,
-          });
-          break;
-      }
-    };
-
-    return (
-      <InputGroup htmlFor={id} label={getLabel(providerNodePool)} {...props}>
-        <CheckBoxInput
-          id={id}
-          checked={featureEnabled}
-          onChange={handleToggleFeature}
-          label={
-            <Text weight='normal' color='text'>
-              {getToggleLabel(providerNodePool)}
-            </Text>
-          }
-        />
-
-        {provider === Providers.AZURE && featureEnabled && (
-          <WorkerNodesCreateNodePoolSpotInstancesAzure
-            value={value as INodePoolSpotInstancesAzure}
-            onChange={appendChanges}
-            errorMessage={validationError}
-          />
-        )}
-
-        {provider === Providers.AWS && featureEnabled && (
-          <WorkerNodesCreateNodePoolSpotInstancesAWS
-            value={value as INodePoolSpotInstancesAWS}
-            onChange={appendChanges}
-            errorMessage={validationError}
-          />
-        )}
-      </InputGroup>
-    );
+    onChange({
+      isValid: errorMessage.length < 1,
+      patch: withNodePoolSpotInstances(config),
+    });
   };
+
+  const handleToggleFeature = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValidationError('');
+    setFeatureEnabled(e.target.checked);
+
+    switch (provider) {
+      case Providers.AZURE:
+        appendChanges({ enabled: e.target.checked, maxPrice: '' });
+        break;
+      case Providers.AWS:
+        appendChanges({
+          enabled: e.target.checked,
+          onDemandBaseCapacity: 0,
+          // eslint-disable-next-line no-magic-numbers
+          onDemandPercentageAboveBaseCapacity: e.target.checked ? 0 : 100,
+        });
+        break;
+    }
+  };
+
+  return (
+    <InputGroup htmlFor={id} label={getLabel(providerNodePool)} {...props}>
+      <CheckBoxInput
+        id={id}
+        checked={featureEnabled}
+        onChange={handleToggleFeature}
+        label={
+          <Text weight='normal' color='text'>
+            {getToggleLabel(providerNodePool)}
+          </Text>
+        }
+      />
+
+      {provider === Providers.AZURE && featureEnabled && (
+        <WorkerNodesCreateNodePoolSpotInstancesAzure
+          value={value as INodePoolSpotInstancesAzure}
+          onChange={appendChanges}
+          errorMessage={validationError}
+        />
+      )}
+
+      {provider === Providers.AWS && featureEnabled && (
+        <WorkerNodesCreateNodePoolSpotInstancesAWS
+          value={value as INodePoolSpotInstancesAWS}
+          onChange={appendChanges}
+          errorMessage={validationError}
+        />
+      )}
+    </InputGroup>
+  );
+};
 
 export default WorkerNodesCreateNodePoolSpotInstances;

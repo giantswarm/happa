@@ -69,49 +69,50 @@ interface IAccessControlRolePermissionsProps
   extends Pick<IAccessControlRoleItem, 'permissions'>,
     React.ComponentPropsWithoutRef<typeof Table> {}
 
-const AccessControlRolePermissions: React.FC<IAccessControlRolePermissionsProps> =
-  ({ permissions, ...props }) => {
-    return (
-      <StyledTable {...props}>
-        <TableHeader>
-          <TableRow>
-            <TableCell>API Groups</TableCell>
-            <TableCell>Resources</TableCell>
-            <TableCell>Resource Names</TableCell>
-            <TableCell>Verbs</TableCell>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <InfiniteScroll
-            replace={true}
-            items={permissions}
-            step={50}
-            renderMarker={(marker) => (
-              <TableRow>
-                <TableCell>{marker}</TableCell>
-              </TableRow>
-            )}
-          >
-            {(permission: IAccessControlRoleItemPermission, idx: number) => (
-              <TableRow key={makePermissionKey(permission, idx)}>
-                <StyledTableCell size='medium'>
-                  {formatApiGroups(permission.apiGroups)}
-                </StyledTableCell>
-                <StyledTableCell size='medium'>
-                  {formatResources(permission.resources)}
-                </StyledTableCell>
-                <StyledTableCell size='medium'>
-                  {formatResources(permission.resourceNames)}
-                </StyledTableCell>
-                <TableCell size='medium'>
-                  <AccessControlRoleVerbs verbs={permission.verbs} />
-                </TableCell>
-              </TableRow>
-            )}
-          </InfiniteScroll>
-        </TableBody>
-      </StyledTable>
-    );
-  };
+const AccessControlRolePermissions: React.FC<
+  IAccessControlRolePermissionsProps
+> = ({ permissions, ...props }) => {
+  return (
+    <StyledTable {...props}>
+      <TableHeader>
+        <TableRow>
+          <TableCell>API Groups</TableCell>
+          <TableCell>Resources</TableCell>
+          <TableCell>Resource Names</TableCell>
+          <TableCell>Verbs</TableCell>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <InfiniteScroll
+          replace={true}
+          items={permissions}
+          step={50}
+          renderMarker={(marker) => (
+            <TableRow>
+              <TableCell>{marker}</TableCell>
+            </TableRow>
+          )}
+        >
+          {(permission: IAccessControlRoleItemPermission, idx: number) => (
+            <TableRow key={makePermissionKey(permission, idx)}>
+              <StyledTableCell size='medium'>
+                {formatApiGroups(permission.apiGroups)}
+              </StyledTableCell>
+              <StyledTableCell size='medium'>
+                {formatResources(permission.resources)}
+              </StyledTableCell>
+              <StyledTableCell size='medium'>
+                {formatResources(permission.resourceNames)}
+              </StyledTableCell>
+              <TableCell size='medium'>
+                <AccessControlRoleVerbs verbs={permission.verbs} />
+              </TableCell>
+            </TableRow>
+          )}
+        </InfiniteScroll>
+      </TableBody>
+    </StyledTable>
+  );
+};
 
 export default AccessControlRolePermissions;

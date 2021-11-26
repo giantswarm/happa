@@ -17,49 +17,50 @@ interface IClusterDetailHACPNodesSwitcherProps
   onCancel?: () => void;
 }
 
-const ClusterDetailHACPNodesSwitcher: React.FC<IClusterDetailHACPNodesSwitcherProps> =
-  ({ cluster, onSubmit, onCancel, ...props }) => {
-    const clientFactory = useHttpClientFactory();
-    const auth = useAuthProvider();
+const ClusterDetailHACPNodesSwitcher: React.FC<
+  IClusterDetailHACPNodesSwitcherProps
+> = ({ cluster, onSubmit, onCancel, ...props }) => {
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
 
-    const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-    const onApply = async () => {
-      if (!cluster) return;
+  const onApply = async () => {
+    if (!cluster) return;
 
-      setIsLoading(true);
+    setIsLoading(true);
 
-      try {
-        await switchClusterToHACPNodes(clientFactory, auth, cluster);
-        setIsLoading(false);
+    try {
+      await switchClusterToHACPNodes(clientFactory, auth, cluster);
+      setIsLoading(false);
 
-        onSubmit?.();
-      } catch (err) {
-        onCancel?.();
-        setIsLoading(false);
+      onSubmit?.();
+    } catch (err) {
+      onCancel?.();
+      setIsLoading(false);
 
-        new FlashMessage(
-          'Something went wrong while trying to update the cluster.',
-          messageType.ERROR,
-          messageTTL.LONG,
-          extractErrorMessage(err)
-        );
+      new FlashMessage(
+        'Something went wrong while trying to update the cluster.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        extractErrorMessage(err)
+      );
 
-        ErrorReporter.getInstance().notify(err as Error);
-      }
-    };
-
-    return (
-      <Collapsible {...props}>
-        <Box margin={{ top: 'small' }}>
-          <MasterNodeConverter
-            onApply={onApply}
-            onCancel={onCancel}
-            isLoading={isLoading}
-          />
-        </Box>
-      </Collapsible>
-    );
+      ErrorReporter.getInstance().notify(err as Error);
+    }
   };
+
+  return (
+    <Collapsible {...props}>
+      <Box margin={{ top: 'small' }}>
+        <MasterNodeConverter
+          onApply={onApply}
+          onCancel={onCancel}
+          isLoading={isLoading}
+        />
+      </Box>
+    </Collapsible>
+  );
+};
 
 export default ClusterDetailHACPNodesSwitcher;

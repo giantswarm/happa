@@ -96,112 +96,113 @@ interface IClusterDetailWidgetProviderProps
   providerCluster?: ProviderCluster;
 }
 
-const ClusterDetailWidgetProvider: React.FC<IClusterDetailWidgetProviderProps> =
-  ({ cluster, providerCluster, ...props }) => {
-    const { orgId } = useParams<{ clusterId: string; orgId: string }>();
-    const organizations = useSelector(selectOrganizations());
-    const selectedOrg = orgId ? organizations[orgId] : undefined;
-    const selectedOrgID = selectedOrg?.name ?? selectedOrg?.id;
+const ClusterDetailWidgetProvider: React.FC<
+  IClusterDetailWidgetProviderProps
+> = ({ cluster, providerCluster, ...props }) => {
+  const { orgId } = useParams<{ clusterId: string; orgId: string }>();
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = orgId ? organizations[orgId] : undefined;
+  const selectedOrgID = selectedOrg?.name ?? selectedOrg?.id;
 
-    const credentialListClient = useHttpClient();
-    const auth = useAuthProvider();
+  const credentialListClient = useHttpClient();
+  const auth = useAuthProvider();
 
-    const provider = window.config.info.general.provider;
+  const provider = window.config.info.general.provider;
 
-    const { canList } = usePermissionsForOrgCredentials(
-      provider,
-      selectedOrg?.namespace ?? ''
-    );
+  const { canList } = usePermissionsForOrgCredentials(
+    provider,
+    selectedOrg?.namespace ?? ''
+  );
 
-    const credentialListKey =
-      canList && selectedOrgID
-        ? legacyCredentials.getCredentialListKey(selectedOrgID)
-        : null;
+  const credentialListKey =
+    canList && selectedOrgID
+      ? legacyCredentials.getCredentialListKey(selectedOrgID)
+      : null;
 
-    const { data: credentialList, error: credentialListError } = useSWR(
-      credentialListKey,
-      () =>
-        legacyCredentials.getCredentialList(
-          credentialListClient,
-          auth,
-          selectedOrgID!
-        )
-    );
+  const { data: credentialList, error: credentialListError } = useSWR(
+    credentialListKey,
+    () =>
+      legacyCredentials.getCredentialList(
+        credentialListClient,
+        auth,
+        selectedOrgID!
+      )
+  );
 
-    useEffect(() => {
-      if (credentialListError) {
-        new FlashMessage(
-          `Could not fetch provider-specific credentials for organization ${orgId}`,
-          messageType.ERROR,
-          messageTTL.LONG,
-          extractErrorMessage(credentialListError)
-        );
+  useEffect(() => {
+    if (credentialListError) {
+      new FlashMessage(
+        `Could not fetch provider-specific credentials for organization ${orgId}`,
+        messageType.ERROR,
+        messageTTL.LONG,
+        extractErrorMessage(credentialListError)
+      );
 
-        ErrorReporter.getInstance().notify(credentialListError);
-      }
-    }, [credentialListError, orgId]);
+      ErrorReporter.getInstance().notify(credentialListError);
+    }
+  }, [credentialListError, orgId]);
 
-    const credentialAccountID = getCredentialsAccountID(credentialList?.items);
-    const accountID = credentialListKey
-      ? credentialAccountID
-      : getProviderClusterAccountID(providerCluster);
-    const accountIDPath = getClusterAccountIDPath(cluster, accountID);
+  const credentialAccountID = getCredentialsAccountID(credentialList?.items);
+  const accountID = credentialListKey
+    ? credentialAccountID
+    : getProviderClusterAccountID(providerCluster);
+  const accountIDPath = getClusterAccountIDPath(cluster, accountID);
 
-    const region = getProviderClusterLocation(providerCluster);
+  const region = getProviderClusterLocation(providerCluster);
 
-    return (
-      <ClusterDetailWidget
-        title='Provider'
-        inline={true}
-        contentProps={{
-          direction: 'row',
-          gap: 'xsmall',
-          wrap: true,
-          align: 'center',
-        }}
-        {...props}
+  return (
+    <ClusterDetailWidget
+      title='Provider'
+      inline={true}
+      contentProps={{
+        direction: 'row',
+        gap: 'xsmall',
+        wrap: true,
+        align: 'center',
+      }}
+      {...props}
+    >
+      <OptionalValue value={getClusterRegionLabel(cluster)} loaderWidth={85}>
+        {(value) => <Text>{value}</Text>}
+      </OptionalValue>
+      <OptionalValue value={region} loaderWidth={80}>
+        {(value) => (
+          <Text>
+            <code>{value}</code>
+          </Text>
+        )}
+      </OptionalValue>
+      <StyledDot />
+      <OptionalValue value={getClusterAccountIDLabel(cluster)}>
+        {(value) => <Text>{value}</Text>}
+      </OptionalValue>
+      <OptionalValue
+        value={accountID}
+        loaderWidth={300}
+        replaceEmptyValue={false}
       >
-        <OptionalValue value={getClusterRegionLabel(cluster)} loaderWidth={85}>
-          {(value) => <Text>{value}</Text>}
-        </OptionalValue>
-        <OptionalValue value={region} loaderWidth={80}>
-          {(value) => (
-            <Text>
+        {(value) =>
+          value === '' ? (
+            <NotAvailable />
+          ) : (
+            <StyledLink
+              color='text-weak'
+              href={accountIDPath}
+              rel='noopener noreferrer'
+              target='_blank'
+            >
               <code>{value}</code>
-            </Text>
-          )}
-        </OptionalValue>
-        <StyledDot />
-        <OptionalValue value={getClusterAccountIDLabel(cluster)}>
-          {(value) => <Text>{value}</Text>}
-        </OptionalValue>
-        <OptionalValue
-          value={accountID}
-          loaderWidth={300}
-          replaceEmptyValue={false}
-        >
-          {(value) =>
-            value === '' ? (
-              <NotAvailable />
-            ) : (
-              <StyledLink
-                color='text-weak'
-                href={accountIDPath}
-                rel='noopener noreferrer'
-                target='_blank'
-              >
-                <code>{value}</code>
-                <i
-                  className='fa fa-open-in-new'
-                  aria-hidden={true}
-                  role='presentation'
-                />
-              </StyledLink>
-            )
-          }
-        </OptionalValue>
-      </ClusterDetailWidget>
-    );
-  };
+              <i
+                className='fa fa-open-in-new'
+                aria-hidden={true}
+                role='presentation'
+              />
+            </StyledLink>
+          )
+        }
+      </OptionalValue>
+    </ClusterDetailWidget>
+  );
+};
 
 export default ClusterDetailWidgetProvider;

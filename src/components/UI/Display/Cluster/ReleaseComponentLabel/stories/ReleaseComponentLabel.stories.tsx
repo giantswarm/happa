@@ -3,8 +3,9 @@ import React, { ComponentPropsWithoutRef } from 'react';
 
 import ReleaseComponentLabel from '..';
 
-const Template: Story<ComponentPropsWithoutRef<typeof ReleaseComponentLabel>> =
-  (args) => <ReleaseComponentLabel name={args.name} {...args} />;
+const Template: Story<
+  ComponentPropsWithoutRef<typeof ReleaseComponentLabel>
+> = (args) => <ReleaseComponentLabel name={args.name} {...args} />;
 
 export const Added = Template.bind({});
 Added.args = {
