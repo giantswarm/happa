@@ -34,14 +34,18 @@ const AddClusterLabelButton: React.FC<IAddClusterLabelButtonProps> = ({
       onClick={onClick}
       {...props}
     >
-      <Text margin={{ right: 'xxsmall' }} size='21px' color='text-weak'>
+      <Text
+        margin={{ right: 'xxsmall' }}
+        size='21px'
+        color='label-background-bright'
+      >
         <i
           className='fa fa-add-circle'
           role='presentation'
           aria-hidden='true'
         />
       </Text>
-      <Text size='14px' alignSelf='center' color='text-weak'>
+      <Text size='14px' alignSelf='center' color='label-background-bright'>
         Add
       </Text>
     </StyledBox>

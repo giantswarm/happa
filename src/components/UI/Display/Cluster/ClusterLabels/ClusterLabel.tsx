@@ -25,7 +25,7 @@ const StyledAnchor = styled(Anchor)`
 
 const StyledLabelBox = styled(Box)`
   > * {
-    color: ${({ theme }) => theme.colors.white5};
+    color: ${({ theme }) => theme.colors.white3};
   }
 `;
 
