@@ -10,7 +10,7 @@ import {
   AccessControlSubjectTypes,
   IAccessControlPermissions,
   IAccessControlRoleItem,
-  IAccessControlServiceAccount,
+  IAccessControlRoleSubjectStatus,
 } from './types';
 
 export function formatManagedBy(managedBy?: string): string {
@@ -26,9 +26,10 @@ interface IAccessControlRoleDetailProps
   onAdd: (
     type: AccessControlSubjectTypes,
     names: string[]
-  ) => Promise<IAccessControlServiceAccount[]>;
+  ) => Promise<IAccessControlRoleSubjectStatus[]>;
   onDelete: (type: AccessControlSubjectTypes, name: string) => Promise<void>;
   activeRole?: IAccessControlRoleItem;
+  isLoading?: boolean;
 }
 
 const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
@@ -37,13 +38,14 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
   activeRole,
   onAdd,
   onDelete,
+  isLoading,
   ...props
 }) => {
   return (
     <Box role='main' aria-label='Role details' {...props}>
-      {!activeRole && <AccessControlRoleDetailLoadingPlaceholder />}
+      {isLoading && <AccessControlRoleDetailLoadingPlaceholder />}
 
-      {activeRole && (
+      {!isLoading && activeRole && (
         <>
           <Box>
             <Heading level={4}>{activeRole.name}</Heading>

@@ -40,6 +40,7 @@ interface IAccessControlSubjectSetProps
   isAdding?: boolean;
   isLoading?: boolean;
   inputSuggestions?: string[];
+  onValidate?: (values: string[]) => string;
 }
 
 const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
@@ -52,6 +53,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
   isAdding,
   isLoading,
   inputSuggestions,
+  onValidate,
   ...props
 }) => {
   const [errorMessage, setErrorMessage] = useState('');
@@ -81,6 +83,10 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
       return `Subject '${duplicatedNames[0]}' already exists.`;
     } else if (duplicatedNames.length > 1) {
       return `Subjects '${duplicatedNames.join(`', '`)}' already exist.`;
+    }
+
+    if (onValidate) {
+      return onValidate(values);
     }
 
     return '';
@@ -114,7 +120,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
         </React.Fragment>
       ))}
 
-      {permissions.canAdd && (
+      {permissions.canBind && (
         <AccessControlSubjectAddForm
           margin={{ right: 'small', bottom: 'small' }}
           isAdding={isAdding}

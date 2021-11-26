@@ -3,9 +3,12 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { getResource } from '../generic/getResource';
-import { IClusterRoleList } from './types';
+import { ClusterRole, IClusterRoleList } from './types';
 
-export function getClusterRoleList(client: IHttpClient, auth: IOAuth2Provider) {
+export async function getClusterRoleList(
+  client: IHttpClient,
+  auth: IOAuth2Provider
+) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'rbac.authorization.k8s.io/v1',
@@ -17,7 +20,17 @@ export function getClusterRoleList(client: IHttpClient, auth: IOAuth2Provider) {
     },
   });
 
-  return getResource<IClusterRoleList>(client, auth, url.toString());
+  const list = await getResource<IClusterRoleList>(
+    client,
+    auth,
+    url.toString()
+  );
+  for (const item of list.items) {
+    item.kind = ClusterRole;
+    item.apiVersion = 'rbac.authorization.k8s.io/v1';
+  }
+
+  return list;
 }
 
 export function getClusterRoleListKey() {

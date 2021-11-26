@@ -4,7 +4,6 @@ import produce from 'immer';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessControlDescription';
@@ -14,12 +13,12 @@ import * as ui from 'UI/Display/MAPI/AccessControl/types';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
+import { usePermissionsForAccessControl } from '../permissions/usePermissionsForAccessControl';
 import BindRolesToSubjectsGuide from './guides/BindRolesToSubjectsGuide';
 import InspectRoleGuide from './guides/InspectRoleGuide';
 import ListRolesGuide from './guides/ListRolesGuide';
 import {
   appendSubjectsToRoleItem,
-  computePermissions,
   createRoleBindingWithSubjects,
   deleteSubjectFromRole,
   ensureServiceAccount,
@@ -38,13 +37,19 @@ const AccessControl: React.FC<IAccessControlProps> = ({
   organizationNamespace,
   ...props
 }) => {
+  const provider = window.config.info.general.provider;
+  const permissions = usePermissionsForAccessControl(
+    provider,
+    organizationNamespace
+  );
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
-  const { data, mutate, error } = useSWR<
+  const { data, mutate, error, isValidating } = useSWR<
     ui.IAccessControlRoleItem[],
     GenericResponseError
-  >(getRoleItemsKey(organizationNamespace), () =>
-    getRoleItems(clientFactory, auth, organizationNamespace)
+  >(getRoleItemsKey(permissions, organizationNamespace), () =>
+    getRoleItems(clientFactory, auth, permissions, organizationNamespace)
   );
 
   useEffect(() => {
@@ -59,6 +64,12 @@ const AccessControl: React.FC<IAccessControlProps> = ({
     [data, activeRoleName]
   );
 
+  const rolesIsLoading =
+    typeof data === 'undefined' && typeof error === 'undefined' && isValidating;
+
+  const activeRoleIsLoading =
+    rolesIsLoading && typeof activeRole === 'undefined';
+
   useLayoutEffect(() => {
     if (!activeRole && data && data.length > 0) {
       setActiveRoleName(data[0].name);
@@ -72,10 +83,23 @@ const AccessControl: React.FC<IAccessControlProps> = ({
     try {
       if (!activeRole || !data) return Promise.resolve([]);
 
-      const creationRequests = names.map((name) =>
-        ensureServiceAccount(clientFactory(), auth, name, organizationNamespace)
-      );
-      const serviceAccountStatuses = await Promise.all(creationRequests);
+      let subjectStatuses: ui.IAccessControlRoleSubjectStatus[] = [];
+      if (type === ui.AccessControlSubjectTypes.ServiceAccount) {
+        const creationRequests = names.map((name) =>
+          ensureServiceAccount(
+            clientFactory(),
+            auth,
+            name,
+            organizationNamespace
+          )
+        );
+        subjectStatuses = await Promise.all(creationRequests);
+      } else {
+        subjectStatuses = names.map((n) => ({
+          name: n,
+          status: ui.AccessControlRoleSubjectStatus.Bound,
+        }));
+      }
 
       const newRoleBinding = await createRoleBindingWithSubjects(
         clientFactory,
@@ -96,7 +120,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
       }, data);
       mutate(newData, false);
 
-      return Promise.resolve(serviceAccountStatuses);
+      return Promise.resolve(subjectStatuses);
     } catch (err) {
       ErrorReporter.getInstance().notify(err as Error);
 
@@ -152,8 +176,6 @@ const AccessControl: React.FC<IAccessControlProps> = ({
     }
   };
 
-  const permissions = useSelector(computePermissions);
-
   return (
     <DocumentTitle title={`Access control | ${organizationName}`}>
       <Box {...props}>
@@ -168,7 +190,8 @@ const AccessControl: React.FC<IAccessControlProps> = ({
               shrink: 1,
             }}
             basis='1/4'
-            roles={data}
+            roles={data ?? []}
+            isLoading={rolesIsLoading}
             activeRoleName={activeRoleName}
             setActiveRoleName={setActiveRoleName}
             errorMessage={extractErrorMessage(error)}
@@ -181,6 +204,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
             }}
             pad={{ left: 'medium', right: 'none' }}
             activeRole={activeRole}
+            isLoading={activeRoleIsLoading}
             onAdd={handleAdd}
             onDelete={handleDelete}
             namespace={organizationNamespace}

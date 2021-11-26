@@ -116,7 +116,12 @@ const AccessControlSubjectAddForm: React.FC<IAccessControlSubjectAddFormProps> =
     return (
       <Box {...props}>
         {isAdding ? (
-          <Box direction='row' gap='small' align='center'>
+          <Box
+            direction='row'
+            gap='small'
+            align='center'
+            width={{ max: 'medium' }}
+          >
             <Keyboard onEsc={handleOnEsc}>
               <form onSubmit={handleSubmit} aria-label='Subjects to add'>
                 <TextInput

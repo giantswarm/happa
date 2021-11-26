@@ -44,21 +44,27 @@ export interface IAccessControlRoleItem {
 }
 
 export interface IAccessControlSubjectPermissions {
-  canAdd: boolean;
+  canCreate: boolean;
+  canBind: boolean;
   canDelete: boolean;
   canList: boolean;
 }
 
+export interface IAccessControlRolePermissions {
+  canList: boolean;
+}
+
 export interface IAccessControlPermissions {
+  roles: Record<string, IAccessControlRolePermissions>;
   subjects: Record<AccessControlSubjectTypes, IAccessControlSubjectPermissions>;
 }
 
 export enum AccessControlRoleSubjectStatus {
   Created = 'Created',
-  Updated = 'Updated',
+  Bound = 'Bound',
 }
 
-export interface IAccessControlServiceAccount {
+export interface IAccessControlRoleSubjectStatus {
   name: string;
   status: AccessControlRoleSubjectStatus;
 }

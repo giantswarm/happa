@@ -5,19 +5,30 @@ import AccessControlRoleDetail from '../AccessControlRoleDetail';
 import { AccessControlSubjectTypes, IAccessControlPermissions } from '../types';
 
 const defaultPermissions: IAccessControlPermissions = {
+  roles: {
+    '': {
+      canList: true,
+    },
+    'org-test': {
+      canList: true,
+    },
+  },
   subjects: {
     [AccessControlSubjectTypes.Group]: {
-      canAdd: true,
+      canCreate: true,
+      canBind: true,
       canDelete: true,
       canList: true,
     },
     [AccessControlSubjectTypes.User]: {
-      canAdd: true,
+      canCreate: true,
+      canBind: true,
       canDelete: true,
       canList: true,
     },
     [AccessControlSubjectTypes.ServiceAccount]: {
-      canAdd: true,
+      canCreate: true,
+      canBind: true,
       canDelete: true,
       canList: true,
     },
@@ -97,7 +108,7 @@ describe('AccessControlRoleDetail', () => {
     const { rerender } = renderWithStore(AccessControlRoleDetail, {
       namespace: 'org-test',
       permissions: defaultPermissions,
-      activeRole: undefined,
+      isLoading: true,
       onAdd: jest.fn(),
       onDelete: jest.fn(),
     });
