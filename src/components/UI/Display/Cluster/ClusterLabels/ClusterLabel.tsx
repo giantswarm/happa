@@ -73,20 +73,18 @@ const ClusterLabel: React.FC<IClusterLabelProps> = ({
       align='stretch'
       border={{ color: 'label-background', size: 'xsmall' }}
       round='large'
+      onClick={onClick}
+      focusIndicator={false}
+      tabIndex={0}
+      aria-label={`Label ${label} with value ${value}`}
+      role='button'
       {...props}
     >
       <Keyboard onSpace={onClick} onEnter={onClick}>
         <TooltipContainer
           content={<StyledTooltip>Click to edit label</StyledTooltip>}
         >
-          <Box
-            direction='row'
-            focusIndicator={false}
-            onClick={onClick}
-            tabIndex={0}
-            aria-label={`Label ${label} with value ${value}`}
-            role='button'
-          >
+          <Box direction='row'>
             <StyledLabelBox
               className='cluster-label__label'
               justify='start'
