@@ -3,7 +3,7 @@ import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ValidationError from 'UI/Display/Cluster/ClusterLabels/ValidationError';
-import { Tooltip } from 'UI/Display/Tooltip';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import ValueLabel from 'UI/Display/ValueLabel';
 import TextInput from 'UI/Inputs/TextInput';
 import useValidatingInternalValue from 'utils/hooks/useValidatingInternalValue';
@@ -71,6 +71,11 @@ const Editable = styled.span<{ allowInteraction?: boolean }>`
   cursor: ${({ allowInteraction }) =>
     allowInteraction ? 'pointer' : 'default'};
   opacity: ${({ allowInteraction }) => (allowInteraction ? '1' : '0.6')};
+`;
+
+// This is to make the "Click to edit label" tooltip not appear above the label editing tooltip
+const StyledTooltip = styled(Tooltip)`
+  z-index: 1069 !important;
 `;
 
 const EditLabelTooltip: FC<IEditLabelTooltip> = ({
@@ -160,18 +165,23 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
         </Button>
       ) : (
         <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
-          <StyledValueLabel
-            onClick={open}
-            label={
-              <Editable allowInteraction={allowInteraction}>{label}</Editable>
-            }
-            value={
-              <Editable allowInteraction={allowInteraction}>{value}</Editable>
-            }
-            tabIndex={0}
-            aria-label={`Label ${label} with value ${value}`}
-            role='button'
-          />
+          <TooltipContainer
+            target={divElement}
+            content={<StyledTooltip>Click to edit label</StyledTooltip>}
+          >
+            <StyledValueLabel
+              onClick={open}
+              label={
+                <Editable allowInteraction={allowInteraction}>{label}</Editable>
+              }
+              value={
+                <Editable allowInteraction={allowInteraction}>{value}</Editable>
+              }
+              tabIndex={0}
+              aria-label={`Label ${label} with value ${value}`}
+              role='button'
+            />
+          </TooltipContainer>
         </Keyboard>
       )}
       {currentlyEditing && (

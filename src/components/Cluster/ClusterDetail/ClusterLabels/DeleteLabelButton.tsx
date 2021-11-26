@@ -9,7 +9,7 @@ import React, {
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import StyledDeleteButton from 'UI/Display/Cluster/ClusterLabels/DeleteLabelButton';
-import { Tooltip } from 'UI/Display/Tooltip';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 const DeleteLabelButtonWrapper = styled.div`
   display: inline-block;
@@ -21,6 +21,11 @@ const DeleteLabelTooltipInner = styled.div`
   span {
     margin-right: 10px;
   }
+`;
+
+// This is to make the "Delete this label" tooltip not appear above the label deletion tooltip
+const StyledTooltip = styled(Tooltip)`
+  z-index: 1069 !important;
 `;
 
 interface IDeleteLabelButtonProps
@@ -47,6 +52,14 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
     onOpen(isOpen);
   };
 
+  const handleDelete = (
+    e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
+  ) => {
+    e.stopPropagation();
+    setIsOpen(true);
+    onOpen(isOpen);
+  };
+
   useEffect(() => {
     /**
      * Focus the cancel button after the confirmation is opened and
@@ -65,16 +78,18 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
 
   return (
     <DeleteLabelButtonWrapper ref={divElement}>
-      <StyledDeleteButton
-        disabled={!allowInteraction}
-        onClick={() => {
-          setIsOpen(true);
-          onOpen(isOpen);
-        }}
-        {...restProps}
+      <TooltipContainer
+        target={divElement}
+        content={<StyledTooltip>Delete this label</StyledTooltip>}
       >
-        &times;
-      </StyledDeleteButton>
+        <StyledDeleteButton
+          disabled={!allowInteraction}
+          onClick={handleDelete}
+          {...restProps}
+        >
+          &times;
+        </StyledDeleteButton>
+      </TooltipContainer>
       {isOpen && (
         <Tooltip
           id='delete-label'
