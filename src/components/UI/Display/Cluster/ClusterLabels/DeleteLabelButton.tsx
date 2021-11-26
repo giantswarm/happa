@@ -30,7 +30,13 @@ const StyledTooltip = styled(Tooltip)`
 `;
 
 const DeleteLabelButton: FC<IButtonProps> = (props) => (
-  <TooltipContainer content={<StyledTooltip>Delete this label</StyledTooltip>}>
+  <TooltipContainer
+    content={
+      <StyledTooltip margin={{ bottom: '1px' }}>
+        Delete this label
+      </StyledTooltip>
+    }
+  >
     <StyledAnchor size='large' tabIndex={0} {...props}>
       <i className='fa fa-close' role='presentation' title='Delete' />
     </StyledAnchor>

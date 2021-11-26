@@ -91,7 +91,11 @@ const ClusterLabel: React.FC<IClusterLabelProps> = ({
     >
       <Keyboard onSpace={onClick} onEnter={onClick}>
         <TooltipContainer
-          content={<StyledTooltip>Click to edit label</StyledTooltip>}
+          content={
+            <StyledTooltip margin={{ left: '19px', bottom: '1px' }}>
+              Click to edit label
+            </StyledTooltip>
+          }
         >
           <Box direction='row'>
             <StyledLabelBox
