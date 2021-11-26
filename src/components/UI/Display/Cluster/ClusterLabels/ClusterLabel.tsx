@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 const StyledAnchor = styled(Anchor)`
+  color: ${({ theme }) => theme.colors.darkBlueLighter4};
+
   :focus {
     outline: 0;
   }
@@ -14,6 +16,10 @@ const StyledAnchor = styled(Anchor)`
 
   i:focus {
     outline: 0;
+  }
+
+  :hover {
+    color: ${({ theme }) => theme.colors.darkBlueDarker2};
   }
 `;
 
@@ -69,6 +75,7 @@ const ClusterLabel: React.FC<IClusterLabelProps> = ({
   return (
     <StyledBox
       height='30px'
+      width='fit-content'
       direction='row'
       align='stretch'
       border={{ color: 'label-background', size: 'xsmall' }}
@@ -120,6 +127,7 @@ const ClusterLabel: React.FC<IClusterLabelProps> = ({
           ) : (
             <StyledAnchor
               size='large'
+              margin={{ bottom: 'xsmall' }}
               color='background-light'
               onClick={onRemove}
               tabIndex={0}
