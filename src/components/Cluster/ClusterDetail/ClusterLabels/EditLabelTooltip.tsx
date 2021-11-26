@@ -62,6 +62,7 @@ const Buttons = styled(GridCell)`
 `;
 
 const Editable = styled.span<{ allowInteraction?: boolean }>`
+  font-size: 14px;
   cursor: ${({ allowInteraction }) =>
     allowInteraction ? 'pointer' : 'default'};
   opacity: ${({ allowInteraction }) => (allowInteraction ? '1' : '0.6')};

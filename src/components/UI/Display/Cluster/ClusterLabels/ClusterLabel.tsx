@@ -68,7 +68,7 @@ const ClusterLabel: React.FC<IClusterLabelProps> = ({
 }) => {
   return (
     <StyledBox
-      height='32px'
+      height='30px'
       direction='row'
       align='stretch'
       border={{ color: 'label-background', size: 'xsmall' }}
@@ -98,7 +98,7 @@ const ClusterLabel: React.FC<IClusterLabelProps> = ({
               className='cluster-label__key'
               justify='start'
               pad={{ left: '15px', vertical: 'xxsmall' }}
-              background='text-weak'
+              background='label-background-bright'
             >
               {typeof value === 'string' ? <Text>{value}</Text> : value}
             </StyledValueBox>
@@ -110,7 +110,7 @@ const ClusterLabel: React.FC<IClusterLabelProps> = ({
           className='cluster-label__delete'
           height='100%'
           justify='center'
-          background='text-weak'
+          background='label-background-bright'
           pad={{ horizontal: 'small', top: 'xsmall' }}
           round={{ size: 'large', corner: 'right' }}
         >
