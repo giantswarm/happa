@@ -3,12 +3,13 @@ import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import CurrencyInput from '..';
 
-export const Currencies: Story<ComponentPropsWithoutRef<typeof CurrencyInput>> =
-  (args) => {
-    const [value, setValue] = useState(args.value);
+export const Currencies: Story<
+  ComponentPropsWithoutRef<typeof CurrencyInput>
+> = (args) => {
+  const [value, setValue] = useState(args.value);
 
-    return <CurrencyInput {...args} value={value} onChange={setValue} />;
-  };
+  return <CurrencyInput {...args} value={value} onChange={setValue} />;
+};
 
 Currencies.args = {
   value: 1,

@@ -10,18 +10,19 @@ interface IReleaseDetailsModalSectionProps
   title?: string;
 }
 
-const ReleaseDetailsModalSection: React.FC<IReleaseDetailsModalSectionProps> =
-  ({ title, children, ...props }) => {
-    return (
-      <Wrapper {...props}>
-        {title && (
-          <h5>
-            <strong>{title}</strong>
-          </h5>
-        )}
-        {children}
-      </Wrapper>
-    );
-  };
+const ReleaseDetailsModalSection: React.FC<
+  IReleaseDetailsModalSectionProps
+> = ({ title, children, ...props }) => {
+  return (
+    <Wrapper {...props}>
+      {title && (
+        <h5>
+          <strong>{title}</strong>
+        </h5>
+      )}
+      {children}
+    </Wrapper>
+  );
+};
 
 export default ReleaseDetailsModalSection;

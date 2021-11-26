@@ -12,39 +12,40 @@ interface IClusterDetailDeleteActionClusterNameProps
   onContinue: () => void;
 }
 
-const ClusterDetailDeleteActionClusterName: React.FC<IClusterDetailDeleteActionClusterNameProps> =
-  ({ variant, value, onChange, onContinue, ...props }) => {
-    const handleFormSubmit = (e: React.KeyboardEvent<HTMLElement>) => {
-      e.preventDefault();
+const ClusterDetailDeleteActionClusterName: React.FC<
+  IClusterDetailDeleteActionClusterNameProps
+> = ({ variant, value, onChange, onContinue, ...props }) => {
+  const handleFormSubmit = (e: React.KeyboardEvent<HTMLElement>) => {
+    e.preventDefault();
 
-      onContinue();
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(e.target.value);
-    };
-
-    const blockEvent = (e: React.SyntheticEvent) => e.preventDefault();
-
-    return (
-      <Box direction='row' gap='small' align='baseline' {...props}>
-        <Text>If yes, please enter the cluster {variant}:</Text>
-        <Keyboard onEnter={handleFormSubmit}>
-          <TextInput
-            width='xxsmall'
-            autoFocus={true}
-            onChange={handleChange}
-            value={value}
-            autoComplete='false'
-            autoCorrect='false'
-            autoCapitalize='false'
-            aria-label={`Cluster ${variant}`}
-            onPaste={blockEvent}
-            onDrop={blockEvent}
-          />
-        </Keyboard>
-      </Box>
-    );
+    onContinue();
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  };
+
+  const blockEvent = (e: React.SyntheticEvent) => e.preventDefault();
+
+  return (
+    <Box direction='row' gap='small' align='baseline' {...props}>
+      <Text>If yes, please enter the cluster {variant}:</Text>
+      <Keyboard onEnter={handleFormSubmit}>
+        <TextInput
+          width='xxsmall'
+          autoFocus={true}
+          onChange={handleChange}
+          value={value}
+          autoComplete='false'
+          autoCorrect='false'
+          autoCapitalize='false'
+          aria-label={`Cluster ${variant}`}
+          onPaste={blockEvent}
+          onDrop={blockEvent}
+        />
+      </Keyboard>
+    </Box>
+  );
+};
 
 export default ClusterDetailDeleteActionClusterName;

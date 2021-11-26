@@ -11,18 +11,19 @@ interface IWorkerNodesCreateNodePoolNameProps
       'onChange' | 'id'
     > {}
 
-const WorkerNodesCreateNodePoolName: React.FC<IWorkerNodesCreateNodePoolNameProps> =
-  ({ id, nodePool, onChange, readOnly, disabled, ...props }) => {
-    return (
-      <InputGroup htmlFor={id} label='Name' {...props}>
-        <TextInput
-          value={nodePool.metadata.name}
-          id={id}
-          readOnly={readOnly}
-          disabled={disabled}
-        />
-      </InputGroup>
-    );
-  };
+const WorkerNodesCreateNodePoolName: React.FC<
+  IWorkerNodesCreateNodePoolNameProps
+> = ({ id, nodePool, onChange, readOnly, disabled, ...props }) => {
+  return (
+    <InputGroup htmlFor={id} label='Name' {...props}>
+      <TextInput
+        value={nodePool.metadata.name}
+        id={id}
+        readOnly={readOnly}
+        disabled={disabled}
+      />
+    </InputGroup>
+  );
+};
 
 export default WorkerNodesCreateNodePoolName;

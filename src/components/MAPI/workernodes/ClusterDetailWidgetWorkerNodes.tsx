@@ -52,155 +52,156 @@ interface IClusterDetailWidgetWorkerNodesProps
   cluster?: capiv1alpha3.ICluster;
 }
 
-const ClusterDetailWidgetWorkerNodes: React.FC<IClusterDetailWidgetWorkerNodesProps> =
-  ({ cluster, ...props }) => {
-    const { clusterId, orgId } = useParams<{
-      clusterId: string;
-      orgId: string;
-    }>();
+const ClusterDetailWidgetWorkerNodes: React.FC<
+  IClusterDetailWidgetWorkerNodesProps
+> = ({ cluster, ...props }) => {
+  const { clusterId, orgId } = useParams<{
+    clusterId: string;
+    orgId: string;
+  }>();
 
-    const clientFactory = useHttpClientFactory();
-    const auth = useAuthProvider();
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
 
-    const { data: nodePoolList, error: nodePoolListError } = useSWR(
-      fetchNodePoolListForClusterKey(cluster),
-      () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  const { data: nodePoolList, error: nodePoolListError } = useSWR(
+    fetchNodePoolListForClusterKey(cluster),
+    () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  );
+
+  useEffect(() => {
+    if (nodePoolListError) {
+      ErrorReporter.getInstance().notify(nodePoolListError);
+    }
+  }, [nodePoolListError]);
+
+  const { data: providerNodePools, error: providerNodePoolsError } = useSWR(
+    fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items),
+    () =>
+      fetchProviderNodePoolsForNodePools(
+        clientFactory,
+        auth,
+        nodePoolList!.items
+      )
+  );
+
+  useEffect(() => {
+    if (providerNodePoolsError) {
+      ErrorReporter.getInstance().notify(providerNodePoolsError);
+    }
+  }, [providerNodePoolsError]);
+
+  const machineTypes = useRef(getMachineTypes());
+
+  const nodePoolsError = nodePoolListError ?? providerNodePoolsError;
+
+  const workerNodePoolsCount = nodePoolListError
+    ? -1
+    : nodePoolList?.items.length;
+  const workerNodesCount = nodePoolsError
+    ? -1
+    : getWorkerNodesCount(nodePoolList?.items);
+
+  const nodePoolsWithProviderNodePools = useMemo(() => {
+    if (!nodePoolList?.items || !providerNodePools) return undefined;
+
+    return mapNodePoolsToProviderNodePools(
+      nodePoolList.items,
+      providerNodePools
     );
+  }, [nodePoolList?.items, providerNodePools]);
 
-    useEffect(() => {
-      if (nodePoolListError) {
-        ErrorReporter.getInstance().notify(nodePoolListError);
-      }
-    }, [nodePoolListError]);
-
-    const { data: providerNodePools, error: providerNodePoolsError } = useSWR(
-      fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items),
-      () =>
-        fetchProviderNodePoolsForNodePools(
-          clientFactory,
-          auth,
-          nodePoolList!.items
-        )
-    );
-
-    useEffect(() => {
-      if (providerNodePoolsError) {
-        ErrorReporter.getInstance().notify(providerNodePoolsError);
-      }
-    }, [providerNodePoolsError]);
-
-    const machineTypes = useRef(getMachineTypes());
-
-    const nodePoolsError = nodePoolListError ?? providerNodePoolsError;
-
-    const workerNodePoolsCount = nodePoolListError
-      ? -1
-      : nodePoolList?.items.length;
-    const workerNodesCount = nodePoolsError
-      ? -1
-      : getWorkerNodesCount(nodePoolList?.items);
-
-    const nodePoolsWithProviderNodePools = useMemo(() => {
-      if (!nodePoolList?.items || !providerNodePools) return undefined;
-
-      return mapNodePoolsToProviderNodePools(
-        nodePoolList.items,
-        providerNodePools
+  const workerNodesCPU = nodePoolsError
+    ? -1
+    : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
+  const workerNodesMemory = nodePoolsError
+    ? -1
+    : getWorkerNodesMemory(
+        nodePoolsWithProviderNodePools,
+        machineTypes.current
       );
-    }, [nodePoolList?.items, providerNodePools]);
 
-    const workerNodesCPU = nodePoolsError
-      ? -1
-      : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
-    const workerNodesMemory = nodePoolsError
-      ? -1
-      : getWorkerNodesMemory(
-          nodePoolsWithProviderNodePools,
-          machineTypes.current
-        );
+  const hasNoNodePools =
+    typeof workerNodePoolsCount === 'number' && workerNodePoolsCount === 0;
 
-    const hasNoNodePools =
-      typeof workerNodePoolsCount === 'number' && workerNodePoolsCount === 0;
+  const workerNodesPath = useMemo(
+    () =>
+      RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail.WorkerNodes,
+        { orgId, clusterId }
+      ),
+    [clusterId, orgId]
+  );
 
-    const workerNodesPath = useMemo(
-      () =>
-        RoutePath.createUsablePath(
-          OrganizationsRoutes.Clusters.Detail.WorkerNodes,
-          { orgId, clusterId }
-        ),
-      [clusterId, orgId]
-    );
-
-    return (
-      <ClusterDetailWidget
-        title='Worker nodes'
-        contentProps={{
-          direction: 'row',
-          gap: 'small',
-          wrap: true,
-          justify: 'around',
-        }}
-        {...props}
-      >
-        {hasNoNodePools && (
-          <Box
-            fill={true}
-            direction='row'
-            pad={{ bottom: 'xsmall', right: 'xsmall' }}
-            justify='between'
-            align='end'
-          >
-            <Box>
-              <Text margin={{ bottom: 'small' }}>No node pools</Text>
-              <Text size='small'>Create node pools to run workloads.</Text>
-            </Box>
-            <StyledLink
-              to={{
-                pathname: workerNodesPath,
-                state: { hasNoNodePools: true },
-              }}
-            >
-              <Button
-                icon={
-                  <i
-                    className='fa fa-add-circle'
-                    role='presentation'
-                    aria-hidden='true'
-                  />
-                }
-                tabIndex={-1}
-              >
-                Add node pool
-              </Button>
-            </StyledLink>
+  return (
+    <ClusterDetailWidget
+      title='Worker nodes'
+      contentProps={{
+        direction: 'row',
+        gap: 'small',
+        wrap: true,
+        justify: 'around',
+      }}
+      {...props}
+    >
+      {hasNoNodePools && (
+        <Box
+          fill={true}
+          direction='row'
+          pad={{ bottom: 'xsmall', right: 'xsmall' }}
+          justify='between'
+          align='end'
+        >
+          <Box>
+            <Text margin={{ bottom: 'small' }}>No node pools</Text>
+            <Text size='small'>Create node pools to run workloads.</Text>
           </Box>
-        )}
+          <StyledLink
+            to={{
+              pathname: workerNodesPath,
+              state: { hasNoNodePools: true },
+            }}
+          >
+            <Button
+              icon={
+                <i
+                  className='fa fa-add-circle'
+                  role='presentation'
+                  aria-hidden='true'
+                />
+              }
+              tabIndex={-1}
+            >
+              Add node pool
+            </Button>
+          </StyledLink>
+        </Box>
+      )}
 
-        {!hasNoNodePools && (
-          <>
-            <ClusterDetailCounter
-              label='node pool'
-              pluralize={true}
-              value={workerNodePoolsCount}
-            />
-            <ClusterDetailCounter
-              label='node'
-              pluralize={true}
-              value={workerNodesCount}
-            />
-            <ClusterDetailCounter
-              label='CPU'
-              pluralize={true}
-              value={formatCPU(workerNodesCPU)}
-            />
-            <ClusterDetailCounter
-              label='GB RAM'
-              value={formatMemory(workerNodesMemory)}
-            />
-          </>
-        )}
-      </ClusterDetailWidget>
-    );
-  };
+      {!hasNoNodePools && (
+        <>
+          <ClusterDetailCounter
+            label='node pool'
+            pluralize={true}
+            value={workerNodePoolsCount}
+          />
+          <ClusterDetailCounter
+            label='node'
+            pluralize={true}
+            value={workerNodesCount}
+          />
+          <ClusterDetailCounter
+            label='CPU'
+            pluralize={true}
+            value={formatCPU(workerNodesCPU)}
+          />
+          <ClusterDetailCounter
+            label='GB RAM'
+            value={formatMemory(workerNodesMemory)}
+          />
+        </>
+      )}
+    </ClusterDetailWidget>
+  );
+};
 
 export default ClusterDetailWidgetWorkerNodes;

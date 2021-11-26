@@ -30,92 +30,91 @@ interface IClusterDetailAppListWidgetCatalogProps
   app?: applicationv1alpha1.IApp;
 }
 
-const ClusterDetailAppListWidgetCatalog: React.FC<IClusterDetailAppListWidgetCatalogProps> =
-  ({ app, ...props }) => {
-    const auth = useAuthProvider();
-    const clientFactory = useHttpClientFactory();
-    const { cache } = useSWRConfig();
+const ClusterDetailAppListWidgetCatalog: React.FC<
+  IClusterDetailAppListWidgetCatalogProps
+> = ({ app, ...props }) => {
+  const auth = useAuthProvider();
+  const clientFactory = useHttpClientFactory();
+  const { cache } = useSWRConfig();
 
-    const catalogNamespaceKey = app ? getCatalogNamespaceKey(app) : null;
+  const catalogNamespaceKey = app ? getCatalogNamespaceKey(app) : null;
 
-    const { data: catalogNamespace, error: catalogNamespaceError } = useSWR<
-      string | null,
-      GenericResponseError
-    >(catalogNamespaceKey, () =>
-      getCatalogNamespace(clientFactory, auth, cache, app!)
-    );
+  const { data: catalogNamespace, error: catalogNamespaceError } = useSWR<
+    string | null,
+    GenericResponseError
+  >(catalogNamespaceKey, () =>
+    getCatalogNamespace(clientFactory, auth, cache, app!)
+  );
 
-    useEffect(() => {
-      if (catalogNamespaceError) {
-        ErrorReporter.getInstance().notify(catalogNamespaceError);
-      }
-    }, [catalogNamespaceError]);
+  useEffect(() => {
+    if (catalogNamespaceError) {
+      ErrorReporter.getInstance().notify(catalogNamespaceError);
+    }
+  }, [catalogNamespaceError]);
 
-    const catalogClient = useRef(clientFactory());
-    const catalogKey = catalogNamespace
-      ? applicationv1alpha1.getCatalogKey(catalogNamespace, app!.spec.catalog)
-      : null;
+  const catalogClient = useRef(clientFactory());
+  const catalogKey = catalogNamespace
+    ? applicationv1alpha1.getCatalogKey(catalogNamespace, app!.spec.catalog)
+    : null;
 
-    const { data: catalog, error: catalogError } = useSWR<
-      applicationv1alpha1.ICatalog,
-      GenericResponseError
-    >(catalogKey, () =>
-      applicationv1alpha1.getCatalog(
-        catalogClient.current,
-        auth,
-        catalogNamespace!,
-        app!.spec.catalog
-      )
-    );
+  const { data: catalog, error: catalogError } = useSWR<
+    applicationv1alpha1.ICatalog,
+    GenericResponseError
+  >(catalogKey, () =>
+    applicationv1alpha1.getCatalog(
+      catalogClient.current,
+      auth,
+      catalogNamespace!,
+      app!.spec.catalog
+    )
+  );
 
-    useEffect(() => {
-      if (catalogError) {
-        const errorMessage = extractErrorMessage(catalogError);
+  useEffect(() => {
+    if (catalogError) {
+      const errorMessage = extractErrorMessage(catalogError);
 
-        new FlashMessage(
-          `There was a problem loading the app's catalog.`,
-          messageType.ERROR,
-          messageTTL.FOREVER,
-          errorMessage
-        );
+      new FlashMessage(
+        `There was a problem loading the app's catalog.`,
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
 
-        ErrorReporter.getInstance().notify(catalogError);
-      }
-    }, [catalogError]);
+      ErrorReporter.getInstance().notify(catalogError);
+    }
+  }, [catalogError]);
 
-    const catalogTitle = catalog
-      ? computeAppCatalogUITitle(catalog)
-      : undefined;
-    const isManaged = catalog ? isAppCatalogVisibleToUsers(catalog) : false;
+  const catalogTitle = catalog ? computeAppCatalogUITitle(catalog) : undefined;
+  const isManaged = catalog ? isAppCatalogVisibleToUsers(catalog) : false;
 
-    return (
-      <ClusterDetailAppListWidget
-        title='Catalog'
-        contentProps={{
-          direction: 'row',
-          gap: 'small',
-          wrap: true,
-          align: 'baseline',
-        }}
-        {...props}
-      >
-        <OptionalValue value={catalogTitle} loaderWidth={150}>
-          {(value) => <Text aria-label={`App catalog: ${value}`}>{value}</Text>}
-        </OptionalValue>
+  return (
+    <ClusterDetailAppListWidget
+      title='Catalog'
+      contentProps={{
+        direction: 'row',
+        gap: 'small',
+        wrap: true,
+        align: 'baseline',
+      }}
+      {...props}
+    >
+      <OptionalValue value={catalogTitle} loaderWidth={150}>
+        {(value) => <Text aria-label={`App catalog: ${value}`}>{value}</Text>}
+      </OptionalValue>
 
-        {isManaged && (
-          <Box
-            pad={{ horizontal: 'xsmall', vertical: 'none' }}
-            round='xxsmall'
-            background='#8dc163'
-          >
-            <CatalogType size='xsmall' color='background' weight='bold'>
-              managed
-            </CatalogType>
-          </Box>
-        )}
-      </ClusterDetailAppListWidget>
-    );
-  };
+      {isManaged && (
+        <Box
+          pad={{ horizontal: 'xsmall', vertical: 'none' }}
+          round='xxsmall'
+          background='#8dc163'
+        >
+          <CatalogType size='xsmall' color='background' weight='bold'>
+            managed
+          </CatalogType>
+        </Box>
+      )}
+    </ClusterDetailAppListWidget>
+  );
+};
 
 export default ClusterDetailAppListWidgetCatalog;

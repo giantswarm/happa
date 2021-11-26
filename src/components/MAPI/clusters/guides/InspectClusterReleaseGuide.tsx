@@ -22,71 +22,72 @@ interface IInspectClusterReleaseGuideProps
   releaseVersion: string;
 }
 
-const InspectClusterReleaseGuide: React.FC<IInspectClusterReleaseGuideProps> =
-  ({ clusterName, clusterNamespace, releaseVersion, ...props }) => {
-    const context = useSelector(getCurrentInstallationContextName);
+const InspectClusterReleaseGuide: React.FC<
+  IInspectClusterReleaseGuideProps
+> = ({ clusterName, clusterNamespace, releaseVersion, ...props }) => {
+  const context = useSelector(getCurrentInstallationContextName);
 
-    return (
-      <CLIGuide
-        title={`Inspect this cluster's release via the Management API`}
-        footer={
-          <CLIGuideAdditionalInfo
-            links={[
-              {
-                label: 'kubectl gs plugin installation',
-                href: docs.kubectlGSInstallationURL,
-                external: true,
-              },
-              {
-                label: 'Cluster CRD schema',
-                href: docs.crdSchemaURL(docs.crds.xk8sio.cluster),
-                external: true,
-              },
-              {
-                label: 'Release CRD schema',
-                href: docs.crdSchemaURL(docs.crds.giantswarmio.release),
-                external: true,
-              },
-              {
-                label: 'Management API introduction',
-                href: docs.managementAPIIntroduction,
-                external: true,
-              },
-            ]}
-          />
-        }
-        {...props}
-      >
-        <CLIGuideStepList>
-          <LoginGuideStep />
-          <CLIGuideStep
-            title='2. Find out which release version is used by this cluster'
-            command={makeKubectlGSCommand(
-              withContext(context),
-              withGetClusters({
-                name: clusterName,
-                namespace: clusterNamespace,
-                output: `jsonpath={.metadata.labels.release\\.giantswarm\\.io/version}`,
-              }),
-              withFormatting()
-            )}
-          >
-            <Text>
-              This should print out <code>{releaseVersion}</code>.
-            </Text>
-          </CLIGuideStep>
-          <CLIGuideStep
-            title='3. Get release details'
-            command={`kubectl --context ${context} describe release v${releaseVersion}`}
-          >
-            <Text>
-              <strong>Note:</strong> You will need the <code>v</code> prefix
-              appended to the version number.
-            </Text>
-          </CLIGuideStep>
-        </CLIGuideStepList>
-      </CLIGuide>
-    );
-  };
+  return (
+    <CLIGuide
+      title={`Inspect this cluster's release via the Management API`}
+      footer={
+        <CLIGuideAdditionalInfo
+          links={[
+            {
+              label: 'kubectl gs plugin installation',
+              href: docs.kubectlGSInstallationURL,
+              external: true,
+            },
+            {
+              label: 'Cluster CRD schema',
+              href: docs.crdSchemaURL(docs.crds.xk8sio.cluster),
+              external: true,
+            },
+            {
+              label: 'Release CRD schema',
+              href: docs.crdSchemaURL(docs.crds.giantswarmio.release),
+              external: true,
+            },
+            {
+              label: 'Management API introduction',
+              href: docs.managementAPIIntroduction,
+              external: true,
+            },
+          ]}
+        />
+      }
+      {...props}
+    >
+      <CLIGuideStepList>
+        <LoginGuideStep />
+        <CLIGuideStep
+          title='2. Find out which release version is used by this cluster'
+          command={makeKubectlGSCommand(
+            withContext(context),
+            withGetClusters({
+              name: clusterName,
+              namespace: clusterNamespace,
+              output: `jsonpath={.metadata.labels.release\\.giantswarm\\.io/version}`,
+            }),
+            withFormatting()
+          )}
+        >
+          <Text>
+            This should print out <code>{releaseVersion}</code>.
+          </Text>
+        </CLIGuideStep>
+        <CLIGuideStep
+          title='3. Get release details'
+          command={`kubectl --context ${context} describe release v${releaseVersion}`}
+        >
+          <Text>
+            <strong>Note:</strong> You will need the <code>v</code> prefix
+            appended to the version number.
+          </Text>
+        </CLIGuideStep>
+      </CLIGuideStepList>
+    </CLIGuide>
+  );
+};
 
 export default InspectClusterReleaseGuide;
