@@ -25,11 +25,15 @@ const EditLabelTooltipWrapper = styled.div`
   display: inline-block;
 `;
 
-const StyledValueLabel = styled(ValueLabel)`
+const StyledValueLabel = styled(ValueLabel)<{ allowInteraction?: boolean }>`
   margin-bottom: 0;
 
+  cursor: ${({ allowInteraction }) =>
+    allowInteraction ? 'pointer' : 'default'};
+
   :hover {
-    text-decoration: underline;
+    text-decoration: ${({ allowInteraction }) =>
+      allowInteraction ? 'underline' : 'none'};
     text-decoration-style: dotted;
   }
 `;
@@ -70,8 +74,6 @@ const Buttons = styled(GridCell)`
 `;
 
 const Editable = styled.span<{ allowInteraction?: boolean }>`
-  cursor: ${({ allowInteraction }) =>
-    allowInteraction ? 'pointer' : 'default'};
   opacity: ${({ allowInteraction }) => (allowInteraction ? '1' : '0.6')};
 `;
 
@@ -80,10 +82,15 @@ const StyledTooltip = styled(Tooltip)`
   z-index: 1069 !important;
 `;
 
-const LabelWrapper = styled(Box)`
+const LabelWrapper = styled(Box)<{ allowInteraction?: boolean }>`
   padding-right: 8px;
   border-radius: 5px;
   outline: 1px solid ${({ theme }) => theme.colors.shade5};
+
+  :hover {
+    pointer-events: ${({ allowInteraction }) =>
+      allowInteraction ? 'auto' : 'none'};
+  }
 `;
 
 const EditLabelTooltip: FC<IEditLabelTooltip> = ({
@@ -176,6 +183,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
           direction='row'
           align='center'
           margin={{ right: 'xsmall', vertical: 'xxsmall' }}
+          allowInteraction={allowInteraction}
         >
           <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
             <TooltipContainer
@@ -197,6 +205,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
                 tabIndex={0}
                 aria-label={`Label ${label} with value ${value}`}
                 role='button'
+                allowInteraction={allowInteraction}
                 outline={false}
               />
             </TooltipContainer>
