@@ -1,12 +1,8 @@
-{{ if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
 apiVersion: networking.k8s.io/v1
-{{ else }}
-apiVersion: networking.k8s.io/v1beta1
-{{ end }}
 kind: Ingress
 metadata:
   name: happaapi
-  namespace: default
+  namespace: giantswarm
   labels:
     app: happa
   annotations:
@@ -18,6 +14,7 @@ metadata:
 
     {{- if .Values.happaapi.letsencrypt }}
     kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-giantswarm"
     {{- end }}
 
     {{- if .Values.security.restrictAccess.api }}
@@ -32,15 +29,10 @@ spec:
       - path: /
         pathType: Prefix
         backend:
-{{ if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
           service:
             name: kubernetes
             port:
               number: 443
-{{ else }}
-          serviceName: kubernetes
-          servicePort: 443
-{{ end }}
   tls:
   - hosts:
     - {{ .Values.happaapi.host }}
