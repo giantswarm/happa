@@ -47,7 +47,6 @@ Simple.argTypes = {
       type: 'select',
     },
   },
-  content: { table: { disable: true } },
 };
 
 // import { Story } from '@storybook/react';
