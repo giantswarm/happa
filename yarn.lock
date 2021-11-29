@@ -3685,10 +3685,10 @@
   dependencies:
     "@types/color-name" "*"
 
-"@types/color-hash@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/color-hash/-/color-hash-1.0.1.tgz#92fb30a91bcdbf5fad1a99e4af2d5528313ea3fc"
-  integrity sha512-vCASMW58k1TVDTjc72mNXI4fz+EEgcXLhCuR8oix4W3wwlUtPli9LQ8OjDiA5/ENi/HhWUblF4ZdizmVGnY3dQ==
+"@types/color-hash@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/color-hash/-/color-hash-1.0.2.tgz#22aec4c488929804c875bd4ef6827499fce00151"
+  integrity sha512-QJCVXSVRse+mMvzWQ8vH6AcKxtqCgHPHf5abAdGn86DEeQdUpSJnKAeCa1+hZuohaUF3l4RhigC9akRx82Bwig==
 
 "@types/color-name@*":
   version "1.1.1"
