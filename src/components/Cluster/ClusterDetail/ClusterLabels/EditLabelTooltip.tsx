@@ -185,11 +185,11 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
           margin={{ right: 'xsmall', vertical: 'xxsmall' }}
           allowInteraction={allowInteraction}
         >
-          <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
-            <TooltipContainer
-              target={divElement}
-              content={<StyledTooltip>Click to edit label</StyledTooltip>}
-            >
+          <TooltipContainer
+            target={divElement}
+            content={<StyledTooltip>Click to edit label</StyledTooltip>}
+          >
+            <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
               <StyledValueLabel
                 onClick={open}
                 label={
@@ -202,14 +202,15 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
                     {value}
                   </Editable>
                 }
-                tabIndex={0}
-                aria-label={`Label ${label} with value ${value}`}
+                tabIndex={allowInteraction ? 0 : -1}
                 role='button'
+                aria-label={`Label ${label} with value ${value}`}
+                aria-disabled={!allowInteraction || currentlyEditing}
                 allowInteraction={allowInteraction}
                 outline={false}
               />
-            </TooltipContainer>
-          </Keyboard>
+            </Keyboard>
+          </TooltipContainer>
           <DeleteLabelButton
             allowInteraction={allowInteraction}
             onOpen={onOpen}
@@ -218,9 +219,8 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
             }}
             role='button'
             aria-label={`Delete '${label}' label`}
-          >
-            &times;
-          </DeleteLabelButton>
+            aria-disabled={!allowInteraction || currentlyEditing}
+          />
         </LabelWrapper>
       )}
       {currentlyEditing && (

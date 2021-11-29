@@ -26,7 +26,7 @@ const StyledAnchor = styled(Anchor)`
 `;
 
 const DeleteLabelButton: FC<IButtonProps> = (props) => (
-  <StyledAnchor size='large' tabIndex={0} {...props}>
+  <StyledAnchor size='large' {...props}>
     <i className='fa fa-close' role='presentation' title='Delete' />
   </StyledAnchor>
 );

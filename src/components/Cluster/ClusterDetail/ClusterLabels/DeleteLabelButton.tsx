@@ -82,13 +82,13 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
         target={divElement}
         content={<StyledTooltip>Delete this label</StyledTooltip>}
       >
-        <StyledDeleteButton
-          disabled={!allowInteraction}
-          onClick={handleDelete}
-          {...restProps}
-        >
-          &times;
-        </StyledDeleteButton>
+        <Keyboard onSpace={handleDelete} onEnter={handleDelete}>
+          <StyledDeleteButton
+            tabIndex={allowInteraction ? 0 : -1}
+            onClick={handleDelete}
+            {...restProps}
+          />
+        </Keyboard>
       </TooltipContainer>
       {isOpen && (
         <Tooltip
