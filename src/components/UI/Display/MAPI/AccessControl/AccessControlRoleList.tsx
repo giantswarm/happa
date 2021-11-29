@@ -29,11 +29,13 @@ interface IAccessControlRoleListProps
   activeRoleName: string;
   setActiveRoleName: (newName: string) => void;
   roles?: IAccessControlRoleItem[];
+  isLoading?: boolean;
   errorMessage?: string;
 }
 
 const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
   roles,
+  isLoading,
   activeRoleName,
   setActiveRoleName,
   errorMessage,
@@ -100,7 +102,7 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
             overflow={{ vertical: 'auto' }}
             pad='small'
           >
-            {!roles &&
+            {isLoading &&
               LOADING_COMPONENTS.map((idx) => (
                 <AccessControlRoleListItemLoadingPlaceholder
                   key={idx}
@@ -108,11 +110,16 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
                 />
               ))}
 
-            {roles && roles.length < 1 && <AccessControlRolePlaceholder />}
-
-            {roles && roles.length > 0 && filteredRoles.length < 1 && (
-              <AccessControlRoleSearchPlaceholder />
+            {!isLoading && roles && roles.length < 1 && (
+              <AccessControlRolePlaceholder />
             )}
+
+            {!isLoading &&
+              roles &&
+              roles.length > 0 &&
+              filteredRoles.length < 1 && (
+                <AccessControlRoleSearchPlaceholder />
+              )}
 
             <InfiniteScroll replace={true} items={filteredRoles} step={50}>
               {(role: IAccessControlRoleItem) => (

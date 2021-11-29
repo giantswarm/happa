@@ -13,13 +13,14 @@ const BetaLabel = styled.span`
 interface IReleaseDetailsModalUpgradeOptionsBetaLabelProps
   extends React.ComponentPropsWithoutRef<'span'> {}
 
-const ReleaseDetailsModalUpgradeOptionsBetaLabel: React.FC<IReleaseDetailsModalUpgradeOptionsBetaLabelProps> =
-  (props) => {
-    return (
-      <BetaLabel role='presentation' {...props}>
-        BETA
-      </BetaLabel>
-    );
-  };
+const ReleaseDetailsModalUpgradeOptionsBetaLabel: React.FC<
+  IReleaseDetailsModalUpgradeOptionsBetaLabelProps
+> = (props) => {
+  return (
+    <BetaLabel role='presentation' {...props}>
+      BETA
+    </BetaLabel>
+  );
+};
 
 export default ReleaseDetailsModalUpgradeOptionsBetaLabel;

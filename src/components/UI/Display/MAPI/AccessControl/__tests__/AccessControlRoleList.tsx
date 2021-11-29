@@ -128,7 +128,7 @@ describe('AccessControlRoleList', () => {
     const { rerender } = renderWithTheme(AccessControlRoleList, {
       activeRoleName: '',
       setActiveRoleName: jest.fn(),
-      roles: undefined,
+      isLoading: true,
     });
     expect(screen.getAllByTitle('Loading...').length).toBeGreaterThan(0);
 

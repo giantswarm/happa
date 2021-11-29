@@ -34,133 +34,134 @@ interface IWorkerNodesCreateNodePoolAvailabilityZonesProps
   cluster: Cluster;
 }
 
-const WorkerNodesCreateNodePoolAvailabilityZones: React.FC<IWorkerNodesCreateNodePoolAvailabilityZonesProps> =
-  ({
-    id,
-    nodePool,
-    onChange,
-    readOnly,
-    disabled,
-    autoFocus,
-    cluster,
-    ...props
-  }) => {
-    const clientFactory = useHttpClientFactory();
-    const auth = useAuthProvider();
+const WorkerNodesCreateNodePoolAvailabilityZones: React.FC<
+  IWorkerNodesCreateNodePoolAvailabilityZonesProps
+> = ({
+  id,
+  nodePool,
+  onChange,
+  readOnly,
+  disabled,
+  autoFocus,
+  cluster,
+  ...props
+}) => {
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
 
-    const controlPlaneNodesKey = cluster
-      ? fetchControlPlaneNodesForClusterKey(cluster)
-      : null;
+  const controlPlaneNodesKey = cluster
+    ? fetchControlPlaneNodesForClusterKey(cluster)
+    : null;
 
-    const { data: controlPlaneNodes, error: controlPlaneNodesError } = useSWR<
-      ControlPlaneNode[],
-      GenericResponseError
-    >(controlPlaneNodesKey, () =>
-      fetchControlPlaneNodesForCluster(clientFactory, auth, cluster)
-    );
+  const { data: controlPlaneNodes, error: controlPlaneNodesError } = useSWR<
+    ControlPlaneNode[],
+    GenericResponseError
+  >(controlPlaneNodesKey, () =>
+    fetchControlPlaneNodesForCluster(clientFactory, auth, cluster)
+  );
 
-    useEffect(() => {
-      if (controlPlaneNodesError) {
-        ErrorReporter.getInstance().notify(controlPlaneNodesError);
-      }
-    }, [controlPlaneNodesError]);
+  useEffect(() => {
+    if (controlPlaneNodesError) {
+      ErrorReporter.getInstance().notify(controlPlaneNodesError);
+    }
+  }, [controlPlaneNodesError]);
 
-    const controlPlaneZones = useMemo(() => {
-      if (typeof controlPlaneNodesError !== 'undefined' || !controlPlaneNodes) {
-        return undefined;
-      }
+  const controlPlaneZones = useMemo(() => {
+    if (typeof controlPlaneNodesError !== 'undefined' || !controlPlaneNodes) {
+      return undefined;
+    }
 
-      return computeControlPlaneNodesStats(controlPlaneNodes).availabilityZones;
-    }, [controlPlaneNodes, controlPlaneNodesError]);
+    return computeControlPlaneNodesStats(controlPlaneNodes).availabilityZones;
+  }, [controlPlaneNodes, controlPlaneNodesError]);
 
-    const provider = window.config.info.general.provider;
-    const azStats = getSupportedAvailabilityZones();
+  const provider = window.config.info.general.provider;
+  const azStats = getSupportedAvailabilityZones();
 
-    const [azSelector, setAzSelector] = useState(
-      AvailabilityZoneSelection.Automatic
-    );
-    const [autoZonesCount, setAutoZonesCount] = useState(1);
-    const [autoZoneIsValid, setAutoZoneIsValid] = useState(true);
-    const [manualZones, setManualZones] = useState<string[]>([]);
-    const [manualZonesIsValid, setManualZonesIsValid] = useState(false);
+  const [azSelector, setAzSelector] = useState(
+    AvailabilityZoneSelection.Automatic
+  );
+  const [autoZonesCount, setAutoZonesCount] = useState(1);
+  const [autoZoneIsValid, setAutoZoneIsValid] = useState(true);
+  const [manualZones, setManualZones] = useState<string[]>([]);
+  const [manualZonesIsValid, setManualZonesIsValid] = useState(false);
 
-    const handleChange = (selector: AvailabilityZoneSelection) => {
-      setAzSelector(selector);
-    };
+  const handleChange = (selector: AvailabilityZoneSelection) => {
+    setAzSelector(selector);
+  };
 
-    useEffect(() => {
-      if (!controlPlaneZones) return;
+  useEffect(() => {
+    if (!controlPlaneZones) return;
 
-      switch (azSelector) {
+    switch (azSelector) {
+      case AvailabilityZoneSelection.Automatic:
+        onChange({
+          isValid: autoZoneIsValid,
+          patch: withNodePoolAvailabilityZones(
+            determineRandomAZs(autoZonesCount, azStats.all, controlPlaneZones)
+          ),
+        });
+        break;
+
+      case AvailabilityZoneSelection.Manual:
+        onChange({
+          isValid: manualZonesIsValid,
+          patch: withNodePoolAvailabilityZones(manualZones),
+        });
+        break;
+
+      case AvailabilityZoneSelection.NotSpecified:
+        onChange({
+          isValid: true,
+          patch: withNodePoolAvailabilityZones(undefined),
+        });
+        break;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    azSelector,
+    autoZonesCount,
+    autoZoneIsValid,
+    manualZones,
+    manualZonesIsValid,
+    controlPlaneZones,
+  ]);
+
+  const handleZoneChange: AZSelectionZonesUpdater =
+    (azSelection) => (payload) => {
+      switch (azSelection) {
         case AvailabilityZoneSelection.Automatic:
-          onChange({
-            isValid: autoZoneIsValid,
-            patch: withNodePoolAvailabilityZones(
-              determineRandomAZs(autoZonesCount, azStats.all, controlPlaneZones)
-            ),
-          });
+          setAutoZoneIsValid(payload.valid);
+          setAutoZonesCount((payload as IUpdateZonePickerPayload).value);
           break;
 
         case AvailabilityZoneSelection.Manual:
-          onChange({
-            isValid: manualZonesIsValid,
-            patch: withNodePoolAvailabilityZones(manualZones),
-          });
-          break;
-
-        case AvailabilityZoneSelection.NotSpecified:
-          onChange({
-            isValid: true,
-            patch: withNodePoolAvailabilityZones(undefined),
-          });
+          setManualZonesIsValid(payload.valid);
+          setManualZones((payload as IUpdateZoneLabelsPayload).zonesArray);
           break;
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      azSelector,
-      autoZonesCount,
-      autoZoneIsValid,
-      manualZones,
-      manualZonesIsValid,
-      controlPlaneZones,
-    ]);
+    };
 
-    const handleZoneChange: AZSelectionZonesUpdater =
-      (azSelection) => (payload) => {
-        switch (azSelection) {
-          case AvailabilityZoneSelection.Automatic:
-            setAutoZoneIsValid(payload.valid);
-            setAutoZonesCount((payload as IUpdateZonePickerPayload).value);
-            break;
-
-          case AvailabilityZoneSelection.Manual:
-            setManualZonesIsValid(payload.valid);
-            setManualZones((payload as IUpdateZoneLabelsPayload).zonesArray);
-            break;
-        }
-      };
-
-    return (
-      <InputGroup htmlFor={id} label='Availability zones' {...props}>
-        {controlPlaneZones && (
-          <AZSelection
-            variant={AZSelectionVariants.NodePool}
-            uniqueIdentifier={id}
-            baseActionName={RUMActions.SelectAZSelection}
-            value={azSelector}
-            provider={provider}
-            onChange={handleChange}
-            minNumOfZones={azStats.minCount}
-            maxNumOfZones={azStats.maxCount}
-            defaultNumOfZones={azStats.defaultCount}
-            allZones={azStats.all}
-            numOfZones={autoZonesCount}
-            selectedZones={manualZones}
-            onUpdateZones={handleZoneChange}
-          />
-        )}
-      </InputGroup>
-    );
-  };
+  return (
+    <InputGroup htmlFor={id} label='Availability zones' {...props}>
+      {controlPlaneZones && (
+        <AZSelection
+          variant={AZSelectionVariants.NodePool}
+          uniqueIdentifier={id}
+          baseActionName={RUMActions.SelectAZSelection}
+          value={azSelector}
+          provider={provider}
+          onChange={handleChange}
+          minNumOfZones={azStats.minCount}
+          maxNumOfZones={azStats.maxCount}
+          defaultNumOfZones={azStats.defaultCount}
+          allZones={azStats.all}
+          numOfZones={autoZonesCount}
+          selectedZones={manualZones}
+          onUpdateZones={handleZoneChange}
+        />
+      )}
+    </InputGroup>
+  );
+};
 
 export default WorkerNodesCreateNodePoolAvailabilityZones;

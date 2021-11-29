@@ -12,56 +12,57 @@ interface IWorkerNodesCreateNodePoolScaleProps
       'onChange' | 'id'
     > {}
 
-const WorkerNodesCreateNodePoolScale: React.FC<IWorkerNodesCreateNodePoolScaleProps> =
-  ({
-    id,
-    nodePool,
-    providerNodePool,
-    onChange,
-    readOnly,
-    disabled,
-    ...props
-  }) => {
-    const isMinValid = useRef(false);
-    const isMaxValid = useRef(false);
+const WorkerNodesCreateNodePoolScale: React.FC<
+  IWorkerNodesCreateNodePoolScaleProps
+> = ({
+  id,
+  nodePool,
+  providerNodePool,
+  onChange,
+  readOnly,
+  disabled,
+  ...props
+}) => {
+  const isMinValid = useRef(false);
+  const isMaxValid = useRef(false);
 
-    const handleChange = (newValue: {
-      scaling: {
-        min: number;
-        minValid: boolean;
-        max: number;
-        maxValid: boolean;
-      };
-    }) => {
-      const { min, minValid, max, maxValid } = newValue.scaling;
-
-      isMinValid.current = minValid;
-      isMaxValid.current = maxValid;
-
-      onChange({
-        isValid: minValid && maxValid,
-        patch: withNodePoolScaling(min, max),
-      });
+  const handleChange = (newValue: {
+    scaling: {
+      min: number;
+      minValid: boolean;
+      max: number;
+      maxValid: boolean;
     };
+  }) => {
+    const { min, minValid, max, maxValid } = newValue.scaling;
 
-    const value = getNodePoolScaling(nodePool, providerNodePool);
+    isMinValid.current = minValid;
+    isMaxValid.current = maxValid;
 
-    return (
-      <InputGroup htmlFor={id} label='Scaling range' {...props}>
-        <NodeCountSelector
-          id={id}
-          autoscalingEnabled={true}
-          onChange={handleChange}
-          readOnly={readOnly || disabled}
-          scaling={{
-            min: value.min,
-            minValid: isMinValid.current,
-            max: value.max,
-            maxValid: isMaxValid.current,
-          }}
-        />
-      </InputGroup>
-    );
+    onChange({
+      isValid: minValid && maxValid,
+      patch: withNodePoolScaling(min, max),
+    });
   };
+
+  const value = getNodePoolScaling(nodePool, providerNodePool);
+
+  return (
+    <InputGroup htmlFor={id} label='Scaling range' {...props}>
+      <NodeCountSelector
+        id={id}
+        autoscalingEnabled={true}
+        onChange={handleChange}
+        readOnly={readOnly || disabled}
+        scaling={{
+          min: value.min,
+          minValid: isMinValid.current,
+          max: value.max,
+          maxValid: isMaxValid.current,
+        }}
+      />
+    </InputGroup>
+  );
+};
 
 export default WorkerNodesCreateNodePoolScale;

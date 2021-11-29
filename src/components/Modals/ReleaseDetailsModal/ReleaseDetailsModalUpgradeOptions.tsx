@@ -36,93 +36,94 @@ interface IReleaseDetailsModalUpgradeOptionsProps
   closeModal: () => void;
 }
 
-const ReleaseDetailsModalUpgradeOptions: React.FC<IReleaseDetailsModalUpgradeOptionsProps> =
-  ({
-    isAdmin,
-    releases,
-    provider,
-    currentVersion,
-    showUpgradeModal,
-    setUpgradeVersion,
-    closeModal,
-    ...rest
-  }) => {
-    const availableReleases = useMemo(() => {
-      try {
-        const releaseHelper = new ReleaseHelper({
-          availableReleases: releases,
-          provider,
-          currentReleaseVersion: currentVersion,
-          isAdmin,
-          ignorePreReleases: false,
+const ReleaseDetailsModalUpgradeOptions: React.FC<
+  IReleaseDetailsModalUpgradeOptionsProps
+> = ({
+  isAdmin,
+  releases,
+  provider,
+  currentVersion,
+  showUpgradeModal,
+  setUpgradeVersion,
+  closeModal,
+  ...rest
+}) => {
+  const availableReleases = useMemo(() => {
+    try {
+      const releaseHelper = new ReleaseHelper({
+        availableReleases: releases,
+        provider,
+        currentReleaseVersion: currentVersion,
+        isAdmin,
+        ignorePreReleases: false,
+      });
+
+      const releasesForUpgrade = releaseHelper.getSupportedUpgradeVersions();
+      const supportedUpgradeReleases: ISupportedUpgradeRelease[] =
+        releasesForUpgrade.map((release) => {
+          const preReleaseInfo = release.getPreRelease();
+
+          return {
+            version: release.toString(),
+            isBeta:
+              preReleaseInfo.length > 0 &&
+              ReleaseHelper.isPreReleaseUpgradableTo(preReleaseInfo),
+          };
         });
 
-        const releasesForUpgrade = releaseHelper.getSupportedUpgradeVersions();
-        const supportedUpgradeReleases: ISupportedUpgradeRelease[] =
-          releasesForUpgrade.map((release) => {
-            const preReleaseInfo = release.getPreRelease();
+      return supportedUpgradeReleases;
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err as Error);
 
-            return {
-              version: release.toString(),
-              isBeta:
-                preReleaseInfo.length > 0 &&
-                ReleaseHelper.isPreReleaseUpgradableTo(preReleaseInfo),
-            };
-          });
+      return [];
+    }
+  }, [releases, currentVersion, provider, isAdmin]);
 
-        return supportedUpgradeReleases;
-      } catch (err) {
-        ErrorReporter.getInstance().notify(err as Error);
+  const containsBetaReleases = useMemo(() => {
+    return availableReleases.some((r) => r.isBeta);
+  }, [availableReleases]);
 
-        return [];
-      }
-    }, [releases, currentVersion, provider, isAdmin]);
+  const onVersionClick =
+    (version: string) => (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
 
-    const containsBetaReleases = useMemo(() => {
-      return availableReleases.some((r) => r.isBeta);
-    }, [availableReleases]);
+      setUpgradeVersion(version);
+      closeModal();
+      showUpgradeModal();
+    };
 
-    const onVersionClick =
-      (version: string) => (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
+  if (availableReleases.length < 1) return null;
 
-        setUpgradeVersion(version);
-        closeModal();
-        showUpgradeModal();
-      };
+  return (
+    <ReleaseDetailsModalSection title='Upgrade options' {...rest}>
+      {availableReleases.length > 1 ? (
+        <>
+          <p>This cluster can be upgraded to these releases:</p>
+          {availableReleases.map((release) => (
+            <VersionWrapper key={release.version}>
+              <ReleaseDetailsModalUpgradeOptionsVersion
+                version={release.version}
+                isBeta={release.isBeta}
+                onClick={onVersionClick(release.version)}
+              />
+            </VersionWrapper>
+          ))}
+        </>
+      ) : (
+        <p>
+          This cluster can be upgraded to{' '}
+          <ReleaseDetailsModalUpgradeOptionsVersion
+            version={availableReleases[0].version}
+            isBeta={availableReleases[0].isBeta}
+            onClick={onVersionClick(availableReleases[0].version)}
+          />
+          .
+        </p>
+      )}
 
-    if (availableReleases.length < 1) return null;
-
-    return (
-      <ReleaseDetailsModalSection title='Upgrade options' {...rest}>
-        {availableReleases.length > 1 ? (
-          <>
-            <p>This cluster can be upgraded to these releases:</p>
-            {availableReleases.map((release) => (
-              <VersionWrapper key={release.version}>
-                <ReleaseDetailsModalUpgradeOptionsVersion
-                  version={release.version}
-                  isBeta={release.isBeta}
-                  onClick={onVersionClick(release.version)}
-                />
-              </VersionWrapper>
-            ))}
-          </>
-        ) : (
-          <p>
-            This cluster can be upgraded to{' '}
-            <ReleaseDetailsModalUpgradeOptionsVersion
-              version={availableReleases[0].version}
-              isBeta={availableReleases[0].isBeta}
-              onClick={onVersionClick(availableReleases[0].version)}
-            />
-            .
-          </p>
-        )}
-
-        {containsBetaReleases && <StyledBetaDisclaimer />}
-      </ReleaseDetailsModalSection>
-    );
-  };
+      {containsBetaReleases && <StyledBetaDisclaimer />}
+    </ReleaseDetailsModalSection>
+  );
+};
 
 export default ReleaseDetailsModalUpgradeOptions;

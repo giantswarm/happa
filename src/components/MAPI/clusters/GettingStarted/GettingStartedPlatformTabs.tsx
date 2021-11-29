@@ -18,24 +18,24 @@ interface IGettingStartedPlatformTabsProps
   windowsContent?: React.ReactNode;
 }
 
-const GettingStartedPlatformTabs: React.FC<IGettingStartedPlatformTabsProps> =
-  ({ linuxContent, macOSContent, windowsContent, ...props }) => {
-    const { selectedPlatform, setSelectedPlatform } =
-      useGettingStartedContext();
+const GettingStartedPlatformTabs: React.FC<
+  IGettingStartedPlatformTabsProps
+> = ({ linuxContent, macOSContent, windowsContent, ...props }) => {
+  const { selectedPlatform, setSelectedPlatform } = useGettingStartedContext();
 
-    return (
-      <Box background='background-front' pad='medium' round='xsmall' {...props}>
-        <Tabs activeIndex={selectedPlatform} onActive={setSelectedPlatform}>
-          {linuxContent && <StyledTab title='Linux'>{linuxContent}</StyledTab>}
+  return (
+    <Box background='background-front' pad='medium' round='xsmall' {...props}>
+      <Tabs activeIndex={selectedPlatform} onActive={setSelectedPlatform}>
+        {linuxContent && <StyledTab title='Linux'>{linuxContent}</StyledTab>}
 
-          {macOSContent && <StyledTab title='macOS'>{macOSContent}</StyledTab>}
+        {macOSContent && <StyledTab title='macOS'>{macOSContent}</StyledTab>}
 
-          {windowsContent && (
-            <StyledTab title='Windows'>{windowsContent}</StyledTab>
-          )}
-        </Tabs>
-      </Box>
-    );
-  };
+        {windowsContent && (
+          <StyledTab title='Windows'>{windowsContent}</StyledTab>
+        )}
+      </Tabs>
+    </Box>
+  );
+};
 
 export default GettingStartedPlatformTabs;

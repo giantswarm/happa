@@ -30,45 +30,43 @@ interface IWorkerNodesCreateNodePoolSpotInstancesAzureProps {
   errorMessage?: string;
 }
 
-const WorkerNodesCreateNodePoolSpotInstancesAzure: React.FC<IWorkerNodesCreateNodePoolSpotInstancesAzureProps> =
-  ({ value, onChange, errorMessage }) => {
-    const useOnDemandPricing =
-      typeof value.maxPrice === 'number' && value.maxPrice < 0;
+const WorkerNodesCreateNodePoolSpotInstancesAzure: React.FC<
+  IWorkerNodesCreateNodePoolSpotInstancesAzureProps
+> = ({ value, onChange, errorMessage }) => {
+  const useOnDemandPricing =
+    typeof value.maxPrice === 'number' && value.maxPrice < 0;
 
-    const toggleOnDemandPricing = (enabled: boolean) => {
-      const nextPrice = enabled
-        ? -1
-        : Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN;
+  const toggleOnDemandPricing = (enabled: boolean) => {
+    const nextPrice = enabled
+      ? -1
+      : Constants.AZURE_SPOT_INSTANCES_MAX_PRICE_MIN;
 
-      onChange({ ...value, maxPrice: nextPrice.toString() });
-    };
-
-    const formattedMaxPrice = formatMaxPrice(
-      value.maxPrice,
-      useOnDemandPricing
-    );
-
-    const handleSetMaxPrice = (nextPrice: number) => {
-      const validationResult = validateMaxPrice(nextPrice);
-
-      onChange({ ...value, maxPrice: nextPrice.toString() }, validationResult);
-    };
-
-    return (
-      <AddNodePoolSpotInstances
-        provider={Providers.AZURE}
-        spotPercentage={-1}
-        setSpotPercentage={notImplementedCallback}
-        onDemandBaseCapacity={-1}
-        setOnDemandBaseCapacity={notImplementedCallback}
-        maxPrice={formattedMaxPrice}
-        setMaxPrice={handleSetMaxPrice}
-        maxPriceValidationError={errorMessage!}
-        useOnDemandPricing={useOnDemandPricing}
-        setUseOnDemandPricing={toggleOnDemandPricing}
-      />
-    );
+    onChange({ ...value, maxPrice: nextPrice.toString() });
   };
+
+  const formattedMaxPrice = formatMaxPrice(value.maxPrice, useOnDemandPricing);
+
+  const handleSetMaxPrice = (nextPrice: number) => {
+    const validationResult = validateMaxPrice(nextPrice);
+
+    onChange({ ...value, maxPrice: nextPrice.toString() }, validationResult);
+  };
+
+  return (
+    <AddNodePoolSpotInstances
+      provider={Providers.AZURE}
+      spotPercentage={-1}
+      setSpotPercentage={notImplementedCallback}
+      onDemandBaseCapacity={-1}
+      setOnDemandBaseCapacity={notImplementedCallback}
+      maxPrice={formattedMaxPrice}
+      setMaxPrice={handleSetMaxPrice}
+      maxPriceValidationError={errorMessage!}
+      useOnDemandPricing={useOnDemandPricing}
+      setUseOnDemandPricing={toggleOnDemandPricing}
+    />
+  );
+};
 
 WorkerNodesCreateNodePoolSpotInstancesAzure.defaultProps = {
   errorMessage: '',

@@ -79,181 +79,181 @@ interface IWorkerNodesNodePoolItemScaleProps
   providerNodePool: ProviderNodePool;
 }
 
-const WorkerNodesNodePoolItemScale: React.FC<IWorkerNodesNodePoolItemScaleProps> =
-  ({ nodePool, providerNodePool, onConfirm, onCancel, open, ...props }) => {
-    const initialScaling = useMemo(
-      () => getNodePoolScaling(nodePool, providerNodePool),
-      [nodePool, providerNodePool]
-    );
+const WorkerNodesNodePoolItemScale: React.FC<
+  IWorkerNodesNodePoolItemScaleProps
+> = ({ nodePool, providerNodePool, onConfirm, onCancel, open, ...props }) => {
+  const initialScaling = useMemo(
+    () => getNodePoolScaling(nodePool, providerNodePool),
+    [nodePool, providerNodePool]
+  );
 
-    const [scalingMin, setScalingMin] = useState(initialScaling.min);
-    const [scalingMinValid, setScalingMinValid] = useState(true);
-    const [scalingMax, setScalingMax] = useState(initialScaling.max);
-    const [scalingMaxValid, setScalingMaxValid] = useState(true);
+  const [scalingMin, setScalingMin] = useState(initialScaling.min);
+  const [scalingMinValid, setScalingMinValid] = useState(true);
+  const [scalingMax, setScalingMax] = useState(initialScaling.max);
+  const [scalingMaxValid, setScalingMaxValid] = useState(true);
 
-    const handleScaleChange = (newValue: {
-      scaling: {
-        min: number;
-        minValid: boolean;
-        max: number;
-        maxValid: boolean;
-      };
-    }) => {
-      /**
-       * When the confirmation prompt is closed, and we reset the values,
-       * the `min` and the `max` limits of the 2 inputs would change,
-       * which would make the underlying `NumberPicker` components call this
-       * callback, with partial values, therefore preventing the full reset
-       * from happening.
-       */
-      if (!open) return;
-
-      const { min, minValid, max, maxValid } = newValue.scaling;
-
-      setScalingMin(min);
-      setScalingMinValid(minValid);
-      setScalingMax(max);
-      setScalingMaxValid(maxValid);
+  const handleScaleChange = (newValue: {
+    scaling: {
+      min: number;
+      minValid: boolean;
+      max: number;
+      maxValid: boolean;
     };
+  }) => {
+    /**
+     * When the confirmation prompt is closed, and we reset the values,
+     * the `min` and the `max` limits of the 2 inputs would change,
+     * which would make the underlying `NumberPicker` components call this
+     * callback, with partial values, therefore preventing the full reset
+     * from happening.
+     */
+    if (!open) return;
 
-    const handleCancel = () => {
-      onCancel?.();
+    const { min, minValid, max, maxValid } = newValue.scaling;
 
-      setScalingMin(initialScaling.min);
-      setScalingMinValid(true);
-      setScalingMax(initialScaling.max);
-      setScalingMaxValid(true);
-    };
+    setScalingMin(min);
+    setScalingMinValid(minValid);
+    setScalingMax(max);
+    setScalingMaxValid(maxValid);
+  };
 
-    const clientFactory = useHttpClientFactory();
-    const auth = useAuthProvider();
+  const handleCancel = () => {
+    onCancel?.();
 
-    const [isLoading, setIsLoading] = useState(false);
+    setScalingMin(initialScaling.min);
+    setScalingMinValid(true);
+    setScalingMax(initialScaling.max);
+    setScalingMaxValid(true);
+  };
 
-    const handleScale = async () => {
-      setIsLoading(true);
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
 
-      try {
-        await updateNodePoolScaling(
-          clientFactory,
-          auth,
-          nodePool,
-          scalingMin,
-          scalingMax
-        );
+  const [isLoading, setIsLoading] = useState(false);
 
-        onConfirm?.();
-        setTimeout(() => {
-          setIsLoading(false);
-          // eslint-disable-next-line no-magic-numbers
-        }, 200);
+  const handleScale = async () => {
+    setIsLoading(true);
 
-        new FlashMessage(
-          (
-            <>
-              Node pool <code>{nodePool.metadata.name}</code> updated
-              successfully
-            </>
-          ),
-          messageType.SUCCESS,
-          messageTTL.SHORT
-        );
-      } catch (err) {
+    try {
+      await updateNodePoolScaling(
+        clientFactory,
+        auth,
+        nodePool,
+        scalingMin,
+        scalingMax
+      );
+
+      onConfirm?.();
+      setTimeout(() => {
         setIsLoading(false);
+        // eslint-disable-next-line no-magic-numbers
+      }, 200);
 
-        const errorMessage = extractErrorMessage(err);
+      new FlashMessage(
+        (
+          <>
+            Node pool <code>{nodePool.metadata.name}</code> updated successfully
+          </>
+        ),
+        messageType.SUCCESS,
+        messageTTL.SHORT
+      );
+    } catch (err) {
+      setIsLoading(false);
 
-        new FlashMessage(
-          (
-            <>
-              Could not update node pool <code>{nodePool.metadata.name}</code>
-            </>
-          ),
-          messageType.ERROR,
-          messageTTL.FOREVER,
-          errorMessage
-        );
+      const errorMessage = extractErrorMessage(err);
 
-        ErrorReporter.getInstance().notify(err as Error);
+      new FlashMessage(
+        (
+          <>
+            Could not update node pool <code>{nodePool.metadata.name}</code>
+          </>
+        ),
+        messageType.ERROR,
+        messageTTL.FOREVER,
+        errorMessage
+      );
+
+      ErrorReporter.getInstance().notify(err as Error);
+    }
+  };
+
+  const submitButtonAttributes = useMemo(
+    () =>
+      getSubmitButtonAttributes({
+        min: scalingMin,
+        minValid: scalingMinValid,
+        max: scalingMax,
+        maxValid: scalingMaxValid,
+        initialScaling,
+      }),
+    [scalingMin, scalingMinValid, scalingMax, scalingMaxValid, initialScaling]
+  );
+
+  const nodesDifference = getWorkerNodesDifference(
+    scalingMin,
+    scalingMax,
+    initialScaling.desired
+  );
+
+  return (
+    <ConfirmationPrompt
+      onConfirm={handleScale}
+      confirmButton={
+        <Button
+          primary={submitButtonAttributes.primary}
+          danger={submitButtonAttributes.danger}
+          onClick={handleScale}
+          loading={isLoading}
+          disabled={submitButtonAttributes.disabled}
+        >
+          {submitButtonAttributes.label}
+        </Button>
       }
-    };
+      onCancel={!isLoading ? handleCancel : undefined}
+      title='Edit scaling limits'
+      open={open}
+      {...props}
+    >
+      <Box>
+        <Text>
+          Set the scaling range and let the autoscaler set the effective number
+          of worker nodes based on the usage.
+        </Text>
+      </Box>
+      <Box width={{ max: 'large' }} margin={{ top: 'small' }}>
+        <NodeCountSelector
+          autoscalingEnabled={true}
+          readOnly={isLoading}
+          onChange={handleScaleChange}
+          scaling={{
+            min: scalingMin,
+            minValid: scalingMinValid,
+            max: scalingMax,
+            maxValid: scalingMaxValid,
+          }}
+        />
+      </Box>
 
-    const submitButtonAttributes = useMemo(
-      () =>
-        getSubmitButtonAttributes({
-          min: scalingMin,
-          minValid: scalingMinValid,
-          max: scalingMax,
-          maxValid: scalingMaxValid,
-          initialScaling,
-        }),
-      [scalingMin, scalingMinValid, scalingMax, scalingMaxValid, initialScaling]
-    );
-
-    const nodesDifference = getWorkerNodesDifference(
-      scalingMin,
-      scalingMax,
-      initialScaling.desired
-    );
-
-    return (
-      <ConfirmationPrompt
-        onConfirm={handleScale}
-        confirmButton={
-          <Button
-            primary={submitButtonAttributes.primary}
-            danger={submitButtonAttributes.danger}
-            onClick={handleScale}
-            loading={isLoading}
-            disabled={submitButtonAttributes.disabled}
-          >
-            {submitButtonAttributes.label}
-          </Button>
-        }
-        onCancel={!isLoading ? handleCancel : undefined}
-        title='Edit scaling limits'
-        open={open}
-        {...props}
-      >
-        <Box>
-          <Text>
-            Set the scaling range and let the autoscaler set the effective
-            number of worker nodes based on the usage.
+      {nodesDifference < 0 && (
+        <Box margin={{ top: 'small' }} width={{ max: 'large' }}>
+          <Text color='status-warning'>
+            <i
+              className='fa fa-warning'
+              role='presentation'
+              aria-hidden={true}
+            />{' '}
+            The node pool currently has {initialScaling.desired} worker{' '}
+            {formatNodesLabel(initialScaling.desired)} running. By setting the
+            maximum lower than that, you enforce the removal of{' '}
+            {Math.abs(nodesDifference)}{' '}
+            {formatNodesLabel(Math.abs(nodesDifference))}. This could result in
+            unscheduled workloads.
           </Text>
         </Box>
-        <Box width={{ max: 'large' }} margin={{ top: 'small' }}>
-          <NodeCountSelector
-            autoscalingEnabled={true}
-            readOnly={isLoading}
-            onChange={handleScaleChange}
-            scaling={{
-              min: scalingMin,
-              minValid: scalingMinValid,
-              max: scalingMax,
-              maxValid: scalingMaxValid,
-            }}
-          />
-        </Box>
-
-        {nodesDifference < 0 && (
-          <Box margin={{ top: 'small' }} width={{ max: 'large' }}>
-            <Text color='status-warning'>
-              <i
-                className='fa fa-warning'
-                role='presentation'
-                aria-hidden={true}
-              />{' '}
-              The node pool currently has {initialScaling.desired} worker{' '}
-              {formatNodesLabel(initialScaling.desired)} running. By setting the
-              maximum lower than that, you enforce the removal of{' '}
-              {Math.abs(nodesDifference)}{' '}
-              {formatNodesLabel(Math.abs(nodesDifference))}. This could result
-              in unscheduled workloads.
-            </Text>
-          </Box>
-        )}
-      </ConfirmationPrompt>
-    );
-  };
+      )}
+    </ConfirmationPrompt>
+  );
+};
 
 export default WorkerNodesNodePoolItemScale;

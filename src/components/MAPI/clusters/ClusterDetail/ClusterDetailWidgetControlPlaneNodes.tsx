@@ -68,138 +68,139 @@ interface IClusterDetailWidgetControlPlaneNodesProps
   providerCluster?: ProviderCluster;
 }
 
-const ClusterDetailWidgetControlPlaneNodes: React.FC<IClusterDetailWidgetControlPlaneNodesProps> =
-  ({ cluster, providerCluster, ...props }) => {
-    const clientFactory = useHttpClientFactory();
-    const auth = useAuthProvider();
+const ClusterDetailWidgetControlPlaneNodes: React.FC<
+  IClusterDetailWidgetControlPlaneNodesProps
+> = ({ cluster, providerCluster, ...props }) => {
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
 
-    const controlPlaneNodesKey = cluster
-      ? fetchControlPlaneNodesForClusterKey(cluster)
-      : null;
+  const controlPlaneNodesKey = cluster
+    ? fetchControlPlaneNodesForClusterKey(cluster)
+    : null;
 
-    const {
-      data: controlPlaneNodes,
-      error: controlPlaneNodesError,
-      isValidating: controlPlaneNodesIsValidating,
-    } = useSWR<ControlPlaneNode[], GenericResponseError>(
-      controlPlaneNodesKey,
-      () => fetchControlPlaneNodesForCluster(clientFactory, auth, cluster!)
+  const {
+    data: controlPlaneNodes,
+    error: controlPlaneNodesError,
+    isValidating: controlPlaneNodesIsValidating,
+  } = useSWR<ControlPlaneNode[], GenericResponseError>(
+    controlPlaneNodesKey,
+    () => fetchControlPlaneNodesForCluster(clientFactory, auth, cluster!)
+  );
+
+  const isLoading =
+    typeof cluster === 'undefined' ||
+    (typeof controlPlaneNodes === 'undefined' &&
+      typeof controlPlaneNodesError === 'undefined' &&
+      controlPlaneNodesIsValidating);
+
+  useEffect(() => {
+    if (controlPlaneNodesError) {
+      ErrorReporter.getInstance().notify(controlPlaneNodesError);
+    }
+  }, [controlPlaneNodesError]);
+
+  const stats = useMemo(() => {
+    if (isLoading) {
+      return {
+        totalCount: undefined,
+        readyCount: undefined,
+        availabilityZones: undefined,
+      };
+    }
+
+    if (typeof controlPlaneNodes === 'undefined') {
+      return {
+        totalCount: -1,
+        readyCount: -1,
+        availabilityZones: [],
+      };
+    }
+
+    return computeControlPlaneNodesStats(controlPlaneNodes);
+  }, [controlPlaneNodes, isLoading]);
+
+  const provider = window.config.info.general.provider;
+
+  const canSwitchToHA =
+    typeof cluster !== 'undefined' &&
+    typeof providerCluster !== 'undefined' &&
+    typeof controlPlaneNodes !== 'undefined' &&
+    canSwitchClusterToHACPNodes(
+      provider,
+      cluster,
+      providerCluster,
+      controlPlaneNodes
     );
 
-    const isLoading =
-      typeof cluster === 'undefined' ||
-      (typeof controlPlaneNodes === 'undefined' &&
-        typeof controlPlaneNodesError === 'undefined' &&
-        controlPlaneNodesIsValidating);
+  const [isSwitchingToHA, setIsSwitchingToHA] = useState(false);
 
-    useEffect(() => {
-      if (controlPlaneNodesError) {
-        ErrorReporter.getInstance().notify(controlPlaneNodesError);
-      }
-    }, [controlPlaneNodesError]);
-
-    const stats = useMemo(() => {
-      if (isLoading) {
-        return {
-          totalCount: undefined,
-          readyCount: undefined,
-          availabilityZones: undefined,
-        };
-      }
-
-      if (typeof controlPlaneNodes === 'undefined') {
-        return {
-          totalCount: -1,
-          readyCount: -1,
-          availabilityZones: [],
-        };
-      }
-
-      return computeControlPlaneNodesStats(controlPlaneNodes);
-    }, [controlPlaneNodes, isLoading]);
-
-    const provider = window.config.info.general.provider;
-
-    const canSwitchToHA =
-      typeof cluster !== 'undefined' &&
-      typeof providerCluster !== 'undefined' &&
-      typeof controlPlaneNodes !== 'undefined' &&
-      canSwitchClusterToHACPNodes(
-        provider,
-        cluster,
-        providerCluster,
-        controlPlaneNodes
-      );
-
-    const [isSwitchingToHA, setIsSwitchingToHA] = useState(false);
-
-    const onSwitchToHAExit = () => {
-      setIsSwitchingToHA(false);
-    };
-
-    return (
-      <ClusterDetailWidget
-        title='Control plane'
-        inline={true}
-        contentProps={{
-          direction: 'row',
-          gap: 'xsmall',
-          wrap: true,
-          align: 'center',
-        }}
-        {...props}
-      >
-        <OptionalValue
-          value={formatNodesCountLabel(stats.readyCount, stats.totalCount)}
-          loaderWidth={200}
-          replaceEmptyValue={false}
-        >
-          {(value) =>
-            value ? (
-              <Text aria-label={`${value} ready`}>
-                {value} <code>Ready</code>
-              </Text>
-            ) : (
-              <Text>
-                <NotAvailable /> control plane nodes <code>Ready</code>
-              </Text>
-            )
-          }
-        </OptionalValue>
-        <StyledDot />
-        <Text margin={{ right: 'xsmall' }}>
-          {formatAvailabilityZonesLabel(stats.availabilityZones)}
-        </Text>
-        <OptionalValue
-          value={stats.availabilityZones}
-          loaderWidth={100}
-          loaderHeight={26}
-        >
-          {(value) => (
-            <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
-          )}
-        </OptionalValue>
-
-        {canSwitchToHA && (
-          <Box basis='100%' margin={{ top: 'small' }}>
-            <ClusterDetailHACPNodesSwitcher
-              open={isSwitchingToHA}
-              cluster={cluster}
-              onSubmit={onSwitchToHAExit}
-              onCancel={onSwitchToHAExit}
-            />
-
-            {!isSwitchingToHA && (
-              <Box animation={{ type: 'fadeIn', duration: 300 }}>
-                <Button onClick={() => setIsSwitchingToHA(true)}>
-                  Switch to high availability…
-                </Button>
-              </Box>
-            )}
-          </Box>
-        )}
-      </ClusterDetailWidget>
-    );
+  const onSwitchToHAExit = () => {
+    setIsSwitchingToHA(false);
   };
+
+  return (
+    <ClusterDetailWidget
+      title='Control plane'
+      inline={true}
+      contentProps={{
+        direction: 'row',
+        gap: 'xsmall',
+        wrap: true,
+        align: 'center',
+      }}
+      {...props}
+    >
+      <OptionalValue
+        value={formatNodesCountLabel(stats.readyCount, stats.totalCount)}
+        loaderWidth={200}
+        replaceEmptyValue={false}
+      >
+        {(value) =>
+          value ? (
+            <Text aria-label={`${value} ready`}>
+              {value} <code>Ready</code>
+            </Text>
+          ) : (
+            <Text>
+              <NotAvailable /> control plane nodes <code>Ready</code>
+            </Text>
+          )
+        }
+      </OptionalValue>
+      <StyledDot />
+      <Text margin={{ right: 'xsmall' }}>
+        {formatAvailabilityZonesLabel(stats.availabilityZones)}
+      </Text>
+      <OptionalValue
+        value={stats.availabilityZones}
+        loaderWidth={100}
+        loaderHeight={26}
+      >
+        {(value) => (
+          <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
+        )}
+      </OptionalValue>
+
+      {canSwitchToHA && (
+        <Box basis='100%' margin={{ top: 'small' }}>
+          <ClusterDetailHACPNodesSwitcher
+            open={isSwitchingToHA}
+            cluster={cluster}
+            onSubmit={onSwitchToHAExit}
+            onCancel={onSwitchToHAExit}
+          />
+
+          {!isSwitchingToHA && (
+            <Box animation={{ type: 'fadeIn', duration: 300 }}>
+              <Button onClick={() => setIsSwitchingToHA(true)}>
+                Switch to high availability…
+              </Button>
+            </Box>
+          )}
+        </Box>
+      )}
+    </ClusterDetailWidget>
+  );
+};
 
 export default ClusterDetailWidgetControlPlaneNodes;

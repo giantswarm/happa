@@ -8,19 +8,20 @@ interface IV5ClusterDetailTableSpotInstancesTabProps {
   provider: PropertiesOf<typeof Providers>;
 }
 
-const V5ClusterDetailTableSpotInstancesTab: React.FC<IV5ClusterDetailTableSpotInstancesTabProps> =
-  ({ provider }) => {
-    const explanation = getExplanation(provider);
-    const tabLabel = getTabLabel(provider);
+const V5ClusterDetailTableSpotInstancesTab: React.FC<
+  IV5ClusterDetailTableSpotInstancesTabProps
+> = ({ provider }) => {
+  const explanation = getExplanation(provider);
+  const tabLabel = getTabLabel(provider);
 
-    return (
-      <TooltipContainer
-        content={<Tooltip id='spot-tooltip'>{explanation}</Tooltip>}
-      >
-        <NodePoolsColumnHeader>{tabLabel}</NodePoolsColumnHeader>
-      </TooltipContainer>
-    );
-  };
+  return (
+    <TooltipContainer
+      content={<Tooltip id='spot-tooltip'>{explanation}</Tooltip>}
+    >
+      <NodePoolsColumnHeader>{tabLabel}</NodePoolsColumnHeader>
+    </TooltipContainer>
+  );
+};
 
 export default V5ClusterDetailTableSpotInstancesTab;
 

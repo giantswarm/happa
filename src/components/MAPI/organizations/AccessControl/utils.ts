@@ -3,7 +3,6 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
-import { IState } from 'model/stores/state';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
@@ -31,56 +30,61 @@ export function isSubjectDelimiter(value: string): boolean {
 
 /**
  * Map all the resources necessary for rendering the whole UI.
- * @param clusterRoles
- * @param roles
- * @param roleBindings
+ * @param resources
  */
 export function mapResourcesToUiRoles(
-  clusterRoles: rbacv1.IClusterRoleList,
-  roles: rbacv1.IRoleList,
-  roleBindings: rbacv1.IRoleBindingList
+  resources: (rbacv1.IClusterRole | rbacv1.IRole | rbacv1.IRoleBinding)[]
 ): ui.IAccessControlRoleItem[] {
   const roleMap: Record<string, ui.IAccessControlRoleItem> = {};
 
-  for (const role of clusterRoles.items) {
-    if (
-      !roleMap.hasOwnProperty(role.metadata.name) &&
-      shouldDisplayRole(role)
-    ) {
-      roleMap[role.metadata.name] = {
-        name: role.metadata.name,
-        namespace: '',
-        managedBy: rbacv1.getManagedBy(role) ?? '',
-        groups: {},
-        serviceAccounts: {},
-        users: {},
-        permissions: getRolePermissions(role),
-      };
-    }
-  }
+  for (const res of resources) {
+    switch (res.kind) {
+      case rbacv1.ClusterRole:
+        if (
+          !roleMap.hasOwnProperty(res.metadata.name) &&
+          shouldDisplayRole(res)
+        ) {
+          roleMap[res.metadata.name] = {
+            name: res.metadata.name,
+            namespace: '',
+            managedBy: rbacv1.getManagedBy(res) ?? '',
+            groups: {},
+            serviceAccounts: {},
+            users: {},
+            permissions: getRolePermissions(res),
+          };
+        }
 
-  for (const role of roles.items) {
-    if (
-      // Don't override ClusterRoles with the same name.
-      !roleMap.hasOwnProperty(role.metadata.name) &&
-      shouldDisplayRole(role)
-    ) {
-      roleMap[role.metadata.name] = {
-        name: role.metadata.name,
-        namespace: role.metadata.namespace!,
-        managedBy: rbacv1.getManagedBy(role) ?? '',
-        groups: {},
-        serviceAccounts: {},
-        users: {},
-        permissions: getRolePermissions(role),
-      };
-    }
-  }
+        break;
 
-  for (const binding of roleBindings.items) {
-    const role = roleMap[binding.roleRef.name];
-    if (role) {
-      appendSubjectsToRoleItem(binding, role);
+      case rbacv1.Role:
+        // Don't override ClusterRoles with the same name.
+        if (
+          !roleMap.hasOwnProperty(res.metadata.name) &&
+          shouldDisplayRole(res)
+        ) {
+          roleMap[res.metadata.name] = {
+            name: res.metadata.name,
+            namespace: res.metadata.namespace!,
+            managedBy: rbacv1.getManagedBy(res) ?? '',
+            groups: {},
+            serviceAccounts: {},
+            users: {},
+            permissions: getRolePermissions(res),
+          };
+        }
+
+        break;
+
+      case rbacv1.RoleBinding:
+        {
+          const role = roleMap[res.roleRef.name];
+          if (role) {
+            appendSubjectsToRoleItem(res, role);
+          }
+        }
+
+        break;
     }
   }
 
@@ -220,41 +224,69 @@ export function sortPermissions(
  * data structure necessary for rendering the UI.
  * @param clientFactory
  * @param auth
+ * @param permissions
  * @param namespace
  */
 export async function getRoleItems(
   clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
+  permissions: ui.IAccessControlPermissions,
   namespace: string
 ) {
-  const response = await Promise.all([
-    rbacv1.getClusterRoleList(clientFactory(), auth),
-    rbacv1.getRoleList(clientFactory(), auth, namespace),
-    rbacv1.getRoleBindingList(clientFactory(), auth, namespace),
-  ]);
+  const requests = [];
 
-  return mapResourcesToUiRoles(...response);
+  if (permissions.roles[''].canList) {
+    requests.push(rbacv1.getClusterRoleList(clientFactory(), auth));
+  }
+
+  if (permissions.roles[namespace]?.canList) {
+    requests.push(rbacv1.getRoleList(clientFactory(), auth, namespace));
+  }
+
+  if (requests.length > 0) {
+    requests.push(rbacv1.getRoleBindingList(clientFactory(), auth, namespace));
+  } else {
+    return [];
+  }
+
+  const responses = await Promise.all(requests);
+  const items = responses.reduce<
+    (rbacv1.IClusterRole | rbacv1.IRole | rbacv1.IRoleBinding)[]
+  >((acc, res) => acc.concat(res.items), []);
+
+  return mapResourcesToUiRoles(items);
 }
 
 /**
  * Get the cache key used for the role getter request in.
+ * @param permissions
  * @param namespace
  */
-export function getRoleItemsKey(namespace: string): string | null {
-  const keyParts = [
-    rbacv1.getClusterRoleListKey(),
-    rbacv1.getRoleListKey(namespace),
-    rbacv1.getRoleBindingListKey(namespace),
-  ];
+export function getRoleItemsKey(
+  permissions: ui.IAccessControlPermissions,
+  namespace: string
+): string | null {
+  const keyParts: (string | null)[] = [];
 
-  let key = '';
-  for (const part of keyParts) {
-    if (!part) return null;
-
-    key += part;
+  if (permissions.roles[''].canList) {
+    keyParts.push(rbacv1.getClusterRoleListKey());
   }
 
-  return key;
+  if (permissions.roles[namespace]?.canList) {
+    keyParts.push(rbacv1.getRoleListKey(namespace));
+  }
+
+  if (keyParts.length > 0) {
+    keyParts.push(rbacv1.getRoleBindingListKey(namespace));
+  } else {
+    return null;
+  }
+
+  if (keyParts.some((s) => !s)) {
+    return null;
+  }
+
+  return keyParts.join();
 }
 
 /**
@@ -543,11 +575,11 @@ export async function ensureServiceAccount(
   auth: IOAuth2Provider,
   name: string,
   namespace: string
-): Promise<ui.IAccessControlServiceAccount> {
+): Promise<ui.IAccessControlRoleSubjectStatus> {
   try {
     await corev1.getServiceAccount(client, auth, name, namespace);
 
-    return { name, status: ui.AccessControlRoleSubjectStatus.Updated };
+    return { name, status: ui.AccessControlRoleSubjectStatus.Bound };
   } catch (err) {
     // If the service account is not found, we'll create it.
     if (
@@ -676,35 +708,42 @@ export function fetchServiceAccountSuggestionsKey(
   return corev1.getServiceAccountListKey(namespace);
 }
 
-export function computePermissions(
-  _state: IState
-): ui.IAccessControlPermissions {
-  return {
-    subjects: {
-      [ui.AccessControlSubjectTypes.Group]: {
-        canAdd: false,
-        canDelete: false,
-        canList: true,
-      },
-      [ui.AccessControlSubjectTypes.User]: {
-        canAdd: false,
-        canDelete: false,
-        canList: true,
-      },
-      [ui.AccessControlSubjectTypes.ServiceAccount]: {
-        canAdd: true,
-        canDelete: true,
-        canList: true,
-      },
-    },
-  };
-}
-
 export function canListSubjects(
   subjectCollection: ui.IAccessControlRoleSubjectItem[],
   subjectPermissions: ui.IAccessControlSubjectPermissions
 ): boolean {
-  if (!subjectPermissions.canAdd && subjectCollection.length < 1) return false;
+  if (!subjectPermissions.canBind && subjectCollection.length < 1) return false;
 
   return subjectPermissions.canList;
+}
+
+export function formatSubjectType(
+  subject: ui.AccessControlSubjectTypes,
+  pluralize?: boolean
+): string {
+  switch (subject) {
+    case ui.AccessControlSubjectTypes.Group:
+      if (pluralize) {
+        return 'Groups';
+      }
+
+      return 'Group';
+
+    case ui.AccessControlSubjectTypes.User:
+      if (pluralize) {
+        return 'Users';
+      }
+
+      return 'User';
+
+    case ui.AccessControlSubjectTypes.ServiceAccount:
+      if (pluralize) {
+        return 'Service accounts';
+      }
+
+      return 'Service account';
+
+    default:
+      return '';
+  }
 }
