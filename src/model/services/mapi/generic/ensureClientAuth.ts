@@ -28,8 +28,11 @@ export async function ensureClientAuth(
   if (impersonationMetadata) {
     client.setHeader('Impersonate-User', impersonationMetadata.user);
 
-    if (impersonationMetadata.groups?.length !== 0) {
-      client.setHeader('Impersonate-Group', impersonationMetadata.groups![0]);
+    if (
+      impersonationMetadata.groups &&
+      impersonationMetadata.groups?.length > 0
+    ) {
+      client.setHeader('Impersonate-Group', impersonationMetadata.groups[0]);
     }
   }
 
