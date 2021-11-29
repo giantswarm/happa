@@ -30,7 +30,7 @@ export async function ensureClientAuth(
 
     if (
       impersonationMetadata.groups &&
-      impersonationMetadata.groups?.length > 0
+      impersonationMetadata.groups.length > 0
     ) {
       client.setHeader('Impersonate-Group', impersonationMetadata.groups[0]);
     }
