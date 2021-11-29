@@ -7,36 +7,51 @@ const radius = '5px';
 const defaultThemeColor = 'shade5';
 
 const Wrapper = styled.div`
-  display: inline-block;
+  display: inline-flex;
+  align-items: stretch;
   margin-bottom: 5px;
   white-space: nowrap;
   line-height: 30px;
+  height: 30px;
 `;
 
 const CommonCSS = css`
+  display: flex;
+  align-items: center;
   padding: 5px 8px;
   font-weight: 300;
 `;
 
-const LabelWrapper = styled.span`
+const LabelWrapper = styled.span<{ outline: boolean }>`
   ${CommonCSS};
-  border: 1px solid
-    ${({ color, theme }) => color ?? theme.colors[defaultThemeColor]};
   background-color: ${({ color, theme }) =>
     color ?? theme.colors[defaultThemeColor]};
   border-top-left-radius: ${radius};
   border-bottom-left-radius: ${radius};
-  border-right: none;
+
+  ${({ outline, color }) =>
+    outline &&
+    css`
+      border: 1px solid
+        ${({ theme }) => color ?? theme.colors[defaultThemeColor]};
+      border-right: none;
+    `}
 `;
 
-const ValueWrapper = styled.span`
+const ValueWrapper = styled.span<{ outline: boolean }>`
   ${CommonCSS};
-  border: 1px solid
-    ${({ color, theme }) => color ?? theme.colors[defaultThemeColor]};
   border-top-right-radius: ${radius};
   border-bottom-right-radius: ${radius};
-  border-left: none;
+
   color: #eee;
+
+  ${({ outline, color }) =>
+    outline &&
+    css`
+      border: 1px solid
+        ${({ theme }) => color ?? theme.colors[defaultThemeColor]};
+      border-left: none;
+    `}
 `;
 
 interface IValueLabelProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -44,13 +59,24 @@ interface IValueLabelProps extends React.ComponentPropsWithoutRef<'div'> {
   value: ReactNode;
 
   color?: string;
+  outline?: boolean;
 }
 
-const ValueLabel = ({ label, value, color, ...props }: IValueLabelProps) => {
+const ValueLabel = ({
+  label,
+  value,
+  color,
+  outline,
+  ...props
+}: IValueLabelProps) => {
   return (
     <Wrapper {...props}>
-      <LabelWrapper color={color}>{label}</LabelWrapper>
-      <ValueWrapper color={color}>{value}</ValueWrapper>
+      <LabelWrapper color={color} outline={Boolean(outline)}>
+        {label}
+      </LabelWrapper>
+      <ValueWrapper color={color} outline={Boolean(outline)}>
+        {value}
+      </ValueWrapper>
     </Wrapper>
   );
 };
@@ -58,6 +84,7 @@ const ValueLabel = ({ label, value, color, ...props }: IValueLabelProps) => {
 ValueLabel.defaultProps = {
   value: '',
   onClick: () => {},
+  outline: true,
 };
 
 export default ValueLabel;

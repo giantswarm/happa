@@ -3,11 +3,13 @@ import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ValidationError from 'UI/Display/Cluster/ClusterLabels/ValidationError';
-import { Tooltip } from 'UI/Display/Tooltip';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import ValueLabel from 'UI/Display/ValueLabel';
 import TextInput from 'UI/Inputs/TextInput';
 import useValidatingInternalValue from 'utils/hooks/useValidatingInternalValue';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
+
+import DeleteLabelButton from './DeleteLabelButton';
 
 interface IEditLabelTooltip {
   label: string;
@@ -23,8 +25,17 @@ const EditLabelTooltipWrapper = styled.div`
   display: inline-block;
 `;
 
-const StyledValueLabel = styled(ValueLabel)`
+const StyledValueLabel = styled(ValueLabel)<{ allowInteraction?: boolean }>`
   margin-bottom: 0;
+
+  cursor: ${({ allowInteraction }) =>
+    allowInteraction ? 'pointer' : 'default'};
+
+  :hover {
+    text-decoration: ${({ allowInteraction }) =>
+      allowInteraction ? 'underline' : 'none'};
+    text-decoration-style: dotted;
+  }
 `;
 
 const FormWrapper = styled.div`
@@ -63,12 +74,23 @@ const Buttons = styled(GridCell)`
 `;
 
 const Editable = styled.span<{ allowInteraction?: boolean }>`
-  text-decoration: ${({ allowInteraction }) =>
-    allowInteraction ? 'underline' : 'none'};
-  text-decoration-style: dotted;
-  cursor: ${({ allowInteraction }) =>
-    allowInteraction ? 'pointer' : 'default'};
   opacity: ${({ allowInteraction }) => (allowInteraction ? '1' : '0.6')};
+`;
+
+// This is to make the "Click to edit label" tooltip not appear above the label editing tooltip
+const StyledTooltip = styled(Tooltip)`
+  z-index: 1069 !important;
+`;
+
+const LabelWrapper = styled(Box)<{ allowInteraction?: boolean }>`
+  padding-right: 8px;
+  border-radius: 5px;
+  outline: 1px solid ${({ theme }) => theme.colors.shade5};
+
+  :hover {
+    pointer-events: ${({ allowInteraction }) =>
+      allowInteraction ? 'auto' : 'none'};
+  }
 `;
 
 const EditLabelTooltip: FC<IEditLabelTooltip> = ({
@@ -157,20 +179,49 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
           Add label
         </Button>
       ) : (
-        <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
-          <StyledValueLabel
-            onClick={open}
-            label={
-              <Editable allowInteraction={allowInteraction}>{label}</Editable>
-            }
-            value={
-              <Editable allowInteraction={allowInteraction}>{value}</Editable>
-            }
-            tabIndex={0}
-            aria-label={`Label ${label} with value ${value}`}
+        <LabelWrapper
+          direction='row'
+          align='center'
+          margin={{ right: 'xsmall', vertical: 'xxsmall' }}
+          allowInteraction={allowInteraction}
+        >
+          <TooltipContainer
+            target={divElement}
+            content={<StyledTooltip>Click to edit label</StyledTooltip>}
+          >
+            <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
+              <StyledValueLabel
+                onClick={open}
+                label={
+                  <Editable allowInteraction={allowInteraction}>
+                    {label}
+                  </Editable>
+                }
+                value={
+                  <Editable allowInteraction={allowInteraction}>
+                    {value}
+                  </Editable>
+                }
+                tabIndex={allowInteraction ? 0 : -1}
+                role='button'
+                aria-label={`Label ${label} with value ${value}`}
+                aria-disabled={!allowInteraction || currentlyEditing}
+                allowInteraction={allowInteraction}
+                outline={false}
+              />
+            </Keyboard>
+          </TooltipContainer>
+          <DeleteLabelButton
+            allowInteraction={allowInteraction}
+            onOpen={onOpen}
+            onDelete={() => {
+              onSave({ key: label, value: null });
+            }}
             role='button'
+            aria-label={`Delete '${label}' label`}
+            aria-disabled={!allowInteraction || currentlyEditing}
           />
-        </Keyboard>
+        </LabelWrapper>
       )}
       {currentlyEditing && (
         <Tooltip
@@ -234,7 +285,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
             <Text size='small'>
               {[keyValidationError, valueValidationError]
                 .filter((err) => err)
-                .join(',')}
+                .join(', ')}
             </Text>
           </ValidationError>
         </Tooltip>
