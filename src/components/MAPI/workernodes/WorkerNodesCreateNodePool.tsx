@@ -381,6 +381,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                   provider={provider}
                   organizationName={orgName}
                   clusterName={cluster.metadata.name}
+                  clusterReleaseVersion={clusterReleaseVersion}
                   description={description}
                   machineType={machineType}
                   nodePoolAZs={nodePoolAZs}

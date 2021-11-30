@@ -241,6 +241,7 @@ export interface IKubectlGSTemplateNodePoolCommandConfig {
   provider: string;
   organization: string;
   clusterName: string;
+  clusterReleaseVersion: string;
   description?: string;
   azureVMSize?: string;
   awsInstanceType?: string;
@@ -272,6 +273,8 @@ export function withTemplateNodePool(
       config.organization,
       '--cluster-name',
       config.clusterName,
+      '--release',
+      config.clusterReleaseVersion,
     ];
 
     if (config.description) {

@@ -295,6 +295,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
         },
         expectedOutput:
           'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0',
@@ -305,6 +306,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           description: 'Describe me',
         },
         expectedOutput:
@@ -316,6 +318,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           azureVMSize: 'some_standard_size',
         },
         expectedOutput:
@@ -327,6 +330,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodePoolAZs: ['1'],
         },
         expectedOutput:
@@ -338,6 +342,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodePoolAZs: ['1', '2'],
         },
         expectedOutput:
@@ -349,6 +354,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           azureUseSpotVMs: true,
         },
         expectedOutput:
@@ -360,6 +366,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           azureUseSpotVMs: true,
           azureSpotVMsMaxPrice: 0.00001,
         },
@@ -372,6 +379,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           awsOnDemandBaseCapacity: 20,
         },
         expectedOutput:
@@ -383,6 +391,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           awsOnDemandPercentageAboveBaseCapacity: 100,
         },
         expectedOutput:
@@ -394,6 +403,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodesMin: 0,
         },
         expectedOutput:
@@ -405,6 +415,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodesMin: 3,
         },
         expectedOutput:
@@ -416,6 +427,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodesMax: 8,
         },
         expectedOutput:
@@ -427,6 +439,7 @@ describe('utils', () => {
           clusterName: 'a1b2c',
           organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodesMax: 10,
         },
         expectedOutput:
