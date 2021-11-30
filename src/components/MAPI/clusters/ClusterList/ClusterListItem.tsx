@@ -71,6 +71,7 @@ interface IClusterListItemProps
   providerCluster?: ProviderCluster | null;
   releases?: releasev1alpha1.IRelease[];
   organizations?: Record<string, IOrganization>;
+  canCreateClusters?: boolean;
 }
 
 const ClusterListItem: React.FC<IClusterListItemProps> = ({
@@ -78,6 +79,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   providerCluster,
   releases,
   organizations,
+  canCreateClusters,
   ...props
 }) => {
   const name = cluster?.metadata.name;
@@ -192,7 +194,8 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const isLoading = typeof cluster === 'undefined';
 
   const shouldDisplayGetStarted = useMemo(() => {
-    if (isDeleting || isLoading || !creationDate) return false;
+    if (isDeleting || isLoading || !creationDate || !canCreateClusters)
+      return false;
 
     const createDate = toDate(creationDate, { timeZone: 'UTC' });
     const age = differenceInHours(createDate)(new Date());
@@ -200,7 +203,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     // Cluster is older than 30 days.
     // eslint-disable-next-line no-magic-numbers
     return age < 30 * 24;
-  }, [creationDate, isDeleting, isLoading]);
+  }, [creationDate, isDeleting, isLoading, canCreateClusters]);
 
   const dispatch = useDispatch();
 

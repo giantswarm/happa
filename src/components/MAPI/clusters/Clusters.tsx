@@ -274,6 +274,7 @@ const Clusters: React.FC<{}> = () => {
                           providerCluster={providerCluster}
                           releases={releaseList?.items}
                           organizations={organizations}
+                          canCreateClusters={canCreateClusters}
                           margin={{ bottom: 'medium' }}
                         />
                       </BaseTransition>
