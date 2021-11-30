@@ -101,23 +101,25 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     const org = capiv1alpha3.getClusterOrganization(cluster);
     if (!org) return undefined;
 
-    return Object.values(organizations).find((o) => o.name === org)?.id;
+    return Object.values(organizations).find((o) => o.name === org);
   }, [cluster, organizations]);
+
+  const orgId = organization?.id;
 
   const creationDate = cluster?.metadata.creationTimestamp;
   const deletionDate = cluster?.metadata.deletionTimestamp;
 
   const clusterPath = useMemo(() => {
-    if (!organization || !name) return '';
+    if (!orgId || !name) return '';
 
     return RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.Detail.Home,
       {
-        orgId: organization,
+        orgId: orgId,
         clusterId: name,
       }
     );
-  }, [organization, name]);
+  }, [orgId, name]);
 
   const k8sVersion = useMemo(() => {
     const formattedReleaseVersion = `v${releaseVersion}`;
@@ -140,18 +142,51 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const { canList: canListNodePools, canGet: canGetNodePools } =
-    usePermissionsForNodePools(provider, cluster?.metadata.namespace ?? '');
+  const orgNamespace = organization?.namespace;
 
-  const hasReadPermissionsForNodePools = canListNodePools && canGetNodePools;
+  const { canList: canListNpInOrgNamespace, canGet: canGetNpInOrgNamespace } =
+    usePermissionsForNodePools(provider, orgNamespace ?? '');
 
-  const nodePoolListForClusterKey = hasReadPermissionsForNodePools
-    ? fetchNodePoolListForClusterKey(cluster)
-    : null;
+  const hasReadPermissionsForNpInOrgNamespace =
+    canListNpInOrgNamespace && canGetNpInOrgNamespace;
+
+  const {
+    canList: canListNpInDefaultNamespace,
+    canGet: canGetNpInDefaultNamespace,
+  } = usePermissionsForNodePools(provider, 'default');
+
+  const hasReadPermissionsForNpInDefaultNamespace =
+    canListNpInDefaultNamespace && canGetNpInDefaultNamespace;
+
+  const nodePoolListForClusterKey = useMemo(() => {
+    switch (true) {
+      case hasReadPermissionsForNpInDefaultNamespace:
+        return fetchNodePoolListForClusterKey(cluster);
+      case hasReadPermissionsForNpInOrgNamespace:
+        return fetchNodePoolListForClusterKey(cluster, orgNamespace);
+      default:
+        return null;
+    }
+  }, [
+    cluster,
+    hasReadPermissionsForNpInDefaultNamespace,
+    hasReadPermissionsForNpInOrgNamespace,
+    orgNamespace,
+  ]);
+
+  const nodePoolListNamespace = hasReadPermissionsForNpInDefaultNamespace
+    ? undefined
+    : orgNamespace;
 
   const { data: nodePoolList, error: nodePoolListError } = useSWR(
     nodePoolListForClusterKey,
-    () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
+    () =>
+      fetchNodePoolListForCluster(
+        clientFactory,
+        auth,
+        cluster,
+        nodePoolListNamespace
+      )
   );
 
   useEffect(() => {
@@ -188,11 +223,11 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   }, [nodePoolList?.items, providerNodePools]);
 
   const workerNodesCPU =
-    providerNodePoolsError || !hasReadPermissionsForNodePools
+    providerNodePoolsError || !hasReadPermissionsForNpInOrgNamespace
       ? -1
       : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
   const workerNodesMemory =
-    providerNodePoolsError || !hasReadPermissionsForNodePools
+    providerNodePoolsError || !hasReadPermissionsForNpInOrgNamespace
       ? -1
       : getWorkerNodesMemory(
           nodePoolsWithProviderNodePools,
@@ -201,10 +236,10 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 
   const isAdmin = useSelector(getUserIsAdmin);
 
-  const workerNodePoolsCount = hasReadPermissionsForNodePools
+  const workerNodePoolsCount = hasReadPermissionsForNpInOrgNamespace
     ? nodePoolList?.items.length
     : -1;
-  const workerNodesCount = hasReadPermissionsForNodePools
+  const workerNodesCount = hasReadPermissionsForNpInOrgNamespace
     ? getWorkerNodesCount(nodePoolList?.items)
     : -1;
 
@@ -229,12 +264,12 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const handleGetStartedClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
 
-    if (!organization || !name) return;
+    if (!orgId || !name) return;
 
     const path = RoutePath.createUsablePath(
       OrganizationsRoutes.Clusters.GettingStarted.Overview,
       {
-        orgId: organization,
+        orgId: orgId,
         clusterId: name,
       }
     );
