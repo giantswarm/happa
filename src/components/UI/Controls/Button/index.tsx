@@ -18,6 +18,12 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
   }
 `;
 
+const StyledControl = styled(Control)<{ unauthorized?: boolean }>`
+  :hover {
+    cursor: ${({ unauthorized }) => (unauthorized ? 'not-allowed' : 'auto')};
+  }
+`;
+
 enum ButtonStyle {
   Primary,
   Secondary,
@@ -103,6 +109,7 @@ interface IButtonProps extends React.ComponentPropsWithoutRef<typeof Control> {
   loading?: boolean;
   loadingTimeout?: number;
   disabled?: boolean;
+  unauthorized?: boolean;
   href?: string;
   target?: '_self' | '_blank' | '_parent' | '_top' | string;
   rel?: string;
@@ -121,6 +128,7 @@ const Button = React.forwardRef<
     {
       loading,
       disabled,
+      unauthorized,
       primary,
       secondary,
       warning,
@@ -160,7 +168,7 @@ const Button = React.forwardRef<
           }}
           {...wrapperProps}
         >
-          <Control
+          <StyledControl
             primary={buttonStyle === ButtonStyle.Primary}
             secondary={
               buttonStyle !== ButtonStyle.Primary &&
@@ -168,6 +176,7 @@ const Button = React.forwardRef<
             }
             label={children}
             disabled={disabled || loading}
+            unauthorized={unauthorized}
             {...props}
             ref={ref as never}
           />
