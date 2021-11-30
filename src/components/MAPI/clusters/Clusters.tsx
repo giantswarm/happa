@@ -235,7 +235,10 @@ const Clusters: React.FC<{}> = () => {
           )}
 
           {hasNoClusters && (
-            <ClusterListEmptyPlaceholder organizationName={selectedOrgName!} />
+            <ClusterListEmptyPlaceholder
+              organizationName={selectedOrgName!}
+              canCreateClusters={canCreateClusters}
+            />
           )}
 
           {!hasOrgs && <ClusterListNoOrgsPlaceholder />}

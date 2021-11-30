@@ -4,11 +4,12 @@ import * as React from 'react';
 interface IClusterListEmptyPlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   organizationName: string;
+  canCreateClusters: boolean;
 }
 
 const ClusterListEmptyPlaceholder: React.FC<
   IClusterListEmptyPlaceholderProps
-> = ({ organizationName, ...props }) => {
+> = ({ organizationName, canCreateClusters, ...props }) => {
   return (
     <Box
       pad='medium'
@@ -24,10 +25,12 @@ const ClusterListEmptyPlaceholder: React.FC<
         Couldn&apos;t find any clusters in organization{' '}
         <code>{organizationName}</code>
       </Heading>
-      <Paragraph fill={true}>
-        Make your first cluster by pressing the green &quot;Launch New
-        Cluster&quot; button above.
-      </Paragraph>
+      {canCreateClusters && (
+        <Paragraph fill={true}>
+          Make your first cluster by pressing the green &quot;Launch New
+          Cluster&quot; button above.
+        </Paragraph>
+      )}
       <Paragraph fill={true}>
         You can switch to a different organization by using the organization
         selector at the top right of the page.
