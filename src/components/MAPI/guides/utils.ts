@@ -174,7 +174,7 @@ export function withLogin(
  * */
 export interface IKubectlGSTemplateClusterCommandConfig {
   provider: string;
-  owner: string;
+  organization: string;
   release?: string;
   name?: string;
   description?: string;
@@ -197,8 +197,8 @@ export function withTemplateCluster(
       'cluster',
       '--provider',
       config.provider,
-      '--owner',
-      config.owner,
+      '--organization',
+      config.organization,
     ];
 
     if (config.name) {
@@ -239,7 +239,7 @@ export function withTemplateCluster(
  * */
 export interface IKubectlGSTemplateNodePoolCommandConfig {
   provider: string;
-  owner: string;
+  organization: string;
   clusterName: string;
   description?: string;
   azureVMSize?: string;
@@ -268,8 +268,8 @@ export function withTemplateNodePool(
       'nodepool',
       '--provider',
       config.provider,
-      '--owner',
-      config.owner,
+      '--organization',
+      config.organization,
       '--cluster-name',
       config.clusterName,
     ];

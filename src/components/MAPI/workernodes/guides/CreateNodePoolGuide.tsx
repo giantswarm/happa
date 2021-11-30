@@ -83,7 +83,7 @@ const CreateNodePoolGuide: React.FC<ICreateNodePoolGuide> = ({
           command={makeKubectlGSCommand(
             withTemplateNodePool({
               provider,
-              owner: organizationName,
+              organization: organizationName,
               clusterName,
               description,
               azureVMSize: vmSize,

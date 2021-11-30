@@ -369,36 +369,38 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
                 )}
               </Box>
             </Box>
-            <Box
-              margin={{ top: 'large' }}
-              direction='column'
-              gap='small'
-              basis='100%'
-              animation={{ type: 'fadeIn', duration: 300 }}
-            >
-              <CreateNodePoolGuide
-                provider={provider}
-                organizationName={orgName}
-                clusterName={cluster.metadata.name}
-                description={description}
-                machineType={machineType}
-                nodePoolAZs={nodePoolAZs}
-                azureUseSpotVMs={spotInstances?.enabled}
-                azureSpotVMsMaxPrice={
-                  (spotInstances as INodePoolSpotInstancesAzure)?.maxPrice
-                }
-                awsOnDemandBaseCapacity={
-                  (spotInstances as INodePoolSpotInstancesAWS)
-                    ?.onDemandBaseCapacity
-                }
-                awsOnDemandPercentageAboveBaseCapacity={
-                  (spotInstances as INodePoolSpotInstancesAWS)
-                    ?.onDemandPercentageAboveBaseCapacity
-                }
-                nodesMin={scaling.min}
-                nodesMax={scaling.max}
-              />
-            </Box>
+            {clusterReleaseVersion && (
+              <Box
+                margin={{ top: 'large' }}
+                direction='column'
+                gap='small'
+                basis='100%'
+                animation={{ type: 'fadeIn', duration: 300 }}
+              >
+                <CreateNodePoolGuide
+                  provider={provider}
+                  organizationName={orgName}
+                  clusterName={cluster.metadata.name}
+                  description={description}
+                  machineType={machineType}
+                  nodePoolAZs={nodePoolAZs}
+                  azureUseSpotVMs={spotInstances?.enabled}
+                  azureSpotVMsMaxPrice={
+                    (spotInstances as INodePoolSpotInstancesAzure)?.maxPrice
+                  }
+                  awsOnDemandBaseCapacity={
+                    (spotInstances as INodePoolSpotInstancesAWS)
+                      ?.onDemandBaseCapacity
+                  }
+                  awsOnDemandPercentageAboveBaseCapacity={
+                    (spotInstances as INodePoolSpotInstancesAWS)
+                      ?.onDemandPercentageAboveBaseCapacity
+                  }
+                  nodesMin={scaling.min}
+                  nodesMax={scaling.max}
+                />
+              </Box>
+            )}
           </Box>
         </form>
       </Keyboard>
