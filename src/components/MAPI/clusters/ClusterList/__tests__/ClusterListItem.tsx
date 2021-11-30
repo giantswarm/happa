@@ -4,6 +4,7 @@ import add from 'date-fns/fp/add';
 import format from 'date-fns/fp/format';
 import sub from 'date-fns/fp/sub';
 import { createMemoryHistory } from 'history';
+import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
@@ -41,12 +42,30 @@ function getComponent(
   );
 }
 
+jest.mock('MAPI/workernodes/permissions/usePermissionsForNodePools');
+
 describe('ClusterListItem', () => {
   it('renders without crashing', () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     render(getComponent({}));
   });
 
   it('displays a loading animation if the cluster is not loaded yet', () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     render(getComponent({}));
 
     expect(
@@ -56,6 +75,14 @@ describe('ClusterListItem', () => {
   });
 
   it('displays if a cluster was deleted', () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     const deletionDate = sub({
       hours: 1,
     })(new Date());
@@ -79,6 +106,14 @@ describe('ClusterListItem', () => {
   });
 
   it('displays the getting started button if the cluster has been created recently', () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     let creationDate = sub({
       days: 20,
     })(new Date());
@@ -93,6 +128,7 @@ describe('ClusterListItem', () => {
           },
         },
         releases: releasev1alpha1Mocks.releasesList.items,
+        canCreateClusters: true,
       })
     );
 
@@ -122,7 +158,37 @@ describe('ClusterListItem', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('does not displays the getting started button if the user does not have permissions create clusters', () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
+    render(
+      getComponent({
+        cluster: capiv1alpha3Mocks.randomCluster1,
+        releases: releasev1alpha1Mocks.releasesList.items,
+        canCreateClusters: false,
+      })
+    );
+
+    expect(
+      screen.queryByRole('button', { name: 'Get Started' })
+    ).not.toBeInTheDocument();
+  });
+
   it('displays various information about the cluster', () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     const creationDate = sub({
       hours: 1,
     })(new Date());
@@ -157,6 +223,14 @@ describe('ClusterListItem', () => {
   });
 
   it('displays stats about worker nodes', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     nock(window.config.mapiEndpoint)
       .get(
         `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
@@ -196,6 +270,14 @@ describe('ClusterListItem', () => {
   });
 
   it(`displays the cluster's current status`, () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     const { rerender } = render(
       getComponent({
         cluster: {
@@ -273,6 +355,14 @@ describe('ClusterListItem', () => {
   });
 
   it('displays information if an upgrade has been scheduled', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     const targetTime = `${format('dd MMM yy HH:mm')(
       add({ days: 1 })(new Date())
     )} UTC`;
