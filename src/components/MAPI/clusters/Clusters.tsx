@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Keyboard, Text } from 'grommet';
+import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { ClusterList } from 'MAPI/types';
 import {
   fetchClusterList,
@@ -31,6 +32,7 @@ import RoutePath from 'utils/routePath';
 
 import ClusterListItem from './ClusterList/ClusterListItem';
 import ListClustersGuide from './guides/ListClustersGuide';
+import { usePermissionsForClusters } from './permissions/usePermissionsForClusters';
 import { compareClusters, mapClustersToProviderClusters } from './utils';
 
 const LOADING_COMPONENTS = new Array(6).fill(0);
@@ -73,14 +75,19 @@ const Clusters: React.FC<{}> = () => {
   const namespace = selectedOrg?.namespace;
   const provider = window.config.info.general.provider;
 
+  const { canList: canListClusters, canCreate: canCreateClusters } =
+    usePermissionsForClusters(provider, namespace ?? '');
+
+  const clusterListKey = canListClusters
+    ? fetchClusterListKey(provider, namespace, selectedOrgID)
+    : null;
+
   const {
     data: clusterList,
     error: clusterListError,
     isValidating: clusterListIsValidating,
-  } = useSWR<ClusterList, GenericResponseError>(
-    fetchClusterListKey(provider, namespace, selectedOrgID),
-    () =>
-      fetchClusterList(clientFactory, auth, provider, namespace, selectedOrgID)
+  } = useSWR<ClusterList, GenericResponseError>(clusterListKey, () =>
+    fetchClusterList(clientFactory, auth, provider, namespace, selectedOrgID)
   );
 
   useEffect(() => {
@@ -152,8 +159,18 @@ const Clusters: React.FC<{}> = () => {
     typeof sortedClustersWithProviderClusters === 'undefined';
 
   const releaseListClient = useRef(clientFactory());
+
+  const { canList: canListReleases } = usePermissionsForReleases(
+    provider,
+    namespace ?? ''
+  );
+
+  const releaseListKey = canListReleases
+    ? releasev1alpha1.getReleaseListKey()
+    : null;
+
   const { data: releaseList, error: releaseListError } = useSWR(
-    releasev1alpha1.getReleaseListKey(),
+    releaseListKey,
     () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
@@ -173,22 +190,41 @@ const Clusters: React.FC<{}> = () => {
             round='xsmall'
             direction='row'
             align='center'
-            gap='small'
           >
-            <Link to={newClusterPath}>
-              <Button
-                primary={true}
-                tabIndex={-1}
-                icon={<i className='fa fa-add-circle' />}
-              >
-                Launch new cluster
-              </Button>
-            </Link>
+            {canCreateClusters ? (
+              <>
+                <Link to={newClusterPath}>
+                  <Button
+                    primary={true}
+                    tabIndex={-1}
+                    icon={<i className='fa fa-add-circle' />}
+                  >
+                    Launch new cluster
+                  </Button>
+                </Link>
 
-            {hasNoClusters && (
-              <Text>
-                Ready to launch your first cluster? Click the green button!
-              </Text>
+                {hasNoClusters && (
+                  <Text margin={{ left: 'small' }}>
+                    Ready to launch your first cluster? Click the green button!
+                  </Text>
+                )}
+              </>
+            ) : (
+              <>
+                <Button
+                  primary={true}
+                  tabIndex={-1}
+                  icon={<i className='fa fa-add-circle' />}
+                  disabled={true}
+                  unauthorized={true}
+                >
+                  Launch new cluster
+                </Button>
+                <Text color='text-weak' margin={{ left: 'small' }}>
+                  For creating a cluster, you need additional permissions.
+                  Please talk to your administrator.
+                </Text>
+              </>
             )}
           </Box>
         )}
