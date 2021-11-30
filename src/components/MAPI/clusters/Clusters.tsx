@@ -75,10 +75,15 @@ const Clusters: React.FC<{}> = () => {
   const namespace = selectedOrg?.namespace;
   const provider = window.config.info.general.provider;
 
-  const { canList: canListClusters, canCreate: canCreateClusters } =
-    usePermissionsForClusters(provider, namespace ?? '');
+  const {
+    canList: canListClusters,
+    canGet: canGetClusters,
+    canCreate: canCreateClusters,
+  } = usePermissionsForClusters(provider, namespace ?? '');
 
-  const clusterListKey = canListClusters
+  const hasReadPermissionsForClusters = canListClusters && canGetClusters;
+
+  const clusterListKey = hasReadPermissionsForClusters
     ? fetchClusterListKey(provider, namespace, selectedOrgID)
     : null;
 

@@ -13,6 +13,7 @@ import {
   getClusterDescription,
   getMachineTypes,
 } from 'MAPI/utils';
+import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { mapNodePoolsToProviderNodePools } from 'MAPI/workernodes/utils';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
@@ -74,6 +75,7 @@ interface IClusterListItemProps
   canCreateClusters?: boolean;
 }
 
+// eslint-disable-next-line complexity
 const ClusterListItem: React.FC<IClusterListItemProps> = ({
   cluster,
   providerCluster,
@@ -133,11 +135,22 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     return version;
   }, [releases, releaseVersion]);
 
+  const provider = window.config.info.general.provider;
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const { canList: canListNodePools, canGet: canGetNodePools } =
+    usePermissionsForNodePools(provider, cluster?.metadata.namespace ?? '');
+
+  const hasReadPermissionsForNodePools = canListNodePools && canGetNodePools;
+
+  const nodePoolListForClusterKey = hasReadPermissionsForNodePools
+    ? fetchNodePoolListForClusterKey(cluster)
+    : null;
+
   const { data: nodePoolList, error: nodePoolListError } = useSWR(
-    fetchNodePoolListForClusterKey(cluster),
+    nodePoolListForClusterKey,
     () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
   );
 
@@ -174,20 +187,26 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     );
   }, [nodePoolList?.items, providerNodePools]);
 
-  const workerNodesCPU = providerNodePoolsError
-    ? -1
-    : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
-  const workerNodesMemory = providerNodePoolsError
-    ? -1
-    : getWorkerNodesMemory(
-        nodePoolsWithProviderNodePools,
-        machineTypes.current
-      );
+  const workerNodesCPU =
+    providerNodePoolsError || !hasReadPermissionsForNodePools
+      ? -1
+      : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
+  const workerNodesMemory =
+    providerNodePoolsError || !hasReadPermissionsForNodePools
+      ? -1
+      : getWorkerNodesMemory(
+          nodePoolsWithProviderNodePools,
+          machineTypes.current
+        );
 
   const isAdmin = useSelector(getUserIsAdmin);
-  const provider = window.config.info.general.provider;
 
-  const workerNodesCount = getWorkerNodesCount(nodePoolList?.items);
+  const workerNodePoolsCount = hasReadPermissionsForNodePools
+    ? nodePoolList?.items.length
+    : -1;
+  const workerNodesCount = hasReadPermissionsForNodePools
+    ? getWorkerNodesCount(nodePoolList?.items)
+    : -1;
 
   const isDeleting = Boolean(deletionDate);
   const hasError = typeof nodePoolListError !== 'undefined';
@@ -293,7 +312,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 
             {!hasError && !isDeleting && (
               <ClusterListItemNodeInfo
-                workerNodePoolsCount={nodePoolList?.items.length}
+                workerNodePoolsCount={workerNodePoolsCount}
                 workerNodesCPU={workerNodesCPU}
                 workerNodesCount={workerNodesCount}
                 workerNodesMemory={workerNodesMemory}
