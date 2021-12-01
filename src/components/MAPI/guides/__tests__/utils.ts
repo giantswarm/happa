@@ -85,91 +85,91 @@ describe('utils', () => {
       {
         name: 'returns correct output with only required options',
         modifierConfig: {
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
         },
         expectedOutput:
-          'kubectl gs template cluster --provider some-provider --owner some-owner',
+          'kubectl gs template cluster --provider some-provider --organization some-organization',
       },
       {
         name: 'returns correct output with name',
         modifierConfig: {
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
           name: 'some-resource',
         },
         expectedOutput:
-          'kubectl gs template cluster --provider some-provider --owner some-owner --name some-resource',
+          'kubectl gs template cluster --provider some-provider --organization some-organization --name some-resource',
       },
       {
         name: 'returns correct output with description',
         modifierConfig: {
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
           description: 'User friendliness',
         },
         expectedOutput:
-          'kubectl gs template cluster --provider some-provider --owner some-owner --description "User friendliness"',
+          'kubectl gs template cluster --provider some-provider --organization some-organization --description "User friendliness"',
       },
       {
         name: 'returns correct output with release',
         modifierConfig: {
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
           release: '14.5.0',
         },
         expectedOutput:
-          'kubectl gs template cluster --provider some-provider --owner some-owner --release 14.5.0',
+          'kubectl gs template cluster --provider some-provider --organization some-organization --release 14.5.0',
       },
       {
         name: 'returns correct output with label',
         modifierConfig: {
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
           labels: { label1: 'value1' },
         },
         expectedOutput:
-          'kubectl gs template cluster --provider some-provider --owner some-owner --label "label1=value1"',
+          'kubectl gs template cluster --provider some-provider --organization some-organization --label "label1=value1"',
       },
       {
         name: 'returns correct output with multiple labels',
         modifierConfig: {
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
           labels: { label1: 'value1', label2: 'value2' },
         },
         expectedOutput:
-          'kubectl gs template cluster --provider some-provider --owner some-owner --label "label1=value1" --label "label2=value2"',
+          'kubectl gs template cluster --provider some-provider --organization some-organization --label "label1=value1" --label "label2=value2"',
       },
       {
         name: 'returns correct output with control plane AZ',
         modifierConfig: {
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
           controlPlaneAZs: ['2'],
         },
         expectedOutput:
-          'kubectl gs template cluster --provider some-provider --owner some-owner --control-plane-az 2',
+          'kubectl gs template cluster --provider some-provider --organization some-organization --control-plane-az 2',
       },
       {
         name: 'returns correct output with multiple control plane AZs',
         modifierConfig: {
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
           controlPlaneAZs: ['1', '2', '3'],
         },
         expectedOutput:
-          'kubectl gs template cluster --provider some-provider --owner some-owner --control-plane-az 1 --control-plane-az 2 --control-plane-az 3',
+          'kubectl gs template cluster --provider some-provider --organization some-organization --control-plane-az 1 --control-plane-az 2 --control-plane-az 3',
       },
       {
         name: 'returns correct output with output',
         modifierConfig: {
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
           output: 'test-file.yaml',
         },
         expectedOutput:
-          'kubectl gs template cluster --provider some-provider --owner some-owner --output "test-file.yaml"',
+          'kubectl gs template cluster --provider some-provider --organization some-organization --output "test-file.yaml"',
       },
     ];
 
@@ -293,144 +293,157 @@ describe('utils', () => {
         name: 'returns correct output with required options',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0',
       },
       {
         name: 'returns correct output with description',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           description: 'Describe me',
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --description "Describe me"',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0 --description "Describe me"',
       },
       {
         name: 'returns correct output with Azure VM size',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           azureVMSize: 'some_standard_size',
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --azure-vm-size some_standard_size',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0 --azure-vm-size some_standard_size',
       },
       {
         name: 'returns correct output with one node pool AZ',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodePoolAZs: ['1'],
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --availability-zones 1',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0 --availability-zones 1',
       },
       {
         name: 'returns correct output with multiple node pool AZs',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodePoolAZs: ['1', '2'],
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --availability-zones 1,2',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0 --availability-zones 1,2',
       },
       {
         name: 'returns correct output with use Azure spot VMs',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           azureUseSpotVMs: true,
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --azure-spot-vms',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0 --azure-spot-vms',
       },
       {
         name: 'returns correct output with Azure spot VMs max price',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           azureUseSpotVMs: true,
           azureSpotVMsMaxPrice: 0.00001,
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --azure-spot-vms --azure-spot-vms-max-price 0.00001',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0 --azure-spot-vms --azure-spot-vms-max-price 0.00001',
       },
       {
         name: 'returns correct output with AWS spot instances on demand base capacity',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           awsOnDemandBaseCapacity: 20,
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --on-demand-base-capacity 20',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0 --on-demand-base-capacity 20',
       },
       {
         name: 'returns correct output with AWS spot instances on demand percentage above base capacity',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           awsOnDemandPercentageAboveBaseCapacity: 100,
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --on-demand-percentage-above-base-capacity 100',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0 --on-demand-percentage-above-base-capacity 100',
       },
       {
         name: 'returns correct output with minimum number of nodes',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodesMin: 0,
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --nodes-min 0',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0 --nodes-min 0',
       },
       {
         name: 'returns correct output if the minimum number of nodes equals the recommended default',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodesMin: 3,
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0',
       },
       {
         name: 'returns correct output with maximum number of nodes',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodesMax: 8,
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c --nodes-max 8',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0 --nodes-max 8',
       },
       {
         name: 'returns correct output if the maximum number of nodes equals the recommended default',
         modifierConfig: {
           clusterName: 'a1b2c',
-          owner: 'some-owner',
+          organization: 'some-organization',
           provider: 'some-provider',
+          clusterReleaseVersion: '16.0.0',
           nodesMax: 10,
         },
         expectedOutput:
-          'kubectl gs template nodepool --provider some-provider --owner some-owner --cluster-name a1b2c',
+          'kubectl gs template nodepool --provider some-provider --organization some-organization --cluster-name a1b2c --release 16.0.0',
       },
     ];
 
