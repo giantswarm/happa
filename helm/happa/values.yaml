@@ -28,10 +28,10 @@ azure:
       allowed: []
       default: ""
 
-certificate:
-  monitoring:
-    crtPem: ""
-    keyPem: ""
+ingress:
+  tls:
+    crtPemB64: ""
+    keyPemB64: ""
 
 guestCluster:
   base: ""
