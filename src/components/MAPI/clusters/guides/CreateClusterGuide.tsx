@@ -75,7 +75,7 @@ const CreateClusterGuide: React.FC<ICreateClusterGuideProps> = ({
           command={makeKubectlGSCommand(
             withTemplateCluster({
               provider,
-              owner: organizationName,
+              organization: organizationName,
               name: clusterName,
               release: releaseVersion,
               description,
