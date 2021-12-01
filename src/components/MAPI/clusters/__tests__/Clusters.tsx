@@ -14,6 +14,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import Clusters from '../Clusters';
+import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 
 const defaultState: IState = {
   ...preloginState,
@@ -58,8 +59,18 @@ function getComponent(
   );
 }
 
+jest.mock('../permissions/usePermissionsForClusters');
+
 describe('Clusters', () => {
   it('renders without crashing', () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     render(getComponent({}));
   });
 
@@ -85,6 +96,14 @@ describe('Clusters', () => {
   });
 
   it('displays an error message if the list of clusters could not be fetched', async () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.NotFound, {
@@ -108,6 +127,14 @@ describe('Clusters', () => {
   });
 
   it('displays a placeholder if there are no clusters', async () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
@@ -126,5 +153,23 @@ describe('Clusters', () => {
         );
       })
     ).toBeInTheDocument();
+  });
+
+  it('does not allow navigating to cluster creation if a user does not have permissions to create clusters', () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: false,
+      canCreate: false,
+      canDelete: false,
+    });
+
+    render(getComponent({}));
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Launch new cluster',
+      })
+    ).toBeDisabled();
   });
 });

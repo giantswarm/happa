@@ -105,7 +105,8 @@ export function compareNodePools(a: NodePool, b: NodePool) {
 export async function fetchNodePoolListForCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  cluster?: capiv1alpha3.ICluster
+  cluster?: capiv1alpha3.ICluster,
+  namespace?: string
 ): Promise<NodePoolList> {
   const infrastructureRef = cluster?.spec?.infrastructureRef;
   if (!infrastructureRef) {
@@ -130,6 +131,7 @@ export async function fetchNodePoolListForCluster(
                 [capiv1alpha4.labelClusterName]: cluster.metadata.name,
               },
             },
+            namespace,
           }
         );
       } else {
@@ -142,6 +144,7 @@ export async function fetchNodePoolListForCluster(
                 [capiv1alpha3.labelCluster]: cluster.metadata.name,
               },
             },
+            namespace,
           }
         );
       }
@@ -159,6 +162,7 @@ export async function fetchNodePoolListForCluster(
               [capiv1alpha3.labelCluster]: cluster.metadata.name,
             },
           },
+          namespace,
         }
       );
 
@@ -174,7 +178,8 @@ export async function fetchNodePoolListForCluster(
 }
 
 export function fetchNodePoolListForClusterKey(
-  cluster?: capiv1alpha3.ICluster
+  cluster?: capiv1alpha3.ICluster,
+  namespace?: string
 ) {
   const infrastructureRef = cluster?.spec?.infrastructureRef;
   if (
@@ -194,6 +199,7 @@ export function fetchNodePoolListForClusterKey(
               [capiv1alpha4.labelClusterName]: cluster.metadata.name,
             },
           },
+          namespace,
         });
       }
 
@@ -203,6 +209,7 @@ export function fetchNodePoolListForClusterKey(
             [capiv1alpha3.labelCluster]: cluster.metadata.name,
           },
         },
+        namespace,
       });
 
     case 'infrastructure.giantswarm.io/v1alpha2':
@@ -213,6 +220,7 @@ export function fetchNodePoolListForClusterKey(
             [capiv1alpha3.labelCluster]: cluster.metadata.name,
           },
         },
+        namespace,
       });
 
     default:
