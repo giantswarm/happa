@@ -7,3 +7,4 @@ version: [[ .Version ]]
 appVersion: [[ .AppVersion ]]
 annotations:
   config.giantswarm.io/version: 1.x.x
+kubeVersion: ">=1.19.0-0"
