@@ -19,6 +19,7 @@ interface ICreateNodePoolGuide
   provider: PropertiesOf<typeof Providers>;
   organizationName: string;
   clusterName: string;
+  clusterReleaseVersion: string;
   description?: string;
   machineType?: string;
   nodePoolAZs?: string[];
@@ -34,6 +35,7 @@ const CreateNodePoolGuide: React.FC<ICreateNodePoolGuide> = ({
   provider,
   organizationName,
   clusterName,
+  clusterReleaseVersion,
   description,
   machineType,
   nodePoolAZs,
@@ -83,8 +85,9 @@ const CreateNodePoolGuide: React.FC<ICreateNodePoolGuide> = ({
           command={makeKubectlGSCommand(
             withTemplateNodePool({
               provider,
-              owner: organizationName,
+              organization: organizationName,
               clusterName,
+              clusterReleaseVersion,
               description,
               azureVMSize: vmSize,
               awsInstanceType: instanceType,
