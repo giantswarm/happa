@@ -28,6 +28,7 @@ export interface IReleaseSpec {
   state: ReleaseState;
   date: string;
   endOfLifeDate?: string;
+  notice?: string;
 }
 
 export const Release = 'Release';
