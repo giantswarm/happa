@@ -65,6 +65,13 @@ export function withClusterReleaseVersion(
       controlPlaneNode.metadata.namespace = hasNonNamespacedResources
         ? defaultNamespace
         : orgNamespace;
+      if (
+        providerCluster &&
+        controlPlaneNode.kind === infrav1alpha3.G8sControlPlane
+      ) {
+        controlPlaneNode.spec.infrastructureRef.namespace =
+          providerCluster.metadata.namespace;
+      }
     }
   };
 }
