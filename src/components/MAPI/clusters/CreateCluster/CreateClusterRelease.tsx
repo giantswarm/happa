@@ -1,8 +1,4 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import ReleaseSelector, {
-  IRelease,
-} from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
-import * as releasesUtils from 'MAPI/releases/utils';
 import { extractErrorMessage, getClusterReleaseVersion } from 'MAPI/utils';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { getUserIsAdmin } from 'model/stores/main/selectors';
@@ -15,6 +11,9 @@ import { getK8sVersionEOLDate } from 'utils/config';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
+import CreateClusterReleaseSelector, {
+  IRelease,
+} from './CreateClusterReleaseSelector';
 import { IClusterPropertyProps, withClusterReleaseVersion } from './patches';
 
 interface ICreateClusterReleaseProps
@@ -60,13 +59,16 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
     return releaseList.items.reduce(
       (acc: Record<string, IRelease>, curr: releasev1alpha1.IRelease) => {
         const isActive = curr.spec.state === 'active';
+        const isPreview = curr.spec.state === 'preview';
         const normalizedVersion = curr.metadata.name.slice(1);
 
-        if (!isAdmin && (!isActive || isPreRelease(normalizedVersion))) {
+        if (
+          !isPreview &&
+          !isAdmin &&
+          (!isActive || isPreRelease(normalizedVersion))
+        ) {
           return acc;
         }
-
-        const components = releasesUtils.reduceReleaseToComponents(curr);
 
         const k8sVersion = releasev1alpha1.getK8sVersion(curr);
         const k8sVersionEOLDate = k8sVersion
@@ -75,9 +77,8 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
 
         acc[normalizedVersion] = {
           version: normalizedVersion,
-          active: isActive,
+          state: curr.spec.state,
           timestamp: curr.metadata.creationTimestamp ?? '',
-          components: Object.values(components),
           kubernetesVersion: k8sVersion,
           k8sVersionEOLDate: k8sVersionEOLDate,
           releaseNotesURL: releasev1alpha1.getReleaseNotesURL(curr),
@@ -100,14 +101,13 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
 
   return (
     <InputGroup label='Release version' {...props}>
-      <ReleaseSelector
+      <CreateClusterReleaseSelector
         releases={releases}
         isAdmin={isAdmin}
         errorMessage={extractErrorMessage(releaseListError)}
         isLoading={releaseIsLoading}
         selectRelease={handleChange}
         selectedRelease={value}
-        autoSelectLatest={false}
       />
     </InputGroup>
   );
