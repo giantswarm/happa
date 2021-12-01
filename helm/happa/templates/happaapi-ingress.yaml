@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: happaapi
-  namespace: giantswarm
+  namespace: default # default namespace because of kubernetes service
   labels:
     app: happa
   annotations:
