@@ -355,11 +355,12 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
               <ClusterListItemMainInfo
                 creationDate={creationDate}
                 releaseVersion={releaseVersion}
+                isPreviewRelease={isPreviewRelease}
                 k8sVersion={k8sVersion}
               />
             )}
 
-            {!hasError && !isDeleting && (
+            {!hasError && !isDeleting && !isPreviewRelease && (
               <ClusterListItemNodeInfo
                 workerNodePoolsCount={workerNodePoolsCount}
                 workerNodesCPU={workerNodesCPU}
