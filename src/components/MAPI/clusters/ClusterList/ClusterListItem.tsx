@@ -222,26 +222,34 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     );
   }, [nodePoolList?.items, providerNodePools]);
 
+  const isLoadingNpResources =
+    typeof nodePoolList === 'undefined' &&
+    typeof nodePoolListError === 'undefined' &&
+    typeof providerNodePools === 'undefined' &&
+    typeof providerNodePoolsError === 'undefined';
+
   const workerNodesCPU =
-    providerNodePoolsError || !hasReadPermissionsForNpInOrgNamespace
-      ? -1
-      : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
+    isLoadingNpResources || hasReadPermissionsForNpInOrgNamespace
+      ? getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current)
+      : -1;
   const workerNodesMemory =
-    providerNodePoolsError || !hasReadPermissionsForNpInOrgNamespace
-      ? -1
-      : getWorkerNodesMemory(
+    isLoadingNpResources || hasReadPermissionsForNpInOrgNamespace
+      ? getWorkerNodesMemory(
           nodePoolsWithProviderNodePools,
           machineTypes.current
-        );
+        )
+      : -1;
 
   const isAdmin = useSelector(getUserIsAdmin);
 
-  const workerNodePoolsCount = hasReadPermissionsForNpInOrgNamespace
-    ? nodePoolList?.items.length
-    : -1;
-  const workerNodesCount = hasReadPermissionsForNpInOrgNamespace
-    ? getWorkerNodesCount(nodePoolList?.items)
-    : -1;
+  const workerNodePoolsCount =
+    isLoadingNpResources || hasReadPermissionsForNpInOrgNamespace
+      ? nodePoolList?.items.length
+      : -1;
+  const workerNodesCount =
+    isLoadingNpResources || hasReadPermissionsForNpInOrgNamespace
+      ? getWorkerNodesCount(nodePoolList?.items)
+      : -1;
 
   const isDeleting = Boolean(deletionDate);
   const hasError = typeof nodePoolListError !== 'undefined';
