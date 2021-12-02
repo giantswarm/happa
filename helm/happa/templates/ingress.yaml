@@ -1,4 +1,8 @@
+{{ if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
 apiVersion: networking.k8s.io/v1
+{{ else }}
+apiVersion: networking.k8s.io/v1beta1
+{{ end }}
 kind: Ingress
 metadata:
   name: happa
@@ -27,10 +31,15 @@ spec:
       - path: /
         pathType: Prefix
         backend:
+{{ if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
           service:
             name: happa
             port:
               number: 8000
+{{ else }}
+          serviceName: happa
+          servicePort: 8000
+{{ end }}
   tls:
   - hosts:
     - {{ .Values.happa.host }}
