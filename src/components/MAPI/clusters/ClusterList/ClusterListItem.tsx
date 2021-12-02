@@ -248,7 +248,13 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const isLoading = typeof cluster === 'undefined';
 
   const shouldDisplayGetStarted = useMemo(() => {
-    if (isDeleting || isLoading || !creationDate || !canCreateClusters)
+    if (
+      isDeleting ||
+      isLoading ||
+      !creationDate ||
+      !canCreateClusters ||
+      isPreviewRelease
+    )
       return false;
 
     const createDate = toDate(creationDate, { timeZone: 'UTC' });
@@ -257,7 +263,13 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     // Cluster is older than 30 days.
     // eslint-disable-next-line no-magic-numbers
     return age < 30 * 24;
-  }, [creationDate, isDeleting, isLoading, canCreateClusters]);
+  }, [
+    isDeleting,
+    isLoading,
+    creationDate,
+    canCreateClusters,
+    isPreviewRelease,
+  ]);
 
   const dispatch = useDispatch();
 
