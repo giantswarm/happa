@@ -4,6 +4,7 @@ import { Box, Heading } from 'grommet';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import ClusterDetailKeyPairs from 'MAPI/keypairs/ClusterDetailKeyPairs';
+import { getPreviewReleaseVersions } from 'MAPI/releases/utils';
 import { Cluster, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -214,6 +215,7 @@ const ClusterDetail: React.FC<{}> = () => {
     }
   }, [cluster, dispatch]);
 
+  // TODO: remove once preview releases are supported
   const releaseListClient = useRef(clientFactory());
 
   const { data: releaseList, error: releaseListError } = useSWR(
@@ -231,17 +233,16 @@ const ClusterDetail: React.FC<{}> = () => {
     if (!cluster || !releaseList?.items) return undefined;
 
     const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
-    const formattedReleaseVersion = `v${releaseVersion}`;
-
-    const release = releaseList.items.find(
-      (r) => r.metadata.name === formattedReleaseVersion
+    const previewReleaseVersions = getPreviewReleaseVersions(
+      releaseList?.items
     );
 
-    return release?.spec.state === 'preview';
+    return previewReleaseVersions.some(
+      (version) => version === `v${releaseVersion}`
+    );
   }, [cluster, releaseList?.items]);
 
   // Redirect to home page if the cluster uses a preview release
-  // Remove once preview releases are supported
   useEffect(() => {
     if (cluster && isPreviewRelease) {
       new FlashMessage(
