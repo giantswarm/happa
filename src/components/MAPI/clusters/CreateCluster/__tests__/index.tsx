@@ -153,12 +153,20 @@ describe('ClusterCreate', () => {
 
     fireEvent.click(screen.getByText('Available releases'));
 
+<<<<<<< HEAD
     // Shows preview releases in the list of releases, but don't allow selection
+=======
+    // Shows preview releases in the list of releases, but cannot select them
+>>>>>>> 71946df0 (Add test case for not displaying upgrades to test releases)
     expect(
       screen.getByLabelText('Release version 20.0.0-alpha')
     ).toBeInTheDocument();
     expect(
+<<<<<<< HEAD
       screen.queryByLabelText('Select release 20.0.0-alpha')
+=======
+      screen.getByLabelText('Select release 20.0.0-alpha')
+>>>>>>> 71946df0 (Add test case for not displaying upgrades to test releases)
     ).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByLabelText('Release version 14.1.5'));
