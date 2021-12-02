@@ -121,21 +121,21 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     );
   }, [orgId, name]);
 
-  const k8sVersion = useMemo(() => {
+  const release = useMemo(() => {
     const formattedReleaseVersion = `v${releaseVersion}`;
 
     if (!releases) return undefined;
 
-    const release = releases.find(
-      (r) => r.metadata.name === formattedReleaseVersion
-    );
-    if (!release) return '';
-
-    const version = releasev1alpha1.getK8sVersion(release);
-    if (typeof version === 'undefined') return '';
-
-    return version;
+    return releases.find((r) => r.metadata.name === formattedReleaseVersion);
   }, [releases, releaseVersion]);
+
+  const k8sVersion = useMemo(() => {
+    if (typeof release === 'undefined') return '';
+
+    return releasev1alpha1.getK8sVersion(release) ?? '';
+  }, [release]);
+
+  const isPreviewRelease = release?.spec.state === 'preview';
 
   const provider = window.config.info.general.provider;
 
@@ -277,12 +277,14 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     dispatch(push(path));
   };
 
+  const disableNavigation = isDeleting || isLoading || isPreviewRelease;
+
   return (
     <StyledLink
-      to={isDeleting || isLoading ? '' : clusterPath}
+      to={disableNavigation ? '' : clusterPath}
       aria-label={isLoading ? 'Loading cluster...' : `Cluster ${name}`}
-      aria-disabled={isDeleting || isLoading}
-      tabIndex={isDeleting || isLoading ? -1 : 0}
+      aria-disabled={disableNavigation}
+      tabIndex={disableNavigation ? -1 : 0}
     >
       <Card
         direction='row'

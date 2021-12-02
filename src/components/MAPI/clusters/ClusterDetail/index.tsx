@@ -18,6 +18,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -212,6 +213,51 @@ const ClusterDetail: React.FC<{}> = () => {
       dispatch(push(MainRoutes.Home));
     }
   }, [cluster, dispatch]);
+
+  const releaseListClient = useRef(clientFactory());
+
+  const { data: releaseList, error: releaseListError } = useSWR(
+    releasev1alpha1.getReleaseListKey(),
+    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  );
+
+  useEffect(() => {
+    if (releaseListError) {
+      ErrorReporter.getInstance().notify(releaseListError);
+    }
+  }, [releaseListError]);
+
+  const isPreviewRelease = useMemo(() => {
+    if (!cluster || !releaseList?.items) return undefined;
+
+    const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+    const formattedReleaseVersion = `v${releaseVersion}`;
+
+    const release = releaseList.items.find(
+      (r) => r.metadata.name === formattedReleaseVersion
+    );
+
+    return release?.spec.state === 'preview';
+  }, [cluster, releaseList?.items]);
+
+  // Redirect to home page if the cluster uses a preview release
+  // Remove once preview releases are supported
+  useEffect(() => {
+    if (cluster && isPreviewRelease) {
+      new FlashMessage(
+        (
+          <>
+            Cluster <code>{cluster.metadata.name}</code> uses a preview release.
+            Cluster details are not available at this time.
+          </>
+        ),
+        messageType.INFO,
+        messageTTL.LONG
+      );
+
+      dispatch(push(MainRoutes.Home));
+    }
+  }, [cluster, dispatch, isPreviewRelease]);
 
   const providerClusterKey = cluster
     ? fetchProviderClusterForClusterKey(cluster)
