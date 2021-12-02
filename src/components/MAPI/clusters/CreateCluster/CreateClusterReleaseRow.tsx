@@ -1,11 +1,11 @@
-import { Anchor, Box, Text } from 'grommet';
+import { Anchor, Text } from 'grommet';
 import { RUMActions } from 'model/constants/realUserMonitoring';
-import { ReleaseState } from 'model/services/mapi/releasev1alpha1';
 import React, { FC } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import Date from 'UI/Display/Date';
+import ReleaseStateLabel from 'UI/Display/MAPI/releases/ReleaseStateLabel';
 import { TableCell, TableRow } from 'UI/Display/Table';
 import RadioInput from 'UI/Inputs/RadioInput';
 
@@ -27,24 +27,6 @@ const StyledTableRow = styled(TableRow)`
     margin-right: 0;
   }
 `;
-
-const StyledText = styled(Text)`
-  text-transform: uppercase;
-`;
-
-function mapStateToBackgroundColor(state: ReleaseState) {
-  switch (state) {
-    case 'active':
-      return '#8dc163';
-    case 'wip':
-      return '#CD8383';
-    case 'preview':
-      return '#F0DC70';
-    case 'deprecated':
-    default:
-      return '#617d8d';
-  }
-}
 
 interface IReleaseRow extends IRelease {
   isSelected: boolean;
@@ -69,8 +51,6 @@ const ReleaseRow: FC<IReleaseRow> = ({
       selectRelease(version);
     }
   };
-
-  const stateBackground = mapStateToBackgroundColor(state);
 
   return (
     <StyledTableRow
@@ -104,15 +84,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
         <Text>{version}</Text>
       </TableCell>
       <TableCell size='small' align='center'>
-        <Box
-          pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}
-          round='xxsmall'
-          background={stateBackground}
-        >
-          <StyledText size='xsmall' color='background' weight='bold'>
-            {state}
-          </StyledText>
-        </Box>
+        <ReleaseStateLabel state={state} />
       </TableCell>
       <TableCell size='small' align='left'>
         <KubernetesVersionLabel
