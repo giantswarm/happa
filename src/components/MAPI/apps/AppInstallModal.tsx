@@ -9,6 +9,7 @@ import {
   IProviderClusterForCluster,
   mapClustersToProviderClusters,
 } from 'MAPI/clusters/utils';
+import { getPreviewReleaseVersions } from 'MAPI/releases/utils';
 import { Cluster, ClusterList } from 'MAPI/types';
 import {
   fetchClusterList,
@@ -22,10 +23,17 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
@@ -201,9 +209,30 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   const organizations = useSelector(selectOrganizations());
 
+  // TODO: remove once preview releases are supported
+  const releaseListClient = useRef(clientFactory());
+
+  const { data: releaseList, error: releaseListError } = useSWR(
+    releasev1alpha1.getReleaseListKey(),
+    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  );
+
+  useEffect(() => {
+    if (releaseListError) {
+      ErrorReporter.getInstance().notify(releaseListError);
+    }
+  }, [releaseListError]);
+
+  const previewReleaseVersions = useMemo(() => {
+    if (!releaseList) return [];
+
+    return getPreviewReleaseVersions(releaseList.items);
+  }, [releaseList]);
+
   useEffect(() => {
     const clusterCollection = filterClusters(
       clustersWithProviderClusters,
+      previewReleaseVersions,
       debouncedQuery
     ).map((c) => mapClusterToClusterPickerInput(c, organizations));
 
@@ -213,6 +242,8 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     clusterList,
     organizations,
     clustersWithProviderClusters,
+    releaseList?.items,
+    previewReleaseVersions,
   ]);
 
   const updateNamespace = useCallback(
