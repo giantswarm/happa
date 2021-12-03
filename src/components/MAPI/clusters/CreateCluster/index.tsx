@@ -10,6 +10,7 @@ import {
   getClusterReleaseVersion,
   getNamespaceFromOrgName,
 } from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -226,9 +227,11 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
   const auth = useAuthProvider();
 
   const releaseListClient = useRef(clientFactory());
-  const { data: releaseList, error: releaseListError } = useSWR(
-    releasev1alpha1.getReleaseListKey(),
-    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  const { data: releaseList, error: releaseListError } = useSWR<
+    releasev1alpha1.IReleaseList,
+    GenericResponseError
+  >(releasev1alpha1.getReleaseListKey(), () =>
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
   useEffect(() => {

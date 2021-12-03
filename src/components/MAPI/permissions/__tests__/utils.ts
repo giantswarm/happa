@@ -374,7 +374,21 @@ describe('permissions::utils', () => {
       ${'org-test3'}       | ${'patch'}  | ${'dogs.k8s.io'}      | ${'houses'} | ${undefined} | ${false}
     `(
       `gets permission for verb '$verb' in namespace '$namespace' for '$group'/'$resource'/'$resourceName'`,
-      ({ namespace, verb, group, resource, resourceName, expected }) => {
+      ({
+        namespace,
+        verb,
+        group,
+        resource,
+        resourceName,
+        expected,
+      }: {
+        namespace: string;
+        verb: string;
+        group: string;
+        resource: string;
+        resourceName: string;
+        expected: string;
+      }) => {
         const result = hasPermission(
           permissions,
           namespace,

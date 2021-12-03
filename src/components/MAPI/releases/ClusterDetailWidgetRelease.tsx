@@ -11,6 +11,7 @@ import {
 } from 'MAPI/releases/utils';
 import { ProviderCluster } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { getUserIsAdmin } from 'model/stores/main/selectors';
@@ -72,9 +73,11 @@ const ClusterDetailWidgetRelease: React.FC<
   const auth = useAuthProvider();
 
   const releaseListClient = useRef(clientFactory());
-  const { data: releaseList, error: releaseListError } = useSWR(
-    releasev1alpha1.getReleaseListKey(),
-    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  const { data: releaseList, error: releaseListError } = useSWR<
+    releasev1alpha1.IReleaseList,
+    GenericResponseError
+  >(releasev1alpha1.getReleaseListKey(), () =>
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
   useEffect(() => {

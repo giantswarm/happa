@@ -318,7 +318,7 @@ function clusterLoadStatus(
       const response = await clustersApi.getClusterStatusWithHttpInfo(id);
       dispatch({ type: CLUSTER_LOAD_STATUS_SUCCESS, id });
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
       return JSON.parse((response as any).response.text);
     } catch (err) {
       if ((err as IGSAPIError).status === StatusCodes.NotFound) {
@@ -531,6 +531,7 @@ export function clusterLoadKeyPairs(
       const keypairsApi = new GiantSwarm.KeyPairsApi();
       const response = await keypairsApi.getKeyPairs(clusterId);
       const keyPairs = Object.values(response).map((keyPair) => {
+        //eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const creationDate = toDate(keyPair.create_date, { timeZone: 'UTC' });
         keyPair.expire_date = add({
           hours: keyPair.ttl_hours,

@@ -216,7 +216,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   ]);
 
   const updateNamespace = useCallback(
-    (ns) => {
+    (ns: string) => {
       setNamespace(ns);
       setNamespaceError(validateAppName(ns).message);
     },

@@ -42,7 +42,9 @@ export function flatten(text: string, child: React.ReactNode): string {
   }
 
   if (hasOwnProperty(child, 'props')) {
-    return React.Children.toArray(child.props.children).reduce(flatten, text);
+    return React.Children.toArray(
+      child.props.children as React.ReactNode | React.ReactNode[]
+    ).reduce(flatten, text);
   }
 
   return '';

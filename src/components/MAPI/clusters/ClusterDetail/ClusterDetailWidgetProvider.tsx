@@ -6,6 +6,7 @@ import {
   getProviderClusterAccountID,
   getProviderClusterLocation,
 } from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { selectOrganizations } from 'model/stores/organization/selectors';
@@ -119,14 +120,15 @@ const ClusterDetailWidgetProvider: React.FC<
       ? legacyCredentials.getCredentialListKey(selectedOrgID)
       : null;
 
-  const { data: credentialList, error: credentialListError } = useSWR(
-    credentialListKey,
-    () =>
-      legacyCredentials.getCredentialList(
-        credentialListClient,
-        auth,
-        selectedOrgID!
-      )
+  const { data: credentialList, error: credentialListError } = useSWR<
+    legacyCredentials.ICredentialList,
+    GenericResponseError
+  >(credentialListKey, () =>
+    legacyCredentials.getCredentialList(
+      credentialListClient,
+      auth,
+      selectedOrgID!
+    )
   );
 
   useEffect(() => {

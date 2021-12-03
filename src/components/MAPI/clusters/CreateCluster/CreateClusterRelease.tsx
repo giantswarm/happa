@@ -4,6 +4,7 @@ import ReleaseSelector, {
 } from 'Cluster/NewCluster/ReleaseSelector/ReleaseSelector';
 import * as releasesUtils from 'MAPI/releases/utils';
 import { extractErrorMessage, getClusterReleaseVersion } from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { getUserIsAdmin } from 'model/stores/main/selectors';
 import { isPreRelease } from 'model/stores/releases/utils';
@@ -39,8 +40,9 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
     data: releaseList,
     error: releaseListError,
     isValidating: releaseIsValidating,
-  } = useSWR(releasev1alpha1.getReleaseListKey(), () =>
-    releasev1alpha1.getReleaseList(releaseListClient, auth)
+  } = useSWR<releasev1alpha1.IReleaseList, GenericResponseError>(
+    releasev1alpha1.getReleaseListKey(),
+    () => releasev1alpha1.getReleaseList(releaseListClient, auth)
   );
 
   useEffect(() => {

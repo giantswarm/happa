@@ -94,6 +94,7 @@ const AccessControlSubjectAddForm: React.FC<
   const handleSuggestionSelect: React.ComponentPropsWithoutRef<
     typeof TextInput
   >['onSuggestionSelect'] = (e) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const newValue = appendSubjectSuggestionToValue(value, e.suggestion);
     setValue(newValue);
   };

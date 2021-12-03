@@ -167,7 +167,7 @@ const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
   }, [lunrIndex, debouncedQuery, clusters]);
 
   const updateNamespace = useCallback(
-    (ns) => {
+    (ns: string) => {
       setNamespace(ns);
       setNamespaceError(validateAppName(ns).message);
     },

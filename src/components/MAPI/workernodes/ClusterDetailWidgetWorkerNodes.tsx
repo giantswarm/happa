@@ -1,12 +1,15 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
+import { NodePoolList } from 'MAPI/types';
 import {
   fetchNodePoolListForCluster,
   fetchNodePoolListForClusterKey,
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
   getMachineTypes,
+  IProviderNodePoolForNodePoolName,
 } from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -63,9 +66,11 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const { data: nodePoolList, error: nodePoolListError } = useSWR(
-    fetchNodePoolListForClusterKey(cluster),
-    () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  const { data: nodePoolList, error: nodePoolListError } = useSWR<
+    NodePoolList,
+    GenericResponseError
+  >(fetchNodePoolListForClusterKey(cluster), () =>
+    fetchNodePoolListForCluster(clientFactory, auth, cluster)
   );
 
   useEffect(() => {
@@ -74,14 +79,11 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
     }
   }, [nodePoolListError]);
 
-  const { data: providerNodePools, error: providerNodePoolsError } = useSWR(
-    fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items),
-    () =>
-      fetchProviderNodePoolsForNodePools(
-        clientFactory,
-        auth,
-        nodePoolList!.items
-      )
+  const { data: providerNodePools, error: providerNodePoolsError } = useSWR<
+    IProviderNodePoolForNodePoolName[],
+    GenericResponseError
+  >(fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items), () =>
+    fetchProviderNodePoolsForNodePools(clientFactory, auth, nodePoolList!.items)
   );
 
   useEffect(() => {
