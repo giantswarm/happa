@@ -1,0 +1,283 @@
+business-resources:
+- organizations: &organizations
+    resources:
+      - group: security.giantswarm.io
+        resources:
+          - organizations
+- rulesreviews: &rulesreviews
+    resources:
+      - group: authorization.k8s.io
+        resources:
+          - selfsubjectrulesreviews
+- accessreviews: &accessreviews
+    resources:
+      - group: authorization.k8s.io
+        resources:
+          - selfsubjectaccessreviews 
+- clusters: &clusters
+    resources:
+      - group: cluster.x-k8s.io
+        resources:
+          - clusters
+      - group: infrastructure.cluster.x-k8s.io
+        resources:
+          - azureclusters
+          - azuremachines
+      - group: infrastructure.giantswarm.io
+        resources:
+          - awsclusters
+          - awscontrolplanes
+          - g8scontrolplanes
+- releases: &releases
+    resources:
+      - group: release.giantswarm.io
+        resources:
+          - releases
+- nodepools: &nodepools
+    resources:
+      - group: cluster.x-k8s.io
+        resources:
+          - machinedeployments
+      - group: exp.cluster.x-k8s.io
+        resources:
+          - machinepools
+      - group: exp.infrastructure.cluster.x-k8s.io
+        resources:
+          - azuremachinepools
+      - group: infrastructure.cluster.x-k8s.io
+        resources:
+          - azuremachines
+      - group: infrastructure.giantswarm.io
+        resources:
+          - awsmachinedeployments
+- sparks: &sparks
+      - group: core.giantswarm.io
+        resources:
+          - sparks
+- apps: &apps
+    resources:
+      - group: application.giantswarm.io
+        resources:
+          - apps
+- catalogs: &catalogs
+    resources:
+      - group: application.giantswarm.io
+        resources:
+          - appcatalogentries
+          - catalogs
+- clientcertificates: &clientcertificates
+    resources:
+      - group: core.giantswarm.io
+        resources:
+          - storageconfigs
+- orgcredentials: &orgcredentials
+    resources:
+      - group: ""
+        resources:
+          - secrets
+- configmaps: &configmaps
+    resources:
+      - group: ""
+        resources:
+          - configmaps
+- secrets: &secrets
+    resources:
+      - group: ""
+        resources:
+          - secrets
+
+user-actions:
+- read-cluster-list:
+    resources:
+      - resource: *clusters
+        verbs:
+          - get
+          - list
+        namespaces:
+          - org-namespace
+          - default
+      - resource: *nodepools
+        verbs:
+          - get
+          - list
+        namespaces:
+          - org-namespace
+          - default
+      - resource: *releases
+        verbs:
+          - get
+          - list
+- create-cluster:
+    resources:
+      - resource: *clusters
+        verbs:
+          - create
+        namespaces:
+          - org-namespace
+          - default
+      - resource: *releases
+        verbs:
+          - list
+- read-cluster-details-overview:
+    resources:
+      - resource: *apps
+        verbs:
+          - list
+        namespaces:
+          - wc-namespace
+      - resource: *catalogs
+        verbs:
+          - list
+        namespaces:
+          - default
+      - resource: *clientcertificates
+        verbs:
+          - get
+        namespaces:
+          - giantswarm
+      - resource: *clusters
+        verbs:
+          - list
+          - get
+        namespaces:
+          - org-namespace
+          - default
+      - resource: *nodepools
+        verbs:
+          - get
+        namespaces:
+          - org-namespace
+          - default
+      - resource: *organizations
+        verbs:
+          - get
+      - resource: *orgcredentials
+        verbs:
+          - list
+        namespaces:
+          - giantswarm
+      - resource: *releases
+        verbs:
+          - list
+- update-cluster-description:
+    resources:
+      - resource: *clusters
+        verbs:
+          - get
+          - update
+        namespaces:
+          - org-namespace
+          - default
+- upgrade-cluster:
+    resources:
+      - resource: *clusters
+        verbs:
+          - get
+          - update
+        namespaces:
+          - org-namespace
+          - default
+      - resource: *releases
+        verbs:
+          - list
+- add-cluster-label:
+    resources:
+      - resource: *clusters
+        verbs:
+          - get
+          - update
+        namespaces:
+          - org-namespace
+          - default
+- switch-cluster-to-HA:
+    resource:
+      - resource: *clusters
+        verbs:
+          - list
+          - get
+          - update
+        namespaces:
+          - org-namespace
+          - default
+- read-cluster-details-worker-nodes:
+    resources:
+      - resource: *clusters
+        verbs:
+          - get
+        namespaces:
+          - org-namespace
+          - default
+      - resource: *nodepools
+        verbs:
+          - get
+          - list
+        namespaces:
+          - org-namespace
+          - default
+      - resource: *organizations
+        verbs:
+          - get
+- update-node-pool-description:
+    resources:
+      - resource: *nodepools
+        verbs:
+          - get
+          - list
+          - update
+        namespaces:
+          - org-namespace
+          - default
+- update-node-pool-scaling:
+    resources:
+      - resource: *nodepools
+        verbs:
+          - get
+          - list
+          - update
+        namespaces:
+          - org-namespace
+          - default
+- delete-node-pool:
+    resources:
+      - resource: *nodepools
+        verbs:
+          - get
+          - list
+          - delete
+        namespaces:
+          - org-namespace
+          - default
+- create-node-pool:
+    resources:
+      - resource: *clusters
+        verbs:
+          - get
+          - list
+        namespaces:
+          - org-namespace
+          - default
+      - resource: *nodepools
+        verbs:
+          - create
+        namespaces:
+          - org-namespace
+          - default
+      - resource: *sparks
+        verbs:
+          - create
+        namespaces:
+          - org-namespace
+          - default
+- read-cluster-details-client-certificates:
+    resources:
+      - resource: *clientcertificates
+        verbs:
+          - get
+        namespaces:
+          - giantswarm
+      - resource: *clusters
+        verbs:
+          - get
+        namespaces:
+          - org-namespace
+          - default
