@@ -179,6 +179,7 @@ class ViewAndEditName extends Component<
     }
   };
 
+  // eslint-disable-next-line class-methods-use-this
   handleFocusKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     e.preventDefault();
 

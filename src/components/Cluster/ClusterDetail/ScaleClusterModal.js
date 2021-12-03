@@ -158,6 +158,7 @@ class ScaleClusterModal extends React.Component {
     return 0;
   };
 
+  // eslint-disable-next-line class-methods-use-this
   pluralize = (nodes) => {
     let pluralize = 's';
 

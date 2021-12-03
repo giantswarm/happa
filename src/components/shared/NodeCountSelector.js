@@ -43,6 +43,7 @@ class NodeCountSelector extends React.Component {
     });
   };
 
+  // eslint-disable-next-line class-methods-use-this
   handleFocus = (event) => {
     event.target.select();
   };
