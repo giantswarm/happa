@@ -10,6 +10,7 @@ export const Help: Story<ComponentPropsWithoutRef<typeof Select>> = (args) => {
     <Select
       {...args}
       value={value}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       onChange={(e) => setValue(e.target.option)}
     />
   );

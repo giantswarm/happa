@@ -106,7 +106,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, IMultiSelectProps>(
         {...props}
         ref={ref}
       >
-        {(option, _idx, _options, state) => {
+        {(option: string, _idx, _options, state) => {
           return (
             <CheckBoxInput
               key={option}

@@ -49,6 +49,7 @@ class ConfigKubeCtl extends React.Component {
     this.props.actions.clusterSelect(clusterId);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   linuxInstructions = () => {
     return (
       <p>
@@ -65,6 +66,7 @@ class ConfigKubeCtl extends React.Component {
     );
   };
 
+  // eslint-disable-next-line class-methods-use-this
   windowsInstructions = () => {
     return (
       <>
@@ -104,6 +106,7 @@ class ConfigKubeCtl extends React.Component {
     );
   };
 
+  // eslint-disable-next-line class-methods-use-this
   macOSinstructions = () => {
     return (
       <>
@@ -144,6 +147,7 @@ class ConfigKubeCtl extends React.Component {
     }));
   };
 
+  // eslint-disable-next-line class-methods-use-this
   friendlyClusterName = (cluster) => {
     return `${cluster.name} (${cluster.id})`;
   };

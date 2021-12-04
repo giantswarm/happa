@@ -120,6 +120,7 @@ class Modals extends React.Component {
     });
   };
 
+  // eslint-disable-next-line class-methods-use-this
   validateOrganizationName = (organizationName) => {
     switch (true) {
       case !organizationName:

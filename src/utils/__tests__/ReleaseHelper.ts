@@ -1,3 +1,4 @@
+import { Providers } from 'model/constants';
 import { ReleaseHelper } from 'utils/ReleaseHelper';
 
 describe('ReleaseHelper', () => {
@@ -51,6 +52,13 @@ describe('ReleaseHelper', () => {
       isAdmin,
       targetVersion,
       expected,
+    }: {
+      currVersion: string;
+      provider: PropertiesOf<typeof Providers>;
+      ignorePreReleases: boolean;
+      isAdmin: boolean;
+      targetVersion: string;
+      expected: string;
     }) => {
       const helper = new ReleaseHelper({
         currentReleaseVersion: currVersion,

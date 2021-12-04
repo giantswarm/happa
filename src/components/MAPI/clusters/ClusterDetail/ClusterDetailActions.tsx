@@ -1,7 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Heading } from 'grommet';
 import { filterUserInstalledApps } from 'MAPI/apps/utils';
-import { Cluster, ProviderCluster } from 'MAPI/types';
+import { Cluster, NodePoolList, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
   fetchCluster,
@@ -83,9 +83,11 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     fetchProviderClusterForCluster(clientFactory, auth, cluster!)
   );
 
-  const { data: nodePoolList, error: nodePoolListError } = useSWR(
-    fetchNodePoolListForClusterKey(cluster),
-    () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  const { data: nodePoolList, error: nodePoolListError } = useSWR<
+    NodePoolList,
+    GenericResponseError
+  >(fetchNodePoolListForClusterKey(cluster), () =>
+    fetchNodePoolListForCluster(clientFactory, auth, cluster)
   );
 
   useEffect(() => {

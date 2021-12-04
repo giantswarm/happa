@@ -113,9 +113,12 @@ describe('mapi::utils', () => {
       ${'-some-random123_org'}                                                           | ${'org-some-random123-org'}
       ${'some-random_org401'}                                                            | ${'org-some-random-org401'}
       ${'some-random-org-with-random-keys-in-a-random-order-just-to-get-a-lot-of-chars'} | ${'org-some-random-org-with-random-keys-in-a-random-order-just-to'}
-    `(`computes namespace from '$orgName'`, ({ orgName, expected }) => {
-      const result = getNamespaceFromOrgName(orgName);
-      expect(result).toEqual(expected);
-    });
+    `(
+      `computes namespace from '$orgName'`,
+      ({ orgName, expected }: { orgName: string; expected: string }) => {
+        const result = getNamespaceFromOrgName(orgName);
+        expect(result).toEqual(expected);
+      }
+    );
   });
 });

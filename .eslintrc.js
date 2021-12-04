@@ -237,6 +237,7 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': 0,
         '@typescript-eslint/restrict-template-expressions': 0,
         '@typescript-eslint/restrict-plus-operands': 0,
+        '@typescript-eslint/no-unsafe-argument': 0,
       },
     },
   ],

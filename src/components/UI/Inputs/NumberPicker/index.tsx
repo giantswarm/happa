@@ -138,7 +138,7 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
     const editable = !readOnly && !disabled;
 
     const updateValue = useCallback(
-      (newValue: number, error = '') => {
+      (newValue: number, error: string = '') => {
         setCurrValue(newValue);
         setValidationError(error);
 

@@ -177,7 +177,7 @@ class OAuth2 implements IOAuth2Provider {
 
   public async getImpersonationMetadata(): Promise<IOAuth2ImpersonationMetadata | null> {
     const key = this.getImpersonationStorageKey();
-    const value = await this.persistenceMethod.get(key);
+    const value: string | null = await this.persistenceMethod.get(key);
     if (!value) return null;
 
     return JSON.parse(value);

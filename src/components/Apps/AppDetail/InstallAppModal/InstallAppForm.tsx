@@ -57,7 +57,7 @@ const InstallAppForm: React.FC<IInstallAppFormProps> = ({
   };
 
   const updateNamespace = useCallback(
-    (newNS) => {
+    (newNS: string) => {
       if (onChangeNamespace) {
         onChangeNamespace(newNS);
       }

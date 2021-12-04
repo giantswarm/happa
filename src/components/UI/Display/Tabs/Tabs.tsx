@@ -27,7 +27,7 @@ const Tabs: React.FC<ITabsProps> = ({
 
       const tabs = React.Children.toArray(children);
       const currentTab = tabs[index] as React.ReactElement;
-      const desiredPath = currentTab?.props?.path;
+      const desiredPath: string = currentTab?.props?.path;
 
       // No need to replace the history if we're already on the path we want to be at.
       if (typeof desiredPath === 'undefined' || currentPath === desiredPath) {
