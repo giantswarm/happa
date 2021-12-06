@@ -144,41 +144,15 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const orgNamespace = organization?.namespace;
+  const { canList: canListNodePools, canGet: canGetNodePools } =
+    usePermissionsForNodePools(provider, cluster?.metadata.namespace ?? '');
 
-  const { canList: canListNpInOrgNamespace, canGet: canGetNpInOrgNamespace } =
-    usePermissionsForNodePools(provider, orgNamespace ?? '');
+  const hasReadPermissionsForNodePools = canListNodePools && canGetNodePools;
 
-  const hasReadPermissionsForNpInOrgNamespace =
-    canListNpInOrgNamespace && canGetNpInOrgNamespace;
-
-  const {
-    canList: canListNpInDefaultNamespace,
-    canGet: canGetNpInDefaultNamespace,
-  } = usePermissionsForNodePools(provider, 'default');
-
-  const hasReadPermissionsForNpInDefaultNamespace =
-    canListNpInDefaultNamespace && canGetNpInDefaultNamespace;
-
-  const nodePoolListForClusterKey = useMemo(() => {
-    switch (true) {
-      case hasReadPermissionsForNpInDefaultNamespace:
-        return fetchNodePoolListForClusterKey(cluster);
-      case hasReadPermissionsForNpInOrgNamespace:
-        return fetchNodePoolListForClusterKey(cluster, orgNamespace);
-      default:
-        return null;
-    }
-  }, [
-    cluster,
-    hasReadPermissionsForNpInDefaultNamespace,
-    hasReadPermissionsForNpInOrgNamespace,
-    orgNamespace,
-  ]);
-
-  const nodePoolListNamespace = hasReadPermissionsForNpInDefaultNamespace
-    ? undefined
-    : orgNamespace;
+  const nodePoolListForClusterKey =
+    hasReadPermissionsForNodePools && cluster
+      ? fetchNodePoolListForClusterKey(cluster, cluster.metadata.namespace)
+      : null;
 
   const { data: nodePoolList, error: nodePoolListError } = useSWR<
     NodePoolList,
@@ -188,7 +162,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
       clientFactory,
       auth,
       cluster,
-      nodePoolListNamespace
+      cluster!.metadata.namespace
     )
   );
 
@@ -223,11 +197,11 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   }, [nodePoolList?.items, providerNodePools]);
 
   const workerNodesCPU =
-    providerNodePoolsError || !hasReadPermissionsForNpInOrgNamespace
+    providerNodePoolsError || !hasReadPermissionsForNodePools
       ? -1
       : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
   const workerNodesMemory =
-    providerNodePoolsError || !hasReadPermissionsForNpInOrgNamespace
+    providerNodePoolsError || !hasReadPermissionsForNodePools
       ? -1
       : getWorkerNodesMemory(
           nodePoolsWithProviderNodePools,
@@ -236,10 +210,10 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 
   const isAdmin = useSelector(getUserIsAdmin);
 
-  const workerNodePoolsCount = hasReadPermissionsForNpInOrgNamespace
+  const workerNodePoolsCount = hasReadPermissionsForNodePools
     ? nodePoolList?.items.length
     : -1;
-  const workerNodesCount = hasReadPermissionsForNpInOrgNamespace
+  const workerNodesCount = hasReadPermissionsForNodePools
     ? getWorkerNodesCount(nodePoolList?.items)
     : -1;
 

@@ -233,7 +233,7 @@ describe('ClusterListItem', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
