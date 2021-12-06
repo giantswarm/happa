@@ -6,9 +6,23 @@ import DropdownMenu, {
   Link,
   List,
 } from 'UI/Controls/DropdownMenu';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 const StyledDropdownTrigger = styled(DropdownTrigger)`
   border-radius: ${({ theme }) => theme.rounding}px;
+`;
+
+const UnauthorizedLink = styled(Link)`
+  opacity: 0.7; /* matching disabled grommet button's opacity */
+
+  :focus {
+    outline: none;
+  }
+
+  :hover {
+    text-decoration: none;
+    cursor: not-allowed;
+  }
 `;
 
 interface IWorkerNodesNodePoolActionsProps
@@ -16,11 +30,20 @@ interface IWorkerNodesNodePoolActionsProps
   onDeleteClick?: () => void;
   onScaleClick?: () => void;
   disabled?: boolean;
+  canUpdateNodePools?: boolean;
+  canDeleteNodePools?: boolean;
 }
 
 const WorkerNodesNodePoolActions: React.FC<
   IWorkerNodesNodePoolActionsProps
-> = ({ onDeleteClick, onScaleClick, disabled, ...props }) => {
+> = ({
+  onDeleteClick,
+  onScaleClick,
+  disabled,
+  canUpdateNodePools,
+  canDeleteNodePools,
+  ...props
+}) => {
   const handleListKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     e.stopPropagation();
     e.preventDefault();
@@ -58,7 +81,7 @@ const WorkerNodesNodePoolActions: React.FC<
               onEnter={handleListKeyDown}
             >
               <List role='menu'>
-                {onScaleClick && (
+                {onScaleClick && canUpdateNodePools ? (
                   <li>
                     <Link
                       href='#'
@@ -72,8 +95,27 @@ const WorkerNodesNodePoolActions: React.FC<
                       <Text>Edit scaling limits</Text>
                     </Link>
                   </li>
+                ) : (
+                  <TooltipContainer
+                    content={
+                      <Tooltip>
+                        Editing the scaling limits requires additional
+                        permissions
+                      </Tooltip>
+                    }
+                  >
+                    <li>
+                      <UnauthorizedLink
+                        role='button'
+                        aria-disabled={true}
+                        aria-label='Editing the scaling limits requires additional permissions'
+                      >
+                        <Text>Edit scaling limits</Text>
+                      </UnauthorizedLink>
+                    </li>
+                  </TooltipContainer>
                 )}
-                {onDeleteClick && (
+                {onDeleteClick && canDeleteNodePools ? (
                   <li>
                     <Link
                       href='#'
@@ -87,6 +129,24 @@ const WorkerNodesNodePoolActions: React.FC<
                       <Text color='status-critical'>Delete</Text>
                     </Link>
                   </li>
+                ) : (
+                  <TooltipContainer
+                    content={
+                      <Tooltip>
+                        Deleting the node pool requires additional permissions
+                      </Tooltip>
+                    }
+                  >
+                    <li>
+                      <UnauthorizedLink
+                        role='button'
+                        aria-disabled={true}
+                        aria-label='Deleting the node pool requires additional permissions'
+                      >
+                        <Text>Delete</Text>
+                      </UnauthorizedLink>
+                    </li>
+                  </TooltipContainer>
                 )}
               </List>
             </Keyboard>

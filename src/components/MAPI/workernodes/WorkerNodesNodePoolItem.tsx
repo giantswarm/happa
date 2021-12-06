@@ -66,6 +66,7 @@ interface IWorkerNodesNodePoolItemProps
   additionalColumns?: IWorkerNodesAdditionalColumn[];
   readOnly?: boolean;
   canUpdateNodePools?: boolean;
+  canDeleteNodePools?: boolean;
 }
 
 const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
@@ -74,6 +75,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   additionalColumns,
   readOnly,
   canUpdateNodePools,
+  canDeleteNodePools,
   ...props
 }) => {
   const clientFactory = useHttpClientFactory();
@@ -331,6 +333,8 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 onDeleteClick={onDelete}
                 onScaleClick={onScale}
                 disabled={readOnly}
+                canUpdateNodePools={canUpdateNodePools}
+                canDeleteNodePools={canDeleteNodePools}
               />
             </Box>
           </>

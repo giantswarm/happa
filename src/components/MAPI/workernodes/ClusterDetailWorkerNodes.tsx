@@ -265,6 +265,8 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
       canList: canListNodePools,
       canGet: canGetNodePools,
       canCreate: canCreateNodePools,
+      canUpdate: canUpdateNodePools,
+      canDelete: canDeleteNodePools,
     } = usePermissionsForNodePools(provider, cluster?.metadata.namespace ?? '');
 
     const nodePoolListForClusterKey =
@@ -470,6 +472,8 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                                 additionalColumns={additionalColumns}
                                 margin={{ bottom: 'small' }}
                                 readOnly={isReadOnly}
+                                canUpdateNodePools={canUpdateNodePools}
+                                canDeleteNodePools={canDeleteNodePools}
                               />
                             </BaseTransition>
                           )
