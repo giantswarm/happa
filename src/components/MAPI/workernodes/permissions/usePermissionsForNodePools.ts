@@ -132,6 +132,13 @@ export function usePermissionsForNodePools(
           'create',
           'infrastructure.cluster.x-k8s.io',
           'azuremachinepools'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'create',
+          'core.giantswarm.io',
+          'sparks'
         );
 
       computed.canDelete =
@@ -162,6 +169,13 @@ export function usePermissionsForNodePools(
           'delete',
           'infrastructure.cluster.x-k8s.io',
           'azuremachinepools'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'delete',
+          'core.giantswarm.io',
+          'sparks'
         );
 
       computed.canUpdate =
@@ -192,6 +206,13 @@ export function usePermissionsForNodePools(
           'update',
           'infrastructure.cluster.x-k8s.io',
           'azuremachinepools'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'update',
+          'core.giantswarm.io',
+          'sparks'
         );
 
       computed.canGet =
@@ -222,6 +243,13 @@ export function usePermissionsForNodePools(
           'get',
           'exp.infrastructure.cluster.x-k8s.io',
           'azuremachinepools'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'core.giantswarm.io',
+          'sparks'
         );
 
       computed.canList =
@@ -252,6 +280,13 @@ export function usePermissionsForNodePools(
           'list',
           'infrastructure.cluster.x-k8s.io',
           'azuremachinepools'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'core.giantswarm.io',
+          'sparks'
         );
 
       break;
