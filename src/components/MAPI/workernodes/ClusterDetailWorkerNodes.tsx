@@ -261,8 +261,11 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
       }
     }, [providerClusterError]);
 
-    const { canList: canListNodePools, canGet: canGetNodePools } =
-      usePermissionsForNodePools(provider, cluster?.metadata.namespace ?? '');
+    const {
+      canList: canListNodePools,
+      canGet: canGetNodePools,
+      canCreate: canCreateNodePools,
+    } = usePermissionsForNodePools(provider, cluster?.metadata.namespace ?? '');
 
     const nodePoolListForClusterKey =
       cluster && canListNodePools && canGetNodePools
@@ -492,10 +495,21 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                 cluster &&
                 providerCluster &&
                 !isCreateFormOpen && (
-                  <Box animation={{ type: 'fadeIn', duration: 300 }}>
+                  <Box
+                    animation={{ type: 'fadeIn', duration: 300 }}
+                    direction='row'
+                    align='center'
+                    gap='small'
+                  >
                     <Button
                       onClick={handleOpenCreateForm}
-                      disabled={!cluster || !providerCluster || isReadOnly}
+                      disabled={
+                        !cluster ||
+                        !providerCluster ||
+                        isReadOnly ||
+                        !canCreateNodePools
+                      }
+                      unauthorized={!canCreateNodePools}
                     >
                       <i
                         className='fa fa-add-circle'
@@ -504,6 +518,12 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                       />{' '}
                       Add node pool
                     </Button>
+                    {!canCreateNodePools && (
+                      <Text color='text-weak'>
+                        For creating a node pool, you need additional
+                        permissions. Please talk to your administrator.
+                      </Text>
+                    )}
                   </Box>
                 )}
 
@@ -512,6 +532,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                   animation={{ type: 'fadeIn', duration: 300 }}
                   onCreateButtonClick={handleOpenCreateForm}
                   disabled={isReadOnly}
+                  unauthorized={!canCreateNodePools}
                 />
               )}
             </Box>

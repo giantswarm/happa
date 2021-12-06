@@ -6,11 +6,12 @@ interface IWorkerNodesNodePoolListPlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   onCreateButtonClick?: () => void;
   disabled?: boolean;
+  unauthorized: boolean;
 }
 
 const WorkerNodesNodePoolListPlaceholder: React.FC<
   IWorkerNodesNodePoolListPlaceholderProps
-> = ({ onCreateButtonClick, disabled, ...props }) => {
+> = ({ onCreateButtonClick, disabled, unauthorized, ...props }) => {
   return (
     <Box
       background='background-back'
@@ -21,11 +22,17 @@ const WorkerNodesNodePoolListPlaceholder: React.FC<
     >
       <Box>
         <Text color='text-weak'>
-          Add at least one node pool to the cluster so you could run workloads
+          {unauthorized
+            ? 'For creating a node pool, you need additional permissions. Please talk to your administrator.'
+            : 'Add at least one node pool to the cluster so you could run workloads'}
         </Text>
       </Box>
       <Box>
-        <Button onClick={onCreateButtonClick} disabled={disabled}>
+        <Button
+          onClick={onCreateButtonClick}
+          disabled={disabled}
+          unauthorized={unauthorized}
+        >
           <i
             className='fa fa-add-circle'
             role='presentation'
