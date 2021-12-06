@@ -137,4 +137,41 @@ describe('ClusterDetailWorkerNodes', () => {
       )
     ).toBeInTheDocument();
   });
+
+  it('does not allow a read-only user to add node pools', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: false,
+      canCreate: false,
+      canDelete: false,
+    });
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${mockCapiv1alpha3.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${mockCapiv1alpha3.randomCluster1.metadata.name}`
+      )
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'exp.cluster.x-k8s.io/v1alpha3',
+        kind: 'MachinePoolList',
+        metadata: {},
+        items: [],
+      });
+
+    render(getComponent({}));
+
+    expect(
+      await screen.findByRole('button', { name: 'Add node pool' })
+    ).toBeDisabled();
+  });
 });
