@@ -247,6 +247,7 @@ describe('WorkerNodesNodePoolItem', () => {
       getComponent({
         nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
         providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        canUpdateNodePools: true,
       })
     );
 
@@ -261,6 +262,22 @@ describe('WorkerNodesNodePoolItem', () => {
         `Successfully updated the node pool's description`
       )
     ).toBeInTheDocument();
+  });
+
+  it('does not allow editing the node pool description for a read-only user', () => {
+    render(
+      getComponent({
+        nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
+        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        canUpdateNodePools: false,
+      })
+    );
+
+    fireEvent.click(screen.getByText('Some node pool'));
+
+    expect(
+      screen.queryByRole('button', { name: 'OK' })
+    ).not.toBeInTheDocument();
   });
 
   it('can change the node pool scaling', async () => {
@@ -283,6 +300,7 @@ describe('WorkerNodesNodePoolItem', () => {
       getComponent({
         nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
         providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        canUpdateNodePools: true,
       })
     );
 
