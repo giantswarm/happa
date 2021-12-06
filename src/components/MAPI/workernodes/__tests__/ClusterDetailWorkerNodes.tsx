@@ -11,6 +11,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailWorkerNodes from '../ClusterDetailWorkerNodes';
+import { usePermissionsForNodePools } from '../permissions/usePermissionsForNodePools';
 
 function getComponent(
   props: React.ComponentPropsWithoutRef<typeof ClusterDetailWorkerNodes>
@@ -44,12 +45,30 @@ jest.mock('react-router', () => ({
 
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganization');
 
+jest.mock('MAPI/workernodes/permissions/usePermissionsForNodePools');
+
 describe('ClusterDetailWorkerNodes', () => {
   it('renders without crashing', () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     render(getComponent({}));
   });
 
   it('displays an error message if the list of node pools could not be fetched', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
@@ -62,7 +81,7 @@ describe('ClusterDetailWorkerNodes', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${mockCapiv1alpha3.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${mockCapiv1alpha3.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${mockCapiv1alpha3.randomCluster1.metadata.name}`
       )
       .reply(StatusCodes.NotFound, {
         apiVersion: 'v1',
@@ -81,6 +100,14 @@ describe('ClusterDetailWorkerNodes', () => {
   });
 
   it('displays a placeholder if there are no node pools', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      canGet: true,
+      canList: true,
+      canUpdate: true,
+      canCreate: true,
+      canDelete: true,
+    });
+
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
@@ -93,7 +120,7 @@ describe('ClusterDetailWorkerNodes', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${mockCapiv1alpha3.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${mockCapiv1alpha3.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${mockCapiv1alpha3.randomCluster1.metadata.name}`
       )
       .reply(StatusCodes.Ok, {
         apiVersion: 'exp.cluster.x-k8s.io/v1alpha3',
