@@ -40,6 +40,7 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
+import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import ClusterDetailActions from './ClusterDetailActions';
 import ClusterDetailOverview from './ClusterDetailOverview';
 import { updateClusterDescription } from './utils';
@@ -142,9 +143,15 @@ const ClusterDetail: React.FC<{}> = () => {
 
   const provider = window.config.info.general.provider;
 
-  const clusterKey = namespace
-    ? fetchClusterKey(provider, namespace, clusterId)
-    : null;
+  const { canGet: canGetCluster } = usePermissionsForClusters(
+    provider,
+    namespace ?? ''
+  );
+
+  const clusterKey =
+    canGetCluster && namespace
+      ? fetchClusterKey(provider, namespace, clusterId)
+      : null;
 
   const {
     data: cluster,

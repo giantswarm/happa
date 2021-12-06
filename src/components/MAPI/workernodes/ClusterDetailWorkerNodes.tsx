@@ -40,6 +40,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import DeleteNodePoolGuide from './guides/DeleteNodePoolGuide';
 import ListNodePoolsGuide from './guides/ListNodePoolsGuide';
 import ModifyNodePoolGuide from './guides/ModifyNodePoolGuide';
+import { usePermissionsForNodePools } from './permissions/usePermissionsForNodePools';
 import { IWorkerNodesAdditionalColumn } from './types';
 import { mapNodePoolsToProviderNodePools } from './utils';
 import WorkerNodesCreateNodePool from './WorkerNodesCreateNodePool';
@@ -261,12 +262,29 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
     }, [providerClusterError]);
 
     const {
+      canList: canListNodePools,
+      canGet: canGetNodePools,
+      canCreate: canCreateNodePools,
+    } = usePermissionsForNodePools(provider, cluster?.metadata.namespace ?? '');
+
+    const nodePoolListForClusterKey =
+      cluster && canListNodePools && canGetNodePools
+        ? fetchNodePoolListForClusterKey(cluster, cluster.metadata.namespace)
+        : null;
+
+    const {
       data: nodePoolList,
       error: nodePoolListError,
       isValidating: nodePoolListIsValidating,
     } = useSWR<NodePoolList, GenericResponseError>(
-      fetchNodePoolListForClusterKey(cluster),
-      () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
+      nodePoolListForClusterKey,
+      () =>
+        fetchNodePoolListForCluster(
+          clientFactory,
+          auth,
+          cluster,
+          cluster!.metadata.namespace
+        )
     );
 
     const nodePoolListIsLoading =
@@ -497,6 +515,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                   animation={{ type: 'fadeIn', duration: 300 }}
                   onCreateButtonClick={handleOpenCreateForm}
                   disabled={isReadOnly}
+                  unauthorized={!canCreateNodePools}
                 />
               )}
             </Box>
