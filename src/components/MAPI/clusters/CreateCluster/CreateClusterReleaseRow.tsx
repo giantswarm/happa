@@ -44,11 +44,18 @@ const ReleaseRow: FC<IReleaseRow> = ({
   timestamp,
   version,
 }) => {
+  const isPreviewRelease = state === 'preview';
+
+  const handleSelectRelease = () => {
+    if (isPreviewRelease) return;
+    selectRelease(version);
+  };
+
   const handleTabSelect = (e: React.KeyboardEvent<HTMLTableRowElement>) => {
     // Handle tapping the space bar.
     if (e.key === ' ') {
       e.preventDefault();
-      selectRelease(version);
+      handleSelectRelease();
     }
   };
 
@@ -57,12 +64,12 @@ const ReleaseRow: FC<IReleaseRow> = ({
       tabIndex={isSelected ? -1 : 0}
       role='radio'
       aria-checked={isSelected}
-      onClick={() => selectRelease(version)}
+      onClick={handleSelectRelease}
       onKeyDown={handleTabSelect}
       aria-label={`Release version ${version}`}
     >
       <TableCell>
-        {state !== 'preview' && (
+        {!isPreviewRelease && (
           <RUMActionTarget name={RUMActions.SelectRelease}>
             <RadioInput
               id={`select-${version}`}
@@ -70,7 +77,7 @@ const ReleaseRow: FC<IReleaseRow> = ({
               checked={isSelected}
               value={isSelected ? 'true' : 'false'}
               name={`select-${version}`}
-              onChange={() => selectRelease(version)}
+              onChange={handleSelectRelease}
               formFieldProps={{
                 margin: 'none',
                 tabIndex: -1,
