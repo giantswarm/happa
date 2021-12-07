@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import { Providers } from 'model/constants';
 import * as docs from 'model/constants/docs';
@@ -13,11 +14,13 @@ interface IDeleteNodePoolGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   clusterNamespace: string;
   provider: PropertiesOf<typeof Providers>;
+  unauthorized?: boolean;
 }
 
 const DeleteNodePoolGuide: React.FC<IDeleteNodePoolGuideProps> = ({
   clusterNamespace,
   provider,
+  unauthorized,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -44,6 +47,7 @@ const DeleteNodePoolGuide: React.FC<IDeleteNodePoolGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {unauthorized && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Delete a node pool'

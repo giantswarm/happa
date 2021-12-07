@@ -560,12 +560,14 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                   <ModifyNodePoolGuide
                     clusterNamespace={cluster.metadata.namespace!}
                     provider={provider}
+                    unauthorized={!canUpdateNodePools}
                   />
                 )}
                 {!isReadOnly && (
                   <DeleteNodePoolGuide
                     clusterNamespace={cluster.metadata.namespace!}
                     provider={provider}
+                    unauthorized={!canDeleteNodePools}
                   />
                 )}
               </Box>
