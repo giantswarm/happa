@@ -73,6 +73,7 @@ interface IClusterListItemProps
   releases?: releasev1alpha1.IRelease[];
   organizations?: Record<string, IOrganization>;
   canCreateClusters?: boolean;
+  canListReleases?: boolean;
 }
 
 // eslint-disable-next-line complexity
@@ -82,6 +83,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   releases,
   organizations,
   canCreateClusters,
+  canListReleases,
   ...props
 }) => {
   const name = cluster?.metadata.name;
@@ -130,10 +132,12 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   }, [releases, releaseVersion]);
 
   const k8sVersion = useMemo(() => {
+    // if releases and permissions are loading, show loading placeholder
+    if (!releases && typeof canListReleases === 'undefined') return undefined;
     if (typeof release === 'undefined') return '';
 
     return releasev1alpha1.getK8sVersion(release) ?? '';
-  }, [release]);
+  }, [canListReleases, release, releases]);
 
   const isPreviewRelease = release?.spec.state === 'preview';
 
