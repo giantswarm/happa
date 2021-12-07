@@ -261,11 +261,8 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
       }
     }, [providerClusterError]);
 
-    const {
-      canList: canListNodePools,
-      canGet: canGetNodePools,
-      canCreate: canCreateNodePools,
-    } = usePermissionsForNodePools(provider, cluster?.metadata.namespace ?? '');
+    const { canList: canListNodePools, canGet: canGetNodePools } =
+      usePermissionsForNodePools(provider, cluster?.metadata.namespace ?? '');
 
     const nodePoolListForClusterKey =
       cluster && canListNodePools && canGetNodePools
@@ -515,7 +512,6 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                   animation={{ type: 'fadeIn', duration: 300 }}
                   onCreateButtonClick={handleOpenCreateForm}
                   disabled={isReadOnly}
-                  unauthorized={!canCreateNodePools}
                 />
               )}
             </Box>
