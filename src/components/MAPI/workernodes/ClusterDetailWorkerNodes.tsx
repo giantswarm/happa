@@ -1,6 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Heading, Text } from 'grommet';
-import { ProviderCluster } from 'MAPI/types';
+import { NodePoolList, ProviderCluster } from 'MAPI/types';
 import { Cluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -12,6 +12,7 @@ import {
   fetchProviderClusterForClusterKey,
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
+  IProviderNodePoolForNodePoolName,
   isNodePoolMngmtReadOnly,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -263,8 +264,9 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
       data: nodePoolList,
       error: nodePoolListError,
       isValidating: nodePoolListIsValidating,
-    } = useSWR(fetchNodePoolListForClusterKey(cluster), () =>
-      fetchNodePoolListForCluster(clientFactory, auth, cluster)
+    } = useSWR<NodePoolList, GenericResponseError>(
+      fetchNodePoolListForClusterKey(cluster),
+      () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
     );
 
     const nodePoolListIsLoading =
@@ -290,14 +292,15 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const hasNoNodePools = nodePoolList?.items.length === 0;
 
-    const { data: providerNodePools, error: providerNodePoolsError } = useSWR(
-      fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items),
-      () =>
-        fetchProviderNodePoolsForNodePools(
-          clientFactory,
-          auth,
-          nodePoolList!.items
-        )
+    const { data: providerNodePools, error: providerNodePoolsError } = useSWR<
+      IProviderNodePoolForNodePoolName[],
+      GenericResponseError
+    >(fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items), () =>
+      fetchProviderNodePoolsForNodePools(
+        clientFactory,
+        auth,
+        nodePoolList!.items
+      )
     );
 
     useEffect(() => {

@@ -3,7 +3,7 @@ import { push } from 'connected-react-router';
 import differenceInHours from 'date-fns/fp/differenceInHours';
 import toDate from 'date-fns-tz/toDate';
 import { Box, Card, CardBody, Text } from 'grommet';
-import { ProviderCluster } from 'MAPI/types';
+import { NodePoolList, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
   fetchNodePoolListForCluster,
@@ -12,9 +12,11 @@ import {
   fetchProviderNodePoolsForNodePoolsKey,
   getClusterDescription,
   getMachineTypes,
+  IProviderNodePoolForNodePoolName,
 } from 'MAPI/utils';
 import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { mapNodePoolsToProviderNodePools } from 'MAPI/workernodes/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -182,15 +184,16 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     ? undefined
     : orgNamespace;
 
-  const { data: nodePoolList, error: nodePoolListError } = useSWR(
-    nodePoolListForClusterKey,
-    () =>
-      fetchNodePoolListForCluster(
-        clientFactory,
-        auth,
-        cluster,
-        nodePoolListNamespace
-      )
+  const { data: nodePoolList, error: nodePoolListError } = useSWR<
+    NodePoolList,
+    GenericResponseError
+  >(nodePoolListForClusterKey, () =>
+    fetchNodePoolListForCluster(
+      clientFactory,
+      auth,
+      cluster,
+      nodePoolListNamespace
+    )
   );
 
   useEffect(() => {
@@ -199,14 +202,11 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     }
   }, [nodePoolListError]);
 
-  const { data: providerNodePools, error: providerNodePoolsError } = useSWR(
-    fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items),
-    () =>
-      fetchProviderNodePoolsForNodePools(
-        clientFactory,
-        auth,
-        nodePoolList!.items
-      )
+  const { data: providerNodePools, error: providerNodePoolsError } = useSWR<
+    IProviderNodePoolForNodePoolName[],
+    GenericResponseError
+  >(fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items), () =>
+    fetchProviderNodePoolsForNodePools(clientFactory, auth, nodePoolList!.items)
   );
 
   useEffect(() => {

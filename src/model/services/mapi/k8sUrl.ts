@@ -172,6 +172,7 @@ export function create(options: any): URL {
     isCore,
   } = options;
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const url = new URL(baseUrl);
 
   // Compute the pathname.
@@ -238,6 +239,7 @@ export function create(options: any): URL {
   }
 
   if (labelSelector) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const labels = serializeLabelSelector(labelSelector);
     if (labels) {
       url.searchParams.set('labelSelector', labels);
@@ -245,6 +247,7 @@ export function create(options: any): URL {
   }
 
   if (fieldSelector) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const fields = serializeFieldSelector(fieldSelector);
     if (fields) {
       url.searchParams.set('fieldSelector', fields);

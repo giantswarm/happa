@@ -174,9 +174,11 @@ const Clusters: React.FC<{}> = () => {
     ? releasev1alpha1.getReleaseListKey()
     : null;
 
-  const { data: releaseList, error: releaseListError } = useSWR(
-    releaseListKey,
-    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  const { data: releaseList, error: releaseListError } = useSWR<
+    releasev1alpha1.IReleaseList,
+    GenericResponseError
+  >(releaseListKey, () =>
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
   useEffect(() => {

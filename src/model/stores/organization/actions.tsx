@@ -159,13 +159,15 @@ export function organizationsLoadMAPI(
           );
 
         const organizationNames = [];
-        for (const rule of rulesReviewResponse.status?.resourceRules) {
-          if (
-            rule.verbs.includes('get') &&
-            rule.resources.includes('organizations') &&
-            rule.resourceNames
-          ) {
-            organizationNames.push(...rule.resourceNames);
+        if (rulesReviewResponse.status) {
+          for (const rule of rulesReviewResponse.status.resourceRules) {
+            if (
+              rule.verbs.includes('get') &&
+              rule.resources.includes('organizations') &&
+              rule.resourceNames
+            ) {
+              organizationNames.push(...rule.resourceNames);
+            }
           }
         }
 

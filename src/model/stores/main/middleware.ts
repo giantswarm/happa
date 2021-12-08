@@ -9,6 +9,7 @@ import { LoggedInUserTypes } from './types';
 
 export function mainAuthMiddleware(auth: IOAuth2Provider): Middleware {
   return (store) => (next) => async (action) => {
+    //eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const loggedInUser = getLoggedInUser(store.getState());
     switch (true) {
       case loggedInUser === null:

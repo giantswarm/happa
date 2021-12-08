@@ -234,6 +234,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
                 isCurrent={isCurrentVersionSelected}
               />
             }
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             onChange={(e) => onSelectVersion(e.option.spec.version)}
             options={options}
             disabled={isLoading || isSwitchingVersion}

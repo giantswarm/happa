@@ -32,10 +32,13 @@ describe('AccessControl/utils', () => {
       ${'subject1			subject2 subject3						'}                      | ${['subject1', 'subject2', 'subject3']}
       ${'some-account, test1, test, test2, default, '}    | ${['some-account', 'test1', 'test', 'test2', 'default']}
       ${'some-account, test1, test, test2, default,;,; '} | ${['some-account', 'test1', 'test', 'test2', 'default']}
-    `(`gets subjects from '$subjects'`, ({ subjects, expected }) => {
-      const parsed = parseSubjects(subjects);
-      expect(parsed).toStrictEqual(expected);
-    });
+    `(
+      `gets subjects from '$subjects'`,
+      ({ subjects, expected }: { subjects: string; expected: string }) => {
+        const parsed = parseSubjects(subjects);
+        expect(parsed).toStrictEqual(expected);
+      }
+    );
   });
 
   describe('getUserNameParts', () => {
@@ -45,10 +48,13 @@ describe('AccessControl/utils', () => {
       ${'test'}                            | ${['test']}
       ${'test@test.com'}                   | ${['test', 'test.com']}
       ${'test@other-test@some-other-test'} | ${['test', 'other-test']}
-    `(`gets userName parts from '$userName'`, ({ userName, expected }) => {
-      const parts = getUserNameParts(userName);
-      expect(parts).toStrictEqual(expected);
-    });
+    `(
+      `gets userName parts from '$userName'`,
+      ({ userName, expected }: { userName: string; expected: string }) => {
+        const parts = getUserNameParts(userName);
+        expect(parts).toStrictEqual(expected);
+      }
+    );
   });
 
   describe('filterSubjectSuggestions', () => {
@@ -65,7 +71,17 @@ describe('AccessControl/utils', () => {
       ${'test'}         | ${['test1', 'test2', 'some-other', 'test3', 'test4']} | ${3}  | ${['test1', 'test2', 'test3']}
     `(
       `filters suggestions with the '$input' input`,
-      ({ input, suggestions, limit, expected }) => {
+      ({
+        input,
+        suggestions,
+        limit,
+        expected,
+      }: {
+        input: string;
+        suggestions: string[];
+        limit: number;
+        expected: string;
+      }) => {
         const result = filterSubjectSuggestions(input, suggestions, limit);
         expect(result).toStrictEqual(expected);
       }
@@ -83,7 +99,15 @@ describe('AccessControl/utils', () => {
       ${'test1, test2, test3, '} | ${'test4'} | ${'test1, test2, test3, test4, '}
     `(
       `appends the '$suggestion' suggestion to '$value'`,
-      ({ value, suggestion, expected }) => {
+      ({
+        value,
+        suggestion,
+        expected,
+      }: {
+        value: string;
+        suggestion: string;
+        expected: string;
+      }) => {
         const result = appendSubjectSuggestionToValue(value, suggestion);
         expect(result).toEqual(expected);
       }

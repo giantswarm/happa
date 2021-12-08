@@ -39,6 +39,7 @@ function findKeyPairsForCluster(
   const keyPairs: IKeyPair[] = [];
   for (const [key, value] of Object.entries(storageConfig.spec.storage.data)) {
     if (key.startsWith(storageKeyPrefix)) {
+      //eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       keyPairs.push(JSON.parse(value));
     }
   }

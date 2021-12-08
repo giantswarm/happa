@@ -65,6 +65,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     mapiAuthenticating: false,
   };
 
+  // eslint-disable-next-line class-methods-use-this
   public onAuthenticateFailed = (message: string) => {
     new FlashMessage(message, messageType.ERROR, messageTTL.LONG);
   };

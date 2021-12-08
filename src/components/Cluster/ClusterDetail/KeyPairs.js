@@ -145,6 +145,7 @@ class KeyPairs extends React.Component {
   /**
    * Replaces a common suffix in every CN string, returns it as copyable
    */
+  // eslint-disable-next-line class-methods-use-this
   commonNameFormatter = (data) => {
     return (
       <Copyable copyText={data.common_name}>

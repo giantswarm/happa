@@ -850,6 +850,7 @@ export const loadClusterApps = createAsynchronousAction<
 
     try {
       let apps = await getClusterApps(payload.clusterId);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       apps = Array.from(apps);
 
       return {

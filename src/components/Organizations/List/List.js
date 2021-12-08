@@ -10,6 +10,7 @@ import EmptyStateDisplay from 'UI/Util/EmptyStateDisplay';
 import RoutePath from 'utils/routePath';
 
 class OrganizationListWrapper extends React.Component {
+  // eslint-disable-next-line class-methods-use-this
   getOrganizationURL = (id) => {
     const organizationDetailPath = RoutePath.createUsablePath(
       OrganizationsRoutes.Detail,

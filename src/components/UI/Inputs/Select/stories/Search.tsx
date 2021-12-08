@@ -23,6 +23,7 @@ export const Search: Story<ComponentPropsWithoutRef<typeof Select>> = (
     <Select
       {...args}
       value={value}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       onChange={(e) => setValue(e.target.option)}
       options={filteredOptions}
       onSearch={searchFor}

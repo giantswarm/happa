@@ -29,6 +29,7 @@ export const Search: Story<ComponentPropsWithoutRef<typeof MultiSelect>> = (
       selected={selected}
       onRemoveValue={onRemoveValue}
       onChange={(e) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         setSelected(e.value);
       }}
       options={filteredOptions}
