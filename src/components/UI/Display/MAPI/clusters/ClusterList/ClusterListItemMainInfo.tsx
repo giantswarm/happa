@@ -30,7 +30,6 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
 }) => {
   return (
     <Box direction='row' align='center' gap='xsmall' {...props}>
-      {isPreviewRelease && <ReleaseStateLabel state='preview' />}
       <OptionalValue value={releaseVersion} replaceEmptyValue={false}>
         {(value) => (
           <Text aria-label={`Release version: ${value}`}>
@@ -40,6 +39,9 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
               aria-hidden='true'
             />{' '}
             {value}
+            {isPreviewRelease && (
+              <ReleaseStateLabel state='preview' margin={{ left: 'xsmall' }} />
+            )}
           </Text>
         )}
       </OptionalValue>
