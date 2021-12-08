@@ -4,6 +4,7 @@ import { Box, Heading } from 'grommet';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import ClusterDetailKeyPairs from 'MAPI/keypairs/ClusterDetailKeyPairs';
+import { getPreviewReleaseVersions } from 'MAPI/releases/utils';
 import { Cluster, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -18,6 +19,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -212,6 +214,53 @@ const ClusterDetail: React.FC<{}> = () => {
       dispatch(push(MainRoutes.Home));
     }
   }, [cluster, dispatch]);
+
+  // TODO: remove once preview releases are supported
+  const releaseListClient = useRef(clientFactory());
+
+  const { data: releaseList, error: releaseListError } = useSWR<
+    releasev1alpha1.IReleaseList,
+    GenericResponseError
+  >(releasev1alpha1.getReleaseListKey(), () =>
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  );
+
+  useEffect(() => {
+    if (releaseListError) {
+      ErrorReporter.getInstance().notify(releaseListError);
+    }
+  }, [releaseListError]);
+
+  const isPreviewRelease = useMemo(() => {
+    if (!cluster || !releaseList?.items) return undefined;
+
+    const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+    const previewReleaseVersions = getPreviewReleaseVersions(
+      releaseList?.items
+    );
+
+    return previewReleaseVersions.some(
+      (version) => version === `v${releaseVersion}`
+    );
+  }, [cluster, releaseList?.items]);
+
+  // Redirect to home page if the cluster uses a preview release
+  useEffect(() => {
+    if (cluster && isPreviewRelease) {
+      new FlashMessage(
+        (
+          <>
+            Cluster <code>{cluster.metadata.name}</code> uses a preview release.
+            Cluster details are not available at this time.
+          </>
+        ),
+        messageType.INFO,
+        messageTTL.LONG
+      );
+
+      dispatch(push(MainRoutes.Home));
+    }
+  }, [cluster, dispatch, isPreviewRelease]);
 
   const providerClusterKey = cluster
     ? fetchProviderClusterForClusterKey(cluster)
