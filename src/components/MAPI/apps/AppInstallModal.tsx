@@ -212,9 +212,11 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   // TODO: remove once preview releases are supported
   const releaseListClient = useRef(clientFactory());
 
-  const { data: releaseList, error: releaseListError } = useSWR(
-    releasev1alpha1.getReleaseListKey(),
-    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  const { data: releaseList, error: releaseListError } = useSWR<
+    releasev1alpha1.IReleaseList,
+    GenericResponseError
+  >(releasev1alpha1.getReleaseListKey(), () =>
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
   useEffect(() => {
