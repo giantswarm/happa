@@ -7,6 +7,8 @@ import Date from 'UI/Display/Date';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { getK8sVersionEOLDate } from 'utils/config';
 
+import ReleaseStateLabel from '../../releases/ReleaseStateLabel';
+
 const StyledDot = styled(Dot)`
   padding: 0;
 `;
@@ -14,12 +16,14 @@ const StyledDot = styled(Dot)`
 interface IClusterListItemMainInfoProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   releaseVersion?: string;
+  isPreviewRelease?: boolean;
   creationDate?: string;
   k8sVersion?: string;
 }
 
 const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
   releaseVersion,
+  isPreviewRelease,
   creationDate,
   k8sVersion,
   ...props
@@ -35,6 +39,9 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
               aria-hidden='true'
             />{' '}
             {value}
+            {isPreviewRelease && (
+              <ReleaseStateLabel state='preview' margin={{ left: 'xsmall' }} />
+            )}
           </Text>
         )}
       </OptionalValue>

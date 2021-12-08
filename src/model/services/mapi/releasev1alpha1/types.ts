@@ -1,6 +1,6 @@
 import * as metav1 from '../metav1';
 
-export type ReleaseState = 'active' | 'deprecated' | 'wip';
+export type ReleaseState = 'active' | 'deprecated' | 'wip' | 'preview';
 
 export interface IReleaseStatus {
   ready?: boolean;
@@ -28,6 +28,7 @@ export interface IReleaseSpec {
   state: ReleaseState;
   date: string;
   endOfLifeDate?: string;
+  notice?: string;
 }
 
 export const Release = 'Release';
