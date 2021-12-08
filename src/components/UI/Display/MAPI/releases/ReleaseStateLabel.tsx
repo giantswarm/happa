@@ -1,10 +1,14 @@
-import { Box, BoxProps, Text } from 'grommet';
+import { Text, TextProps } from 'grommet';
 import { ReleaseState } from 'model/services/mapi/releasev1alpha1';
 import React from 'react';
 import styled from 'styled-components';
 
-const StyledText = styled(Text)`
+const StyledText = styled(Text)<{ state: ReleaseState }>`
   text-transform: uppercase;
+  background: ${({ state }) => mapStateToBackgroundColor(state)};
+  padding: 1px ${({ theme }) => theme.spacingPx}px;
+  border-radius: 3px;
+  font-weight: 400;
 `;
 
 function mapStateToBackgroundColor(state: ReleaseState) {
@@ -21,26 +25,22 @@ function mapStateToBackgroundColor(state: ReleaseState) {
   }
 }
 
-interface IReleaseStateLabelProps extends BoxProps {
+interface IReleaseStateLabelProps extends TextProps {
   state: ReleaseState;
 }
 
-const ReleaseStateLabel: React.FC<IReleaseStateLabelProps> = ({ state }) => {
-  const background = mapStateToBackgroundColor(state);
-
+const ReleaseStateLabel: React.FC<IReleaseStateLabelProps> = ({
+  state,
+  ...props
+}) => {
   return (
-    <Box
-      pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}
-      round='xxsmall'
-      background={background}
+    <StyledText
+      color={state === 'deprecated' ? '#768e9d' : 'background'}
+      state={state}
+      {...props}
     >
-      <StyledText
-        size='small'
-        color={state === 'deprecated' ? '#768e9d' : 'background'}
-      >
-        {state}
-      </StyledText>
-    </Box>
+      {state}
+    </StyledText>
   );
 };
 
