@@ -1,4 +1,4 @@
-import { Anchor, Text } from 'grommet';
+import { Anchor, Box, Text } from 'grommet';
 import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { FC } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
@@ -7,6 +7,7 @@ import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import Date from 'UI/Display/Date';
 import ReleaseStateLabel from 'UI/Display/MAPI/releases/ReleaseStateLabel';
 import { TableCell, TableRow } from 'UI/Display/Table';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import RadioInput from 'UI/Inputs/RadioInput';
 
 import { IRelease } from './CreateClusterReleaseSelector';
@@ -88,10 +89,30 @@ const ReleaseRow: FC<IReleaseRow> = ({
         )}
       </TableCell>
       <TableCell size='medium'>
-        <Text>{version}</Text>
+        <Text>
+          {version}{' '}
+          {isPreviewRelease && (
+            <TooltipContainer
+              content={
+                <Tooltip>
+                  {`Cluster creation using preview releases is currently only
+                  supported with 'kubectl gs template cluster'`}
+                </Tooltip>
+              }
+            >
+              <i
+                className='fa fa-info'
+                aria-hidden={true}
+                role='presentation'
+              />
+            </TooltipContainer>
+          )}
+        </Text>
       </TableCell>
       <TableCell size='small' align='center'>
-        <ReleaseStateLabel state={state} />
+        <Box align='stretch'>
+          <ReleaseStateLabel state={state} />
+        </Box>
       </TableCell>
       <TableCell size='small' align='left'>
         <KubernetesVersionLabel

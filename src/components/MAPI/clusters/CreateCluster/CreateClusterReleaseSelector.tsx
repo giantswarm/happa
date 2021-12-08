@@ -121,10 +121,6 @@ const CreateClusterReleaseSelector: FC<ICreateClusterReleaseSelectorProps> = ({
     );
   }
 
-  const containsPreviewReleases = Object.values(releases).some(
-    (release) => release.state === 'preview'
-  );
-
   return (
     <LoadingOverlay loading={isLoading}>
       <Box
@@ -213,21 +209,8 @@ const CreateClusterReleaseSelector: FC<ICreateClusterReleaseSelectorProps> = ({
                   aria-hidden={true}
                   role='presentation'
                 />{' '}
-                WIP and DEPRECATED releases are only available to Giant Swarm
+                WIP and deprecated releases are only available to Giant Swarm
                 staff.
-              </Text>
-            </Box>
-          )}
-          {containsPreviewReleases && (
-            <Box margin={{ vertical: 'xsmall' }}>
-              <Text size='small' color='text-weak'>
-                <i
-                  className='fa fa-info'
-                  aria-hidden={true}
-                  role='presentation'
-                />{' '}
-                Cluster creation for PREVIEW releases is currently not
-                supported.
               </Text>
             </Box>
           )}
