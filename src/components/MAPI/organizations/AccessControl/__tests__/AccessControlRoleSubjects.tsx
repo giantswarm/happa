@@ -311,7 +311,7 @@ describe('AccessControlRoleSubjects', () => {
     const section = screen.getByLabelText('Groups');
     fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
 
-    let input = within(section).getByPlaceholderText(
+    let input: HTMLInputElement = within(section).getByPlaceholderText(
       'e.g. subject1, subject2, subject3'
     );
     expect(document.activeElement).toBe(input);
