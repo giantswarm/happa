@@ -4,6 +4,7 @@ import { Box, Heading } from 'grommet';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import ClusterDetailKeyPairs from 'MAPI/keypairs/ClusterDetailKeyPairs';
+import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { getPreviewReleaseVersions } from 'MAPI/releases/utils';
 import { Cluster, ProviderCluster } from 'MAPI/types';
 import {
@@ -225,10 +226,19 @@ const ClusterDetail: React.FC<{}> = () => {
   // TODO: remove once preview releases are supported
   const releaseListClient = useRef(clientFactory());
 
+  const { canList: canListReleases } = usePermissionsForReleases(
+    provider,
+    'default'
+  );
+
+  const releaseListKey = canListReleases
+    ? releasev1alpha1.getReleaseListKey()
+    : null;
+
   const { data: releaseList, error: releaseListError } = useSWR<
     releasev1alpha1.IReleaseList,
     GenericResponseError
-  >(releasev1alpha1.getReleaseListKey(), () =>
+  >(releaseListKey, () =>
     releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
