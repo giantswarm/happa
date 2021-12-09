@@ -36,6 +36,14 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useRouteMatch: jest.fn().mockReturnValue({
@@ -53,25 +61,17 @@ jest.mock('MAPI/clusters/permissions/usePermissionsForClusters');
 
 describe('ClusterDetail', () => {
   it('renders without crashing', () => {
-    (usePermissionsForClusters as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     render(getComponent({}));
   });
 
   it('displays loading animations if the cluster is still loading', () => {
-    (usePermissionsForClusters as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     render(getComponent({}));
 
@@ -79,13 +79,9 @@ describe('ClusterDetail', () => {
   });
 
   it(`displays the cluster's description`, async () => {
-    (usePermissionsForClusters as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
@@ -113,13 +109,9 @@ describe('ClusterDetail', () => {
   });
 
   it(`can edit the cluster's description`, async () => {
-    (usePermissionsForClusters as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
