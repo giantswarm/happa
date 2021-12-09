@@ -167,7 +167,7 @@ const Clusters: React.FC<{}> = () => {
 
   const { canList: canListReleases } = usePermissionsForReleases(
     provider,
-    namespace ?? ''
+    'default'
   );
 
   const releaseListKey = canListReleases
@@ -282,6 +282,7 @@ const Clusters: React.FC<{}> = () => {
                           releases={releaseList?.items}
                           organizations={organizations}
                           canCreateClusters={canCreateClusters}
+                          canListReleases={canListReleases}
                           margin={{ bottom: 'medium' }}
                         />
                       </BaseTransition>

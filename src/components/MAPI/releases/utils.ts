@@ -155,3 +155,16 @@ export function getReleaseComponentsDiff(
 
   return diff;
 }
+
+export function getPreviewReleaseVersions(
+  releases: releasev1alpha1.IRelease[]
+): string[] {
+  const releaseVersions: string[] = [];
+
+  for (const release of releases) {
+    if (release.spec.state === 'preview')
+      releaseVersions.push(release.metadata.name);
+  }
+
+  return releaseVersions;
+}

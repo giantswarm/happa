@@ -20,7 +20,7 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
 
 const StyledControl = styled(Control)<{ unauthorized?: boolean }>`
   :hover {
-    cursor: ${({ unauthorized }) => (unauthorized ? 'not-allowed' : 'auto')};
+    cursor: ${({ unauthorized }) => (unauthorized ? 'not-allowed' : 'pointer')};
   }
 `;
 

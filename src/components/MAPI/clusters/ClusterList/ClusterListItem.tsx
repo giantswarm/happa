@@ -75,6 +75,7 @@ interface IClusterListItemProps
   releases?: releasev1alpha1.IRelease[];
   organizations?: Record<string, IOrganization>;
   canCreateClusters?: boolean;
+  canListReleases?: boolean;
 }
 
 // eslint-disable-next-line complexity
@@ -84,6 +85,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   releases,
   organizations,
   canCreateClusters,
+  canListReleases,
   ...props
 }) => {
   const name = cluster?.metadata.name;
@@ -123,21 +125,23 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     );
   }, [orgId, name]);
 
-  const k8sVersion = useMemo(() => {
+  const release = useMemo(() => {
     const formattedReleaseVersion = `v${releaseVersion}`;
 
     if (!releases) return undefined;
 
-    const release = releases.find(
-      (r) => r.metadata.name === formattedReleaseVersion
-    );
-    if (!release) return '';
-
-    const version = releasev1alpha1.getK8sVersion(release);
-    if (typeof version === 'undefined') return '';
-
-    return version;
+    return releases.find((r) => r.metadata.name === formattedReleaseVersion);
   }, [releases, releaseVersion]);
+
+  const k8sVersion = useMemo(() => {
+    // if releases and permissions are loading, show loading placeholder
+    if (!releases && typeof canListReleases === 'undefined') return undefined;
+    if (typeof release === 'undefined') return '';
+
+    return releasev1alpha1.getK8sVersion(release) ?? '';
+  }, [canListReleases, release, releases]);
+
+  const isPreviewRelease = release?.spec.state === 'preview';
 
   const provider = window.config.info.general.provider;
 
@@ -222,7 +226,13 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const isLoading = typeof cluster === 'undefined';
 
   const shouldDisplayGetStarted = useMemo(() => {
-    if (isDeleting || isLoading || !creationDate || !canCreateClusters)
+    if (
+      isDeleting ||
+      isLoading ||
+      !creationDate ||
+      !canCreateClusters ||
+      isPreviewRelease
+    )
       return false;
 
     const createDate = toDate(creationDate, { timeZone: 'UTC' });
@@ -231,7 +241,13 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     // Cluster is older than 30 days.
     // eslint-disable-next-line no-magic-numbers
     return age < 30 * 24;
-  }, [creationDate, isDeleting, isLoading, canCreateClusters]);
+  }, [
+    isDeleting,
+    isLoading,
+    creationDate,
+    canCreateClusters,
+    isPreviewRelease,
+  ]);
 
   const dispatch = useDispatch();
 
@@ -251,12 +267,14 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     dispatch(push(path));
   };
 
+  const disableNavigation = isDeleting || isLoading || isPreviewRelease;
+
   return (
     <StyledLink
-      to={isDeleting || isLoading ? '' : clusterPath}
+      to={disableNavigation ? '' : clusterPath}
       aria-label={isLoading ? 'Loading cluster...' : `Cluster ${name}`}
-      aria-disabled={isDeleting || isLoading}
-      tabIndex={isDeleting || isLoading ? -1 : 0}
+      aria-disabled={disableNavigation}
+      tabIndex={disableNavigation ? -1 : 0}
     >
       <Card
         direction='row'
@@ -315,11 +333,12 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
               <ClusterListItemMainInfo
                 creationDate={creationDate}
                 releaseVersion={releaseVersion}
+                isPreviewRelease={isPreviewRelease}
                 k8sVersion={k8sVersion}
               />
             )}
 
-            {!hasError && !isDeleting && (
+            {!hasError && !isDeleting && !isPreviewRelease && (
               <ClusterListItemNodeInfo
                 workerNodePoolsCount={workerNodePoolsCount}
                 workerNodesCPU={workerNodesCPU}

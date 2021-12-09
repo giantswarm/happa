@@ -2,7 +2,7 @@ import produce from 'immer';
 import { YAMLException } from 'js-yaml';
 import { IProviderClusterForCluster } from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
-import { getClusterDescription } from 'MAPI/utils';
+import { getClusterDescription, getClusterReleaseVersion } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { AppConstants, Constants } from 'model/constants';
@@ -257,6 +257,7 @@ export async function createApp(
  */
 export function filterClusters(
   clustersWithProviderClusters: IProviderClusterForCluster[],
+  previewReleaseVersions: string[],
   searchQuery: string
 ): IProviderClusterForCluster[] {
   if (clustersWithProviderClusters.length < 1)
@@ -269,6 +270,10 @@ export function filterClusters(
 
     switch (true) {
       case typeof cluster.metadata.deletionTimestamp !== 'undefined':
+      case previewReleaseVersions.some(
+        (version) => version === `v${getClusterReleaseVersion(cluster)}`
+      ):
+        // TODO: remove once preview releases are supported
         return false;
       case cluster.metadata.name.includes(normalizedQuery):
       case getClusterDescription(cluster, providerCluster)

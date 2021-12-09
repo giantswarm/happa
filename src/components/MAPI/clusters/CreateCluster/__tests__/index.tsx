@@ -146,12 +146,21 @@ describe('ClusterCreate', () => {
 
     render(getComponent({}));
 
-    // Has the latest version selected by default.
+    // Has the latest active version selected by default.
     expect(
       await screen.findByLabelText('Release version: 15.0.0')
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText('Available releases'));
+
+    // Shows preview releases in the list of releases, but don't allow selection
+    expect(
+      screen.getByLabelText('Release version 20.0.0-alpha')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByLabelText('Select release 20.0.0-alpha')
+    ).not.toBeInTheDocument();
+
     fireEvent.click(screen.getByLabelText('Release version 14.1.5'));
 
     const createButton = screen.getByRole('button', { name: 'Create cluster' });
