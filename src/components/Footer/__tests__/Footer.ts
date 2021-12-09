@@ -30,17 +30,17 @@ const mockGetConfiguration = (version: string) => {
 };
 
 describe('Footer', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     jest.useFakeTimers();
   });
 
   afterAll(() => {
     setConstants(initialConstants);
-    jest.useRealTimers();
   });
 
   afterEach(() => {
     setConstants(mockConstants);
+    jest.useRealTimers();
   });
 
   it('renders without crashing', () => {
