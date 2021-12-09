@@ -10,6 +10,7 @@ import * as securityv1alpha1Mocks from 'test/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
+import { usePermissionsForClusters } from '../../clusters/permissions/usePermissionsForClusters';
 import ClusterDetailWorkerNodes from '../ClusterDetailWorkerNodes';
 import { usePermissionsForNodePools } from '../permissions/usePermissionsForNodePools';
 
@@ -35,6 +36,14 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: jest.fn().mockReturnValue({
@@ -46,28 +55,27 @@ jest.mock('react-router', () => ({
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganization');
 
 jest.mock('MAPI/workernodes/permissions/usePermissionsForNodePools');
+jest.mock('MAPI/clusters/permissions/usePermissionsForClusters');
 
 describe('ClusterDetailWorkerNodes', () => {
   it('renders without crashing', () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     render(getComponent({}));
   });
 
   it('displays an error message if the list of node pools could not be fetched', async () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
@@ -100,13 +108,12 @@ describe('ClusterDetailWorkerNodes', () => {
   });
 
   it('displays a placeholder if there are no node pools', async () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
@@ -140,8 +147,13 @@ describe('ClusterDetailWorkerNodes', () => {
 
   it('does not allow a read-only user to add node pools', async () => {
     (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
+      ...defaultPermissions,
+      canUpdate: false,
+      canCreate: false,
+      canDelete: false,
+    });
+    (usePermissionsForClusters as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
       canUpdate: false,
       canCreate: false,
       canDelete: false,

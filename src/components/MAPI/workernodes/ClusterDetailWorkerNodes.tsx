@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Heading, Text } from 'grommet';
+import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import { NodePoolList, ProviderCluster } from 'MAPI/types';
 import { Cluster } from 'MAPI/types';
 import {
@@ -233,9 +234,15 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const provider = window.config.info.general.provider;
 
-    const clusterKey = namespace
-      ? fetchClusterKey(provider, namespace, clusterId)
-      : null;
+    const { canGet: canGetCluster } = usePermissionsForClusters(
+      provider,
+      namespace ?? ''
+    );
+
+    const clusterKey =
+      canGetCluster && namespace
+        ? fetchClusterKey(provider, namespace, clusterId)
+        : null;
 
     const {
       data: cluster,
