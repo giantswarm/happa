@@ -42,7 +42,7 @@ describe('WorkerNodesNodePoolItem', () => {
     jest.useFakeTimers();
   });
 
-  afterAll(() => {
+  afterEach(() => {
     jest.useRealTimers();
   });
 

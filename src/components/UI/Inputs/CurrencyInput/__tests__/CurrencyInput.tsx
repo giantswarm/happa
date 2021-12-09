@@ -17,7 +17,7 @@ describe('CurrencyInput', () => {
       label: 'Test input',
     });
 
-    const input = screen.getByLabelText('Test input') as HTMLInputElement;
+    const input: HTMLInputElement = screen.getByLabelText('Test input');
 
     fireEvent.change(input, {
       target: {
@@ -54,7 +54,7 @@ describe('CurrencyInput', () => {
       value: 13.12312031,
     });
 
-    const input = screen.getByLabelText('Test input') as HTMLInputElement;
+    const input: HTMLInputElement = screen.getByLabelText('Test input');
 
     expect(input.value).toBe('13.12312');
     // eslint-disable-next-line no-magic-numbers
@@ -79,7 +79,7 @@ describe('CurrencyInput', () => {
       max: 10,
     });
 
-    const input = screen.getByLabelText('Test input') as HTMLInputElement;
+    const input: HTMLInputElement = screen.getByLabelText('Test input');
 
     fireEvent.change(input, {
       target: {
