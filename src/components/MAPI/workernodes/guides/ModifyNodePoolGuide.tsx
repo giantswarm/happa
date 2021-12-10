@@ -14,13 +14,13 @@ interface IModifyNodePoolGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   clusterNamespace: string;
   provider: PropertiesOf<typeof Providers>;
-  unauthorized?: boolean;
+  canUpdateNodePools?: boolean;
 }
 
 const ModifyNodePoolGuide: React.FC<IModifyNodePoolGuideProps> = ({
   clusterNamespace,
   provider,
-  unauthorized,
+  canUpdateNodePools,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -52,7 +52,7 @@ const ModifyNodePoolGuide: React.FC<IModifyNodePoolGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
-        {unauthorized && <UnauthorizedMessage />}
+        {!canUpdateNodePools && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Update the node pool description'

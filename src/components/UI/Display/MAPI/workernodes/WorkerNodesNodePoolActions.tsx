@@ -81,7 +81,7 @@ const WorkerNodesNodePoolActions: React.FC<
               onEnter={handleListKeyDown}
             >
               <List role='menu'>
-                {onScaleClick && canUpdateNodePools ? (
+                {canUpdateNodePools && onScaleClick ? (
                   <li>
                     <Link
                       href='#'
@@ -115,7 +115,7 @@ const WorkerNodesNodePoolActions: React.FC<
                     </li>
                   </TooltipContainer>
                 )}
-                {onDeleteClick && canDeleteNodePools ? (
+                {canDeleteNodePools && onDeleteClick ? (
                   <li>
                     <Link
                       href='#'

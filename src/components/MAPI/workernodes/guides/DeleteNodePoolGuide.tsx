@@ -14,13 +14,13 @@ interface IDeleteNodePoolGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   clusterNamespace: string;
   provider: PropertiesOf<typeof Providers>;
-  unauthorized?: boolean;
+  canDeleteNodePools?: boolean;
 }
 
 const DeleteNodePoolGuide: React.FC<IDeleteNodePoolGuideProps> = ({
   clusterNamespace,
   provider,
-  unauthorized,
+  canDeleteNodePools,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -47,7 +47,7 @@ const DeleteNodePoolGuide: React.FC<IDeleteNodePoolGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
-        {unauthorized && <UnauthorizedMessage />}
+        {!canDeleteNodePools && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Delete a node pool'

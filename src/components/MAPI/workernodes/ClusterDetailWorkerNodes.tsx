@@ -543,7 +543,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                   animation={{ type: 'fadeIn', duration: 300 }}
                   onCreateButtonClick={handleOpenCreateForm}
                   disabled={isReadOnly}
-                  unauthorized={!canCreateNodePools}
+                  canCreateNodePools={canCreateNodePools}
                 />
               )}
             </Box>
@@ -567,14 +567,14 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                   <ModifyNodePoolGuide
                     clusterNamespace={cluster.metadata.namespace!}
                     provider={provider}
-                    unauthorized={!canUpdateNodePools}
+                    canUpdateNodePools={canUpdateNodePools}
                   />
                 )}
                 {!isReadOnly && (
                   <DeleteNodePoolGuide
                     clusterNamespace={cluster.metadata.namespace!}
                     provider={provider}
-                    unauthorized={!canDeleteNodePools}
+                    canDeleteNodePools={canDeleteNodePools}
                   />
                 )}
               </Box>
