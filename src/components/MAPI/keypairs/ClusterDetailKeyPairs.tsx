@@ -1,6 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import CertificateOrgsLabel from 'Cluster/ClusterDetail/CertificateOrgsLabel';
 import { Box, Text } from 'grommet';
+import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import { Cluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -36,6 +37,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import CreateKeyPairGuide from '../clusters/guides/CreateKeyPairGuide';
 import ClusterDetailKeyPairDetailsModal from './ClusterDetailKeyPairDetailsModal';
+import { usePermissionsForKeyPairs } from './permissions/usePermissionsForKeyPairs';
 import { getKeyPairExpirationDate, isKeyPairExpiringSoon } from './utils';
 
 const LOADING_COMPONENTS = new Array(4).fill(0);
@@ -80,17 +82,32 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   const { clusterId, orgId } =
     useParams<{ clusterId: string; orgId: string }>();
 
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = orgId ? organizations[orgId] : undefined;
+  const namespace = selectedOrg?.namespace;
+
+  const provider = window.config.info.general.provider;
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   const keyPairListClient = useRef(clientFactory());
+
+  const { canGet: canGetKeyPairs } = usePermissionsForKeyPairs(
+    provider,
+    namespace ?? ''
+  );
+
+  const keyPairListKey = canGetKeyPairs
+    ? legacyKeyPairs.getKeyPairListKey(clusterId)
+    : null;
 
   const {
     data: keyPairList,
     error: keyPairListError,
     isValidating: keyPairListIsValidating,
   } = useSWR<legacyKeyPairs.IKeyPairList, GenericResponseError>(
-    legacyKeyPairs.getKeyPairListKey(clusterId),
+    keyPairListKey,
     () =>
       legacyKeyPairs.getKeyPairList(keyPairListClient.current, auth, clusterId)
   );
@@ -112,6 +129,10 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
       ErrorReporter.getInstance().notify(keyPairListError);
     }
   }, [keyPairListError]);
+
+  const displayKeyPairPlaceholder =
+    !canGetKeyPairs ||
+    (!keyPairListIsLoading && keyPairList?.items.length === 0);
 
   const [selectedKeyPairSerial, setSelectedKeyPairSerial] = useState('');
 
@@ -142,15 +163,15 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
     setSelectedKeyPairSerial('');
   };
 
-  const provider = window.config.info.general.provider;
+  const { canGet: canGetCluster } = usePermissionsForClusters(
+    provider,
+    namespace ?? ''
+  );
 
-  const organizations = useSelector(selectOrganizations());
-  const selectedOrg = orgId ? organizations[orgId] : undefined;
-  const namespace = selectedOrg?.namespace;
-
-  const clusterKey = namespace
-    ? fetchClusterKey(provider, namespace, clusterId)
-    : null;
+  const clusterKey =
+    canGetCluster && namespace
+      ? fetchClusterKey(provider, namespace, clusterId)
+      : null;
 
   // The error is handled in the parent component.
   const { data: cluster } = useSWR<Cluster, GenericResponseError>(
@@ -219,8 +240,9 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
                     </TableRow>
                   ))}
 
-                {!keyPairListIsLoading &&
-                  keyPairList!.items.map((keyPair) => (
+                {canGetKeyPairs &&
+                  !keyPairListIsLoading &&
+                  keyPairList?.items.map((keyPair) => (
                     <TableRow key={keyPair.serial_number}>
                       <TableCell size='large'>
                         {formatCommonName(keyPair.common_name)}
@@ -245,7 +267,7 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
                     </TableRow>
                   ))}
 
-                {!keyPairListIsLoading && keyPairList!.items.length === 0 && (
+                {displayKeyPairPlaceholder && (
                   <TableRow>
                     <TableCell>
                       <Text color='text-weak'>
