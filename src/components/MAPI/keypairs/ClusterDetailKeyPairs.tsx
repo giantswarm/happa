@@ -128,7 +128,7 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
     }
   }, [keyPairListError]);
 
-  const displayKeyPairPlaceholder =
+  const displayKeyPairsPlaceholder =
     !canGetKeyPairs ||
     (!keyPairListIsLoading && keyPairList?.items.length === 0);
 
@@ -265,7 +265,7 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
                     </TableRow>
                   ))}
 
-                {displayKeyPairPlaceholder && (
+                {displayKeyPairsPlaceholder && (
                   <TableRow>
                     <TableCell>
                       <Text color='text-weak'>
