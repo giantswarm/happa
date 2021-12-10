@@ -93,10 +93,8 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
 
   const keyPairListClient = useRef(clientFactory());
 
-  const { canGet: canGetKeyPairs } = usePermissionsForKeyPairs(
-    provider,
-    namespace ?? ''
-  );
+  const { canGet: canGetKeyPairs, canCreate: canCreateKeyPairs } =
+    usePermissionsForKeyPairs(provider, namespace ?? '');
 
   const keyPairListKey = canGetKeyPairs
     ? legacyKeyPairs.getKeyPairListKey(clusterId)
@@ -179,7 +177,7 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
     () => fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
   );
 
-  const canCreateClientCertificates = cluster
+  const canCreateClientCertificatesForCluster = cluster
     ? supportsClientCertificates(cluster)
     : false;
 
@@ -293,10 +291,11 @@ const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
           </Box>
 
           <Box margin={{ top: 'large' }} direction='column' gap='small'>
-            {canCreateClientCertificates && (
+            {canCreateClientCertificatesForCluster && (
               <CreateKeyPairGuide
                 clusterName={clusterId}
                 organizationName={orgId}
+                canCreateKeyPairs={canCreateKeyPairs}
               />
             )}
           </Box>
