@@ -210,6 +210,7 @@ describe('WorkerNodesNodePoolItem', () => {
       getComponent({
         nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
         providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        canDeleteNodePools: true,
       })
     );
 
@@ -230,6 +231,23 @@ describe('WorkerNodesNodePoolItem', () => {
     jest.clearAllTimers();
   });
 
+  it('does not allow deleting the node pool for a read-only user', async () => {
+    render(
+      getComponent({
+        nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
+        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        canDeleteNodePools: false,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+    fireEvent.click(await screen.findByText('Delete'));
+
+    expect(
+      screen.queryByText('Do you really want to delete node pool t6yo9?')
+    ).not.toBeInTheDocument();
+  });
+
   it('can edit the node pool description by clicking on the description', async () => {
     nock(window.config.mapiEndpoint)
       .get(
@@ -247,6 +265,7 @@ describe('WorkerNodesNodePoolItem', () => {
       getComponent({
         nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
         providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        canUpdateNodePools: true,
       })
     );
 
@@ -261,6 +280,22 @@ describe('WorkerNodesNodePoolItem', () => {
         `Successfully updated the node pool's description`
       )
     ).toBeInTheDocument();
+  });
+
+  it('does not allow editing the node pool description for a read-only user', () => {
+    render(
+      getComponent({
+        nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
+        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        canUpdateNodePools: false,
+      })
+    );
+
+    fireEvent.click(screen.getByText('Some node pool'));
+
+    expect(
+      screen.queryByRole('button', { name: 'OK' })
+    ).not.toBeInTheDocument();
   });
 
   it('can change the node pool scaling', async () => {
@@ -283,6 +318,7 @@ describe('WorkerNodesNodePoolItem', () => {
       getComponent({
         nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
         providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        canUpdateNodePools: true,
       })
     );
 
@@ -353,5 +389,22 @@ describe('WorkerNodesNodePoolItem', () => {
     ).toBeInTheDocument();
 
     jest.clearAllTimers();
+  });
+
+  it('does not allow editing the node pool scaling limits for a read-only user', async () => {
+    render(
+      getComponent({
+        nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
+        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        canUpdateNodePools: false,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+    fireEvent.click(await screen.findByText('Edit scaling limits'));
+
+    // Controls for editing the node pool scaling limits
+    expect(screen.queryByLabelText('Minimum')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Maximum')).not.toBeInTheDocument();
   });
 });

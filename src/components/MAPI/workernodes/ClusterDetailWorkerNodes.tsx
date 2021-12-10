@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Heading, Text } from 'grommet';
+import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import { NodePoolList, ProviderCluster } from 'MAPI/types';
 import { Cluster } from 'MAPI/types';
 import {
@@ -40,6 +41,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import DeleteNodePoolGuide from './guides/DeleteNodePoolGuide';
 import ListNodePoolsGuide from './guides/ListNodePoolsGuide';
 import ModifyNodePoolGuide from './guides/ModifyNodePoolGuide';
+import { usePermissionsForNodePools } from './permissions/usePermissionsForNodePools';
 import { IWorkerNodesAdditionalColumn } from './types';
 import { mapNodePoolsToProviderNodePools } from './utils';
 import WorkerNodesCreateNodePool from './WorkerNodesCreateNodePool';
@@ -232,9 +234,15 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
 
     const provider = window.config.info.general.provider;
 
-    const clusterKey = namespace
-      ? fetchClusterKey(provider, namespace, clusterId)
-      : null;
+    const { canGet: canGetCluster } = usePermissionsForClusters(
+      provider,
+      namespace ?? ''
+    );
+
+    const clusterKey =
+      canGetCluster && namespace
+        ? fetchClusterKey(provider, namespace, clusterId)
+        : null;
 
     const {
       data: cluster,
@@ -261,12 +269,31 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
     }, [providerClusterError]);
 
     const {
+      canList: canListNodePools,
+      canGet: canGetNodePools,
+      canCreate: canCreateNodePools,
+      canUpdate: canUpdateNodePools,
+      canDelete: canDeleteNodePools,
+    } = usePermissionsForNodePools(provider, cluster?.metadata.namespace ?? '');
+
+    const nodePoolListForClusterKey =
+      cluster && canListNodePools && canGetNodePools
+        ? fetchNodePoolListForClusterKey(cluster, cluster.metadata.namespace)
+        : null;
+
+    const {
       data: nodePoolList,
       error: nodePoolListError,
       isValidating: nodePoolListIsValidating,
     } = useSWR<NodePoolList, GenericResponseError>(
-      fetchNodePoolListForClusterKey(cluster),
-      () => fetchNodePoolListForCluster(clientFactory, auth, cluster)
+      nodePoolListForClusterKey,
+      () =>
+        fetchNodePoolListForCluster(
+          clientFactory,
+          auth,
+          cluster,
+          cluster!.metadata.namespace
+        )
     );
 
     const nodePoolListIsLoading =
@@ -452,6 +479,8 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                                 additionalColumns={additionalColumns}
                                 margin={{ bottom: 'small' }}
                                 readOnly={isReadOnly}
+                                canUpdateNodePools={canUpdateNodePools}
+                                canDeleteNodePools={canDeleteNodePools}
                               />
                             </BaseTransition>
                           )
@@ -477,10 +506,21 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                 cluster &&
                 providerCluster &&
                 !isCreateFormOpen && (
-                  <Box animation={{ type: 'fadeIn', duration: 300 }}>
+                  <Box
+                    animation={{ type: 'fadeIn', duration: 300 }}
+                    direction='row'
+                    align='center'
+                    gap='small'
+                  >
                     <Button
                       onClick={handleOpenCreateForm}
-                      disabled={!cluster || !providerCluster || isReadOnly}
+                      disabled={
+                        !cluster ||
+                        !providerCluster ||
+                        isReadOnly ||
+                        !canCreateNodePools
+                      }
+                      unauthorized={!canCreateNodePools}
                     >
                       <i
                         className='fa fa-add-circle'
@@ -489,6 +529,12 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                       />{' '}
                       Add node pool
                     </Button>
+                    {!canCreateNodePools && (
+                      <Text color='text-weak'>
+                        For creating a node pool, you need additional
+                        permissions. Please talk to your administrator.
+                      </Text>
+                    )}
                   </Box>
                 )}
 
@@ -497,6 +543,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                   animation={{ type: 'fadeIn', duration: 300 }}
                   onCreateButtonClick={handleOpenCreateForm}
                   disabled={isReadOnly}
+                  canCreateNodePools={canCreateNodePools}
                 />
               )}
             </Box>
@@ -520,12 +567,14 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                   <ModifyNodePoolGuide
                     clusterNamespace={cluster.metadata.namespace!}
                     provider={provider}
+                    canUpdateNodePools={canUpdateNodePools}
                   />
                 )}
                 {!isReadOnly && (
                   <DeleteNodePoolGuide
                     clusterNamespace={cluster.metadata.namespace!}
                     provider={provider}
+                    canDeleteNodePools={canDeleteNodePools}
                   />
                 )}
               </Box>

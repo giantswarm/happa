@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import { Providers } from 'model/constants';
 import * as docs from 'model/constants/docs';
@@ -13,11 +14,13 @@ interface IModifyNodePoolGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   clusterNamespace: string;
   provider: PropertiesOf<typeof Providers>;
+  canUpdateNodePools?: boolean;
 }
 
 const ModifyNodePoolGuide: React.FC<IModifyNodePoolGuideProps> = ({
   clusterNamespace,
   provider,
+  canUpdateNodePools,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -49,6 +52,7 @@ const ModifyNodePoolGuide: React.FC<IModifyNodePoolGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {!canUpdateNodePools && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Update the node pool description'

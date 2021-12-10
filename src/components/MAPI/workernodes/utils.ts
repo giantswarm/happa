@@ -69,6 +69,7 @@ export async function updateNodePoolDescription(
                 machinePool.metadata.labels![capiv1alpha3.labelCluster],
             },
           },
+          namespace: nodePool.metadata.namespace,
         })
       );
 
@@ -120,6 +121,7 @@ export async function updateNodePoolDescription(
                 nodePool.metadata.labels![infrav1alpha3.labelCluster],
             },
           },
+          namespace: nodePool.metadata.namespace,
         }
       );
 
@@ -185,6 +187,7 @@ export async function deleteNodePool(
                 machinePool.metadata.labels![capiv1alpha3.labelCluster],
             },
           },
+          namespace: nodePool.metadata.namespace,
         }),
         produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
           if (!draft) return;
@@ -238,6 +241,7 @@ export async function deleteNodePool(
                 machineDeployment.metadata.labels![capiv1alpha3.labelCluster],
             },
           },
+          namespace: nodePool.metadata.namespace,
         }),
         produce((draft?: capiv1alpha3.IMachineDeploymentList) => {
           if (!draft) return;
@@ -399,6 +403,7 @@ export async function updateNodePoolScaling(
                 machinePool.metadata.labels![capiv1alpha3.labelCluster],
             },
           },
+          namespace: nodePool.metadata.namespace,
         }),
         produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
           if (!draft) return;
@@ -469,6 +474,7 @@ export async function updateNodePoolScaling(
                 nodePool.metadata.labels![infrav1alpha3.labelCluster],
             },
           },
+          namespace: nodePool.metadata.namespace,
         }
       );
 
@@ -817,6 +823,7 @@ export async function createNodePool(
                 nodePool.metadata.labels![capiv1alpha3.labelCluster],
             },
           },
+          namespace: nodePool.metadata.namespace,
         }),
         produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
           if (!draft) return;
@@ -871,6 +878,7 @@ export async function createNodePool(
                 nodePool.metadata.labels![capiv1alpha3.labelCluster],
             },
           },
+          namespace: nodePool.metadata.namespace,
         }),
         produce((draft?: capiv1alpha3.IMachineDeploymentList) => {
           if (!draft) return;

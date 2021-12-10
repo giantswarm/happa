@@ -11,6 +11,7 @@ import * as securityv1alpha1Mocks from 'test/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
+import { usePermissionsForClusters } from '../../permissions/usePermissionsForClusters';
 import ClusterDetail from '../';
 
 function getComponent(
@@ -35,6 +36,14 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useRouteMatch: jest.fn().mockReturnValue({
@@ -48,18 +57,32 @@ jest.mock('react-router', () => ({
 
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganization');
 
+jest.mock('MAPI/clusters/permissions/usePermissionsForClusters');
+
 describe('ClusterDetail', () => {
   it('renders without crashing', () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     render(getComponent({}));
   });
 
   it('displays loading animations if the cluster is still loading', () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     render(getComponent({}));
 
     expect(screen.getAllByLabelText('Loading...').length).toEqual(1);
   });
 
   it(`displays the cluster's description`, async () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
@@ -86,6 +109,10 @@ describe('ClusterDetail', () => {
   });
 
   it(`can edit the cluster's description`, async () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);

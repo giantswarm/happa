@@ -175,7 +175,7 @@ const Button = React.forwardRef<
               buttonStyle !== ButtonStyle.Link
             }
             label={children}
-            disabled={disabled || loading}
+            disabled={disabled || loading || unauthorized}
             unauthorized={unauthorized}
             {...props}
             ref={ref as never}

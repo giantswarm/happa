@@ -19,6 +19,7 @@ interface IViewAndEditNameProps extends React.ComponentPropsWithRef<'span'> {
   onToggleEditingState?(editing: boolean): void;
   variant?: ViewAndEditNameVariant;
   readOnly?: boolean;
+  unauthorized?: boolean;
 }
 
 interface IViewAndEditNameState {
@@ -41,10 +42,11 @@ const NameInput = styled(TextInput)`
   font-size: 85%;
 `;
 
-const NameLabel = styled.a`
+const NameLabel = styled.a<{ unauthorized?: boolean }>`
   &:hover {
     text-decoration-style: dotted;
     color: #fff;
+    cursor: ${({ unauthorized }) => (unauthorized ? 'not-allowed' : 'pointer')};
   }
 `;
 
@@ -194,6 +196,7 @@ class ViewAndEditName extends Component<
       onToggleEditingState,
       variant,
       readOnly,
+      unauthorized,
       ...rest
     } = this.props;
     const { errorMessage } = this.state;
@@ -251,16 +254,28 @@ class ViewAndEditName extends Component<
         onSpace={this.handleFocusKeyDown}
         onEnter={this.handleFocusKeyDown}
       >
-        <span tabIndex={0} {...rest}>
-          {readOnly && this.state.value}
-
-          {!readOnly && (
+        <span tabIndex={unauthorized ? -1 : 0} {...rest}>
+          {!readOnly && !unauthorized ? (
             <TooltipContainer
               content={
                 <Tooltip>{`Click to edit ${typeLabel} ${variant}`}</Tooltip>
               }
             >
               <NameLabel onClick={this.activateEditMode}>
+                {this.state.value}
+              </NameLabel>
+            </TooltipContainer>
+          ) : (
+            <TooltipContainer
+              content={
+                <Tooltip>
+                  {unauthorized
+                    ? 'Editing the description requires additional permissions'
+                    : 'Editing the description is currently not supported'}
+                </Tooltip>
+              }
+            >
+              <NameLabel unauthorized={unauthorized}>
                 {this.state.value}
               </NameLabel>
             </TooltipContainer>
