@@ -294,3 +294,19 @@ user-actions:
         namespaces:
           - org-namespace
           - default
+- delete-cluster:
+    resources:
+      - resource: *clusters
+        verbs:
+          - get
+          - delete
+        namespaces:
+          - org-namespace
+          - default
+      - resource: *controlplanes
+        verbs:
+          - list
+          - delete
+        namespaces:
+          - org-namespace
+          - default
