@@ -42,6 +42,7 @@ interface IClusterDetailDeleteActionProps
   isLoading?: boolean;
   variant?: ClusterDetailDeleteActionNameVariant;
   disabled?: boolean;
+  canDeleteClusters?: boolean;
 }
 
 const ClusterDetailDeleteAction: React.FC<IClusterDetailDeleteActionProps> = ({
@@ -55,6 +56,7 @@ const ClusterDetailDeleteAction: React.FC<IClusterDetailDeleteActionProps> = ({
   isLoading,
   variant,
   disabled,
+  canDeleteClusters,
   ...props
 }) => {
   const [confirmationStep, setConfirmationStep] = useState(
@@ -109,11 +111,18 @@ const ClusterDetailDeleteAction: React.FC<IClusterDetailDeleteActionProps> = ({
   return (
     <Box direction='column' gap='medium' pad={{ top: 'medium' }} {...props}>
       <Box width={{ max: 'large' }}>
-        <Text>
-          Please make sure you really want to delete this cluster before you
-          proceed, as there is no way to undo this. Data stored on the worker
-          nodes will be lost. Workloads will be terminated.
-        </Text>
+        {canDeleteClusters ? (
+          <Text>
+            Please make sure you really want to delete this cluster before you
+            proceed, as there is no way to undo this. Data stored on the worker
+            nodes will be lost. Workloads will be terminated.
+          </Text>
+        ) : (
+          <Text>
+            For deleting this cluster, you need additional permissions. Please
+            talk to your administrator.
+          </Text>
+        )}
       </Box>
       <Box>
         <ConfirmationPrompt
@@ -171,6 +180,7 @@ const ClusterDetailDeleteAction: React.FC<IClusterDetailDeleteActionProps> = ({
               onClick={showConfirmation}
               loading={isLoading}
               disabled={disabled}
+              unauthorized={!canDeleteClusters}
             >
               <i
                 className='fa fa-delete'

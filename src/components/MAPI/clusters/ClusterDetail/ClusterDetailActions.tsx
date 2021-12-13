@@ -62,10 +62,8 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
 
   const namespace = org?.status?.namespace;
 
-  const { canGet: canGetClusters } = usePermissionsForClusters(
-    provider,
-    namespace ?? ''
-  );
+  const { canGet: canGetClusters, canDelete: canDeleteClusters } =
+    usePermissionsForClusters(provider, namespace ?? '');
 
   const clusterKey =
     canGetClusters && namespace
@@ -268,6 +266,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
               onDelete={handleDelete}
               isLoading={isLoading}
               disabled={hasError}
+              canDeleteClusters={canDeleteClusters}
               variant={ClusterDetailDeleteActionNameVariant.Name}
               basis='3/4'
               flex={{ grow: 1, shrink: 0 }}
