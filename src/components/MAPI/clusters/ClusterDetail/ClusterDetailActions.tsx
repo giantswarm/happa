@@ -284,6 +284,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
                 clusterName={name}
                 namespace={namespace!}
                 provider={provider}
+                canDeleteClusters={canDeleteClusters}
               />
             </Box>
           )}
