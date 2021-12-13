@@ -136,9 +136,6 @@ describe('Installed app detail pane', () => {
     });
 
     it('deletes the config map of an already installed app', async () => {
-      // eslint-disable-next-line no-magic-numbers
-      jest.setTimeout(20000);
-
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/config/`,
@@ -180,12 +177,10 @@ describe('Installed app detail pane', () => {
       });
 
       await findByText(/has been deleted./i);
-    });
+      // eslint-disable-next-line no-magic-numbers
+    }, 10000);
 
     it('updates secrets of an already installed app', async () => {
-      // eslint-disable-next-line no-magic-numbers
-      jest.setTimeout(20000);
-
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
@@ -240,12 +235,10 @@ describe('Installed app detail pane', () => {
       await waitForElementToBeRemoved(() =>
         screen.getByLabelText(/App details/i)
       );
-    });
+      // eslint-disable-next-line no-magic-numbers
+    }, 10000);
 
     it('deletes secrets of an already installed app', async () => {
-      // eslint-disable-next-line no-magic-numbers
-      jest.setTimeout(20000);
-
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
@@ -287,7 +280,8 @@ describe('Installed app detail pane', () => {
       });
 
       await findByText(/has been deleted./i);
-    });
+      // eslint-disable-next-line no-magic-numbers
+    }, 10000);
   });
 
   it('deletes already installed app', async () => {
