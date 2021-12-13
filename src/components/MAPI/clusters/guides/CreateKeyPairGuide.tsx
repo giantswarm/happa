@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import {
   getCurrentInstallationContextName,
   makeKubectlGSCommand,
@@ -17,11 +18,13 @@ interface ICreateKeyPairGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   clusterName: string;
   organizationName: string;
+  canCreateKeyPairs?: boolean;
 }
 
 const CreateKeyPairGuide: React.FC<ICreateKeyPairGuideProps> = ({
   clusterName,
   organizationName,
+  canCreateKeyPairs,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -48,6 +51,7 @@ const CreateKeyPairGuide: React.FC<ICreateKeyPairGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {!canCreateKeyPairs && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Create a client certificate'
