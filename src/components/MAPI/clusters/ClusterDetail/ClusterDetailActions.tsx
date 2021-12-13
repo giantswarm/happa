@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Heading } from 'grommet';
+import { usePermissionsForApps } from 'MAPI/apps/permissions/usePermissionsForApps';
 import { filterUserInstalledApps } from 'MAPI/apps/utils';
 import { Cluster, NodePoolList, ProviderCluster } from 'MAPI/types';
 import {
@@ -110,11 +111,18 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
   }, [nodePoolListError, clusterId]);
 
   const appListClient = useRef(clientFactory());
+
+  const { canList: canListApps } = usePermissionsForApps(provider, clusterId);
+
   const appListGetOptions = { namespace: clusterId };
+  const appListKey = canListApps
+    ? applicationv1alpha1.getAppListKey(appListGetOptions)
+    : null;
+
   const { data: appList, error: appListError } = useSWR<
     applicationv1alpha1.IAppList,
     GenericResponseError
-  >(applicationv1alpha1.getAppListKey(appListGetOptions), () =>
+  >(appListKey, () =>
     applicationv1alpha1.getAppList(
       appListClient.current,
       auth,
