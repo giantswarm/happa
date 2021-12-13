@@ -22,12 +22,19 @@ business-resources:
       - group: infrastructure.cluster.x-k8s.io
         resources:
           - azureclusters
-          - azuremachines
       - group: infrastructure.giantswarm.io
         resources:
           - awsclusters
+- controlplanes: &controlplanes
+    resources:
+      - group: infrastructure.giantswarm.io
+        resources:
           - awscontrolplanes
           - g8scontrolplanes
+      - group: infrastructure.cluster.x-k8s.io
+        resources:
+          - azureclusters
+          - azuremachines
 - releases: &releases
     resources:
       - group: release.giantswarm.io
@@ -115,6 +122,12 @@ user-actions:
         namespaces:
           - org-namespace
           - default
+      - resource: *controlplanes
+        verbs:
+          - create
+        namespaces:
+          - org-namespace
+          - default      
       - resource: *releases
         verbs:
           - list
