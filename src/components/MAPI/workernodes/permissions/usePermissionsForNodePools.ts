@@ -2,11 +2,18 @@ import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasPermission } from 'MAPI/permissions/utils';
 import { Providers } from 'model/constants';
 
+import { usePermissionsForSparks } from './usePermissionsForSparks';
+
 // eslint-disable-next-line complexity
 export function usePermissionsForNodePools(
   provider: PropertiesOf<typeof Providers>,
   namespace: string
 ) {
+  const { canCreate: canCreateSparks } = usePermissionsForSparks(
+    provider,
+    namespace
+  );
+
   const { data: permissions } = usePermissions();
 
   const computed = {
@@ -105,6 +112,7 @@ export function usePermissionsForNodePools(
 
     case Providers.AZURE:
       computed.canCreate =
+        canCreateSparks &&
         hasPermission(
           permissions,
           namespace,
@@ -125,13 +133,6 @@ export function usePermissionsForNodePools(
           'create',
           'exp.infrastructure.cluster.x-k8s.io',
           'azuremachinepools'
-        ) &&
-        hasPermission(
-          permissions,
-          namespace,
-          'create',
-          'core.giantswarm.io',
-          'sparks'
         );
 
       computed.canDelete =
@@ -155,13 +156,6 @@ export function usePermissionsForNodePools(
           'delete',
           'exp.infrastructure.cluster.x-k8s.io',
           'azuremachinepools'
-        ) &&
-        hasPermission(
-          permissions,
-          namespace,
-          'delete',
-          'core.giantswarm.io',
-          'sparks'
         );
 
       computed.canUpdate =
@@ -185,13 +179,6 @@ export function usePermissionsForNodePools(
           'update',
           'exp.infrastructure.cluster.x-k8s.io',
           'azuremachinepools'
-        ) &&
-        hasPermission(
-          permissions,
-          namespace,
-          'update',
-          'core.giantswarm.io',
-          'sparks'
         );
 
       computed.canGet =
@@ -215,13 +202,6 @@ export function usePermissionsForNodePools(
           'get',
           'exp.infrastructure.cluster.x-k8s.io',
           'azuremachinepools'
-        ) &&
-        hasPermission(
-          permissions,
-          namespace,
-          'get',
-          'core.giantswarm.io',
-          'sparks'
         );
 
       computed.canList =
@@ -245,13 +225,6 @@ export function usePermissionsForNodePools(
           'list',
           'exp.infrastructure.cluster.x-k8s.io',
           'azuremachinepools'
-        ) &&
-        hasPermission(
-          permissions,
-          namespace,
-          'list',
-          'core.giantswarm.io',
-          'sparks'
         );
 
       break;
