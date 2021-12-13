@@ -13,6 +13,7 @@ import {
   fetchProviderClusterForClusterKey,
   getClusterDescription,
 } from 'MAPI/utils';
+import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
@@ -84,11 +85,26 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     fetchProviderClusterForCluster(clientFactory, auth, cluster!)
   );
 
+  const { canList: canListNodePools } = usePermissionsForNodePools(
+    provider,
+    cluster?.metadata.namespace ?? ''
+  );
+
+  const nodePoolListForClusterKey =
+    canListNodePools && cluster
+      ? fetchNodePoolListForClusterKey(cluster, cluster.metadata.namespace)
+      : null;
+
   const { data: nodePoolList, error: nodePoolListError } = useSWR<
     NodePoolList,
     GenericResponseError
-  >(fetchNodePoolListForClusterKey(cluster), () =>
-    fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  >(nodePoolListForClusterKey, () =>
+    fetchNodePoolListForCluster(
+      clientFactory,
+      auth,
+      cluster,
+      cluster!.metadata.namespace
+    )
   );
 
   useEffect(() => {
