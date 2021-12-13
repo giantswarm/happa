@@ -102,14 +102,12 @@ user-actions:
           - list
         namespaces:
           - org-namespace
-          - default
       - resource: *nodepools
         verbs:
           - get
           - list
         namespaces:
           - org-namespace
-          - default
       - resource: *releases
         verbs:
           - get
@@ -121,13 +119,11 @@ user-actions:
           - create
         namespaces:
           - org-namespace
-          - default
       - resource: *controlplanes
         verbs:
           - create
         namespaces:
           - org-namespace
-          - default      
       - resource: *releases
         verbs:
           - list
@@ -154,13 +150,11 @@ user-actions:
           - get
         namespaces:
           - org-namespace
-          - default
       - resource: *nodepools
         verbs:
           - get
         namespaces:
           - org-namespace
-          - default
       - resource: *organizations
         verbs:
           - get
@@ -180,7 +174,6 @@ user-actions:
           - update
         namespaces:
           - org-namespace
-          - default
 - upgrade-cluster:
     resources:
       - resource: *clusters
@@ -189,7 +182,6 @@ user-actions:
           - update
         namespaces:
           - org-namespace
-          - default
       - resource: *releases
         verbs:
           - list
@@ -201,7 +193,6 @@ user-actions:
           - update
         namespaces:
           - org-namespace
-          - default
 - switch-cluster-to-HA:
     resource:
       - resource: *clusters
@@ -211,7 +202,6 @@ user-actions:
           - update
         namespaces:
           - org-namespace
-          - default
 - read-cluster-details-worker-nodes:
     resources:
       - resource: *clusters
@@ -219,14 +209,12 @@ user-actions:
           - get
         namespaces:
           - org-namespace
-          - default
       - resource: *nodepools
         verbs:
           - get
           - list
         namespaces:
           - org-namespace
-          - default
       - resource: *organizations
         verbs:
           - get
@@ -239,7 +227,6 @@ user-actions:
           - update
         namespaces:
           - org-namespace
-          - default
 - update-node-pool-scaling:
     resources:
       - resource: *nodepools
@@ -249,7 +236,6 @@ user-actions:
           - update
         namespaces:
           - org-namespace
-          - default
 - delete-node-pool:
     resources:
       - resource: *nodepools
@@ -259,7 +245,6 @@ user-actions:
           - delete
         namespaces:
           - org-namespace
-          - default
 - create-node-pool:
     resources:
       - resource: *clusters
@@ -268,19 +253,16 @@ user-actions:
           - list
         namespaces:
           - org-namespace
-          - default
       - resource: *nodepools
         verbs:
           - create
         namespaces:
           - org-namespace
-          - default
       - resource: *sparks
         verbs:
           - create
         namespaces:
           - org-namespace
-          - default
 - read-cluster-details-client-certificates:
     resources:
       - resource: *clientcertificates
@@ -293,7 +275,6 @@ user-actions:
           - get
         namespaces:
           - org-namespace
-          - default
 - delete-cluster:
     resources:
       - resource: *clusters
@@ -302,11 +283,9 @@ user-actions:
           - delete
         namespaces:
           - org-namespace
-          - default
       - resource: *controlplanes
         verbs:
           - list
           - delete
         namespaces:
           - org-namespace
-          - default
