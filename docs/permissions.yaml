@@ -72,11 +72,16 @@ business-resources:
         resources:
           - appcatalogentries
           - catalogs
-- clientcertificates: &clientcertificates
+- storageconfigs: &storageconfigs
     resources:
       - group: core.giantswarm.io
         resources:
           - storageconfigs
+- certconfigs: &certconfigs
+    resources:
+      - group: core.giantswarm.io
+        resources:
+          - certconfigs
 - orgcredentials: &orgcredentials
     resources:
       - group: ""
@@ -265,11 +270,18 @@ user-actions:
           - org-namespace
 - read-cluster-details-client-certificates:
     resources:
-      - resource: *clientcertificates
+      - resource: *storageconfigs
         verbs:
           - get
         namespaces:
           - giantswarm
+- create-cluster-details-client-certificates:
+    resources:
+      - resource: *certconfigs
+        verbs:
+          - create
+        namespaces:
+          - org-namespace
       - resource: *clusters
         verbs:
           - get
