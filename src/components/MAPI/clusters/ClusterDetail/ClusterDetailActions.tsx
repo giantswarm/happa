@@ -30,6 +30,7 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import DeleteClusterGuide from '../guides/DeleteClusterGuide';
+import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import { getWorkerNodesCount } from '../utils';
 import { deleteClusterResources } from './utils';
 
@@ -61,9 +62,15 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
 
   const namespace = org?.status?.namespace;
 
-  const clusterKey = namespace
-    ? fetchClusterKey(provider, namespace, clusterId)
-    : null;
+  const { canGet: canGetClusters } = usePermissionsForClusters(
+    provider,
+    namespace ?? ''
+  );
+
+  const clusterKey =
+    canGetClusters && namespace
+      ? fetchClusterKey(provider, namespace, clusterId)
+      : null;
 
   // The error is handled in the parent component.
   const { data: cluster, error: clusterError } = useSWR<
