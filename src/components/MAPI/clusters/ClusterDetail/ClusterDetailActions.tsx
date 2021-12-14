@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Heading } from 'grommet';
+import { usePermissionsForApps } from 'MAPI/apps/permissions/usePermissionsForApps';
 import { filterUserInstalledApps } from 'MAPI/apps/utils';
 import { Cluster, NodePoolList, ProviderCluster } from 'MAPI/types';
 import {
@@ -12,6 +13,7 @@ import {
   fetchProviderClusterForClusterKey,
   getClusterDescription,
 } from 'MAPI/utils';
+import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
@@ -28,6 +30,7 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import DeleteClusterGuide from '../guides/DeleteClusterGuide';
+import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import { getWorkerNodesCount } from '../utils';
 import { deleteClusterResources } from './utils';
 
@@ -59,9 +62,13 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
 
   const namespace = org?.status?.namespace;
 
-  const clusterKey = namespace
-    ? fetchClusterKey(provider, namespace, clusterId)
-    : null;
+  const { canGet: canGetClusters, canDelete: canDeleteClusters } =
+    usePermissionsForClusters(provider, namespace ?? '');
+
+  const clusterKey =
+    canGetClusters && namespace
+      ? fetchClusterKey(provider, namespace, clusterId)
+      : null;
 
   // The error is handled in the parent component.
   const { data: cluster, error: clusterError } = useSWR<
@@ -83,11 +90,26 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
     fetchProviderClusterForCluster(clientFactory, auth, cluster!)
   );
 
+  const { canList: canListNodePools } = usePermissionsForNodePools(
+    provider,
+    cluster?.metadata.namespace ?? ''
+  );
+
+  const nodePoolListForClusterKey =
+    canListNodePools && cluster
+      ? fetchNodePoolListForClusterKey(cluster, cluster.metadata.namespace)
+      : null;
+
   const { data: nodePoolList, error: nodePoolListError } = useSWR<
     NodePoolList,
     GenericResponseError
-  >(fetchNodePoolListForClusterKey(cluster), () =>
-    fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  >(nodePoolListForClusterKey, () =>
+    fetchNodePoolListForCluster(
+      clientFactory,
+      auth,
+      cluster,
+      cluster!.metadata.namespace
+    )
   );
 
   useEffect(() => {
@@ -110,11 +132,18 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
   }, [nodePoolListError, clusterId]);
 
   const appListClient = useRef(clientFactory());
+
+  const { canList: canListApps } = usePermissionsForApps(provider, clusterId);
+
   const appListGetOptions = { namespace: clusterId };
+  const appListKey = canListApps
+    ? applicationv1alpha1.getAppListKey(appListGetOptions)
+    : null;
+
   const { data: appList, error: appListError } = useSWR<
     applicationv1alpha1.IAppList,
     GenericResponseError
-  >(applicationv1alpha1.getAppListKey(appListGetOptions), () =>
+  >(appListKey, () =>
     applicationv1alpha1.getAppList(
       appListClient.current,
       auth,
@@ -237,6 +266,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
               onDelete={handleDelete}
               isLoading={isLoading}
               disabled={hasError}
+              canDeleteClusters={canDeleteClusters}
               variant={ClusterDetailDeleteActionNameVariant.Name}
               basis='3/4'
               flex={{ grow: 1, shrink: 0 }}
@@ -254,6 +284,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
                 clusterName={name}
                 namespace={namespace!}
                 provider={provider}
+                canDeleteClusters={canDeleteClusters}
               />
             </Box>
           )}

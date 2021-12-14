@@ -1,6 +1,7 @@
 import { getNamespaceFromOrgName } from 'MAPI/utils';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import { LoggedInUserTypes } from 'model/stores/main/types';
+import { AccessControlRoleItemVerb } from 'UI/Display/MAPI/AccessControl/types';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
@@ -300,4 +301,67 @@ export function hasAppAccess(
   return Object.keys(permissions).some((ns) =>
     hasAppAccesInNamespace(permissions, ns)
   );
+}
+
+/**
+ * Fetch access to a resource within a given namespace.
+ * Returns an object mapping each given verb to a boolean indicating access.
+ * @param httpClientFactory
+ * @param auth
+ * @param namespace
+ * @param group
+ * @param resource
+ */
+export async function fetchAccessForResource(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  namespace: string,
+  verbs: readonly AccessControlRoleItemVerb[],
+  group: string,
+  resource: string
+): Promise<Record<AccessControlRoleItemVerb, boolean>> {
+  const requests = verbs.map(async (verb) => {
+    try {
+      const request: authorizationv1.ISelfSubjectAccessReviewSpec = {
+        resourceAttributes: {
+          namespace,
+          verb,
+          group,
+          resource,
+        },
+      };
+
+      const accessReviewResponse =
+        await authorizationv1.createSelfSubjectAccessReview(
+          httpClientFactory(),
+          auth,
+          request
+        );
+
+      return { verb, access: accessReviewResponse.status?.allowed ?? false };
+    } catch {
+      return { verb, access: false };
+    }
+  });
+
+  const reviewRequests = await Promise.all(requests);
+
+  const accessMap: Record<AccessControlRoleItemVerb, boolean> = {};
+
+  for (const reviewRequest of reviewRequests) {
+    accessMap[reviewRequest.verb] = reviewRequest.access;
+  }
+
+  return accessMap;
+}
+
+export function fetchAccessForResourceKey(
+  namespace: string,
+  verbs: readonly AccessControlRoleItemVerb[],
+  group: string,
+  resource: string
+) {
+  return `getAccessForResource/${namespace}/${verbs.join(
+    ','
+  )}/${group}/${resource}`;
 }

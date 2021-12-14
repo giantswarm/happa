@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import { Providers } from 'model/constants';
 import * as docs from 'model/constants/docs';
@@ -15,12 +16,14 @@ interface IDeleteClusterGuideProps
   clusterName: string;
   namespace: string;
   provider: PropertiesOf<typeof Providers>;
+  canDeleteClusters?: boolean;
 }
 
 const DeleteClusterGuide: React.FC<IDeleteClusterGuideProps> = ({
   clusterName,
   namespace,
   provider,
+  canDeleteClusters,
   ...props
 }) => {
   const context = useSelector(getCurrentInstallationContextName);
@@ -47,6 +50,7 @@ const DeleteClusterGuide: React.FC<IDeleteClusterGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {!canDeleteClusters && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Delete the cluster'
