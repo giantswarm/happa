@@ -32,6 +32,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 0,
       workerNodesCount: 0,
       onDelete: jest.fn(),
+      canDeleteClusters: true,
     });
 
     expect(screen.getByRole('button', { name: /Delete/ })).toBeInTheDocument();
@@ -55,6 +56,7 @@ describe('ClusterDetailDeleteAction', () => {
       workerNodesCount: 3,
       userInstalledAppsCount: 5,
       onDelete: jest.fn(),
+      canDeleteClusters: true,
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
@@ -82,6 +84,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 1,
       workerNodesCount: 1,
       onDelete: jest.fn(),
+      canDeleteClusters: true,
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
@@ -103,6 +106,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 1,
       workerNodesCount: 1,
       onDelete: onDeleteMockFn,
+      canDeleteClusters: true,
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
@@ -145,6 +149,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 1,
       workerNodesCount: 1,
       onDelete: jest.fn(),
+      canDeleteClusters: true,
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
@@ -164,6 +169,7 @@ describe('ClusterDetailDeleteAction', () => {
       workerNodesCount: 1,
       variant: ClusterDetailDeleteActionNameVariant.ID,
       onDelete: jest.fn(),
+      canDeleteClusters: true,
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
@@ -175,6 +181,26 @@ describe('ClusterDetailDeleteAction', () => {
 
     expect(
       await screen.findByText('If yes, please enter the cluster ID:')
+    ).toBeInTheDocument();
+  });
+
+  it('displays a warning message and the delete button as disabled if the user does not have permissions to delete clusters', () => {
+    renderWithTheme(ClusterDetailDeleteAction, {
+      name: 'at3s7',
+      description: 'A test cluster',
+      creationDate: new Date().toISOString(),
+      nodePoolsCount: 0,
+      workerNodesCount: 0,
+      onDelete: jest.fn(),
+      canDeleteClusters: false,
+    });
+
+    expect(screen.getByRole('button', { name: /Delete/ })).toBeDisabled();
+
+    expect(
+      screen.getByText(
+        'For deleting this cluster, you need additional permissions. Please talk to your administrator.'
+      )
     ).toBeInTheDocument();
   });
 });
