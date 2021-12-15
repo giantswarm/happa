@@ -105,7 +105,9 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     const org = capiv1alpha3.getClusterOrganization(cluster);
     if (!org) return undefined;
 
-    return Object.values(organizations).find((o) => o.name === org);
+    return Object.values(organizations).find(
+      (o) => o.name === org || o.id === org
+    );
   }, [cluster, organizations]);
 
   const orgId = organization?.id;
