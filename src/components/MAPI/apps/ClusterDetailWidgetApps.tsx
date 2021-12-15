@@ -44,7 +44,8 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
 
   const appListClient = useRef(clientFactory());
 
-  const { canList: canListApps } = usePermissionsForApps(provider, clusterId);
+  const { canList: canListApps, canCreate: canCreateApps } =
+    usePermissionsForApps(provider, clusterId);
 
   const appListGetOptions = { namespace: clusterId };
   const appListKey = canListApps
@@ -163,10 +164,12 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
       {hasNoApps && (
         <Box fill={true} pad={{ bottom: 'xsmall' }}>
           <Text margin={{ bottom: 'small' }}>No apps installed</Text>
-          <Text size='small'>
-            To find apps to install, browse our{' '}
-            <StyledLink to={AppsRoutes.Home}>apps</StyledLink>.
-          </Text>
+          {canCreateApps && canReadCatalogResources && (
+            <Text size='small'>
+              To find apps to install, browse our{' '}
+              <StyledLink to={AppsRoutes.Home}>apps</StyledLink>.
+            </Text>
+          )}
         </Box>
       )}
 
