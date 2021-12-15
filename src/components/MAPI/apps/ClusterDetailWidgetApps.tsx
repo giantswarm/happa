@@ -12,6 +12,7 @@ import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterD
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
+import { usePermissionsForApps } from './permissions/usePermissionsForApps';
 import {
   computeAppsCategorizedCounters,
   filterUserInstalledApps,
@@ -34,16 +35,24 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
 ) => {
   const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 
+  const provider = window.config.info.general.provider;
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   const appListClient = useRef(clientFactory());
 
+  const { canList: canListApps } = usePermissionsForApps(provider, clusterId);
+
   const appListGetOptions = { namespace: clusterId };
+  const appListKey = canListApps
+    ? applicationv1alpha1.getAppListKey(appListGetOptions)
+    : null;
+
   const { data: appList, error: appListError } = useSWR<
     applicationv1alpha1.IAppList,
     GenericResponseError
-  >(applicationv1alpha1.getAppListKey(appListGetOptions), () =>
+  >(appListKey, () =>
     applicationv1alpha1.getAppList(
       appListClient.current,
       auth,
