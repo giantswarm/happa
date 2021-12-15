@@ -146,10 +146,8 @@ const ClusterDetail: React.FC<{}> = () => {
 
   const provider = window.config.info.general.provider;
 
-  const { canGet: canGetCluster } = usePermissionsForClusters(
-    provider,
-    namespace ?? ''
-  );
+  const { canGet: canGetCluster, canUpdate: canUpdateCluster } =
+    usePermissionsForClusters(provider, namespace ?? '');
 
   const clusterKey =
     canGetCluster && namespace
@@ -376,6 +374,7 @@ const ClusterDetail: React.FC<{}> = () => {
                     onSave={updateDescription}
                     aria-label={value as string}
                     variant={ViewAndEditNameVariant.Description}
+                    unauthorized={!canUpdateCluster}
                   />
                 )}
               </OptionalValue>
