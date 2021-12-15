@@ -24,6 +24,7 @@ import ClusterDetailWidgetWorkerNodes from '../../workernodes/ClusterDetailWidge
 import InspectClusterGuide from '../guides/InspectClusterGuide';
 import InspectClusterReleaseGuide from '../guides/InspectClusterReleaseGuide';
 import SetClusterLabelsGuide from '../guides/SetClusterLabelsGuide';
+import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -55,9 +56,15 @@ const ClusterDetailOverview: React.FC<{}> = () => {
 
   const namespace = org?.status?.namespace;
 
-  const clusterKey = namespace
-    ? fetchClusterKey(provider, namespace, clusterId)
-    : null;
+  const { canGet: canGetCluster } = usePermissionsForClusters(
+    provider,
+    namespace ?? ''
+  );
+
+  const clusterKey =
+    canGetCluster && namespace
+      ? fetchClusterKey(provider, namespace, clusterId)
+      : null;
 
   // The error is handled in the parent component.
   const { data: cluster } = useSWR<Cluster, GenericResponseError>(
