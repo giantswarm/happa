@@ -12,7 +12,9 @@ import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterD
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
+import { usePermissionsForAppCatalogEntries } from './permissions/usePermissionsForAppCatalogEntries';
 import { usePermissionsForApps } from './permissions/usePermissionsForApps';
+import { usePermissionsForCatalogs } from './permissions/usePermissionsForCatalogs';
 import {
   computeAppsCategorizedCounters,
   filterUserInstalledApps,
@@ -72,15 +74,16 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
     return filterUserInstalledApps(appList.items, true);
   }, [appList]);
 
+  const insufficientPermissionsForApps = canListApps === false;
+
   const appCounters = useMemo(() => {
-    if (appListError) {
+    if (appListError || insufficientPermissionsForApps) {
       return {
         apps: -1,
         uniqueApps: -1,
         deployed: -1,
       };
     }
-
     if (!appList) {
       return {
         apps: undefined,
@@ -90,16 +93,30 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
     }
 
     return computeAppsCategorizedCounters(userInstalledApps);
-  }, [appList, appListError, userInstalledApps]);
+  }, [
+    appList,
+    appListError,
+    insufficientPermissionsForApps,
+    userInstalledApps,
+  ]);
 
   const hasNoApps =
     typeof appCounters.apps === 'number' && appCounters.apps === 0;
 
-  const { cache } = useSWRConfig();
+  const { canList: canListCatalogs } = usePermissionsForCatalogs(
+    provider,
+    'default'
+  );
+  const { canList: canListAppCatalogEntries } =
+    usePermissionsForAppCatalogEntries(provider, 'default');
 
-  const upgradableAppsKey = appList
+  const canReadCatalogResources = canListCatalogs && canListAppCatalogEntries;
+
+  const upgradableAppsKey = canReadCatalogResources
     ? getUpgradableAppsKey(userInstalledApps)
     : null;
+
+  const { cache } = useSWRConfig();
 
   const { data: upgradableApps, error: upgradableAppsError } = useSWR<
     string[],
@@ -115,11 +132,22 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
   }, [upgradableAppsError]);
 
   const upgradableAppsCount = useMemo(() => {
+    if (
+      upgradableAppsError ||
+      !canReadCatalogResources ||
+      insufficientPermissionsForApps
+    )
+      return -1;
+
     if (!upgradableApps) return undefined;
-    if (upgradableAppsError) return -1;
 
     return upgradableApps.length;
-  }, [upgradableApps, upgradableAppsError]);
+  }, [
+    upgradableAppsError,
+    canReadCatalogResources,
+    insufficientPermissionsForApps,
+    upgradableApps,
+  ]);
 
   return (
     <ClusterDetailWidget
