@@ -6,7 +6,7 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import ClusterDetailCounter from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailCounter';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -95,6 +95,8 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
   const hasNoApps =
     typeof appCounters.apps === 'number' && appCounters.apps === 0;
 
+  const { cache } = useSWRConfig();
+
   const upgradableAppsKey = appList
     ? getUpgradableAppsKey(userInstalledApps)
     : null;
@@ -103,7 +105,7 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
     string[],
     GenericResponseError
   >(upgradableAppsKey, () =>
-    getUpgradableApps(userInstalledApps, clientFactory, auth)
+    getUpgradableApps(clientFactory, auth, cache, userInstalledApps)
   );
 
   useEffect(() => {
