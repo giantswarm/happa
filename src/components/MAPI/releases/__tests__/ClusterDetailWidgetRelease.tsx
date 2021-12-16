@@ -146,6 +146,37 @@ describe('ClusterDetailWidgetRelease', () => {
     );
   });
 
+  it('does not allow interacting with the upgradable version links if the user does not have permissions to upgrade clusters', async () => {
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/release.giantswarm.io/v1alpha1/releases/')
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
+
+    render(
+      getComponent({
+        cluster: capiv1alpha3Mocks.randomCluster1,
+        canUpdateCluster: false,
+      })
+    );
+
+    await waitForElementToBeRemoved(() => screen.queryByText('Loading...'));
+
+    fireEvent.click(screen.getByText('14.1.5'));
+
+    await screen.findByText('Details for release 14.1.5');
+    expect(
+      screen.getByText(/This cluster can be upgraded to/)
+    ).toBeInTheDocument();
+
+    const upgradableVersion = screen.getByText('v15.0.0');
+    fireEvent.click(upgradableVersion);
+
+    expect(screen.queryByText('Upgrade to 15.0.0')).not.toBeInTheDocument();
+  });
+
   it('displays information if an upgrade has been scheduled', async () => {
     (usePermissionsForReleases as jest.Mock).mockReturnValue(
       defaultPermissions
