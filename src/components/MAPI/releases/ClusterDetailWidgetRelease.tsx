@@ -361,6 +361,7 @@ const ClusterDetailWidgetRelease: React.FC<
             canUpgrade ? supportedUpgradeVersions : undefined
           }
           onUpgradeVersionSelect={handleUpgradeVersionSelect}
+          canUpdateCluster={canUpdateCluster}
         />
       )}
 
