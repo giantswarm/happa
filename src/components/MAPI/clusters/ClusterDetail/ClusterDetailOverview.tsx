@@ -56,10 +56,8 @@ const ClusterDetailOverview: React.FC<{}> = () => {
 
   const namespace = org?.status?.namespace;
 
-  const { canGet: canGetCluster } = usePermissionsForClusters(
-    provider,
-    namespace ?? ''
-  );
+  const { canGet: canGetCluster, canUpdate: canUpdateCluster } =
+    usePermissionsForClusters(provider, namespace ?? '');
 
   const clusterKey =
     canGetCluster && namespace
@@ -108,6 +106,7 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       <ClusterDetailWidgetRelease
         cluster={cluster}
         providerCluster={providerCluster}
+        canUpdateCluster={canUpdateCluster}
         basis='100%'
       />
       <ClusterDetailWidgetLabels cluster={cluster} basis='100%' />
