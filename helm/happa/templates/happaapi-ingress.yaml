@@ -14,6 +14,7 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
     nginx.ingress.kubernetes.io/cors-allow-origin: {{ .Values.happa.address | quote }}
+    nginx.ingress.kubernetes.io/cors-allow-headers: DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Authorization, Impersonate-User, Impersonate-Group
     nginx.ingress.kubernetes.io/enable-cors: "true"
 
     {{- if .Values.happaapi.letsencrypt }}
