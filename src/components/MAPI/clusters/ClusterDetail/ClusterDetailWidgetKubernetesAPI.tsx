@@ -1,7 +1,10 @@
 import URIBlock from 'Cluster/ClusterDetail/URIBlock';
+import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import Button from 'UI/Controls/Button';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
@@ -24,6 +27,12 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<
     orgId: string;
   }>();
 
+  const provider = window.config.info.general.provider;
+
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = orgId ? organizations[orgId] : undefined;
+  const namespace = selectedOrg?.namespace;
+
   const k8sApiURL = cluster
     ? capiv1alpha3.getKubernetesAPIEndpointURL(cluster)
     : undefined;
@@ -34,6 +43,11 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<
       { orgId, clusterId }
     );
   }, [orgId, clusterId]);
+
+  const { canCreate: canCreateKeyPairs } = usePermissionsForKeyPairs(
+    provider,
+    namespace ?? ''
+  );
 
   return (
     <ClusterDetailWidget
@@ -53,7 +67,7 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<
         {(value) => <URIBlock>{value}</URIBlock>}
       </OptionalValue>
 
-      {typeof k8sApiURL !== 'undefined' && (
+      {canCreateKeyPairs && typeof k8sApiURL !== 'undefined' && (
         <Link to={gettingStartedPath}>
           <Button
             tabIndex={-1}
