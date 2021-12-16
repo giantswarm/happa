@@ -273,24 +273,35 @@ const ClusterDetailWidgetRelease: React.FC<
     <ClusterDetailWidget title='Release' inline={true} {...props}>
       <Box direction='row' gap='xsmall' wrap={true} align='center'>
         <OptionalValue value={releaseVersion} replaceEmptyValue={false}>
-          {(value) => (
-            <Keyboard onSpace={handleVersionClick}>
-              <StyledLink
-                href='#'
-                aria-label={`Cluster release version ${value}`}
-                onClick={handleVersionClick}
-              >
-                <Text>
-                  <i
-                    className='fa fa-version-tag'
-                    role='presentation'
-                    aria-hidden='true'
-                  />
-                </Text>{' '}
-                <VersionLabel>{value || <NotAvailable />}</VersionLabel>
-              </StyledLink>
-            </Keyboard>
-          )}
+          {(value) =>
+            canListReleases ? (
+              <Keyboard onSpace={handleVersionClick}>
+                <StyledLink
+                  href='#'
+                  aria-label={`Cluster release version ${value}`}
+                  onClick={handleVersionClick}
+                >
+                  <Text>
+                    <i
+                      className='fa fa-version-tag'
+                      role='presentation'
+                      aria-hidden='true'
+                    />
+                  </Text>{' '}
+                  <VersionLabel>{value || <NotAvailable />}</VersionLabel>
+                </StyledLink>
+              </Keyboard>
+            ) : (
+              <Text aria-label={`Cluster release version ${value}`}>
+                <i
+                  className='fa fa-version-tag'
+                  role='presentation'
+                  aria-hidden='true'
+                />{' '}
+                {value || <NotAvailable />}
+              </Text>
+            )
+          }
         </OptionalValue>
         <StyledDot />
         <OptionalValue value={k8sVersion} replaceEmptyValue={false}>
