@@ -127,7 +127,8 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
       );
   }, [appCatalogEntryList]);
 
-  const isCurrentVersionSelected = currentSelectedVersion === app?.spec.version;
+  const isCurrentVersionSelected =
+    app && currentSelectedVersion === normalizeAppVersion(app.spec.version);
 
   const appPath = useMemo(() => {
     if (!app) return '';
@@ -135,7 +136,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
     return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
       catalogName: app.spec.catalog,
       app: app.spec.name,
-      version: app.spec.version,
+      version: normalizeAppVersion(app.spec.version),
     });
   }, [app]);
 
@@ -148,7 +149,10 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
   const versionSwitchComparison = useMemo(() => {
     if (!currentSelectedVersion || !app) return 0;
 
-    return compare(app.spec.version, currentSelectedVersion);
+    return compare(
+      normalizeAppVersion(app.spec.version),
+      currentSelectedVersion
+    );
   }, [app, currentSelectedVersion]);
 
   const isUpgrading = versionSwitchComparison < 0;
@@ -283,7 +287,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
               />{' '}
               from version{' '}
               <Truncated as='code' numStart={TRUNCATE_START_CHARS}>
-                {app?.spec.version ?? ''}
+                {app ? normalizeAppVersion(app.spec.version) : ''}
               </Truncated>{' '}
               to{' '}
               <Truncated as='code' numStart={TRUNCATE_START_CHARS}>

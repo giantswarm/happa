@@ -25,7 +25,11 @@ import ConfigureAppGuide from './guides/ConfigureAppGuide';
 import InspectInstalledAppGuide from './guides/InspectInstalledApp';
 import UninstallAppGuide from './guides/UninstallAppGuide';
 import UpdateAppGuide from './guides/UpdateAppGuide';
-import { getCatalogNamespace, getCatalogNamespaceKey } from './utils';
+import {
+  getCatalogNamespace,
+  getCatalogNamespaceKey,
+  normalizeAppVersion,
+} from './utils';
 
 const Icon = styled(Text)<{ isActive?: boolean }>`
   transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
@@ -68,7 +72,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
       typeof app !== 'undefined' &&
       typeof currentSelectedVersion === 'undefined'
     )
-      setCurrentSelectedVersion(app.spec.version);
+      setCurrentSelectedVersion(normalizeAppVersion(app.spec.version));
   }, [app, currentSelectedVersion]);
 
   const isDeleted = typeof app?.metadata?.deletionTimestamp !== 'undefined';
@@ -248,7 +252,9 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             <UpdateAppGuide
               appName={app.metadata.name}
               namespace={app.metadata.namespace!}
-              newVersion={currentSelectedVersion ?? app.spec.version}
+              newVersion={
+                currentSelectedVersion ?? normalizeAppVersion(app.spec.version)
+              }
               catalogName={app.spec.catalog}
               catalogNamespace={catalogNamespace}
             />

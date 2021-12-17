@@ -9,7 +9,11 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
-import { getLatestVersionForApp, isAppChangingVersion } from './utils';
+import {
+  getLatestVersionForApp,
+  isAppChangingVersion,
+  normalizeAppVersion,
+} from './utils';
 
 interface IClusterDetailAppListItemStatusProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
@@ -73,7 +77,9 @@ const ClusterDetailAppListItemStatus: React.FC<
       app.spec.name
     );
 
-    return latestVersion && latestVersion !== app.spec.version;
+    return (
+      latestVersion && latestVersion !== normalizeAppVersion(app.spec.version)
+    );
   }, [app, appCatalogEntryList, isChangingVersion]);
 
   return (
@@ -85,7 +91,7 @@ const ClusterDetailAppListItemStatus: React.FC<
             role='presentation'
             aria-hidden='true'
           />{' '}
-          Switching to {app.spec.version}
+          Switching to {normalizeAppVersion(app.spec.version)}
         </Text>
       )}
 
