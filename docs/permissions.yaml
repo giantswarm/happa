@@ -143,15 +143,15 @@ user-actions:
           - list
         namespaces:
           - default
-      - resource: *clientcertificates
-        verbs:
-          - get
-        namespaces:
-          - giantswarm
       - resource: *clusters
         verbs:
           - list
           - get
+        namespaces:
+          - org-namespace
+      - resource: *controlplanes
+        verbs:
+          - list
         namespaces:
           - org-namespace
       - resource: *nodepools
@@ -170,6 +170,11 @@ user-actions:
       - resource: *releases
         verbs:
           - list
+      - resource: *storageconfigs
+        verbs:
+          - get
+        namespaces:
+          - giantswarm
 - update-cluster-description:
     resources:
       - resource: *clusters
@@ -199,10 +204,9 @@ user-actions:
           - org-namespace
 - switch-cluster-to-HA:
     resource:
-      - resource: *clusters
+      - resource: *controlplanes
         verbs:
           - list
-          - get
           - update
         namespaces:
           - org-namespace
@@ -268,18 +272,6 @@ user-actions:
           - get
         namespaces:
           - giantswarm
-- create-cluster-details-client-certificates:
-    resources:
-      - resource: *certconfigs
-        verbs:
-          - create
-        namespaces:
-          - org-namespace
-      - resource: *clusters
-        verbs:
-          - get
-        namespaces:
-          - org-namespace
 - delete-cluster:
     resources:
       - resource: *clusters
