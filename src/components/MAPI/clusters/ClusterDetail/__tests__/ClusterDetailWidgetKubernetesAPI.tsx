@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
-import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
 import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
 import { renderWithStore } from 'test/renderUtils';
 
+import { usePermissionsForKeyPairs } from '../../../keypairs/permissions/usePermissionsForKeyPairs';
 import ClusterDetailWidgetKubernetesAPI from '../ClusterDetailWidgetKubernetesAPI';
 
 const defaultPermissions = {
@@ -13,7 +13,7 @@ const defaultPermissions = {
   canDelete: true,
 };
 
-jest.mock('MAPI/keypairs/permissions/usePermissionsForKeypairs');
+jest.mock('MAPI/keypairs/permissions/usePermissionsForKeyPairs');
 
 describe('ClusterDetailWidgetKubernetesAPI', () => {
   it('renders without crashing', () => {
