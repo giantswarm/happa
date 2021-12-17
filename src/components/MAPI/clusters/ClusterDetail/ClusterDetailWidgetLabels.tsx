@@ -18,10 +18,12 @@ interface IClusterDetailWidgetLabelsProps
     'title'
   > {
   cluster?: capiv1alpha3.ICluster;
+  canUpdateCluster?: boolean;
 }
 
 const ClusterDetailWidgetLabels: React.FC<IClusterDetailWidgetLabelsProps> = ({
   cluster,
+  canUpdateCluster,
   ...props
 }) => {
   const clientFactory = useHttpClientFactory();
@@ -103,6 +105,7 @@ const ClusterDetailWidgetLabels: React.FC<IClusterDetailWidgetLabelsProps> = ({
             errorMessage={labelsError}
             isLoading={labelsIsLoading}
             showTitle={false}
+            unauthorized={!canUpdateCluster}
           />
         )}
       </OptionalValue>

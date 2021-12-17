@@ -109,7 +109,11 @@ const ClusterDetailOverview: React.FC<{}> = () => {
         canUpdateCluster={canUpdateCluster}
         basis='100%'
       />
-      <ClusterDetailWidgetLabels cluster={cluster} basis='100%' />
+      <ClusterDetailWidgetLabels
+        cluster={cluster}
+        canUpdateCluster={canUpdateCluster}
+        basis='100%'
+      />
       <ClusterDetailWidgetControlPlaneNodes
         cluster={cluster}
         providerCluster={providerCluster}

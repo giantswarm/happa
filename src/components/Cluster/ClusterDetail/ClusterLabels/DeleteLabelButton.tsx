@@ -78,18 +78,20 @@ const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
 
   return (
     <DeleteLabelButtonWrapper ref={divElement}>
-      <TooltipContainer
-        target={divElement}
-        content={<StyledTooltip>Delete this label</StyledTooltip>}
-      >
-        <Keyboard onSpace={handleDelete} onEnter={handleDelete}>
-          <StyledDeleteButton
-            tabIndex={allowInteraction ? 0 : -1}
-            onClick={handleDelete}
-            {...restProps}
-          />
-        </Keyboard>
-      </TooltipContainer>
+      <Keyboard onSpace={handleDelete} onEnter={handleDelete}>
+        <span>
+          <TooltipContainer
+            target={divElement}
+            content={<StyledTooltip>Delete this label</StyledTooltip>}
+          >
+            <StyledDeleteButton
+              tabIndex={allowInteraction ? 0 : -1}
+              onClick={handleDelete}
+              {...restProps}
+            />
+          </TooltipContainer>
+        </span>
+      </Keyboard>
       {isOpen && (
         <Tooltip
           id='delete-label'
