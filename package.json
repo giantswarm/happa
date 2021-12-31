@@ -195,7 +195,7 @@
     "@types/react-window": "1.8.5",
     "@types/redux-mock-store": "1.0.3",
     "@types/request": "2.48.7",
-    "@types/serialize-javascript": "5.0.1",
+    "@types/serialize-javascript": "5.0.2",
     "@types/styled-components": "5.1.18",
     "@types/superagent": "4.1.13",
     "@types/terser-webpack-plugin": "5.0.4",
