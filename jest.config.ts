@@ -3,17 +3,18 @@ import path from 'path';
 
 process.env.DEBUG_PRINT_LIMIT = '10000';
 const esModules = [
-  'react-markdown',
-  'unist-util-stringify-position',
-  'unified',
   'bail',
-  'is-plain-obj',
-  'trough',
-  'mdast-util-from-markdown',
-  'micromark',
   'decode-named-character-reference',
-  'remark-rehype',
   'hast-util-whitespace',
+  'is-plain-obj',
+  'markdown-table',
+  'mdast-util',
+  'micromark',
+  'react-markdown',
+  'remark',
+  'trough',
+  'unified',
+  'unist-util',
 ].join('|');
 
 const config: Config.InitialOptions = {
