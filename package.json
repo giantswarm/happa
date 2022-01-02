@@ -36,43 +36,6 @@
     "scripts"
   ],
   "browserslist": "last 2 Chrome versions, last 2 Firefox versions, last 2 safari versions",
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "useBuiltIns": "usage",
-          "shippedProposals": true,
-          "bugfixes": true,
-          "loose": true,
-          "corejs": "3.18.3"
-        }
-      ],
-      "@babel/preset-react",
-      [
-        "@babel/preset-typescript",
-        {
-          "allExtensions": true,
-          "isTSX": true
-        }
-      ]
-    ],
-    "plugins": [
-      "transform-class-properties",
-      "styled-components",
-      "date-fns",
-      "react-hot-loader/babel",
-      [
-        "transform-imports",
-        {
-          "react-virtualized": {
-            "transform": "react-virtualized/dist/commonjs/${member}/${member}",
-            "preventFullImport": true
-          }
-        }
-      ]
-    ]
-  },
   "prettier": {
     "printWidth": 80,
     "singleQuote": true,
@@ -123,7 +86,7 @@
     "react-content-loader": "6.1.0",
     "react-dom": "17.0.2",
     "react-gravatar": "2.6.3",
-    "react-markdown": "6.0.3",
+    "react-markdown": "7.1.1",
     "react-redux": "7.2.6",
     "react-router": "5.2.1",
     "react-router-dom": "5.3.0",
