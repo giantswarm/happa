@@ -81,13 +81,13 @@ const Experiments: React.FC<IExperimentsProps> = () => {
 
     mutate(usePermissionsKey);
 
-    reloadOrganizations();
-
     new FlashMessage(
       'Impersonation configured successfully.',
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
+
+    reloadOrganizations();
   };
 
   const handleClearImpersonation = async () => {
@@ -98,13 +98,13 @@ const Experiments: React.FC<IExperimentsProps> = () => {
 
     mutate(usePermissionsKey);
 
-    reloadOrganizations();
-
     new FlashMessage(
       'Impersonation removed successfully.',
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
+
+    reloadOrganizations();
   };
 
   return (
