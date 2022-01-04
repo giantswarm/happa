@@ -266,7 +266,7 @@ const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
               onDelete={handleDelete}
               isLoading={isLoading}
               disabled={hasError}
-              canDeleteClusters={canDeleteClusters}
+              unauthorized={!canDeleteClusters}
               variant={ClusterDetailDeleteActionNameVariant.Name}
               basis='3/4'
               flex={{ grow: 1, shrink: 0 }}

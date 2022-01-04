@@ -32,7 +32,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 0,
       workerNodesCount: 0,
       onDelete: jest.fn(),
-      canDeleteClusters: true,
+      unauthorized: false,
     });
 
     expect(screen.getByRole('button', { name: /Delete/ })).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe('ClusterDetailDeleteAction', () => {
       workerNodesCount: 3,
       userInstalledAppsCount: 5,
       onDelete: jest.fn(),
-      canDeleteClusters: true,
+      unauthorized: false,
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
@@ -84,7 +84,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 1,
       workerNodesCount: 1,
       onDelete: jest.fn(),
-      canDeleteClusters: true,
+      unauthorized: false,
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
@@ -106,7 +106,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 1,
       workerNodesCount: 1,
       onDelete: onDeleteMockFn,
-      canDeleteClusters: true,
+      unauthorized: false,
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
@@ -149,7 +149,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 1,
       workerNodesCount: 1,
       onDelete: jest.fn(),
-      canDeleteClusters: true,
+      unauthorized: false,
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
@@ -169,7 +169,7 @@ describe('ClusterDetailDeleteAction', () => {
       workerNodesCount: 1,
       variant: ClusterDetailDeleteActionNameVariant.ID,
       onDelete: jest.fn(),
-      canDeleteClusters: true,
+      unauthorized: false,
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete/ }));
@@ -192,7 +192,7 @@ describe('ClusterDetailDeleteAction', () => {
       nodePoolsCount: 0,
       workerNodesCount: 0,
       onDelete: jest.fn(),
-      canDeleteClusters: false,
+      unauthorized: true,
     });
 
     expect(screen.getByRole('button', { name: /Delete/ })).toBeDisabled();
