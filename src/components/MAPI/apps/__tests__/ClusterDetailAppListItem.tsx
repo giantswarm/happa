@@ -20,6 +20,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListItem from '../ClusterDetailAppListItem';
+import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
 
 function generateApp(
   name: string = 'some-app',
@@ -98,6 +99,16 @@ function generateApp(
   };
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
+jest.mock('MAPI/apps/permissions/usePermissionsForCatalogs');
+
 function getComponent(
   props: React.ComponentPropsWithoutRef<typeof ClusterDetailAppListItem>
 ) {
@@ -127,10 +138,17 @@ describe('ClusterDetailAppListItem', () => {
   jest.setTimeout(40000);
 
   it('renders without crashing', () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
     render(getComponent({}));
   });
 
   it('displays various information about the supported app versions', async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     const entryList = Object.assign(
       {},
       applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList,
@@ -200,6 +218,10 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('displays current version even if it is not in the list of supported versions', async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get(
         '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
@@ -232,6 +254,10 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('can upgrade to a newer version', async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     let app = generateApp('coredns', '1.2.0');
     const newVersion = '1.3.0';
 
@@ -296,6 +322,10 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('can downgrade to an older version', async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     let app = generateApp('coredns', '1.3.0');
     const newVersion = '1.2.0';
 
