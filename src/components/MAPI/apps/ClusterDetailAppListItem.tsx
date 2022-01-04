@@ -31,6 +31,7 @@ import ConfigureAppGuide from './guides/ConfigureAppGuide';
 import InspectInstalledAppGuide from './guides/InspectInstalledApp';
 import UninstallAppGuide from './guides/UninstallAppGuide';
 import UpdateAppGuide from './guides/UpdateAppGuide';
+import { usePermissionsForCatalogs } from './permissions/usePermissionsForCatalogs';
 import {
   getCatalogNamespace,
   getCatalogNamespaceKey,
@@ -110,11 +111,19 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
     }
   };
 
+  const provider = window.config.info.general.provider;
+
   const auth = useAuthProvider();
   const clientFactory = useHttpClientFactory();
   const { cache } = useSWRConfig();
 
-  const catalogNamespaceKey = app ? getCatalogNamespaceKey(app) : null;
+  const catalogPermissions = usePermissionsForCatalogs(provider, 'default');
+
+  const canReadCatalogs =
+    catalogPermissions.canList && catalogPermissions.canGet;
+
+  const catalogNamespaceKey =
+    canReadCatalogs && app ? getCatalogNamespaceKey(app) : null;
 
   const { data: catalogNamespace, error: catalogNamespaceError } = useSWR<
     string | null,
@@ -223,6 +232,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           />
           <ClusterDetailAppListWidgetCatalog
             app={app}
+            canReadCatalogs={canReadCatalogs}
             basis='250px'
             flex={{ grow: 1, shrink: 1 }}
           />

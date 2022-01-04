@@ -28,16 +28,18 @@ interface IClusterDetailAppListWidgetCatalogProps
     'title'
   > {
   app?: applicationv1alpha1.IApp;
+  canReadCatalogs?: boolean;
 }
 
 const ClusterDetailAppListWidgetCatalog: React.FC<
   IClusterDetailAppListWidgetCatalogProps
-> = ({ app, ...props }) => {
+> = ({ app, canReadCatalogs, ...props }) => {
   const auth = useAuthProvider();
   const clientFactory = useHttpClientFactory();
   const { cache } = useSWRConfig();
 
-  const catalogNamespaceKey = app ? getCatalogNamespaceKey(app) : null;
+  const catalogNamespaceKey =
+    canReadCatalogs && app ? getCatalogNamespaceKey(app) : null;
 
   const { data: catalogNamespace, error: catalogNamespaceError } = useSWR<
     string | null,
