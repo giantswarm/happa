@@ -12,13 +12,14 @@ function isReleaseBeta(release: IReleaseVersion) {
 interface IClusterDetailReleaseDetailsUpgradeOptionsProps {
   supportedVersions: IReleaseVersion[];
   onVersionClick: (version: string) => void;
+  canUpdateCluster?: boolean;
 }
 
 const ClusterDetailReleaseDetailsUpgradeOptions: React.FC<
   IClusterDetailReleaseDetailsUpgradeOptionsProps
-> = ({ supportedVersions, onVersionClick }) => {
+> = ({ supportedVersions, onVersionClick, canUpdateCluster }) => {
   const handleVersionClick = (version: string) => () => {
-    onVersionClick(version);
+    if (canUpdateCluster) onVersionClick(version);
   };
 
   const handleKeyDown =
@@ -47,7 +48,8 @@ const ClusterDetailReleaseDetailsUpgradeOptions: React.FC<
               version={release.version}
               isBeta={isReleaseBeta(release)}
               onClick={handleVersionClick(release.version)}
-              tabIndex={0}
+              tabIndex={canUpdateCluster ? 0 : -1}
+              unauthorized={canUpdateCluster}
             />
           </Keyboard>
           .
@@ -76,7 +78,8 @@ const ClusterDetailReleaseDetailsUpgradeOptions: React.FC<
               version={release.version}
               isBeta={isReleaseBeta(release)}
               onClick={handleVersionClick(release.version)}
-              tabIndex={0}
+              tabIndex={canUpdateCluster ? 0 : -1}
+              unauthorized={!canUpdateCluster}
             />
           </Keyboard>
         </Box>

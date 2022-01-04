@@ -176,4 +176,39 @@ describe('ClusterDetail', () => {
       await screen.findByText(`Successfully updated the cluster's description`)
     ).toBeInTheDocument();
   });
+
+  it('does not allow editing the cluster description if the user does not have permissions to do so', async () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canUpdate: false,
+    });
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${
+          mockCapiv1alpha3.randomCluster1.metadata.namespace
+        }/azureclusters/${
+          mockCapiv1alpha3.randomCluster1.spec!.infrastructureRef!.name
+        }/`
+      )
+      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureCluster1);
+
+    render(getComponent({}));
+
+    fireEvent.click(await screen.findByText('Random Cluster'));
+
+    expect(
+      screen.queryByLabelText(`cluster description`)
+    ).not.toBeInTheDocument();
+  });
 });

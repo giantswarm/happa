@@ -54,7 +54,7 @@ const ValueWrapper = styled.span<{ outline: boolean }>`
     `}
 `;
 
-interface IValueLabelProps extends React.ComponentPropsWithoutRef<'div'> {
+interface IValueLabelProps extends React.ComponentPropsWithRef<'div'> {
   label: ReactNode;
   value: ReactNode;
 
@@ -62,24 +62,20 @@ interface IValueLabelProps extends React.ComponentPropsWithoutRef<'div'> {
   outline?: boolean;
 }
 
-const ValueLabel = ({
-  label,
-  value,
-  color,
-  outline,
-  ...props
-}: IValueLabelProps) => {
-  return (
-    <Wrapper {...props}>
-      <LabelWrapper color={color} outline={Boolean(outline)}>
-        {label}
-      </LabelWrapper>
-      <ValueWrapper color={color} outline={Boolean(outline)}>
-        {value}
-      </ValueWrapper>
-    </Wrapper>
-  );
-};
+const ValueLabel = React.forwardRef(
+  ({ label, value, color, outline, ...props }: IValueLabelProps, _) => {
+    return (
+      <Wrapper {...props}>
+        <LabelWrapper color={color} outline={Boolean(outline)}>
+          {label}
+        </LabelWrapper>
+        <ValueWrapper color={color} outline={Boolean(outline)}>
+          {value}
+        </ValueWrapper>
+      </Wrapper>
+    );
+  }
+);
 
 ValueLabel.defaultProps = {
   value: '',

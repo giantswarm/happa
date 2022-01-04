@@ -34,6 +34,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import ClusterDetailReleaseDetailsModal from './ClusterDetailReleaseDetailsModal';
 import ClusterDetailUpgradeModal from './ClusterDetailUpgradeModal';
+import { usePermissionsForReleases } from './permissions/usePermissionsForReleases';
 
 const StyledDot = styled(Dot)`
   padding: 0;
@@ -64,19 +65,30 @@ interface IClusterDetailWidgetReleaseProps
   > {
   cluster?: capiv1alpha3.ICluster;
   providerCluster?: ProviderCluster;
+  canUpdateCluster?: boolean;
 }
 
 const ClusterDetailWidgetRelease: React.FC<
   IClusterDetailWidgetReleaseProps
-> = ({ cluster, providerCluster, ...props }) => {
+> = ({ cluster, providerCluster, canUpdateCluster, ...props }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const provider = window.config.info.general.provider;
+
   const releaseListClient = useRef(clientFactory());
+  const { canList: canListReleases } = usePermissionsForReleases(
+    provider,
+    'default'
+  );
+  const releaseListKey = canListReleases
+    ? releasev1alpha1.getReleaseListKey()
+    : null;
+
   const { data: releaseList, error: releaseListError } = useSWR<
     releasev1alpha1.IReleaseList,
     GenericResponseError
-  >(releasev1alpha1.getReleaseListKey(), () =>
+  >(releaseListKey, () =>
     releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
@@ -102,16 +114,15 @@ const ClusterDetailWidgetRelease: React.FC<
   }, [releaseList?.items, releaseVersion]);
 
   const k8sVersion = useMemo(() => {
-    if (!releaseList) return undefined;
+    if (!releaseList && canListReleases) return undefined;
     if (!currentRelease) return '';
 
     const version = releasev1alpha1.getK8sVersion(currentRelease);
     if (!version) return '';
 
     return version;
-  }, [releaseList, currentRelease]);
+  }, [releaseList, canListReleases, currentRelease]);
 
-  const provider = window.config.info.general.provider;
   const isAdmin = useSelector(getUserIsAdmin);
 
   const supportedUpgradeVersions: ui.IReleaseVersion[] = useMemo(() => {
@@ -262,24 +273,35 @@ const ClusterDetailWidgetRelease: React.FC<
     <ClusterDetailWidget title='Release' inline={true} {...props}>
       <Box direction='row' gap='xsmall' wrap={true} align='center'>
         <OptionalValue value={releaseVersion} replaceEmptyValue={false}>
-          {(value) => (
-            <Keyboard onSpace={handleVersionClick}>
-              <StyledLink
-                href='#'
-                aria-label={`Cluster release version ${value}`}
-                onClick={handleVersionClick}
-              >
-                <Text>
-                  <i
-                    className='fa fa-version-tag'
-                    role='presentation'
-                    aria-hidden='true'
-                  />
-                </Text>{' '}
-                <VersionLabel>{value || <NotAvailable />}</VersionLabel>
-              </StyledLink>
-            </Keyboard>
-          )}
+          {(value) =>
+            canListReleases ? (
+              <Keyboard onSpace={handleVersionClick}>
+                <StyledLink
+                  href='#'
+                  aria-label={`Cluster release version ${value}`}
+                  onClick={handleVersionClick}
+                >
+                  <Text>
+                    <i
+                      className='fa fa-version-tag'
+                      role='presentation'
+                      aria-hidden='true'
+                    />
+                  </Text>{' '}
+                  <VersionLabel>{value || <NotAvailable />}</VersionLabel>
+                </StyledLink>
+              </Keyboard>
+            ) : (
+              <Text aria-label={`Cluster release version ${value}`}>
+                <i
+                  className='fa fa-version-tag'
+                  role='presentation'
+                  aria-hidden='true'
+                />{' '}
+                {value || <NotAvailable />}
+              </Text>
+            )
+          }
         </OptionalValue>
         <StyledDot />
         <OptionalValue value={k8sVersion} replaceEmptyValue={false}>
@@ -306,8 +328,24 @@ const ClusterDetailWidgetRelease: React.FC<
       </Box>
 
       {canUpgrade && (
-        <Box margin={{ top: 'small' }}>
-          <Button onClick={handleUpgradeButtonClick}>Upgrade cluster…</Button>
+        <Box
+          direction='row'
+          align='center'
+          margin={{ top: 'small' }}
+          gap='small'
+        >
+          <Button
+            onClick={handleUpgradeButtonClick}
+            unauthorized={!canUpdateCluster}
+          >
+            Upgrade cluster…
+          </Button>
+          {!canUpdateCluster && (
+            <Text color='text-weak' size='small'>
+              For upgrading this cluster, you need additional permissions.
+              Please talk to your administrator.
+            </Text>
+          )}
         </Box>
       )}
 
@@ -323,6 +361,7 @@ const ClusterDetailWidgetRelease: React.FC<
             canUpgrade ? supportedUpgradeVersions : undefined
           }
           onUpgradeVersionSelect={handleUpgradeVersionSelect}
+          canUpdateCluster={canUpdateCluster}
         />
       )}
 

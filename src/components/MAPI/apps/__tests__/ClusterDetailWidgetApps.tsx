@@ -12,6 +12,9 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailWidgetApps from '../ClusterDetailWidgetApps';
+import { usePermissionsForAppCatalogEntries } from '../permissions/usePermissionsForAppCatalogEntries';
+import { usePermissionsForApps } from '../permissions/usePermissionsForApps';
+import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
 
 function generateApp(
   specName: string = 'some-app',
@@ -47,6 +50,7 @@ function generateApp(
     },
     spec: {
       catalog: 'default',
+      catalogNamespace: 'default',
       config: {
         configMap: {
           name: `${namespace}-cluster-values`,
@@ -114,6 +118,14 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: jest.fn().mockReturnValue({
@@ -122,14 +134,34 @@ jest.mock('react-router', () => ({
   }),
 }));
 
+jest.mock('MAPI/apps/permissions/usePermissionsForApps');
+jest.mock('MAPI/apps/permissions/usePermissionsForCatalogs');
+jest.mock('MAPI/apps/permissions/usePermissionsForAppCatalogEntries');
+
 describe('ClusterDetailWidgetApps', () => {
   it('displays loading animations if the cluster is still loading', () => {
+    (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     render(getComponent({}));
 
     expect(screen.getAllByLabelText('Loading...').length).toEqual(4);
   });
 
   it('displays a placeholder if there are no apps', async () => {
+    (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${mockCapiv1alpha3.randomCluster1.metadata.name}/apps/`
@@ -157,7 +189,54 @@ describe('ClusterDetailWidgetApps', () => {
     ).toBeInTheDocument();
   });
 
+  it('does not display a prompt to install apps if the user does not have permissions to do so', async () => {
+    (usePermissionsForApps as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canCreate: false,
+    });
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${mockCapiv1alpha3.randomCluster1.metadata.name}/apps/`
+      )
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'application.giantswarm.io/v1alpha1',
+        kind: applicationv1alpha1.AppList,
+        items: [],
+        metadata: {
+          resourceVersion: '294675100',
+          selfLink:
+            '/apis/application.giantswarm.io/v1alpha1/namespaces/j5y9m/apps/',
+        },
+      });
+
+    render(getComponent({}));
+
+    expect(await screen.findByText('No apps installed')).toBeInTheDocument();
+    expect(
+      screen.queryByText((_, node) => {
+        return (
+          node?.textContent === 'To find apps to install, browse our apps.'
+        );
+      })
+    ).not.toBeInTheDocument();
+  });
+
   it('displays stats about the apps installed in the cluster', async () => {
+    (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${mockCapiv1alpha3.randomCluster1.metadata.name}/apps/`
@@ -183,6 +262,14 @@ describe('ClusterDetailWidgetApps', () => {
   });
 
   it('displays the number of upgradable apps', async () => {
+    (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${mockCapiv1alpha3.randomCluster1.metadata.name}/apps/`
@@ -197,7 +284,7 @@ describe('ClusterDetailWidgetApps', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
+        '/apis/application.giantswarm.io/v1alpha1/namespaces/default/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
       )
       .reply(
         StatusCodes.Ok,
@@ -206,7 +293,7 @@ describe('ClusterDetailWidgetApps', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
+        '/apis/application.giantswarm.io/v1alpha1/namespaces/default/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
       )
       .reply(
         StatusCodes.Ok,
@@ -216,5 +303,35 @@ describe('ClusterDetailWidgetApps', () => {
     render(getComponent({}));
 
     expect(await screen.findByLabelText('1 upgradable')).toBeInTheDocument();
+  });
+
+  it('does not display the number of upgradable apps if the user does not have permissions to get catalog resources', async () => {
+    (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canList: false,
+    });
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canList: false,
+    });
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${mockCapiv1alpha3.randomCluster1.metadata.name}/apps/`
+      )
+      .reply(StatusCodes.Ok, {
+        ...applicationv1alpha1Mocks.randomCluster1AppsList,
+        items: [
+          generateApp('coredns', 'deployed', '1.2.0'),
+          generateApp('coredns', 'deployed', '1.3.0'),
+        ],
+      });
+
+    render(getComponent({}));
+
+    expect(
+      await screen.findByLabelText('upgradable not available')
+    ).toBeInTheDocument();
   });
 });

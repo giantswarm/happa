@@ -3,6 +3,7 @@ import { push } from 'connected-react-router';
 import differenceInHours from 'date-fns/fp/differenceInHours';
 import toDate from 'date-fns-tz/toDate';
 import { Box, Card, CardBody, Text } from 'grommet';
+import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
 import { NodePoolList, ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -227,12 +228,19 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   const hasError = typeof nodePoolListError !== 'undefined';
   const isLoading = typeof cluster === 'undefined';
 
+  const selectedOrg = organizations && orgId ? organizations[orgId] : undefined;
+  const namespace = selectedOrg?.namespace;
+  const { canCreate: canCreateKeyPairs } = usePermissionsForKeyPairs(
+    provider,
+    namespace ?? ''
+  );
+
   const shouldDisplayGetStarted = useMemo(() => {
     if (
       isDeleting ||
       isLoading ||
       !creationDate ||
-      !canCreateClusters ||
+      !canCreateKeyPairs ||
       isPreviewRelease
     )
       return false;

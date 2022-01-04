@@ -19,11 +19,12 @@ interface IReleaseDetailsModalUpgradeOptionsVersionProps
   extends React.ComponentPropsWithoutRef<'span'> {
   version: string;
   isBeta: boolean;
+  unauthorized?: boolean;
 }
 
 const ReleaseDetailsModalUpgradeOptionsVersion: React.FC<
   IReleaseDetailsModalUpgradeOptionsVersionProps
-> = ({ version, isBeta, ...rest }) => {
+> = ({ version, isBeta, unauthorized, ...rest }) => {
   const formattedVersion = `v${version}`;
 
   let label = formattedVersion;
@@ -32,8 +33,16 @@ const ReleaseDetailsModalUpgradeOptionsVersion: React.FC<
   }
 
   return (
-    <span role='button' aria-label={label} {...rest}>
-      <Version>{formattedVersion}</Version>{' '}
+    <span
+      role={unauthorized ? undefined : 'button'}
+      aria-label={label}
+      {...rest}
+    >
+      {unauthorized ? (
+        <span>{formattedVersion}</span>
+      ) : (
+        <Version>{formattedVersion}</Version>
+      )}{' '}
       {isBeta && <ReleaseDetailsModalUpgradeOptionsBetaLabel />}
     </span>
   );

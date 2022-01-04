@@ -118,7 +118,7 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
 
@@ -180,7 +180,7 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
 
@@ -248,7 +248,7 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
 
@@ -308,7 +308,7 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
 
@@ -377,7 +377,7 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
 
@@ -446,7 +446,7 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
 

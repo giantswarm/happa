@@ -1,5 +1,5 @@
 import { Anchor } from 'grommet';
-import React, { FC } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 interface IButtonProps {}
@@ -25,10 +25,10 @@ const StyledAnchor = styled(Anchor)`
   }
 `;
 
-const DeleteLabelButton: FC<IButtonProps> = (props) => (
+const DeleteLabelButton = React.forwardRef<IButtonProps>((props, _) => (
   <StyledAnchor size='large' {...props}>
     <i className='fa fa-close' role='presentation' title='Delete' />
   </StyledAnchor>
-);
+));
 
 export default DeleteLabelButton;

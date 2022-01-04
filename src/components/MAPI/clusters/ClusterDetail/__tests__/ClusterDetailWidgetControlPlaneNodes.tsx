@@ -9,6 +9,7 @@ import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
+import { usePermissionsForCPNodes } from '../../permissions/usePermissionsForCPNodes';
 import ClusterDetailWidgetControlPlaneNodes from '../ClusterDetailWidgetControlPlaneNodes';
 
 function getComponent(
@@ -35,12 +36,26 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
+jest.mock('MAPI/clusters/permissions/usePermissionsForCPNodes');
+
 describe('ClusterDetailWidgetControlPlaneNodes', () => {
   it('renders without crashing', () => {
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+
     render(getComponent({}));
   });
 
   it('displays loading animations if the cluster is still loading', () => {
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+
     render(
       getComponent({
         cluster: undefined,
@@ -51,9 +66,11 @@ describe('ClusterDetailWidgetControlPlaneNodes', () => {
   });
 
   it('displays the number of control plane nodes that are ready on Azure', async () => {
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster2.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList2);
 
@@ -69,9 +86,11 @@ describe('ClusterDetailWidgetControlPlaneNodes', () => {
   });
 
   it('displays if all control planes are ready on Azure', async () => {
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster2.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
 
@@ -87,9 +106,11 @@ describe('ClusterDetailWidgetControlPlaneNodes', () => {
   });
 
   it('displays if the cluster is not in an availability zone', async () => {
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster2.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList2);
 
@@ -104,9 +125,11 @@ describe('ClusterDetailWidgetControlPlaneNodes', () => {
   });
 
   it(`displays the cluster's availability zone`, async () => {
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster2.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
       .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
 

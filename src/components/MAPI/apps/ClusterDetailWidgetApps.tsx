@@ -6,12 +6,15 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import ClusterDetailCounter from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailCounter';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
+import { usePermissionsForAppCatalogEntries } from './permissions/usePermissionsForAppCatalogEntries';
+import { usePermissionsForApps } from './permissions/usePermissionsForApps';
+import { usePermissionsForCatalogs } from './permissions/usePermissionsForCatalogs';
 import {
   computeAppsCategorizedCounters,
   filterUserInstalledApps,
@@ -34,16 +37,25 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
 ) => {
   const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 
+  const provider = window.config.info.general.provider;
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   const appListClient = useRef(clientFactory());
 
+  const { canList: canListApps, canCreate: canCreateApps } =
+    usePermissionsForApps(provider, clusterId);
+
   const appListGetOptions = { namespace: clusterId };
+  const appListKey = canListApps
+    ? applicationv1alpha1.getAppListKey(appListGetOptions)
+    : null;
+
   const { data: appList, error: appListError } = useSWR<
     applicationv1alpha1.IAppList,
     GenericResponseError
-  >(applicationv1alpha1.getAppListKey(appListGetOptions), () =>
+  >(appListKey, () =>
     applicationv1alpha1.getAppList(
       appListClient.current,
       auth,
@@ -63,15 +75,16 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
     return filterUserInstalledApps(appList.items, true);
   }, [appList]);
 
+  const insufficientPermissionsForApps = canListApps === false;
+
   const appCounters = useMemo(() => {
-    if (appListError) {
+    if (appListError || insufficientPermissionsForApps) {
       return {
         apps: -1,
         uniqueApps: -1,
         deployed: -1,
       };
     }
-
     if (!appList) {
       return {
         apps: undefined,
@@ -81,20 +94,36 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
     }
 
     return computeAppsCategorizedCounters(userInstalledApps);
-  }, [appList, appListError, userInstalledApps]);
+  }, [
+    appList,
+    appListError,
+    insufficientPermissionsForApps,
+    userInstalledApps,
+  ]);
 
   const hasNoApps =
     typeof appCounters.apps === 'number' && appCounters.apps === 0;
 
-  const upgradableAppsKey = appList
+  const { canList: canListCatalogs } = usePermissionsForCatalogs(
+    provider,
+    'default'
+  );
+  const { canList: canListAppCatalogEntries } =
+    usePermissionsForAppCatalogEntries(provider, 'default');
+
+  const canReadCatalogResources = canListCatalogs && canListAppCatalogEntries;
+
+  const upgradableAppsKey = canReadCatalogResources
     ? getUpgradableAppsKey(userInstalledApps)
     : null;
+
+  const { cache } = useSWRConfig();
 
   const { data: upgradableApps, error: upgradableAppsError } = useSWR<
     string[],
     GenericResponseError
   >(upgradableAppsKey, () =>
-    getUpgradableApps(userInstalledApps, clientFactory, auth)
+    getUpgradableApps(clientFactory, auth, cache, userInstalledApps)
   );
 
   useEffect(() => {
@@ -104,11 +133,22 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
   }, [upgradableAppsError]);
 
   const upgradableAppsCount = useMemo(() => {
+    if (
+      upgradableAppsError ||
+      !canReadCatalogResources ||
+      insufficientPermissionsForApps
+    )
+      return -1;
+
     if (!upgradableApps) return undefined;
-    if (upgradableAppsError) return -1;
 
     return upgradableApps.length;
-  }, [upgradableApps, upgradableAppsError]);
+  }, [
+    upgradableAppsError,
+    canReadCatalogResources,
+    insufficientPermissionsForApps,
+    upgradableApps,
+  ]);
 
   return (
     <ClusterDetailWidget
@@ -124,10 +164,12 @@ const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
       {hasNoApps && (
         <Box fill={true} pad={{ bottom: 'xsmall' }}>
           <Text margin={{ bottom: 'small' }}>No apps installed</Text>
-          <Text size='small'>
-            To find apps to install, browse our{' '}
-            <StyledLink to={AppsRoutes.Home}>apps</StyledLink>.
-          </Text>
+          {canCreateApps && canReadCatalogResources && (
+            <Text size='small'>
+              To find apps to install, browse our{' '}
+              <StyledLink to={AppsRoutes.Home}>apps</StyledLink>.
+            </Text>
+          )}
         </Box>
       )}
 
