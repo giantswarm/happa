@@ -204,7 +204,7 @@
     "lint-staged": "12.1.5",
     "mini-css-extract-plugin": "2.4.5",
     "nock": "13.2.1",
-    "node-sass": "7.0.0",
+    "node-sass": "7.0.1",
     "prettier": "2.5.1",
     "raw-loader": "4.0.2",
     "react-docgen-typescript": "2.2.2",
