@@ -3,6 +3,7 @@ import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
 import ListAppsGuide from 'MAPI/clusters/guides/ListAppsGuide';
+import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppConstants, Constants } from 'model/constants';
@@ -38,6 +39,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import ClusterDetailAppList from './ClusterDetailAppList';
 import ClusterDetailAppLoadingPlaceholder from './ClusterDetailAppLoadingPlaceholder';
+import { usePermissionsForApps } from './permissions/usePermissionsForApps';
 import { filterUserInstalledApps, mapDefaultApps } from './utils';
 
 const LOADING_COMPONENTS = new Array(6).fill(0);
@@ -98,17 +100,25 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
   const { pathname } = useLocation();
   const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 
+  const provider = window.config.info.general.provider;
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   const appListClient = useRef(clientFactory());
+  const { canList: canListApps } = usePermissionsForApps(provider, clusterId);
   const appListGetOptions = { namespace: clusterId };
+
+  const appListKey = canListApps
+    ? applicationv1alpha1.getAppListKey(appListGetOptions)
+    : null;
+
   const {
     data: appList,
     error: appListError,
     isValidating: appListIsValidating,
   } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
-    applicationv1alpha1.getAppListKey(appListGetOptions),
+    appListKey,
     () =>
       applicationv1alpha1.getAppList(
         appListClient.current,
@@ -150,12 +160,21 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
   }, [detailsModalIsVisible, appToDisplay]);
 
   const releaseClient = useRef(clientFactory());
+  const { canGet: canGetReleases } = usePermissionsForReleases(
+    provider,
+    'default'
+  );
+
+  const releaseListKey = canGetReleases
+    ? releasev1alpha1.getReleaseKey(releaseVersion)
+    : null;
+
   const {
     data: release,
     error: releaseError,
     isValidating: releaseIsValidating,
   } = useSWR<releasev1alpha1.IRelease, GenericResponseError>(
-    releasev1alpha1.getReleaseKey(releaseVersion),
+    releaseListKey,
     () =>
       releasev1alpha1.getRelease(
         releaseClient.current,
@@ -189,7 +208,6 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
     setDetailsModalAppName('');
   };
 
-  const provider = window.config.info.general.provider;
   const hasOptionalIngress = supportsOptionalIngress(provider, releaseVersion);
 
   const userInstalledApps = useMemo(
