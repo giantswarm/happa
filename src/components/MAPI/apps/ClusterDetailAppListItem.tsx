@@ -3,7 +3,13 @@ import { AccordionPanel, Box, Text } from 'grommet';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import useSWR, { useSWRConfig } from 'swr';
 import Date from 'UI/Display/Date';
@@ -67,13 +73,19 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
     string | undefined
   >(undefined);
 
+  const normalizedAppVersion = useMemo(() => {
+    if (!app) return undefined;
+
+    return normalizeAppVersion(app.spec.version);
+  }, [app]);
+
   useEffect(() => {
     if (
-      typeof app !== 'undefined' &&
+      typeof normalizedAppVersion !== 'undefined' &&
       typeof currentSelectedVersion === 'undefined'
     )
-      setCurrentSelectedVersion(normalizeAppVersion(app.spec.version));
-  }, [app, currentSelectedVersion]);
+      setCurrentSelectedVersion(normalizedAppVersion);
+  }, [normalizedAppVersion, currentSelectedVersion]);
 
   const isDeleted = typeof app?.metadata?.deletionTimestamp !== 'undefined';
   const isDisabled = typeof app === 'undefined' || isDeleted;
@@ -252,9 +264,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             <UpdateAppGuide
               appName={app.metadata.name}
               namespace={app.metadata.namespace!}
-              newVersion={
-                currentSelectedVersion ?? normalizeAppVersion(app.spec.version)
-              }
+              newVersion={currentSelectedVersion ?? normalizedAppVersion!}
               catalogName={app.spec.catalog}
               catalogNamespace={catalogNamespace}
             />
