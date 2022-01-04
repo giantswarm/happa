@@ -848,15 +848,26 @@ export function formatYAMLError(err: unknown): string {
 
 /**
  * Determines whether an app has a newer version
- * @param app
- * @param client
+ * @param clientFactory
  * @param auth
+ * @param cache
+ * @param app
  */
 export async function hasNewerVersion(
-  app: applicationv1alpha1.IApp,
-  client: IHttpClient,
-  auth: IOAuth2Provider
+  clientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cache: Cache,
+  app: applicationv1alpha1.IApp
 ): Promise<{ name: string; hasNewerVersion: boolean }> {
+  const catalogNamespace = await getCatalogNamespace(
+    clientFactory,
+    auth,
+    cache,
+    app
+  );
+
+  const appCatalogEntryListItems: applicationv1alpha1.IAppCatalogEntry[] = [];
+
   const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
     {
       labelSelector: {
@@ -865,16 +876,33 @@ export async function hasNewerVersion(
           [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
         },
       },
+      namespace: catalogNamespace ?? undefined,
     };
 
-  const appCatalogEntryList = await applicationv1alpha1.getAppCatalogEntryList(
-    client,
-    auth,
+  const appCatalogEntryListKey = applicationv1alpha1.getAppCatalogEntryListKey(
     appCatalogEntryListGetOptions
   );
 
+  const cachedAppCatalogEntryList:
+    | applicationv1alpha1.IAppCatalogEntryList
+    | undefined = cache.get(appCatalogEntryListKey);
+
+  if (cachedAppCatalogEntryList) {
+    appCatalogEntryListItems.push(...cachedAppCatalogEntryList.items);
+  } else {
+    const appCatalogEntryList =
+      await applicationv1alpha1.getAppCatalogEntryList(
+        clientFactory(),
+        auth,
+        appCatalogEntryListGetOptions
+      );
+
+    appCatalogEntryListItems.push(...appCatalogEntryList.items);
+    cache.set(appCatalogEntryListKey, appCatalogEntryList);
+  }
+
   const latestVersion = getLatestVersionForApp(
-    appCatalogEntryList.items,
+    appCatalogEntryListItems,
     app.spec.name
   );
 
@@ -888,17 +916,19 @@ export async function hasNewerVersion(
 
 /**
  * Get names of apps that can be upgraded (i.e. has newer versions)
- * @param apps
  * @param clientFactory
  * @param auth
+ * @param cache
+ * @param apps
  */
 export async function getUpgradableApps(
-  apps: applicationv1alpha1.IApp[],
   clientFactory: HttpClientFactory,
-  auth: IOAuth2Provider
+  auth: IOAuth2Provider,
+  cache: Cache,
+  apps: applicationv1alpha1.IApp[]
 ) {
   const response = await Promise.all(
-    apps.map((app) => hasNewerVersion(app, clientFactory(), auth))
+    apps.map((app) => hasNewerVersion(clientFactory, auth, cache, app))
   );
 
   const upgradableApps = [];
@@ -915,7 +945,12 @@ export async function getUpgradableApps(
  * @param apps
  */
 export function getUpgradableAppsKey(apps: applicationv1alpha1.IApp[]) {
-  return apps.reduce((key, app) => key + app.spec.name, '');
+  if (apps.length === 0) return null;
+
+  return `getUpgradableApps${apps.reduce(
+    (key, app) => `${key}/${app.spec.catalog}/${app.spec.name}`,
+    ''
+  )}`;
 }
 
 /**
@@ -950,14 +985,17 @@ export async function getCatalogNamespace(
       if (cachedCatalogList) {
         catalogs.push(...cachedCatalogList.items);
       } else {
-        const catalogList = await applicationv1alpha1.getCatalogList(
-          clientFactory(),
-          auth,
-          getCatalogListOptions
-        );
-
-        cache.set(catalogListKey, catalogList);
-        catalogs.push(...catalogList.items);
+        try {
+          const catalogList = await applicationv1alpha1.getCatalogList(
+            clientFactory(),
+            auth,
+            getCatalogListOptions
+          );
+          cache.set(catalogListKey, catalogList);
+          catalogs.push(...catalogList.items);
+        } catch {
+          continue;
+        }
       }
     }
 

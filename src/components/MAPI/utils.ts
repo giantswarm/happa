@@ -444,6 +444,7 @@ export async function fetchControlPlaneNodesForCluster(
               [capzv1alpha3.labelControlPlane]: 'true',
             },
           },
+          namespace: cluster.metadata.namespace,
         }
       );
 
@@ -459,6 +460,7 @@ export async function fetchControlPlaneNodesForCluster(
               [infrav1alpha3.labelCluster]: cluster.metadata.name,
             },
           },
+          namespace: cluster.metadata.namespace,
         }),
         infrav1alpha3.getG8sControlPlaneList(httpClientFactory(), auth, {
           labelSelector: {
@@ -466,6 +468,7 @@ export async function fetchControlPlaneNodesForCluster(
               [infrav1alpha3.labelCluster]: cluster.metadata.name,
             },
           },
+          namespace: cluster.metadata.namespace,
         }),
       ]);
 
@@ -506,6 +509,7 @@ export function fetchControlPlaneNodesForClusterKey(
             [capiv1alpha3.labelCluster]: cluster.metadata.name,
           },
         },
+        namespace: cluster.metadata.namespace,
       });
 
     case 'infrastructure.giantswarm.io/v1alpha2':
@@ -516,6 +520,7 @@ export function fetchControlPlaneNodesForClusterKey(
             [infrav1alpha3.labelCluster]: cluster.metadata.name,
           },
         },
+        namespace: cluster.metadata.namespace,
       });
 
     default:

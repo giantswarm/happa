@@ -28,6 +28,7 @@ import {
   getWorkerNodesCPU,
   getWorkerNodesMemory,
 } from '../clusters/utils';
+import { usePermissionsForNodePools } from './permissions/usePermissionsForNodePools';
 import { mapNodePoolsToProviderNodePools } from './utils';
 
 function formatMemory(value?: number) {
@@ -57,6 +58,7 @@ interface IClusterDetailWidgetWorkerNodesProps
 
 const ClusterDetailWidgetWorkerNodes: React.FC<
   IClusterDetailWidgetWorkerNodesProps
+  // eslint-disable-next-line complexity
 > = ({ cluster, ...props }) => {
   const { clusterId, orgId } = useParams<{
     clusterId: string;
@@ -66,11 +68,30 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const provider = window.config.info.general.provider;
+
+  const { canList, canGet, canCreate } = usePermissionsForNodePools(
+    provider,
+    cluster?.metadata.namespace ?? ''
+  );
+
+  const hasReadPermissionsForNp = canList && canGet;
+
+  const nodePoolListForClusterKey =
+    cluster && hasReadPermissionsForNp
+      ? fetchNodePoolListForClusterKey(cluster, cluster.metadata.namespace)
+      : null;
+
   const { data: nodePoolList, error: nodePoolListError } = useSWR<
     NodePoolList,
     GenericResponseError
-  >(fetchNodePoolListForClusterKey(cluster), () =>
-    fetchNodePoolListForCluster(clientFactory, auth, cluster)
+  >(nodePoolListForClusterKey, () =>
+    fetchNodePoolListForCluster(
+      clientFactory,
+      auth,
+      cluster,
+      cluster!.metadata.namespace
+    )
   );
 
   useEffect(() => {
@@ -95,13 +116,16 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
   const machineTypes = useRef(getMachineTypes());
 
   const nodePoolsError = nodePoolListError ?? providerNodePoolsError;
+  const insufficientPermissionsForNp = cluster && !hasReadPermissionsForNp;
 
-  const workerNodePoolsCount = nodePoolListError
-    ? -1
-    : nodePoolList?.items.length;
-  const workerNodesCount = nodePoolsError
-    ? -1
-    : getWorkerNodesCount(nodePoolList?.items);
+  const workerNodePoolsCount =
+    nodePoolListError || insufficientPermissionsForNp
+      ? -1
+      : nodePoolList?.items.length;
+  const workerNodesCount =
+    nodePoolsError || insufficientPermissionsForNp
+      ? -1
+      : getWorkerNodesCount(nodePoolList?.items);
 
   const nodePoolsWithProviderNodePools = useMemo(() => {
     if (!nodePoolList?.items || !providerNodePools) return undefined;
@@ -112,15 +136,17 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
     );
   }, [nodePoolList?.items, providerNodePools]);
 
-  const workerNodesCPU = nodePoolsError
-    ? -1
-    : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
-  const workerNodesMemory = nodePoolsError
-    ? -1
-    : getWorkerNodesMemory(
-        nodePoolsWithProviderNodePools,
-        machineTypes.current
-      );
+  const workerNodesCPU =
+    nodePoolsError || insufficientPermissionsForNp
+      ? -1
+      : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
+  const workerNodesMemory =
+    nodePoolsError || insufficientPermissionsForNp
+      ? -1
+      : getWorkerNodesMemory(
+          nodePoolsWithProviderNodePools,
+          machineTypes.current
+        );
 
   const hasNoNodePools =
     typeof workerNodePoolsCount === 'number' && workerNodePoolsCount === 0;
@@ -151,31 +177,35 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
           direction='row'
           pad={{ bottom: 'xsmall', right: 'xsmall' }}
           justify='between'
-          align='end'
+          align={canCreate ? 'end' : 'start'}
         >
           <Box>
             <Text margin={{ bottom: 'small' }}>No node pools</Text>
-            <Text size='small'>Create node pools to run workloads.</Text>
+            {canCreate && (
+              <Text size='small'>Create node pools to run workloads.</Text>
+            )}
           </Box>
-          <StyledLink
-            to={{
-              pathname: workerNodesPath,
-              state: { hasNoNodePools: true },
-            }}
-          >
-            <Button
-              icon={
-                <i
-                  className='fa fa-add-circle'
-                  role='presentation'
-                  aria-hidden='true'
-                />
-              }
-              tabIndex={-1}
+          {canCreate && (
+            <StyledLink
+              to={{
+                pathname: workerNodesPath,
+                state: { hasNoNodePools: true },
+              }}
             >
-              Add node pool
-            </Button>
-          </StyledLink>
+              <Button
+                icon={
+                  <i
+                    className='fa fa-add-circle'
+                    role='presentation'
+                    aria-hidden='true'
+                  />
+                }
+                tabIndex={-1}
+              >
+                Add node pool
+              </Button>
+            </StyledLink>
+          )}
         </Box>
       )}
 

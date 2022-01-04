@@ -18,7 +18,7 @@ export function usePermissionsForApps(
   _provider: PropertiesOf<typeof Providers>,
   namespace: string
 ) {
-  const computed = {
+  const computed: Record<string, boolean | undefined> = {
     canGet: false,
     canList: false,
     canUpdate: false,
@@ -33,10 +33,11 @@ export function usePermissionsForApps(
   const group = 'application.giantswarm.io';
   const resource = 'apps';
 
-  const { data: appAccess, error } = useSWR<
-    Record<typeof verbs[number], boolean>,
-    GenericResponseError
-  >(
+  const {
+    data: appAccess,
+    error,
+    isValidating,
+  } = useSWR<Record<typeof verbs[number], boolean>, GenericResponseError>(
     fetchAccessForResourceKey(namespace, verbs, group, resource),
     () =>
       fetchAccessForResource(
@@ -64,6 +65,21 @@ export function usePermissionsForApps(
       );
     }
   }, [error]);
+
+  const isLoading =
+    typeof appAccess === 'undefined' &&
+    typeof error === 'undefined' &&
+    isValidating;
+
+  if (isLoading) {
+    computed.canGet = undefined;
+    computed.canList = undefined;
+    computed.canUpdate = undefined;
+    computed.canCreate = undefined;
+    computed.canDelete = undefined;
+
+    return computed;
+  }
 
   if (!appAccess) return computed;
 

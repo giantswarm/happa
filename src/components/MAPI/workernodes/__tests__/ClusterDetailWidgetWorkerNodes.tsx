@@ -13,6 +13,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailWidgetWorkerNodes from '../ClusterDetailWidgetWorkerNodes';
+import { usePermissionsForNodePools } from '../permissions/usePermissionsForNodePools';
 
 function getComponent(
   props: React.ComponentPropsWithoutRef<typeof ClusterDetailWidgetWorkerNodes>
@@ -36,12 +37,30 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
+jest.mock('MAPI/workernodes/permissions/usePermissionsForNodePools');
+
 describe('ClusterDetailWidgetWorkerNodes', () => {
   it('renders without crashing', () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     render(getComponent({}));
   });
 
   it('displays loading animations if the cluster is still loading', () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     render(
       getComponent({
         cluster: undefined,
@@ -52,9 +71,13 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
   });
 
   it('displays a placeholder if there are no node pools', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
       )
       .reply(StatusCodes.Ok, {
         apiVersion: 'exp.cluster.x-k8s.io/v1alpha3',
@@ -75,10 +98,43 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
     ).toBeInTheDocument();
   });
 
-  it('displays stats about node pools', async () => {
+  it('does not display the link button to add node pools if the user does not have permissions to do so', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canCreate: false,
+    });
+
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+      )
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'exp.cluster.x-k8s.io/v1alpha3',
+        kind: capiexpv1alpha3.MachinePoolList,
+        metadata: {},
+        items: [],
+      });
+
+    render(
+      getComponent({
+        cluster: capiv1alpha3Mocks.randomCluster1,
+      })
+    );
+
+    expect(await screen.findByText('No node pools')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Add node pool' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('displays stats about node pools', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
@@ -114,9 +170,13 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
   });
 
   it('only displays a part of the stats if provider-specific resources fail to load', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
@@ -164,9 +224,13 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
   });
 
   it('only displays a part of the stats if one of the machine types is unknown', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,

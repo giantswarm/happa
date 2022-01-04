@@ -24,6 +24,7 @@ import ClusterDetailWidgetWorkerNodes from '../../workernodes/ClusterDetailWidge
 import InspectClusterGuide from '../guides/InspectClusterGuide';
 import InspectClusterReleaseGuide from '../guides/InspectClusterReleaseGuide';
 import SetClusterLabelsGuide from '../guides/SetClusterLabelsGuide';
+import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -55,9 +56,13 @@ const ClusterDetailOverview: React.FC<{}> = () => {
 
   const namespace = org?.status?.namespace;
 
-  const clusterKey = namespace
-    ? fetchClusterKey(provider, namespace, clusterId)
-    : null;
+  const { canGet: canGetCluster, canUpdate: canUpdateCluster } =
+    usePermissionsForClusters(provider, namespace ?? '');
+
+  const clusterKey =
+    canGetCluster && namespace
+      ? fetchClusterKey(provider, namespace, clusterId)
+      : null;
 
   // The error is handled in the parent component.
   const { data: cluster } = useSWR<Cluster, GenericResponseError>(
@@ -101,9 +106,14 @@ const ClusterDetailOverview: React.FC<{}> = () => {
       <ClusterDetailWidgetRelease
         cluster={cluster}
         providerCluster={providerCluster}
+        canUpdateCluster={canUpdateCluster}
         basis='100%'
       />
-      <ClusterDetailWidgetLabels cluster={cluster} basis='100%' />
+      <ClusterDetailWidgetLabels
+        cluster={cluster}
+        canUpdateCluster={canUpdateCluster}
+        basis='100%'
+      />
       <ClusterDetailWidgetControlPlaneNodes
         cluster={cluster}
         providerCluster={providerCluster}
@@ -143,6 +153,7 @@ const ClusterDetailOverview: React.FC<{}> = () => {
             clusterName={cluster.metadata.name}
             clusterNamespace={cluster.metadata.namespace!}
             provider={provider}
+            canUpdateCluster={canUpdateCluster}
           />
         </Box>
       )}

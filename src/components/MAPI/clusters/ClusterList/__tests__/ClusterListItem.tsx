@@ -4,6 +4,7 @@ import add from 'date-fns/fp/add';
 import format from 'date-fns/fp/format';
 import sub from 'date-fns/fp/sub';
 import { createMemoryHistory } from 'history';
+import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
 import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { StatusCodes } from 'model/constants';
 import nock from 'nock';
@@ -42,29 +43,36 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
 jest.mock('MAPI/workernodes/permissions/usePermissionsForNodePools');
+jest.mock('MAPI/keypairs/permissions/usePermissionsForKeyPairs');
 
 describe('ClusterListItem', () => {
   it('renders without crashing', () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     render(getComponent({}));
   });
 
   it('displays a loading animation if the cluster is not loaded yet', () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     render(getComponent({}));
 
@@ -75,13 +83,12 @@ describe('ClusterListItem', () => {
   });
 
   it('displays if a cluster was deleted', () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     const deletionDate = sub({
       hours: 1,
@@ -106,13 +113,12 @@ describe('ClusterListItem', () => {
   });
 
   it('displays the getting started button if the cluster has been created recently', () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     let creationDate = sub({
       days: 20,
@@ -158,13 +164,13 @@ describe('ClusterListItem', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('does not displays the getting started button if the user does not have permissions create clusters', () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
+  it('does not displays the getting started button if the user does not have permissions create key pairs', () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canCreate: false,
     });
 
     render(
@@ -181,13 +187,12 @@ describe('ClusterListItem', () => {
   });
 
   it('displays various information about the cluster', () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     const creationDate = sub({
       hours: 1,
@@ -223,13 +228,12 @@ describe('ClusterListItem', () => {
   });
 
   it('displays stats about worker nodes', async () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     nock(window.config.mapiEndpoint)
       .get(
@@ -270,13 +274,12 @@ describe('ClusterListItem', () => {
   });
 
   it(`displays the cluster's current status`, () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     const { rerender } = render(
       getComponent({
@@ -355,13 +358,12 @@ describe('ClusterListItem', () => {
   });
 
   it('displays information if an upgrade has been scheduled', async () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue({
-      canGet: true,
-      canList: true,
-      canUpdate: true,
-      canCreate: true,
-      canDelete: true,
-    });
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     const targetTime = `${format('dd MMM yy HH:mm')(
       add({ days: 1 })(new Date())

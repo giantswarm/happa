@@ -19,6 +19,7 @@ import * as ui from 'UI/Display/MAPI/releases/types';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailWidgetRelease from '../ClusterDetailWidgetRelease';
+import { usePermissionsForReleases } from '../permissions/usePermissionsForReleases';
 import { getReleaseComponentsDiff } from '../utils';
 
 function getComponent(
@@ -43,12 +44,30 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
+jest.mock('MAPI/releases/permissions/usePermissionsForReleases');
+
 describe('ClusterDetailWidgetRelease', () => {
   it('renders without crashing', () => {
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     render(getComponent({}));
   });
 
   it('displays loading animations if the cluster is still loading', () => {
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     render(
       getComponent({
         cluster: undefined,
@@ -59,6 +78,10 @@ describe('ClusterDetailWidgetRelease', () => {
   });
 
   it('displays the Kubernetes version used', async () => {
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/release.giantswarm.io/v1alpha1/releases/')
       .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
@@ -73,6 +96,10 @@ describe('ClusterDetailWidgetRelease', () => {
   });
 
   it('displays details about the release when clicking on the release version', async () => {
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/release.giantswarm.io/v1alpha1/releases/')
       .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
@@ -119,7 +146,42 @@ describe('ClusterDetailWidgetRelease', () => {
     );
   });
 
+  it('does not allow interacting with the upgradable version links if the user does not have permissions to upgrade clusters', async () => {
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/release.giantswarm.io/v1alpha1/releases/')
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
+
+    render(
+      getComponent({
+        cluster: capiv1alpha3Mocks.randomCluster1,
+        canUpdateCluster: false,
+      })
+    );
+
+    await waitForElementToBeRemoved(() => screen.queryByText('Loading...'));
+
+    fireEvent.click(screen.getByText('14.1.5'));
+
+    await screen.findByText('Details for release 14.1.5');
+    expect(
+      screen.getByText(/This cluster can be upgraded to/)
+    ).toBeInTheDocument();
+
+    const upgradableVersion = screen.getByText('v15.0.0');
+    fireEvent.click(upgradableVersion);
+
+    expect(screen.queryByText('Upgrade to 15.0.0')).not.toBeInTheDocument();
+  });
+
   it('displays information if an upgrade has been scheduled', async () => {
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/release.giantswarm.io/v1alpha1/releases/')
       .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
@@ -148,6 +210,10 @@ describe('ClusterDetailWidgetRelease', () => {
   });
 
   it('displays a warning when there is an upgrade available', async () => {
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/release.giantswarm.io/v1alpha1/releases/')
       .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
@@ -162,6 +228,10 @@ describe('ClusterDetailWidgetRelease', () => {
   });
 
   it('can upgrade a cluster', async () => {
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/release.giantswarm.io/v1alpha1/releases/')
       .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
@@ -191,6 +261,7 @@ describe('ClusterDetailWidgetRelease', () => {
     render(
       getComponent({
         cluster: capiv1alpha3Mocks.randomCluster1,
+        canUpdateCluster: true,
       })
     );
 
@@ -252,6 +323,33 @@ describe('ClusterDetailWidgetRelease', () => {
 
     expect(
       await screen.findByText('Cluster upgrade initiated.')
+    ).toBeInTheDocument();
+  });
+
+  it('displays a warning message and the cluster upgrade button as disabled if the user does not have permissions to upgrade clusters', async () => {
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/release.giantswarm.io/v1alpha1/releases/')
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
+
+    render(
+      getComponent({
+        cluster: capiv1alpha3Mocks.randomCluster1,
+        canUpdateCluster: false,
+      })
+    );
+
+    expect(
+      await screen.findByRole('button', { name: 'Upgrade cluster…' })
+    ).toBeDisabled();
+
+    expect(
+      screen.getByText(
+        'For upgrading this cluster, you need additional permissions. Please talk to your administrator.'
+      )
     ).toBeInTheDocument();
   });
 });

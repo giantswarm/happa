@@ -51,6 +51,7 @@ interface IClusterLabelsProps
   isLoading?: boolean;
   errorMessage?: string;
   showTitle?: boolean;
+  unauthorized?: boolean;
 }
 
 const ClusterLabels: FC<IClusterLabelsProps> = ({
@@ -59,6 +60,7 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
   isLoading,
   errorMessage,
   showTitle,
+  unauthorized,
   ...props
 }) => {
   const [allowEditing, setAllowEditing] = useState(true);
@@ -71,13 +73,15 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
       {noLabels ? (
         <NoLabels>
           This cluster has no labels.
-          <NoLabelsEditLabelTooltip
-            allowInteraction={!isLoading && allowEditing}
-            label=''
-            onOpen={(isOpen) => setAllowEditing(isOpen)}
-            onSave={onChange}
-            value=''
-          />
+          {!unauthorized && (
+            <NoLabelsEditLabelTooltip
+              allowInteraction={!isLoading && allowEditing}
+              label=''
+              onOpen={(isOpen) => setAllowEditing(isOpen)}
+              onSave={onChange}
+              value=''
+            />
+          )}
         </NoLabels>
       ) : (
         <>
@@ -91,16 +95,19 @@ const ClusterLabels: FC<IClusterLabelsProps> = ({
                     onOpen={(isOpen) => setAllowEditing(isOpen)}
                     onSave={onChange}
                     value={value}
+                    unauthorized={unauthorized}
                   />
                 </LabelWrapper>
               ))}
-            <EditLabelTooltip
-              allowInteraction={!isLoading && allowEditing}
-              label=''
-              onOpen={(isOpen) => setAllowEditing(isOpen)}
-              onSave={onChange}
-              value=''
-            />
+            {!unauthorized && (
+              <EditLabelTooltip
+                allowInteraction={!isLoading && allowEditing}
+                label=''
+                onOpen={(isOpen) => setAllowEditing(isOpen)}
+                onSave={onChange}
+                value=''
+              />
+            )}
           </LabelsWrapper>
           {errorMessage && (
             <ErrorText>Could not save labels. Please try again.</ErrorText>

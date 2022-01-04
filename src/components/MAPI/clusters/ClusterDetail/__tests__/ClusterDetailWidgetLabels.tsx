@@ -51,6 +51,7 @@ describe('ClusterDetailWidgetLabels', () => {
     render(
       getComponent({
         cluster: capiv1alpha3Mocks.randomCluster1,
+        canUpdateCluster: true,
       })
     );
 
@@ -87,6 +88,7 @@ describe('ClusterDetailWidgetLabels', () => {
     render(
       getComponent({
         cluster: capiv1alpha3Mocks.randomCluster1,
+        canUpdateCluster: true,
       })
     );
 
@@ -138,7 +140,7 @@ describe('ClusterDetailWidgetLabels', () => {
       )
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
 
-    render(getComponent({ cluster }));
+    render(getComponent({ cluster, canUpdateCluster: true }));
 
     fireEvent.click(
       screen.getByRole('button', {
@@ -155,5 +157,48 @@ describe('ClusterDetailWidgetLabels', () => {
     expect(
       await screen.findByText(`Successfully updated the cluster's labels`)
     ).toBeInTheDocument();
+  });
+
+  it('displays cluster labels as read-only if the user does not have permissions to update cluster resources', () => {
+    const cluster = {
+      ...capiv1alpha3Mocks.randomCluster1,
+      metadata: {
+        ...capiv1alpha3Mocks.randomCluster1.metadata,
+        labels: {
+          ...capiv1alpha3Mocks.randomCluster1.metadata.labels!,
+          'some-key': 'some-value',
+        },
+      },
+    };
+
+    render(getComponent({ cluster, canUpdateCluster: false }));
+
+    // Does not display add button
+    expect(
+      screen.queryByRole('button', {
+        name: 'Add label',
+      })
+    ).not.toBeInTheDocument();
+
+    // Does not display delete button for the label
+    expect(
+      screen.queryByRole('button', {
+        name: `Delete 'some-key' label`,
+      })
+    ).not.toBeInTheDocument();
+
+    // Does not allow editing by clicking on the label
+    const label = screen.getByLabelText('Label some-key with value some-value');
+
+    fireEvent.mouseOver(label);
+
+    expect(
+      screen.getByText('For editing labels, you need additional permissions.')
+    ).toBeInTheDocument();
+
+    fireEvent.click(label);
+
+    expect(screen.queryByLabelText('Label key')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Label value')).not.toBeInTheDocument();
   });
 });

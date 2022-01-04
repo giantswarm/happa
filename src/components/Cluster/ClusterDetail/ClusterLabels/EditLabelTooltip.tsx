@@ -19,17 +19,29 @@ interface IEditLabelTooltip {
 
   allowInteraction?: boolean;
   className?: string;
+  unauthorized?: boolean;
 }
 
 const EditLabelTooltipWrapper = styled.div`
   display: inline-block;
 `;
 
-const StyledValueLabel = styled(ValueLabel)<{ allowInteraction?: boolean }>`
+const StyledValueLabel = styled(ValueLabel)<{
+  allowInteraction?: boolean;
+  unauthorized?: boolean;
+}>`
   margin-bottom: 0;
 
-  cursor: ${({ allowInteraction }) =>
-    allowInteraction ? 'pointer' : 'default'};
+  cursor: ${({ allowInteraction, unauthorized }) => {
+    switch (true) {
+      case unauthorized:
+        return 'not-allowed';
+      case allowInteraction:
+        return 'pointer';
+      default:
+        return 'default';
+    }
+  }};
 
   :hover {
     text-decoration: ${({ allowInteraction }) =>
@@ -82,8 +94,11 @@ const StyledTooltip = styled(Tooltip)`
   z-index: 1069 !important;
 `;
 
-const LabelWrapper = styled(Box)<{ allowInteraction?: boolean }>`
-  padding-right: 8px;
+const LabelWrapper = styled(Box)<{
+  allowInteraction?: boolean;
+  unauthorized?: boolean;
+}>`
+  padding-right: ${({ unauthorized }) => (unauthorized ? 0 : '8px')};
   border-radius: 5px;
   outline: 1px solid ${({ theme }) => theme.colors.shade5};
 
@@ -100,6 +115,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
   value,
   allowInteraction,
   className,
+  unauthorized,
 }) => {
   const [currentlyEditing, setCurrentlyEditing] = useState(false);
 
@@ -140,7 +156,7 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
   };
 
   const open = () => {
-    if (allowInteraction === true) {
+    if (allowInteraction === true && !unauthorized) {
       setInternalKeyValue(label);
       setInternalValueValue(value);
       setCurrentlyEditing(true);
@@ -184,43 +200,55 @@ const EditLabelTooltip: FC<IEditLabelTooltip> = ({
           align='center'
           margin={{ right: 'xsmall', vertical: 'xxsmall' }}
           allowInteraction={allowInteraction}
+          unauthorized={unauthorized}
         >
-          <TooltipContainer
-            target={divElement}
-            content={<StyledTooltip>Click to edit label</StyledTooltip>}
-          >
-            <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
-              <StyledValueLabel
-                onClick={open}
-                label={
-                  <Editable allowInteraction={allowInteraction}>
-                    {label}
-                  </Editable>
+          <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
+            <span>
+              <TooltipContainer
+                target={divElement}
+                content={
+                  <StyledTooltip>
+                    {unauthorized
+                      ? 'For editing labels, you need additional permissions.'
+                      : 'Click to edit label'}
+                  </StyledTooltip>
                 }
-                value={
-                  <Editable allowInteraction={allowInteraction}>
-                    {value}
-                  </Editable>
-                }
-                tabIndex={allowInteraction ? 0 : -1}
-                role='button'
-                aria-label={`Label ${label} with value ${value}`}
-                aria-disabled={!allowInteraction || currentlyEditing}
-                allowInteraction={allowInteraction}
-                outline={false}
-              />
-            </Keyboard>
-          </TooltipContainer>
-          <DeleteLabelButton
-            allowInteraction={allowInteraction}
-            onOpen={onOpen}
-            onDelete={() => {
-              onSave({ key: label, value: null });
-            }}
-            role='button'
-            aria-label={`Delete '${label}' label`}
-            aria-disabled={!allowInteraction || currentlyEditing}
-          />
+              >
+                <StyledValueLabel
+                  onClick={open}
+                  label={
+                    <Editable allowInteraction={allowInteraction}>
+                      {label}
+                    </Editable>
+                  }
+                  value={
+                    <Editable allowInteraction={allowInteraction}>
+                      {value}
+                    </Editable>
+                  }
+                  tabIndex={allowInteraction ? 0 : -1}
+                  role='button'
+                  aria-label={`Label ${label} with value ${value}`}
+                  aria-disabled={!allowInteraction || currentlyEditing}
+                  allowInteraction={allowInteraction}
+                  unauthorized={unauthorized}
+                  outline={false}
+                />
+              </TooltipContainer>
+            </span>
+          </Keyboard>
+          {!unauthorized && (
+            <DeleteLabelButton
+              allowInteraction={allowInteraction}
+              onOpen={onOpen}
+              onDelete={() => {
+                onSave({ key: label, value: null });
+              }}
+              role='button'
+              aria-label={`Delete '${label}' label`}
+              aria-disabled={!allowInteraction || currentlyEditing}
+            />
+          )}
         </LabelWrapper>
       )}
       {currentlyEditing && (

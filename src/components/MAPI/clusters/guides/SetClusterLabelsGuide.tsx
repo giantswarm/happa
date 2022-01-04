@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import { Providers } from 'model/constants';
 import * as docs from 'model/constants/docs';
@@ -14,12 +15,14 @@ interface ISetClusterLabelsGuideProps
   clusterName: string;
   clusterNamespace: string;
   provider: PropertiesOf<typeof Providers>;
+  canUpdateCluster?: boolean;
 }
 
 const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
   clusterName,
   clusterNamespace,
   provider,
+  canUpdateCluster,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -56,6 +59,7 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {!canUpdateCluster && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Add a label to this cluster'

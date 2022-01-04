@@ -27,6 +27,7 @@ interface IClusterDetailReleaseDetailsModalProps {
   components?: IClusterDetailReleaseDetailsModalComponent[];
   releaseNotesURL?: string;
   supportedUpgradeVersions?: ui.IReleaseVersion[];
+  canUpdateCluster?: boolean;
 }
 
 const ClusterDetailReleaseDetailsModal: React.FC<
@@ -40,6 +41,7 @@ const ClusterDetailReleaseDetailsModal: React.FC<
   components,
   releaseNotesURL,
   supportedUpgradeVersions,
+  canUpdateCluster,
 }) => {
   const title = `Details for release ${version}`;
 
@@ -97,6 +99,7 @@ const ClusterDetailReleaseDetailsModal: React.FC<
             <ClusterDetailReleaseDetailsUpgradeOptions
               supportedVersions={supportedUpgradeVersions}
               onVersionClick={onUpgradeVersionSelect}
+              canUpdateCluster={canUpdateCluster}
             />
           </StyledReleaseDetailsModalSection>
         )}

@@ -221,6 +221,7 @@ class ViewAndEditName extends Component<
                 },
               }}
               contentProps={{ width: 'medium' }}
+              aria-label={`${typeLabel} ${variant}`}
             />
             {hasError && (
               <Tooltip

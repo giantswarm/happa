@@ -18,6 +18,7 @@ import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
+import { usePermissionsForCPNodes } from '../permissions/usePermissionsForCPNodes';
 import ClusterDetailHACPNodesSwitcher from './ClusterDetailHACPNodesSwitcher';
 import {
   canSwitchClusterToHACPNodes,
@@ -74,9 +75,15 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const controlPlaneNodesKey = cluster
-    ? fetchControlPlaneNodesForClusterKey(cluster)
-    : null;
+  const provider = window.config.info.general.provider;
+
+  const { canList, canUpdate } = usePermissionsForCPNodes(
+    provider,
+    cluster?.metadata.namespace ?? ''
+  );
+
+  const controlPlaneNodesKey =
+    cluster && canList ? fetchControlPlaneNodesForClusterKey(cluster) : null;
 
   const {
     data: controlPlaneNodes,
@@ -108,7 +115,7 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
       };
     }
 
-    if (typeof controlPlaneNodes === 'undefined') {
+    if (typeof controlPlaneNodes === 'undefined' || !canList) {
       return {
         totalCount: -1,
         readyCount: -1,
@@ -117,9 +124,7 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
     }
 
     return computeControlPlaneNodesStats(controlPlaneNodes);
-  }, [controlPlaneNodes, isLoading]);
-
-  const provider = window.config.info.general.provider;
+  }, [canList, controlPlaneNodes, isLoading]);
 
   const canSwitchToHA =
     typeof cluster !== 'undefined' &&
@@ -136,6 +141,10 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
 
   const onSwitchToHAExit = () => {
     setIsSwitchingToHA(false);
+  };
+
+  const handleSetSwitchToHA = () => {
+    if (canUpdate) setIsSwitchingToHA(true);
   };
 
   return (
@@ -191,10 +200,21 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
           />
 
           {!isSwitchingToHA && (
-            <Box animation={{ type: 'fadeIn', duration: 300 }}>
-              <Button onClick={() => setIsSwitchingToHA(true)}>
+            <Box
+              direction='row'
+              align='center'
+              gap='small'
+              animation={{ type: 'fadeIn', duration: 300 }}
+            >
+              <Button onClick={handleSetSwitchToHA} unauthorized={!canUpdate}>
                 Switch to high availability…
               </Button>
+              {!canUpdate && (
+                <Text size='small'>
+                  For switching to high availability, you need additional
+                  permissions. Please talk to your administrator.
+                </Text>
+              )}
             </Box>
           )}
         </Box>
