@@ -3,8 +3,12 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import { Box, Heading, Text } from 'grommet';
 import { AccountSettingsRoutes } from 'model/constants/routes';
 import * as featureFlags from 'model/featureFlags';
+import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { organizationsLoadMAPI } from 'model/stores/organization/actions';
+import { IState } from 'model/stores/state';
 import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
+import { useDispatch } from 'react-redux';
 import { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 import {
@@ -19,6 +23,7 @@ import TextInput from 'UI/Inputs/TextInput';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
 import { usePermissionsKey } from './permissions/usePermissions';
+import { extractErrorMessage } from './utils';
 
 interface IExperimentsProps {}
 
@@ -48,6 +53,22 @@ const Experiments: React.FC<IExperimentsProps> = () => {
     })();
   }, [auth]);
 
+  const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
+  const reloadOrganizations = async () => {
+    try {
+      await dispatch(organizationsLoadMAPI(auth));
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        `Could not reload organizations list.`,
+        messageType.ERROR,
+        messageTTL.LONG,
+        errorMessage
+      );
+    }
+  };
+
   const handleSetImpersonation = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -65,6 +86,8 @@ const Experiments: React.FC<IExperimentsProps> = () => {
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
+
+    reloadOrganizations();
   };
 
   const handleClearImpersonation = async () => {
@@ -80,6 +103,8 @@ const Experiments: React.FC<IExperimentsProps> = () => {
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
+
+    reloadOrganizations();
   };
 
   return (

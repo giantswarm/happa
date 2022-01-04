@@ -2,6 +2,20 @@ import { Config } from '@jest/types';
 import path from 'path';
 
 process.env.DEBUG_PRINT_LIMIT = '10000';
+const esModules = [
+  'bail',
+  'decode-named-character-reference',
+  'hast-util-whitespace',
+  'is-plain-obj',
+  'markdown-table',
+  'mdast-util',
+  'micromark',
+  'react-markdown',
+  'remark',
+  'trough',
+  'unified',
+  'unist-util',
+].join('|');
 
 const config: Config.InitialOptions = {
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
@@ -23,6 +37,7 @@ const config: Config.InitialOptions = {
       require.resolve('./test/assetsMock.ts'),
   },
   testPathIgnorePatterns: ['/node_modules/', 'node_modules_linux'],
+  transformIgnorePatterns: [`<rootDir>/node_modules/(?!(${esModules}))`],
   globals: {
     // window.config object will now be available in all tests
     config: {
