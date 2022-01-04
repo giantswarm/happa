@@ -742,7 +742,8 @@ export function isAppChangingVersion(app: applicationv1alpha1.IApp): boolean {
   if (!app.status) return false;
 
   return (
-    app.status.version.length > 0 && app.spec.version !== app.status.version
+    app.status.version.length > 0 &&
+    normalizeAppVersion(app.spec.version) !== app.status.version
   );
 }
 

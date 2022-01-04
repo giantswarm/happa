@@ -127,17 +127,24 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
       );
   }, [appCatalogEntryList]);
 
-  const isCurrentVersionSelected = currentSelectedVersion === app?.spec.version;
+  const normalizedAppVersion = useMemo(() => {
+    if (!app) return undefined;
+
+    return normalizeAppVersion(app.spec.version);
+  }, [app]);
+
+  const isCurrentVersionSelected =
+    currentSelectedVersion === normalizedAppVersion;
 
   const appPath = useMemo(() => {
-    if (!app) return '';
+    if (!app || !normalizedAppVersion) return '';
 
     return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
       catalogName: app.spec.catalog,
       app: app.spec.name,
-      version: app.spec.version,
+      version: normalizedAppVersion,
     });
-  }, [app]);
+  }, [app, normalizedAppVersion]);
 
   const [isSwitchingVersion, setIsSwitchingVersion] = useState(false);
 
@@ -146,10 +153,10 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
   };
 
   const versionSwitchComparison = useMemo(() => {
-    if (!currentSelectedVersion || !app) return 0;
+    if (!currentSelectedVersion || !normalizedAppVersion) return 0;
 
-    return compare(app.spec.version, currentSelectedVersion);
-  }, [app, currentSelectedVersion]);
+    return compare(normalizedAppVersion, currentSelectedVersion);
+  }, [normalizedAppVersion, currentSelectedVersion]);
 
   const isUpgrading = versionSwitchComparison < 0;
   const isDowngrading = versionSwitchComparison > 0;
@@ -283,7 +290,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
               />{' '}
               from version{' '}
               <Truncated as='code' numStart={TRUNCATE_START_CHARS}>
-                {app?.spec.version ?? ''}
+                {normalizedAppVersion ?? ''}
               </Truncated>{' '}
               to{' '}
               <Truncated as='code' numStart={TRUNCATE_START_CHARS}>

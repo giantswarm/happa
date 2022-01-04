@@ -12,7 +12,11 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
-import { getLatestVersionForApp, isAppChangingVersion } from './utils';
+import {
+  getLatestVersionForApp,
+  isAppChangingVersion,
+  normalizeAppVersion,
+} from './utils';
 
 interface IClusterDetailAppListWidgetVersionProps
   extends Omit<
@@ -88,7 +92,9 @@ const ClusterDetailAppListWidgetVersion: React.FC<
       app.spec.name
     );
 
-    return latestVersion && latestVersion !== app.spec.version;
+    return (
+      latestVersion && latestVersion !== normalizeAppVersion(app.spec.version)
+    );
   }, [app, appCatalogEntryList, isChangingVersion]);
 
   return (
