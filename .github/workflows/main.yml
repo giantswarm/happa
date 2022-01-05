@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Assign Author
-        uses: technote-space/assign-author@v1.5.14
+        uses: technote-space/assign-author@v1.5.15
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Validate PR Title
