@@ -18,11 +18,13 @@ import {
 interface IClusterDetailAppListItemStatusProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   app: applicationv1alpha1.IApp;
+  catalogNamespace?: string | null;
+  canListAppCatalogEntries?: boolean;
 }
 
 const ClusterDetailAppListItemStatus: React.FC<
   IClusterDetailAppListItemStatusProps
-> = ({ app, ...props }) => {
+> = ({ app, catalogNamespace, canListAppCatalogEntries, ...props }) => {
   const auth = useAuthProvider();
   const appCatalogEntryListClient = useHttpClient();
 
@@ -35,22 +37,25 @@ const ClusterDetailAppListItemStatus: React.FC<
             [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
           },
         },
+        namespace: catalogNamespace ?? undefined,
       };
-    }, [app]);
+    }, [app.spec.catalog, app.spec.name, catalogNamespace]);
+
+  const getAppCatalogEntryListKey = canListAppCatalogEntries
+    ? applicationv1alpha1.getAppCatalogEntryListKey(
+        appCatalogEntryListGetOptions
+      )
+    : null;
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,
     GenericResponseError
-  >(
-    applicationv1alpha1.getAppCatalogEntryListKey(
+  >(getAppCatalogEntryListKey, () =>
+    applicationv1alpha1.getAppCatalogEntryList(
+      appCatalogEntryListClient,
+      auth,
       appCatalogEntryListGetOptions
-    ),
-    () =>
-      applicationv1alpha1.getAppCatalogEntryList(
-        appCatalogEntryListClient,
-        auth,
-        appCatalogEntryListGetOptions
-      )
+    )
   );
 
   useEffect(() => {

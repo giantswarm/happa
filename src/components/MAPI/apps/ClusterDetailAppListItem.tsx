@@ -31,6 +31,7 @@ import ConfigureAppGuide from './guides/ConfigureAppGuide';
 import InspectInstalledAppGuide from './guides/InspectInstalledApp';
 import UninstallAppGuide from './guides/UninstallAppGuide';
 import UpdateAppGuide from './guides/UpdateAppGuide';
+import { usePermissionsForAppCatalogEntries } from './permissions/usePermissionsForAppCatalogEntries';
 import { usePermissionsForCatalogs } from './permissions/usePermissionsForCatalogs';
 import {
   getCatalogNamespace,
@@ -147,6 +148,9 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
     }
   }, [catalogNamespaceError]);
 
+  const { canList: canListAppCatalogEntries } =
+    usePermissionsForAppCatalogEntries(provider, catalogNamespace ?? '');
+
   return (
     <AccordionPanel
       ref={accordionRef}
@@ -206,7 +210,13 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
                   )}
                 </OptionalValue>
 
-                {app && <ClusterDetailAppListItemStatus app={app} />}
+                {app && (
+                  <ClusterDetailAppListItemStatus
+                    app={app}
+                    catalogNamespace={catalogNamespace}
+                    canListAppCatalogEntries={canListAppCatalogEntries}
+                  />
+                )}
               </Box>
             )}
           </Box>
@@ -222,6 +232,8 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
         <StyledBox wrap={true} direction='row'>
           <ClusterDetailAppListWidgetVersion
             app={app}
+            catalogNamespace={catalogNamespace}
+            canListAppCatalogEntries={canListAppCatalogEntries}
             basis='250px'
             flex={{ grow: 1, shrink: 1 }}
           />
@@ -245,6 +257,8 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             app={app}
             currentSelectedVersion={currentSelectedVersion}
             onSelectVersion={setCurrentSelectedVersion}
+            catalogNamespace={catalogNamespace}
+            canListAppCatalogEntries={canListAppCatalogEntries}
             basis='100%'
             margin={{ top: 'small' }}
           />

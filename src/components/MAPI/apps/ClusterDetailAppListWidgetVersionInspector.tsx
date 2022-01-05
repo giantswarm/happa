@@ -33,6 +33,8 @@ interface IClusterDetailAppListWidgetVersionInspectorProps
   app?: applicationv1alpha1.IApp;
   currentSelectedVersion?: string;
   onSelectVersion: (newVersion: string) => void;
+  catalogNamespace?: string | null;
+  canListAppCatalogEntries?: boolean;
 }
 
 const TRUNCATE_START_CHARS = 10;
@@ -40,7 +42,14 @@ const TRUNCATE_END_CHARS = 5;
 
 const ClusterDetailAppListWidgetVersionInspector: React.FC<
   IClusterDetailAppListWidgetVersionInspectorProps
-> = ({ app, currentSelectedVersion, onSelectVersion, ...props }) => {
+> = ({
+  app,
+  currentSelectedVersion,
+  onSelectVersion,
+  catalogNamespace,
+  canListAppCatalogEntries,
+  ...props
+}) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
@@ -57,15 +66,16 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
             [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
           },
         },
+        namespace: catalogNamespace ?? undefined,
       };
-    }, [app]);
+    }, [app, catalogNamespace]);
   const appCatalogEntryListKey = useMemo(() => {
-    if (!app) return null;
+    if (!app || !canListAppCatalogEntries) return null;
 
     return applicationv1alpha1.getAppCatalogEntryListKey(
       appCatalogEntryListGetOptions
     );
-  }, [app, appCatalogEntryListGetOptions]);
+  }, [app, appCatalogEntryListGetOptions, canListAppCatalogEntries]);
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,
@@ -95,7 +105,8 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
 
   const isLoading =
     typeof app === 'undefined' ||
-    (typeof appCatalogEntryList === 'undefined' &&
+    (canListAppCatalogEntries &&
+      typeof appCatalogEntryList === 'undefined' &&
       typeof appCatalogEntryListError === 'undefined');
 
   const currentEntry = useMemo(() => {
