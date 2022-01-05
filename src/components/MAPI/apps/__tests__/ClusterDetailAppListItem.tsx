@@ -20,6 +20,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListItem from '../ClusterDetailAppListItem';
+import { usePermissionsForAppCatalogEntries } from '../permissions/usePermissionsForAppCatalogEntries';
 import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
 
 function generateApp(
@@ -108,6 +109,7 @@ const defaultPermissions = {
 };
 
 jest.mock('MAPI/apps/permissions/usePermissionsForCatalogs');
+jest.mock('MAPI/apps/permissions/usePermissionsForAppCatalogEntries');
 
 function getComponent(
   props: React.ComponentPropsWithoutRef<typeof ClusterDetailAppListItem>
@@ -141,11 +143,17 @@ describe('ClusterDetailAppListItem', () => {
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
       defaultPermissions
     );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
     render(getComponent({}));
   });
 
   it('displays various information about the supported app versions', async () => {
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
       defaultPermissions
     );
 
@@ -221,6 +229,9 @@ describe('ClusterDetailAppListItem', () => {
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
       defaultPermissions
     );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     nock(window.config.mapiEndpoint)
       .get(
@@ -255,6 +266,9 @@ describe('ClusterDetailAppListItem', () => {
 
   it('can upgrade to a newer version', async () => {
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
       defaultPermissions
     );
 
@@ -323,6 +337,9 @@ describe('ClusterDetailAppListItem', () => {
 
   it('can downgrade to an older version', async () => {
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
       defaultPermissions
     );
 
