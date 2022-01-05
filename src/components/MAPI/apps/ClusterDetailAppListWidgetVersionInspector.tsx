@@ -14,6 +14,7 @@ import ClusterIDLabel, {
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import AppVersionInspectorOption from 'UI/Display/MAPI/apps/AppVersionInspectorOption';
 import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppListWidget';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import Select from 'UI/Inputs/Select';
 import Truncated from 'UI/Util/Truncated';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -23,6 +24,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 import { compare } from 'utils/semver';
 
+import { IAppsPermissions } from './permissions/types';
 import { normalizeAppVersion, updateAppVersion } from './utils';
 
 interface IClusterDetailAppListWidgetVersionInspectorProps
@@ -31,6 +33,7 @@ interface IClusterDetailAppListWidgetVersionInspectorProps
     'title'
   > {
   app?: applicationv1alpha1.IApp;
+  appsPermissions?: IAppsPermissions;
   currentSelectedVersion?: string;
   onSelectVersion: (newVersion: string) => void;
   catalogNamespace?: string | null;
@@ -42,8 +45,10 @@ const TRUNCATE_END_CHARS = 5;
 
 const ClusterDetailAppListWidgetVersionInspector: React.FC<
   IClusterDetailAppListWidgetVersionInspectorProps
+  // eslint-disable-next-line complexity
 > = ({
   app,
+  appsPermissions,
   currentSelectedVersion,
   onSelectVersion,
   catalogNamespace,
@@ -174,8 +179,10 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
 
   const [appUpdateIsLoading, setAppUpdateIsLoading] = useState(false);
 
+  const canUpdateApps = appsPermissions?.canGet && appsPermissions?.canUpdate;
+
   const handleSwitchVersions = async () => {
-    if (!app || !currentSelectedVersion) return;
+    if (!app || !currentSelectedVersion || !canUpdateApps) return;
 
     try {
       setAppUpdateIsLoading(true);
@@ -281,12 +288,26 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
             Details
           </Button>
         </Link>
-        <Button
-          disabled={isLoading || isCurrentVersionSelected || isSwitchingVersion}
-          onClick={() => setIsSwitchingVersion(true)}
+        <TooltipContainer
+          content={
+            <Tooltip>
+              For updating this app, you need additional permissions.
+            </Tooltip>
+          }
+          show={!canUpdateApps}
         >
-          Update…
-        </Button>
+          <Box>
+            <Button
+              disabled={
+                isLoading || isCurrentVersionSelected || isSwitchingVersion
+              }
+              unauthorized={!canUpdateApps}
+              onClick={() => setIsSwitchingVersion(true)}
+            >
+              Update…
+            </Button>
+          </Box>
+        </TooltipContainer>
       </Box>
 
       <Box margin={{ top: isSwitchingVersion ? 'small' : undefined }}>

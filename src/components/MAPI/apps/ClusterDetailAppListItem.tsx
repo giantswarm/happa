@@ -31,6 +31,7 @@ import ConfigureAppGuide from './guides/ConfigureAppGuide';
 import InspectInstalledAppGuide from './guides/InspectInstalledApp';
 import UninstallAppGuide from './guides/UninstallAppGuide';
 import UpdateAppGuide from './guides/UpdateAppGuide';
+import { IAppsPermissions } from './permissions/types';
 import { usePermissionsForAppCatalogEntries } from './permissions/usePermissionsForAppCatalogEntries';
 import { usePermissionsForCatalogs } from './permissions/usePermissionsForCatalogs';
 import {
@@ -58,12 +59,14 @@ const Header = styled(Box)`
 interface IClusterDetailAppListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   app?: applicationv1alpha1.IApp;
+  appsPermissions?: IAppsPermissions;
   isActive?: boolean;
   onAppUninstalled?: () => void;
 }
 
 const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
   app,
+  appsPermissions,
   isActive,
   onAppUninstalled,
 }) => {
@@ -255,6 +258,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           />
           <ClusterDetailAppListWidgetVersionInspector
             app={app}
+            appsPermissions={appsPermissions}
             currentSelectedVersion={currentSelectedVersion}
             onSelectVersion={setCurrentSelectedVersion}
             catalogNamespace={catalogNamespace}

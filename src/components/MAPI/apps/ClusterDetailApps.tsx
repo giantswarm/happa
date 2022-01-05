@@ -106,10 +106,10 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
   const auth = useAuthProvider();
 
   const appListClient = useRef(clientFactory());
-  const { canList: canListApps } = usePermissionsForApps(provider, clusterId);
+  const appsPermissions = usePermissionsForApps(provider, clusterId);
   const appListGetOptions = { namespace: clusterId };
 
-  const appListKey = canListApps
+  const appListKey = appsPermissions.canList
     ? applicationv1alpha1.getAppListKey(appListGetOptions)
     : null;
 
@@ -227,6 +227,7 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
           <h3>Installed Apps</h3>
           <ClusterDetailAppList
             apps={userInstalledApps}
+            appsPermissions={appsPermissions}
             isLoading={appListIsLoading}
             border={{ side: 'bottom' }}
             pad={{ bottom: 'medium' }}
