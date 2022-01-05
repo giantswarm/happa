@@ -287,6 +287,7 @@ describe('ClusterDetailAppListItem', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultPermissions,
       })
     );
 
@@ -358,6 +359,7 @@ describe('ClusterDetailAppListItem', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultPermissions,
       })
     );
 
@@ -404,5 +406,51 @@ describe('ClusterDetailAppListItem', () => {
     await withMarkup(screen.findByText)(
       `${app.metadata.name} on cluster ${app.metadata.namespace} will be downgraded to version ${newVersion}.`
     );
+  });
+
+  it(`does not allow updating an app for a 'read-only' user`, async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    const app = generateApp('coredns', '1.2.0');
+    const newVersion = '1.3.0';
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3D${app.metadata.name}%2Capplication.giantswarm.io%2Fcatalog%3D${app.spec.catalog}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
+      );
+
+    render(
+      getComponent({
+        app,
+        appsPermissions: { ...defaultPermissions, canUpdate: false },
+      })
+    );
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /Details/ })).not.toBeDisabled()
+    );
+
+    fireEvent.click(screen.getByLabelText('Select app version'));
+    fireEvent.click(screen.getByLabelText(newVersion));
+
+    const updateButton = screen.getByRole('button', { name: /Update/ });
+    expect(updateButton).toBeDisabled();
+
+    fireEvent.mouseEnter(updateButton);
+
+    expect(
+      screen.getByText(
+        'For updating this app, you need additional permissions.'
+      )
+    ).toBeInTheDocument();
   });
 });
