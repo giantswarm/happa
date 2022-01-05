@@ -11,14 +11,16 @@ import useSWR from 'swr';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
+import { IAppsPermissions } from './types';
+
 // eslint-disable-next-line no-magic-numbers
 const REFRESH_INTERVAL = 60 * 1000;
 
 export function usePermissionsForApps(
   _provider: PropertiesOf<typeof Providers>,
   namespace: string
-) {
-  const computed: Record<string, boolean | undefined> = {
+): IAppsPermissions {
+  const computed: IAppsPermissions = {
     canGet: false,
     canList: false,
     canUpdate: false,
