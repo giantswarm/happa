@@ -9,7 +9,7 @@ import {
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import useSWR, { useSWRConfig } from 'swr';
 import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppListWidget';
@@ -86,7 +86,12 @@ const ClusterDetailAppListWidgetCatalog: React.FC<
     }
   }, [catalogError]);
 
-  const catalogTitle = catalog ? computeAppCatalogUITitle(catalog) : undefined;
+  const catalogTitle = useMemo(() => {
+    if (catalogNamespace === null) return '';
+    if (!catalog) return undefined;
+
+    return computeAppCatalogUITitle(catalog);
+  }, [catalog, catalogNamespace]);
   const isManaged = catalog ? isAppCatalogVisibleToUsers(catalog) : false;
 
   return (
