@@ -14,6 +14,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
+import { IAppsPermissions } from './permissions/types';
 import { deleteAppWithName } from './utils';
 
 interface IClusterDetailAppListWidgetUninstallProps
@@ -22,17 +23,21 @@ interface IClusterDetailAppListWidgetUninstallProps
     'title'
   > {
   app?: applicationv1alpha1.IApp;
+  appsPermissions?: IAppsPermissions;
   onAppUninstalled?: () => void;
 }
 
 const ClusterDetailAppListWidgetUninstall: React.FC<
   IClusterDetailAppListWidgetUninstallProps
-> = ({ app, onAppUninstalled, ...props }) => {
+> = ({ app, appsPermissions, onAppUninstalled, ...props }) => {
   const auth = useAuthProvider();
   const appClient = useHttpClient();
 
+  const canUninstallApps =
+    appsPermissions?.canGet && appsPermissions?.canDelete;
+
   const uninstallApp = async () => {
-    if (!app) return;
+    if (!app || !canUninstallApps) return;
 
     try {
       await deleteAppWithName(
@@ -125,10 +130,15 @@ const ClusterDetailAppListWidgetUninstall: React.FC<
               animation={{ type: 'fadeIn', duration: 300 }}
             >
               <Text>
-                Uninstalling the app from this cluster will not remove the
-                configuration resources.
+                {canUninstallApps
+                  ? 'Uninstalling the app from this cluster will not remove the configuration resources.'
+                  : 'For uninstalling this app, you need additional permissions. Please talk to your administrator.'}
               </Text>
-              <Button secondary onClick={handleUninstall}>
+              <Button
+                secondary
+                onClick={handleUninstall}
+                unauthorized={!canUninstallApps}
+              >
                 Uninstall…
               </Button>
             </Box>

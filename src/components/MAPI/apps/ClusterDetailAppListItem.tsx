@@ -274,6 +274,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           />
           <ClusterDetailAppListWidgetUninstall
             app={app}
+            appsPermissions={appsPermissions}
             onAppUninstalled={onAppUninstalled}
             basis='100%'
             margin={{ top: 'small' }}
