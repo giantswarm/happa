@@ -13,6 +13,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListWidgetConfiguration from '../ClusterDetailAppListWidgetConfiguration';
+import { IAppsPermissions } from '../permissions/types';
 
 function generateApp(
   name: string = 'some-app',
@@ -115,6 +116,15 @@ function getComponent(
   );
 }
 
+const defaultAppsPermissions: IAppsPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+  canConfigure: true,
+};
+
 describe('ClusterDetailAppListWidgetConfiguration', () => {
   it('renders without crashing', () => {
     render(getComponent({}));
@@ -130,6 +140,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -154,6 +165,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -175,6 +187,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -272,6 +285,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -346,6 +360,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -442,6 +457,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 

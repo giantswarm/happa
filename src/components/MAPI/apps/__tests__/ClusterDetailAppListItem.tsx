@@ -20,6 +20,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListItem from '../ClusterDetailAppListItem';
+import { IAppsPermissions } from '../permissions/types';
 import { usePermissionsForAppCatalogEntries } from '../permissions/usePermissionsForAppCatalogEntries';
 import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
 
@@ -100,12 +101,13 @@ function generateApp(
   };
 }
 
-const defaultPermissions = {
+const defaultPermissions: IAppsPermissions = {
   canGet: true,
   canList: true,
   canUpdate: true,
   canCreate: true,
   canDelete: true,
+  canConfigure: true,
 };
 
 jest.mock('MAPI/apps/permissions/usePermissionsForCatalogs');
