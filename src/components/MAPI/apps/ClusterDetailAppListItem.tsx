@@ -297,14 +297,17 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
               newVersion={currentSelectedVersion ?? normalizedAppVersion!}
               catalogName={app.spec.catalog}
               catalogNamespace={catalogNamespace}
+              canUpdateApps={appsPermissions?.canUpdate}
             />
             <ConfigureAppGuide
               appName={app.metadata.name}
               namespace={app.metadata.namespace!}
+              canConfigureApps={appsPermissions?.canConfigure}
             />
             <UninstallAppGuide
               appName={app.metadata.name}
               namespace={app.metadata.namespace!}
+              canUninstallApps={appsPermissions?.canDelete}
             />
           </Box>
         )}
