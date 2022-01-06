@@ -526,4 +526,26 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
       )
     ).toBeInTheDocument();
   });
+
+  it('displays if the user does not have permissions to configure apps', () => {
+    render(
+      getComponent({
+        app: generateApp(),
+        appsPermissions: { ...defaultAppsPermissions, canConfigure: false },
+      })
+    );
+
+    // No permissions message is displayed twice: one for configMap values, one for secret values
+    const permissionsWarningMessages = screen.getAllByText(
+      'For setting those values, you need additional permissions.'
+    );
+    expect(permissionsWarningMessages).toHaveLength(2);
+
+    expect(
+      screen.getByRole('button', { name: 'Upload values' })
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Upload secret values' })
+    ).toBeDisabled();
+  });
 });
