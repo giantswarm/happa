@@ -268,6 +268,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           />
           <ClusterDetailAppListWidgetConfiguration
             app={app}
+            appsPermissions={appsPermissions}
             basis='100%'
             margin={{ top: 'small' }}
           />
