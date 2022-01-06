@@ -12,12 +12,13 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { IAppsPermissions } from './types';
+import { usePermissionsForAppConfigs } from './usePermissionsForAppConfigs';
 
 // eslint-disable-next-line no-magic-numbers
 const REFRESH_INTERVAL = 60 * 1000;
 
 export function usePermissionsForApps(
-  _provider: PropertiesOf<typeof Providers>,
+  provider: PropertiesOf<typeof Providers>,
   namespace: string
 ): IAppsPermissions {
   const computed: IAppsPermissions = {
@@ -26,6 +27,7 @@ export function usePermissionsForApps(
     canUpdate: false,
     canCreate: false,
     canDelete: false,
+    canConfigure: false,
   };
 
   const httpClientFactory = useHttpClientFactory();
@@ -68,6 +70,11 @@ export function usePermissionsForApps(
     }
   }, [error]);
 
+  const appConfigsPermissions = usePermissionsForAppConfigs(
+    provider,
+    namespace
+  );
+
   const isLoading =
     typeof appAccess === 'undefined' &&
     typeof error === 'undefined' &&
@@ -79,6 +86,7 @@ export function usePermissionsForApps(
     computed.canUpdate = undefined;
     computed.canCreate = undefined;
     computed.canDelete = undefined;
+    computed.canConfigure = undefined;
 
     return computed;
   }
@@ -90,6 +98,11 @@ export function usePermissionsForApps(
   computed.canUpdate = appAccess.update;
   computed.canCreate = appAccess.create;
   computed.canDelete = appAccess.delete;
+  computed.canConfigure =
+    appAccess.get &&
+    appAccess.update &&
+    appConfigsPermissions.canGet &&
+    appConfigsPermissions.canUpdate;
 
   return computed;
 }

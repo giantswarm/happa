@@ -4,4 +4,5 @@ export interface IAppsPermissions {
   canUpdate: boolean | undefined;
   canCreate: boolean | undefined;
   canDelete: boolean | undefined;
+  canConfigure: boolean | undefined;
 }
