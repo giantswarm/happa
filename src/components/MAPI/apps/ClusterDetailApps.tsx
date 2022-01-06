@@ -235,19 +235,21 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
             errorMessage={extractErrorMessage(appListError)}
           >
             <Box margin={{ top: 'medium' }}>
-              <Button
-                onClick={openAppCatalog}
-                disabled={appListIsLoading}
-                icon={
-                  <i
-                    className='fa fa-add-circle'
-                    role='presentation'
-                    aria-hidden='true'
-                  />
-                }
-              >
-                Install app
-              </Button>
+              {appsPermissions.canCreate && (
+                <Button
+                  onClick={openAppCatalog}
+                  disabled={appListIsLoading}
+                  icon={
+                    <i
+                      className='fa fa-add-circle'
+                      role='presentation'
+                      aria-hidden='true'
+                    />
+                  }
+                >
+                  Install app
+                </Button>
+              )}
             </Box>
             <Box margin={{ top: 'large' }} direction='column' gap='small'>
               <ListAppsGuide namespace={clusterId} />
