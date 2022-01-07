@@ -24,11 +24,13 @@ interface IClusterDetailAppListWidgetVersionProps
     'title'
   > {
   app?: applicationv1alpha1.IApp;
+  catalogNamespace?: string | null;
+  canListAppCatalogEntries?: boolean;
 }
 
 const ClusterDetailAppListWidgetVersion: React.FC<
   IClusterDetailAppListWidgetVersionProps
-> = ({ app, ...props }) => {
+> = ({ app, catalogNamespace, canListAppCatalogEntries, ...props }) => {
   const auth = useAuthProvider();
   const appCatalogEntryListClient = useHttpClient();
 
@@ -43,15 +45,16 @@ const ClusterDetailAppListWidgetVersion: React.FC<
             [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
           },
         },
+        namespace: catalogNamespace ?? undefined,
       };
-    }, [app]);
+    }, [app, catalogNamespace]);
   const appCatalogEntryListKey = useMemo(() => {
-    if (!app) return null;
+    if (!app || !canListAppCatalogEntries) return null;
 
     return applicationv1alpha1.getAppCatalogEntryListKey(
       appCatalogEntryListGetOptions
     );
-  }, [app, appCatalogEntryListGetOptions]);
+  }, [app, appCatalogEntryListGetOptions, canListAppCatalogEntries]);
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,

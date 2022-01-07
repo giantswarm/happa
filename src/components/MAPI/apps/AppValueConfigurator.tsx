@@ -50,11 +50,15 @@ function getTitleLabel(
 function getSubtitleLabel(
   variant: AppValueConfiguratorVariant,
   configName: string,
-  configNamespace: string
+  configNamespace: string,
+  canConfigureApps?: boolean
 ): React.ReactNode {
   const hasConfig = isConfigValid(configName, configNamespace);
 
   switch (true) {
+    case !canConfigureApps:
+      return 'For setting those values, you need additional permissions.';
+
     case variant === AppValueConfiguratorVariant.ConfigMap && hasConfig:
       return 'You can upload a YAML file here to update those values.';
 
@@ -115,11 +119,13 @@ interface IAppValueConfiguratorProps
   onUploadConfig?: (values: string) => Promise<void>;
   onReplaceConfig?: (values: string) => Promise<void>;
   isLoading?: boolean;
+  canConfigureApps?: boolean;
 }
 
 const AppValueConfigurator: React.FC<IAppValueConfiguratorProps> = ({
   configName,
   configNamespace,
+  canConfigureApps,
   isLoading,
   onUploadConfig,
   onReplaceConfig,
@@ -160,7 +166,12 @@ const AppValueConfigurator: React.FC<IAppValueConfiguratorProps> = ({
                 {getTitleLabel(variant!, configName, configNamespace)}
               </Text>
               <Text color='text-weak'>
-                {getSubtitleLabel(variant!, configName, configNamespace)}
+                {getSubtitleLabel(
+                  variant!,
+                  configName,
+                  configNamespace,
+                  canConfigureApps
+                )}
               </Text>
             </>
           )}
@@ -183,6 +194,7 @@ const AppValueConfigurator: React.FC<IAppValueConfiguratorProps> = ({
               }
               buttonText={getButtonLabel(variant!, configName, configNamespace)}
               onInputChange={handleFileUpload}
+              unauthorized={!canConfigureApps}
             />
           )}
         </Box>

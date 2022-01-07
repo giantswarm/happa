@@ -13,6 +13,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListWidgetConfiguration from '../ClusterDetailAppListWidgetConfiguration';
+import { IAppsPermissions } from '../permissions/types';
 
 function generateApp(
   name: string = 'some-app',
@@ -115,6 +116,15 @@ function getComponent(
   );
 }
 
+const defaultAppsPermissions: IAppsPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+  canConfigure: true,
+};
+
 describe('ClusterDetailAppListWidgetConfiguration', () => {
   it('renders without crashing', () => {
     render(getComponent({}));
@@ -130,6 +140,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -154,6 +165,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -175,6 +187,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -272,6 +285,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -346,6 +360,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -442,6 +457,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -509,5 +525,27 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
         `The Secret containing user level secret values for ${app.metadata.name} on ${app.metadata.namespace} has successfully been updated.`
       )
     ).toBeInTheDocument();
+  });
+
+  it('displays if the user does not have permissions to configure apps', () => {
+    render(
+      getComponent({
+        app: generateApp(),
+        appsPermissions: { ...defaultAppsPermissions, canConfigure: false },
+      })
+    );
+
+    // No permissions message is displayed twice: one for configMap values, one for secret values
+    const permissionsWarningMessages = screen.getAllByText(
+      'For setting those values, you need additional permissions.'
+    );
+    expect(permissionsWarningMessages).toHaveLength(2);
+
+    expect(
+      screen.getByRole('button', { name: 'Upload values' })
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Upload secret values' })
+    ).toBeDisabled();
   });
 });

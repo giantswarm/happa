@@ -10,6 +10,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListWidgetUninstall from '../ClusterDetailAppListWidgetUninstall';
+import { IAppsPermissions } from '../permissions/types';
 
 function getComponent(
   props: React.ComponentPropsWithoutRef<
@@ -108,6 +109,15 @@ function generateApp(
   };
 }
 
+const defaultPermissions: IAppsPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+  canConfigure: true,
+};
+
 describe('ClusterDetailAppWidgetUninstall', () => {
   it('renders without crashing', () => {
     render(getComponent({}));
@@ -126,7 +136,7 @@ describe('ClusterDetailAppWidgetUninstall', () => {
   it('displays the confirmation for uninstalling an app when the uninstall button is clicked', () => {
     const app = generateApp();
 
-    render(getComponent({ app }));
+    render(getComponent({ app, appsPermissions: defaultPermissions }));
 
     const uninstallButton = screen.getByRole('button', {
       name: /Uninstall/,
@@ -143,7 +153,7 @@ describe('ClusterDetailAppWidgetUninstall', () => {
   it('uninstalls an app', async () => {
     const app = generateApp();
 
-    render(getComponent({ app }));
+    render(getComponent({ app, appsPermissions: defaultPermissions }));
 
     const uninstallButton = screen.getByRole('button', {
       name: /Uninstall/,
@@ -181,6 +191,29 @@ describe('ClusterDetailAppWidgetUninstall', () => {
     expect(
       await withMarkup(screen.findByText)(
         `App ${app.metadata.name} will be uninstalled from cluster ${app.metadata.namespace}.`
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('displays if the user does not have permissions to uninstall an app', () => {
+    const app = generateApp();
+
+    render(
+      getComponent({
+        app,
+        appsPermissions: { ...defaultPermissions, canDelete: false },
+      })
+    );
+
+    expect(
+      screen.getByRole('button', {
+        name: /Uninstall/,
+      })
+    ).toBeDisabled();
+
+    expect(
+      screen.getByText(
+        'For uninstalling this app, you need additional permissions. Please talk to your administrator.'
       )
     ).toBeInTheDocument();
   });

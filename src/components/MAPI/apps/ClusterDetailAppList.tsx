@@ -3,18 +3,21 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useState } from 'react';
 
 import ClusterDetailAppListItem from './ClusterDetailAppListItem';
+import { IAppsPermissions } from './permissions/types';
 
 const LOADING_COMPONENTS = new Array(3).fill(0);
 
 interface IClusterDetailAppListProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   apps: applicationv1alpha1.IApp[];
+  appsPermissions?: IAppsPermissions;
   isLoading?: boolean;
   errorMessage?: string;
 }
 
 const ClusterDetailAppList: React.FC<IClusterDetailAppListProps> = ({
   apps,
+  appsPermissions,
   isLoading,
   children,
   errorMessage,
@@ -70,6 +73,7 @@ const ClusterDetailAppList: React.FC<IClusterDetailAppListProps> = ({
             <ClusterDetailAppListItem
               key={app.metadata.name}
               app={app}
+              appsPermissions={appsPermissions}
               isActive={activeIndex === idx}
               onAppUninstalled={resetActiveIndex}
             />

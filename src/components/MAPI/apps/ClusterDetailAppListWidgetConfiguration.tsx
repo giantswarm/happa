@@ -11,6 +11,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import AppValueConfigurator, {
   AppValueConfiguratorVariant,
 } from './AppValueConfigurator';
+import { IAppsPermissions } from './permissions/types';
 import { ensureConfigMapForApp, ensureSecretForApp } from './utils';
 
 interface IClusterDetailAppListWidgetConfigurationProps
@@ -19,16 +20,17 @@ interface IClusterDetailAppListWidgetConfigurationProps
     'title'
   > {
   app?: applicationv1alpha1.IApp;
+  appsPermissions?: IAppsPermissions;
 }
 
 const ClusterDetailAppListWidgetConfiguration: React.FC<
   IClusterDetailAppListWidgetConfigurationProps
-> = ({ app, ...props }) => {
+> = ({ app, appsPermissions, ...props }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   async function ensureAppConfig(values: string) {
-    if (!app) return;
+    if (!app || !appsPermissions?.canConfigure) return;
 
     try {
       const contents = yaml.dump(values);
@@ -91,7 +93,7 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
   }
 
   async function ensureAppSecret(values: string) {
-    if (!app) return;
+    if (!app || !appsPermissions?.canConfigure) return;
 
     try {
       const contents = yaml.dump(values);
@@ -153,7 +155,9 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
     }
   }
 
-  const isLoading = typeof app === 'undefined';
+  const isLoading =
+    typeof app === 'undefined' ||
+    typeof appsPermissions?.canConfigure === 'undefined';
 
   return (
     <ClusterDetailAppListWidget
@@ -168,6 +172,7 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
         variant={AppValueConfiguratorVariant.ConfigMap}
         onUploadConfig={ensureAppConfig}
         onReplaceConfig={ensureAppConfig}
+        canConfigureApps={appsPermissions?.canConfigure}
       />
       <AppValueConfigurator
         configName={app?.spec.userConfig?.secret?.name ?? ''}
@@ -176,6 +181,7 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
         variant={AppValueConfiguratorVariant.Secret}
         onUploadConfig={ensureAppSecret}
         onReplaceConfig={ensureAppSecret}
+        canConfigureApps={appsPermissions?.canConfigure}
       />
     </ClusterDetailAppListWidget>
   );

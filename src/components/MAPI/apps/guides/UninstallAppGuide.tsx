@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import * as docs from 'model/constants/docs';
 import React from 'react';
@@ -12,11 +13,13 @@ interface IUninstallAppGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   appName: string;
   namespace: string;
+  canUninstallApps?: boolean;
 }
 
 const UninstallAppGuide: React.FC<IUninstallAppGuideProps> = ({
   appName,
   namespace,
+  canUninstallApps,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -43,6 +46,7 @@ const UninstallAppGuide: React.FC<IUninstallAppGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {!canUninstallApps && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Remove the app resource'

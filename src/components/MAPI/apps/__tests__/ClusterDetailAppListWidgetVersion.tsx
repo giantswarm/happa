@@ -121,7 +121,7 @@ describe('ClusterDetailAppListWidgetVersion', () => {
   it('displays the current app version', () => {
     const app = generateApp('some-app', '1.2.3');
 
-    render(getComponent({ app }));
+    render(getComponent({ app, canListAppCatalogEntries: true }));
 
     expect(screen.getByLabelText('App version: 1.2.3')).toBeInTheDocument();
   });
@@ -130,7 +130,7 @@ describe('ClusterDetailAppListWidgetVersion', () => {
     const app = generateApp('some-app', '1.2.3');
     app.spec.version = '1.3.0';
 
-    render(getComponent({ app }));
+    render(getComponent({ app, canListAppCatalogEntries: true }));
 
     expect(screen.getByLabelText('App version: 1.2.3')).toBeInTheDocument();
     expect(screen.getByText('Switching to 1.3.0')).toBeInTheDocument();
@@ -140,7 +140,7 @@ describe('ClusterDetailAppListWidgetVersion', () => {
     const app = generateApp('some-app', '1.2.3');
     delete app.status;
 
-    render(getComponent({ app }));
+    render(getComponent({ app, canListAppCatalogEntries: true }));
 
     expect(screen.getByLabelText('App version: 1.2.3')).toBeInTheDocument();
   });
@@ -149,7 +149,7 @@ describe('ClusterDetailAppListWidgetVersion', () => {
     const app = generateApp('some-app', '1.2.3');
     delete app.status;
 
-    render(getComponent({ app }));
+    render(getComponent({ app, canListAppCatalogEntries: true }));
 
     expect(screen.getByLabelText('App version: 1.2.3')).toBeInTheDocument();
   });
@@ -167,7 +167,7 @@ describe('ClusterDetailAppListWidgetVersion', () => {
     const app = generateApp('coredns', '1.1.0');
     delete app.status;
 
-    render(getComponent({ app }));
+    render(getComponent({ app, canListAppCatalogEntries: true }));
 
     expect(screen.getByLabelText('App version: 1.1.0')).toBeInTheDocument();
 

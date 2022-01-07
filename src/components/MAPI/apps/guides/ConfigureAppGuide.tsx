@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import * as docs from 'model/constants/docs';
 import React from 'react';
@@ -12,11 +13,13 @@ interface IConfigureAppGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   appName: string;
   namespace: string;
+  canConfigureApps?: boolean;
 }
 
 const ConfigureAppGuide: React.FC<IConfigureAppGuideProps> = ({
   appName,
   namespace,
+  canConfigureApps,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -58,6 +61,7 @@ const ConfigureAppGuide: React.FC<IConfigureAppGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {!canConfigureApps && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Find your app configuration'

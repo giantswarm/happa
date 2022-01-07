@@ -20,6 +20,9 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListItem from '../ClusterDetailAppListItem';
+import { IAppsPermissions } from '../permissions/types';
+import { usePermissionsForAppCatalogEntries } from '../permissions/usePermissionsForAppCatalogEntries';
+import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
 
 function generateApp(
   name: string = 'some-app',
@@ -98,6 +101,18 @@ function generateApp(
   };
 }
 
+const defaultPermissions: IAppsPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+  canConfigure: true,
+};
+
+jest.mock('MAPI/apps/permissions/usePermissionsForCatalogs');
+jest.mock('MAPI/apps/permissions/usePermissionsForAppCatalogEntries');
+
 function getComponent(
   props: React.ComponentPropsWithoutRef<typeof ClusterDetailAppListItem>
 ) {
@@ -127,10 +142,23 @@ describe('ClusterDetailAppListItem', () => {
   jest.setTimeout(40000);
 
   it('renders without crashing', () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
     render(getComponent({}));
   });
 
   it('displays various information about the supported app versions', async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     const entryList = Object.assign(
       {},
       applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList,
@@ -200,6 +228,13 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('displays current version even if it is not in the list of supported versions', async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get(
         '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
@@ -232,6 +267,13 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('can upgrade to a newer version', async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     let app = generateApp('coredns', '1.2.0');
     const newVersion = '1.3.0';
 
@@ -247,6 +289,7 @@ describe('ClusterDetailAppListItem', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultPermissions,
       })
     );
 
@@ -296,6 +339,13 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('can downgrade to an older version', async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     let app = generateApp('coredns', '1.3.0');
     const newVersion = '1.2.0';
 
@@ -311,6 +361,7 @@ describe('ClusterDetailAppListItem', () => {
     render(
       getComponent({
         app,
+        appsPermissions: defaultPermissions,
       })
     );
 
@@ -357,5 +408,51 @@ describe('ClusterDetailAppListItem', () => {
     await withMarkup(screen.findByText)(
       `${app.metadata.name} on cluster ${app.metadata.namespace} will be downgraded to version ${newVersion}.`
     );
+  });
+
+  it(`does not allow updating an app for a 'read-only' user`, async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    const app = generateApp('coredns', '1.2.0');
+    const newVersion = '1.3.0';
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3D${app.metadata.name}%2Capplication.giantswarm.io%2Fcatalog%3D${app.spec.catalog}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
+      );
+
+    render(
+      getComponent({
+        app,
+        appsPermissions: { ...defaultPermissions, canUpdate: false },
+      })
+    );
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /Details/ })).not.toBeDisabled()
+    );
+
+    fireEvent.click(screen.getByLabelText('Select app version'));
+    fireEvent.click(screen.getByLabelText(newVersion));
+
+    const updateButton = screen.getByRole('button', { name: /Update/ });
+    expect(updateButton).toBeDisabled();
+
+    fireEvent.mouseEnter(updateButton);
+
+    expect(
+      screen.getByText(
+        'For updating this app, you need additional permissions.'
+      )
+    ).toBeInTheDocument();
   });
 });

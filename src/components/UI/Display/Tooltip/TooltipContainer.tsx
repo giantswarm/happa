@@ -3,12 +3,13 @@ import React, { useRef, useState } from 'react';
 interface ITooltipContainerProps {
   content: React.ReactElement;
   target?: React.RefObject<HTMLElement>;
+  show?: boolean;
   children?: React.ReactElement;
 }
 
 const TooltipContainer: React.FC<
   React.PropsWithChildren<ITooltipContainerProps>
-> = ({ content, target, children }) => {
+> = ({ content, target, show, children }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const createdTargetRef = useRef<HTMLElement>(null);
 
@@ -16,12 +17,13 @@ const TooltipContainer: React.FC<
 
   const handleMouseOver = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setTooltipVisible(true);
+    if (show) setTooltipVisible(true);
   };
 
   return (
     <>
       {tooltipVisible &&
+        show &&
         React.cloneElement(content, {
           target: tooltipTargetRef.current ?? undefined,
         })}
@@ -36,6 +38,10 @@ const TooltipContainer: React.FC<
         })}
     </>
   );
+};
+
+TooltipContainer.defaultProps = {
+  show: true,
 };
 
 export default TooltipContainer;

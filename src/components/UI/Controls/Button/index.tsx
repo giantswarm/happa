@@ -3,8 +3,11 @@ import React from 'react';
 import styled from 'styled-components';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 
-const StyledBox = styled(Box)`
+const StyledBox = styled(Box)<{ unauthorized?: boolean }>`
   display: inline-block;
+  :hover {
+    cursor: ${({ unauthorized }) => (unauthorized ? 'not-allowed' : 'pointer')};
+  }
 `;
 
 const StyledLoadingIndicator = styled(LoadingIndicator)`
@@ -19,9 +22,7 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
 `;
 
 const StyledControl = styled(Control)<{ unauthorized?: boolean }>`
-  :hover {
-    cursor: ${({ unauthorized }) => (unauthorized ? 'not-allowed' : 'pointer')};
-  }
+  pointer-events: ${({ unauthorized }) => (unauthorized ? 'none' : 'auto')};
 `;
 
 enum ButtonStyle {
@@ -166,6 +167,7 @@ const Button = React.forwardRef<
           width={{
             min: 'auto',
           }}
+          unauthorized={unauthorized}
           {...wrapperProps}
         >
           <StyledControl

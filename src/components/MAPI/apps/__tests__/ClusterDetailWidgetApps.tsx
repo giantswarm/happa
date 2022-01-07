@@ -12,6 +12,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailWidgetApps from '../ClusterDetailWidgetApps';
+import { IAppsPermissions } from '../permissions/types';
 import { usePermissionsForAppCatalogEntries } from '../permissions/usePermissionsForAppCatalogEntries';
 import { usePermissionsForApps } from '../permissions/usePermissionsForApps';
 import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
@@ -126,6 +127,15 @@ const defaultPermissions = {
   canDelete: true,
 };
 
+const defaultAppsPermissions: IAppsPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+  canConfigure: true,
+};
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: jest.fn().mockReturnValue({
@@ -140,7 +150,9 @@ jest.mock('MAPI/apps/permissions/usePermissionsForAppCatalogEntries');
 
 describe('ClusterDetailWidgetApps', () => {
   it('displays loading animations if the cluster is still loading', () => {
-    (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForApps as jest.Mock).mockReturnValue(
+      defaultAppsPermissions
+    );
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
       defaultPermissions
     );
@@ -154,7 +166,9 @@ describe('ClusterDetailWidgetApps', () => {
   });
 
   it('displays a placeholder if there are no apps', async () => {
-    (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForApps as jest.Mock).mockReturnValue(
+      defaultAppsPermissions
+    );
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
       defaultPermissions
     );
@@ -191,7 +205,7 @@ describe('ClusterDetailWidgetApps', () => {
 
   it('does not display a prompt to install apps if the user does not have permissions to do so', async () => {
     (usePermissionsForApps as jest.Mock).mockReturnValue({
-      ...defaultPermissions,
+      ...defaultAppsPermissions,
       canCreate: false,
     });
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
@@ -229,7 +243,9 @@ describe('ClusterDetailWidgetApps', () => {
   });
 
   it('displays stats about the apps installed in the cluster', async () => {
-    (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForApps as jest.Mock).mockReturnValue(
+      defaultAppsPermissions
+    );
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
       defaultPermissions
     );
@@ -262,7 +278,9 @@ describe('ClusterDetailWidgetApps', () => {
   });
 
   it('displays the number of upgradable apps', async () => {
-    (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForApps as jest.Mock).mockReturnValue(
+      defaultAppsPermissions
+    );
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
       defaultPermissions
     );
@@ -306,7 +324,9 @@ describe('ClusterDetailWidgetApps', () => {
   });
 
   it('does not display the number of upgradable apps if the user does not have permissions to get catalog resources', async () => {
-    (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForApps as jest.Mock).mockReturnValue(
+      defaultAppsPermissions
+    );
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue({
       ...defaultPermissions,
       canList: false,

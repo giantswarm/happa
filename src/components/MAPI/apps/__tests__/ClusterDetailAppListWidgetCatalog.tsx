@@ -143,7 +143,7 @@ describe('ClusterDetailAppListWidgetCatalog', () => {
 
     const app = generateApp('some-app', '1.2.3');
 
-    render(getComponent({ app }));
+    render(getComponent({ app, canReadCatalogs: true }));
 
     expect(
       await screen.findByLabelText('App catalog: Default Catalog')
@@ -176,7 +176,7 @@ describe('ClusterDetailAppListWidgetCatalog', () => {
     const app = generateApp('some-app', '1.2.3');
     app.spec.catalog = 'giantswarm';
 
-    render(getComponent({ app }));
+    render(getComponent({ app, canReadCatalogs: true }));
 
     expect(
       await screen.findByLabelText('App catalog: Giant Swarm Catalog')

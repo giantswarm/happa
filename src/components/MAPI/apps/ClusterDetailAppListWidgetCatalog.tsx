@@ -9,7 +9,7 @@ import {
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import useSWR, { useSWRConfig } from 'swr';
 import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppListWidget';
@@ -28,16 +28,18 @@ interface IClusterDetailAppListWidgetCatalogProps
     'title'
   > {
   app?: applicationv1alpha1.IApp;
+  canReadCatalogs?: boolean;
 }
 
 const ClusterDetailAppListWidgetCatalog: React.FC<
   IClusterDetailAppListWidgetCatalogProps
-> = ({ app, ...props }) => {
+> = ({ app, canReadCatalogs, ...props }) => {
   const auth = useAuthProvider();
   const clientFactory = useHttpClientFactory();
   const { cache } = useSWRConfig();
 
-  const catalogNamespaceKey = app ? getCatalogNamespaceKey(app) : null;
+  const catalogNamespaceKey =
+    canReadCatalogs && app ? getCatalogNamespaceKey(app) : null;
 
   const { data: catalogNamespace, error: catalogNamespaceError } = useSWR<
     string | null,
@@ -84,7 +86,12 @@ const ClusterDetailAppListWidgetCatalog: React.FC<
     }
   }, [catalogError]);
 
-  const catalogTitle = catalog ? computeAppCatalogUITitle(catalog) : undefined;
+  const catalogTitle = useMemo(() => {
+    if (catalogNamespace === null) return '';
+    if (!catalog) return undefined;
+
+    return computeAppCatalogUITitle(catalog);
+  }, [catalog, catalogNamespace]);
   const isManaged = catalog ? isAppCatalogVisibleToUsers(catalog) : false;
 
   return (

@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import * as docs from 'model/constants/docs';
 import React from 'react';
@@ -15,6 +16,7 @@ interface IUpdateAppGuideProps
   newVersion: string;
   catalogName: string;
   catalogNamespace: string;
+  canUpdateApps?: boolean;
 }
 
 const UpdateAppGuide: React.FC<IUpdateAppGuideProps> = ({
@@ -23,6 +25,7 @@ const UpdateAppGuide: React.FC<IUpdateAppGuideProps> = ({
   newVersion,
   catalogName,
   catalogNamespace,
+  canUpdateApps,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -59,6 +62,7 @@ const UpdateAppGuide: React.FC<IUpdateAppGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {!canUpdateApps && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Find out which versions are available for this app'

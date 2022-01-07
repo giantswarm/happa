@@ -31,6 +31,9 @@ import ConfigureAppGuide from './guides/ConfigureAppGuide';
 import InspectInstalledAppGuide from './guides/InspectInstalledApp';
 import UninstallAppGuide from './guides/UninstallAppGuide';
 import UpdateAppGuide from './guides/UpdateAppGuide';
+import { IAppsPermissions } from './permissions/types';
+import { usePermissionsForAppCatalogEntries } from './permissions/usePermissionsForAppCatalogEntries';
+import { usePermissionsForCatalogs } from './permissions/usePermissionsForCatalogs';
 import {
   getCatalogNamespace,
   getCatalogNamespaceKey,
@@ -56,12 +59,14 @@ const Header = styled(Box)`
 interface IClusterDetailAppListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   app?: applicationv1alpha1.IApp;
+  appsPermissions?: IAppsPermissions;
   isActive?: boolean;
   onAppUninstalled?: () => void;
 }
 
 const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
   app,
+  appsPermissions,
   isActive,
   onAppUninstalled,
 }) => {
@@ -110,11 +115,19 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
     }
   };
 
+  const provider = window.config.info.general.provider;
+
   const auth = useAuthProvider();
   const clientFactory = useHttpClientFactory();
   const { cache } = useSWRConfig();
 
-  const catalogNamespaceKey = app ? getCatalogNamespaceKey(app) : null;
+  const catalogPermissions = usePermissionsForCatalogs(provider, 'default');
+
+  const canReadCatalogs =
+    catalogPermissions.canList && catalogPermissions.canGet;
+
+  const catalogNamespaceKey =
+    canReadCatalogs && app ? getCatalogNamespaceKey(app) : null;
 
   const { data: catalogNamespace, error: catalogNamespaceError } = useSWR<
     string | null,
@@ -137,6 +150,9 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
       ErrorReporter.getInstance().notify(catalogNamespaceError);
     }
   }, [catalogNamespaceError]);
+
+  const { canList: canListAppCatalogEntries } =
+    usePermissionsForAppCatalogEntries(provider, catalogNamespace ?? '');
 
   return (
     <AccordionPanel
@@ -197,7 +213,13 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
                   )}
                 </OptionalValue>
 
-                {app && <ClusterDetailAppListItemStatus app={app} />}
+                {app && (
+                  <ClusterDetailAppListItemStatus
+                    app={app}
+                    catalogNamespace={catalogNamespace}
+                    canListAppCatalogEntries={canListAppCatalogEntries}
+                  />
+                )}
               </Box>
             )}
           </Box>
@@ -213,6 +235,8 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
         <StyledBox wrap={true} direction='row'>
           <ClusterDetailAppListWidgetVersion
             app={app}
+            catalogNamespace={catalogNamespace}
+            canListAppCatalogEntries={canListAppCatalogEntries}
             basis='250px'
             flex={{ grow: 1, shrink: 1 }}
           />
@@ -223,6 +247,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           />
           <ClusterDetailAppListWidgetCatalog
             app={app}
+            canReadCatalogs={canReadCatalogs}
             basis='250px'
             flex={{ grow: 1, shrink: 1 }}
           />
@@ -233,18 +258,23 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           />
           <ClusterDetailAppListWidgetVersionInspector
             app={app}
+            appsPermissions={appsPermissions}
             currentSelectedVersion={currentSelectedVersion}
             onSelectVersion={setCurrentSelectedVersion}
+            catalogNamespace={catalogNamespace}
+            canListAppCatalogEntries={canListAppCatalogEntries}
             basis='100%'
             margin={{ top: 'small' }}
           />
           <ClusterDetailAppListWidgetConfiguration
             app={app}
+            appsPermissions={appsPermissions}
             basis='100%'
             margin={{ top: 'small' }}
           />
           <ClusterDetailAppListWidgetUninstall
             app={app}
+            appsPermissions={appsPermissions}
             onAppUninstalled={onAppUninstalled}
             basis='100%'
             margin={{ top: 'small' }}
@@ -267,14 +297,17 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
               newVersion={currentSelectedVersion ?? normalizedAppVersion!}
               catalogName={app.spec.catalog}
               catalogNamespace={catalogNamespace}
+              canUpdateApps={appsPermissions?.canUpdate}
             />
             <ConfigureAppGuide
               appName={app.metadata.name}
               namespace={app.metadata.namespace!}
+              canConfigureApps={appsPermissions?.canConfigure}
             />
             <UninstallAppGuide
               appName={app.metadata.name}
               namespace={app.metadata.namespace!}
+              canUninstallApps={appsPermissions?.canDelete}
             />
           </Box>
         )}
