@@ -31,7 +31,6 @@ const config: webpack.Configuration = merge(common, {
   output: {
     filename: 'assets/[name].js',
   },
-  // @ts-expect-error
   devServer: {
     static: { directory: path.join(__dirname, 'src'), watch: false },
     hot: true,
