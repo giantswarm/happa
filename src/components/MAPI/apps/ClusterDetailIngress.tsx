@@ -18,6 +18,7 @@ import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
+import { usePermissionsForApps } from './permissions/usePermissionsForApps';
 import { findIngressApp } from './utils';
 
 const IngressWrapper = styled.div``;
@@ -53,17 +54,27 @@ const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
   const auth = useAuthProvider();
 
   const appListClient = useHttpClient();
+  const appsPermissions = usePermissionsForApps(
+    provider ?? window.config.info.general.provider,
+    clusterId
+  );
   const appListGetOptions = { namespace: clusterId };
+
+  const appListKey = appsPermissions.canList
+    ? applicationv1alpha1.getAppListKey(appListGetOptions)
+    : null;
+
   const {
     data: appList,
     error: appListError,
     isValidating: appListIsValidating,
   } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
-    applicationv1alpha1.getAppListKey(appListGetOptions),
+    appListKey,
     () => applicationv1alpha1.getAppList(appListClient, auth, appListGetOptions)
   );
   const appListIsLoading =
-    typeof appList === 'undefined' && appListIsValidating && !appListError;
+    typeof appsPermissions.canList === 'undefined' ||
+    (typeof appList === 'undefined' && appListIsValidating && !appListError);
 
   useEffect(() => {
     if (appListError) {
