@@ -102,7 +102,8 @@ export function usePermissionsForApps(
     appAccess.get &&
     appAccess.update &&
     appConfigsPermissions.canGet &&
-    appConfigsPermissions.canUpdate;
+    appConfigsPermissions.canUpdate &&
+    appConfigsPermissions.canCreate;
 
   return computed;
 }
