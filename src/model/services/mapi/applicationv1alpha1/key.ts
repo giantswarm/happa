@@ -32,7 +32,7 @@ export function getAppCatalogEntryReadmeURL(
 }
 
 export function getAppCurrentVersion(app: IApp): string {
-  if (!app.status) return app.spec.version;
+  if (!app.status || !app.status.version) return app.spec.version;
 
   return app.status.version;
 }
