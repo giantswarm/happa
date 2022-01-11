@@ -20,8 +20,7 @@ RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/rele
       tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
       && ln -s /usr/local/bin/node /usr/local/bin/nodejs;
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY headers.conf /etc/nginx/headers.conf
+COPY nginx /etc/nginx/
 COPY --chown=nginx tsconfig.json/ /tsconfig.json
 COPY --chown=nginx scripts/ /scripts
 COPY --from=compress --chown=nginx /www /www
