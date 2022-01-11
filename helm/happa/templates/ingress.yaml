@@ -17,11 +17,6 @@ metadata:
     {{- if .Values.security.restrictAccess.api }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ template "whitelistCIDR" . }}
     {{- end }}
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      add_header X-Frame-Options sameorigin always;
-      add_header X-XSS-Protection "1; mode=block" always;
-      add_header X-Content-Type-Options "nosniff" always;
-      add_header Referrer-Policy "no-referrer-when-downgrade" always;
 spec:
   ingressClassName: nginx
   rules:
