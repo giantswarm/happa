@@ -21,12 +21,13 @@ export function usePermissionsForAppConfigs(
   const computed: Record<string, boolean | undefined> = {
     canGet: false,
     canUpdate: false,
+    canCreate: false,
   };
 
   const httpClientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const verbs = ['get', 'update'] as const;
+  const verbs = ['get', 'update', 'create'] as const;
 
   const {
     data: configMapsAccess,
@@ -94,6 +95,7 @@ export function usePermissionsForAppConfigs(
   if (configMapsIsLoading || secretsIsLoading) {
     computed.canGet = undefined;
     computed.canUpdate = undefined;
+    computed.canCreate = undefined;
 
     return computed;
   }
@@ -102,6 +104,7 @@ export function usePermissionsForAppConfigs(
 
   computed.canGet = configMapsAccess.get && secretsAccess.get;
   computed.canUpdate = configMapsAccess.update && secretsAccess.update;
+  computed.canCreate = configMapsAccess.create && secretsAccess.create;
 
   return computed;
 }
