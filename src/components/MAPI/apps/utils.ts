@@ -890,15 +890,31 @@ export async function hasNewerVersion(
   if (cachedAppCatalogEntryList) {
     appCatalogEntryListItems.push(...cachedAppCatalogEntryList.items);
   } else {
-    const appCatalogEntryList =
-      await applicationv1alpha1.getAppCatalogEntryList(
-        clientFactory(),
-        auth,
-        appCatalogEntryListGetOptions
-      );
+    try {
+      const appCatalogEntryList =
+        await applicationv1alpha1.getAppCatalogEntryList(
+          clientFactory(),
+          auth,
+          appCatalogEntryListGetOptions
+        );
 
-    appCatalogEntryListItems.push(...appCatalogEntryList.items);
-    cache.set(appCatalogEntryListKey, appCatalogEntryList);
+      appCatalogEntryListItems.push(...appCatalogEntryList.items);
+      cache.set(appCatalogEntryListKey, appCatalogEntryList);
+    } catch (err) {
+      if (
+        !metav1.isStatusError(
+          (err as GenericResponse).data,
+          metav1.K8sStatusErrorReasons.Forbidden
+        )
+      ) {
+        return Promise.reject(err);
+      }
+
+      return {
+        name: app.spec.name,
+        hasNewerVersion: false,
+      };
+    }
   }
 
   const latestVersion = getLatestVersionForApp(
@@ -910,7 +926,7 @@ export async function hasNewerVersion(
     name: app.spec.name,
     hasNewerVersion:
       typeof latestVersion !== 'undefined' &&
-      latestVersion !== app.spec.version,
+      latestVersion !== normalizeAppVersion(app.spec.version),
   };
 }
 
