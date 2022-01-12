@@ -17,6 +17,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import OrganizationIndex from '../OrganizationIndex';
+import { usePermissionsForOrganizations } from '../permissions/usePermissionsForOrganizations';
 
 const defaultState: IState = {
   ...preloginState,
@@ -136,17 +137,32 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canCreate: true,
+  canDelete: true,
+  canConfigure: true,
+};
+
 jest.unmock(
   'model/services/mapi/authorizationv1/createSelfSubjectAccessReview'
 );
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganizationList');
 
+jest.mock('../permissions/usePermissionsForOrganizations');
+
 describe('OrganizationIndex', () => {
   it('renders without crashing', () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
     render(getComponent({}));
   });
 
   it('displays organizations and their cluster counts', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     const randomClusterList = generateClusterList([
       generateCluster(),
       generateCluster(),
@@ -184,6 +200,10 @@ describe('OrganizationIndex', () => {
   });
 
   it('displays organizations and their cluster counts for a user that doesn`t have permissions to list clusters at the cluster scope', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     const randomClusterList1 = generateClusterList([
       generateCluster(),
       generateCluster(),
@@ -227,6 +247,10 @@ describe('OrganizationIndex', () => {
   });
 
   it('displays the button to create an organization', () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     const randomClusterList = generateClusterList([]);
 
     nock(window.config.mapiEndpoint)
@@ -258,6 +282,10 @@ describe('OrganizationIndex', () => {
   });
 
   it('can create an organization', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     const randomClusterList = generateClusterList([]);
 
     nock(window.config.mapiEndpoint)
@@ -340,6 +368,10 @@ describe('OrganizationIndex', () => {
   });
 
   it('can cancel an organization creation', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     const randomClusterList = generateClusterList([]);
 
     nock(window.config.mapiEndpoint)
@@ -401,6 +433,10 @@ describe('OrganizationIndex', () => {
   });
 
   it('displays an error if an organization cannot be created', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .post('/apis/security.giantswarm.io/v1alpha1/organizations/')
       .reply(StatusCodes.InternalServerError, {
