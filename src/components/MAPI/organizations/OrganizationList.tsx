@@ -157,7 +157,9 @@ const OrganizationIndex: React.FC = () => {
 
       <Box margin={{ top: 'large' }} direction='column' gap='small'>
         <ListOrganizationsGuide />
-        <CreateOrganizationGuide />
+        <CreateOrganizationGuide
+          canCreateOrganizations={canCreateOrganizations}
+        />
       </Box>
     </DocumentTitle>
   );
