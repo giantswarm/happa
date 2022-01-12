@@ -2,6 +2,7 @@ import { Cluster, ClusterList } from 'MAPI/types';
 import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { Providers } from 'model/constants';
+import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import { Cache } from 'swr';
@@ -79,6 +80,28 @@ export async function fetchClusterListForOrganizations(
   provider: PropertiesOf<typeof Providers>,
   organizations: Record<string, IOrganization>
 ): Promise<ClusterList> {
+  const request: authorizationv1.ISelfSubjectAccessReviewSpec = {
+    resourceAttributes: {
+      namespace: '',
+      verb: 'list',
+      group: 'cluster.x-k8s.io',
+      resource: 'clusters',
+    },
+  };
+
+  const accessReviewResponse =
+    await authorizationv1.createSelfSubjectAccessReview(
+      httpClientFactory(),
+      auth,
+      request
+    );
+
+  if (accessReviewResponse.status?.allowed) {
+    // If the user has access to list clusters at the cluster scope,
+    // return the function to list clusters at the cluster scope
+    return fetchClusterList(httpClientFactory, auth, provider, '');
+  }
+
   const clusterList: capiv1alpha3.IClusterList = {
     apiVersion: 'cluster.x-k8s.io/v1alpha3',
     kind: capiv1alpha3.ClusterList,
@@ -86,20 +109,19 @@ export async function fetchClusterListForOrganizations(
     items: [],
   };
 
-  for (const [organizationName, organizationEntry] of Object.entries(
-    organizations
-  )) {
-    const clusterListKey = fetchClusterListKey(
-      provider,
-      organizationEntry.namespace,
-      organizationName
-    );
-    const cachedClusterList: capiv1alpha3.IClusterList | undefined =
-      cache.get(clusterListKey);
+  const requests = Object.entries(organizations).map(
+    async ([organizationName, organizationEntry]) => {
+      const clusterListKey = fetchClusterListKey(
+        provider,
+        organizationEntry.namespace,
+        organizationName
+      );
+      const cachedClusterList: capiv1alpha3.IClusterList | undefined =
+        cache.get(clusterListKey);
 
-    if (cachedClusterList) {
-      clusterList.items.push(...cachedClusterList.items);
-    } else {
+      if (cachedClusterList) {
+        return cachedClusterList.items;
+      }
       try {
         const clusters = await fetchClusterList(
           httpClientFactory,
@@ -109,8 +131,9 @@ export async function fetchClusterListForOrganizations(
           organizationName
         );
 
-        clusterList.items.push(...clusters.items);
         cache.set(clusterListKey, clusters);
+
+        return clusters.items;
       } catch (err) {
         if (
           !metav1.isStatusError(
@@ -118,10 +141,24 @@ export async function fetchClusterListForOrganizations(
             metav1.K8sStatusErrorReasons.Forbidden
           )
         ) {
+          // If the request failed due to non-permission-related reasons (non-403),
+          // return the error
           return Promise.reject(err);
         }
-        continue;
+
+        return [];
       }
+    }
+  );
+
+  const responses = await Promise.allSettled(requests);
+  for (const response of responses) {
+    if (response.status === 'rejected') {
+      return Promise.reject(response.reason);
+    }
+
+    if (response.status === 'fulfilled') {
+      clusterList.items.push(...response.value);
     }
   }
 
