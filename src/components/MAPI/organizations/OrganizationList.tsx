@@ -2,11 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import { ClusterList } from 'MAPI/types';
-import {
-  extractErrorMessage,
-  fetchClusterList,
-  fetchClusterListKey,
-} from 'MAPI/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
@@ -15,7 +11,7 @@ import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DocumentTitle from 'shared/DocumentTitle';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import OrganizationListPage from 'UI/Display/Organizations/OrganizationListPage';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -26,7 +22,11 @@ import RoutePath from 'utils/routePath';
 import CreateOrganizationGuide from './guides/CreateOrganizationGuide';
 import ListOrganizationsGuide from './guides/ListOrganizationsGuide';
 import OrganizationListCreateOrg from './OrganizationListCreateOrg';
-import { computeClusterCountersForOrganizations } from './utils';
+import {
+  computeClusterCountersForOrganizations,
+  fetchClusterListForOrganizations,
+  fetchClusterListForOrganizationsKey,
+} from './utils';
 
 const OrganizationIndex: React.FC = () => {
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
@@ -36,12 +36,19 @@ const OrganizationIndex: React.FC = () => {
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
+  const { cache } = useSWRConfig();
 
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterList,
     GenericResponseError
-  >(fetchClusterListKey(provider, ''), () =>
-    fetchClusterList(clientFactory, auth, provider, '')
+  >(fetchClusterListForOrganizationsKey(organizations), () =>
+    fetchClusterListForOrganizations(
+      clientFactory,
+      auth,
+      cache,
+      provider,
+      organizations
+    )
   );
 
   useEffect(() => {

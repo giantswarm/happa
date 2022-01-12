@@ -1,5 +1,12 @@
-import { Cluster } from 'MAPI/types';
+import { Cluster, ClusterList } from 'MAPI/types';
+import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
+import { GenericResponse } from 'model/clients/GenericResponse';
+import { Providers } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as metav1 from 'model/services/mapi/metav1';
+import { Cache } from 'swr';
+import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 export enum OrganizationNameStatusMessage {
   TooShort = `Must be at least 4 characters long`,
@@ -63,4 +70,66 @@ export function computeClusterCountersForOrganizations(clusters?: Cluster[]) {
 
     return acc;
   }, {});
+}
+
+export async function fetchClusterListForOrganizations(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cache: Cache,
+  provider: PropertiesOf<typeof Providers>,
+  organizations: Record<string, IOrganization>
+): Promise<ClusterList> {
+  const clusterList: capiv1alpha3.IClusterList = {
+    apiVersion: 'cluster.x-k8s.io/v1alpha3',
+    kind: capiv1alpha3.ClusterList,
+    metadata: {},
+    items: [],
+  };
+
+  for (const [organizationName, organizationEntry] of Object.entries(
+    organizations
+  )) {
+    const clusterListKey = fetchClusterListKey(
+      provider,
+      organizationEntry.namespace,
+      organizationName
+    );
+    const cachedClusterList: capiv1alpha3.IClusterList | undefined =
+      cache.get(clusterListKey);
+
+    if (cachedClusterList) {
+      clusterList.items.push(...cachedClusterList.items);
+    } else {
+      try {
+        const clusters = await fetchClusterList(
+          httpClientFactory,
+          auth,
+          provider,
+          organizationEntry.namespace,
+          organizationName
+        );
+
+        clusterList.items.push(...clusters.items);
+        cache.set(clusterListKey, clusters);
+      } catch (err) {
+        if (
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.Forbidden
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        continue;
+      }
+    }
+  }
+
+  return clusterList;
+}
+
+export function fetchClusterListForOrganizationsKey(
+  organizations: Record<string, IOrganization>
+): string {
+  return `fetchClusterListForOrgs/${Object.keys(organizations).join('/')}`;
 }
