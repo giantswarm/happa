@@ -1,6 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
-import { Box } from 'grommet';
+import { Box, Text } from 'grommet';
 import { ClusterList } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -22,6 +22,7 @@ import RoutePath from 'utils/routePath';
 import CreateOrganizationGuide from './guides/CreateOrganizationGuide';
 import ListOrganizationsGuide from './guides/ListOrganizationsGuide';
 import OrganizationListCreateOrg from './OrganizationListCreateOrg';
+import { usePermissionsForOrganizations } from './permissions/usePermissionsForOrganizations';
 import {
   computeClusterCountersForOrganizations,
   fetchClusterListForOrganizations,
@@ -105,6 +106,13 @@ const OrganizationIndex: React.FC = () => {
     setIsCreateFormOpen(false);
   };
 
+  const { canCreate: canCreateOrganizations } = usePermissionsForOrganizations(
+    provider,
+    ''
+  );
+
+  const orgPermissionsIsLoading = typeof canCreateOrganizations === 'undefined';
+
   return (
     <DocumentTitle title='Organizations'>
       <OrganizationListPage
@@ -117,11 +125,19 @@ const OrganizationIndex: React.FC = () => {
           open={isCreateFormOpen}
           onSubmit={handleCloseCreateForm}
           onCancel={handleCloseCreateForm}
+          canCreate={canCreateOrganizations}
         />
 
         {!isCreateFormOpen && (
-          <Box animation={{ type: 'fadeIn', duration: 300 }}>
-            <Button onClick={handleOpenCreateForm}>
+          <Box
+            animation={{ type: 'fadeIn', duration: 300 }}
+            direction='row'
+            align='center'
+          >
+            <Button
+              onClick={handleOpenCreateForm}
+              unauthorized={!canCreateOrganizations}
+            >
               <i
                 className='fa fa-add-circle'
                 role='presentation'
@@ -129,6 +145,12 @@ const OrganizationIndex: React.FC = () => {
               />{' '}
               Add organization
             </Button>
+            {!orgPermissionsIsLoading && !canCreateOrganizations && (
+              <Text margin={{ left: 'small' }} color='text-weak'>
+                For creating an organization, you need additional permissions.
+                Please talk to your administrator.
+              </Text>
+            )}
           </Box>
         )}
       </Box>
