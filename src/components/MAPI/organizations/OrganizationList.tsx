@@ -125,7 +125,7 @@ const OrganizationIndex: React.FC = () => {
           open={isCreateFormOpen}
           onSubmit={handleCloseCreateForm}
           onCancel={handleCloseCreateForm}
-          canCreate={canCreateOrganizations}
+          canCreateOrganizations={canCreateOrganizations}
         />
 
         {!isCreateFormOpen && (

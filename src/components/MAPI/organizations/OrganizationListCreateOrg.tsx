@@ -24,11 +24,13 @@ interface IOrganizationListCreateOrgProps
   extends React.ComponentPropsWithoutRef<typeof Collapsible> {
   onSubmit?: () => void;
   onCancel?: () => void;
+  canCreateOrganizations?: boolean;
 }
 
 const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
   onSubmit,
   onCancel,
+  canCreateOrganizations,
   open,
   ...props
 }) => {
@@ -80,7 +82,7 @@ const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
   const handleSubmit = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
 
-    if (!isValid) return;
+    if (!isValid || !canCreateOrganizations) return;
 
     setIsCreating(true);
 
