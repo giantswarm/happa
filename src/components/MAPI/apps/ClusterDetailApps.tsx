@@ -127,9 +127,10 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
       )
   );
   const appListIsLoading =
-    appListIsValidating &&
-    typeof appList === 'undefined' &&
-    typeof appListError === 'undefined';
+    typeof appsPermissions.canList === 'undefined' ||
+    (appListIsValidating &&
+      typeof appList === 'undefined' &&
+      typeof appListError === 'undefined');
 
   useEffect(() => {
     if (appListError) {

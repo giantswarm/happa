@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { Constants } from 'model/constants';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -17,6 +18,8 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
+import { usePermissionsForAppCatalogEntries } from './permissions/usePermissionsForAppCatalogEntries';
+import { usePermissionsForApps } from './permissions/usePermissionsForApps';
 import {
   createIngressApp,
   findIngressApp,
@@ -46,21 +49,31 @@ interface IInstallIngressButtonProps
   clusterID: string;
 }
 
+// eslint-disable-next-line complexity
 const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   clusterID,
 }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const provider = window.config.info.general.provider;
+
   const appListClient = useRef(clientFactory());
   const appListGetOptions = { namespace: clusterID };
+
+  const appsPermissions = usePermissionsForApps(provider, clusterID);
+
+  const appListKey = appsPermissions?.canList
+    ? applicationv1alpha1.getAppListKey(appListGetOptions)
+    : null;
+
   const {
     data: appList,
     isValidating: appListIsValidating,
     error: appListError,
     mutate: mutateAppList,
   } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
-    applicationv1alpha1.getAppListKey(appListGetOptions),
+    appListKey,
     () =>
       applicationv1alpha1.getAppList(
         appListClient.current,
@@ -81,12 +94,22 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   );
 
   const appCatalogEntryClient = useRef(clientFactory());
+  const { canList: canListAppCatalogEntries } =
+    usePermissionsForAppCatalogEntries(
+      provider,
+      Constants.INSTALL_INGRESS_TAB_CATALOG_NAMESPACE
+    );
+
+  const ingressAppCatalogEntryKey = canListAppCatalogEntries
+    ? getIngressAppCatalogEntryKey(appList?.items)
+    : null;
+
   const {
     data: ingressAppToInstall,
     error: ingressAppToInstallError,
     isValidating: ingressAppToInstallIsValidating,
   } = useSWR<applicationv1alpha1.IAppCatalogEntry | null, GenericResponseError>(
-    getIngressAppCatalogEntryKey(appList?.items),
+    ingressAppCatalogEntryKey,
     () => getIngressAppCatalogEntry(appCatalogEntryClient.current, auth)
   );
 
@@ -110,8 +133,16 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 
   const [isInstalling, setIsInstalling] = useState(false);
 
+  const canInstallIngress =
+    appsPermissions.canCreate && appsPermissions.canConfigure;
+
   let isLoading = false;
   switch (true) {
+    case typeof canInstallIngress === 'undefined':
+      isLoading = true;
+      break;
+    case !canInstallIngress:
+      break;
     case !errorMessage && isInstalling:
       isLoading = true;
       break;
@@ -126,7 +157,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   }
 
   const handleClick = async () => {
-    if (!ingressAppToInstall) return Promise.resolve();
+    if (!ingressAppToInstall || !canInstallIngress) return Promise.resolve();
 
     try {
       setIsInstalling(true);
@@ -187,6 +218,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
           primary={true}
           loadingTimeout={0}
           disabled={installationIsDisabled}
+          unauthorized={!canInstallIngress}
           onClick={handleClick}
         >
           Install ingress controller
@@ -208,15 +240,22 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
         <Text>🎉 Ingress controller installed.</Text>
       )}
 
-      {!errorMessage && ingressAppToInstall && (
-        <Text margin={{ left: 'small' }}>
-          This will install the{' '}
-          <StyledLink to={appDetailPath} href={appDetailPath}>
-            NGINX Ingress Controller app {ingressAppToInstall.spec.version}
-          </StyledLink>{' '}
-          on cluster <ClusterIDLabel clusterID={clusterID} />
-        </Text>
-      )}
+      {!errorMessage &&
+        ingressAppToInstall &&
+        (canInstallIngress ? (
+          <Text margin={{ left: 'small' }}>
+            This will install the{' '}
+            <StyledLink to={appDetailPath} href={appDetailPath}>
+              NGINX Ingress Controller app {ingressAppToInstall.spec.version}
+            </StyledLink>{' '}
+            on cluster <ClusterIDLabel clusterID={clusterID} />
+          </Text>
+        ) : (
+          <Text margin={{ left: 'small' }}>
+            For installing an Ingress controller, you need additional
+            permissions. Please talk to your administrator.
+          </Text>
+        ))}
     </Wrapper>
   );
 };

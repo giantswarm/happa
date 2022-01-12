@@ -651,6 +651,7 @@ const ingressAppCatalogEntryListGetOptions = {
       [applicationv1alpha1.labelLatest]: 'true',
     },
   },
+  namespace: Constants.INSTALL_INGRESS_TAB_CATALOG_NAMESPACE,
 };
 
 export async function getIngressAppCatalogEntry(
