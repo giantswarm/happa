@@ -19,3 +19,11 @@ export function getUiDisplay(role: IRole | IClusterRole): boolean | undefined {
 export function getAppBranch(role: IRole | IClusterRole): string | undefined {
   return role.metadata.labels?.['app.giantswarm.io/branch'];
 }
+
+export function getRoleDescription(
+  role: IRole | IClusterRole
+): string | undefined {
+  if (!role.metadata.annotations) return undefined;
+
+  return role.metadata.annotations['giantswarm.io/notes'];
+}
