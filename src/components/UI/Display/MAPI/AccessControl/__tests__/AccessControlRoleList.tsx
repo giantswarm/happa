@@ -44,6 +44,7 @@ describe('AccessControlRoleList', () => {
         {
           name: 'some-role',
           managedBy: '',
+          description: '',
           namespace: '',
           groups: {},
           users: {},
@@ -53,6 +54,7 @@ describe('AccessControlRoleList', () => {
         {
           name: 'some-other-role',
           managedBy: '',
+          description: '',
           namespace: 'test-namespace',
           groups: {
             'group-1': {
@@ -81,6 +83,7 @@ describe('AccessControlRoleList', () => {
         {
           name: 'some-cool-role',
           managedBy: '',
+          description: '',
           namespace: 'test-namespace',
           groups: {},
           // eslint-disable-next-line no-magic-numbers
@@ -162,6 +165,7 @@ describe('AccessControlRoleList', () => {
         {
           name: 'some-role',
           managedBy: '',
+          description: '',
           namespace: '',
           groups: {},
           users: {},
@@ -171,6 +175,7 @@ describe('AccessControlRoleList', () => {
         {
           name: 'some-other-role',
           managedBy: '',
+          description: '',
           namespace: 'test-namespace',
           groups: {
             'group-1': {
@@ -212,6 +217,7 @@ describe('AccessControlRoleList', () => {
         {
           name: 'some-role',
           managedBy: '',
+          description: '',
           namespace: '',
           groups: {},
           users: {},
@@ -221,6 +227,7 @@ describe('AccessControlRoleList', () => {
         {
           name: 'some-other-role',
           managedBy: '',
+          description: '',
           namespace: 'test-namespace',
           groups: {
             'group-1': {
@@ -264,6 +271,7 @@ describe('AccessControlRoleList', () => {
         {
           name: 'some-role',
           managedBy: '',
+          description: '',
           namespace: '',
           groups: {},
           users: {},
@@ -273,6 +281,7 @@ describe('AccessControlRoleList', () => {
         {
           name: 'some-other-role',
           managedBy: '',
+          description: '',
           namespace: 'test-namespace',
           groups: {
             'group-1': {

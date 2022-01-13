@@ -44,6 +44,7 @@ describe('AccessControlRoleDetail', () => {
         name: '',
         namespace: '',
         managedBy: '',
+        description: '',
         groups: {},
         users: {},
         serviceAccounts: {},
@@ -62,6 +63,7 @@ describe('AccessControlRoleDetail', () => {
         name: 'test-role',
         namespace: '',
         managedBy: 'party-operator',
+        description: 'Friendly description',
         groups: {},
         users: {},
         serviceAccounts: {},
@@ -78,6 +80,7 @@ describe('AccessControlRoleDetail', () => {
     expect(
       screen.getByText('Managed by Giant Swarm (party-operator)')
     ).toBeInTheDocument();
+    expect(screen.getByText('Friendly description')).toBeInTheDocument();
 
     rerender(
       getComponentWithStore(AccessControlRoleDetail, {
@@ -123,6 +126,7 @@ describe('AccessControlRoleDetail', () => {
           name: 'test-role',
           namespace: '',
           managedBy: 'party-operator',
+          description: '',
           groups: {},
           users: {},
           serviceAccounts: {},
