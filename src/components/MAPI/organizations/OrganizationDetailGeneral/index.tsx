@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
+import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import { ClusterList } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -54,20 +55,27 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
 
   const provider = window.config.info.general.provider;
 
+  const clustersPermissions = usePermissionsForClusters(
+    provider,
+    organizationNamespace
+  );
+
+  const clusterListKey = clustersPermissions.canList
+    ? fetchClusterListKey(provider, organizationNamespace, selectedOrgID)
+    : null;
+
   const {
     data: clusterList,
     error: clusterListError,
     isValidating: clusterListIsValidating,
-  } = useSWR<ClusterList, GenericResponseError>(
-    fetchClusterListKey(provider, organizationNamespace, selectedOrgID),
-    () =>
-      fetchClusterList(
-        clientFactory,
-        auth,
-        provider,
-        organizationNamespace,
-        selectedOrgID
-      )
+  } = useSWR<ClusterList, GenericResponseError>(clusterListKey, () =>
+    fetchClusterList(
+      clientFactory,
+      auth,
+      provider,
+      organizationNamespace,
+      selectedOrgID
+    )
   );
 
   useEffect(() => {
