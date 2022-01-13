@@ -6,6 +6,9 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
+import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
+import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissionsForCPNodes';
+import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
@@ -46,6 +49,14 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: jest.fn().mockReturnValue({ orgId: 'org1' }),
@@ -57,8 +68,19 @@ jest.unmock(
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganization');
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganizationList');
 
+jest.mock('MAPI/clusters/permissions/usePermissionsForClusters');
+jest.mock('MAPI/clusters/permissions/usePermissionsForCPNodes');
+jest.mock('MAPI/workernodes/permissions/usePermissionsForNodePools');
+
 describe('OrganizationDetailGeneral', () => {
   it('renders without crashing', () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
     render(
       getComponent({
         organizationName: 'org1',
@@ -68,6 +90,14 @@ describe('OrganizationDetailGeneral', () => {
   });
 
   it('provides the ability to delete an organization', async () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
@@ -114,6 +144,14 @@ describe('OrganizationDetailGeneral', () => {
   });
 
   it('displays an error if deleting an organization fails', async () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
@@ -158,6 +196,14 @@ describe('OrganizationDetailGeneral', () => {
   });
 
   it('can cancel deletion', async () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
@@ -185,6 +231,14 @@ describe('OrganizationDetailGeneral', () => {
   });
 
   it('cannot delete the organization if there are still clusters that belong to it', async () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
@@ -247,6 +301,14 @@ describe('OrganizationDetailGeneral', () => {
   });
 
   it('can delete the organization if the cluster CRD is not ensured', async () => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
@@ -291,6 +353,14 @@ describe('OrganizationDetailGeneral', () => {
   it('displays various stats about the resources that belong to the organization', async () => {
     // eslint-disable-next-line no-magic-numbers
     jest.setTimeout(10000);
+
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
@@ -476,6 +546,14 @@ describe('OrganizationDetailGeneral', () => {
   it('displays various stats about the resources that belong to the organization', async () => {
     // eslint-disable-next-line no-magic-numbers
     jest.setTimeout(10000);
+
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
