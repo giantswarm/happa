@@ -85,7 +85,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
         <Text weight='bold' size='large' margin='none'>
           Delete this organization
         </Text>
-        <Box width='large'>
+        <Box width={canDeleteOrganizations ? 'large' : 'x-large'}>
           {typeof canDeleteOrganizations !== 'undefined' &&
             !canDeleteOrganizations && (
               <Text>
