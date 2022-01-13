@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissionsForCPNodes';
+import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { ClusterList } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -63,7 +64,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
   );
 
   const clusterListKey = clustersPermissions.canList
-    ? fetchClusterListKey(provider, organizationNamespace, selectedOrgID)
+    ? () => fetchClusterListKey(provider, organizationNamespace, selectedOrgID)
     : null;
 
   const {
@@ -138,7 +139,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     nodePoolsPermissions.canList;
 
   const clustersSummaryKey = hasPermissionsForClustersSummary
-    ? fetchClustersSummaryKey(clusterList?.items)
+    ? () => fetchClustersSummaryKey(clusterList?.items)
     : null;
 
   const {
@@ -156,12 +157,21 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     }
   }, [clustersSummaryError]);
 
+  const releasesPermissions = usePermissionsForReleases(
+    provider,
+    organizationNamespace
+  );
+
+  const releasesSummaryKey = releasesPermissions.canGet
+    ? () => fetchReleasesSummaryKey(clusterList?.items)
+    : null;
+
   const {
     data: releasesSummary,
     isValidating: releasesSummaryIsValidating,
     error: releasesSummaryError,
   } = useSWR<ui.IOrganizationDetailReleasesSummary, GenericResponseError>(
-    () => fetchReleasesSummaryKey(clusterList?.items),
+    releasesSummaryKey,
     () => fetchReleasesSummary(clientFactory, auth, clusterList!.items)
   );
 
