@@ -233,7 +233,10 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       />
       <Box margin={{ top: 'large' }} direction='column' gap='small'>
         <GetOrganizationDetailsGuide organizationName={organizationName} />
-        <DeleteOrganizationGuide organizationName={organizationName} />
+        <DeleteOrganizationGuide
+          organizationName={organizationName}
+          canDeleteOrganization={orgPermissions.canDelete}
+        />
       </Box>
     </>
   );
