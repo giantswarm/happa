@@ -70,7 +70,11 @@ const OrganizationIndex: React.FC = () => {
       clusterList?.items
     );
 
-    const orgs = Object.values(organizations).map((org) => {
+    const sortedOrganizations = Object.values(organizations).sort((a, b) =>
+      (a?.name || a.id).localeCompare(b?.name || b.id)
+    );
+
+    const orgs = sortedOrganizations.map((org) => {
       // eslint-disable-next-line @typescript-eslint/init-declarations
       let clusterCount: number | undefined;
       if (clusterListError) {
