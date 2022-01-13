@@ -379,31 +379,31 @@ export async function fetchAppsSummary(
   // The key is the app name, and the value is the number of deployments.
   const apps: Record<string, number> = {};
 
-  try {
-    // Get all apps that belong to all clusters.
-    const appLists = await Promise.all(
-      clusters.map((cluster) => {
-        return applicationv1alpha1.getAppList(httpClientFactory(), auth, {
-          namespace: cluster.metadata.name,
-        });
-      })
-    );
+  // Get all apps that belong to all clusters.
+  const responses = await Promise.allSettled(
+    clusters.map((cluster) => {
+      return applicationv1alpha1.getAppList(httpClientFactory(), auth, {
+        namespace: cluster.metadata.name,
+      });
+    })
+  );
 
-    for (const appList of appLists) {
-      for (const app of appList.items) {
-        apps[app.spec.name] ??= 0;
-        apps[app.spec.name] += 1;
-      }
-    }
-  } catch (err) {
+  for (const response of responses) {
     if (
+      response.status === 'rejected' &&
       !metav1.isStatusError(
-        (err as GenericResponse).data,
+        (response.reason as GenericResponse).data,
         metav1.K8sStatusErrorReasons.Forbidden
       )
     ) {
-      ErrorReporter.getInstance().notify(err as Error);
+      ErrorReporter.getInstance().notify(response.reason as Error);
     }
+
+    if (response.status === 'fulfilled')
+      for (const app of response.value.items) {
+        apps[app.spec.name] ??= 0;
+        apps[app.spec.name] += 1;
+      }
   }
 
   summary.appsInUseCount = Object.keys(apps).length;
