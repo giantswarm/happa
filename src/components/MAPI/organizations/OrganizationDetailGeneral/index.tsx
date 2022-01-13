@@ -142,22 +142,21 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     provider,
     organizationNamespace
   );
-  const hasPermissionsForClustersSummary =
-    CPNodesPermissions.canList &&
-    nodePoolsPermissions.canGet &&
-    nodePoolsPermissions.canList;
-
-  const clustersSummaryKey = hasPermissionsForClustersSummary
-    ? () => fetchClustersSummaryKey(clusterList?.items)
-    : null;
 
   const {
     data: clustersSummary,
     isValidating: clustersSummaryIsValidating,
     error: clustersSummaryError,
   } = useSWR<ui.IOrganizationDetailClustersSummary, GenericResponseError>(
-    clustersSummaryKey,
-    () => fetchClustersSummary(clientFactory, auth, clusterList!.items)
+    () => fetchClustersSummaryKey(clusterList?.items),
+    () =>
+      fetchClustersSummary(
+        clientFactory,
+        auth,
+        clusterList!.items,
+        CPNodesPermissions,
+        nodePoolsPermissions
+      )
   );
 
   useEffect(() => {
