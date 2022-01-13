@@ -19,13 +19,17 @@ export function usePermissionsForOrganizations(
   _namespace: string
 ) {
   const computed: Record<string, boolean | undefined> = {
-    canCreate: false,
+    canGet: undefined,
+    canList: undefined,
+    canUpdate: undefined,
+    canCreate: undefined,
+    canDelete: undefined,
   };
 
   const httpClientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const verbs = ['create'] as const;
+  const verbs = ['create', 'delete'] as const;
 
   const {
     data: orgsAccess,
@@ -71,14 +75,13 @@ export function usePermissionsForOrganizations(
     isValidating;
 
   if (isLoading) {
-    computed.canCreate = undefined;
-
     return computed;
   }
 
   if (!orgsAccess) return computed;
 
   computed.canCreate = orgsAccess.create;
+  computed.canDelete = orgsAccess.delete;
 
   return computed;
 }
