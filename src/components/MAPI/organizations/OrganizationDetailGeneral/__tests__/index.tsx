@@ -8,6 +8,7 @@ import {
 import { createMemoryHistory } from 'history';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissionsForCPNodes';
+import { usePermissionsForOrganizations } from 'MAPI/organizations/permissions/usePermissionsForOrganizations';
 import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { StatusCodes } from 'model/constants';
@@ -73,12 +74,16 @@ jest.mock('MAPI/clusters/permissions/usePermissionsForClusters');
 jest.mock('MAPI/clusters/permissions/usePermissionsForCPNodes');
 jest.mock('MAPI/workernodes/permissions/usePermissionsForNodePools');
 jest.mock('MAPI/releases/permissions/usePermissionsForReleases');
+jest.mock('MAPI/organizations/permissions/usePermissionsForOrganizations');
 
 describe('OrganizationDetailGeneral', () => {
   (usePermissionsForClusters as jest.Mock).mockReturnValue(defaultPermissions);
   (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
   (usePermissionsForNodePools as jest.Mock).mockReturnValue(defaultPermissions);
   (usePermissionsForReleases as jest.Mock).mockReturnValue(defaultPermissions);
+  (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+    defaultPermissions
+  );
 
   it('renders without crashing', () => {
     render(
@@ -308,6 +313,31 @@ describe('OrganizationDetailGeneral', () => {
     expect(
       await screen.findByText('Organization org1 deleted successfully.')
     ).toBeInTheDocument();
+  });
+
+  it('does not allow deletion if the user does not have permissions to do so', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canDelete: false,
+    });
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        items: [],
+        kind: 'ClusterList',
+      });
+
+    render(
+      getComponent({
+        organizationName: 'org1',
+        organizationNamespace: 'org-org1',
+      })
+    );
+
+    const deleteButton = await screen.findByText('Delete organization');
+    expect(deleteButton).toBeDisabled();
   });
 
   it('displays various stats about the resources that belong to the organization', async () => {
