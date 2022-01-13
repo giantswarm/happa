@@ -151,14 +151,10 @@ export async function fetchClusterListForOrganizations(
     }
   );
 
-  const responses = await Promise.allSettled(requests);
+  const responses = await Promise.all(requests);
   for (const response of responses) {
-    if (response.status === 'rejected') {
-      return Promise.reject(response.reason);
-    }
-
-    if (response.status === 'fulfilled') {
-      clusterList.items.push(...response.value);
+    if (response.length > 0) {
+      clusterList.items.push(...response);
     }
   }
 
