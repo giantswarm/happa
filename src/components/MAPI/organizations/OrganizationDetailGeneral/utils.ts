@@ -10,10 +10,12 @@ import {
   IProviderNodePoolForNodePool,
   mapNodePoolsToProviderNodePools,
 } from 'MAPI/workernodes/utils';
+import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
+import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as ui from 'UI/Display/Organizations/types';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -393,7 +395,14 @@ export async function fetchAppsSummary(
       }
     }
   } catch (err) {
-    ErrorReporter.getInstance().notify(err as Error);
+    if (
+      !metav1.isStatusError(
+        (err as GenericResponse).data,
+        metav1.K8sStatusErrorReasons.Forbidden
+      )
+    ) {
+      ErrorReporter.getInstance().notify(err as Error);
+    }
   }
 
   summary.appsInUseCount = Object.keys(apps).length;
