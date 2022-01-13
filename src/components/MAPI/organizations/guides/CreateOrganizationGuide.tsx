@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import {
   getCurrentInstallationContextName,
   makeKubectlGSCommand,
@@ -14,11 +15,14 @@ import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
 interface ICreateOrganizationsGuidProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {}
+  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+  canCreateOrganizations?: boolean;
+}
 
-const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
-  props
-) => {
+const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = ({
+  canCreateOrganizations,
+  ...props
+}) => {
   const context = useSelector(getCurrentInstallationContextName);
 
   return (
@@ -53,6 +57,7 @@ const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = (
       {...props}
     >
       <CLIGuideStepList>
+        {!canCreateOrganizations && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Create an organization manifest'

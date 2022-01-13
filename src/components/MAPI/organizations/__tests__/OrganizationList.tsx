@@ -17,6 +17,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import OrganizationIndex from '../OrganizationIndex';
+import { usePermissionsForOrganizations } from '../permissions/usePermissionsForOrganizations';
 
 const defaultState: IState = {
   ...preloginState,
@@ -136,23 +137,55 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canCreate: true,
+  canDelete: true,
+  canConfigure: true,
+};
+
 jest.unmock(
   'model/services/mapi/authorizationv1/createSelfSubjectAccessReview'
 );
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganizationList');
 
+jest.mock('../permissions/usePermissionsForOrganizations');
+
 describe('OrganizationIndex', () => {
   it('renders without crashing', () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
     render(getComponent({}));
   });
 
   it('displays organizations and their cluster counts', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     const randomClusterList = generateClusterList([
       generateCluster(),
       generateCluster(),
       generateCluster('org2', 'org-org2'),
     ]);
 
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'cluster.x-k8s.io',
+            resource: 'clusters',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
+      );
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
       .reply(StatusCodes.Ok, randomClusterList);
@@ -166,9 +199,77 @@ describe('OrganizationIndex', () => {
     expect(await screen.findByText('1')).toBeInTheDocument();
   });
 
+  it('displays organizations and their cluster counts for a user that doesn`t have permissions to list clusters at the cluster scope', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    const randomClusterList1 = generateClusterList([
+      generateCluster(),
+      generateCluster(),
+    ]);
+
+    const randomClusterList2 = generateClusterList([
+      generateCluster('org2', 'org-org2'),
+    ]);
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'cluster.x-k8s.io',
+            resource: 'clusters',
+          },
+        },
+      })
+      .reply(StatusCodes.Ok, {
+        ...authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope,
+        status: { allowed: false },
+      });
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, randomClusterList1);
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org2/clusters/')
+      .reply(StatusCodes.Ok, randomClusterList2);
+
+    render(getComponent({}));
+
+    expect(screen.getByText('org1')).toBeInTheDocument();
+    expect(screen.getByText('org2')).toBeInTheDocument();
+
+    expect(await screen.findByText('2')).toBeInTheDocument();
+    expect(await screen.findByText('1')).toBeInTheDocument();
+  });
+
   it('displays the button to create an organization', () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     const randomClusterList = generateClusterList([]);
 
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'cluster.x-k8s.io',
+            resource: 'clusters',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
+      );
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
       .reply(StatusCodes.Ok, randomClusterList);
@@ -181,7 +282,32 @@ describe('OrganizationIndex', () => {
   });
 
   it('can create an organization', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     const randomClusterList = generateClusterList([]);
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'cluster.x-k8s.io',
+            resource: 'clusters',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
+      .reply(StatusCodes.Ok, randomClusterList);
 
     nock(window.config.mapiEndpoint)
       .post('/apis/security.giantswarm.io/v1alpha1/organizations/')
@@ -206,10 +332,6 @@ describe('OrganizationIndex', () => {
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/')
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationListResponse);
-
-    nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
-      .reply(StatusCodes.Ok, randomClusterList);
 
     render(getComponent({}));
 
@@ -246,8 +368,29 @@ describe('OrganizationIndex', () => {
   });
 
   it('can cancel an organization creation', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     const randomClusterList = generateClusterList([]);
 
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'cluster.x-k8s.io',
+            resource: 'clusters',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
+      );
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
       .reply(StatusCodes.Ok, randomClusterList);
@@ -290,6 +433,10 @@ describe('OrganizationIndex', () => {
   });
 
   it('displays an error if an organization cannot be created', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
     nock(window.config.mapiEndpoint)
       .post('/apis/security.giantswarm.io/v1alpha1/organizations/')
       .reply(StatusCodes.InternalServerError, {

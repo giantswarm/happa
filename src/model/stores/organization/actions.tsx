@@ -175,7 +175,7 @@ export function organizationsLoadMAPI(
         // to check if the orgs have a 'ui.giantswarm.io/original-organization-name'
         // annotation.
         const orgGetRequests = organizationNames.map((orgName) =>
-          securityv1alpha1.getOrganization(client, auth, orgName)
+          securityv1alpha1.getOrganization(new HttpClientImpl(), auth, orgName)
         );
 
         const orgGetResponses = await Promise.all(orgGetRequests);
