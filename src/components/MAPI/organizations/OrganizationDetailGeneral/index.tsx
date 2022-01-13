@@ -1,12 +1,14 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
+import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissionsForCPNodes';
 import { ClusterList } from 'MAPI/types';
 import {
   extractErrorMessage,
   fetchClusterList,
   fetchClusterListKey,
 } from 'MAPI/utils';
+import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -122,12 +124,29 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     }
   };
 
+  const CPNodesPermissions = usePermissionsForCPNodes(
+    provider,
+    organizationNamespace
+  );
+  const nodePoolsPermissions = usePermissionsForNodePools(
+    provider,
+    organizationNamespace
+  );
+  const hasPermissionsForClustersSummary =
+    CPNodesPermissions.canList &&
+    nodePoolsPermissions.canGet &&
+    nodePoolsPermissions.canList;
+
+  const clustersSummaryKey = hasPermissionsForClustersSummary
+    ? fetchClustersSummaryKey(clusterList?.items)
+    : null;
+
   const {
     data: clustersSummary,
     isValidating: clustersSummaryIsValidating,
     error: clustersSummaryError,
   } = useSWR<ui.IOrganizationDetailClustersSummary, GenericResponseError>(
-    () => fetchClustersSummaryKey(clusterList?.items),
+    clustersSummaryKey,
     () => fetchClustersSummary(clientFactory, auth, clusterList!.items)
   );
 
