@@ -211,6 +211,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
         organizationName={organizationName}
         organizationNamespace={organizationNamespace}
         onDelete={handleDelete}
+        canDeleteOrganizations={orgPermissions.canDelete}
         clusterCount={clusterList?.items.length}
         clusterCountLoading={
           typeof clusterList === 'undefined' &&

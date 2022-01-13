@@ -27,6 +27,7 @@ interface IOrganizationDetailPageProps {
   organizationName: string;
   organizationNamespace: string;
   onDelete: () => Promise<void>;
+  canDeleteOrganizations?: boolean;
   clusterCount?: number;
   clusterCountLoading?: boolean;
   clustersSummary?: IOrganizationDetailClustersSummary;
@@ -41,6 +42,7 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
   organizationName,
   organizationNamespace,
   onDelete,
+  canDeleteOrganizations,
   clusterCount,
   clusterCountLoading,
   clustersSummary,
@@ -214,6 +216,7 @@ const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
           organizationName={organizationName}
           organizationNamespace={organizationNamespace}
           onDelete={onDelete}
+          canDeleteOrganizations={canDeleteOrganizations}
           clusterCount={clusterCount}
           border='top'
         />
