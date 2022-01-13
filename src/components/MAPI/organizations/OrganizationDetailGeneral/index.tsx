@@ -29,6 +29,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import DeleteOrganizationGuide from '../guides/DeleteOrganizationGuide';
 import GetOrganizationDetailsGuide from '../guides/GetOrganizationDetailsGuide';
+import { usePermissionsForOrganizations } from '../permissions/usePermissionsForOrganizations';
 import {
   fetchAppsSummary,
   fetchAppsSummaryKey,
@@ -104,7 +105,15 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     ErrorReporter.getInstance().notify(clusterListError);
   }, [clusterListError]);
 
+  const orgPermissions = usePermissionsForOrganizations(provider, '');
+
   const handleDelete = async () => {
+    if (!orgPermissions.canDelete) {
+      return Promise.reject(
+        new Error('Insufficient permissions to delete organization')
+      );
+    }
+
     try {
       const client = clientFactory();
 
