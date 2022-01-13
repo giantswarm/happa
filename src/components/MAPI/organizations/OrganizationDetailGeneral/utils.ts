@@ -80,7 +80,8 @@ async function fetchSingleClusterSummary(
     const nodePoolList = await fetchNodePoolListForCluster(
       httpClientFactory,
       auth,
-      cluster
+      cluster,
+      cluster.metadata.namespace
     );
 
     appendNodePoolsStats(nodePoolList.items, summary);
