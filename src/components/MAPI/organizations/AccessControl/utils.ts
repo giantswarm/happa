@@ -749,3 +749,15 @@ export function formatSubjectType(
       return '';
   }
 }
+
+export function canBindRolesToSubjects(
+  permissions: ui.IAccessControlPermissions
+): boolean {
+  for (const subject of Object.values(permissions.subjects)) {
+    if (!subject.canBind) {
+      return false;
+    }
+  }
+
+  return true;
+}
