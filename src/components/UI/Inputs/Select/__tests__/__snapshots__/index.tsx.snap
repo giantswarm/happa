@@ -21,7 +21,7 @@ exports[`Select renders a disabled input 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 tgLLr Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
+          class="StyledButtonKind-sc-1vhfpnt-0 cNXTcR Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           disabled=""
           id="pet"
           type="button"
@@ -87,7 +87,7 @@ exports[`Select renders a simple input 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 gcTDZi Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
+          class="StyledButtonKind-sc-1vhfpnt-0 eMuefU Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
         >
@@ -152,7 +152,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 tgLLr Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
+          class="StyledButtonKind-sc-1vhfpnt-0 cNXTcR Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           disabled=""
           id="pet"
           type="button"
@@ -228,7 +228,7 @@ exports[`Select renders an input with a help message 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 gcTDZi Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
+          class="StyledButtonKind-sc-1vhfpnt-0 eMuefU Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
         >
@@ -299,7 +299,7 @@ exports[`Select renders an input with a label 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 gcTDZi Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
+          class="StyledButtonKind-sc-1vhfpnt-0 eMuefU Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
         >
@@ -370,7 +370,7 @@ exports[`Select renders an input with a validation error 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 gcTDZi Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
+          class="StyledButtonKind-sc-1vhfpnt-0 eMuefU Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
         >
@@ -446,7 +446,7 @@ exports[`Select renders an input with an info message 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 gcTDZi Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
+          class="StyledButtonKind-sc-1vhfpnt-0 eMuefU Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
         >

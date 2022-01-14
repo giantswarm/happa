@@ -17,7 +17,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
         <button
           aria-expanded="true"
           aria-selected="true"
-          class="StyledButtonKind-sc-1vhfpnt-0 VVdqz"
+          class="StyledButtonKind-sc-1vhfpnt-0 OoANd"
           role="tab"
           type="button"
         >
@@ -34,7 +34,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
         <button
           aria-expanded="false"
           aria-selected="false"
-          class="StyledButtonKind-sc-1vhfpnt-0 VVdqz"
+          class="StyledButtonKind-sc-1vhfpnt-0 OoANd"
           role="tab"
           type="button"
         >
@@ -51,7 +51,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
         <button
           aria-expanded="false"
           aria-selected="false"
-          class="StyledButtonKind-sc-1vhfpnt-0 VVdqz"
+          class="StyledButtonKind-sc-1vhfpnt-0 OoANd"
           role="tab"
           type="button"
         >

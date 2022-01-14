@@ -105,7 +105,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     ErrorReporter.getInstance().notify(clusterListError);
   }, [clusterListError]);
 
-  const orgPermissions = usePermissionsForOrganizations(provider, '');
+  const orgPermissions = usePermissionsForOrganizations(provider, 'default');
 
   const handleDelete = async () => {
     if (!orgPermissions.canDelete) {
@@ -165,10 +165,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     }
   }, [clustersSummaryError]);
 
-  const releasesPermissions = usePermissionsForReleases(
-    provider,
-    organizationNamespace
-  );
+  const releasesPermissions = usePermissionsForReleases(provider, 'default');
 
   const releasesSummaryKey = releasesPermissions.canGet
     ? () => fetchReleasesSummaryKey(clusterList?.items)
