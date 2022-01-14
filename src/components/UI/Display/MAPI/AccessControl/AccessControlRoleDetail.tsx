@@ -55,6 +55,11 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
             <Text>&bull;</Text>
             <Text>Managed by {formatManagedBy(activeRole.managedBy)}</Text>
           </Box>
+          {activeRole.description.length > 0 && (
+            <Box margin={{ top: 'small' }}>
+              <Text size='small'>{activeRole.description}</Text>
+            </Box>
+          )}
           <Box margin={{ top: 'medium' }}>
             <Tabs>
               <Tab title='Subjects'>

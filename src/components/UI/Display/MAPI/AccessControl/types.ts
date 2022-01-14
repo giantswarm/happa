@@ -37,6 +37,7 @@ export interface IAccessControlRoleItem {
   name: string;
   namespace: string;
   managedBy: string;
+  description: string;
   groups: Record<string, IAccessControlRoleSubjectItem>;
   users: Record<string, IAccessControlRoleSubjectItem>;
   serviceAccounts: Record<string, IAccessControlRoleSubjectItem>;
