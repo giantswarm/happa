@@ -71,7 +71,7 @@
     "deep-diff": "1.0.2",
     "dotenv": "11.0.0",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
-    "grommet": "2.19.1",
+    "grommet": "2.20.0",
     "history": "4.10.1",
     "immer": "9.0.12",
     "js-base64": "3.7.2",
