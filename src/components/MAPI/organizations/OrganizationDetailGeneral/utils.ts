@@ -1,3 +1,4 @@
+import { IPermissions } from 'MAPI/permissions/types';
 import { ControlPlaneNode, NodePool } from 'MAPI/types';
 import {
   fetchControlPlaneNodesForCluster,
@@ -10,10 +11,12 @@ import {
   IProviderNodePoolForNodePool,
   mapNodePoolsToProviderNodePools,
 } from 'MAPI/workernodes/utils';
+import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
+import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as ui from 'UI/Display/Organizations/types';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -26,15 +29,25 @@ import { compare } from 'utils/semver';
  * @param httpClientFactory
  * @param auth
  * @param clusters
+ * @param CPNodesPermissions
+ * @param nodePoolsPermissions
  */
 export async function fetchClustersSummary(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  clusters: capiv1alpha3.ICluster[]
+  clusters: capiv1alpha3.ICluster[],
+  CPNodesPermissions: IPermissions,
+  nodePoolsPermissions: IPermissions
 ): Promise<ui.IOrganizationDetailClustersSummary> {
   const response = await Promise.all(
     clusters.map((cluster) =>
-      fetchSingleClusterSummary(httpClientFactory, auth, cluster)
+      fetchSingleClusterSummary(
+        httpClientFactory,
+        auth,
+        cluster,
+        CPNodesPermissions,
+        nodePoolsPermissions
+      )
     )
   );
 
@@ -56,51 +69,59 @@ export function fetchClustersSummaryKey(
 async function fetchSingleClusterSummary(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  cluster: capiv1alpha3.ICluster
+  cluster: capiv1alpha3.ICluster,
+  CPNodesPermissions: IPermissions,
+  nodePoolsPermissions: IPermissions
 ): Promise<ui.IOrganizationDetailClustersSummary> {
   const summary: ui.IOrganizationDetailClustersSummary = {};
 
   const machineTypes = getMachineTypes();
 
-  try {
-    const cpNodes = await fetchControlPlaneNodesForCluster(
-      httpClientFactory,
-      auth,
-      cluster
-    );
+  if (CPNodesPermissions.canList) {
+    try {
+      const cpNodes = await fetchControlPlaneNodesForCluster(
+        httpClientFactory,
+        auth,
+        cluster
+      );
 
-    appendControlPlaneNodeStats(cpNodes, machineTypes, summary);
-  } catch (err) {
-    ErrorReporter.getInstance().notify(err as Error);
+      appendControlPlaneNodeStats(cpNodes, machineTypes, summary);
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err as Error);
+    }
   }
 
-  try {
-    const nodePoolList = await fetchNodePoolListForCluster(
-      httpClientFactory,
-      auth,
-      cluster
-    );
+  if (nodePoolsPermissions.canList && nodePoolsPermissions.canGet) {
+    try {
+      const nodePoolList = await fetchNodePoolListForCluster(
+        httpClientFactory,
+        auth,
+        cluster,
+        cluster.metadata.namespace
+      );
 
-    appendNodePoolsStats(nodePoolList.items, summary);
+      appendNodePoolsStats(nodePoolList.items, summary);
 
-    const providerSpecificNodePools = await fetchProviderNodePoolsForNodePools(
-      httpClientFactory,
-      auth,
-      nodePoolList.items
-    );
+      const providerSpecificNodePools =
+        await fetchProviderNodePoolsForNodePools(
+          httpClientFactory,
+          auth,
+          nodePoolList.items
+        );
 
-    const nodePoolsWithProviderNodePools = mapNodePoolsToProviderNodePools(
-      nodePoolList.items,
-      providerSpecificNodePools
-    );
+      const nodePoolsWithProviderNodePools = mapNodePoolsToProviderNodePools(
+        nodePoolList.items,
+        providerSpecificNodePools
+      );
 
-    appendProviderNodePoolsStats(
-      nodePoolsWithProviderNodePools,
-      machineTypes,
-      summary
-    );
-  } catch (err) {
-    ErrorReporter.getInstance().notify(err as Error);
+      appendProviderNodePoolsStats(
+        nodePoolsWithProviderNodePools,
+        machineTypes,
+        summary
+      );
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err as Error);
+    }
   }
 
   return summary;
@@ -376,24 +397,31 @@ export async function fetchAppsSummary(
   // The key is the app name, and the value is the number of deployments.
   const apps: Record<string, number> = {};
 
-  try {
-    // Get all apps that belong to all clusters.
-    const appLists = await Promise.all(
-      clusters.map((cluster) => {
-        return applicationv1alpha1.getAppList(httpClientFactory(), auth, {
-          namespace: cluster.metadata.name,
-        });
-      })
-    );
+  // Get all apps that belong to all clusters.
+  const responses = await Promise.allSettled(
+    clusters.map((cluster) => {
+      return applicationv1alpha1.getAppList(httpClientFactory(), auth, {
+        namespace: cluster.metadata.name,
+      });
+    })
+  );
 
-    for (const appList of appLists) {
-      for (const app of appList.items) {
+  for (const response of responses) {
+    if (
+      response.status === 'rejected' &&
+      !metav1.isStatusError(
+        (response.reason as GenericResponse).data,
+        metav1.K8sStatusErrorReasons.Forbidden
+      )
+    ) {
+      ErrorReporter.getInstance().notify(response.reason as Error);
+    }
+
+    if (response.status === 'fulfilled')
+      for (const app of response.value.items) {
         apps[app.spec.name] ??= 0;
         apps[app.spec.name] += 1;
       }
-    }
-  } catch (err) {
-    ErrorReporter.getInstance().notify(err as Error);
   }
 
   summary.appsInUseCount = Object.keys(apps).length;

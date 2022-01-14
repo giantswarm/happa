@@ -6,6 +6,11 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
+import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
+import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissionsForCPNodes';
+import { usePermissionsForOrganizations } from 'MAPI/organizations/permissions/usePermissionsForOrganizations';
+import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
+import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
@@ -46,6 +51,14 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: jest.fn().mockReturnValue({ orgId: 'org1' }),
@@ -57,7 +70,21 @@ jest.unmock(
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganization');
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganizationList');
 
+jest.mock('MAPI/clusters/permissions/usePermissionsForClusters');
+jest.mock('MAPI/clusters/permissions/usePermissionsForCPNodes');
+jest.mock('MAPI/workernodes/permissions/usePermissionsForNodePools');
+jest.mock('MAPI/releases/permissions/usePermissionsForReleases');
+jest.mock('MAPI/organizations/permissions/usePermissionsForOrganizations');
+
 describe('OrganizationDetailGeneral', () => {
+  (usePermissionsForClusters as jest.Mock).mockReturnValue(defaultPermissions);
+  (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+  (usePermissionsForNodePools as jest.Mock).mockReturnValue(defaultPermissions);
+  (usePermissionsForReleases as jest.Mock).mockReturnValue(defaultPermissions);
+  (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+    defaultPermissions
+  );
+
   it('renders without crashing', () => {
     render(
       getComponent({
@@ -288,6 +315,31 @@ describe('OrganizationDetailGeneral', () => {
     ).toBeInTheDocument();
   });
 
+  it('does not allow deletion if the user does not have permissions to do so', async () => {
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canDelete: false,
+    });
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        items: [],
+        kind: 'ClusterList',
+      });
+
+    render(
+      getComponent({
+        organizationName: 'org1',
+        organizationNamespace: 'org-org1',
+      })
+    );
+
+    const deleteButton = await screen.findByText('Delete organization');
+    expect(deleteButton).toBeDisabled();
+  });
+
   it('displays various stats about the resources that belong to the organization', async () => {
     // eslint-disable-next-line no-magic-numbers
     jest.setTimeout(10000);
@@ -328,7 +380,7 @@ describe('OrganizationDetailGeneral', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
@@ -355,7 +407,7 @@ describe('OrganizationDetailGeneral', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster2.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
@@ -373,7 +425,7 @@ describe('OrganizationDetailGeneral', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster3.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster3.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster3.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,

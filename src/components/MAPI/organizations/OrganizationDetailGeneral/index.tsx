@@ -1,11 +1,15 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
+import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
+import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissionsForCPNodes';
+import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { ClusterList } from 'MAPI/types';
 import {
   extractErrorMessage,
   fetchClusterList,
   fetchClusterListKey,
 } from 'MAPI/utils';
+import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -25,6 +29,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import DeleteOrganizationGuide from '../guides/DeleteOrganizationGuide';
 import GetOrganizationDetailsGuide from '../guides/GetOrganizationDetailsGuide';
+import { usePermissionsForOrganizations } from '../permissions/usePermissionsForOrganizations';
 import {
   fetchAppsSummary,
   fetchAppsSummaryKey,
@@ -54,20 +59,27 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
 
   const provider = window.config.info.general.provider;
 
+  const clustersPermissions = usePermissionsForClusters(
+    provider,
+    organizationNamespace
+  );
+
+  const clusterListKey = clustersPermissions.canList
+    ? () => fetchClusterListKey(provider, organizationNamespace, selectedOrgID)
+    : null;
+
   const {
     data: clusterList,
     error: clusterListError,
     isValidating: clusterListIsValidating,
-  } = useSWR<ClusterList, GenericResponseError>(
-    fetchClusterListKey(provider, organizationNamespace, selectedOrgID),
-    () =>
-      fetchClusterList(
-        clientFactory,
-        auth,
-        provider,
-        organizationNamespace,
-        selectedOrgID
-      )
+  } = useSWR<ClusterList, GenericResponseError>(clusterListKey, () =>
+    fetchClusterList(
+      clientFactory,
+      auth,
+      provider,
+      organizationNamespace,
+      selectedOrgID
+    )
   );
 
   useEffect(() => {
@@ -93,7 +105,15 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     ErrorReporter.getInstance().notify(clusterListError);
   }, [clusterListError]);
 
+  const orgPermissions = usePermissionsForOrganizations(provider, 'default');
+
   const handleDelete = async () => {
+    if (!orgPermissions.canDelete) {
+      return Promise.reject(
+        new Error('Insufficient permissions to delete organization')
+      );
+    }
+
     try {
       const client = clientFactory();
 
@@ -114,13 +134,29 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     }
   };
 
+  const CPNodesPermissions = usePermissionsForCPNodes(
+    provider,
+    organizationNamespace
+  );
+  const nodePoolsPermissions = usePermissionsForNodePools(
+    provider,
+    organizationNamespace
+  );
+
   const {
     data: clustersSummary,
     isValidating: clustersSummaryIsValidating,
     error: clustersSummaryError,
   } = useSWR<ui.IOrganizationDetailClustersSummary, GenericResponseError>(
     () => fetchClustersSummaryKey(clusterList?.items),
-    () => fetchClustersSummary(clientFactory, auth, clusterList!.items)
+    () =>
+      fetchClustersSummary(
+        clientFactory,
+        auth,
+        clusterList!.items,
+        CPNodesPermissions,
+        nodePoolsPermissions
+      )
   );
 
   useEffect(() => {
@@ -129,12 +165,18 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
     }
   }, [clustersSummaryError]);
 
+  const releasesPermissions = usePermissionsForReleases(provider, 'default');
+
+  const releasesSummaryKey = releasesPermissions.canGet
+    ? () => fetchReleasesSummaryKey(clusterList?.items)
+    : null;
+
   const {
     data: releasesSummary,
     isValidating: releasesSummaryIsValidating,
     error: releasesSummaryError,
   } = useSWR<ui.IOrganizationDetailReleasesSummary, GenericResponseError>(
-    () => fetchReleasesSummaryKey(clusterList?.items),
+    releasesSummaryKey,
     () => fetchReleasesSummary(clientFactory, auth, clusterList!.items)
   );
 
@@ -165,6 +207,7 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
         organizationName={organizationName}
         organizationNamespace={organizationNamespace}
         onDelete={handleDelete}
+        canDeleteOrganizations={orgPermissions.canDelete}
         clusterCount={clusterList?.items.length}
         clusterCountLoading={
           typeof clusterList === 'undefined' &&
@@ -186,7 +229,10 @@ const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
       />
       <Box margin={{ top: 'large' }} direction='column' gap='small'>
         <GetOrganizationDetailsGuide organizationName={organizationName} />
-        <DeleteOrganizationGuide organizationName={organizationName} />
+        <DeleteOrganizationGuide
+          organizationName={organizationName}
+          canDeleteOrganization={orgPermissions.canDelete}
+        />
       </Box>
     </>
   );

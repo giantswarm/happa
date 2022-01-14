@@ -112,7 +112,7 @@ const OrganizationIndex: React.FC = () => {
 
   const { canCreate: canCreateOrganizations } = usePermissionsForOrganizations(
     provider,
-    ''
+    'default'
   );
 
   const orgPermissionsIsLoading = typeof canCreateOrganizations === 'undefined';

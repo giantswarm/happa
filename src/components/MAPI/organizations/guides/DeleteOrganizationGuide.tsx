@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import * as docs from 'model/constants/docs';
 import React from 'react';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -10,10 +11,12 @@ import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 interface IDeleteOrganizationGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   organizationName: string;
+  canDeleteOrganization?: boolean;
 }
 
 const DeleteOrganizationGuide: React.FC<IDeleteOrganizationGuideProps> = ({
   organizationName,
+  canDeleteOrganization,
   ...props
 }) => {
   return (
@@ -43,6 +46,7 @@ const DeleteOrganizationGuide: React.FC<IDeleteOrganizationGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {!canDeleteOrganization && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Delete the organization'

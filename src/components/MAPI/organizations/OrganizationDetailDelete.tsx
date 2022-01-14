@@ -14,6 +14,7 @@ interface IOrganizationDetailDeleteProps
   organizationName: string;
   organizationNamespace: string;
   onDelete: () => Promise<void>;
+  canDeleteOrganizations?: boolean;
   clusterCount?: number;
 }
 
@@ -21,6 +22,7 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
   organizationName,
   organizationNamespace,
   onDelete,
+  canDeleteOrganizations,
   clusterCount,
   ...props
 }) => {
@@ -83,8 +85,16 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
         <Text weight='bold' size='large' margin='none'>
           Delete this organization
         </Text>
-        <Box width='large'>
-          {typeof clusterCount === 'undefined' && (
+        <Box width={canDeleteOrganizations ? 'large' : 'x-large'}>
+          {typeof canDeleteOrganizations !== 'undefined' &&
+            !canDeleteOrganizations && (
+              <Text>
+                For deleting this organization, you need additional permissions.
+                Please talk to your administrator.
+              </Text>
+            )}
+
+          {canDeleteOrganizations && typeof clusterCount === 'undefined' && (
             <Text key='org-deletion-disclaimer'>
               <i
                 className='fa fa-warning'
@@ -97,21 +107,25 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
             </Text>
           )}
 
-          {typeof clusterCount !== 'undefined' && clusterCount > 0 && (
-            <Text key='org-deletion-disclaimer'>
-              To delete this organization, there must not be any clusters
-              associated with it. Please delete the clusters first.
-            </Text>
-          )}
+          {canDeleteOrganizations &&
+            typeof clusterCount !== 'undefined' &&
+            clusterCount > 0 && (
+              <Text key='org-deletion-disclaimer'>
+                To delete this organization, there must not be any clusters
+                associated with it. Please delete the clusters first.
+              </Text>
+            )}
 
-          {typeof clusterCount !== 'undefined' && clusterCount < 1 && (
-            <Text key='org-deletion-disclaimer'>
-              The <code>{organizationName}</code> Organization CR and the
-              namespace <code>{organizationNamespace}</code> with all the
-              resources in it will be deleted from the management cluster. There
-              is no way to undo this action.
-            </Text>
-          )}
+          {canDeleteOrganizations &&
+            typeof clusterCount !== 'undefined' &&
+            clusterCount < 1 && (
+              <Text key='org-deletion-disclaimer'>
+                The <code>{organizationName}</code> Organization CR and the
+                namespace <code>{organizationNamespace}</code> with all the
+                resources in it will be deleted from the management cluster.
+                There is no way to undo this action.
+              </Text>
+            )}
         </Box>
         <Box>
           <ConfirmationPrompt
@@ -144,6 +158,10 @@ const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
                 danger={true}
                 onClick={showConfirmation}
                 loading={isLoading}
+                unauthorized={
+                  typeof canDeleteOrganizations !== 'undefined' &&
+                  !canDeleteOrganizations
+                }
               >
                 <i
                   className='fa fa-delete'
