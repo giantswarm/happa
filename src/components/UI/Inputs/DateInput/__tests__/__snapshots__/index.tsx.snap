@@ -15,7 +15,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 goECDo"
+          class="StyledButtonKind-sc-1vhfpnt-0 jbRmPk"
           id="dob"
           type="button"
         >
@@ -66,10 +66,23 @@ exports[`DateInput renders a disabled input 1`] = `
         class="StyledBox-sc-13pk1d4-0 fAcOfV FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          class="StyledBox-sc-13pk1d4-0 bcbTf"
         >
           <div
-            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 eDvKCK"
+            class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          >
+            <input
+              autocomplete="off"
+              class="StyledMaskedInput-sc-99vkfa-0 hhyXHs"
+              disabled=""
+              id="dob"
+              placeholder="yyyy-mm-dd"
+              value=""
+            />
+          </div>
+          <button
+            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            type="button"
           >
             <svg
               aria-label="Calendar"
@@ -83,15 +96,7 @@ exports[`DateInput renders a disabled input 1`] = `
                 stroke-width="2"
               />
             </svg>
-          </div>
-          <input
-            autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 gOthl"
-            disabled=""
-            id="dob"
-            placeholder="yyyy-mm-dd"
-            value=""
-          />
+          </button>
         </div>
       </div>
     </div>
@@ -113,10 +118,21 @@ exports[`DateInput renders a simple input 1`] = `
         class="StyledBox-sc-13pk1d4-0 fFeUPF FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          class="StyledBox-sc-13pk1d4-0 bcbTf"
         >
           <div
-            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 eDvKCK"
+            class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          >
+            <input
+              autocomplete="off"
+              class="StyledMaskedInput-sc-99vkfa-0 hNeIZN"
+              placeholder="yyyy-mm-dd"
+              value=""
+            />
+          </div>
+          <button
+            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            type="button"
           >
             <svg
               aria-label="Calendar"
@@ -130,13 +146,7 @@ exports[`DateInput renders a simple input 1`] = `
                 stroke-width="2"
               />
             </svg>
-          </div>
-          <input
-            autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 dxiquI"
-            placeholder="yyyy-mm-dd"
-            value=""
-          />
+          </button>
         </div>
       </div>
     </div>
@@ -169,10 +179,22 @@ exports[`DateInput renders an input with a help message 1`] = `
         class="StyledBox-sc-13pk1d4-0 fFeUPF FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          class="StyledBox-sc-13pk1d4-0 bcbTf"
         >
           <div
-            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 eDvKCK"
+            class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          >
+            <input
+              autocomplete="off"
+              class="StyledMaskedInput-sc-99vkfa-0 hNeIZN"
+              id="dob"
+              placeholder="yyyy-mm-dd"
+              value=""
+            />
+          </div>
+          <button
+            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            type="button"
           >
             <svg
               aria-label="Calendar"
@@ -186,14 +208,7 @@ exports[`DateInput renders an input with a help message 1`] = `
                 stroke-width="2"
               />
             </svg>
-          </div>
-          <input
-            autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 dxiquI"
-            id="dob"
-            placeholder="yyyy-mm-dd"
-            value=""
-          />
+          </button>
         </div>
       </div>
     </div>
@@ -221,10 +236,22 @@ exports[`DateInput renders an input with a label 1`] = `
         class="StyledBox-sc-13pk1d4-0 fFeUPF FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          class="StyledBox-sc-13pk1d4-0 bcbTf"
         >
           <div
-            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 eDvKCK"
+            class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          >
+            <input
+              autocomplete="off"
+              class="StyledMaskedInput-sc-99vkfa-0 hNeIZN"
+              id="dob"
+              placeholder="yyyy-mm-dd"
+              value=""
+            />
+          </div>
+          <button
+            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            type="button"
           >
             <svg
               aria-label="Calendar"
@@ -238,14 +265,7 @@ exports[`DateInput renders an input with a label 1`] = `
                 stroke-width="2"
               />
             </svg>
-          </div>
-          <input
-            autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 dxiquI"
-            id="dob"
-            placeholder="yyyy-mm-dd"
-            value=""
-          />
+          </button>
         </div>
       </div>
     </div>
@@ -273,10 +293,22 @@ exports[`DateInput renders an input with a validation error 1`] = `
         class="StyledBox-sc-13pk1d4-0 dXaGkl FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          class="StyledBox-sc-13pk1d4-0 bcbTf"
         >
           <div
-            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 eDvKCK"
+            class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          >
+            <input
+              autocomplete="off"
+              class="StyledMaskedInput-sc-99vkfa-0 hNeIZN"
+              id="dob"
+              placeholder="yyyy-mm-dd"
+              value=""
+            />
+          </div>
+          <button
+            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            type="button"
           >
             <svg
               aria-label="Calendar"
@@ -290,14 +322,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
                 stroke-width="2"
               />
             </svg>
-          </div>
-          <input
-            autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 dxiquI"
-            id="dob"
-            placeholder="yyyy-mm-dd"
-            value=""
-          />
+          </button>
         </div>
       </div>
       <span
@@ -330,10 +355,22 @@ exports[`DateInput renders an input with an info message 1`] = `
         class="StyledBox-sc-13pk1d4-0 fFeUPF FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          class="StyledBox-sc-13pk1d4-0 bcbTf"
         >
           <div
-            class="StyledMaskedInput__StyledIcon-sc-99vkfa-2 eDvKCK"
+            class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 gNPSOw"
+          >
+            <input
+              autocomplete="off"
+              class="StyledMaskedInput-sc-99vkfa-0 hNeIZN"
+              id="dob"
+              placeholder="yyyy-mm-dd"
+              value=""
+            />
+          </div>
+          <button
+            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            type="button"
           >
             <svg
               aria-label="Calendar"
@@ -347,14 +384,7 @@ exports[`DateInput renders an input with an info message 1`] = `
                 stroke-width="2"
               />
             </svg>
-          </div>
-          <input
-            autocomplete="off"
-            class="StyledMaskedInput-sc-99vkfa-0 dxiquI"
-            id="dob"
-            placeholder="yyyy-mm-dd"
-            value=""
-          />
+          </button>
         </div>
       </div>
       <span
