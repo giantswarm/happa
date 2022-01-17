@@ -103,7 +103,7 @@
     "serialize-javascript": "6.0.0",
     "stacktrace-js": "2.0.2",
     "styled-components": "5.3.3",
-    "superagent": "6.1.0",
+    "superagent": "7.0.2",
     "swr": "1.1.2",
     "underscore": "1.13.2",
     "uuid": "8.3.2",
