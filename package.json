@@ -202,7 +202,7 @@
     "jest": "27.4.7",
     "json-loader": "0.5.7",
     "lint-staged": "12.1.7",
-    "mini-css-extract-plugin": "2.4.7",
+    "mini-css-extract-plugin": "2.5.0",
     "nock": "13.2.2",
     "node-sass": "7.0.1",
     "prettier": "2.5.1",
