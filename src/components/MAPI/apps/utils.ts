@@ -1162,3 +1162,115 @@ export function fetchCatalogListForOrganizationsKey(
     isAdmin ? 'isAdmin' : ''
   }`;
 }
+
+export async function fetchAppCatalogEntryListForOrganizations(
+  clientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cache: Cache,
+  organizations: Record<string, IOrganization>
+): Promise<applicationv1alpha1.IAppCatalogEntryList> {
+  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+    {
+      labelSelector: {
+        matchingLabels: { [applicationv1alpha1.labelLatest]: 'true' },
+      },
+    };
+
+  // Check if the user has access to list appcatalogentries in all namespaces
+  const request: authorizationv1.ISelfSubjectAccessReviewSpec = {
+    resourceAttributes: {
+      namespace: '',
+      verb: 'list',
+      group: 'application.giantswarm.io',
+      resource: 'appcatalogentries',
+    },
+  };
+
+  const accessReviewResponse =
+    await authorizationv1.createSelfSubjectAccessReview(
+      clientFactory(),
+      auth,
+      request
+    );
+
+  if (accessReviewResponse.status?.allowed) {
+    return applicationv1alpha1.getAppCatalogEntryList(
+      clientFactory(),
+      auth,
+      appCatalogEntryListGetOptions
+    );
+  }
+
+  // If not, we fetch appcatalogentries in each organization
+  // namespace the user belongs to, plus `default`
+  const appCatalogEntryList: applicationv1alpha1.IAppCatalogEntryList = {
+    apiVersion: 'application.giantswarm.io/v1alpha1',
+    kind: applicationv1alpha1.AppCatalogEntryList,
+    metadata: {},
+    items: [],
+  };
+
+  const namespaces = Object.entries(organizations).map(
+    ([_, orgEntry]) =>
+      orgEntry.namespace ?? getNamespaceFromOrgName(orgEntry.id)
+  );
+  namespaces.push('default');
+
+  const requests = namespaces.map(async (namespace) => {
+    appCatalogEntryListGetOptions.namespace = namespace;
+
+    const appCatalogEntryListKey =
+      applicationv1alpha1.getAppCatalogEntryListKey(
+        appCatalogEntryListGetOptions
+      );
+
+    const cachedAppCatalogEntryList: applicationv1alpha1.IAppCatalogEntryList =
+      cache.get(appCatalogEntryListKey);
+
+    if (cachedAppCatalogEntryList) {
+      return cachedAppCatalogEntryList.items;
+    }
+
+    try {
+      const appCatalogEntries =
+        await applicationv1alpha1.getAppCatalogEntryList(
+          clientFactory(),
+          auth,
+          appCatalogEntryListGetOptions
+        );
+
+      cache.set(appCatalogEntryListKey, appCatalogEntries);
+
+      return appCatalogEntries.items;
+    } catch (err) {
+      if (
+        !metav1.isStatusError(
+          (err as GenericResponse).data,
+          metav1.K8sStatusErrorReasons.Forbidden
+        )
+      ) {
+        return Promise.reject(err);
+      }
+
+      return [];
+    }
+  });
+
+  const responses = await Promise.all(requests);
+
+  for (const response of responses) {
+    if (response.length > 0) {
+      appCatalogEntryList.items.push(...response);
+    }
+  }
+
+  return appCatalogEntryList;
+}
+
+export function fetchAppCatalogEntryListForOrganizationsKey(
+  organizations: Record<string, IOrganization>
+): string {
+  return `fetchAppCatalogEntryListForOrgs/${Object.keys(organizations).join(
+    '/'
+  )}`;
+}
