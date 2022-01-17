@@ -7,6 +7,7 @@ import {
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import AppsProvider from 'MAPI/apps/AppsProvider';
+import { usePermissionsForCatalogs } from 'MAPI/apps/permissions/usePermissionsForCatalogs';
 import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
@@ -39,7 +40,19 @@ function getComponent(props: React.ComponentPropsWithoutRef<typeof AppList>) {
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
+jest.mock('MAPI/apps/permissions/usePermissionsForCatalogs');
+
 describe('AppList', () => {
+  (usePermissionsForCatalogs as jest.Mock).mockReturnValue(defaultPermissions);
+
   it('renders without crashing', () => {
     render(getComponent({}));
   });
