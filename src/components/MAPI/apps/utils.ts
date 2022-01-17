@@ -2,11 +2,16 @@ import produce from 'immer';
 import { YAMLException } from 'js-yaml';
 import { IProviderClusterForCluster } from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
-import { getClusterDescription, getClusterReleaseVersion } from 'MAPI/utils';
+import {
+  getClusterDescription,
+  getClusterReleaseVersion,
+  getNamespaceFromOrgName,
+} from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { AppConstants, Constants } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -1034,4 +1039,126 @@ export async function getCatalogNamespace(
  */
 export function getCatalogNamespaceKey(app: applicationv1alpha1.IApp): string {
   return `getCatalogNamespace/${app.spec.catalog}/${app.metadata.name}`;
+}
+
+export async function fetchCatalogListForOrganizations(
+  clientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cache: Cache,
+  organizations: Record<string, IOrganization>,
+  isAdmin: boolean
+): Promise<applicationv1alpha1.ICatalogList> {
+  const metadata = await auth.getImpersonationMetadata();
+
+  if (isAdmin && !metadata) {
+    // Admins can see any type of catalogs,
+    // but only if they are not impersonating any users
+    return applicationv1alpha1.getCatalogList(clientFactory(), auth);
+  }
+
+  const catalogListGetOptions: applicationv1alpha1.IGetCatalogListOptions = {
+    labelSelector: {
+      matchingLabels: {
+        [applicationv1alpha1.labelCatalogVisibility]: 'public',
+        [applicationv1alpha1.labelCatalogType]: 'stable',
+      },
+    },
+  };
+
+  // Check if the user has access to list catalogs in all namespaces
+  const request: authorizationv1.ISelfSubjectAccessReviewSpec = {
+    resourceAttributes: {
+      namespace: '',
+      verb: 'list',
+      group: 'application.giantswarm.io',
+      resource: 'catalogs',
+    },
+  };
+
+  const accessReviewResponse =
+    await authorizationv1.createSelfSubjectAccessReview(
+      clientFactory(),
+      auth,
+      request
+    );
+
+  if (accessReviewResponse.status?.allowed) {
+    return applicationv1alpha1.getCatalogList(
+      clientFactory(),
+      auth,
+      catalogListGetOptions
+    );
+  }
+
+  // If not, we fetch catalogs in each organization namespace the user
+  // belongs to, plus `default`
+  const catalogList: applicationv1alpha1.ICatalogList = {
+    apiVersion: 'application.giantswarm.io/v1alpha1',
+    kind: applicationv1alpha1.CatalogList,
+    metadata: {},
+    items: [],
+  };
+
+  const namespaces = Object.entries(organizations).map(
+    ([_, orgEntry]) =>
+      orgEntry.namespace ?? getNamespaceFromOrgName(orgEntry.id)
+  );
+  namespaces.push('default');
+
+  const requests = namespaces.map(async (namespace) => {
+    catalogListGetOptions.namespace = namespace;
+
+    const catalogListKey = applicationv1alpha1.getCatalogListKey(
+      catalogListGetOptions
+    );
+
+    const cachedCatalogList: applicationv1alpha1.ICatalogList =
+      cache.get(catalogListKey);
+
+    if (cachedCatalogList) {
+      return cachedCatalogList.items;
+    }
+
+    try {
+      const catalogs = await applicationv1alpha1.getCatalogList(
+        clientFactory(),
+        auth,
+        catalogListGetOptions
+      );
+
+      cache.set(catalogListKey, catalogs);
+
+      return catalogs.items;
+    } catch (err) {
+      if (
+        !metav1.isStatusError(
+          (err as GenericResponse).data,
+          metav1.K8sStatusErrorReasons.Forbidden
+        )
+      ) {
+        return Promise.reject(err);
+      }
+
+      return [];
+    }
+  });
+
+  const responses = await Promise.all(requests);
+
+  for (const response of responses) {
+    if (response.length > 0) {
+      catalogList.items.push(...response);
+    }
+  }
+
+  return catalogList;
+}
+
+export function fetchCatalogListForOrganizationsKey(
+  organizations: Record<string, IOrganization>,
+  isAdmin: boolean
+): string {
+  return `fetchCatalogListForOrgs/${Object.keys(organizations).join('/')}/${
+    isAdmin ? 'isAdmin' : ''
+  }`;
 }
