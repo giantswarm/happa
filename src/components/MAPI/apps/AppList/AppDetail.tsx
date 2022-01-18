@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import DocumentTitle from 'shared/DocumentTitle';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -25,7 +25,12 @@ import { compare } from 'utils/semver';
 
 import InspectAppGuide from '../guides/InspectAppGuide';
 import InstallAppGuide from '../guides/InstallAppGuide';
-import { isTestRelease } from '../utils';
+import { usePermissionsForAppCatalogEntries } from '../permissions/usePermissionsForAppCatalogEntries';
+import {
+  fetchAppCatalogEntryListForOrganizations,
+  fetchAppCatalogEntryListForOrganizationsKey,
+  isTestRelease,
+} from '../utils';
 import {
   fetchAppCatalogEntryReadme,
   fetchAppCatalogEntryReadmeKey,
@@ -57,17 +62,22 @@ const AppDetail: React.FC<{}> = () => {
     app: string;
     version: string;
   }>();
-
   const { catalogName, app, version } = match.params;
+
+  const provider = window.config.info.general.provider;
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const { cache } = useSWRConfig();
   const dispatch = useDispatch();
 
-  const appCatalogEntryListClient = useRef(clientFactory());
+  const appCatalogEntriesPermissions = usePermissionsForAppCatalogEntries(
+    provider,
+    'default'
+  );
 
-  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+  const appCatalogEntryGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
     useMemo(
       () => ({
         labelSelector: {
@@ -79,20 +89,21 @@ const AppDetail: React.FC<{}> = () => {
       }),
       [app, catalogName]
     );
+  const appCatalogEntryListKey = appCatalogEntriesPermissions.canList
+    ? fetchAppCatalogEntryListForOrganizationsKey({}, appCatalogEntryGetOptions)
+    : null;
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,
     GenericResponseError
-  >(
-    applicationv1alpha1.getAppCatalogEntryListKey(
-      appCatalogEntryListGetOptions
-    ),
-    () =>
-      applicationv1alpha1.getAppCatalogEntryList(
-        appCatalogEntryListClient.current,
-        auth,
-        appCatalogEntryListGetOptions
-      )
+  >(appCatalogEntryListKey, () =>
+    fetchAppCatalogEntryListForOrganizations(
+      clientFactory,
+      auth,
+      cache,
+      {},
+      appCatalogEntryGetOptions
+    )
   );
 
   useEffect(() => {
