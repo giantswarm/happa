@@ -4,9 +4,10 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { getUserIsAdmin } from 'model/stores/main/selectors';
-import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { selectOrganizations } from 'model/stores/organization/selectors';
+import React, { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
@@ -16,6 +17,14 @@ import usePrevious from 'utils/hooks/usePrevious';
 
 import { useAppsContext } from '../AppsProvider';
 import ListAppCatalogsAndAppsGuide from '../guides/ListAppCatalogsAndAppsGuide';
+import { usePermissionsForAppCatalogEntries } from '../permissions/usePermissionsForAppCatalogEntries';
+import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
+import {
+  fetchAppCatalogEntryListForOrganizations,
+  fetchAppCatalogEntryListForOrganizationsKey,
+  fetchCatalogListForOrganizations,
+  fetchCatalogListForOrganizationsKey,
+} from '../utils';
 import {
   compareAppCatalogEntriesFns,
   filterAppCatalogEntries,
@@ -27,37 +36,33 @@ const SEARCH_THROTTLE_RATE_MS = 250;
 
 const AppList: React.FC<{}> = () => {
   const isAdmin = useSelector(getUserIsAdmin);
+  const organizations = useSelector(selectOrganizations());
+
+  const provider = window.config.info.general.provider;
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
+  const { cache } = useSWRConfig();
 
-  const catalogListClient = useRef(clientFactory());
-  const catalogListGetOptions: applicationv1alpha1.IGetCatalogListOptions =
-    useMemo(() => {
-      // Admins can see any type of catalogs.
-      if (isAdmin) return {};
+  const catalogPermissions = usePermissionsForCatalogs(provider, 'default');
 
-      return {
-        labelSelector: {
-          matchingLabels: {
-            [applicationv1alpha1.labelCatalogVisibility]: 'public',
-            [applicationv1alpha1.labelCatalogType]: 'stable',
-          },
-        },
-      };
-    }, [isAdmin]);
+  const catalogListForOrganizationsKey = catalogPermissions.canList
+    ? fetchCatalogListForOrganizationsKey(organizations, isAdmin)
+    : null;
 
   const {
     data: catalogList,
     error: catalogListError,
     isValidating: catalogListIsValidating,
   } = useSWR<applicationv1alpha1.ICatalogList, GenericResponseError>(
-    applicationv1alpha1.getCatalogListKey(catalogListGetOptions),
+    catalogListForOrganizationsKey,
     () =>
-      applicationv1alpha1.getCatalogList(
-        catalogListClient.current,
+      fetchCatalogListForOrganizations(
+        clientFactory,
         auth,
-        catalogListGetOptions
+        cache,
+        organizations,
+        isAdmin
       )
   );
   const prevcatalogList = usePrevious(catalogList);
@@ -114,31 +119,27 @@ const AppList: React.FC<{}> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [catalogList, prevcatalogList, selectedCatalogs]);
 
-  const appCatalogEntryListClient = useRef(clientFactory());
+  const appCatalogEntriesPermissions = usePermissionsForAppCatalogEntries(
+    provider,
+    'default'
+  );
 
-  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
-    useMemo(
-      () => ({
-        labelSelector: {
-          matchingLabels: { [applicationv1alpha1.labelLatest]: 'true' },
-        },
-      }),
-      []
-    );
+  const appCatalogEntryListKey = appCatalogEntriesPermissions.canList
+    ? fetchAppCatalogEntryListForOrganizationsKey(organizations)
+    : null;
 
   const {
     data: appCatalogEntryList,
     error: appCatalogEntryListError,
     isValidating: appCatalogEntryListIsValidating,
   } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponseError>(
-    applicationv1alpha1.getAppCatalogEntryListKey(
-      appCatalogEntryListGetOptions
-    ),
+    appCatalogEntryListKey,
     () =>
-      applicationv1alpha1.getAppCatalogEntryList(
-        appCatalogEntryListClient.current,
+      fetchAppCatalogEntryListForOrganizations(
+        clientFactory,
         auth,
-        appCatalogEntryListGetOptions
+        cache,
+        organizations
       )
   );
 

@@ -7,11 +7,14 @@ import {
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import AppsProvider from 'MAPI/apps/AppsProvider';
+import { usePermissionsForAppCatalogEntries } from 'MAPI/apps/permissions/usePermissionsForAppCatalogEntries';
+import { usePermissionsForCatalogs } from 'MAPI/apps/permissions/usePermissionsForCatalogs';
 import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
+import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
@@ -39,7 +42,26 @@ function getComponent(props: React.ComponentPropsWithoutRef<typeof AppList>) {
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
+jest.unmock(
+  'model/services/mapi/authorizationv1/createSelfSubjectAccessReview'
+);
+jest.mock('MAPI/apps/permissions/usePermissionsForCatalogs');
+jest.mock('MAPI/apps/permissions/usePermissionsForAppCatalogEntries');
+
 describe('AppList', () => {
+  (usePermissionsForCatalogs as jest.Mock).mockReturnValue(defaultPermissions);
+  (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+    defaultPermissions
+  );
+
   it('renders without crashing', () => {
     render(getComponent({}));
   });
@@ -49,6 +71,23 @@ describe('AppList', () => {
       .get('/apis/application.giantswarm.io/v1alpha1/catalogs/')
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.catalogList);
 
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'application.giantswarm.io',
+            resource: 'appcatalogentries',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListAppCatalogEntriesAtClusterScope
+      );
     nock(window.config.mapiEndpoint)
       .get(
         '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=latest%3Dtrue'
@@ -77,6 +116,23 @@ describe('AppList', () => {
       .get('/apis/application.giantswarm.io/v1alpha1/catalogs/')
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.catalogList);
 
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'application.giantswarm.io',
+            resource: 'appcatalogentries',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListAppCatalogEntriesAtClusterScope
+      );
     nock(window.config.mapiEndpoint)
       .get(
         '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=latest%3Dtrue'
@@ -133,6 +189,23 @@ describe('AppList', () => {
       .get('/apis/application.giantswarm.io/v1alpha1/catalogs/')
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.catalogList);
 
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'application.giantswarm.io',
+            resource: 'appcatalogentries',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListAppCatalogEntriesAtClusterScope
+      );
     nock(window.config.mapiEndpoint)
       .get(
         '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=latest%3Dtrue'
