@@ -6,6 +6,7 @@ import {
 import { createMemoryHistory } from 'history';
 import AppsProvider from 'MAPI/apps/AppsProvider';
 import { usePermissionsForAppCatalogEntries } from 'MAPI/apps/permissions/usePermissionsForAppCatalogEntries';
+import { usePermissionsForCatalogs } from 'MAPI/apps/permissions/usePermissionsForCatalogs';
 import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
@@ -63,11 +64,14 @@ jest.unmock(
   'model/services/mapi/authorizationv1/createSelfSubjectAccessReview'
 );
 jest.mock('MAPI/apps/permissions/usePermissionsForAppCatalogEntries');
+jest.mock('MAPI/apps/permissions/usePermissionsForCatalogs');
 
 describe('AppDetail', () => {
   (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
     defaultPermissions
   );
+  (usePermissionsForCatalogs as jest.Mock).mockReturnValue(defaultPermissions);
+
   it('renders without crashing', () => {
     render(getComponent({}));
   });
