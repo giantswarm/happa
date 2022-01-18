@@ -9,11 +9,13 @@ import {
   IProviderClusterForCluster,
   mapClustersToProviderClusters,
 } from 'MAPI/clusters/utils';
+import {
+  fetchClusterListForOrganizations,
+  fetchClusterListForOrganizationsKey,
+} from 'MAPI/organizations/utils';
 import { getPreviewReleaseVersions } from 'MAPI/releases/utils';
 import { Cluster, ClusterList } from 'MAPI/types';
 import {
-  fetchClusterList,
-  fetchClusterListKey,
   fetchProviderClustersForClusters,
   fetchProviderClustersForClustersKey,
   getClusterDescription,
@@ -35,7 +37,7 @@ import React, {
   useState,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
@@ -147,16 +149,25 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     next();
   };
 
+  const organizations = useSelector(selectOrganizations());
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
+  const { cache } = useSWRConfig();
 
   const provider = window.config.info.general.provider;
 
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterList,
     GenericResponseError
-  >(fetchClusterListKey(provider, ''), () =>
-    fetchClusterList(clientFactory, auth, provider, '')
+  >(fetchClusterListForOrganizationsKey(organizations), () =>
+    fetchClusterListForOrganizations(
+      clientFactory,
+      auth,
+      cache,
+      provider,
+      organizations
+    )
   );
 
   useEffect(() => {
@@ -206,8 +217,6 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   const [filteredClusters, setFilteredClusters] = useState<
     React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters']
   >([]);
-
-  const organizations = useSelector(selectOrganizations());
 
   // TODO: remove once preview releases are supported
   const releaseListClient = useRef(clientFactory());
