@@ -5,11 +5,13 @@ import {
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import AppsProvider from 'MAPI/apps/AppsProvider';
+import { usePermissionsForAppCatalogEntries } from 'MAPI/apps/permissions/usePermissionsForAppCatalogEntries';
 import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
+import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
@@ -49,7 +51,23 @@ jest.mock('react-router', () => ({
   }),
 }));
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
+jest.unmock(
+  'model/services/mapi/authorizationv1/createSelfSubjectAccessReview'
+);
+jest.mock('MAPI/apps/permissions/usePermissionsForAppCatalogEntries');
+
 describe('AppDetail', () => {
+  (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+    defaultPermissions
+  );
   it('renders without crashing', () => {
     render(getComponent({}));
   });
@@ -59,6 +77,23 @@ describe('AppDetail', () => {
       applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1;
     const catalog = applicationv1alpha1Mocks.defaultAppCatalog;
 
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'application.giantswarm.io',
+            resource: 'appcatalogentries',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListAppCatalogEntriesAtClusterScope
+      );
     nock(window.config.mapiEndpoint)
       .get(
         `/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3D${appCatalogEntry.spec.appName}%2Capplication.giantswarm.io%2Fcatalog%3D${appCatalogEntry.spec.catalog.name}`
