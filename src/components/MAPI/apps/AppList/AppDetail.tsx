@@ -26,6 +26,7 @@ import { compare } from 'utils/semver';
 import InspectAppGuide from '../guides/InspectAppGuide';
 import InstallAppGuide from '../guides/InstallAppGuide';
 import { usePermissionsForAppCatalogEntries } from '../permissions/usePermissionsForAppCatalogEntries';
+import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
 import {
   fetchAppCatalogEntryListForOrganizations,
   fetchAppCatalogEntryListForOrganizationsKey,
@@ -198,12 +199,18 @@ const AppDetail: React.FC<{}> = () => {
 
   const catalogClient = useRef(clientFactory());
 
-  const catalogKey = selectedEntry
-    ? applicationv1alpha1.getCatalogKey(
-        selectedEntry.spec.catalog.namespace,
-        catalogName
-      )
-    : null;
+  const catalogPermissions = usePermissionsForCatalogs(
+    provider,
+    selectedEntry?.spec.catalog.namespace || ''
+  );
+
+  const catalogKey =
+    selectedEntry && catalogPermissions.canGet
+      ? applicationv1alpha1.getCatalogKey(
+          selectedEntry.spec.catalog.namespace,
+          catalogName
+        )
+      : null;
 
   const { data: catalog, error: catalogError } = useSWR<
     applicationv1alpha1.ICatalog,
