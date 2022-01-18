@@ -124,8 +124,21 @@ const AppList: React.FC<{}> = () => {
     'default'
   );
 
+  const appCatalogEntryGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+    useMemo(
+      () => ({
+        labelSelector: {
+          matchingLabels: { [applicationv1alpha1.labelLatest]: 'true' },
+        },
+      }),
+      []
+    );
+
   const appCatalogEntryListKey = appCatalogEntriesPermissions.canList
-    ? fetchAppCatalogEntryListForOrganizationsKey(organizations)
+    ? fetchAppCatalogEntryListForOrganizationsKey(
+        organizations,
+        appCatalogEntryGetOptions
+      )
     : null;
 
   const {
@@ -139,7 +152,8 @@ const AppList: React.FC<{}> = () => {
         clientFactory,
         auth,
         cache,
-        organizations
+        organizations,
+        appCatalogEntryGetOptions
       )
   );
 
