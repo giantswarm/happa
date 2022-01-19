@@ -7,6 +7,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { getAppCatalogEntryReadmeURL } from 'model/services/mapi/applicationv1alpha1';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -26,6 +27,7 @@ import { compare } from 'utils/semver';
 import InspectAppGuide from '../guides/InspectAppGuide';
 import InstallAppGuide from '../guides/InstallAppGuide';
 import { usePermissionsForAppCatalogEntries } from '../permissions/usePermissionsForAppCatalogEntries';
+import { usePermissionsForApps } from '../permissions/usePermissionsForApps';
 import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
 import {
   fetchAppCatalogEntryListForOrganizations,
@@ -201,7 +203,7 @@ const AppDetail: React.FC<{}> = () => {
 
   const catalogPermissions = usePermissionsForCatalogs(
     provider,
-    selectedEntry?.spec.catalog.namespace || ''
+    selectedEntry?.spec.catalog.namespace ?? ''
   );
 
   const catalogKey =
@@ -260,6 +262,19 @@ const AppDetail: React.FC<{}> = () => {
     ? formatVersion(selectedEntry.spec.appVersion)
     : undefined;
 
+  const selectedOrgName = useSelector(
+    (state: IState) => state.main.selectedOrganization
+  );
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = selectedOrgName
+    ? organizations[selectedOrgName]
+    : undefined;
+
+  const appsPermissions = usePermissionsForApps(
+    provider,
+    selectedClusterID ?? selectedOrg?.namespace ?? ''
+  );
+
   return (
     <DocumentTitle title={appName ? `App Details | ${appName}` : 'App Details'}>
       <Breadcrumb
@@ -294,6 +309,7 @@ const AppDetail: React.FC<{}> = () => {
                   catalogName={catalog.metadata.name}
                   versions={otherEntries}
                   selectedClusterID={selectedClusterID}
+                  appsPermissions={appsPermissions}
                 />
               ) : undefined
             }

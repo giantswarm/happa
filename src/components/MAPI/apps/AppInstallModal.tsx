@@ -49,6 +49,7 @@ import useDebounce from 'utils/hooks/useDebounce';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
+import { IAppsPermissions } from './permissions/types';
 import { createApp, filterClusters, formatYAMLError } from './utils';
 
 function getOrganizationForCluster(
@@ -88,6 +89,7 @@ interface IAppInstallModalProps {
   catalogName: string;
   versions: IVersion[];
   selectedClusterID: string | null;
+  appsPermissions?: IAppsPermissions;
 }
 
 const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
