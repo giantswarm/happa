@@ -23,6 +23,7 @@ export interface IConfigurationValues {
   sentryEnvironment: string;
   sentryReleaseVersion: string;
   sentryDebug: boolean;
+  sentryPipeline: string;
   sentrySampleRate: number;
 
   FEATURE_MAPI_AUTH: boolean;
@@ -97,6 +98,7 @@ export async function getConfigurationValues(
   config.setDefault('sentry-environment', 'development');
   config.setDefault('sentry-release-version', 'development');
   config.setDefault('sentry-sample-rate', 0.5);
+  config.setDefault('sentry-pipeline', 'testing');
 
   config.setDefault('feature-monitoring', true);
 
@@ -133,6 +135,7 @@ export async function getConfigurationValues(
     sentryDsn: config.getString('sentry-dsn'),
     sentryEnvironment: config.getString('sentry-environment'),
     sentryReleaseVersion: config.getString('sentry-release-version'),
+    sentryPipeline: config.getString('sentry-pipeline'),
     sentryDebug: config.getBoolean('sentry-debug'),
     sentrySampleRate: config.getNumber('sentry-sample-rate'),
 
