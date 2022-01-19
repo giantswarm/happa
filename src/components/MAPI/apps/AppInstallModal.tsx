@@ -5,6 +5,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import yaml from 'js-yaml';
+import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import {
   IProviderClusterForCluster,
   mapClustersToProviderClusters,
@@ -153,7 +154,13 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     next();
   };
 
+  const selectedOrgName = useSelector(
+    (state: IState) => state.main.selectedOrganization
+  );
   const organizations = useSelector(selectOrganizations());
+  const selectedOrg = selectedOrgName
+    ? organizations[selectedOrgName]
+    : undefined;
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -161,10 +168,21 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   const provider = window.config.info.general.provider;
 
+  const clustersPermissions = usePermissionsForClusters(
+    provider,
+    selectedOrg?.namespace ?? ''
+  );
+  const canReadClusters =
+    clustersPermissions.canList && clustersPermissions.canGet;
+
+  const clusterListForOrganizationsKey = canReadClusters
+    ? fetchClusterListForOrganizationsKey(organizations)
+    : null;
+
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterList,
     GenericResponseError
-  >(fetchClusterListForOrganizationsKey(organizations), () =>
+  >(clusterListForOrganizationsKey, () =>
     fetchClusterListForOrganizations(
       clientFactory,
       auth,
