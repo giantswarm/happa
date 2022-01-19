@@ -464,7 +464,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         content={
           <Tooltip>
             {!canInstallApps
-              ? 'For installing an app, you need additional permissions'
+              ? 'For installing this app, you need additional permissions'
               : 'No clusters available for app installation'}
           </Tooltip>
         }
