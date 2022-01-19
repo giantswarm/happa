@@ -18,6 +18,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import AppInstallModal from '../AppInstallModal';
+import { IAppsPermissions } from '../permissions/types';
 
 const defaultState: IState = {
   ...preloginState,
@@ -67,6 +68,15 @@ const defaultPermissions = {
   canUpdate: true,
   canCreate: true,
   canDelete: true,
+};
+
+const defaultAppsPermissions: IAppsPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+  canConfigure: true,
 };
 
 jest.unmock(
@@ -122,6 +132,7 @@ describe('AppInstallModal', () => {
         catalogName: app.spec.catalog,
         versions: [],
         selectedClusterID: null,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -220,6 +231,7 @@ describe('AppInstallModal', () => {
           },
         ],
         selectedClusterID: null,
+        appsPermissions: defaultAppsPermissions,
       })
     );
 
@@ -236,5 +248,28 @@ describe('AppInstallModal', () => {
         `Your app ${app.metadata.name} is being installed on ${capiv1alpha3Mocks.randomCluster1.metadata.name}`
       )
     ).toBeInTheDocument();
+  });
+
+  it('displays app installation button as disabled if the user does not have permissions to install apps', () => {
+    const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
+
+    render(
+      getComponent({
+        appName: app.metadata.name,
+        chartName: app.spec.name,
+        catalogName: app.spec.catalog,
+        versions: [],
+        selectedClusterID: null,
+        appsPermissions: {
+          ...defaultAppsPermissions,
+          canCreate: false,
+          canConfigure: false,
+        },
+      })
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Install in cluster' })
+    ).toBeDisabled();
   });
 });
