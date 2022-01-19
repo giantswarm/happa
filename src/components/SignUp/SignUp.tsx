@@ -215,7 +215,9 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
           statusMessage: statusMessage,
         });
 
-        ErrorReporter.getInstance().notify(error as Error);
+        if (error.message !== 'InvalidToken') {
+          ErrorReporter.getInstance().notify(error as Error);
+        }
       });
   }
 
