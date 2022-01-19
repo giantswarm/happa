@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
+import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import { IMainState } from 'model/stores/main/types';
@@ -10,6 +11,7 @@ import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
+import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
 import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
 import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
@@ -59,7 +61,22 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
+jest.unmock(
+  'model/services/mapi/authorizationv1/createSelfSubjectAccessReview'
+);
+jest.mock('MAPI/releases/permissions/usePermissionsForReleases');
+
 describe('AppInstallModal', () => {
+  (usePermissionsForReleases as jest.Mock).mockReturnValue(defaultPermissions);
+
   it('renders without crashing', () => {
     const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
 
@@ -77,6 +94,23 @@ describe('AppInstallModal', () => {
   it('can pick a cluster if one is not already selected', async () => {
     const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
 
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'cluster.x-k8s.io',
+            resource: 'clusters',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
+      );
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomClusterList);
@@ -119,6 +153,23 @@ describe('AppInstallModal', () => {
   it('can install an app using the default values', async () => {
     const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
 
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'cluster.x-k8s.io',
+            resource: 'clusters',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
+      );
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
       .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomClusterList);
