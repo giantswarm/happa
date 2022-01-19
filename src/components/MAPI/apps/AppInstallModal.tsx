@@ -13,6 +13,7 @@ import {
   fetchClusterListForOrganizations,
   fetchClusterListForOrganizationsKey,
 } from 'MAPI/organizations/utils';
+import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { getPreviewReleaseVersions } from 'MAPI/releases/utils';
 import { Cluster, ClusterList } from 'MAPI/types';
 import {
@@ -221,10 +222,15 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   // TODO: remove once preview releases are supported
   const releaseListClient = useRef(clientFactory());
 
+  const releasesPermissions = usePermissionsForReleases(provider, 'default');
+  const releaseListKey = releasesPermissions.canList
+    ? releasev1alpha1.getReleaseListKey()
+    : null;
+
   const { data: releaseList, error: releaseListError } = useSWR<
     releasev1alpha1.IReleaseList,
     GenericResponseError
-  >(releasev1alpha1.getReleaseListKey(), () =>
+  >(releaseListKey, () =>
     releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
