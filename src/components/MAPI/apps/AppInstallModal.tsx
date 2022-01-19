@@ -42,6 +42,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import Modal from 'UI/Layout/Modal';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
@@ -343,8 +344,11 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     return false;
   };
 
+  const canInstallApps =
+    props.appsPermissions?.canCreate && props.appsPermissions?.canConfigure;
+
   const installApp = async () => {
-    if (!clusterName) return;
+    if (!clusterName || !canInstallApps) return;
 
     const cluster = clusterList?.items.find(
       (c) => c.metadata.name === clusterName
@@ -438,13 +442,34 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   return (
     <>
-      <Button
-        primary={true}
-        onClick={openModal}
-        icon={<i className='fa fa-add-circle' />}
+      <TooltipContainer
+        content={
+          <Tooltip>
+            {!canInstallApps
+              ? 'For installing an app, you need additional permissions'
+              : 'No clusters available for app installation'}
+          </Tooltip>
+        }
+        show={!canInstallApps || filteredClusters.length === 0}
       >
-        Install in cluster
-      </Button>
+        <Box>
+          <Button
+            primary={true}
+            onClick={openModal}
+            icon={<i className='fa fa-add-circle' />}
+            disabled={
+              clusterList &&
+              providerClusterList &&
+              filteredClusters.length === 0
+            }
+            unauthorized={
+              typeof canInstallApps !== 'undefined' && !canInstallApps
+            }
+          >
+            Install in cluster
+          </Button>
+        </Box>
+      </TooltipContainer>
       {(() => {
         switch (pages[page]) {
           case CLUSTER_PICKER_PAGE:
