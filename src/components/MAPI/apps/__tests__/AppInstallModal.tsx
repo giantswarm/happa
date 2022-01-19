@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
+import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -83,9 +84,11 @@ jest.unmock(
   'model/services/mapi/authorizationv1/createSelfSubjectAccessReview'
 );
 jest.mock('MAPI/releases/permissions/usePermissionsForReleases');
+jest.mock('MAPI/clusters/permissions/usePermissionsForClusters');
 
 describe('AppInstallModal', () => {
   (usePermissionsForReleases as jest.Mock).mockReturnValue(defaultPermissions);
+  (usePermissionsForClusters as jest.Mock).mockReturnValue(defaultPermissions);
 
   it('renders without crashing', () => {
     const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
