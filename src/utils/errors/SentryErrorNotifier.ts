@@ -15,6 +15,8 @@ export interface ISentryErrorNotifierConfig {
   history: History<History.LocationState>;
   debug?: boolean;
   sampleRate?: number;
+  // Type of the installation. Either 'testing' or 'stable'.
+  pipeline: string;
 }
 
 export class SentryErrorNotifier implements IErrorReporterNotifier {
@@ -33,6 +35,10 @@ export class SentryErrorNotifier implements IErrorReporterNotifier {
       debug: config.debug,
       environment: config.environment,
     });
+
+    if (config.pipeline !== '') {
+      Sentry.setTag('pipeline', config.pipeline);
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
