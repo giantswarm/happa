@@ -11,7 +11,7 @@ exports[`Button renders a button with a loading animation 1`] = `
       class="StyledBox-sc-13pk1d4-0 kshQkK Button__StyledBox-sc-160jtek-0 hucncT"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 cYsLCR Button__StyledControl-sc-160jtek-2 YCrZc"
+        class="StyledButtonKind-sc-1vhfpnt-0 cYsLCR Button__StyledControl-sc-160jtek-2 bWEELh"
         disabled=""
         type="button"
       >
@@ -76,7 +76,7 @@ exports[`Button renders a disabled button 1`] = `
       class="StyledBox-sc-13pk1d4-0 kshQkK Button__StyledBox-sc-160jtek-0 hucncT"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 cYsLCR Button__StyledControl-sc-160jtek-2 YCrZc"
+        class="StyledButtonKind-sc-1vhfpnt-0 cYsLCR Button__StyledControl-sc-160jtek-2 bWEELh"
         disabled=""
         type="button"
       >
