@@ -330,6 +330,9 @@ const AppDetail: React.FC<{}> = () => {
                 appName={selectedEntry.spec.appName}
                 catalogName={selectedEntry.spec.catalog.name}
                 selectedVersion={selectedEntry.spec.version}
+                canInstallApps={
+                  appsPermissions.canCreate && appsPermissions.canConfigure
+                }
               />
             </Box>
           )}

@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import * as docs from 'model/constants/docs';
 import React from 'react';
@@ -13,12 +14,14 @@ interface IInstallAppGuideProps
   appName: string;
   catalogName: string;
   selectedVersion: string;
+  canInstallApps?: boolean;
 }
 
 const InstallAppGuide: React.FC<IInstallAppGuideProps> = ({
   appName,
   catalogName,
   selectedVersion,
+  canInstallApps,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -55,6 +58,7 @@ const InstallAppGuide: React.FC<IInstallAppGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {!canInstallApps && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Create an app manifest'
