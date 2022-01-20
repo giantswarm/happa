@@ -23,6 +23,7 @@ interface IGlobalConfig {
   sentryDsn: string;
   sentryEnvironment: string;
   sentryReleaseVersion: string;
+  sentryPipeline: string;
   sentryDebug: boolean;
   sentrySampleRate: number;
   info: {
