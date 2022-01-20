@@ -42,6 +42,7 @@ export interface IAccessControlRoleItem {
   users: Record<string, IAccessControlRoleSubjectItem>;
   serviceAccounts: Record<string, IAccessControlRoleSubjectItem>;
   permissions: IAccessControlRoleItemPermission[];
+  displayOnly?: boolean;
 }
 
 export interface IAccessControlSubjectPermissions {

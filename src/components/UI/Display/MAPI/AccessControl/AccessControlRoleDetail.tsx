@@ -53,7 +53,9 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
           <Box direction='row' wrap={true} gap='xsmall'>
             <AccessControlRoleType namespace={activeRole.namespace} />
             <Text>&bull;</Text>
-            <Text>Managed by {formatManagedBy(activeRole.managedBy)}</Text>
+            {!activeRole.displayOnly && (
+              <Text>Managed by {formatManagedBy(activeRole.managedBy)}</Text>
+            )}
           </Box>
           {activeRole.description.length > 0 && (
             <Box margin={{ top: 'small' }}>

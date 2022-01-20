@@ -93,6 +93,7 @@ export function mapResourcesToUiRoles(
               serviceAccounts: {},
               users: {},
               permissions: [],
+              displayOnly: true,
             };
           }
           const role = roleMap[res.roleRef.name];
