@@ -1,5 +1,6 @@
 import { Box, Heading, Text } from 'grommet';
 import AccessControlRoleSubjects from 'MAPI/organizations/AccessControl/AccessControlRoleSubjects';
+import { canBindRolesToSubjects } from 'MAPI/organizations/AccessControl/utils';
 import * as React from 'react';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 
@@ -17,6 +18,22 @@ export function formatManagedBy(managedBy?: string): string {
   if (!managedBy) return 'you';
 
   return `Giant Swarm (${managedBy})`;
+}
+
+function getPermissionsWarning(
+  canBindRoles: boolean,
+  canViewClusterRoleDetails: boolean
+): string {
+  switch (true) {
+    case !canBindRoles && !canViewClusterRoleDetails:
+      return 'To edit subjects and to access cluster role details, you need additional permissions. Please talk to your administrator.';
+    case !canBindRoles:
+      return 'To edit subjects, you need additional permissions. Please talk to your administrator.';
+    case !canViewClusterRoleDetails:
+      return 'To access cluster role details, you need additional permissions. Please talk to your administrator.';
+    default:
+      return '';
+  }
 }
 
 interface IAccessControlRoleDetailProps
@@ -41,6 +58,9 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
   isLoading,
   ...props
 }) => {
+  const canBindRoles = canBindRolesToSubjects(permissions);
+  const canViewClusterRoleDetails = permissions.roles[''].canList;
+
   return (
     <Box role='main' aria-label='Role details' {...props}>
       {isLoading && <AccessControlRoleDetailLoadingPlaceholder />}
@@ -60,6 +80,13 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
           {activeRole.description.length > 0 && (
             <Box margin={{ top: 'small' }}>
               <Text size='small'>{activeRole.description}</Text>
+            </Box>
+          )}
+          {(!canBindRoles || !canViewClusterRoleDetails) && (
+            <Box margin={{ top: 'small' }}>
+              <Text>
+                {getPermissionsWarning(canBindRoles, canViewClusterRoleDetails)}
+              </Text>
             </Box>
           )}
           <Box margin={{ top: 'medium' }}>
