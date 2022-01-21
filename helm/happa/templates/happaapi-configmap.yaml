@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: happaapi-configmap
+  namespace: giantswarm
+  labels:
+    app: happa
+data:
+  # Allow for large Authorization headers
+  large-client-header-buffers: 4 128k
