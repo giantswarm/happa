@@ -2,6 +2,7 @@ import { Box, Heading, Text } from 'grommet';
 import AccessControlRoleSubjects from 'MAPI/organizations/AccessControl/AccessControlRoleSubjects';
 import { canBindRolesToSubjects } from 'MAPI/organizations/AccessControl/utils';
 import * as React from 'react';
+import styled from 'styled-components';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 
 import AccessControlRoleDetailLoadingPlaceholder from './AccessControlRoleDetailLoadingPlaceholder';
@@ -13,6 +14,12 @@ import {
   IAccessControlRoleItem,
   IAccessControlRoleSubjectStatus,
 } from './types';
+
+const StyledTab = styled(Tab)<{ unauthorized?: boolean }>`
+  :hover {
+    cursor: ${({ unauthorized }) => (unauthorized ? 'not-allowed' : 'pointer')};
+  }
+`;
 
 export function formatManagedBy(managedBy?: string): string {
   if (!managedBy) return 'you';
@@ -72,9 +79,11 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
           </Box>
           <Box direction='row' wrap={true} gap='xsmall'>
             <AccessControlRoleType namespace={activeRole.namespace} />
-            <Text>&bull;</Text>
             {!activeRole.displayOnly && (
-              <Text>Managed by {formatManagedBy(activeRole.managedBy)}</Text>
+              <>
+                <Text margin={{ right: 'xsmall' }}>&bull;</Text>
+                <Text>Managed by {formatManagedBy(activeRole.managedBy)}</Text>
+              </>
             )}
           </Box>
           {activeRole.description.length > 0 && (
@@ -85,6 +94,11 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
           {(!canBindRoles || !canViewClusterRoleDetails) && (
             <Box margin={{ top: 'small' }}>
               <Text>
+                <i
+                  className='fa fa-ban'
+                  role='presentation'
+                  aria-hidden={true}
+                />{' '}
                 {getPermissionsWarning(canBindRoles, canViewClusterRoleDetails)}
               </Text>
             </Box>
@@ -103,11 +117,15 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
                   permissions={permissions}
                 />
               </Tab>
-              <Tab title='Permissions' disabled={activeRole.displayOnly}>
+              <StyledTab
+                title='Permissions'
+                disabled={activeRole.displayOnly}
+                unauthorized={activeRole.displayOnly}
+              >
                 <AccessControlRolePermissions
                   permissions={activeRole.permissions}
                 />
-              </Tab>
+              </StyledTab>
             </Tabs>
           </Box>
         </>
