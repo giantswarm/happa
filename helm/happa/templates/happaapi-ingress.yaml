@@ -17,9 +17,6 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-headers: DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Authorization, Impersonate-User, Impersonate-Group
     nginx.ingress.kubernetes.io/enable-cors: "true"
 
-    # For users with large group lists, ID tokens can become large.
-    nginx.ingress.kubernetes.io/proxy-body-size: 4m
-
     {{- if .Values.happaapi.letsencrypt }}
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-giantswarm"
