@@ -76,7 +76,7 @@ const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
                   permissions={permissions}
                 />
               </Tab>
-              <Tab title='Permissions'>
+              <Tab title='Permissions' disabled={activeRole.displayOnly}>
                 <AccessControlRolePermissions
                   permissions={activeRole.permissions}
                 />
