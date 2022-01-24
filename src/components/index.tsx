@@ -40,6 +40,7 @@ if (window.config.environment !== 'development') {
     environment: window.config.sentryEnvironment,
     debug: window.config.sentryDebug,
     sampleRate: window.config.sentrySampleRate,
+    pipeline: window.config.sentryPipeline,
     history,
   });
 }
