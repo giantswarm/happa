@@ -1,5 +1,7 @@
 import { filterFunc } from 'components/Apps/AppsList/utils';
 import { push } from 'connected-react-router';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { StatusCodes } from 'model/constants';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import { supportsMapiApps, supportsMapiClusters } from 'model/featureSupport';
 import {
@@ -74,11 +76,24 @@ export function batchedLayout(
       dispatch(push(MainRoutes.Login));
       dispatch(globalLoadError());
 
-      new FlashMessage(
-        'Please log in again, as your previously saved credentials appear to be invalid.',
-        messageType.WARNING,
-        messageTTL.MEDIUM
-      );
+      if (
+        (err as GenericResponseError).status === StatusCodes.BadRequest &&
+        (err as GenericResponseError).message.includes(
+          'Your request appears to be invalid'
+        )
+      ) {
+        new FlashMessage(
+          `We couldn't execute a request. Please contact support at support@giantswarm.io`,
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else {
+        new FlashMessage(
+          'Please log in again, as your previously saved credentials appear to be invalid.',
+          messageType.WARNING,
+          messageTTL.MEDIUM
+        );
+      }
 
       ErrorReporter.getInstance().notify(err as Error);
 
