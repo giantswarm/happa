@@ -5,15 +5,19 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import yaml from 'js-yaml';
+import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import {
   IProviderClusterForCluster,
   mapClustersToProviderClusters,
 } from 'MAPI/clusters/utils';
+import {
+  fetchClusterListForOrganizations,
+  fetchClusterListForOrganizationsKey,
+} from 'MAPI/organizations/utils';
+import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { getPreviewReleaseVersions } from 'MAPI/releases/utils';
 import { Cluster, ClusterList } from 'MAPI/types';
 import {
-  fetchClusterList,
-  fetchClusterListKey,
   fetchProviderClustersForClusters,
   fetchProviderClustersForClustersKey,
   getClusterDescription,
@@ -35,10 +39,11 @@ import React, {
   useState,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import Modal from 'UI/Layout/Modal';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
@@ -46,6 +51,7 @@ import useDebounce from 'utils/hooks/useDebounce';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
+import { IAppsPermissions } from './permissions/types';
 import { createApp, filterClusters, formatYAMLError } from './utils';
 
 function getOrganizationForCluster(
@@ -85,6 +91,7 @@ interface IAppInstallModalProps {
   catalogName: string;
   versions: IVersion[];
   selectedClusterID: string | null;
+  appsPermissions?: IAppsPermissions;
 }
 
 const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
@@ -147,16 +154,42 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     next();
   };
 
+  const selectedOrgName = useSelector(
+    (state: IState) => state.main.selectedOrganization
+  );
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = selectedOrgName
+    ? organizations[selectedOrgName]
+    : undefined;
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
+  const { cache } = useSWRConfig();
 
   const provider = window.config.info.general.provider;
+
+  const clustersPermissions = usePermissionsForClusters(
+    provider,
+    selectedOrg?.namespace ?? ''
+  );
+  const canReadClusters =
+    clustersPermissions.canList && clustersPermissions.canGet;
+
+  const clusterListForOrganizationsKey = canReadClusters
+    ? fetchClusterListForOrganizationsKey(organizations)
+    : null;
 
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterList,
     GenericResponseError
-  >(fetchClusterListKey(provider, ''), () =>
-    fetchClusterList(clientFactory, auth, provider, '')
+  >(clusterListForOrganizationsKey, () =>
+    fetchClusterListForOrganizations(
+      clientFactory,
+      auth,
+      cache,
+      provider,
+      organizations
+    )
   );
 
   useEffect(() => {
@@ -207,15 +240,18 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters']
   >([]);
 
-  const organizations = useSelector(selectOrganizations());
-
   // TODO: remove once preview releases are supported
   const releaseListClient = useRef(clientFactory());
+
+  const releasesPermissions = usePermissionsForReleases(provider, 'default');
+  const releaseListKey = releasesPermissions.canList
+    ? releasev1alpha1.getReleaseListKey()
+    : null;
 
   const { data: releaseList, error: releaseListError } = useSWR<
     releasev1alpha1.IReleaseList,
     GenericResponseError
-  >(releasev1alpha1.getReleaseListKey(), () =>
+  >(releaseListKey, () =>
     releasev1alpha1.getReleaseList(releaseListClient.current, auth)
   );
 
@@ -326,8 +362,11 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     return false;
   };
 
+  const canInstallApps =
+    props.appsPermissions?.canCreate && props.appsPermissions?.canConfigure;
+
   const installApp = async () => {
-    if (!clusterName) return;
+    if (!clusterName || !canInstallApps) return;
 
     const cluster = clusterList?.items.find(
       (c) => c.metadata.name === clusterName
@@ -421,13 +460,34 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   return (
     <>
-      <Button
-        primary={true}
-        onClick={openModal}
-        icon={<i className='fa fa-add-circle' />}
+      <TooltipContainer
+        content={
+          <Tooltip>
+            {!canInstallApps
+              ? 'For installing this app, you need additional permissions'
+              : 'No clusters available for app installation'}
+          </Tooltip>
+        }
+        show={!canInstallApps || filteredClusters.length === 0}
       >
-        Install in cluster
-      </Button>
+        <Box>
+          <Button
+            primary={true}
+            onClick={openModal}
+            icon={<i className='fa fa-add-circle' />}
+            disabled={
+              clusterList &&
+              providerClusterList &&
+              filteredClusters.length === 0
+            }
+            unauthorized={
+              typeof canInstallApps !== 'undefined' && !canInstallApps
+            }
+          >
+            Install in cluster
+          </Button>
+        </Box>
+      </TooltipContainer>
       {(() => {
         switch (pages[page]) {
           case CLUSTER_PICKER_PAGE:

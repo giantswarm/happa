@@ -7,6 +7,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { getAppCatalogEntryReadmeURL } from 'model/services/mapi/applicationv1alpha1';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -14,7 +15,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import DocumentTitle from 'shared/DocumentTitle';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -25,7 +26,14 @@ import { compare } from 'utils/semver';
 
 import InspectAppGuide from '../guides/InspectAppGuide';
 import InstallAppGuide from '../guides/InstallAppGuide';
-import { isTestRelease } from '../utils';
+import { usePermissionsForAppCatalogEntries } from '../permissions/usePermissionsForAppCatalogEntries';
+import { usePermissionsForApps } from '../permissions/usePermissionsForApps';
+import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
+import {
+  fetchAppCatalogEntryListForOrganizations,
+  fetchAppCatalogEntryListForOrganizationsKey,
+  isTestRelease,
+} from '../utils';
 import {
   fetchAppCatalogEntryReadme,
   fetchAppCatalogEntryReadmeKey,
@@ -57,17 +65,22 @@ const AppDetail: React.FC<{}> = () => {
     app: string;
     version: string;
   }>();
-
   const { catalogName, app, version } = match.params;
+
+  const provider = window.config.info.general.provider;
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
+  const { cache } = useSWRConfig();
   const dispatch = useDispatch();
 
-  const appCatalogEntryListClient = useRef(clientFactory());
+  const appCatalogEntriesPermissions = usePermissionsForAppCatalogEntries(
+    provider,
+    'default'
+  );
 
-  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
+  const appCatalogEntryGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
     useMemo(
       () => ({
         labelSelector: {
@@ -79,20 +92,21 @@ const AppDetail: React.FC<{}> = () => {
       }),
       [app, catalogName]
     );
+  const appCatalogEntryListKey = appCatalogEntriesPermissions.canList
+    ? fetchAppCatalogEntryListForOrganizationsKey({}, appCatalogEntryGetOptions)
+    : null;
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,
     GenericResponseError
-  >(
-    applicationv1alpha1.getAppCatalogEntryListKey(
-      appCatalogEntryListGetOptions
-    ),
-    () =>
-      applicationv1alpha1.getAppCatalogEntryList(
-        appCatalogEntryListClient.current,
-        auth,
-        appCatalogEntryListGetOptions
-      )
+  >(appCatalogEntryListKey, () =>
+    fetchAppCatalogEntryListForOrganizations(
+      clientFactory,
+      auth,
+      cache,
+      {},
+      appCatalogEntryGetOptions
+    )
   );
 
   useEffect(() => {
@@ -187,12 +201,18 @@ const AppDetail: React.FC<{}> = () => {
 
   const catalogClient = useRef(clientFactory());
 
-  const catalogKey = selectedEntry
-    ? applicationv1alpha1.getCatalogKey(
-        selectedEntry.spec.catalog.namespace,
-        catalogName
-      )
-    : null;
+  const catalogPermissions = usePermissionsForCatalogs(
+    provider,
+    selectedEntry?.spec.catalog.namespace ?? ''
+  );
+
+  const catalogKey =
+    selectedEntry && catalogPermissions.canGet
+      ? applicationv1alpha1.getCatalogKey(
+          selectedEntry.spec.catalog.namespace,
+          catalogName
+        )
+      : null;
 
   const { data: catalog, error: catalogError } = useSWR<
     applicationv1alpha1.ICatalog,
@@ -242,6 +262,19 @@ const AppDetail: React.FC<{}> = () => {
     ? formatVersion(selectedEntry.spec.appVersion)
     : undefined;
 
+  const selectedOrgName = useSelector(
+    (state: IState) => state.main.selectedOrganization
+  );
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = selectedOrgName
+    ? organizations[selectedOrgName]
+    : undefined;
+
+  const appsPermissions = usePermissionsForApps(
+    provider,
+    selectedClusterID ?? selectedOrg?.namespace ?? ''
+  );
+
   return (
     <DocumentTitle title={appName ? `App Details | ${appName}` : 'App Details'}>
       <Breadcrumb
@@ -276,6 +309,7 @@ const AppDetail: React.FC<{}> = () => {
                   catalogName={catalog.metadata.name}
                   versions={otherEntries}
                   selectedClusterID={selectedClusterID}
+                  appsPermissions={appsPermissions}
                 />
               ) : undefined
             }
@@ -296,6 +330,9 @@ const AppDetail: React.FC<{}> = () => {
                 appName={selectedEntry.spec.appName}
                 catalogName={selectedEntry.spec.catalog.name}
                 selectedVersion={selectedEntry.spec.version}
+                canInstallApps={
+                  appsPermissions.canCreate && appsPermissions.canConfigure
+                }
               />
             </Box>
           )}
