@@ -19,6 +19,7 @@ import InspectRoleGuide from './guides/InspectRoleGuide';
 import ListRolesGuide from './guides/ListRolesGuide';
 import {
   appendSubjectsToRoleItem,
+  canBindRolesToSubjects,
   createRoleBindingWithSubjects,
   deleteSubjectFromRole,
   ensureServiceAccount,
@@ -214,7 +215,10 @@ const AccessControl: React.FC<IAccessControlProps> = ({
         <Box margin={{ top: 'large' }} direction='column' gap='small'>
           <ListRolesGuide namespace={organizationNamespace} />
           <InspectRoleGuide namespace={organizationNamespace} />
-          <BindRolesToSubjectsGuide namespace={organizationNamespace} />
+          <BindRolesToSubjectsGuide
+            namespace={organizationNamespace}
+            canBindRoles={canBindRolesToSubjects(permissions)}
+          />
         </Box>
       </Box>
     </DocumentTitle>

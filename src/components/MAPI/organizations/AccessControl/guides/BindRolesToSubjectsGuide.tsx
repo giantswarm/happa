@@ -1,5 +1,6 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import * as docs from 'model/constants/docs';
 import React from 'react';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -10,10 +11,12 @@ import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 interface IBindRolesToSubjectsGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   namespace: string;
+  canBindRoles?: boolean;
 }
 
 const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
   namespace,
+  canBindRoles,
   ...props
 }) => {
   return (
@@ -53,6 +56,7 @@ const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {!canBindRoles && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title={

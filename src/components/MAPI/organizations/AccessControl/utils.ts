@@ -80,6 +80,22 @@ export function mapResourcesToUiRoles(
 
       case rbacv1.RoleBinding:
         {
+          if (
+            !roleMap.hasOwnProperty(res.roleRef.name) &&
+            res.roleRef.kind === 'ClusterRole'
+          ) {
+            roleMap[res.roleRef.name] = {
+              name: res.roleRef.name,
+              namespace: '',
+              managedBy: '',
+              description: '',
+              groups: {},
+              serviceAccounts: {},
+              users: {},
+              permissions: [],
+              displayOnly: true,
+            };
+          }
           const role = roleMap[res.roleRef.name];
           if (role) {
             appendSubjectsToRoleItem(res, role);
@@ -245,13 +261,10 @@ export async function getRoleItems(
     requests.push(rbacv1.getRoleList(clientFactory(), auth, namespace));
   }
 
-  if (requests.length > 0) {
-    requests.push(rbacv1.getRoleBindingList(clientFactory(), auth, namespace));
-  } else {
-    return [];
-  }
+  requests.push(rbacv1.getRoleBindingList(clientFactory(), auth, namespace));
 
   const responses = await Promise.all(requests);
+
   const items = responses.reduce<
     (rbacv1.IClusterRole | rbacv1.IRole | rbacv1.IRoleBinding)[]
   >((acc, res) => acc.concat(res.items), []);
@@ -278,11 +291,7 @@ export function getRoleItemsKey(
     keyParts.push(rbacv1.getRoleListKey(namespace));
   }
 
-  if (keyParts.length > 0) {
-    keyParts.push(rbacv1.getRoleBindingListKey(namespace));
-  } else {
-    return null;
-  }
+  keyParts.push(rbacv1.getRoleBindingListKey(namespace));
 
   if (keyParts.some((s) => !s)) {
     return null;
@@ -748,4 +757,16 @@ export function formatSubjectType(
     default:
       return '';
   }
+}
+
+export function canBindRolesToSubjects(
+  permissions: ui.IAccessControlPermissions
+): boolean {
+  for (const subject of Object.values(permissions.subjects)) {
+    if (!subject.canBind) {
+      return false;
+    }
+  }
+
+  return true;
 }

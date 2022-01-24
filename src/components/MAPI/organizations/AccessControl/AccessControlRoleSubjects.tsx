@@ -433,8 +433,14 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
     return '';
   };
 
+  const displayEmptyPlaceholder =
+    !canListSubjects(groupCollection, groupPermissions) &&
+    !canListSubjects(userCollection, userPermissions) &&
+    !canListSubjects(serviceAccountCollection, serviceAccountPermissions);
+
   return (
     <Box direction='column' gap='medium' pad={{ top: 'small' }} {...props}>
+      {displayEmptyPlaceholder && <Text>No subjects bound to this role.</Text>}
       {canListSubjects(groupCollection, groupPermissions) && (
         <Box gap='small' direction='column' aria-label='Groups'>
           <Box>
