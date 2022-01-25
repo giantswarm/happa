@@ -1060,7 +1060,6 @@ export async function fetchCatalogListForOrganizations(
     labelSelector: {
       matchingLabels: {
         [applicationv1alpha1.labelCatalogVisibility]: 'public',
-        [applicationv1alpha1.labelCatalogType]: 'stable',
       },
     },
   };
