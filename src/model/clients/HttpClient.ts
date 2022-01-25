@@ -305,6 +305,15 @@ export class HttpClientImpl implements IHttpClient {
         return Promise.reject(res);
       }
 
+      if ((err as Error).name === 'TypeError') {
+        res.message = `Your request appears to be invalid: ${
+          (err as Error).message
+        }`;
+        res.headers = Object.assign({}, headers);
+
+        return Promise.reject(res);
+      }
+
       // We got a non-2xx status code.
       if (err instanceof Response) {
         res.data = (await getResponseData(err)) as T;
