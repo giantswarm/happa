@@ -1167,15 +1167,9 @@ export async function fetchAppCatalogEntryListForOrganizations(
   clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   cache: Cache,
-  organizations: Record<string, IOrganization>
+  organizations: Record<string, IOrganization>,
+  appCatalogEntryListGetOptions?: applicationv1alpha1.IGetAppCatalogEntryListOptions
 ): Promise<applicationv1alpha1.IAppCatalogEntryList> {
-  const appCatalogEntryListGetOptions: applicationv1alpha1.IGetAppCatalogEntryListOptions =
-    {
-      labelSelector: {
-        matchingLabels: { [applicationv1alpha1.labelLatest]: 'true' },
-      },
-    };
-
   // Check if the user has access to list appcatalogentries in all namespaces
   const request: authorizationv1.ISelfSubjectAccessReviewSpec = {
     resourceAttributes: {
@@ -1217,7 +1211,7 @@ export async function fetchAppCatalogEntryListForOrganizations(
   namespaces.push('default');
 
   const requests = namespaces.map(async (namespace) => {
-    appCatalogEntryListGetOptions.namespace = namespace;
+    (appCatalogEntryListGetOptions ?? {}).namespace = namespace;
 
     const appCatalogEntryListKey =
       applicationv1alpha1.getAppCatalogEntryListKey(
@@ -1268,9 +1262,10 @@ export async function fetchAppCatalogEntryListForOrganizations(
 }
 
 export function fetchAppCatalogEntryListForOrganizationsKey(
-  organizations: Record<string, IOrganization>
+  organizations: Record<string, IOrganization>,
+  appCatalogEntryGetOptions?: applicationv1alpha1.IGetAppCatalogEntryListOptions
 ): string {
-  return `fetchAppCatalogEntryListForOrgs/${Object.keys(organizations).join(
-    '/'
-  )}`;
+  return `fetchAppCatalogEntryListForOrgs/${applicationv1alpha1.getAppCatalogEntryListKey(
+    appCatalogEntryGetOptions
+  )}/${Object.keys(organizations).join('/')}`;
 }

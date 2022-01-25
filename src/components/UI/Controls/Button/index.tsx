@@ -21,8 +21,12 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
   }
 `;
 
-const StyledControl = styled(Control)<{ unauthorized?: boolean }>`
-  pointer-events: ${({ unauthorized }) => (unauthorized ? 'none' : 'auto')};
+const StyledControl = styled(Control)<{
+  unauthorized?: boolean;
+  disabled?: boolean;
+}>`
+  pointer-events: ${({ unauthorized, disabled }) =>
+    unauthorized || disabled ? 'none' : 'auto'};
 `;
 
 enum ButtonStyle {

@@ -19,9 +19,11 @@ export function usePermissionsForAppConfigs(
   namespace: string
 ) {
   const computed: Record<string, boolean | undefined> = {
-    canGet: false,
-    canUpdate: false,
-    canCreate: false,
+    canGet: undefined,
+    canList: undefined,
+    canUpdate: undefined,
+    canCreate: undefined,
+    canDelete: undefined,
   };
 
   const httpClientFactory = useHttpClientFactory();
@@ -92,15 +94,15 @@ export function usePermissionsForAppConfigs(
     typeof secretsError === 'undefined' &&
     secretsIsValidating;
 
-  if (configMapsIsLoading || secretsIsLoading) {
-    computed.canGet = undefined;
-    computed.canUpdate = undefined;
-    computed.canCreate = undefined;
+  if (configMapsIsLoading || secretsIsLoading) return computed;
+
+  if (!configMapsAccess || !secretsAccess) {
+    computed.canGet = false;
+    computed.canUpdate = false;
+    computed.canCreate = false;
 
     return computed;
   }
-
-  if (!configMapsAccess || !secretsAccess) return computed;
 
   computed.canGet = configMapsAccess.get && secretsAccess.get;
   computed.canUpdate = configMapsAccess.update && secretsAccess.update;
