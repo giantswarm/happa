@@ -83,7 +83,7 @@ export function batchedLayout(
         )
       ) {
         new FlashMessage(
-          `We couldn't execute a request. Please contact support at support@giantswarm.io`,
+          `We couldn't execute a request. Please try again later, and contact support at support@giantswarm.io if the problem persists.`,
           messageType.ERROR,
           messageTTL.LONG
         );
