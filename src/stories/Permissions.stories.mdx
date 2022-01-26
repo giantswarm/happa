@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title='Development/Permissions' />
+
+# Permissions
+
+### How are permissions used in happa?
+
+Happa's interface is organized by organizations, and each organization is associated with a namespace with the `org-` prefix followed by the organization's name (e.g. the `giantswarm` organization is associated with the `org-giantswarm` namespace). A user's permissions refer to the set of rules that determine which namespaces they have access to, and what access they have to which resources within each namespace. These rules then determine the interface's functionalities for the user, including how features are displayed (enabled/disabled), and what actions are permitted.
+
+### How are permissions determined?
+
+Permissions are first fetched and calculated during the initial load of the application, after the user has been successfully authenticated:
+1. Determine the organization namespaces the user has access to: A `SelfSubjectAccessReview` is performed to determine if the user can *list* `organization` CR's.
+    - If yes, the list of `organizations` is fetched and stored in the global store
+    - If not, a `SelfSubjectRulesReview` is performed to determine which `organization` CR's the user can *get* by name. These `organizations` are then fetched and stored in the global store.
+
+2. Determine the access to resources the user has in each namespace: A `SelfSubjectRulesReview` is performed in each organization namespace, plus the `default` and `giantswarm` namespaces. (These are not organization namespaces, but also contain resources used in the UI.)
+
+### How are permissions stored and used in components?
+
+The responses from the reviews described in step 2 above are combined and stored in an optimized permissions object, mapping namespaces to resources, and resources to API verbs (e.g. *get*, *list*, *watch*, *update*, *create*, *patch*, *delete*). These reviews are performed on a refresh interval (once every minute) to ensure that the permissions used are up to date. The responses for the reviews are stored in the cache using the `SWR` library. To facilitate accessing the permissions object from React components, this logic is abstracted into the custom `usePermissions` "hook", from which other more specific permissions hooks (e.g. `usePermissionsForClusters`) can be composed. These hooks return an object mapping an access verb, e.g. `canGet`, to a boolean, indicating access.
+
+### How are permissions for resources in other namespaces determined?
+
+Some resources are not in organization, `default`, or `giantswarm` namespaces. Specifically, app-related resources (`apps`, `configmaps`, and `secrets`) are in the workload cluster namespace, and permissions to these resources cannot be determined from the permissions object described above. For these resources, a `SelfSubjectAccessReview` is performed for the API verbs required in each workload cluster namespace associated with the `clusters` CR's in the organizations the user has access to. This logic is also abstracted into custom hooks, and expose a similar interface as the other permissions hooks.
+
+### What are the minimum permissions required in order to access happa?
+
+To access happa beyond the login page, a user must have, at minimum, access to *get* or *list* the `clusters` resource in the `cluster.x-k8s.io` group in at least one namespace they have access to (i.e. in any organization's namespace, or the `default` or `giantswarm` namespaces). If a user does not have the required minimum permissions, they will encounter an "Insufficient Permissions" page after successful authentication.
