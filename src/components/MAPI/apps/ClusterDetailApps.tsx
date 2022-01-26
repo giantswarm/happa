@@ -142,7 +142,9 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
   const [detailsModalAppName, setDetailsModalAppName] = useState('');
 
   const appToDisplay = useMemo(() => {
-    return appList?.items.find(
+    if (!appList) return undefined;
+
+    return appList.items.find(
       (app) => app.metadata.name === detailsModalAppName
     );
   }, [appList, detailsModalAppName]);
