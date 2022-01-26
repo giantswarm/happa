@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title='Development/Permissions for user actions' />
+
+# Permissions for user actions
+
+The following table details the actions a user can perform within happa, and the access to resources required for each action.
+
+| user action                       | resource                 | verbs                | namespaces              |
+|-----------------------------------|--------------------------|----------------------|-------------------------|
+| view clusters list                | clusters                 | get, list            | organization            |
+|                                   | node pools               | get, list            | organization            |
+|                                   | releases                 | list                 | *N/A*                   |
+| create clusters                   | clusters                 | create               | organization            |
+|                                   | control planes           | create               | organization            |
+|                                   | releases                 | list                 | *N/A*                   |
+| view cluster details overview     | apps                     | list                 | workload cluster        |
+|                                   | catalogs                 | list                 | `default`               |
+|                                   | clusters                 | get, list            | organization            |
+|                                   | control planes           | list                 | organization            |
+|                                   | node pools               | get                  | organization            |
+|                                   | organizations            | get                  | *N/A*                   |
+|                                   | organization credentials | list                 | `giantswarm`            |
+|                                   | releases                 | list                 | *N/A*                   |
+|                                   | client certificates      | get                  | `giantswarm`            |
+| update cluster description        | clusters                 | get, update          | organization            |
+| upgrade cluster                   | clusters                 | get, update          | organization            |
+|                                   | releases                 | list                 | *N/A*                   |
+| add cluster label                 | clusters                 | get, update          | organizations           |
+| switch cluster to HA              | control planes           | list, update         | organization            |
+| view cluster details worker nodes | clusters                 | get                  | organization            |
+|                                   | node pools               | get, list            | organization            |
+|                                   | organizations            | get                  | *N/A*                   |
+| update node pool description      | node pools               | get, list, update    | organization            |
+| update node pool scaling          | node pools               | get, list, update    | organization            |
+| delete node pools                 | node pools               | delete, get, list    | organization            |
+| create node pools                 | node pools               | create               | organization            |
+|                                   | sparks                   | create               | organization            |
+| view client certificates          | client certificates      | get                  | `giantswarm`            |
+| delete cluster                    | clusters                 | get, delete          | organization            |
+|                                   | control planes           | list, delete         | organization            |
+| view installed apps               | apps                     | get, list            | workload cluster        |
+|                                   | app catalog entries      | list                 | `default`, organization |
+|                                   | catalogs                 | list                 | `default`, organization |
+| configure installed app           | apps                     | get, update          | workload cluster        |
+|                                   | configmaps               | create, get, update  | workload cluster        |
+|                                   | secrets                  | create, get, update  | workload cluster        |
+| upgrade installed app             | apps                     | get, update          | workload cluster        |
+| uninstall installed app           | apps                     | get, delete          | workload cluster        |
+| install apps                      | apps                     | create               | workload cluster        |
+|                                   | secrets                  | create, get, update  | workload cluster        |
+| view organization details         | apps                     | get                  | workload cluster        |
+|                                   | clusters                 | list                 | organization            |
+|                                   | control planes           | list                 | organization            |
+|                                   | node pools               | get, list            | organization            |
+|                                   | releases                 | list                 | *N/A*                   |
+| view access control               | cluster roles            | list                 | *N/A*                   |
+|                                   | cluster role bindings    | list                 | organization            |
+|                                   | roles                    | list                 | organization            |
+|                                   | role bindings            | list                 | organization            |
+| view app catalogs                 | app catalog entries      | list                 | `default`, organization |
+|                                   | catalogs                 | list                 | `default`, organization |
+| view app details                  | app catalog entries      | list                 | `default`, organization |
+|                                   | catalogs                 | list                 | `default`, organization |
