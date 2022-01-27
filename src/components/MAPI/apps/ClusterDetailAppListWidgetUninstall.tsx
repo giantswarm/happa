@@ -37,13 +37,13 @@ function getAppUninstallConfirmationInfo(
 
   switch (true) {
     case hasConfigMap && hasSecrets:
-      configResourcesMessage += `Uninstalling this app will not remove the existing ConfigMap and Secret configuration resources. `;
+      configResourcesMessage += `Uninstalling this app will leave the existing ConfigMap and Secret configuration resources in place. `;
       break;
     case hasConfigMap:
-      configResourcesMessage += `Uninstalling this app will not remove the existing ConfigMap configuration resources. `;
+      configResourcesMessage += `Uninstalling this app will leave the existing ConfigMap configuration resource in place. `;
       break;
     case hasSecrets:
-      configResourcesMessage += `Uninstalling this app will not remove the existing Secret configuration resources. `;
+      configResourcesMessage += `Uninstalling this app will leave the existing Secret configuration resource in place. `;
       break;
   }
 
