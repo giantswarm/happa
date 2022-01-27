@@ -2,7 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import { extractErrorMessage } from 'MAPI/utils';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Button from 'UI/Controls/Button';
 import ConfirmationPrompt from 'UI/Controls/ConfirmationPrompt';
 import ClusterIDLabel, {
@@ -25,6 +25,29 @@ interface IClusterDetailAppListWidgetUninstallProps
   app?: applicationv1alpha1.IApp;
   appsPermissions?: IAppsPermissions;
   onAppUninstalled?: () => void;
+}
+
+function getAppUninstallConfirmationInfo(
+  app: applicationv1alpha1.IApp
+): string {
+  const hasConfigMap = Boolean(app.spec.userConfig?.configMap);
+  const hasSecrets = Boolean(app.spec.userConfig?.secret);
+
+  let configResourcesMessage = '';
+
+  switch (true) {
+    case hasConfigMap && hasSecrets:
+      configResourcesMessage += `Uninstalling this app will not remove the existing ConfigMap and Secret configuration resources. `;
+      break;
+    case hasConfigMap:
+      configResourcesMessage += `Uninstalling this app will not remove the existing ConfigMap configuration resources. `;
+      break;
+    case hasSecrets:
+      configResourcesMessage += `Uninstalling this app will not remove the existing Secret configuration resources. `;
+      break;
+  }
+
+  return `${configResourcesMessage}You can re-install this app at any time.`;
 }
 
 const ClusterDetailAppListWidgetUninstall: React.FC<
@@ -76,6 +99,12 @@ const ClusterDetailAppListWidgetUninstall: React.FC<
   const handleCancel = () => setIsConfirmationVisible(false);
   const handleUninstall = () => setIsConfirmationVisible(true);
 
+  const uninstallConfirmationInfo = useMemo(() => {
+    if (!app) return '';
+
+    return getAppUninstallConfirmationInfo(app);
+  }, [app]);
+
   return (
     <ClusterDetailAppListWidget
       title='Uninstall'
@@ -119,7 +148,7 @@ const ClusterDetailAppListWidgetUninstall: React.FC<
               background: 'transparent',
             }}
           >
-            <Text>There is no undo.</Text>
+            <Text>{uninstallConfirmationInfo}</Text>
           </ConfirmationPrompt>
 
           {!isConfirmationVisible && (
