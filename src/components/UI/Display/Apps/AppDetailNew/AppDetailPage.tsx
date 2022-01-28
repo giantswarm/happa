@@ -270,7 +270,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           <Readme>
             {typeof props.readme !== 'undefined' && (
               <ReactMarkdown
-                plugins={[gfm]}
+                remarkPlugins={[gfm]}
                 skipHtml
                 className='markdown'
                 components={{
