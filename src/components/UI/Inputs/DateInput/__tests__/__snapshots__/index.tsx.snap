@@ -15,7 +15,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 jbRmPk"
+          class="StyledButtonKind-sc-1vhfpnt-0 kwDLpo"
           id="dob"
           type="button"
         >
@@ -81,7 +81,7 @@ exports[`DateInput renders a disabled input 1`] = `
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            class="StyledButtonKind-sc-1vhfpnt-0 hBuMvT"
             type="button"
           >
             <svg
@@ -131,7 +131,7 @@ exports[`DateInput renders a simple input 1`] = `
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            class="StyledButtonKind-sc-1vhfpnt-0 hBuMvT"
             type="button"
           >
             <svg
@@ -193,7 +193,7 @@ exports[`DateInput renders an input with a help message 1`] = `
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            class="StyledButtonKind-sc-1vhfpnt-0 hBuMvT"
             type="button"
           >
             <svg
@@ -250,7 +250,7 @@ exports[`DateInput renders an input with a label 1`] = `
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            class="StyledButtonKind-sc-1vhfpnt-0 hBuMvT"
             type="button"
           >
             <svg
@@ -307,7 +307,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            class="StyledButtonKind-sc-1vhfpnt-0 hBuMvT"
             type="button"
           >
             <svg
@@ -369,7 +369,7 @@ exports[`DateInput renders an input with an info message 1`] = `
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 freVFZ"
+            class="StyledButtonKind-sc-1vhfpnt-0 hBuMvT"
             type="button"
           >
             <svg
