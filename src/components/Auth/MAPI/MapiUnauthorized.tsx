@@ -1,7 +1,12 @@
 import { Anchor, Box, Heading, Paragraph, Text } from 'grommet';
 import { usePermissionsKey } from 'MAPI/permissions/usePermissions';
+import { extractErrorMessage } from 'MAPI/utils';
 import { MainRoutes } from 'model/constants/routes';
+import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { organizationsLoadMAPI } from 'model/stores/organization/actions';
+import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { mutate } from 'swr';
@@ -45,6 +50,22 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
     return user?.groups?.join(', ') || 'none';
   }, [impersonationMetadata, user?.groups]);
 
+  const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
+  const reloadOrganizations = async () => {
+    try {
+      await dispatch(organizationsLoadMAPI(auth));
+    } catch (err) {
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        `Could not reload organizations list.`,
+        messageType.ERROR,
+        messageTTL.LONG,
+        errorMessage
+      );
+    }
+  };
+
   const clearImpersonation = async () => {
     await auth.setImpersonationMetadata(null);
 
@@ -55,6 +76,8 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
+
+    reloadOrganizations();
   };
 
   const email = user?.email ?? 'Not logged in';
