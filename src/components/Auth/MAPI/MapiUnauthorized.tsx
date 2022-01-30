@@ -9,7 +9,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { mutate } from 'swr';
+import { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { IOAuth2ImpersonationMetadata } from 'utils/OAuth2/OAuth2';
@@ -65,11 +65,14 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
       );
     }
   };
+  const { cache, mutate } = useSWRConfig();
 
   const clearImpersonation = async () => {
     await auth.setImpersonationMetadata(null);
 
-    mutate(usePermissionsKey);
+    // TODO: Remove type casting when type inference bug is fixed upstream
+    (cache as unknown as Map<unknown, unknown>).clear();
+    mutate(usePermissionsKey, true);
 
     new FlashMessage(
       'Impersonation removed successfully.',
