@@ -9,7 +9,7 @@ import { IState } from 'model/stores/state';
 import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
-import { mutate } from 'swr';
+import { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import {
   Table,
@@ -69,6 +69,8 @@ const Experiments: React.FC<IExperimentsProps> = () => {
     }
   };
 
+  const { cache, mutate } = useSWRConfig();
+
   const handleSetImpersonation = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -79,6 +81,8 @@ const Experiments: React.FC<IExperimentsProps> = () => {
       groups: impersonationGroup ? [impersonationGroup] : undefined,
     });
 
+    // TODO: Remove type casting when type inference bug is fixed upstream
+    (cache as unknown as Map<unknown, unknown>).clear();
     mutate(usePermissionsKey);
 
     new FlashMessage(
@@ -96,6 +100,8 @@ const Experiments: React.FC<IExperimentsProps> = () => {
 
     await auth.setImpersonationMetadata(null);
 
+    // TODO: Remove type casting when type inference bug is fixed upstream
+    (cache as unknown as Map<unknown, unknown>).clear();
     mutate(usePermissionsKey);
 
     new FlashMessage(
