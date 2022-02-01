@@ -545,7 +545,7 @@ function createDefaultG8sControlPlane(config: {
       },
     },
     spec: {
-      replicas: config.awsControlPlane.spec.availabilityZones!.length,
+      replicas: Constants.AWS_HA_MASTERS_MAX_NODES,
       infrastructureRef: corev1.getObjectReference(config.awsControlPlane),
     },
     status: {},
