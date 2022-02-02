@@ -54,6 +54,8 @@ const Icon: React.FC<IIconProps> = ({ name, src, ...rest }) => {
   let imagesrc = src;
   if (imagesrc?.endsWith('light.png')) {
     imagesrc = imagesrc.replace('light.png', 'dark.png');
+  } else if (imagesrc?.endsWith('light.svg')) {
+    imagesrc = imagesrc.replace('light.svg', 'dark.svg');
   }
 
   return (
