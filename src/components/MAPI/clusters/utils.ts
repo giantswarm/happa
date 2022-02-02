@@ -505,8 +505,7 @@ function createDefaultAWSControlPlane(config: {
       },
     },
     spec: {
-      // This is defaulted by aws-admission-controller
-      availabilityZones: [],
+      // availabilityZones is defaulted by aws-admission-controller
       instanceType: Constants.AWS_CONTROL_PLANE_DEFAULT_INSTANCE_TYPE,
     },
   };
