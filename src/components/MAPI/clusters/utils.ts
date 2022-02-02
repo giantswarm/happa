@@ -424,7 +424,8 @@ export function createDefaultControlPlaneNodes(config: {
         awsControlPlane: awsCP,
       });
 
-      return [awsCP, g8sCP];
+      // g8sControlPlane should be applied before awsControlPlane
+      return [g8sCP, awsCP];
     }
   }
 
