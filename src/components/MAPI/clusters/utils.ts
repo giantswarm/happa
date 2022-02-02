@@ -6,12 +6,10 @@ import {
   ProviderCluster,
 } from 'MAPI/types';
 import {
-  determineRandomAZs,
   fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForClusterKey,
   generateUID,
   getClusterDescription,
-  getSupportedAvailabilityZones,
   IMachineType,
   IProviderClusterForClusterName,
 } from 'MAPI/utils';
@@ -493,12 +491,6 @@ function createDefaultAWSControlPlane(config: {
   const releaseVersion =
     config.providerCluster!.metadata.labels![infrav1alpha3.labelReleaseVersion];
 
-  const azStats = getSupportedAvailabilityZones();
-  const azs = determineRandomAZs(
-    Constants.AWS_HA_MASTERS_MAX_NODES,
-    azStats.all
-  );
-
   return {
     apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
     kind: infrav1alpha3.AWSControlPlane,
@@ -513,7 +505,8 @@ function createDefaultAWSControlPlane(config: {
       },
     },
     spec: {
-      availabilityZones: azs,
+      // This is defaulted by aws-admission-controller
+      availabilityZones: [],
       instanceType: Constants.AWS_CONTROL_PLANE_DEFAULT_INSTANCE_TYPE,
     },
   };
