@@ -6,12 +6,10 @@ import {
   ProviderCluster,
 } from 'MAPI/types';
 import {
-  determineRandomAZs,
   fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForClusterKey,
   generateUID,
   getClusterDescription,
-  getSupportedAvailabilityZones,
   IMachineType,
   IProviderClusterForClusterName,
 } from 'MAPI/utils';
@@ -424,7 +422,8 @@ export function createDefaultControlPlaneNodes(config: {
         awsControlPlane: awsCP,
       });
 
-      return [awsCP, g8sCP];
+      // g8sControlPlane should be applied before awsControlPlane
+      return [g8sCP, awsCP];
     }
   }
 
@@ -492,12 +491,6 @@ function createDefaultAWSControlPlane(config: {
   const releaseVersion =
     config.providerCluster!.metadata.labels![infrav1alpha3.labelReleaseVersion];
 
-  const azStats = getSupportedAvailabilityZones();
-  const azs = determineRandomAZs(
-    Constants.AWS_HA_MASTERS_MAX_NODES,
-    azStats.all
-  );
-
   return {
     apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
     kind: infrav1alpha3.AWSControlPlane,
@@ -512,7 +505,7 @@ function createDefaultAWSControlPlane(config: {
       },
     },
     spec: {
-      availabilityZones: azs,
+      // availabilityZones is defaulted by aws-admission-controller
       instanceType: Constants.AWS_CONTROL_PLANE_DEFAULT_INSTANCE_TYPE,
     },
   };
@@ -545,7 +538,7 @@ function createDefaultG8sControlPlane(config: {
       },
     },
     spec: {
-      replicas: config.awsControlPlane.spec.availabilityZones!.length,
+      replicas: Constants.AWS_HA_MASTERS_MAX_NODES,
       infrastructureRef: corev1.getObjectReference(config.awsControlPlane),
     },
     status: {},
