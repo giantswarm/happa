@@ -170,6 +170,8 @@ export function validateOrRaise<T>(
 export function formatDate(date: string | number | Date): string {
   const givenDate = parseDate(date);
 
+  if (!isFinite(givenDate.getTime())) return date.toString();
+
   const parsedDate = utcToZonedTime(givenDate, 'UTC');
 
   return `${format('d MMM yyyy, HH:mm')(parsedDate)} UTC`;
