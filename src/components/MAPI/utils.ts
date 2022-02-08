@@ -118,9 +118,8 @@ export async function fetchNodePoolListForCluster(
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let list: NodePoolList;
 
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (infrastructureRef.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       if (isCAPZCluster(cluster)) {
         list = await capiv1alpha4.getMachinePoolList(
           httpClientFactory(),
@@ -151,8 +150,7 @@ export async function fetchNodePoolListForCluster(
 
       break;
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case 'awscluster':
       list = await capiv1alpha3.getMachineDeploymentList(
         httpClientFactory(),
         auth,
@@ -189,9 +187,8 @@ export function fetchNodePoolListForClusterKey(
     return null;
   }
 
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (infrastructureRef.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       if (isCAPZCluster(cluster)) {
         return capiv1alpha4.getMachinePoolListKey({
           labelSelector: {
@@ -212,8 +209,7 @@ export function fetchNodePoolListForClusterKey(
         namespace,
       });
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case 'awscluster':
       return capiv1alpha3.getMachineDeploymentListKey({
         labelSelector: {
           matchingLabels: {
@@ -431,9 +427,8 @@ export async function fetchControlPlaneNodesForCluster(
     );
   }
 
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
+  switch (infrastructureRef.kind.toLocaleLowerCase()) {
+    case 'azurecluster': {
       const cpNodes = await capzv1alpha3.getAzureMachineList(
         httpClientFactory(),
         auth,
@@ -451,8 +446,7 @@ export async function fetchControlPlaneNodesForCluster(
       return cpNodes.items;
     }
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3': {
+    case 'awscluster': {
       const [awsCP, g8sCP] = await Promise.allSettled([
         infrav1alpha3.getAWSControlPlaneList(httpClientFactory(), auth, {
           labelSelector: {
@@ -500,9 +494,8 @@ export function fetchControlPlaneNodesForClusterKey(
     return null;
   }
 
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (infrastructureRef.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       return capzv1alpha3.getAzureMachineListKey({
         labelSelector: {
           matchingLabels: {
@@ -512,8 +505,7 @@ export function fetchControlPlaneNodesForClusterKey(
         namespace: cluster.metadata.namespace,
       });
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case 'awscluster':
       return infrav1alpha3.getAWSControlPlaneListKey({
         labelSelector: {
           matchingLabels: {
@@ -540,9 +532,8 @@ export async function fetchProviderClusterForCluster(
     );
   }
 
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (infrastructureRef.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       return capzv1alpha3.getAzureCluster(
         httpClientFactory(),
         auth,
@@ -550,8 +541,7 @@ export async function fetchProviderClusterForCluster(
         infrastructureRef.name
       );
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case 'awscluster':
       return infrav1alpha3.getAWSCluster(
         httpClientFactory(),
         auth,
@@ -568,16 +558,14 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) return null;
 
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (infrastructureRef.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       return capzv1alpha3.getAzureClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
       );
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case 'awscluster':
       return infrav1alpha3.getAWSClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
@@ -611,7 +599,11 @@ export async function fetchProviderClustersForClusters(
           clusterName: cluster.metadata.name,
           providerCluster,
         };
-      } catch {
+      } catch (err) {
+        if ((err as Error).message.includes('Unsupported provider')) {
+          return Promise.reject((err as Error).message);
+        }
+
         return {
           clusterName: cluster.metadata.name,
           providerCluster: undefined,
@@ -889,16 +881,14 @@ export function getClusterDescription(
     return defaultValue;
   }
 
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (infrastructureRef.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       return (
         cluster.metadata.annotations?.[
           capiv1alpha3.annotationClusterDescription
         ] || defaultValue
       );
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case 'awscluster':
       return (
         (providerCluster as infrav1alpha3.IAWSCluster)?.spec?.cluster
           .description ||
@@ -1109,13 +1099,11 @@ export function supportsClientCertificates(cluster: Cluster): boolean {
     return false;
   }
 
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (infrastructureRef.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       return true;
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3': {
+    case 'awscluster': {
       const releaseVersion = getClusterReleaseVersion(cluster);
       if (!releaseVersion) return false;
 

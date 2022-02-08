@@ -27,6 +27,7 @@ import ClusterListEmptyPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/Cl
 import ClusterListErrorPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/ClusterListErrorPlaceholder';
 import ClusterListNoOrgsPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/ClusterListNoOrgsPlaceholder';
 import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
@@ -117,6 +118,13 @@ const Clusters: React.FC<{}> = () => {
 
   useEffect(() => {
     if (providerClusterListError) {
+      new FlashMessage(
+        'There was a problem loading the cluster list.',
+        messageType.ERROR,
+        messageTTL.MEDIUM,
+        providerClusterListError
+      );
+
       ErrorReporter.getInstance().notify(providerClusterListError);
     }
   }, [providerClusterListError]);

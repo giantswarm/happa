@@ -29,13 +29,11 @@ import { getCredentialsAccountID } from './utils';
 export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
 
-  switch (cluster.spec?.infrastructureRef?.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (cluster.spec?.infrastructureRef?.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       return 'Azure region';
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case 'awscluster':
       return 'AWS region';
 
     default:
@@ -46,13 +44,11 @@ export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
 export function getClusterAccountIDLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
 
-  switch (cluster.spec?.infrastructureRef?.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (cluster.spec?.infrastructureRef?.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       return 'Subscription ID';
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case 'awscluster':
       return 'Account ID';
 
     default:
@@ -66,13 +62,11 @@ export function getClusterAccountIDPath(
 ) {
   if (!cluster || !accountID) return undefined;
 
-  switch (cluster.spec?.infrastructureRef?.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (cluster.spec?.infrastructureRef?.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       return 'https://portal.azure.com/';
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case 'awscluster':
       return `https://${accountID}.signin.aws.amazon.com/console`;
 
     default:

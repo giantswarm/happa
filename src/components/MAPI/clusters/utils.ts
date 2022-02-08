@@ -798,16 +798,14 @@ export function getClusterConditions(
     return statuses;
   }
 
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (infrastructureRef.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       statuses.isConditionUnknown = typeof cluster.status === 'undefined';
       statuses.isCreating = isClusterCreating(cluster);
       statuses.isUpgrading = isClusterUpgrading(cluster);
       break;
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3': {
+    case 'awscluster': {
       if (!providerCluster) break;
 
       statuses.isConditionUnknown = infrav1alpha3.isConditionUnknown(
