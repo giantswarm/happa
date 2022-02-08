@@ -877,16 +877,14 @@ export function getClusterDescription(
     return defaultValue;
   }
 
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (infrastructureRef.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       return (
         cluster.metadata.annotations?.[
           capiv1alpha3.annotationClusterDescription
         ] || defaultValue
       );
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case 'awscluster':
       return (
         (providerCluster as infrav1alpha3.IAWSCluster)?.spec?.cluster
           .description ||
