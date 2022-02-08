@@ -1095,13 +1095,11 @@ export function supportsClientCertificates(cluster: Cluster): boolean {
     return false;
   }
 
-  switch (infrastructureRef.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (infrastructureRef.kind.toLocaleLowerCase()) {
+    case 'azurecluster':
       return true;
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3': {
+    case 'awscluster': {
       const releaseVersion = getClusterReleaseVersion(cluster);
       if (!releaseVersion) return false;
 
