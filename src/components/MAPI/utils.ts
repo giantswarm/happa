@@ -599,7 +599,11 @@ export async function fetchProviderClustersForClusters(
           clusterName: cluster.metadata.name,
           providerCluster,
         };
-      } catch {
+      } catch (err) {
+        if ((err as Error).message.includes('Unsupported provider')) {
+          return Promise.reject((err as Error).message);
+        }
+
         return {
           clusterName: cluster.metadata.name,
           providerCluster: undefined,
