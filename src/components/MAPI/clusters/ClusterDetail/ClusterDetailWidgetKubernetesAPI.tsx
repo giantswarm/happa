@@ -49,6 +49,16 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<
     namespace ?? ''
   );
 
+  const clusterInOrgNamespace = cluster?.metadata.namespace !== 'default';
+
+  const shouldDisplayGetStarted = useMemo(
+    () =>
+      canCreateKeyPairs &&
+      typeof k8sApiURL !== 'undefined' &&
+      clusterInOrgNamespace,
+    [canCreateKeyPairs, clusterInOrgNamespace, k8sApiURL]
+  );
+
   return (
     <ClusterDetailWidget
       title='Kubernetes API'
@@ -67,7 +77,7 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<
         {(value) => <URIBlock>{value}</URIBlock>}
       </OptionalValue>
 
-      {canCreateKeyPairs && typeof k8sApiURL !== 'undefined' && (
+      {shouldDisplayGetStarted && (
         <Link to={gettingStartedPath}>
           <Button
             tabIndex={-1}
