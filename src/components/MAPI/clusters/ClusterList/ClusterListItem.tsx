@@ -235,13 +235,16 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     namespace ?? ''
   );
 
+  const clusterInOrgNamespace = cluster?.metadata.namespace !== 'default';
+
   const shouldDisplayGetStarted = useMemo(() => {
     if (
       isDeleting ||
       isLoading ||
       !creationDate ||
       !canCreateKeyPairs ||
-      isPreviewRelease
+      isPreviewRelease ||
+      !clusterInOrgNamespace
     )
       return false;
 
@@ -255,8 +258,9 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
     isDeleting,
     isLoading,
     creationDate,
-    canCreateClusters,
+    canCreateKeyPairs,
     isPreviewRelease,
+    clusterInOrgNamespace,
   ]);
 
   const dispatch = useDispatch();
