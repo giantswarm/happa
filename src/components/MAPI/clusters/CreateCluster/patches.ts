@@ -1,4 +1,5 @@
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
+import { determineRandomAZs, getSupportedAvailabilityZones } from 'MAPI/utils';
 import { Constants } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
@@ -104,6 +105,8 @@ export function withClusterControlPlaneNodeAZs(zones?: string[]): ClusterPatch {
 
 export function withClusterControlPlaneNodesCount(count: number): ClusterPatch {
   return (_, _p, controlPlaneNodes) => {
+    const supportedAZs = getSupportedAvailabilityZones().all;
+
     for (const controlPlaneNode of controlPlaneNodes) {
       if (
         controlPlaneNode.apiVersion !==
@@ -112,8 +115,22 @@ export function withClusterControlPlaneNodesCount(count: number): ClusterPatch {
       ) {
         continue;
       }
-      if (controlPlaneNode.kind === infrav1alpha3.G8sControlPlane) {
-        controlPlaneNode.spec.replicas = count;
+
+      switch (controlPlaneNode.kind) {
+        case infrav1alpha3.G8sControlPlane:
+          controlPlaneNode.spec.replicas = count;
+          break;
+        case infrav1alpha3.AWSControlPlane: {
+          if (count === 1) {
+            controlPlaneNode.spec.availabilityZones = determineRandomAZs(
+              count,
+              supportedAZs
+            );
+          } else {
+            delete controlPlaneNode.spec.availabilityZones;
+          }
+          break;
+        }
       }
     }
   };
