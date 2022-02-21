@@ -16,20 +16,30 @@ describe('AccessControl/utils', () => {
       subjects                                            | expected
       ${''}                                               | ${[]}
       ${'subject1'}                                       | ${['subject1']}
-      ${'subject1 subject2'}                              | ${['subject1', 'subject2']}
+      ${'subject one'}                                    | ${['subject one']}
       ${'subject1,subject2'}                              | ${['subject1', 'subject2']}
+      ${'subject one,subject two'}                        | ${['subject one', 'subject two']}
       ${'subject1, subject2'}                             | ${['subject1', 'subject2']}
+      ${'subject one, subject two'}                       | ${['subject one', 'subject two']}
       ${'subject1 ,subject2'}                             | ${['subject1', 'subject2']}
+      ${'subject one ,subject two'}                       | ${['subject one', 'subject two']}
       ${'subject1 , subject2'}                            | ${['subject1', 'subject2']}
+      ${'subject one , subject two'}                      | ${['subject one', 'subject two']}
       ${'subject1 ,subject2, subject3'}                   | ${['subject1', 'subject2', 'subject3']}
+      ${'subject one ,subject two ,subject three'}        | ${['subject one', 'subject two', 'subject three']}
       ${'subject1;subject2'}                              | ${['subject1', 'subject2']}
+      ${'subject one;subject two'}                        | ${['subject one', 'subject two']}
       ${'subject1; subject2'}                             | ${['subject1', 'subject2']}
+      ${'subject one; subject two'}                       | ${['subject one', 'subject two']}
       ${'subject1 ;subject2'}                             | ${['subject1', 'subject2']}
+      ${'subject one ;subject two'}                       | ${['subject one', 'subject two']}
       ${'subject1 ; subject2'}                            | ${['subject1', 'subject2']}
+      ${'subject one ; subject two'}                      | ${['subject one', 'subject two']}
       ${'subject1 ;subject2; subject3'}                   | ${['subject1', 'subject2', 'subject3']}
-      ${'subject1	subject2; subject3'}                     | ${['subject1', 'subject2', 'subject3']}
-      ${'subject1			subject2 subject3'}                      | ${['subject1', 'subject2', 'subject3']}
-      ${'subject1			subject2 subject3						'}                      | ${['subject1', 'subject2', 'subject3']}
+      ${'subject one ;subject two; subject three'}        | ${['subject one', 'subject two', 'subject three']}
+      ${'subject1	subject2; subject3'}                     | ${['subject1	subject2', 'subject3']}
+      ${'subject1			subject2 subject3'}                      | ${['subject1			subject2 subject3']}
+      ${'subject1			subject2 subject3						'}                      | ${['subject1			subject2 subject3']}
       ${'some-account, test1, test, test2, default, '}    | ${['some-account', 'test1', 'test', 'test2', 'default']}
       ${'some-account, test1, test, test2, default,;,; '} | ${['some-account', 'test1', 'test', 'test2', 'default']}
     `(
@@ -65,8 +75,9 @@ describe('AccessControl/utils', () => {
       ${''}             | ${['test1', 'test2']}                                 | ${3}  | ${['test1', 'test2']}
       ${'test'}         | ${['test1', 'test2']}                                 | ${3}  | ${['test1', 'test2']}
       ${'test1'}        | ${['test1', 'test2']}                                 | ${3}  | ${['test1']}
-      ${'test1 test2'}  | ${['test1', 'test2', 'test3']}                        | ${3}  | ${['test2']}
-      ${'test1 test2 '} | ${['test1', 'test2', 'test3']}                        | ${3}  | ${['test3']}
+      ${'test1 test2'}  | ${['test1', 'test2', 'test3']}                        | ${3}  | ${[]}
+      ${'test1 '}       | ${['test1 test2', 'test3']}                           | ${3}  | ${['test1 test2']}
+      ${'test1 test2 '} | ${['test1 test2', 'test3']}                           | ${3}  | ${['test1 test2']}
       ${'test'}         | ${['test1', 'test2', 'some-other']}                   | ${3}  | ${['test1', 'test2']}
       ${'test'}         | ${['test1', 'test2', 'some-other', 'test3', 'test4']} | ${3}  | ${['test1', 'test2', 'test3']}
     `(
@@ -90,13 +101,13 @@ describe('AccessControl/utils', () => {
 
   describe('appendSubjectSuggestionToValue', () => {
     test.each`
-      value                      | suggestion | expected
-      ${''}                      | ${''}      | ${''}
-      ${''}                      | ${'test1'} | ${'test1, '}
-      ${'tes'}                   | ${'test1'} | ${'test1, '}
-      ${'tes '}                  | ${'test1'} | ${'tes test1, '}
-      ${'tes,    '}              | ${'test1'} | ${'tes,    test1, '}
-      ${'test1, test2, test3, '} | ${'test4'} | ${'test1, test2, test3, test4, '}
+      value                      | suggestion  | expected
+      ${''}                      | ${''}       | ${''}
+      ${''}                      | ${'test1'}  | ${'test1, '}
+      ${'tes'}                   | ${'test1'}  | ${'test1, '}
+      ${'test '}                 | ${'test 1'} | ${'test 1, '}
+      ${'tes,    '}              | ${'test1'}  | ${'tes,    test1, '}
+      ${'test1, test2, test3, '} | ${'test4'}  | ${'test1, test2, test3, test4, '}
     `(
       `appends the '$suggestion' suggestion to '$value'`,
       ({
