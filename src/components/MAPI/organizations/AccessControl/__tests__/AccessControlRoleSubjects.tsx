@@ -318,7 +318,7 @@ describe('AccessControlRoleSubjects', () => {
 
     expect(
       withMarkup(screen.getByText)(
-        'Enter one or more group identifiers, separated by a comma , or semicolon ; , exactly as defined in your identity provider, including upper/lowercase spelling.'
+        'Enter one or more group identifiers, exactly as defined in your identity provider, including upper/lowercase spelling.'
       )
     ).toBeInTheDocument();
 

@@ -469,9 +469,8 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           {groupType.isAdding && (
             <Box>
               <Text>
-                Enter one or more group identifiers, separated by a comma{' '}
-                <code>,</code> or semicolon <code>;</code> , exactly as defined
-                in your identity provider, including upper/lowercase spelling.
+                Enter one or more group identifiers, exactly as defined in your
+                identity provider, including upper/lowercase spelling.
               </Text>
             </Box>
           )}
@@ -516,9 +515,8 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           {userType.isAdding && (
             <Box>
               <Text>
-                Enter one or more email addresses, separated by a comma{' '}
-                <code>,</code> or semicolon <code>;</code> , exactly as defined
-                in your identity provider, including upper/lowercase spelling.
+                Enter one or more email addresses, exactly as defined in your
+                identity provider, including upper/lowercase spelling.
               </Text>
             </Box>
           )}
@@ -569,9 +567,8 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
           {serviceAccountType.isAdding && (
             <Box>
               <Text>
-                Enter one or more account identifiers, separated by a comma{' '}
-                <code>,</code> or semicolon <code>;</code> , including
-                upper/lowercase spelling.
+                Enter one or more account identifiers, including upper/lowercase
+                spelling.
               </Text>
             </Box>
           )}
