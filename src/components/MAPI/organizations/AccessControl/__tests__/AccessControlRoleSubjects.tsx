@@ -317,8 +317,8 @@ describe('AccessControlRoleSubjects', () => {
     expect(document.activeElement).toBe(input);
 
     expect(
-      screen.getByText(
-        'Enter one or more group identifiers, exactly as defined in your identity provider, including upper/lowercase spelling.'
+      withMarkup(screen.getByText)(
+        'Enter one or more group identifiers, separated by a comma , or semicolon ; , exactly as defined in your identity provider, including upper/lowercase spelling.'
       )
     ).toBeInTheDocument();
 
@@ -704,7 +704,7 @@ describe('AccessControlRoleSubjects', () => {
     fireEvent.change(input, {
       target: {
         value:
-          'test-group1 test-group2 test-group1 test-group1 test-group3 test-group2',
+          'test-group1, test-group2, test-group1, test-group1, test-group3, test-group2',
       },
     });
 
