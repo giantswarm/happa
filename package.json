@@ -172,7 +172,7 @@
     "babel-jest": "27.5.1",
     "babel-loader": "8.2.3",
     "babel-plugin-date-fns": "2.0.0",
-    "babel-plugin-styled-components": "2.0.2",
+    "babel-plugin-styled-components": "2.0.3",
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-plugin-transform-imports": "2.0.0",
     "babel-plugin-transform-react-jsx": "6.24.1",
