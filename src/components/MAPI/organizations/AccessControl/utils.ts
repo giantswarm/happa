@@ -7,7 +7,7 @@ import * as ui from 'UI/Display/MAPI/AccessControl/types';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-const subjectDelimiterRegexp = /\s*(?:[,\s;])+\s*/;
+const subjectDelimiterRegexp = /\s*(?:[,;])+\s*/;
 
 /**
  * Parse subjects from a serialized value (e.g. an user input).
@@ -680,9 +680,9 @@ export function appendSubjectSuggestionToValue(
   const subjects = parseSubjects(value);
 
   let newValue = value;
-  if (subjects.length > 0 && !isSubjectDelimiter(newValue.slice(-1))) {
+  if (subjects.length > 0 && !newValue.trim().match(/(\s*(?:[,;])+\s*)$/)) {
     const latestSubjectLength = subjects[subjects.length - 1].length;
-    newValue = newValue.substr(0, newValue.length - latestSubjectLength);
+    newValue = newValue.substr(0, newValue.trim().length - latestSubjectLength);
   }
 
   return `${newValue}${suggestion}, `;

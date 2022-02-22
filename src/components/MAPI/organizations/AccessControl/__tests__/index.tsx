@@ -1253,7 +1253,7 @@ describe('AccessControl', () => {
       'e.g. subject1, subject2, subject3'
     );
     fireEvent.change(input, {
-      target: { value: 'automation random' },
+      target: { value: 'automation, random' },
     });
 
     fireEvent.click(within(section).getByRole('button', { name: 'OK' }));
@@ -1465,7 +1465,7 @@ describe('AccessControl', () => {
       'e.g. subject1, subject2, subject3'
     );
     fireEvent.change(input, {
-      target: { value: 'automation random' },
+      target: { value: 'automation, random' },
     });
 
     fireEvent.click(within(section).getByRole('button', { name: 'OK' }));
