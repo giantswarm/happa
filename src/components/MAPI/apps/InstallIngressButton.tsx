@@ -5,12 +5,13 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Constants } from 'model/constants';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
-import useSWR from 'swr';
+import useSWR, { KeyedMutator } from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
@@ -48,11 +49,13 @@ const StyledLink = styled(Link)`
 interface IInstallIngressButtonProps
   extends React.ComponentPropsWithoutRef<'div'> {
   clusterID: string;
+  mutateCluster?: KeyedMutator<capiv1alpha3.ICluster>;
 }
 
 // eslint-disable-next-line complexity
 const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
   clusterID,
+  mutateCluster,
 }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -171,6 +174,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
       );
 
       mutateAppList();
+      if (mutateCluster) mutateCluster();
 
       setIsInstalling(false);
     } catch (err) {

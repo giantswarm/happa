@@ -412,6 +412,7 @@ const ClusterDetail: React.FC<{}> = () => {
                   <ClusterDetailIngress
                     provider={provider}
                     k8sEndpoint={clusterK8sApiURL}
+                    mutateCluster={mutateCluster}
                   />
                 )
               }

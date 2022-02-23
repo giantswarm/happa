@@ -6,13 +6,14 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import React, { useEffect, useMemo } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useLocation, useParams } from 'react-router';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
-import useSWR from 'swr';
+import useSWR, { KeyedMutator } from 'swr';
 import FlashMessage from 'UI/Display/FlashMessage';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -39,6 +40,7 @@ interface IClusterDetailIngressProps
   k8sEndpoint?: string;
   kvmTCPHTTPPort?: number;
   kvmTCPHTTPSPort?: number;
+  mutateCluster?: KeyedMutator<capiv1alpha3.ICluster>;
 }
 
 const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
@@ -46,6 +48,7 @@ const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
   k8sEndpoint,
   kvmTCPHTTPPort,
   kvmTCPHTTPSPort,
+  mutateCluster,
   ...rest
 }) => {
   const { pathname } = useLocation();
@@ -132,7 +135,10 @@ const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
           )}
 
           {!hasIngress && !appListIsLoading && !appListError && (
-            <InstallIngressButton clusterID={clusterId} />
+            <InstallIngressButton
+              clusterID={clusterId}
+              mutateCluster={mutateCluster}
+            />
           )}
 
           {appListError && (
