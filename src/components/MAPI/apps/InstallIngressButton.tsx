@@ -5,6 +5,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Constants } from 'model/constants';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import * as metav1 from 'model/services/mapi/metav1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -173,14 +174,28 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
 
       setIsInstalling(false);
     } catch (err) {
-      const message = extractErrorMessage(err);
+      if (
+        metav1.isStatusError(
+          (err as GenericResponseError)?.data,
 
-      new FlashMessage(
-        'Something went wrong while trying to install the ingress controller app.',
-        messageType.ERROR,
-        messageTTL.LONG,
-        message
-      );
+          metav1.K8sStatusErrorReasons.NotFound
+        )
+      ) {
+        new FlashMessage(
+          'The cluster is not yet ready for app installation. Please try again in 5 to 10 minutes.',
+          messageType.ERROR,
+          messageTTL.LONG
+        );
+      } else {
+        const message = extractErrorMessage(err);
+
+        new FlashMessage(
+          'Something went wrong while trying to install the ingress controller app.',
+          messageType.ERROR,
+          messageTTL.LONG,
+          message
+        );
+      }
 
       setIsInstalling(false);
 
