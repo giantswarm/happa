@@ -20,7 +20,9 @@ exports[`Select renders a disabled input 1`] = `
         class="StyledBox-sc-13pk1d4-0 fAcOfV FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
-          aria-label="Open Drop"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-label="Just select something...; Selected: A dog"
           class="StyledButtonKind-sc-1vhfpnt-0 cNXTcR Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           disabled=""
           id="pet"
@@ -86,7 +88,9 @@ exports[`Select renders a simple input 1`] = `
         class="StyledBox-sc-13pk1d4-0 fFeUPF FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
-          aria-label="Open Drop"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-label="Just select something..."
           class="StyledButtonKind-sc-1vhfpnt-0 eMuefU Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
@@ -151,6 +155,8 @@ exports[`Select renders an input inside the dropdown, that can search through th
         class="StyledBox-sc-13pk1d4-0 fAcOfV FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
+          aria-expanded="false"
+          aria-haspopup="listbox"
           aria-label="Open Drop"
           class="StyledButtonKind-sc-1vhfpnt-0 cNXTcR Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           disabled=""
@@ -227,7 +233,9 @@ exports[`Select renders an input with a help message 1`] = `
         class="StyledBox-sc-13pk1d4-0 fFeUPF FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
-          aria-label="Open Drop"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-label="Just select something..."
           class="StyledButtonKind-sc-1vhfpnt-0 eMuefU Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
@@ -298,7 +306,9 @@ exports[`Select renders an input with a label 1`] = `
         class="StyledBox-sc-13pk1d4-0 fFeUPF FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
-          aria-label="Open Drop"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-label="Just select something..."
           class="StyledButtonKind-sc-1vhfpnt-0 eMuefU Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
@@ -369,7 +379,9 @@ exports[`Select renders an input with a validation error 1`] = `
         class="StyledBox-sc-13pk1d4-0 dXaGkl FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
-          aria-label="Open Drop"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-label="Just select something..."
           class="StyledButtonKind-sc-1vhfpnt-0 eMuefU Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
@@ -445,7 +457,9 @@ exports[`Select renders an input with an info message 1`] = `
         class="StyledBox-sc-13pk1d4-0 fFeUPF FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
-          aria-label="Open Drop"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-label="Just select something..."
           class="StyledButtonKind-sc-1vhfpnt-0 eMuefU Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"

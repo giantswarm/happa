@@ -20,7 +20,9 @@ exports[`MultiSelect renders a simple input 1`] = `
         class="StyledBox-sc-13pk1d4-0 fFeUPF FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
-          aria-label="Open Drop"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-label="Just select something..."
           class="StyledButtonKind-sc-1vhfpnt-0 eMuefU Select__StyledSelectDropButton-sc-17idtfo-2 ggODSg"
           id="pet"
           type="button"
