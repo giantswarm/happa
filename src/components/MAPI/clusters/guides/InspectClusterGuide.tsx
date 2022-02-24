@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import {
   getCurrentInstallationContextName,
@@ -109,7 +110,7 @@ const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
         />
 
         {provider === Providers.AZURE && (
-          <>
+          <Box direction='column' gap='medium'>
             <CLIGuideStep
               title={
                 <>
@@ -136,10 +137,10 @@ const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
                 --namespace ${clusterNamespace}
               `}
             />
-          </>
+          </Box>
         )}
         {provider === Providers.AWS && (
-          <>
+          <Box direction='column' gap='medium'>
             <CLIGuideStep
               title={
                 <>
@@ -180,7 +181,7 @@ const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
                 --namespace ${clusterNamespace}
               `}
             />
-          </>
+          </Box>
         )}
       </CLIGuideStepList>
     </CLIGuide>
