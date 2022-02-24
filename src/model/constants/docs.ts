@@ -118,6 +118,9 @@ export const crds = {
     release: 'releases.release.giantswarm.io',
     catalog: 'catalogs.application.giantswarm.io/',
     appCatalogEntry: 'appcatalogentries.application.giantswarm.io',
+    awsCluster: 'awsclusters.infrastructure.giantswarm.io',
+    awsControlPlane: 'awscontrolplanes.infrastructure.giantswarm.io',
+    g8sControlPlane: 'g8scontrolplanes.infrastructure.giantswarm.io',
   },
   xk8sio: {
     azureCluster: 'azureclusters.infrastructure.cluster.x-k8s.io',
