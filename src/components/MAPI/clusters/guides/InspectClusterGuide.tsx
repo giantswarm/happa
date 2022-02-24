@@ -109,6 +109,50 @@ const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
             />
           </>
         )}
+        {provider === Providers.AWS && (
+          <>
+            <CLIGuideStep
+              title={
+                <>
+                  3. Show the <code>AWSCluster</code> resource
+                </>
+              }
+              command={`
+              kubectl --context ${context} \\
+                get awscluster.infrastructure.giantswarm.io ${clusterName} \\
+                --namespace ${clusterNamespace} --output json
+              `}
+            />
+            <CLIGuideStep
+              title={
+                <>
+                  4. Show the <code>AWSControlPlane</code> resources
+                  representing the control plane nodes
+                </>
+              }
+              command={`
+              kubectl --context ${context} \\
+                get awscontrolplanes.infrastructure.giantswarm.io \\
+                --selector cluster.x-k8s.io/cluster-name=${clusterName} \\
+                --namespace ${clusterNamespace}
+              `}
+            />
+            <CLIGuideStep
+              title={
+                <>
+                  5. Show the <code>G8sControlPlane</code> resources
+                  representing the control plane nodes
+                </>
+              }
+              command={`
+              kubectl --context ${context} \\
+                get g8scontrolplanes.infrastructure.giantswarm.io \\
+                --selector cluster.x-k8s.io/cluster-name=${clusterName} \\
+                --namespace ${clusterNamespace}
+              `}
+            />
+          </>
+        )}
       </CLIGuideStepList>
     </CLIGuide>
   );
