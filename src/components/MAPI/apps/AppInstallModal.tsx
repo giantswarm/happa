@@ -431,7 +431,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
           (error as GenericResponseError)?.data,
           metav1.K8sStatusErrorReasons.NotFound
         ):
-          errorMessage = `The cluster is not yet ready for app installation. Please try again in 5 to 10 minutes.`;
+          errorMessage = `The cluster is not yet ready for app installation. Please try again in a few minutes.`;
 
           break;
 

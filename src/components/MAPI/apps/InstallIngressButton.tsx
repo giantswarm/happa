@@ -186,7 +186,7 @@ const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
         )
       ) {
         new FlashMessage(
-          'The cluster is not yet ready for app installation. Please try again in 5 to 10 minutes.',
+          'The cluster is not yet ready for app installation. Please try again in a few minutes.',
           messageType.ERROR,
           messageTTL.LONG
         );
