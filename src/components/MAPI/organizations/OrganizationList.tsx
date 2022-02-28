@@ -5,7 +5,9 @@ import { ClusterList } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
+import { supportsMapiClusters } from 'model/featureSupport';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { getLoggedInUser } from 'model/stores/main/selectors';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -39,10 +41,17 @@ const OrganizationIndex: React.FC = () => {
   const auth = useAuthProvider();
   const { cache } = useSWRConfig();
 
+  const user = useSelector(getLoggedInUser);
+  const supportsClustersViaMapi = user && supportsMapiClusters(user, provider);
+
+  const clusterListForOrganizationsKey = supportsClustersViaMapi
+    ? fetchClusterListForOrganizationsKey(organizations)
+    : null;
+
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterList,
     GenericResponseError
-  >(fetchClusterListForOrganizationsKey(organizations), () =>
+  >(clusterListForOrganizationsKey, () =>
     fetchClusterListForOrganizations(
       clientFactory,
       auth,
