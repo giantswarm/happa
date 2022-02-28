@@ -1,3 +1,4 @@
+import { Box } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import {
   getCurrentInstallationContextName,
@@ -13,6 +14,44 @@ import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
+
+function getProviderCRDLinks(provider: PropertiesOf<typeof Providers>) {
+  switch (provider) {
+    case Providers.AZURE:
+      return [
+        {
+          label: 'AzureCluster CRD schema',
+          href: docs.crdSchemaURL(docs.crds.xk8sio.azureCluster),
+          external: true,
+        },
+        {
+          label: 'AzureMachine CRD schema',
+          href: docs.crdSchemaURL(docs.crds.xk8sio.azureMachine),
+          external: true,
+        },
+      ];
+    case Providers.AWS:
+      return [
+        {
+          label: 'AWSCluster CRD schema',
+          href: docs.crdSchemaURL(docs.crds.giantswarmio.awsCluster),
+          external: true,
+        },
+        {
+          label: 'AWSControlPlane CRD schema',
+          href: docs.crdSchemaURL(docs.crds.giantswarmio.awsControlPlane),
+          external: true,
+        },
+        {
+          label: 'G8SControlPlane CRD schema',
+          href: docs.crdSchemaURL(docs.crds.giantswarmio.g8sControlPlane),
+          external: true,
+        },
+      ];
+    default:
+      return [];
+  }
+}
 
 interface IInspectClusterGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
@@ -45,16 +84,7 @@ const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
               href: docs.crdSchemaURL(docs.crds.xk8sio.cluster),
               external: true,
             },
-            {
-              label: 'AzureCluster CRD schema',
-              href: docs.crdSchemaURL(docs.crds.xk8sio.azureCluster),
-              external: true,
-            },
-            {
-              label: 'AzureMachine CRD schema',
-              href: docs.crdSchemaURL(docs.crds.xk8sio.azureMachine),
-              external: true,
-            },
+            ...getProviderCRDLinks(provider),
             {
               label: 'Management API introduction',
               href: docs.managementAPIIntroduction,
@@ -80,7 +110,7 @@ const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
         />
 
         {provider === Providers.AZURE && (
-          <>
+          <Box direction='column' gap='medium'>
             <CLIGuideStep
               title={
                 <>
@@ -107,7 +137,51 @@ const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
                 --namespace ${clusterNamespace}
               `}
             />
-          </>
+          </Box>
+        )}
+        {provider === Providers.AWS && (
+          <Box direction='column' gap='medium'>
+            <CLIGuideStep
+              title={
+                <>
+                  3. Show the <code>AWSCluster</code> resource
+                </>
+              }
+              command={`
+              kubectl --context ${context} \\
+                get awscluster.infrastructure.giantswarm.io ${clusterName} \\
+                --namespace ${clusterNamespace} --output json
+              `}
+            />
+            <CLIGuideStep
+              title={
+                <>
+                  4. Show the <code>AWSControlPlane</code> resources
+                  representing the control plane nodes
+                </>
+              }
+              command={`
+              kubectl --context ${context} \\
+                get awscontrolplanes.infrastructure.giantswarm.io \\
+                --selector cluster.x-k8s.io/cluster-name=${clusterName} \\
+                --namespace ${clusterNamespace}
+              `}
+            />
+            <CLIGuideStep
+              title={
+                <>
+                  5. Show the <code>G8sControlPlane</code> resources
+                  representing the control plane nodes
+                </>
+              }
+              command={`
+              kubectl --context ${context} \\
+                get g8scontrolplanes.infrastructure.giantswarm.io \\
+                --selector cluster.x-k8s.io/cluster-name=${clusterName} \\
+                --namespace ${clusterNamespace}
+              `}
+            />
+          </Box>
         )}
       </CLIGuideStepList>
     </CLIGuide>

@@ -203,7 +203,7 @@ describe('ClusterDetailAppListItem', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('(current version)')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByLabelText('Select app version'));
+    fireEvent.click(screen.getByLabelText(/Select app version/));
 
     for (const entry of entryList.items) {
       const row = await screen.findByLabelText(entry.spec.version);
@@ -257,7 +257,7 @@ describe('ClusterDetailAppListItem', () => {
       within(appVersionWidget).getByText(currentVersion)
     ).toBeInTheDocument();
 
-    const appVersionSelector = screen.getByLabelText('Select app version');
+    const appVersionSelector = screen.getByLabelText(/Select app version/);
     expect(
       await within(appVersionSelector).findAllByLabelText(
         'no information available'
@@ -297,7 +297,7 @@ describe('ClusterDetailAppListItem', () => {
       expect(screen.getByRole('button', { name: /Details/ })).not.toBeDisabled()
     );
 
-    fireEvent.click(screen.getByLabelText('Select app version'));
+    fireEvent.click(screen.getByLabelText(/Select app version/));
     fireEvent.click(screen.getByLabelText(newVersion));
 
     const updateButton = screen.getByRole('button', { name: /Update/ });
@@ -369,7 +369,7 @@ describe('ClusterDetailAppListItem', () => {
       expect(screen.getByRole('button', { name: /Details/ })).not.toBeDisabled()
     );
 
-    fireEvent.click(screen.getByLabelText('Select app version'));
+    fireEvent.click(screen.getByLabelText(/Select app version/));
     fireEvent.click(screen.getByLabelText(newVersion));
 
     const updateButton = screen.getByRole('button', { name: /Update/ });
@@ -441,7 +441,7 @@ describe('ClusterDetailAppListItem', () => {
       expect(screen.getByRole('button', { name: /Details/ })).not.toBeDisabled()
     );
 
-    fireEvent.click(screen.getByLabelText('Select app version'));
+    fireEvent.click(screen.getByLabelText(/Select app version/));
     fireEvent.click(screen.getByLabelText(newVersion));
 
     const updateButton = screen.getByRole('button', { name: /Update/ });
