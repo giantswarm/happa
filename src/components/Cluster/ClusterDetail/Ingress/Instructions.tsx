@@ -4,6 +4,7 @@ import { getBasePathFromK8sEndpoint } from 'Cluster/ClusterDetail/Ingress/util';
 import { Providers } from 'model/constants';
 import React from 'react';
 import styled from 'styled-components';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 import {
   Description,
@@ -54,10 +55,8 @@ const Instructions: React.FC<IInstructionsProps> = ({
   ...rest
 }) => {
   // Safe because of default props.
-  const basePath: string = getBasePathFromK8sEndpoint(k8sEndpoint as string);
-  const examplePath: string = `${IngressPathPrefixes.Example}${basePath}`;
-  const balancerPath: string = `${IngressPathPrefixes.LoadBalancer}${basePath}`;
-  const patternPath: string = `${IngressPathPrefixes.Pattern}${basePath}`;
+  const basePath: string | undefined =
+    getBasePathFromK8sEndpoint(k8sEndpoint as string) || undefined;
 
   return (
     <>
@@ -66,22 +65,46 @@ const Instructions: React.FC<IInstructionsProps> = ({
           <InfoRow>
             <Label>Base domain:</Label>
             <URIWrapper>
-              <StyledURIBlock>{basePath}</StyledURIBlock>
+              <OptionalValue
+                value={basePath}
+                loaderWidth={200}
+                loaderHeight={20}
+              >
+                {() => <StyledURIBlock>{basePath}</StyledURIBlock>}
+              </OptionalValue>
             </URIWrapper>
           </InfoRow>
           <InfoRow>
             <Label>Load balancer DNS name:</Label>
             <URIWrapper>
-              <StyledURIBlock>{balancerPath}</StyledURIBlock>
+              <OptionalValue
+                value={basePath}
+                loaderWidth={200}
+                loaderHeight={20}
+              >
+                {() => (
+                  <StyledURIBlock>{`${IngressPathPrefixes.LoadBalancer}${basePath}`}</StyledURIBlock>
+                )}
+              </OptionalValue>
             </URIWrapper>
           </InfoRow>
           <InfoRow>
             <Label>Hostname pattern:</Label>
             <URIWrapper>
-              <StyledURIBlock copyContent={patternPath}>
-                <Emphasis>{IngressPathPrefixes.Pattern}</Emphasis>
-                {basePath}
-              </StyledURIBlock>
+              <OptionalValue
+                value={basePath}
+                loaderWidth={200}
+                loaderHeight={20}
+              >
+                {() => (
+                  <StyledURIBlock
+                    copyContent={`${IngressPathPrefixes.Pattern}${basePath}`}
+                  >
+                    <Emphasis>{IngressPathPrefixes.Pattern}</Emphasis>
+                    {basePath}
+                  </StyledURIBlock>
+                )}
+              </OptionalValue>
               <Description>
                 Replace <code>{IngressPathPrefixes.Pattern}</code> with a unique
                 domain name segment to address your service.
@@ -129,7 +152,15 @@ const Instructions: React.FC<IInstructionsProps> = ({
               Create a CNAME <code>myservice.example.com</code> pointing to the
               load balancer DNS name
               <URIWrapper>
-                <StyledURIBlock>{balancerPath}</StyledURIBlock>
+                <OptionalValue
+                  value={basePath}
+                  loaderWidth={200}
+                  loaderHeight={20}
+                >
+                  {() => (
+                    <StyledURIBlock>{`${IngressPathPrefixes.LoadBalancer}${basePath}`}</StyledURIBlock>
+                  )}
+                </OptionalValue>
               </URIWrapper>
             </li>
           </Steps>
@@ -154,7 +185,15 @@ const Instructions: React.FC<IInstructionsProps> = ({
               Set the <code>hostname</code> in your workload&apos;s Ingress
               resource to the according name
               <URIWrapper>
-                <StyledURIBlock>{examplePath}</StyledURIBlock>
+                <OptionalValue
+                  value={basePath}
+                  loaderWidth={200}
+                  loaderHeight={20}
+                >
+                  {() => (
+                    <StyledURIBlock>{`${IngressPathPrefixes.Example}${basePath}`}</StyledURIBlock>
+                  )}
+                </OptionalValue>
               </URIWrapper>
             </li>
           </Steps>
