@@ -462,6 +462,7 @@ export async function createRoleBindingWithSubjects(
       subject.namespace = namespace;
     }
 
+    roleBinding.subjects ??= [];
     roleBinding.subjects.push(subject);
   }
 
@@ -493,6 +494,9 @@ export async function deleteSubjectFromRoleBinding(
     binding.name,
     namespace
   );
+
+  // If there are no subjects to delete, then there's nothing to do here
+  if (!bindingResource.subjects) return bindingResource;
 
   // Delete the subjects that match.
   bindingResource.subjects = bindingResource.subjects.filter((s) => {
