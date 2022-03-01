@@ -58,8 +58,8 @@
   "mainOutput": "main",
   "dependencies": {
     "@hot-loader/react-dom": "17.0.2",
-    "@sentry/react": "6.18.0",
-    "@sentry/tracing": "6.18.0",
+    "@sentry/react": "6.18.1",
+    "@sentry/tracing": "6.18.1",
     "bootstrap": "3.4.1",
     "bowser": "2.11.0",
     "color-hash": "2.0.1",
