@@ -186,6 +186,37 @@ describe('WorkerNodesNodePoolItem', () => {
     ).toBeInTheDocument();
   });
 
+  it('displays full name if the name is too short to be truncated', () => {
+    render(
+      getComponent({
+        nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
+        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+      })
+    );
+
+    expect(screen.getByLabelText('Name: t6yo9')).toHaveTextContent('t6yo9');
+  });
+
+  it('displays truncated name with a tooltip if the name is long', () => {
+    render(
+      getComponent({
+        nodePool: {
+          ...capiexpv1alpha3Mocks.randomCluster1MachinePool1,
+          metadata: {
+            ...capiexpv1alpha3Mocks.randomCluster1MachinePool1.metadata,
+            name: 't6yo90',
+          },
+        },
+        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+      })
+    );
+
+    expect(screen.getByLabelText('Name: t6yo90')).toHaveTextContent('t6y…0');
+    const label: HTMLSpanElement = screen.getByText('t6y…0');
+    fireEvent.mouseOver(label);
+    expect(screen.getByText('t6yo90')).toBeInTheDocument();
+  });
+
   it('can delete a node pool', async () => {
     nock(window.config.mapiEndpoint)
       .get(

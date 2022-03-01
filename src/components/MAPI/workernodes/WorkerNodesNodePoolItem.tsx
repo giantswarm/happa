@@ -19,6 +19,7 @@ import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ViewAndEditName, {
   ViewAndEditNameVariant,
 } from 'UI/Inputs/ViewEditName';
+import Truncated from 'UI/Util/Truncated';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
@@ -209,9 +210,14 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
           >
             {(value) => (
               <Copyable copyText={value as string}>
-                <Text aria-label={`Name: ${value}`}>
-                  <Code>{value}</Code>
-                </Text>
+                <Truncated
+                  as={Code}
+                  aria-label={`Name: ${value}`}
+                  numEnd={1}
+                  numStart={3}
+                >
+                  {value as string}
+                </Truncated>
               </Copyable>
             )}
           </OptionalValue>
