@@ -119,6 +119,8 @@ export function appendSubjectsToRoleItem(
   binding: rbacv1.IRoleBinding,
   role: ui.IAccessControlRoleItem
 ) {
+  if (!binding.subjects) return;
+
   const uiRoleBinding: ui.IAccessControlRoleSubjectRoleBinding = {
     name: binding.metadata.name,
     namespace: binding.metadata.namespace!,
