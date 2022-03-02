@@ -5,7 +5,11 @@ import { ClusterList } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
+import { supportsMapiClusters } from 'model/featureSupport';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { selectClusters } from 'model/stores/cluster/selectors';
+import { clustersCountGroupedByOwner } from 'model/stores/cluster/utils';
+import { getLoggedInUser } from 'model/stores/main/selectors';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -39,10 +43,17 @@ const OrganizationIndex: React.FC = () => {
   const auth = useAuthProvider();
   const { cache } = useSWRConfig();
 
+  const user = useSelector(getLoggedInUser);
+  const supportsClustersViaMapi = user && supportsMapiClusters(user, provider);
+
+  const clusterListForOrganizationsKey = supportsClustersViaMapi
+    ? fetchClusterListForOrganizationsKey(organizations)
+    : null;
+
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterList,
     GenericResponseError
-  >(fetchClusterListForOrganizationsKey(organizations), () =>
+  >(clusterListForOrganizationsKey, () =>
     fetchClusterListForOrganizations(
       clientFactory,
       auth,
@@ -65,10 +76,18 @@ const OrganizationIndex: React.FC = () => {
     }
   }, [clusterListError]);
 
+  const clusters = useSelector(selectClusters());
+
   const organizationList = useMemo(() => {
-    const clusterCounters = computeClusterCountersForOrganizations(
-      clusterList?.items
-    );
+    // eslint-disable-next-line @typescript-eslint/init-declarations
+    let clusterCounters: Record<string, number> | undefined;
+    if (supportsClustersViaMapi) {
+      clusterCounters = computeClusterCountersForOrganizations(
+        clusterList?.items
+      );
+    } else {
+      clusterCounters = clustersCountGroupedByOwner(Object.values(clusters));
+    }
 
     const sortedOrganizations = Object.values(organizations).sort((a, b) =>
       (a?.name || a.id).localeCompare(b?.name || b.id)
@@ -90,7 +109,13 @@ const OrganizationIndex: React.FC = () => {
     });
 
     return orgs;
-  }, [organizations, clusterList, clusterListError]);
+  }, [
+    supportsClustersViaMapi,
+    organizations,
+    clusterList,
+    clusters,
+    clusterListError,
+  ]);
 
   const handleOrgClick = (name: string) => {
     const orgPath = RoutePath.createUsablePath(OrganizationsRoutes.Detail, {
