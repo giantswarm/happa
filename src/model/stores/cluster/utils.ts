@@ -12,15 +12,15 @@ import { compareDates } from 'utils/helpers';
 import { validateLabelKey } from 'utils/labelUtils';
 import { compare } from 'utils/semver';
 
-export const clustersGroupedByOwner = (
+export const clustersCountGroupedByOwner = (
   clusters: Cluster[]
-): Record<string, Cluster[]> => {
+): Record<string, number> => {
   return clusters.reduce((r, a) => {
-    r[a.owner] = r[a.owner] || [];
-    r[a.owner].push(a);
+    r[a.owner] ??= 0;
+    r[a.owner]++;
 
     return r;
-  }, {} as Record<string, Cluster[]>);
+  }, {} as Record<string, number>);
 };
 
 /**

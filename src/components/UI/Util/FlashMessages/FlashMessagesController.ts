@@ -117,14 +117,22 @@ export class FlashMessagesController {
     T extends FlashMessageEvents,
     U extends FlashMessageEventCallbacks[T]
   >(event: T, cb: U) {
-    this.eventEmitter.addEventListener(event, cb as EventListener, false);
+    this.eventEmitter.addEventListener(
+      event,
+      cb as unknown as EventListener,
+      false
+    );
   }
 
   public removeEventListener<
     T extends FlashMessageEvents,
     U extends FlashMessageEventCallbacks[T]
   >(event: T, fn: U) {
-    this.eventEmitter.removeEventListener(event, fn as EventListener, false);
+    this.eventEmitter.removeEventListener(
+      event,
+      fn as unknown as EventListener,
+      false
+    );
   }
 
   protected dispatchEvent<

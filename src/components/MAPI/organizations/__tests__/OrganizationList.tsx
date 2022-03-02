@@ -1,9 +1,11 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { StatusCodes } from 'model/constants';
+import * as featureFlags from 'model/featureFlags';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import { IMainState } from 'model/stores/main/types';
+import { mapOAuth2UserToUser } from 'model/stores/main/utils';
 import { IOrganizationState } from 'model/stores/organization/types';
 import { IState } from 'model/stores/state';
 import nock from 'nock';
@@ -18,30 +20,6 @@ import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import OrganizationIndex from '../OrganizationIndex';
 import { usePermissionsForOrganizations } from '../permissions/usePermissionsForOrganizations';
-
-const defaultState: IState = {
-  ...preloginState,
-  main: {
-    ...preloginState.main,
-  } as IMainState,
-  entities: {
-    organizations: {
-      ...preloginState.entities.organizations,
-      items: {
-        org1: {
-          id: 'org1',
-          name: 'org1',
-          namespace: 'org-org1',
-        },
-        org2: {
-          id: 'org2',
-          name: 'org2',
-          namespace: 'org-org2',
-        },
-      },
-    } as IOrganizationState,
-  } as IState['entities'],
-} as IState;
 
 const generateCluster = (
   orgName: string = 'org1',
@@ -127,6 +105,31 @@ function getComponent(
     </SWRConfig>
   );
 
+  const defaultState: IState = {
+    ...preloginState,
+    main: {
+      ...preloginState.main,
+      loggedInUser: mapOAuth2UserToUser(auth.loggedInUser!),
+    } as IMainState,
+    entities: {
+      organizations: {
+        ...preloginState.entities.organizations,
+        items: {
+          org1: {
+            id: 'org1',
+            name: 'org1',
+            namespace: 'org-org1',
+          },
+          org2: {
+            id: 'org2',
+            name: 'org2',
+            namespace: 'org-org2',
+          },
+        },
+      } as IOrganizationState,
+    } as IState['entities'],
+  } as IState;
+
   return getComponentWithStore(
     Component,
     props,
@@ -159,6 +162,7 @@ describe('OrganizationIndex', () => {
   });
 
   it('displays organizations and their cluster counts', async () => {
+    featureFlags.flags.NextGenClusters.enabled = true;
     (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
       defaultPermissions
     );
@@ -200,6 +204,7 @@ describe('OrganizationIndex', () => {
   });
 
   it('displays organizations and their cluster counts for a user that doesn`t have permissions to list clusters at the cluster scope', async () => {
+    featureFlags.flags.NextGenClusters.enabled = true;
     (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
       defaultPermissions
     );
@@ -247,6 +252,7 @@ describe('OrganizationIndex', () => {
   });
 
   it('displays the button to create an organization', () => {
+    featureFlags.flags.NextGenClusters.enabled = true;
     (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
       defaultPermissions
     );
@@ -282,6 +288,7 @@ describe('OrganizationIndex', () => {
   });
 
   it('can create an organization', async () => {
+    featureFlags.flags.NextGenClusters.enabled = true;
     (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
       defaultPermissions
     );
@@ -368,6 +375,7 @@ describe('OrganizationIndex', () => {
   });
 
   it('can cancel an organization creation', async () => {
+    featureFlags.flags.NextGenClusters.enabled = true;
     (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
       defaultPermissions
     );
@@ -433,6 +441,7 @@ describe('OrganizationIndex', () => {
   });
 
   it('displays an error if an organization cannot be created', async () => {
+    featureFlags.flags.NextGenClusters.enabled = true;
     (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
       defaultPermissions
     );

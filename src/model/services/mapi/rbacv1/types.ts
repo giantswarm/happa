@@ -50,7 +50,7 @@ export interface IClusterRoleBinding {
   kind: typeof ClusterRoleBinding;
   metadata: metav1.IObjectMeta;
   roleRef: IRoleRef;
-  subjects: ISubject[];
+  subjects?: ISubject[];
 }
 
 export const ClusterRoleBindingList = 'ClusterRoleBindingList';
@@ -84,7 +84,7 @@ export interface IRoleBinding {
   kind: typeof RoleBinding;
   metadata: metav1.IObjectMeta;
   roleRef: IRoleRef;
-  subjects: ISubject[];
+  subjects?: ISubject[];
 }
 
 export const RoleBindingList = 'RoleBindingList';
