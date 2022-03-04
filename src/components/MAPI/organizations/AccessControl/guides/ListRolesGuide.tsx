@@ -50,7 +50,7 @@ const ListRolesGuide: React.FC<IListRolesGuideProps> = ({
               2. List <code>ClusterRole</code> resources
             </>
           }
-          command='kubectl get clusterroles -l ui.giantswarm.io/display=true'
+          command='kubectl get clusterroles --selector ui.giantswarm.io/display=true'
         >
           <Text>
             As a result, you will get a list of <code>ClusterRole</code>{' '}
@@ -69,7 +69,7 @@ const ListRolesGuide: React.FC<IListRolesGuideProps> = ({
               namespace
             </>
           }
-          command={`kubectl get roles -n ${namespace} -l ui.giantswarm.io/display=true`}
+          command={`kubectl get roles --namespace ${namespace} --selector ui.giantswarm.io/display=true`}
         />
       </CLIGuideStepList>
     </CLIGuide>

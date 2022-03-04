@@ -70,7 +70,7 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
                 ? 'clusters.cluster.x-k8s.io'
                 : 'cluster'
             } ${clusterName} \\
-            -n ${clusterNamespace} \\
+            --namespace ${clusterNamespace} \\
             --type merge \\
             --patch '{"metadata": {"labels": {"foo": "bar"}}}'
           `}
