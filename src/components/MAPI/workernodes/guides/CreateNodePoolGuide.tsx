@@ -105,7 +105,7 @@ const CreateNodePoolGuide: React.FC<ICreateNodePoolGuide> = ({
         />
         <CLIGuideStep
           title='3. Apply the manifest'
-          command={`kubectl --context ${context} apply -f cluster-${clusterName}-nodepool.yaml`}
+          command={`kubectl --context ${context} apply --filename cluster-${clusterName}-nodepool.yaml`}
         >
           <Text>As a result, a node pool will get created.</Text>
         </CLIGuideStep>

@@ -67,7 +67,7 @@ const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
           }
           command={`
           kubectl create rolebinding example \\
-            -n ${namespace} --user example@acme.org --role read-all
+            --namespace ${namespace} --user example@acme.org --role read-all
           `}
         >
           <Text>
@@ -92,7 +92,7 @@ const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
           }
           command={`
           kubectl create rolebinding example \\
-            -n ${namespace} --user example@acme.org --clusterrole read-all`}
+            --namespace ${namespace} --user example@acme.org --clusterrole read-all`}
         >
           <Text>
             <strong>Note:</strong> Replace <code>example</code> with a unique
@@ -117,7 +117,7 @@ const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
           }
           command={`
           kubectl create rolebinding example \\
-            -n ${namespace} --serviceaccount ${namespace}:my-sa --role read-all`}
+            --namespace ${namespace} --serviceaccount ${namespace}:my-sa --role read-all`}
         >
           <Text>
             <strong>Note:</strong> Replace <code>example</code> with a unique

@@ -85,7 +85,7 @@ const InstallAppGuide: React.FC<IInstallAppGuideProps> = ({
         <CLIGuideStep
           title='3. Apply the manifest'
           command={`
-          kubectl --context ${context} apply -f app.yaml
+          kubectl --context ${context} apply --filename app.yaml
           `}
         >
           <Text>
