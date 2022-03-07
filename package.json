@@ -201,7 +201,7 @@
     "isomorphic-fetch": "3.0.0",
     "jest": "27.5.1",
     "json-loader": "0.5.7",
-    "lint-staged": "12.3.4",
+    "lint-staged": "12.3.5",
     "mini-css-extract-plugin": "2.5.3",
     "nock": "13.2.4",
     "node-sass": "7.0.1",
