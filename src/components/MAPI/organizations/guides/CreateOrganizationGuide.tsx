@@ -75,7 +75,7 @@ const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = ({
         </CLIGuideStep>
         <CLIGuideStep
           title='3. Apply the manifest'
-          command={`kubectl --context ${context} apply -f example-organization.yaml`}
+          command={`kubectl --context ${context} apply --filename example-organization.yaml`}
         >
           <Text>
             As a result, the CR and the according namespace will get created.

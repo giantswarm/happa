@@ -88,7 +88,7 @@ const CreateClusterGuide: React.FC<ICreateClusterGuideProps> = ({
         />
         <CLIGuideStep
           title='3. Apply the manifest'
-          command={`kubectl apply --context ${context} -f cluster-${clusterName}.yaml`}
+          command={`kubectl apply --context ${context} --filename cluster-${clusterName}.yaml`}
         >
           <Text>
             As a result, a cluster without worker nodes will get created.

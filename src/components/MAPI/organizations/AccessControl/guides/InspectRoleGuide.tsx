@@ -64,7 +64,7 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
               namespace
             </>
           }
-          command={`kubectl describe role read-all -n ${namespace}`}
+          command={`kubectl describe role read-all --namespace ${namespace}`}
         >
           <Text>
             <strong>Note:</strong> Replace <code>read-all</code> with the name
@@ -78,7 +78,7 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
               <code>RoleBinding</code> references a <code>ClusterRole</code>
             </>
           }
-          command='kubectl get rolebindings,clusterrolebindings -A | grep ClusterRole/cluster-admin'
+          command='kubectl get rolebindings,clusterrolebindings --all-namespaces | grep ClusterRole/cluster-admin'
         >
           <Text>
             <strong>Note:</strong> Replace <code>cluster-admin</code> with the
@@ -92,7 +92,7 @@ const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
               <code>Role</code>
             </>
           }
-          command={`kubectl get rolebindings -n ${namespace} | grep Role/example`}
+          command={`kubectl get rolebindings --namespace ${namespace} | grep Role/example`}
         >
           <Text>
             <strong>Note:</strong> Replace <code>example</code> with the name of
