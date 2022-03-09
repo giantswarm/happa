@@ -1,6 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { Constants } from 'model/constants';
 import { getLoggedInUser } from 'model/stores/main/selectors';
 import { LoggedInUserTypes } from 'model/stores/main/types';
 import { selectOrganizations } from 'model/stores/organization/selectors';
@@ -13,9 +14,6 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { IPermissionMap } from './types';
 import { fetchPermissions } from './utils';
-
-// eslint-disable-next-line no-magic-numbers
-const REFRESH_INTERVAL = 60 * 1000; // In ms.
 
 export const usePermissionsKey = 'getUserPermissions';
 
@@ -41,7 +39,7 @@ export function usePermissions() {
     IPermissionMap,
     GenericResponseError
   >(key, () => fetchPermissions(httpClientFactory, auth, organizations), {
-    refreshInterval: REFRESH_INTERVAL,
+    refreshInterval: Constants.PERMISSIONS_REFRESH_INTERVAL,
   });
 
   const isLoading =
