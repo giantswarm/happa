@@ -1,5 +1,4 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { Box, Text } from 'grommet';
 import {
   computeAppCatalogUITitle,
   getCatalogNamespace,
@@ -10,17 +9,13 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useMemo, useRef } from 'react';
-import styled from 'styled-components';
 import useSWR, { useSWRConfig } from 'swr';
+import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppListWidget';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
-
-const CatalogType = styled(Text)`
-  text-transform: uppercase;
-`;
 
 interface IClusterDetailAppListWidgetCatalogProps
   extends Omit<
@@ -95,31 +90,16 @@ const ClusterDetailAppListWidgetCatalog: React.FC<
   const isManaged = catalog ? isAppCatalogVisibleToUsers(catalog) : false;
 
   return (
-    <ClusterDetailAppListWidget
-      title='Catalog'
-      contentProps={{
-        direction: 'row',
-        gap: 'small',
-        wrap: true,
-        align: 'baseline',
-      }}
-      {...props}
-    >
+    <ClusterDetailAppListWidget title='Catalog' {...props}>
       <OptionalValue value={catalogTitle} loaderWidth={150}>
-        {(value) => <Text aria-label={`App catalog: ${value}`}>{value}</Text>}
+        {(value) => (
+          <CatalogLabel
+            catalogName={value as string}
+            isManaged={isManaged}
+            aria-label={`App catalog: ${value}`}
+          />
+        )}
       </OptionalValue>
-
-      {isManaged && (
-        <Box
-          pad={{ horizontal: 'xsmall', vertical: 'none' }}
-          round='xxsmall'
-          background='#8dc163'
-        >
-          <CatalogType size='xsmall' color='background' weight='bold'>
-            managed
-          </CatalogType>
-        </Box>
-      )}
     </ClusterDetailAppListWidget>
   );
 };
