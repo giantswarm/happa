@@ -63,8 +63,11 @@ const AccessControlRoleListItem = React.forwardRef<
     ref
   ) => {
     const groupCount = Object.values(groups).length;
+    const groupCountFormatted = formatCounter(groupCount);
     const userCount = Object.values(users).length;
+    const userCountFormatted = formatCounter(userCount);
     const serviceAccountCount = Object.values(serviceAccounts).length;
+    const serviceAccountCountFormatted = formatCounter(serviceAccountCount);
 
     const hasBoundSubjects =
       groupCount > 0 || userCount > 0 || serviceAccountCount > 0;
@@ -105,45 +108,48 @@ const AccessControlRoleListItem = React.forwardRef<
             <Box direction='row'>
               {groupCount > 0 && (
                 <Box width='30%'>
-                  <Text color='text-weak' size='small'>
+                  <Text
+                    color='text-weak'
+                    size='small'
+                    aria-label={`Groups: ${groupCountFormatted}`}
+                  >
                     <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
-                      <i
-                        className='fa fa-group'
-                        role='presentation'
-                        aria-label='Groups'
-                      />
+                      <i className='fa fa-group' role='presentation' />
                     </TooltipContainer>{' '}
-                    {formatCounter(groupCount)}
+                    {groupCountFormatted}
                   </Text>
                 </Box>
               )}
               {userCount > 0 && (
                 <Box width='30%'>
-                  <Text color='text-weak' size='small'>
+                  <Text
+                    color='text-weak'
+                    size='small'
+                    aria-label={`Users: ${userCountFormatted}`}
+                  >
                     <TooltipContainer content={<Tooltip>Users</Tooltip>}>
-                      <i
-                        className='fa fa-user'
-                        role='presentation'
-                        aria-label='Users'
-                      />
+                      <i className='fa fa-user' role='presentation' />
                     </TooltipContainer>{' '}
-                    {formatCounter(userCount)}
+                    {userCountFormatted}
                   </Text>
                 </Box>
               )}
               {serviceAccountCount > 0 && (
                 <Box width='30%'>
-                  <Text color='text-weak' size='small'>
+                  <Text
+                    color='text-weak'
+                    size='small'
+                    aria-label={`Service accounts: ${serviceAccountCountFormatted}`}
+                  >
                     <TooltipContainer
                       content={<Tooltip>Service accounts</Tooltip>}
                     >
                       <i
                         className='fa fa-service-account'
                         role='presentation'
-                        aria-label='Service accounts'
                       />
                     </TooltipContainer>{' '}
-                    {formatCounter(serviceAccountCount)}
+                    {serviceAccountCountFormatted}
                   </Text>
                 </Box>
               )}
