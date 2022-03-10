@@ -66,6 +66,9 @@ const AccessControlRoleListItem = React.forwardRef<
     const userCount = Object.values(users).length;
     const serviceAccountCount = Object.values(serviceAccounts).length;
 
+    const hasBoundSubjects =
+      groupCount > 0 || userCount > 0 || serviceAccountCount > 0;
+
     return (
       <StyledCard
         pad={{ vertical: 'small', horizontal: 'medium' }}
@@ -97,54 +100,56 @@ const AccessControlRoleListItem = React.forwardRef<
             </Box>
           </StyledHeading>
         </CardHeader>
-        <CardBody margin={{ top: 'xsmall' }}>
-          <Box direction='row'>
-            {groupCount > 0 && (
-              <Box width='30%'>
-                <Text color='text-weak' size='small'>
-                  <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
-                    <i
-                      className='fa fa-group'
-                      role='presentation'
-                      aria-label='Groups'
-                    />
-                  </TooltipContainer>{' '}
-                  {formatCounter(groupCount)}
-                </Text>
-              </Box>
-            )}
-            {userCount > 0 && (
-              <Box width='30%'>
-                <Text color='text-weak' size='small'>
-                  <TooltipContainer content={<Tooltip>Users</Tooltip>}>
-                    <i
-                      className='fa fa-user'
-                      role='presentation'
-                      aria-label='Users'
-                    />
-                  </TooltipContainer>{' '}
-                  {formatCounter(userCount)}
-                </Text>
-              </Box>
-            )}
-            {serviceAccountCount > 0 && (
-              <Box width='30%'>
-                <Text color='text-weak' size='small'>
-                  <TooltipContainer
-                    content={<Tooltip>Service accounts</Tooltip>}
-                  >
-                    <i
-                      className='fa fa-service-account'
-                      role='presentation'
-                      aria-label='Service accounts'
-                    />
-                  </TooltipContainer>{' '}
-                  {formatCounter(serviceAccountCount)}
-                </Text>
-              </Box>
-            )}
-          </Box>
-        </CardBody>
+        {hasBoundSubjects && (
+          <CardBody margin={{ top: 'xsmall' }}>
+            <Box direction='row'>
+              {groupCount > 0 && (
+                <Box width='30%'>
+                  <Text color='text-weak' size='small'>
+                    <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
+                      <i
+                        className='fa fa-group'
+                        role='presentation'
+                        aria-label='Groups'
+                      />
+                    </TooltipContainer>{' '}
+                    {formatCounter(groupCount)}
+                  </Text>
+                </Box>
+              )}
+              {userCount > 0 && (
+                <Box width='30%'>
+                  <Text color='text-weak' size='small'>
+                    <TooltipContainer content={<Tooltip>Users</Tooltip>}>
+                      <i
+                        className='fa fa-user'
+                        role='presentation'
+                        aria-label='Users'
+                      />
+                    </TooltipContainer>{' '}
+                    {formatCounter(userCount)}
+                  </Text>
+                </Box>
+              )}
+              {serviceAccountCount > 0 && (
+                <Box width='30%'>
+                  <Text color='text-weak' size='small'>
+                    <TooltipContainer
+                      content={<Tooltip>Service accounts</Tooltip>}
+                    >
+                      <i
+                        className='fa fa-service-account'
+                        role='presentation'
+                        aria-label='Service accounts'
+                      />
+                    </TooltipContainer>{' '}
+                    {formatCounter(serviceAccountCount)}
+                  </Text>
+                </Box>
+              )}
+            </Box>
+          </CardBody>
+        )}
       </StyledCard>
     );
   }
