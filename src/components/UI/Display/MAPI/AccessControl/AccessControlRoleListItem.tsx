@@ -1,6 +1,7 @@
 import { Box, Card, CardBody, CardHeader, Heading, Text } from 'grommet';
 import * as React from 'react';
 import styled from 'styled-components';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import { IAccessControlRoleItem } from './types';
 
@@ -87,10 +88,28 @@ const AccessControlRoleListItem = React.forwardRef<
       <CardBody margin={{ top: 'xsmall' }}>
         <Box justify='between' direction='row'>
           <Box width='100px'>
-            <Text color='text-weak'>Groups: {groupCount}</Text>
+            <Text color='text-weak' size='small'>
+              <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
+                <i
+                  className='fa fa-group'
+                  role='presentation'
+                  aria-label='Groups'
+                />
+              </TooltipContainer>{' '}
+              {groupCount}
+            </Text>
           </Box>
           <Box width='100px'>
-            <Text color='text-weak'>Users: {userCount}</Text>
+            <Text color='text-weak' size='small'>
+              <TooltipContainer content={<Tooltip>Users</Tooltip>}>
+                <i
+                  className='fa fa-user'
+                  role='presentation'
+                  aria-label='Users'
+                />
+              </TooltipContainer>{' '}
+              {userCount}
+            </Text>
           </Box>
         </Box>
       </CardBody>
