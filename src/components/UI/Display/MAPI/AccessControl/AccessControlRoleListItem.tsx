@@ -50,71 +50,100 @@ interface IAccessControlRoleListItemProps
 const AccessControlRoleListItem = React.forwardRef<
   HTMLDivElement,
   IAccessControlRoleListItemProps
->(({ name, namespace, active, permissions, groups, users, ...props }, ref) => {
-  const groupCount = formatCounter(Object.values(groups).length);
-  const userCount = formatCounter(Object.values(users).length);
+>(
+  (
+    {
+      name,
+      namespace,
+      active,
+      permissions,
+      groups,
+      users,
+      serviceAccounts,
+      ...props
+    },
+    ref
+  ) => {
+    const groupCount = formatCounter(Object.values(groups).length);
+    const userCount = formatCounter(Object.values(users).length);
+    const serviceAccountCount = formatCounter(
+      Object.values(serviceAccounts).length
+    );
 
-  return (
-    <StyledCard
-      pad={{ vertical: 'small', horizontal: 'medium' }}
-      round='xsmall'
-      elevation='none'
-      overflow='visible'
-      background='background-front'
-      aria-selected={active}
-      role='button'
-      tabIndex={active ? -1 : 0}
-      aria-label={name}
-      {...props}
-      ref={ref}
-    >
-      <CardHeader>
-        <StyledHeading level={5} margin='none'>
-          <Box direction='row' align='center'>
-            <Text truncate={true}>{name}</Text>
+    return (
+      <StyledCard
+        pad={{ vertical: 'small', horizontal: 'medium' }}
+        round='xsmall'
+        elevation='none'
+        overflow='visible'
+        background='background-front'
+        aria-selected={active}
+        role='button'
+        tabIndex={active ? -1 : 0}
+        aria-label={name}
+        {...props}
+        ref={ref}
+      >
+        <CardHeader>
+          <StyledHeading level={5} margin='none'>
+            <Box direction='row' align='center'>
+              <Text truncate={true}>{name}</Text>
 
-            {namespace.length < 1 && (
-              <Text margin={{ left: 'xxsmall' }}>
-                <i
-                  className='fa fa-globe'
-                  role='presentation'
-                  aria-label='Cluster role'
-                />
+              {namespace.length < 1 && (
+                <Text margin={{ left: 'xxsmall' }}>
+                  <i
+                    className='fa fa-globe'
+                    role='presentation'
+                    aria-label='Cluster role'
+                  />
+                </Text>
+              )}
+            </Box>
+          </StyledHeading>
+        </CardHeader>
+        <CardBody margin={{ top: 'xsmall' }}>
+          <Box direction='row'>
+            <Box width='30%'>
+              <Text color='text-weak' size='small'>
+                <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
+                  <i
+                    className='fa fa-group'
+                    role='presentation'
+                    aria-label='Groups'
+                  />
+                </TooltipContainer>{' '}
+                {groupCount}
               </Text>
-            )}
+            </Box>
+            <Box width='30%'>
+              <Text color='text-weak' size='small'>
+                <TooltipContainer content={<Tooltip>Users</Tooltip>}>
+                  <i
+                    className='fa fa-user'
+                    role='presentation'
+                    aria-label='Users'
+                  />
+                </TooltipContainer>{' '}
+                {userCount}
+              </Text>
+            </Box>
+            <Box width='30%'>
+              <Text color='text-weak' size='small'>
+                <TooltipContainer content={<Tooltip>Service accounts</Tooltip>}>
+                  <i
+                    className='fa fa-service-account'
+                    role='presentation'
+                    aria-label='Service accounts'
+                  />
+                </TooltipContainer>{' '}
+                {serviceAccountCount}
+              </Text>
+            </Box>
           </Box>
-        </StyledHeading>
-      </CardHeader>
-      <CardBody margin={{ top: 'xsmall' }}>
-        <Box justify='between' direction='row'>
-          <Box width='100px'>
-            <Text color='text-weak' size='small'>
-              <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
-                <i
-                  className='fa fa-group'
-                  role='presentation'
-                  aria-label='Groups'
-                />
-              </TooltipContainer>{' '}
-              {groupCount}
-            </Text>
-          </Box>
-          <Box width='100px'>
-            <Text color='text-weak' size='small'>
-              <TooltipContainer content={<Tooltip>Users</Tooltip>}>
-                <i
-                  className='fa fa-user'
-                  role='presentation'
-                  aria-label='Users'
-                />
-              </TooltipContainer>{' '}
-              {userCount}
-            </Text>
-          </Box>
-        </Box>
-      </CardBody>
-    </StyledCard>
-  );
-});
+        </CardBody>
+      </StyledCard>
+    );
+  }
+);
 
 export default AccessControlRoleListItem;
