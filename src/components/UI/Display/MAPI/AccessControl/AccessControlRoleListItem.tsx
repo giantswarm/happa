@@ -101,43 +101,37 @@ const AccessControlRoleListItem = React.forwardRef<
           </StyledHeading>
         </CardHeader>
         <CardBody margin={{ top: 'xsmall' }}>
-          <Box justify='between' direction='row'>
-            <Box width='100px'>
-              <Text
-                color={groupCount > 0 ? 'text-weak' : 'text-xweak'}
-                size='small'
-                aria-label={`Groups: ${groupCountFormatted}`}
-              >
-                <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
-                  <i className='fa fa-group' role='presentation' />
-                </TooltipContainer>{' '}
-                {groupCountFormatted}
-              </Text>
-            </Box>
-            <Box width='100px'>
-              <Text
-                color={userCount > 0 ? 'text-weak' : 'text-xweak'}
-                size='small'
-                aria-label={`Users: ${userCountFormatted}`}
-              >
-                <TooltipContainer content={<Tooltip>Users</Tooltip>}>
-                  <i className='fa fa-user' role='presentation' />
-                </TooltipContainer>{' '}
-                {userCountFormatted}
-              </Text>
-            </Box>
-            <Box width='100px'>
-              <Text
-                color={serviceAccountCount > 0 ? 'text-weak' : 'text-xweak'}
-                size='small'
-                aria-label={`Service accounts: ${serviceAccountCountFormatted}`}
-              >
-                <TooltipContainer content={<Tooltip>Service accounts</Tooltip>}>
-                  <i className='fa fa-service-account' role='presentation' />
-                </TooltipContainer>{' '}
-                {serviceAccountCountFormatted}
-              </Text>
-            </Box>
+          <Box justify='start' direction='row' flex='grow' gap='medium'>
+            <Text
+              color={groupCount > 0 ? 'text-weak' : 'text-xweak'}
+              size='small'
+              aria-label={`Groups: ${groupCountFormatted}`}
+            >
+              <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
+                <i className='fa fa-group' role='presentation' />
+              </TooltipContainer>{' '}
+              {groupCountFormatted}
+            </Text>
+            <Text
+              color={userCount > 0 ? 'text-weak' : 'text-xweak'}
+              size='small'
+              aria-label={`Users: ${userCountFormatted}`}
+            >
+              <TooltipContainer content={<Tooltip>Users</Tooltip>}>
+                <i className='fa fa-user' role='presentation' />
+              </TooltipContainer>{' '}
+              {userCountFormatted}
+            </Text>
+            <Text
+              color={serviceAccountCount > 0 ? 'text-weak' : 'text-xweak'}
+              size='small'
+              aria-label={`Service accounts: ${serviceAccountCountFormatted}`}
+            >
+              <TooltipContainer content={<Tooltip>Service accounts</Tooltip>}>
+                <i className='fa fa-service-account' role='presentation' />
+              </TooltipContainer>{' '}
+              {serviceAccountCountFormatted}
+            </Text>
           </Box>
         </CardBody>
       </StyledCard>
