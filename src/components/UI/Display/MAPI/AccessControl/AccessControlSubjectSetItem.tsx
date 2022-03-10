@@ -53,6 +53,7 @@ const AccessControlSubjectSetItem: React.FC<
   isEditable,
   isLoading,
   isNewlyAdded,
+  removeFromNewlyAdded,
   onDelete,
   deleteTooltipMessage,
   deleteConfirmationMessage,
@@ -92,10 +93,12 @@ const AccessControlSubjectSetItem: React.FC<
     onDelete();
   };
 
-  const [isHighlightedValue, setIsHiglightedValue] = useState(isNewlyAdded);
   useEffect(() => {
-    if (isHighlightedValue) setIsHiglightedValue(false);
-  }, [isHighlightedValue]);
+    if (isNewlyAdded) {
+      removeFromNewlyAdded();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Box
@@ -108,7 +111,7 @@ const AccessControlSubjectSetItem: React.FC<
       margin={{ right: 'small', bottom: 'small' }}
       {...props}
     >
-      <RefreshableLabel value={Number(isHighlightedValue)}>
+      <RefreshableLabel value={Number(isNewlyAdded)}>
         {typeof name === 'string' ? (
           <Text color='text-weak'>{name}</Text>
         ) : (

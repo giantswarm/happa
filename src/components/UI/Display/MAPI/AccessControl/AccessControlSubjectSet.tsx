@@ -21,6 +21,7 @@ export interface IAccessControlSubjectSetRenderer
   isLoading: boolean;
   isNewlyAdded: boolean;
   onDelete: () => void;
+  removeFromNewlyAdded: () => void;
 }
 
 export interface IAccessControlSubjectSetItem {
@@ -41,6 +42,7 @@ interface IAccessControlSubjectSetProps
   isLoading?: boolean;
   inputSuggestions?: string[];
   onValidate?: (values: string[]) => string;
+  removeFromNewlyAdded?: (name: string) => void;
 }
 
 const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
@@ -106,6 +108,10 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
     onAdd(newValue);
   };
 
+  const removeFromNewlyAdded = (n: string) => {
+    setNewlyAddedSubjects((prev) => prev.filter((subject) => subject !== n));
+  };
+
   return (
     <Box direction='row' wrap={true} align='start' {...props}>
       {items.map(({ name, isEditable, isLoading: isItemLoading }) => (
@@ -115,6 +121,7 @@ const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
             isEditable: permissions.canDelete && isEditable,
             isLoading: isItemLoading,
             isNewlyAdded: newlyAddedSubjects.includes(name),
+            removeFromNewlyAdded: () => removeFromNewlyAdded(name),
             onDelete: () => onDeleteItem(name),
           })}
         </React.Fragment>
