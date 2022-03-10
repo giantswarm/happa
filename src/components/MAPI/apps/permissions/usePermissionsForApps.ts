@@ -5,7 +5,7 @@ import {
 } from 'MAPI/permissions/utils';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import { Providers } from 'model/constants';
+import { Constants, Providers } from 'model/constants';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
@@ -13,9 +13,6 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { IAppsPermissions } from './types';
 import { usePermissionsForAppConfigs } from './usePermissionsForAppConfigs';
-
-// eslint-disable-next-line no-magic-numbers
-const REFRESH_INTERVAL = 60 * 1000;
 
 export function usePermissionsForApps(
   provider: PropertiesOf<typeof Providers>,
@@ -53,7 +50,7 @@ export function usePermissionsForApps(
         resource
       ),
     {
-      refreshInterval: REFRESH_INTERVAL,
+      refreshInterval: Constants.PERMISSIONS_REFRESH_INTERVAL,
     }
   );
 

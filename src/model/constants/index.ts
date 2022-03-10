@@ -19,6 +19,8 @@ export const Constants = {
   DEFAULT_METADATA_CHECK_PERIOD: 10 * 60 * 1000, // 10 minutes
   // eslint-disable-next-line no-magic-numbers
   DEFAULT_METADATA_UPDATE_TIMEOUT: 2 * 1000, // 2 seconds
+  // eslint-disable-next-line no-magic-numbers
+  PERMISSIONS_REFRESH_INTERVAL: 5 * 60 * 1000, // 5 minutes
   METADATA_UPDATE_LABEL: 'Update the web interface now',
 
   DEFAULT_NODEPOOL_NAME: 'Unnamed node pool',
