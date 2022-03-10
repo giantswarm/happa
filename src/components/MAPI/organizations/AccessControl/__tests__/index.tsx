@@ -115,7 +115,7 @@ describe('AccessControl', () => {
     });
     expect(listItem).toBeInTheDocument();
     expect(within(listItem).getByLabelText('Groups: 1')).toBeInTheDocument();
-    expect(within(listItem).queryByLabelText('Users')).not.toBeInTheDocument();
+    expect(within(listItem).getByLabelText('Users: 0')).toBeInTheDocument();
     expect(
       within(listItem).getByRole('presentation', { name: 'Cluster role' })
     ).toBeInTheDocument();
