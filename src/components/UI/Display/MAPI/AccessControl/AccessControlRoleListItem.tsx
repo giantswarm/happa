@@ -15,6 +15,16 @@ function formatCounter(fromValue: number): string {
   }
 }
 
+function getSubjectTooltipMessage(
+  subjectType: string,
+  count: number,
+  isClusterRole: boolean
+): string {
+  return `This ${
+    isClusterRole ? 'cluster role' : 'role'
+  } is bound to ${count} ${subjectType}${count === 1 ? '' : 's'}`;
+}
+
 const StyledCard = styled(Card)`
   min-height: auto;
   box-shadow: ${(props) =>
@@ -69,6 +79,8 @@ const AccessControlRoleListItem = React.forwardRef<
     const serviceAccountCount = Object.values(serviceAccounts).length;
     const serviceAccountCountFormatted = formatCounter(serviceAccountCount);
 
+    const isClusterRole = namespace.length < 1;
+
     return (
       <StyledCard
         pad={{ vertical: 'small', horizontal: 'medium' }}
@@ -88,7 +100,7 @@ const AccessControlRoleListItem = React.forwardRef<
             <Box direction='row' align='center'>
               <Text truncate={true}>{name}</Text>
 
-              {namespace.length < 1 && (
+              {isClusterRole && (
                 <Text margin={{ left: 'xxsmall' }}>
                   <i
                     className='fa fa-globe'
@@ -102,36 +114,58 @@ const AccessControlRoleListItem = React.forwardRef<
         </CardHeader>
         <CardBody margin={{ top: 'xsmall' }}>
           <Box justify='start' direction='row' flex='grow' gap='medium'>
-            <Text
-              color={groupCount > 0 ? 'text-weak' : 'text-xweak'}
-              size='small'
-              aria-label={`Groups: ${groupCountFormatted}`}
+            <TooltipContainer
+              content={
+                <Tooltip>
+                  {getSubjectTooltipMessage('group', groupCount, isClusterRole)}
+                </Tooltip>
+              }
             >
-              <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
-                <i className='fa fa-group' role='presentation' />
-              </TooltipContainer>{' '}
-              {groupCountFormatted}
-            </Text>
-            <Text
-              color={userCount > 0 ? 'text-weak' : 'text-xweak'}
-              size='small'
-              aria-label={`Users: ${userCountFormatted}`}
+              <Text
+                color={groupCount > 0 ? 'text-weak' : 'text-xweak'}
+                size='small'
+                aria-label={`Groups: ${groupCountFormatted}`}
+              >
+                <i className='fa fa-group' role='presentation' />{' '}
+                {groupCountFormatted}
+              </Text>
+            </TooltipContainer>
+            <TooltipContainer
+              content={
+                <Tooltip>
+                  {getSubjectTooltipMessage('user', userCount, isClusterRole)}
+                </Tooltip>
+              }
             >
-              <TooltipContainer content={<Tooltip>Users</Tooltip>}>
-                <i className='fa fa-user' role='presentation' />
-              </TooltipContainer>{' '}
-              {userCountFormatted}
-            </Text>
-            <Text
-              color={serviceAccountCount > 0 ? 'text-weak' : 'text-xweak'}
-              size='small'
-              aria-label={`Service accounts: ${serviceAccountCountFormatted}`}
+              <Text
+                color={userCount > 0 ? 'text-weak' : 'text-xweak'}
+                size='small'
+                aria-label={`Users: ${userCountFormatted}`}
+              >
+                <i className='fa fa-user' role='presentation' />{' '}
+                {userCountFormatted}
+              </Text>
+            </TooltipContainer>
+            <TooltipContainer
+              content={
+                <Tooltip>
+                  {getSubjectTooltipMessage(
+                    'service account',
+                    serviceAccountCount,
+                    isClusterRole
+                  )}
+                </Tooltip>
+              }
             >
-              <TooltipContainer content={<Tooltip>Service accounts</Tooltip>}>
-                <i className='fa fa-service-account' role='presentation' />
-              </TooltipContainer>{' '}
-              {serviceAccountCountFormatted}
-            </Text>
+              <Text
+                color={serviceAccountCount > 0 ? 'text-weak' : 'text-xweak'}
+                size='small'
+                aria-label={`Service accounts: ${serviceAccountCountFormatted}`}
+              >
+                <i className='fa fa-service-account' role='presentation' />{' '}
+                {serviceAccountCountFormatted}
+              </Text>
+            </TooltipContainer>
           </Box>
         </CardBody>
       </StyledCard>
