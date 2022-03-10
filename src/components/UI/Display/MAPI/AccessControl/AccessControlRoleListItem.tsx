@@ -7,8 +7,6 @@ import { IAccessControlRoleItem } from './types';
 
 function formatCounter(fromValue: number): string {
   switch (true) {
-    case fromValue === 0:
-      return 'None';
     // eslint-disable-next-line no-magic-numbers
     case fromValue > 99:
       return '99+';
@@ -64,11 +62,9 @@ const AccessControlRoleListItem = React.forwardRef<
     },
     ref
   ) => {
-    const groupCount = formatCounter(Object.values(groups).length);
-    const userCount = formatCounter(Object.values(users).length);
-    const serviceAccountCount = formatCounter(
-      Object.values(serviceAccounts).length
-    );
+    const groupCount = Object.values(groups).length;
+    const userCount = Object.values(users).length;
+    const serviceAccountCount = Object.values(serviceAccounts).length;
 
     return (
       <StyledCard
@@ -103,42 +99,50 @@ const AccessControlRoleListItem = React.forwardRef<
         </CardHeader>
         <CardBody margin={{ top: 'xsmall' }}>
           <Box direction='row'>
-            <Box width='30%'>
-              <Text color='text-weak' size='small'>
-                <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
-                  <i
-                    className='fa fa-group'
-                    role='presentation'
-                    aria-label='Groups'
-                  />
-                </TooltipContainer>{' '}
-                {groupCount}
-              </Text>
-            </Box>
-            <Box width='30%'>
-              <Text color='text-weak' size='small'>
-                <TooltipContainer content={<Tooltip>Users</Tooltip>}>
-                  <i
-                    className='fa fa-user'
-                    role='presentation'
-                    aria-label='Users'
-                  />
-                </TooltipContainer>{' '}
-                {userCount}
-              </Text>
-            </Box>
-            <Box width='30%'>
-              <Text color='text-weak' size='small'>
-                <TooltipContainer content={<Tooltip>Service accounts</Tooltip>}>
-                  <i
-                    className='fa fa-service-account'
-                    role='presentation'
-                    aria-label='Service accounts'
-                  />
-                </TooltipContainer>{' '}
-                {serviceAccountCount}
-              </Text>
-            </Box>
+            {groupCount > 0 && (
+              <Box width='30%'>
+                <Text color='text-weak' size='small'>
+                  <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
+                    <i
+                      className='fa fa-group'
+                      role='presentation'
+                      aria-label='Groups'
+                    />
+                  </TooltipContainer>{' '}
+                  {formatCounter(groupCount)}
+                </Text>
+              </Box>
+            )}
+            {userCount > 0 && (
+              <Box width='30%'>
+                <Text color='text-weak' size='small'>
+                  <TooltipContainer content={<Tooltip>Users</Tooltip>}>
+                    <i
+                      className='fa fa-user'
+                      role='presentation'
+                      aria-label='Users'
+                    />
+                  </TooltipContainer>{' '}
+                  {formatCounter(userCount)}
+                </Text>
+              </Box>
+            )}
+            {serviceAccountCount > 0 && (
+              <Box width='30%'>
+                <Text color='text-weak' size='small'>
+                  <TooltipContainer
+                    content={<Tooltip>Service accounts</Tooltip>}
+                  >
+                    <i
+                      className='fa fa-service-account'
+                      role='presentation'
+                      aria-label='Service accounts'
+                    />
+                  </TooltipContainer>{' '}
+                  {formatCounter(serviceAccountCount)}
+                </Text>
+              </Box>
+            )}
           </Box>
         </CardBody>
       </StyledCard>
