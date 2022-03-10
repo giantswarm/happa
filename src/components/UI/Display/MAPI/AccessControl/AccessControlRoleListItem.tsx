@@ -1,6 +1,7 @@
 import { Box, Card, CardBody, CardHeader, Heading, Text } from 'grommet';
 import * as React from 'react';
 import styled from 'styled-components';
+import RefreshableLabel from 'UI/Display/RefreshableLabel';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import { IAccessControlRoleItem } from './types';
@@ -126,8 +127,10 @@ const AccessControlRoleListItem = React.forwardRef<
                 size='small'
                 aria-label={`Groups: ${groupCountFormatted}`}
               >
-                <i className='fa fa-group' role='presentation' />{' '}
-                {groupCountFormatted}
+                <RefreshableLabel value={groupCount}>
+                  <i className='fa fa-group' role='presentation' />{' '}
+                  {groupCountFormatted}
+                </RefreshableLabel>
               </Text>
             </TooltipContainer>
             <TooltipContainer
@@ -142,8 +145,10 @@ const AccessControlRoleListItem = React.forwardRef<
                 size='small'
                 aria-label={`Users: ${userCountFormatted}`}
               >
-                <i className='fa fa-user' role='presentation' />{' '}
-                {userCountFormatted}
+                <RefreshableLabel value={userCount}>
+                  <i className='fa fa-user' role='presentation' />{' '}
+                  {userCountFormatted}
+                </RefreshableLabel>
               </Text>
             </TooltipContainer>
             <TooltipContainer
@@ -162,8 +167,10 @@ const AccessControlRoleListItem = React.forwardRef<
                 size='small'
                 aria-label={`Service accounts: ${serviceAccountCountFormatted}`}
               >
-                <i className='fa fa-service-account' role='presentation' />{' '}
-                {serviceAccountCountFormatted}
+                <RefreshableLabel value={serviceAccountCount}>
+                  <i className='fa fa-service-account' role='presentation' />{' '}
+                  {serviceAccountCountFormatted}
+                </RefreshableLabel>
               </Text>
             </TooltipContainer>
           </Box>
