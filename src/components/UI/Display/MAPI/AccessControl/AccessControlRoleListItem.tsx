@@ -69,9 +69,6 @@ const AccessControlRoleListItem = React.forwardRef<
     const serviceAccountCount = Object.values(serviceAccounts).length;
     const serviceAccountCountFormatted = formatCounter(serviceAccountCount);
 
-    const hasBoundSubjects =
-      groupCount > 0 || userCount > 0 || serviceAccountCount > 0;
-
     return (
       <StyledCard
         pad={{ vertical: 'small', horizontal: 'medium' }}
@@ -103,59 +100,46 @@ const AccessControlRoleListItem = React.forwardRef<
             </Box>
           </StyledHeading>
         </CardHeader>
-        {hasBoundSubjects && (
-          <CardBody margin={{ top: 'xsmall' }}>
-            <Box direction='row'>
-              {groupCount > 0 && (
-                <Box width='30%'>
-                  <Text
-                    color='text-weak'
-                    size='small'
-                    aria-label={`Groups: ${groupCountFormatted}`}
-                  >
-                    <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
-                      <i className='fa fa-group' role='presentation' />
-                    </TooltipContainer>{' '}
-                    {groupCountFormatted}
-                  </Text>
-                </Box>
-              )}
-              {userCount > 0 && (
-                <Box width='30%'>
-                  <Text
-                    color='text-weak'
-                    size='small'
-                    aria-label={`Users: ${userCountFormatted}`}
-                  >
-                    <TooltipContainer content={<Tooltip>Users</Tooltip>}>
-                      <i className='fa fa-user' role='presentation' />
-                    </TooltipContainer>{' '}
-                    {userCountFormatted}
-                  </Text>
-                </Box>
-              )}
-              {serviceAccountCount > 0 && (
-                <Box width='30%'>
-                  <Text
-                    color='text-weak'
-                    size='small'
-                    aria-label={`Service accounts: ${serviceAccountCountFormatted}`}
-                  >
-                    <TooltipContainer
-                      content={<Tooltip>Service accounts</Tooltip>}
-                    >
-                      <i
-                        className='fa fa-service-account'
-                        role='presentation'
-                      />
-                    </TooltipContainer>{' '}
-                    {serviceAccountCountFormatted}
-                  </Text>
-                </Box>
-              )}
+        <CardBody margin={{ top: 'xsmall' }}>
+          <Box justify='between' direction='row'>
+            <Box width='100px'>
+              <Text
+                color={groupCount > 0 ? 'text-weak' : 'text-xweak'}
+                size='small'
+                aria-label={`Groups: ${groupCountFormatted}`}
+              >
+                <TooltipContainer content={<Tooltip>Groups</Tooltip>}>
+                  <i className='fa fa-group' role='presentation' />
+                </TooltipContainer>{' '}
+                {groupCountFormatted}
+              </Text>
             </Box>
-          </CardBody>
-        )}
+            <Box width='100px'>
+              <Text
+                color={userCount > 0 ? 'text-weak' : 'text-xweak'}
+                size='small'
+                aria-label={`Users: ${userCountFormatted}`}
+              >
+                <TooltipContainer content={<Tooltip>Users</Tooltip>}>
+                  <i className='fa fa-user' role='presentation' />
+                </TooltipContainer>{' '}
+                {userCountFormatted}
+              </Text>
+            </Box>
+            <Box width='100px'>
+              <Text
+                color={serviceAccountCount > 0 ? 'text-weak' : 'text-xweak'}
+                size='small'
+                aria-label={`Service accounts: ${serviceAccountCountFormatted}`}
+              >
+                <TooltipContainer content={<Tooltip>Service accounts</Tooltip>}>
+                  <i className='fa fa-service-account' role='presentation' />
+                </TooltipContainer>{' '}
+                {serviceAccountCountFormatted}
+              </Text>
+            </Box>
+          </Box>
+        </CardBody>
       </StyledCard>
     );
   }
