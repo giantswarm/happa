@@ -60,18 +60,19 @@ const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
   const text = (
     <span>
       {props.catalogName}
-      {props.isManaged && <CatalogType>MANAGED</CatalogType>}
-      {props.catalogName === 'Giant Swarm Catalog' && (
+      {props.isManaged || props.catalogName === 'Giant Swarm Catalog' ? (
         <CatalogType>MANAGED</CatalogType>
-      )}
+      ) : null}
     </span>
   );
 
   return (
     <Wrapper {...props} hasError={Boolean(props.error)}>
-      <IconArea>
-        <Icon src={props.iconUrl} />
-      </IconArea>
+      {props.iconUrl && (
+        <IconArea>
+          <Icon src={props.iconUrl} />
+        </IconArea>
+      )}
       <Text>
         {props.description && (
           <TooltipContainer
