@@ -114,8 +114,8 @@ describe('AccessControl', () => {
       name: 'cluster-admin',
     });
     expect(listItem).toBeInTheDocument();
-    expect(within(listItem).getByText('Groups: 1')).toBeInTheDocument();
-    expect(within(listItem).getByText('Users: None')).toBeInTheDocument();
+    expect(within(listItem).getByLabelText('Groups: 1')).toBeInTheDocument();
+    expect(within(listItem).getByLabelText('Users: 0')).toBeInTheDocument();
     expect(
       within(listItem).getByRole('presentation', { name: 'Cluster role' })
     ).toBeInTheDocument();
@@ -169,8 +169,8 @@ describe('AccessControl', () => {
       name: 'edit-all',
     });
     expect(listItem).toBeInTheDocument();
-    expect(within(listItem).getByText('Groups: 1')).toBeInTheDocument();
-    expect(within(listItem).getByText('Users: 2')).toBeInTheDocument();
+    expect(within(listItem).getByLabelText('Groups: 1')).toBeInTheDocument();
+    expect(within(listItem).getByLabelText('Users: 2')).toBeInTheDocument();
     expect(
       within(listItem).queryByRole('presentation', { name: 'Cluster role' })
     ).not.toBeInTheDocument();
