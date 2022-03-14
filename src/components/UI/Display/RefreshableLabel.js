@@ -51,7 +51,7 @@ function RefreshableLabel({ children, value, className }) {
   useEffect(() => {
     const sToMs = 1000;
     const compareData = () => {
-      if (prevValue && value !== prevValue) {
+      if (typeof prevValue !== 'undefined' && value !== prevValue) {
         setHasDataChanged(true);
       }
 
