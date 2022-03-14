@@ -44,6 +44,10 @@ const StyledNavLink = styled(NavLink)`
 const StyledExternalNavLink = styled.a`
   display: inline-block;
   margin-right: 18px;
+
+  &:last-child {
+    margin-right: 0;
+  }
 `;
 
 const NavDiv = styled.div`
