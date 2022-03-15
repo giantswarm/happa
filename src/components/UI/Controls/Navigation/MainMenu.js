@@ -63,7 +63,7 @@ const NavDiv = styled.div`
 const DropdownMenuStyled = styled(DropdownMenu)`
   display: none;
   position: static;
-  margin: 0 8px;
+  margin: 0 ${({ theme }) => theme.spacingPx * 2}px;
 
   .active {
     font-weight: 700;
@@ -76,10 +76,10 @@ const DropdownMenuStyled = styled(DropdownMenu)`
 `;
 
 const DropdownList = styled(List)`
-  left: 4px;
+  left: ${({ theme }) => theme.spacingPx}px;
   line-height: 1.45em;
-  margin-top: 10px;
-  width: calc(100vw - 8px);
+  margin-top: ${({ theme }) => theme.spacingPx * 2}px;
+  width: calc(100vw - ${({ theme }) => theme.spacingPx * 2}px);
 `;
 
 const DropdownNavLink = styled(StyledNavLink)`
