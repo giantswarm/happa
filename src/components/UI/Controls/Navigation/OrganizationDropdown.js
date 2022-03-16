@@ -6,10 +6,16 @@ import DropdownMenu, { DropdownTrigger, List } from 'UI/Controls/DropdownMenu';
 import Truncated from 'UI/Util/Truncated';
 import RoutePath from 'utils/routePath';
 
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const OrganizationDropdownTrigger = styled(DropdownTrigger)`
   width: unset;
   height: unset;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   position: relative;
   padding: 0 12px 0 0;
   margin: 0;
@@ -26,6 +32,7 @@ const OrganizationDropdownTrigger = styled(DropdownTrigger)`
   text-align: center;
   will-change: background-color;
   transition: background-color 0.3s;
+  white-space: nowrap;
 
   &:active {
     color: #ccd;
@@ -68,18 +75,10 @@ const TriggerLabel = styled(Truncated)`
   margin-left: 50px;
 `;
 
-const OrganizationMenu = styled(DropdownMenu)`
-  display: inline;
-`;
-
-const InlineDiv = styled.div`
-  display: inline;
-`;
-
 const OrganizationList = styled(List)`
   right: 0;
   left: 0;
-  top: 24px;
+  top: 100%;
 `;
 
 const MenuItem = styled(NavLink)`
@@ -146,8 +145,8 @@ const OrganizationDropdown = ({
   }, [organizations.items, organizations.isFetching]);
 
   return (
-    <InlineDiv>
-      <OrganizationMenu
+    <Wrapper>
+      <DropdownMenu
         render={({
           isOpen,
           onClickHandler,
@@ -155,7 +154,7 @@ const OrganizationDropdown = ({
           onBlurHandler,
           onKeyDownHandler,
         }) => (
-          <InlineDiv onBlur={onBlurHandler} onFocus={onFocusHandler}>
+          <div onBlur={onBlurHandler} onFocus={onFocusHandler}>
             <OrganizationDropdownTrigger
               aria-expanded={isOpen}
               aria-haspopup='true'
@@ -225,10 +224,10 @@ const OrganizationDropdown = ({
                 )}
               </OrganizationList>
             )}
-          </InlineDiv>
+          </div>
         )}
       />
-    </InlineDiv>
+    </Wrapper>
   );
 };
 

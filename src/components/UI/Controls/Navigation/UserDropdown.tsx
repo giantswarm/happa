@@ -1,9 +1,10 @@
-import { AuthorizationTypes } from 'model/constants';
+import { AuthorizationTypes, CSSBreakpoints } from 'model/constants';
 import { AccountSettingsRoutes, MainRoutes } from 'model/constants/routes';
 import React from 'react';
 import Gravatar from 'react-gravatar';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { mq } from 'styles';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/Controls/DropdownMenu';
 import Truncated from 'UI/Util/Truncated';
 
@@ -23,6 +24,7 @@ const StyledDropdownTrigger = styled(DropdownTrigger)`
   line-height: 2;
   cursor: pointer;
   background: transparent;
+  padding: 0 ${({ theme }) => theme.spacingPx * 2}px;
 
   &:active,
   &:focus {
@@ -38,15 +40,15 @@ const StyledDropdownTrigger = styled(DropdownTrigger)`
   }
 
   .caret {
-    margin-left: ${({ theme }) => theme.spacingPx}px;
+    margin-left: 0;
   }
 `;
 
 const StyledList = styled(List)`
   right: 0;
-  left: 0;
   top: 100%;
   width: 100%;
+  min-width: 160px;
 `;
 
 const MenuItem = styled(NavLink)`
@@ -64,9 +66,19 @@ const MenuItem = styled(NavLink)`
 `;
 
 const StyledGravatar = styled(Gravatar)`
+  margin-top: ${({ theme }) => theme.spacingPx}px;
+  margin-bottom: ${({ theme }) => theme.spacingPx}px;
   margin-right: ${({ theme }) => theme.spacingPx * 2}px;
-  width: 1.6em;
-  height: 1.6em;
+  width: 26px;
+  height: 26px;
+`;
+
+const Username = styled.div`
+  margin-right: ${({ theme }) => theme.spacingPx}px;
+
+  ${mq(CSSBreakpoints.Large)} {
+    display: none;
+  }
 `;
 
 interface IUserDropdownProps {
@@ -93,9 +105,11 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
               type='button'
             >
               <StyledGravatar default='mm' email={user.email} size={100} />
-              <Truncated tooltipPlacement='bottom' aria-label={user.email}>
-                {user.email}
-              </Truncated>
+              <Username>
+                <Truncated tooltipPlacement='bottom' aria-label={user.email}>
+                  {user.email}
+                </Truncated>
+              </Username>
               <span className='caret' />
             </StyledDropdownTrigger>
             {isOpen && (
