@@ -128,7 +128,7 @@ class Navigation extends React.Component {
               organizations={this.props.organizations}
               selectedOrganization={this.props.selectedOrganization}
             />
-            &nbsp; &nbsp;
+
             <UserDropdown user={this.props.user} />
           </Actions>
         </div>

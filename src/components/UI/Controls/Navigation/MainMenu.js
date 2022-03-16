@@ -44,6 +44,10 @@ const StyledNavLink = styled(NavLink)`
 const StyledExternalNavLink = styled.a`
   display: inline-block;
   margin-right: 18px;
+
+  &:last-child {
+    margin-right: 0;
+  }
 `;
 
 const NavDiv = styled.div`
@@ -58,11 +62,8 @@ const NavDiv = styled.div`
 
 const DropdownMenuStyled = styled(DropdownMenu)`
   display: none;
-  left: unset;
-  flex-direction: column;
-  transform: translate(30px, 5px);
-  position: fixed;
-  width: 38px;
+  position: static;
+  margin: 0 ${({ theme }) => theme.spacingPx * 2}px;
 
   .active {
     font-weight: 700;
@@ -70,15 +71,15 @@ const DropdownMenuStyled = styled(DropdownMenu)`
 
   ${mq(CSSBreakpoints.Medium)} {
     display: flex;
+    align-items: center;
   }
 `;
 
 const DropdownList = styled(List)`
-  right: unset;
-  left: -35px;
+  left: ${({ theme }) => theme.spacingPx}px;
   line-height: 1.45em;
-  margin: 7px 0 0 -1px;
-  width: calc(100vw - 8px);
+  margin-top: ${({ theme }) => theme.spacingPx * 2}px;
+  width: calc(100vw - ${({ theme }) => theme.spacingPx * 2}px);
 `;
 
 const DropdownNavLink = styled(StyledNavLink)`
