@@ -87,6 +87,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   organizations,
   canCreateClusters,
   canListReleases,
+  className,
   ...props
 }) => {
   const name = cluster?.metadata.name;
@@ -285,10 +286,12 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 
   return (
     <StyledLink
+      className={className}
       to={disableNavigation ? '' : clusterPath}
       aria-label={isLoading ? 'Loading cluster...' : `Cluster ${name}`}
       aria-disabled={disableNavigation}
       tabIndex={disableNavigation ? -1 : 0}
+      {...props}
     >
       <Card
         direction='row'
