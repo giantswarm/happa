@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitForElementToBeRemoved,
+  within,
+} from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { usePermissionsForAccessControl } from 'MAPI/organizations/permissions/usePermissionsForAccessControl';
 import { StatusCodes } from 'model/constants';
@@ -359,14 +365,14 @@ describe('AccessControl', () => {
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
     expect(
-      await withMarkup(screen.findByText)(
-        'Groups subject1, subject2, subject3 have been bound to the role.'
-      )
+      await within(section).findByLabelText('subject1')
     ).toBeInTheDocument();
-
-    expect(within(section).getByLabelText('subject1')).toBeInTheDocument();
-    expect(within(section).getByLabelText('subject2')).toBeInTheDocument();
-    expect(within(section).getByLabelText('subject3')).toBeInTheDocument();
+    expect(
+      await within(section).findByLabelText('subject2')
+    ).toBeInTheDocument();
+    expect(
+      await within(section).findByLabelText('subject3')
+    ).toBeInTheDocument();
 
     (Date.now as unknown as jest.SpyInstance).mockClear();
   });
@@ -570,15 +576,11 @@ describe('AccessControl', () => {
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
     expect(
-      await withMarkup(screen.findByText)(
-        'Users subject1@example.com, subject2 have been bound to the role.'
-      )
+      await within(section).findByLabelText('subject1@example.com')
     ).toBeInTheDocument();
-
     expect(
-      within(section).getByLabelText('subject1@example.com')
+      await within(section).findByLabelText('subject2')
     ).toBeInTheDocument();
-    expect(within(section).getByLabelText('subject2')).toBeInTheDocument();
 
     (Date.now as unknown as jest.SpyInstance).mockClear();
   });
@@ -784,13 +786,9 @@ describe('AccessControl', () => {
     fireEvent.click(screen.getByText('Remove'));
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
-    expect(
-      await withMarkup(screen.findByText)(
-        'The binding for group Admins has been removed.'
-      )
-    ).toBeInTheDocument();
-
-    expect(within(section).queryByLabelText('Admins')).not.toBeInTheDocument();
+    await waitForElementToBeRemoved(() =>
+      within(section).queryByLabelText('Admins')
+    );
   });
 
   it('displays an error if deleting a group fails', async () => {
@@ -980,15 +978,10 @@ describe('AccessControl', () => {
     fireEvent.click(screen.getByText('Remove'));
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
-    expect(
-      await withMarkup(screen.findByText)(
-        'The binding for user test@test.com has been removed.'
-      )
-    ).toBeInTheDocument();
 
-    expect(
+    await waitForElementToBeRemoved(() =>
       within(section).queryByLabelText('test@test.com')
-    ).not.toBeInTheDocument();
+    );
   });
 
   it('displays an error if deleting a user fails', async () => {
@@ -1110,15 +1103,10 @@ describe('AccessControl', () => {
     fireEvent.click(screen.getByText('Remove'));
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
-    expect(
-      await withMarkup(screen.findByText)(
-        'The binding for service account some-random-account has been removed.'
-      )
-    ).toBeInTheDocument();
 
-    expect(
+    await waitForElementToBeRemoved(() =>
       within(section).queryByLabelText('some-random-account')
-    ).not.toBeInTheDocument();
+    );
   });
 
   it('can create service accounts', async () => {
@@ -1260,13 +1248,9 @@ describe('AccessControl', () => {
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
     expect(
-      await withMarkup(screen.findByText)(
-        'Service accounts automation, random have been created and bound to the role.'
-      )
+      await within(section).findByLabelText('automation')
     ).toBeInTheDocument();
-
-    expect(within(section).getByLabelText('automation')).toBeInTheDocument();
-    expect(within(section).getByLabelText('random')).toBeInTheDocument();
+    expect(await within(section).findByLabelText('random')).toBeInTheDocument();
 
     (Date.now as unknown as jest.SpyInstance).mockClear();
   });
@@ -1373,13 +1357,7 @@ describe('AccessControl', () => {
     fireEvent.click(within(section).getByRole('button', { name: 'OK' }));
     expect(within(section).getByRole('progressbar')).toBeInTheDocument();
 
-    expect(
-      await withMarkup(screen.findByText)(
-        'Service account random has been bound to the role.'
-      )
-    ).toBeInTheDocument();
-
-    expect(within(section).getByLabelText('random')).toBeInTheDocument();
+    expect(await within(section).findByLabelText('random')).toBeInTheDocument();
 
     (Date.now as unknown as jest.SpyInstance).mockClear();
   });
@@ -1592,13 +1570,10 @@ describe('AccessControl', () => {
     fireEvent.click(screen.getByText('Remove'));
 
     expect(within(subject).getByRole('progressbar')).toBeInTheDocument();
-    expect(
-      await withMarkup(screen.findByText)(
-        'The binding for service account el-toro has been removed.'
-      )
-    ).toBeInTheDocument();
 
-    expect(within(section).queryByLabelText('el-toro')).not.toBeInTheDocument();
+    await waitForElementToBeRemoved(() =>
+      within(section).queryByLabelText('el-toro')
+    );
   });
 
   it('displays an error if deleting a service account fails', async () => {
