@@ -18,7 +18,7 @@ const customTheme: ThemeType = {
       border: {
         radius: '0',
       },
-      zIndex: '9999',
+      zIndex: '0',
     },
   },
   select: {
