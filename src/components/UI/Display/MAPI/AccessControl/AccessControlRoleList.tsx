@@ -2,6 +2,7 @@ import { Box, InfiniteScroll, Keyboard, Sidebar } from 'grommet';
 import { filterRoles } from 'MAPI/organizations/AccessControl/utils';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { VerticalScroll } from 'styles';
 import TextInput from 'UI/Inputs/TextInput';
 import useDebounce from 'utils/hooks/useDebounce';
 
@@ -25,19 +26,7 @@ const Content = styled(Box)`
 `;
 
 const RoleListWrapper = styled(Box)`
-  scrollbar-gutter: stable;
-  scrollbar-color: ${({ theme }) => `${theme.colors.shade6} transparent`};
-
-  ::-webkit-scrollbar {
-    background-color: ${({ theme }) => theme.colors.shade5};
-    border-radius: 5px;
-    width: 10px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.colors.shade6};
-    border-radius: 5px;
-  }
+  ${VerticalScroll}
 `;
 
 interface IAccessControlRoleListProps
