@@ -347,12 +347,6 @@ describe('AccessControlRoleSubjects', () => {
     });
     expect(input).not.toBeInTheDocument();
 
-    expect(
-      await withMarkup(screen.findByText)(
-        'Groups group1, group2, group3 have been bound to the role.'
-      )
-    ).toBeInTheDocument();
-
     fireEvent.click(within(section).getByRole('button', { name: 'Add' }));
 
     input = within(section).getByPlaceholderText(
@@ -372,12 +366,6 @@ describe('AccessControlRoleSubjects', () => {
     await waitFor(() => {
       expect(input).not.toBeInTheDocument();
     });
-
-    expect(
-      await withMarkup(screen.findByText)(
-        'Group group1 has been bound to the role.'
-      )
-    ).toBeInTheDocument();
   });
 
   it('can delete subjects', async () => {
@@ -432,12 +420,6 @@ describe('AccessControlRoleSubjects', () => {
         within(subject).queryByRole('progressbar')
       ).not.toBeInTheDocument();
     });
-
-    expect(
-      await withMarkup(screen.findByText)(
-        'The binding for group test-group1 has been removed.'
-      )
-    ).toBeInTheDocument();
   });
 
   it('can cancel deleting subjects', async () => {
