@@ -183,7 +183,7 @@ const AccessControl: React.FC<IAccessControlProps> = ({
         <AccessControlRoleDescription margin={{ bottom: 'medium' }} />
         <Box direction='row' fill='horizontal'>
           <AccessControlRoleList
-            pad={{ left: 'none', right: 'medium' }}
+            pad={{ left: 'none', right: 'small' }}
             border={{ side: 'right' }}
             height={{ min: '400px' }}
             flex={{

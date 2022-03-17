@@ -24,6 +24,22 @@ const Content = styled(Box)`
   top: 110px;
 `;
 
+const RoleListWrapper = styled(Box)`
+  scrollbar-gutter: stable;
+  scrollbar-color: ${({ theme }) => `${theme.colors.shade6} transparent`};
+
+  ::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.shade5};
+    border-radius: 5px;
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.shade6};
+    border-radius: 5px;
+  }
+`;
+
 interface IAccessControlRoleListProps
   extends React.ComponentPropsWithoutRef<typeof Sidebar> {
   activeRoleName: string;
@@ -73,7 +89,10 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
   return (
     <Sidebar responsive={false} as='aside' aria-label='Role list' {...props}>
       <Content>
-        <Box margin={{ bottom: 'small' }} pad={{ horizontal: 'small' }}>
+        <Box
+          margin={{ bottom: 'small' }}
+          pad={{ left: 'small', right: 'medium' }}
+        >
           <TextInput
             icon={
               <i
@@ -97,10 +116,10 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
             (e.target as HTMLElement).click();
           }}
         >
-          <Box
+          <RoleListWrapper
             height={{ max: '60vh' }}
             overflow={{ vertical: 'auto' }}
-            pad='small'
+            pad={{ horizontal: 'small', top: '1px' }}
           >
             {isLoading &&
               LOADING_COMPONENTS.map((idx) => (
@@ -132,7 +151,7 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
                 />
               )}
             </InfiniteScroll>
-          </Box>
+          </RoleListWrapper>
         </Keyboard>
       </Content>
     </Sidebar>
