@@ -12,7 +12,6 @@ const Wrapper = styled.div`
 
 const ComponentName = styled.dt`
   margin-bottom: 5px;
-  font-weight: 300;
 `;
 
 const ChangeItems = styled.dd`

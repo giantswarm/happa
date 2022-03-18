@@ -27,7 +27,6 @@ const Wrapper = styled.div<{
   span {
     white-space: normal !important;
     font-size: 16px;
-    font-weight: 300;
 
     &:hover {
       text-decoration: ${({ isHyperlink }) => isHyperlink && 'underline'};
