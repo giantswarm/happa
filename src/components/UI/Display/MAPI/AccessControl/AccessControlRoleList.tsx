@@ -2,6 +2,7 @@ import { Box, InfiniteScroll, Keyboard, Sidebar } from 'grommet';
 import { filterRoles } from 'MAPI/organizations/AccessControl/utils';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { VerticalScroll } from 'styles';
 import TextInput from 'UI/Inputs/TextInput';
 import useDebounce from 'utils/hooks/useDebounce';
 
@@ -22,6 +23,10 @@ const LOADING_COMPONENTS = new Array(6).fill(0).map((_, idx) => idx);
 const Content = styled(Box)`
   position: sticky;
   top: 110px;
+`;
+
+const RoleListWrapper = styled(Box)`
+  ${VerticalScroll}
 `;
 
 interface IAccessControlRoleListProps
@@ -73,7 +78,10 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
   return (
     <Sidebar responsive={false} as='aside' aria-label='Role list' {...props}>
       <Content>
-        <Box margin={{ bottom: 'small' }} pad={{ horizontal: 'small' }}>
+        <Box
+          margin={{ bottom: 'small' }}
+          pad={{ left: 'small', right: 'medium' }}
+        >
           <TextInput
             icon={
               <i
@@ -97,10 +105,10 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
             (e.target as HTMLElement).click();
           }}
         >
-          <Box
+          <RoleListWrapper
             height={{ max: '60vh' }}
             overflow={{ vertical: 'auto' }}
-            pad='small'
+            pad={{ horizontal: 'small', top: '1px' }}
           >
             {isLoading &&
               LOADING_COMPONENTS.map((idx) => (
@@ -132,7 +140,7 @@ const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
                 />
               )}
             </InfiniteScroll>
-          </Box>
+          </RoleListWrapper>
         </Keyboard>
       </Content>
     </Sidebar>

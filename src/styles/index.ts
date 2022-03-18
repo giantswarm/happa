@@ -39,6 +39,22 @@ export const Ellipsis = css`
   overflow: hidden;
 `;
 
+export const VerticalScroll = css`
+  scrollbar-gutter: stable;
+  scrollbar-color: ${(props) => `${props.theme.colors.shade6} transparent`};
+
+  ::-webkit-scrollbar {
+    background-color: ${(props) => props.theme.colors.shade5};
+    border-radius: 5px;
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: ${(props) => props.theme.colors.shade6};
+    border-radius: 5px;
+  }
+`;
+
 /***** STYLED ELEMENTS *****/
 
 // Layout

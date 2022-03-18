@@ -1,6 +1,7 @@
 import { Box, Heading, Layer, Text } from 'grommet';
 import React from 'react';
 import styled from 'styled-components';
+import { VerticalScroll } from 'styles';
 import Button from 'UI/Controls/Button';
 
 const CloseButton = styled(Button)`
@@ -16,20 +17,7 @@ const CloseButtonText = styled(Text)`
 `;
 
 const Content = styled(Box)`
-  scrollbar-color: ${({ theme }) =>
-    `${theme.global.colors.border.dark} transparent`};
-  scrollbar-width: medium;
-
-  ::-webkit-scrollbar {
-    background-color: ${({ theme }) => theme.colors.shade5};
-    border-radius: 5px;
-    width: 10px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.global.colors.border.dark};
-    border-radius: 5px;
-  }
+  ${VerticalScroll}
 `;
 
 interface IModalProps
