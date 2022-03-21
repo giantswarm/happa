@@ -138,9 +138,8 @@ class OAuth2 implements IOAuth2Provider {
 
   public async handleLoginResponse(currentURL: string): Promise<IOAuth2User> {
     const origUser = await this.userManager.signinRedirectCallback(currentURL);
-    const newUser = getUserFromOIDCUser(origUser);
 
-    return newUser;
+    return getUserFromOIDCUser(origUser);
   }
 
   public async getLoggedInUser(): Promise<IOAuth2User | null> {
@@ -151,13 +150,11 @@ class OAuth2 implements IOAuth2Provider {
     if (origUser.expired) {
       origUser = await this.userManager.signinSilent();
       if (!origUser) return null;
+
+      this.userManager.events.load(origUser);
     }
 
-    const newUser = getUserFromOIDCUser(origUser);
-
-    this.userManager.events.load(origUser);
-
-    return newUser;
+    return getUserFromOIDCUser(origUser);
   }
 
   public async renewUser(): Promise<IOAuth2User> {
