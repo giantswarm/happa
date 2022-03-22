@@ -167,7 +167,7 @@ const DateInput = React.forwardRef<HTMLInputElement, IDateInputProps>(
             }}
             dropProps={{
               align: { top: 'bottom' },
-              ...props,
+              ...dropProps,
             }}
           />
         </FormField>
