@@ -19,7 +19,6 @@ const CommonCSS = css`
   display: flex;
   align-items: center;
   padding: 5px 8px;
-  font-weight: 300;
 `;
 
 const LabelWrapper = styled.span<{ outline: boolean }>`

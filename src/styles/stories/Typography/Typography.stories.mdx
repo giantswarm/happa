@@ -1,0 +1,53 @@
+import { Box, Heading } from 'grommet';
+import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import theme from 'styles/theme';
+
+<Meta title='Display/Typography'/>
+
+# Typography
+
+## Fonts
+
+Happa uses the font families Roboto and Inconsolata, with a default base font size of 16px. The font weights used are 300 (for main headings only), 400 (normal), and 700 (bold).
+
+## Headings
+
+The `<Heading>` component from `grommet` should be used instead of the native HTML heading tags (`<h1>`, `<h2>`, etc. ). This allows us to set global styles for these elements from `grommet`'s theme.
+
+The `level` prop corresponds to the heading level that will be rendered (e.g. `level={1}` will result in a `<h1>` element). Heading levels should be chosen for semantic rather than stylistic reasons. In order to adjust the font size of a heading, please use the `size` prop (default size is `medium`).
+
+### Main headings & subsection headings
+
+We reserve level-1 and -2 headings for the main headings (i.e. the page title, and section titles). On any given page, there should only be one level-1 heading.
+
+Within subsections, we use level-4 and -5 headings.
+
+<Canvas>
+  <Story name='Headings'>
+    <Heading level={1}>This is a main heading of level 1</Heading>
+    <Heading level={2}>This is a main heading of level 2</Heading>
+    <Heading level={4}>Subsection heading of level 4</Heading>
+    <Heading level={5}>Subsection heading of level 5</Heading>
+  </Story>
+</Canvas>
+
+## Content
+
+For text elements, we use the `<Text>` and `<Paragraph>` components from `grommet`.
+
+While both components have the same default styles, `<Paragraph>` results in a `<p>` element, whereas `<Text>` results in a `<span>` element, and should be used for non-semantic text elements.
+
+<Canvas>
+  <Story name='Content'>
+    <Text>Some non-semantic text</Text>
+    <Paragraph>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Paragraph>
+  </Story>
+</Canvas>
+
+## Code
+
+<Canvas>
+  <Story name='Code'>
+    <code>execute this command</code>
+  </Story>
+</Canvas>

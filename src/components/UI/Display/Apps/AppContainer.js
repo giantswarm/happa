@@ -69,7 +69,6 @@ const AppIcon = styled.div`
     color: #2e556a;
     text-align: center;
     font-size: 20px;
-    font-weight: 300;
     z-index: 1;
   }
 `;
