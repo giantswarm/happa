@@ -270,23 +270,27 @@ export function resumeLogin(
     const location = getState().router.location;
     const urlParams = new URLSearchParams(location.search);
     const isLoginResponse = urlParams.has('code') && urlParams.has('state');
+    let user = null;
 
     if (isLoginResponse) {
-      const user = await auth.handleLoginResponse(window.location.href);
+      const mapiUser = await auth.handleLoginResponse(window.location.href);
       // Login callbacks are handled by `OAuth2`.
 
       // Remove state and code from url.
       dispatch(replace(location.pathname));
 
-      if (!user) {
-        return Promise.reject(new Error('Failed to process login response.'));
+      if (mapiUser) {
+        user = mapOAuth2UserToUser(mapiUser);
+        dispatch(loginSuccess(user));
+
+        return Promise.resolve(user);
       }
 
-      return Promise.resolve(mapOAuth2UserToUser(user));
+      return Promise.reject(new Error('Failed to process login response.'));
     }
 
     // Try to resume GS user first.
-    const user = fetchUserFromStorage();
+    user = fetchUserFromStorage();
     if (user) {
       dispatch(loginSuccess(user));
 
@@ -296,8 +300,10 @@ export function resumeLogin(
     const mapiUser = await auth.getLoggedInUser();
     if (mapiUser) {
       // Login callbacks are handled by `OAuth2`.
+      user = mapOAuth2UserToUser(mapiUser);
+      dispatch(loginSuccess(user));
 
-      return Promise.resolve(mapOAuth2UserToUser(mapiUser));
+      return Promise.resolve(user);
     }
 
     return Promise.reject(new Error('You are not logged in.'));
