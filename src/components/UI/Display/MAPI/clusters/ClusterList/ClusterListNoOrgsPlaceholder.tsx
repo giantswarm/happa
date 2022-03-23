@@ -20,11 +20,13 @@ const ClusterListNoOrgsPlaceholder: React.FC<
       height={{ min: 'medium' }}
       {...props}
     >
-      <Heading level={1}>Welcome to Giant Swarm!</Heading>
-      <Paragraph fill={true}>
+      <Heading level={1} textAlign='center'>
+        Welcome to Giant Swarm!
+      </Heading>
+      <Paragraph fill={true} textAlign='center'>
         There are no organizations yet in your installation.
       </Paragraph>
-      <Paragraph fill={true}>
+      <Paragraph fill={true} textAlign='center'>
         Go to <Link to={OrganizationsRoutes.List}>Manage Organizations</Link> to
         create your first organization, then come back to this screen to create
         your first cluster!
