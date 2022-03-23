@@ -40,6 +40,7 @@ export function usePermissions() {
     GenericResponseError
   >(key, () => fetchPermissions(httpClientFactory, auth, organizations), {
     refreshInterval: Constants.PERMISSIONS_REFRESH_INTERVAL,
+    revalidateIfStale: false,
   });
 
   const isLoading =
