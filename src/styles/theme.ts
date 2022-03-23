@@ -686,6 +686,9 @@ const theme = deepMerge(generate(16), {
         },
       },
       '3': {
+        font: {
+          weight: '300',
+        },
         small: {
           size: '22px',
           height: '27px',

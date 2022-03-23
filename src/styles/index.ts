@@ -21,7 +21,6 @@ export enum FlashMessageType {
 export const Row = css`
   padding: 14px 20px;
   min-height: 56px;
-  font-weight: 300;
   letter-spacing: 0.3px;
   margin-bottom: 16px;
   border-radius: 5px;
