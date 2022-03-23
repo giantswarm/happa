@@ -14,7 +14,10 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import { getUserIsAdmin } from 'model/stores/main/selectors';
+import {
+  getIsImpersonatingNonAdmin,
+  getUserIsAdmin,
+} from 'model/stores/main/selectors';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -124,6 +127,7 @@ const ClusterDetailWidgetRelease: React.FC<
   }, [releaseList, canListReleases, currentRelease]);
 
   const isAdmin = useSelector(getUserIsAdmin);
+  const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
 
   const supportedUpgradeVersions: ui.IReleaseVersion[] = useMemo(() => {
     if (!releaseList || !releaseVersion) return [];
@@ -131,10 +135,10 @@ const ClusterDetailWidgetRelease: React.FC<
     return getSupportedUpgradeVersions(
       releaseVersion,
       provider,
-      isAdmin,
+      isAdmin && !isImpersonatingNonAdmin,
       releaseList.items
     );
-  }, [isAdmin, provider, releaseList, releaseVersion]);
+  }, [isAdmin, isImpersonatingNonAdmin, provider, releaseList, releaseVersion]);
 
   const nextVersion = useMemo(() => {
     return supportedUpgradeVersions.find(
