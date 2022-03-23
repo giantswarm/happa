@@ -3,7 +3,10 @@ import { Box } from 'grommet';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import { getUserIsAdmin } from 'model/stores/main/selectors';
+import {
+  getIsImpersonatingNonAdmin,
+  getUserIsAdmin,
+} from 'model/stores/main/selectors';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -37,6 +40,7 @@ const SEARCH_THROTTLE_RATE_MS = 250;
 const AppList: React.FC<{}> = () => {
   const isAdmin = useSelector(getUserIsAdmin);
   const organizations = useSelector(selectOrganizations());
+  const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
 
   const provider = window.config.info.general.provider;
 
@@ -47,7 +51,10 @@ const AppList: React.FC<{}> = () => {
   const catalogPermissions = usePermissionsForCatalogs(provider, 'default');
 
   const catalogListForOrganizationsKey = catalogPermissions.canList
-    ? fetchCatalogListForOrganizationsKey(organizations, isAdmin)
+    ? fetchCatalogListForOrganizationsKey(
+        organizations,
+        isAdmin && !isImpersonatingNonAdmin
+      )
     : null;
 
   const {
@@ -62,7 +69,7 @@ const AppList: React.FC<{}> = () => {
         auth,
         cache,
         organizations,
-        isAdmin
+        isAdmin && !isImpersonatingNonAdmin
       )
   );
   const prevcatalogList = usePrevious(catalogList);
