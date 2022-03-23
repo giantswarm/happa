@@ -3,6 +3,7 @@ import { usePermissionsKey } from 'MAPI/permissions/usePermissions';
 import { extractErrorMessage } from 'MAPI/utils';
 import { MainRoutes } from 'model/constants/routes';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { clearImpersonation as clearImpersonationAction } from 'model/stores/main/actions';
 import { organizationsLoadMAPI } from 'model/stores/organization/actions';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -79,6 +80,8 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
+
+    dispatch(clearImpersonationAction());
 
     reloadOrganizations();
   };

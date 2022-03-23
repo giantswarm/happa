@@ -4,6 +4,10 @@ import { Box, Heading, Text } from 'grommet';
 import { AccountSettingsRoutes } from 'model/constants/routes';
 import * as featureFlags from 'model/featureFlags';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import {
+  clearImpersonation,
+  setImpersonation,
+} from 'model/stores/main/actions';
 import { organizationsLoadMAPI } from 'model/stores/organization/actions';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useState } from 'react';
@@ -75,11 +79,12 @@ const Experiments: React.FC<IExperimentsProps> = () => {
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
-
-    await auth.setImpersonationMetadata({
+    const metadata = {
       user: impersonationUser,
       groups: impersonationGroup ? [impersonationGroup] : undefined,
-    });
+    };
+
+    await auth.setImpersonationMetadata(metadata);
 
     // TODO: Remove type casting when type inference bug is fixed upstream
     (cache as unknown as Map<unknown, unknown>).clear();
@@ -90,6 +95,8 @@ const Experiments: React.FC<IExperimentsProps> = () => {
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
+
+    dispatch(setImpersonation(metadata));
 
     reloadOrganizations();
   };
@@ -109,6 +116,8 @@ const Experiments: React.FC<IExperimentsProps> = () => {
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
+
+    dispatch(clearImpersonation());
 
     reloadOrganizations();
   };

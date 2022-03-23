@@ -303,6 +303,11 @@ export function resumeLogin(
         user = mapOAuth2UserToUser(mapiUser);
         dispatch(loginSuccess(user));
 
+        const metadata = await auth.getImpersonationMetadata();
+        if (metadata) {
+          dispatch(setImpersonation(metadata));
+        }
+
         return Promise.resolve(user);
       }
 
@@ -322,6 +327,11 @@ export function resumeLogin(
       // Login callbacks are handled by `OAuth2`.
       user = mapOAuth2UserToUser(mapiUser);
       dispatch(loginSuccess(user));
+
+      const metadata = await auth.getImpersonationMetadata();
+      if (metadata) {
+        dispatch(setImpersonation(metadata));
+      }
 
       return Promise.resolve(user);
     }
