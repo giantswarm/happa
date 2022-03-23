@@ -1,5 +1,6 @@
 import produce from 'immer';
 import {
+  CLEAR_IMPERSONATION,
   CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_SUCCESS,
@@ -81,6 +82,11 @@ const makeMainReducer = () => {
 
         case SET_IMPERSONATION:
           draft.impersonation = action.impersonation;
+
+          break;
+
+        case CLEAR_IMPERSONATION:
+          draft.impersonation = null;
 
           break;
       }

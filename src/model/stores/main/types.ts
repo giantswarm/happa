@@ -1,4 +1,5 @@
 import {
+  CLEAR_IMPERSONATION,
   CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_REQUEST,
@@ -108,6 +109,10 @@ export interface IMainSetImpersonationAction {
   impersonation: IOAuth2ImpersonationMetadata;
 }
 
+export interface IMainClearImpersonationAction {
+  type: typeof CLEAR_IMPERSONATION;
+}
+
 export type MainActions =
   | IMainSelectClusterAction
   | IGlobalLoadRequestAction
@@ -125,4 +130,5 @@ export type MainActions =
   | IMainRequestPasswordRecoveryTokenAction
   | IMainVerifyPasswordRecoveryTokenAction
   | IMainSetNewPasswordAction
-  | IMainSetImpersonationAction;
+  | IMainSetImpersonationAction
+  | IMainClearImpersonationAction;

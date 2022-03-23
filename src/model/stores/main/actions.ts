@@ -5,6 +5,7 @@ import { AuthorizationTypes, StatusCodes } from 'model/constants';
 import { MainRoutes } from 'model/constants/routes';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
 import {
+  CLEAR_IMPERSONATION,
   CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_REQUEST,
@@ -105,6 +106,12 @@ export function setImpersonation(
   return {
     type: SET_IMPERSONATION,
     impersonation,
+  };
+}
+
+export function clearImpersonation(): MainActions {
+  return {
+    type: CLEAR_IMPERSONATION,
   };
 }
 
