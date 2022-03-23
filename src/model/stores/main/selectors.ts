@@ -36,3 +36,9 @@ export function getAllowedInstanceTypeNames(): string[] {
 export function getLoggedInUser(state: IState): ILoggedInUser | null {
   return state.main.loggedInUser;
 }
+
+export function getIsImpersonatingNonAdmin(state: IState): boolean {
+  return !state.main.impersonation?.groups?.includes(
+    window.config.mapiAuthAdminGroup
+  );
+}

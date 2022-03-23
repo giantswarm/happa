@@ -19,6 +19,7 @@ import {
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
   REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
+  SET_IMPERSONATION,
   SET_NEW_PASSWORD,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'model/stores/main/constants';
@@ -35,7 +36,10 @@ import {
   setUserToStorage,
 } from 'utils/localStorageUtils';
 import MapiAuth, { MapiAuthConnectors } from 'utils/MapiAuth/MapiAuth';
-import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import {
+  IOAuth2ImpersonationMetadata,
+  IOAuth2Provider,
+} from 'utils/OAuth2/OAuth2';
 import Passage, {
   IRequestPasswordRecoveryTokenResponse,
   ISetNewPasswordResponse,
@@ -92,6 +96,15 @@ export function logoutError(errorMessage: string): MainActions {
   return {
     type: LOGOUT_ERROR,
     errorMessage,
+  };
+}
+
+export function setImpersonation(
+  impersonation: IOAuth2ImpersonationMetadata
+): MainActions {
+  return {
+    type: SET_IMPERSONATION,
+    impersonation,
   };
 }
 

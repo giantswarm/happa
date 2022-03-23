@@ -13,9 +13,11 @@ import {
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
   REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
+  SET_IMPERSONATION,
   SET_NEW_PASSWORD,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'model/stores/main/constants';
+import { IOAuth2ImpersonationMetadata } from 'utils/OAuth2/OAuth2';
 
 export enum LoggedInUserTypes {
   GS,
@@ -27,6 +29,7 @@ export interface IMainState {
   selectedOrganization: string | null;
   firstLoadComplete: boolean;
   selectedClusterID: string | null;
+  impersonation: IOAuth2ImpersonationMetadata | null;
 }
 
 export interface IMainSelectClusterAction {
@@ -100,6 +103,11 @@ export interface IMainSetNewPasswordAction {
   type: typeof SET_NEW_PASSWORD;
 }
 
+export interface IMainSetImpersonationAction {
+  type: typeof SET_IMPERSONATION;
+  impersonation: IOAuth2ImpersonationMetadata;
+}
+
 export type MainActions =
   | IMainSelectClusterAction
   | IGlobalLoadRequestAction
@@ -116,4 +124,5 @@ export type MainActions =
   | IMainRefreshUserInfoSuccessAction
   | IMainRequestPasswordRecoveryTokenAction
   | IMainVerifyPasswordRecoveryTokenAction
-  | IMainSetNewPasswordAction;
+  | IMainSetNewPasswordAction
+  | IMainSetImpersonationAction;
