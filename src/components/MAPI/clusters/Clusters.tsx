@@ -1,10 +1,13 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
+import { ClusterList as ClusterListType } from 'MAPI/types';
 import {
+  fetchClusterList,
   fetchClusterListKey,
-  fetchClusterListWithProviderClusters,
-  IClusterListWithProviderClusters,
+  fetchProviderClustersForClusters,
+  fetchProviderClustersForClustersKey,
+  IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
@@ -27,7 +30,11 @@ import RoutePath from 'utils/routePath';
 import ClusterList from './ClusterList/ClusterList';
 import ListClustersGuide from './guides/ListClustersGuide';
 import { usePermissionsForClusters } from './permissions/usePermissionsForClusters';
-import { compareClusters, mapClustersToProviderClusters } from './utils';
+import {
+  compareClusters,
+  IProviderClusterForCluster,
+  mapClustersToProviderClusters,
+} from './utils';
 
 // eslint-disable-next-line complexity
 const Clusters: React.FC<{}> = () => {
@@ -59,49 +66,63 @@ const Clusters: React.FC<{}> = () => {
     ? fetchClusterListKey(provider, namespace, selectedOrgID)
     : null;
 
-  const {
-    data: clusterListData,
-    error: clusterListError,
-    isValidating: clusterListIsValidating,
-  } = useSWR<IClusterListWithProviderClusters, GenericResponseError>(
-    clusterListKey,
-    () =>
-      fetchClusterListWithProviderClusters(
-        clientFactory,
-        auth,
-        provider,
-        namespace,
-        selectedOrgID
-      )
+  const { data: clusterList, error: clusterListError } = useSWR<
+    ClusterListType,
+    GenericResponseError
+  >(clusterListKey, () =>
+    fetchClusterList(clientFactory, auth, provider, namespace, selectedOrgID)
   );
 
   useEffect(() => {
     if (clusterListError) {
-      new FlashMessage(
-        'There was a problem loading the cluster list.',
-        messageType.ERROR,
-        messageTTL.MEDIUM,
-        clusterListError.message
-      );
       ErrorReporter.getInstance().notify(clusterListError);
     }
   }, [clusterListError]);
 
-  const clusterListIsLoading =
-    typeof clusterListData === 'undefined' &&
-    typeof clusterListError === 'undefined' &&
-    clusterListIsValidating;
+  const providerClusterKey = clusterList
+    ? fetchProviderClustersForClustersKey(clusterList.items)
+    : null;
 
+  const { data: providerClusterList, error: providerClusterListError } = useSWR<
+    IProviderClusterForClusterName[],
+    GenericResponseError
+  >(providerClusterKey, () =>
+    fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
+  );
+
+  useEffect(() => {
+    if (providerClusterListError) {
+      new FlashMessage(
+        'There was a problem loading the cluster list.',
+        messageType.ERROR,
+        messageTTL.MEDIUM,
+        providerClusterListError.message
+      );
+
+      ErrorReporter.getInstance().notify(providerClusterListError);
+    }
+  }, [providerClusterListError]);
+
+  const clustersRef = useRef<IProviderClusterForCluster[]>();
   const sortedClustersWithProviderClusters = useMemo(() => {
-    if (!clusterListData) return undefined;
+    if (!clusterList?.items && !providerClusterList) {
+      clustersRef.current = undefined;
+    }
 
-    const { clusterList, providerClusters } = clusterListData;
+    if (clusterList?.items && providerClusterList) {
+      clustersRef.current = mapClustersToProviderClusters(
+        clusterList.items,
+        providerClusterList
+      ).sort(compareClusters);
+    }
 
-    return mapClustersToProviderClusters(
-      clusterList.items,
-      providerClusters
-    ).sort(compareClusters);
-  }, [clusterListData]);
+    return clustersRef.current;
+  }, [clusterList?.items, providerClusterList]);
+
+  const clusterListIsLoading =
+    sortedClustersWithProviderClusters === undefined &&
+    clusterListError === undefined &&
+    providerClusterListError === undefined;
 
   const newClusterPath = useMemo(() => {
     if (!selectedOrg) return '';

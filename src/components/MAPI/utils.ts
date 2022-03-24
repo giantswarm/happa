@@ -348,37 +348,6 @@ export function fetchClusterKey(
   return capiv1alpha3.getClusterKey(namespace, name);
 }
 
-export interface IClusterListWithProviderClusters {
-  clusterList: ClusterList;
-  providerClusters: IProviderClusterForClusterName[];
-}
-
-export async function fetchClusterListWithProviderClusters(
-  httpClientFactory: HttpClientFactory,
-  auth: IOAuth2Provider,
-  provider: PropertiesOf<typeof Providers>,
-  namespace?: string,
-  organization?: string
-): Promise<IClusterListWithProviderClusters> {
-  const clusterList = await fetchClusterList(
-    httpClientFactory,
-    auth,
-    provider,
-    namespace,
-    organization
-  );
-  const providerClusters = await fetchProviderClustersForClusters(
-    httpClientFactory,
-    auth,
-    clusterList.items
-  );
-
-  return {
-    clusterList,
-    providerClusters,
-  };
-}
-
 export async function fetchClusterList(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
