@@ -298,19 +298,23 @@ export async function updateClusterLabels(
   return capiv1alpha3.updateCluster(httpClient, auth, cluster);
 }
 
-export function getCredentialsAccountID(
-  credentials?: legacyCredentials.ICredential[]
-) {
-  if (!credentials) return undefined;
-  if (credentials.length < 1) return '';
-
-  const mainCredential = credentials.find((credential, _, collection) => {
+function getMainCredential(credentials: legacyCredentials.ICredential[]) {
+  return credentials.find((credential, _, collection) => {
     // If only the default credential is present, display it.
     if (collection.length === 1) return true;
 
     // If there are custom credentials, display the first one.
     return credential.name !== legacyCredentials.defaultCredentialName;
   });
+}
+
+export function getCredentialsAccountID(
+  credentials?: legacyCredentials.ICredential[]
+) {
+  if (!credentials) return undefined;
+  if (credentials.length < 1) return '';
+
+  const mainCredential = getMainCredential(credentials);
   if (!mainCredential) return '';
 
   switch (true) {
@@ -321,6 +325,18 @@ export function getCredentialsAccountID(
     default:
       return '';
   }
+}
+
+export function getCredentialsAzureTenantID(
+  credentials?: legacyCredentials.ICredential[]
+) {
+  if (!credentials) return undefined;
+  if (credentials.length < 1) return '';
+
+  const mainCredential = getMainCredential(credentials);
+  if (!mainCredential) return '';
+
+  return mainCredential.azureTenantID || '';
 }
 
 export interface IControlPlaneNodesStats {
