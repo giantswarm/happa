@@ -38,7 +38,8 @@ export function getLoggedInUser(state: IState): ILoggedInUser | null {
 }
 
 /**
- * Impersonation is set, and the current impersonation user/group is not an admin
+ * Impersonation is set, and the current impersonated user does not belong
+ * to the admin group
  */
 export function getIsImpersonatingNonAdmin(state: IState): boolean {
   return (
