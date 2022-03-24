@@ -21,17 +21,17 @@ const ClusterListEmptyPlaceholder: React.FC<
       height={{ min: 'medium' }}
       {...props}
     >
-      <Heading level={1}>
+      <Heading level={1} textAlign='center'>
         Couldn&apos;t find any clusters in organization{' '}
         <code>{organizationName}</code>
       </Heading>
       {canCreateClusters && (
-        <Paragraph fill={true}>
+        <Paragraph fill={true} textAlign='center'>
           Make your first cluster by pressing the green &quot;Launch New
           Cluster&quot; button above.
         </Paragraph>
       )}
-      <Paragraph fill={true}>
+      <Paragraph fill={true} textAlign='center'>
         You can switch to a different organization by using the organization
         selector at the top right of the page.
       </Paragraph>
