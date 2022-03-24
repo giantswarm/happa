@@ -224,6 +224,7 @@
     "webpack-merge": "5.8.0"
   },
   "resolutions": {
+    "@braintree/sanitize-url": "^6.0.0",
     "kind-of": "6.0.3",
     "lodash": "4.17.21",
     "http-proxy": "1.18.1",
