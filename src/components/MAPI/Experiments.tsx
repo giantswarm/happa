@@ -10,9 +10,9 @@ import {
 } from 'model/stores/main/actions';
 import { organizationsLoadMAPI } from 'model/stores/organization/actions';
 import { IState } from 'model/stores/state';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import {
@@ -45,17 +45,17 @@ const Experiments: React.FC<IExperimentsProps> = () => {
   };
 
   const auth = useAuthProvider();
-  const [impersonationUser, setImpersonationUser] = useState<string>('');
-  const [impersonationGroup, setImpersonationGroup] = useState<string>('');
 
-  useEffect(() => {
-    (async () => {
-      const metadata = await auth.getImpersonationMetadata();
+  const impersonationMetadata = useSelector(
+    (state: IState) => state.main.impersonation
+  );
 
-      setImpersonationUser(metadata?.user ?? '');
-      setImpersonationGroup(metadata?.groups?.[0] ?? '');
-    })();
-  }, [auth]);
+  const [impersonationUser, setImpersonationUser] = useState<string>(
+    impersonationMetadata?.user ?? ''
+  );
+  const [impersonationGroup, setImpersonationGroup] = useState<string>(
+    impersonationMetadata?.groups?.[0] ?? ''
+  );
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
   const reloadOrganizations = async () => {
