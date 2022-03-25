@@ -319,6 +319,11 @@ export function resumeLogin(
     if (user) {
       dispatch(loginSuccess(user));
 
+      const metadata = await auth.getImpersonationMetadata();
+      if (metadata) {
+        dispatch(setImpersonation(metadata));
+      }
+
       return Promise.resolve(user);
     }
 
