@@ -2,16 +2,16 @@
 
 exports[`Button renders a button with a loading animation 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 kshQkK Button__StyledBox-sc-160jtek-0 hucncT"
+      class="StyledBox-sc-13pk1d4-0 dHYHCk Button__StyledBox-sc-160jtek-0 icBnSJ"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 cYsLCR Button__StyledControl-sc-160jtek-2 bWEELh"
+        class="StyledButtonKind-sc-1vhfpnt-0 eystmn Button__StyledControl-sc-160jtek-2 lnCScf"
         disabled=""
         type="button"
       >
@@ -22,7 +22,7 @@ exports[`Button renders a button with a loading animation 1`] = `
         aria-hidden="false"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 dYoKvr Button__StyledLoadingIndicator-sc-160jtek-1 RfLMa"
+        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 QqhvF Button__StyledLoadingIndicator-sc-160jtek-1 kHyGFc"
         role="progressbar"
       >
         <img
@@ -38,16 +38,16 @@ exports[`Button renders a button with a loading animation 1`] = `
 
 exports[`Button renders a danger button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 kshQkK Button__StyledBox-sc-160jtek-0 hucncT"
+      class="StyledBox-sc-13pk1d4-0 dHYHCk Button__StyledBox-sc-160jtek-0 icBnSJ"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 jiWmBk Button__StyledControl-sc-160jtek-2 YCrZc"
+        class="StyledButtonKind-sc-1vhfpnt-0 hSyGNu Button__StyledControl-sc-160jtek-2 kKngQa"
         type="button"
       >
         Hi friends
@@ -57,7 +57,7 @@ exports[`Button renders a danger button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 dYoKvr Button__StyledLoadingIndicator-sc-160jtek-1 RfLMa"
+        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 QqhvF Button__StyledLoadingIndicator-sc-160jtek-1 kHyGFc"
         role="progressbar"
       />
     </div>
@@ -67,16 +67,16 @@ exports[`Button renders a danger button 1`] = `
 
 exports[`Button renders a disabled button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 kshQkK Button__StyledBox-sc-160jtek-0 hucncT"
+      class="StyledBox-sc-13pk1d4-0 dHYHCk Button__StyledBox-sc-160jtek-0 icBnSJ"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 cYsLCR Button__StyledControl-sc-160jtek-2 bWEELh"
+        class="StyledButtonKind-sc-1vhfpnt-0 eystmn Button__StyledControl-sc-160jtek-2 lnCScf"
         disabled=""
         type="button"
       >
@@ -87,7 +87,7 @@ exports[`Button renders a disabled button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 dYoKvr Button__StyledLoadingIndicator-sc-160jtek-1 RfLMa"
+        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 QqhvF Button__StyledLoadingIndicator-sc-160jtek-1 kHyGFc"
         role="progressbar"
       />
     </div>
@@ -97,16 +97,16 @@ exports[`Button renders a disabled button 1`] = `
 
 exports[`Button renders a link button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 kshQkK Button__StyledBox-sc-160jtek-0 hucncT"
+      class="StyledBox-sc-13pk1d4-0 dHYHCk Button__StyledBox-sc-160jtek-0 icBnSJ"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 gbWvUS Button__StyledControl-sc-160jtek-2 YCrZc"
+        class="StyledButtonKind-sc-1vhfpnt-0 fwKDKY Button__StyledControl-sc-160jtek-2 kKngQa"
         type="button"
       >
         Hi friends
@@ -116,7 +116,7 @@ exports[`Button renders a link button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 dYoKvr Button__StyledLoadingIndicator-sc-160jtek-1 RfLMa"
+        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 QqhvF Button__StyledLoadingIndicator-sc-160jtek-1 kHyGFc"
         role="progressbar"
       />
     </div>
@@ -126,16 +126,16 @@ exports[`Button renders a link button 1`] = `
 
 exports[`Button renders a primary button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 kshQkK Button__StyledBox-sc-160jtek-0 hucncT"
+      class="StyledBox-sc-13pk1d4-0 dHYHCk Button__StyledBox-sc-160jtek-0 icBnSJ"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 gYyaPS Button__StyledControl-sc-160jtek-2 YCrZc"
+        class="StyledButtonKind-sc-1vhfpnt-0 gZZzjI Button__StyledControl-sc-160jtek-2 kKngQa"
         type="button"
       >
         Hi friends
@@ -145,7 +145,7 @@ exports[`Button renders a primary button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 dYoKvr Button__StyledLoadingIndicator-sc-160jtek-1 RfLMa"
+        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 QqhvF Button__StyledLoadingIndicator-sc-160jtek-1 kHyGFc"
         role="progressbar"
       />
     </div>
@@ -155,16 +155,16 @@ exports[`Button renders a primary button 1`] = `
 
 exports[`Button renders a secondary button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 kshQkK Button__StyledBox-sc-160jtek-0 hucncT"
+      class="StyledBox-sc-13pk1d4-0 dHYHCk Button__StyledBox-sc-160jtek-0 icBnSJ"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 iOZGez Button__StyledControl-sc-160jtek-2 YCrZc"
+        class="StyledButtonKind-sc-1vhfpnt-0 jgKHQx Button__StyledControl-sc-160jtek-2 kKngQa"
         type="button"
       >
         Hi friends
@@ -174,7 +174,7 @@ exports[`Button renders a secondary button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 dYoKvr Button__StyledLoadingIndicator-sc-160jtek-1 RfLMa"
+        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 QqhvF Button__StyledLoadingIndicator-sc-160jtek-1 kHyGFc"
         role="progressbar"
       />
     </div>
@@ -184,16 +184,16 @@ exports[`Button renders a secondary button 1`] = `
 
 exports[`Button renders a warning button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 kshQkK Button__StyledBox-sc-160jtek-0 hucncT"
+      class="StyledBox-sc-13pk1d4-0 dHYHCk Button__StyledBox-sc-160jtek-0 icBnSJ"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 csMiTr Button__StyledControl-sc-160jtek-2 YCrZc"
+        class="StyledButtonKind-sc-1vhfpnt-0 iujMfp Button__StyledControl-sc-160jtek-2 kKngQa"
         type="button"
       >
         Hi friends
@@ -203,7 +203,7 @@ exports[`Button renders a warning button 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 dYoKvr Button__StyledLoadingIndicator-sc-160jtek-1 RfLMa"
+        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 QqhvF Button__StyledLoadingIndicator-sc-160jtek-1 kHyGFc"
         role="progressbar"
       />
     </div>
@@ -213,16 +213,16 @@ exports[`Button renders a warning button 1`] = `
 
 exports[`Button renders without crashing 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 kshQkK Button__StyledBox-sc-160jtek-0 hucncT"
+      class="StyledBox-sc-13pk1d4-0 dHYHCk Button__StyledBox-sc-160jtek-0 icBnSJ"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 iOZGez Button__StyledControl-sc-160jtek-2 YCrZc"
+        class="StyledButtonKind-sc-1vhfpnt-0 jgKHQx Button__StyledControl-sc-160jtek-2 kKngQa"
         type="button"
       >
         Hi friends
@@ -232,7 +232,7 @@ exports[`Button renders without crashing 1`] = `
         aria-hidden="true"
         aria-live="assertive"
         aria-valuetext="Loading…"
-        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 dYoKvr Button__StyledLoadingIndicator-sc-160jtek-1 RfLMa"
+        class="LoadingIndicator__ProgressButtonStatusIndicator-sc-yaqsha-0 QqhvF Button__StyledLoadingIndicator-sc-160jtek-1 kHyGFc"
         role="progressbar"
       />
     </div>

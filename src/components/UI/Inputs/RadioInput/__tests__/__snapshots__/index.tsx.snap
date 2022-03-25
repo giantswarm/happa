@@ -2,38 +2,38 @@
 
 exports[`RadioInput renders a disabled input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gPuWHK FormField__FormFieldBox-sc-m9hood-0 bNDIlh RadioInput__StyledFormField-sc-1brmdkl-0 kpNcUU"
+      class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT RadioInput__StyledFormField-sc-1brmdkl-0 btSJIi"
       tabindex="0"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 eQINw FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 a-DZpO FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 fnmFBu"
+          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 bymbLY"
           disabled=""
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 jVBRKb StyledRadioButton-sc-g1f6ld-5 hNMTMW"
+            class="StyledBox-sc-13pk1d4-0 cqzCLd StyledRadioButton-sc-g1f6ld-5 hXfoNY"
           >
             <input
-              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 gjwrmF"
+              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 dTlTkb"
               disabled=""
               name="some-input"
               tabindex="-1"
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 hJlUKl StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 beixsF"
+              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
-            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 bMBtIZ"
+            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 fnudST"
           >
             Some input
           </span>
@@ -46,36 +46,36 @@ exports[`RadioInput renders a disabled input 1`] = `
 
 exports[`RadioInput renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gPuWHK FormField__FormFieldBox-sc-m9hood-0 bNDIlh RadioInput__StyledFormField-sc-1brmdkl-0 kpNcUU"
+      class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT RadioInput__StyledFormField-sc-1brmdkl-0 btSJIi"
       tabindex="0"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 eQINw FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 a-DZpO FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 kvJkVD"
+          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 hZkGAh"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 jVBRKb StyledRadioButton-sc-g1f6ld-5 hNMTMW"
+            class="StyledBox-sc-13pk1d4-0 cqzCLd StyledRadioButton-sc-g1f6ld-5 hXfoNY"
           >
             <input
-              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 fhNmLR"
+              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 cpHFwb"
               name="some-input"
               tabindex="-1"
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 hJlUKl StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 beixsF"
+              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
-            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 bMBtIZ"
+            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 fnudST"
           >
             Some input
           </span>
@@ -88,44 +88,44 @@ exports[`RadioInput renders a simple input 1`] = `
 
 exports[`RadioInput renders an input with a form field label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gPuWHK FormField__FormFieldBox-sc-m9hood-0 bNDIlh RadioInput__StyledFormField-sc-1brmdkl-0 kpNcUU"
+      class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT RadioInput__StyledFormField-sc-1brmdkl-0 btSJIi"
       tabindex="0"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 eqjVSW"
+        class="StyledText-sc-1sadyjn-0 fynxVA"
         for="some-input"
       >
         A brilliant input
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 eQINw FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 a-DZpO FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 kvJkVD"
+          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 hZkGAh"
           for="some-input"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 jVBRKb StyledRadioButton-sc-g1f6ld-5 hNMTMW"
+            class="StyledBox-sc-13pk1d4-0 cqzCLd StyledRadioButton-sc-g1f6ld-5 hXfoNY"
           >
             <input
-              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 fhNmLR"
+              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 cpHFwb"
               id="some-input"
               name="some-input"
               tabindex="-1"
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 hJlUKl StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 beixsF"
+              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
-            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 bMBtIZ"
+            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 fnudST"
           >
             Some input
           </span>
@@ -138,41 +138,41 @@ exports[`RadioInput renders an input with a form field label 1`] = `
 
 exports[`RadioInput renders an input with a help message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gPuWHK FormField__FormFieldBox-sc-m9hood-0 bNDIlh RadioInput__StyledFormField-sc-1brmdkl-0 kpNcUU"
+      class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT RadioInput__StyledFormField-sc-1brmdkl-0 btSJIi"
       tabindex="0"
     >
       <span
-        class="StyledText-sc-1sadyjn-0 fqoiau"
+        class="StyledText-sc-1sadyjn-0 cEISQk"
       >
         This is a very cool input
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 eQINw FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 a-DZpO FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 kvJkVD"
+          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 hZkGAh"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 jVBRKb StyledRadioButton-sc-g1f6ld-5 hNMTMW"
+            class="StyledBox-sc-13pk1d4-0 cqzCLd StyledRadioButton-sc-g1f6ld-5 hXfoNY"
           >
             <input
-              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 fhNmLR"
+              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 cpHFwb"
               name="some-input"
               tabindex="-1"
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 hJlUKl StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 beixsF"
+              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
-            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 bMBtIZ"
+            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 fnudST"
           >
             Some input
           </span>
@@ -185,43 +185,43 @@ exports[`RadioInput renders an input with a help message 1`] = `
 
 exports[`RadioInput renders an input with a validation error 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gPuWHK FormField__FormFieldBox-sc-m9hood-0 bNDIlh RadioInput__StyledFormField-sc-1brmdkl-0 kpNcUU"
+      class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT RadioInput__StyledFormField-sc-1brmdkl-0 btSJIi"
       tabindex="0"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 eQINw FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 a-DZpO FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 kvJkVD"
+          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 hZkGAh"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 jVBRKb StyledRadioButton-sc-g1f6ld-5 hNMTMW"
+            class="StyledBox-sc-13pk1d4-0 cqzCLd StyledRadioButton-sc-g1f6ld-5 hXfoNY"
           >
             <input
-              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 fhNmLR"
+              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 cpHFwb"
               name="some-input"
               tabindex="-1"
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 hJlUKl StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 beixsF"
+              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
-            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 bMBtIZ"
+            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 fnudST"
           >
             Some input
           </span>
         </label>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 kVwhZo"
+        class="StyledText-sc-1sadyjn-0 dGdtNa"
       >
         You failed at this
       </span>
@@ -232,43 +232,43 @@ exports[`RadioInput renders an input with a validation error 1`] = `
 
 exports[`RadioInput renders an input with an info message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gPuWHK FormField__FormFieldBox-sc-m9hood-0 bNDIlh RadioInput__StyledFormField-sc-1brmdkl-0 kpNcUU"
+      class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT RadioInput__StyledFormField-sc-1brmdkl-0 btSJIi"
       tabindex="0"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 eQINw FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 a-DZpO FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 kvJkVD"
+          class="StyledRadioButton__StyledRadioButtonContainer-sc-g1f6ld-0 hZkGAh"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 jVBRKb StyledRadioButton-sc-g1f6ld-5 hNMTMW"
+            class="StyledBox-sc-13pk1d4-0 cqzCLd StyledRadioButton-sc-g1f6ld-5 hXfoNY"
           >
             <input
-              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 fhNmLR"
+              class="StyledRadioButton__StyledRadioButtonInput-sc-g1f6ld-1 cpHFwb"
               name="some-input"
               tabindex="-1"
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 hJlUKl StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 beixsF"
+              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
-            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 bMBtIZ"
+            class="StyledRadioButton__StyledRadioButtonLabel-sc-g1f6ld-2 fnudST"
           >
             Some input
           </span>
         </label>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 heWbGB"
+        class="StyledText-sc-1sadyjn-0 kliOOn"
       >
         You can set a cool value
       </span>
