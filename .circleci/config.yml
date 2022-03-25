@@ -181,9 +181,9 @@ workflows:
               only: /^v.*/
 
       - architect/push-to-app-collection:
-          name: push-happa-to-vmware-app-collection
+          name: push-happa-to-vsphere-app-collection
           app_name: "happa"
-          app_collection_repo: "vmware-app-collection"
+          app_collection_repo: "vsphere-app-collection"
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
