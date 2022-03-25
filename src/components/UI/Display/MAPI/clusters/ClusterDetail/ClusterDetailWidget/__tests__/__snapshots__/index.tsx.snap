@@ -2,29 +2,29 @@
 
 exports[`ClusterDetailWidget renders a inline widget 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
       aria-label="Some widget"
-      class="StyledBox-sc-13pk1d4-0 jTdYlY"
+      class="StyledBox-sc-13pk1d4-0 etoCUW"
     >
       <header
-        class="StyledBox-sc-13pk1d4-0 pwcCg"
+        class="StyledBox-sc-13pk1d4-0 jmJVZe"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 cGLddP ClusterDetailWidget__Title-sc-15uj98x-0 jQdVth"
+          class="StyledText-sc-1sadyjn-0 kwKWtx ClusterDetailWidget__Title-sc-15uj98x-0 ezALGf"
         >
           Some widget
         </span>
       </header>
       <div
-        class="StyledBox-sc-13pk1d4-0 hbGccM"
+        class="StyledBox-sc-13pk1d4-0 bDumOi"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 hgRsLg"
+          class="StyledText-sc-1sadyjn-0 gNWhMe"
         >
           Some content
         </span>
@@ -36,29 +36,29 @@ exports[`ClusterDetailWidget renders a inline widget 1`] = `
 
 exports[`ClusterDetailWidget renders a simple widget 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 giQQcM"
+  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 kuNpSX"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
       aria-label="Some widget"
-      class="StyledBox-sc-13pk1d4-0 jTdYlY"
+      class="StyledBox-sc-13pk1d4-0 etoCUW"
     >
       <header
-        class="StyledBox-sc-13pk1d4-0 hcKcZC"
+        class="StyledBox-sc-13pk1d4-0 bXvHvk"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 cGLddP ClusterDetailWidget__Title-sc-15uj98x-0 jQdVth"
+          class="StyledText-sc-1sadyjn-0 kwKWtx ClusterDetailWidget__Title-sc-15uj98x-0 ezALGf"
         >
           Some widget
         </span>
       </header>
       <div
-        class="StyledBox-sc-13pk1d4-0 hbGccM"
+        class="StyledBox-sc-13pk1d4-0 bDumOi"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 hgRsLg"
+          class="StyledText-sc-1sadyjn-0 gNWhMe"
         >
           Some content
         </span>
