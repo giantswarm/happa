@@ -79,8 +79,10 @@ interface IClusterDetailKeyPairsProps {}
 
 const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
   const { pathname } = useLocation();
-  const { clusterId, orgId } =
-    useParams<{ clusterId: string; orgId: string }>();
+  const { clusterId, orgId } = useParams<{
+    clusterId: string;
+    orgId: string;
+  }>();
 
   const organizations = useSelector(selectOrganizations());
   const selectedOrg = orgId ? organizations[orgId] : undefined;

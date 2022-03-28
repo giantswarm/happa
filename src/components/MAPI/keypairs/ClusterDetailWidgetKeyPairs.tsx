@@ -30,8 +30,10 @@ interface IClusterDetailWidgetKeyPairsProps
 const ClusterDetailWidgetKeyPairs: React.FC<
   IClusterDetailWidgetKeyPairsProps
 > = (props) => {
-  const { clusterId, orgId } =
-    useParams<{ clusterId: string; orgId: string }>();
+  const { clusterId, orgId } = useParams<{
+    clusterId: string;
+    orgId: string;
+  }>();
 
   const organizations = useSelector(selectOrganizations());
   const selectedOrg = orgId ? organizations[orgId] : undefined;
