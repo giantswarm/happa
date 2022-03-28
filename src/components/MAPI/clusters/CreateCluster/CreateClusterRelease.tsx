@@ -2,7 +2,10 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { extractErrorMessage, getClusterReleaseVersion } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import { getUserIsAdmin } from 'model/stores/main/selectors';
+import {
+  getIsImpersonatingNonAdmin,
+  getUserIsAdmin,
+} from 'model/stores/main/selectors';
 import { isPreRelease } from 'model/stores/releases/utils';
 import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -31,6 +34,7 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
   ...props
 }) => {
   const isAdmin = useSelector(getUserIsAdmin);
+  const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
 
   const releaseListClient = useHttpClient();
   const auth = useAuthProvider();
@@ -66,7 +70,7 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
 
         if (
           !isPreview &&
-          !isAdmin &&
+          (!isAdmin || (isAdmin && isImpersonatingNonAdmin)) &&
           (!isActive || isPreRelease(normalizedVersion))
         ) {
           return acc;
@@ -90,7 +94,7 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
       },
       {}
     );
-  }, [isAdmin, releaseList]);
+  }, [isAdmin, isImpersonatingNonAdmin, releaseList]);
 
   const handleChange = (newVersion: string) => {
     onChange({
@@ -105,7 +109,7 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
     <InputGroup label='Release version' {...props}>
       <CreateClusterReleaseSelector
         releases={releases}
-        isAdmin={isAdmin}
+        isAdmin={isAdmin && !isImpersonatingNonAdmin}
         errorMessage={extractErrorMessage(releaseListError)}
         isLoading={releaseIsLoading}
         selectRelease={handleChange}

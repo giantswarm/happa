@@ -1048,9 +1048,7 @@ export async function fetchCatalogListForOrganizations(
   organizations: Record<string, IOrganization>,
   isAdmin: boolean
 ): Promise<applicationv1alpha1.ICatalogList> {
-  const metadata = await auth.getImpersonationMetadata();
-
-  if (isAdmin && !metadata) {
+  if (isAdmin) {
     // Admins can see any type of catalogs,
     // but only if they are not impersonating any users
     return applicationv1alpha1.getCatalogList(clientFactory(), auth);

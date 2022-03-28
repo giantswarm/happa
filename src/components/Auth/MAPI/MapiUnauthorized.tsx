@@ -3,16 +3,16 @@ import { usePermissionsKey } from 'MAPI/permissions/usePermissions';
 import { extractErrorMessage } from 'MAPI/utils';
 import { MainRoutes } from 'model/constants/routes';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { clearImpersonation as clearImpersonationAction } from 'model/stores/main/actions';
 import { organizationsLoadMAPI } from 'model/stores/organization/actions';
 import { IState } from 'model/stores/state';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
-import { IOAuth2ImpersonationMetadata } from 'utils/OAuth2/OAuth2';
 
 import { useAuthProvider } from './MapiAuthProvider';
 
@@ -31,16 +31,9 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
 }) => {
   const auth = useAuthProvider();
 
-  const [impersonationMetadata, setImpersonationMetadata] =
-    useState<IOAuth2ImpersonationMetadata | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      const metadata = await auth.getImpersonationMetadata();
-
-      setImpersonationMetadata(metadata);
-    })();
-  }, [auth]);
+  const impersonationMetadata = useSelector(
+    (state: IState) => state.main.impersonation
+  );
 
   const groups = useMemo(() => {
     if (impersonationMetadata) {
@@ -79,6 +72,8 @@ const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
+
+    dispatch(clearImpersonationAction());
 
     reloadOrganizations();
   };

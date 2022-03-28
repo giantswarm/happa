@@ -1,5 +1,6 @@
 import produce from 'immer';
 import {
+  CLEAR_IMPERSONATION,
   CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_SUCCESS,
@@ -9,6 +10,7 @@ import {
   LOGOUT_SUCCESS,
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_SUCCESS,
+  SET_IMPERSONATION,
 } from 'model/stores/main/constants';
 import { IMainState, MainActions } from 'model/stores/main/types';
 import {
@@ -27,6 +29,7 @@ const initialState = (): IMainState => ({
   selectedClusterID: null,
   firstLoadComplete: false,
   loggedInUser: fetchUserFromStorage(),
+  impersonation: null,
 });
 
 const makeMainReducer = () => {
@@ -74,6 +77,16 @@ const makeMainReducer = () => {
 
         case CLUSTER_SELECT:
           draft.selectedClusterID = action.clusterID;
+
+          break;
+
+        case SET_IMPERSONATION:
+          draft.impersonation = action.impersonation;
+
+          break;
+
+        case CLEAR_IMPERSONATION:
+          draft.impersonation = null;
 
           break;
       }
