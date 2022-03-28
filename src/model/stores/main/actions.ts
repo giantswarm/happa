@@ -5,6 +5,7 @@ import { AuthorizationTypes, StatusCodes } from 'model/constants';
 import { MainRoutes } from 'model/constants/routes';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
 import {
+  CLEAR_IMPERSONATION,
   CLUSTER_SELECT,
   GLOBAL_LOAD_ERROR,
   GLOBAL_LOAD_REQUEST,
@@ -19,6 +20,7 @@ import {
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
   REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
+  SET_IMPERSONATION,
   SET_NEW_PASSWORD,
   VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'model/stores/main/constants';
@@ -35,7 +37,10 @@ import {
   setUserToStorage,
 } from 'utils/localStorageUtils';
 import MapiAuth, { MapiAuthConnectors } from 'utils/MapiAuth/MapiAuth';
-import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import {
+  IOAuth2ImpersonationMetadata,
+  IOAuth2Provider,
+} from 'utils/OAuth2/OAuth2';
 import Passage, {
   IRequestPasswordRecoveryTokenResponse,
   ISetNewPasswordResponse,
@@ -92,6 +97,21 @@ export function logoutError(errorMessage: string): MainActions {
   return {
     type: LOGOUT_ERROR,
     errorMessage,
+  };
+}
+
+export function setImpersonation(
+  impersonation: IOAuth2ImpersonationMetadata
+): MainActions {
+  return {
+    type: SET_IMPERSONATION,
+    impersonation,
+  };
+}
+
+export function clearImpersonation(): MainActions {
+  return {
+    type: CLEAR_IMPERSONATION,
   };
 }
 
@@ -283,6 +303,11 @@ export function resumeLogin(
         user = mapOAuth2UserToUser(mapiUser);
         dispatch(loginSuccess(user));
 
+        const metadata = await auth.getImpersonationMetadata();
+        if (metadata) {
+          dispatch(setImpersonation(metadata));
+        }
+
         return Promise.resolve(user);
       }
 
@@ -294,6 +319,11 @@ export function resumeLogin(
     if (user) {
       dispatch(loginSuccess(user));
 
+      const metadata = await auth.getImpersonationMetadata();
+      if (metadata) {
+        dispatch(setImpersonation(metadata));
+      }
+
       return Promise.resolve(user);
     }
 
@@ -302,6 +332,11 @@ export function resumeLogin(
       // Login callbacks are handled by `OAuth2`.
       user = mapOAuth2UserToUser(mapiUser);
       dispatch(loginSuccess(user));
+
+      const metadata = await auth.getImpersonationMetadata();
+      if (metadata) {
+        dispatch(setImpersonation(metadata));
+      }
 
       return Promise.resolve(user);
     }

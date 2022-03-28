@@ -4,11 +4,15 @@ import { Box, Heading, Text } from 'grommet';
 import { AccountSettingsRoutes } from 'model/constants/routes';
 import * as featureFlags from 'model/featureFlags';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import {
+  clearImpersonation,
+  setImpersonation,
+} from 'model/stores/main/actions';
 import { organizationsLoadMAPI } from 'model/stores/organization/actions';
 import { IState } from 'model/stores/state';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import {
@@ -41,17 +45,17 @@ const Experiments: React.FC<IExperimentsProps> = () => {
   };
 
   const auth = useAuthProvider();
-  const [impersonationUser, setImpersonationUser] = useState<string>('');
-  const [impersonationGroup, setImpersonationGroup] = useState<string>('');
 
-  useEffect(() => {
-    (async () => {
-      const metadata = await auth.getImpersonationMetadata();
+  const impersonationMetadata = useSelector(
+    (state: IState) => state.main.impersonation
+  );
 
-      setImpersonationUser(metadata?.user ?? '');
-      setImpersonationGroup(metadata?.groups?.[0] ?? '');
-    })();
-  }, [auth]);
+  const [impersonationUser, setImpersonationUser] = useState<string>(
+    impersonationMetadata?.user ?? ''
+  );
+  const [impersonationGroup, setImpersonationGroup] = useState<string>(
+    impersonationMetadata?.groups?.[0] ?? ''
+  );
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
   const reloadOrganizations = async () => {
@@ -75,11 +79,12 @@ const Experiments: React.FC<IExperimentsProps> = () => {
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
-
-    await auth.setImpersonationMetadata({
+    const metadata = {
       user: impersonationUser,
       groups: impersonationGroup ? [impersonationGroup] : undefined,
-    });
+    };
+
+    await auth.setImpersonationMetadata(metadata);
 
     // TODO: Remove type casting when type inference bug is fixed upstream
     (cache as unknown as Map<unknown, unknown>).clear();
@@ -90,6 +95,8 @@ const Experiments: React.FC<IExperimentsProps> = () => {
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
+
+    dispatch(setImpersonation(metadata));
 
     reloadOrganizations();
   };
@@ -109,6 +116,8 @@ const Experiments: React.FC<IExperimentsProps> = () => {
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );
+
+    dispatch(clearImpersonation());
 
     reloadOrganizations();
   };

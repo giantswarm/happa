@@ -36,3 +36,16 @@ export function getAllowedInstanceTypeNames(): string[] {
 export function getLoggedInUser(state: IState): ILoggedInUser | null {
   return state.main.loggedInUser;
 }
+
+/**
+ * Impersonation is set, and the current impersonated user does not belong
+ * to the admin group
+ */
+export function getIsImpersonatingNonAdmin(state: IState): boolean {
+  return (
+    state.main.impersonation !== null &&
+    !state.main.impersonation?.groups?.includes(
+      window.config.mapiAuthAdminGroup
+    )
+  );
+}

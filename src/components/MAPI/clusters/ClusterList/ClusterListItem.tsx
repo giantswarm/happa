@@ -21,7 +21,10 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import { getUserIsAdmin } from 'model/stores/main/selectors';
+import {
+  getIsImpersonatingNonAdmin,
+  getUserIsAdmin,
+} from 'model/stores/main/selectors';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -217,6 +220,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
         );
 
   const isAdmin = useSelector(getUserIsAdmin);
+  const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
 
   const workerNodePoolsCount = hasReadPermissionsForNodePools
     ? nodePoolList?.items.length
@@ -336,7 +340,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
                   cluster={cluster}
                   providerCluster={providerCluster}
                   provider={provider}
-                  isAdmin={isAdmin}
+                  isAdmin={isAdmin && !isImpersonatingNonAdmin}
                   releases={releases}
                 />
               )}

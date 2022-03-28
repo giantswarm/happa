@@ -24,6 +24,7 @@ const state: IState = {
     selectedClusterID: null,
     firstLoadComplete: false,
     loggedInUser: null,
+    impersonation: null,
   },
   errors: {},
   metadata: {
