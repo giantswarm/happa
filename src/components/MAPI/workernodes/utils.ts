@@ -26,8 +26,9 @@ export async function updateNodePoolDescription(
   nodePool: NodePool,
   newDescription: string
 ) {
-  switch (nodePool.apiVersion) {
-    case 'exp.cluster.x-k8s.io/v1alpha3': {
+  switch (nodePool.kind) {
+    // Azure
+    case capiexpv1alpha3.MachinePool: {
       const client = httpClientFactory();
 
       let machinePool = await capiexpv1alpha3.getMachinePool(
@@ -76,7 +77,8 @@ export async function updateNodePoolDescription(
       return machinePool;
     }
 
-    case 'cluster.x-k8s.io/v1alpha3': {
+    // AWS
+    case capiv1alpha3.MachineDeployment: {
       let providerNodePool = await fetchProviderNodePoolForNodePool(
         httpClientFactory,
         auth,
@@ -154,8 +156,9 @@ export async function deleteNodePool(
   auth: IOAuth2Provider,
   nodePool: NodePool
 ) {
-  switch (nodePool.apiVersion) {
-    case 'exp.cluster.x-k8s.io/v1alpha3': {
+  switch (nodePool.kind) {
+    // Azure
+    case capiexpv1alpha3.MachinePool: {
       const client = httpClientFactory();
 
       const machinePool = await capiexpv1alpha3.getMachinePool(
@@ -206,7 +209,8 @@ export async function deleteNodePool(
       return machinePool;
     }
 
-    case 'cluster.x-k8s.io/v1alpha3': {
+    // AWS
+    case capiv1alpha3.MachineDeployment: {
       const client = httpClientFactory();
 
       const machineDeployment = await capiv1alpha3.getMachineDeployment(
@@ -261,9 +265,10 @@ export async function deleteNodePool(
 
       return machineDeployment;
     }
-  }
 
-  return Promise.reject(new Error('Unsupported provider.'));
+    default:
+      return Promise.reject(new Error('Unsupported provider.'));
+  }
 }
 
 export async function deleteProviderNodePool(
@@ -349,8 +354,9 @@ export async function updateNodePoolScaling(
   min: number,
   max: number
 ) {
-  switch (nodePool.apiVersion) {
-    case 'exp.cluster.x-k8s.io/v1alpha3': {
+  switch (nodePool.kind) {
+    // Azure
+    case capiexpv1alpha3.MachinePool: {
       const client = httpClientFactory();
 
       let machinePool = await capiexpv1alpha3.getMachinePool(
@@ -422,7 +428,8 @@ export async function updateNodePoolScaling(
       return machinePool;
     }
 
-    case 'cluster.x-k8s.io/v1alpha3': {
+    // AWS
+    case capiv1alpha3.MachineDeployment: {
       let providerNodePool = await fetchProviderNodePoolForNodePool(
         httpClientFactory,
         auth,

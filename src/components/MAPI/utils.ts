@@ -631,29 +631,34 @@ export function getNodePoolDescription(
   providerNodePool: ProviderNodePool | null,
   defaultValue = Constants.DEFAULT_NODEPOOL_DESCRIPTION
 ): string {
-  switch (nodePool.apiVersion) {
-    case 'exp.cluster.x-k8s.io/v1alpha3':
+  const kind = nodePool.kind;
+  const apiVersion = nodePool.apiVersion;
+
+  switch (true) {
+    // Azure
+    case kind === capiexpv1alpha3.MachinePool &&
+      apiVersion === 'exp.cluster.x-k8s.io/v1alpha3':
       return (
         nodePool.metadata.annotations?.[
           capiexpv1alpha3.annotationMachinePoolDescription
         ] || defaultValue
       );
-    case 'cluster.x-k8s.io/v1alpha4':
+
+    // CAPZ alpha
+    case kind === capiv1alpha4.MachinePool &&
+      apiVersion === 'cluster.x-k8s.io/v1alpha4':
       return (
         nodePool.metadata.annotations?.[
           capiv1alpha4.annotationMachinePoolDescription
         ] || defaultValue
       );
-    case 'cluster.x-k8s.io/v1alpha3':
-      if (
-        providerNodePool?.apiVersion ===
-          'infrastructure.giantswarm.io/v1alpha2' ||
-        providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
-      ) {
-        return providerNodePool.spec.nodePool.description || defaultValue;
-      }
 
-      return defaultValue;
+    // AWS
+    case kind === capiv1alpha3.MachineDeployment:
+      return (
+        (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec.nodePool
+          .description || defaultValue
+      );
     default:
       return defaultValue;
   }
@@ -778,8 +783,13 @@ export function getNodePoolScaling(
   nodePool: NodePool,
   providerNodePool: ProviderNodePool | null
 ): INodesStatus {
-  switch (nodePool.apiVersion) {
-    case 'exp.cluster.x-k8s.io/v1alpha3': {
+  const kind = nodePool.kind;
+  const apiVersion = nodePool.apiVersion;
+
+  switch (true) {
+    // Azure
+    case kind === capiexpv1alpha3.MachinePool &&
+      apiVersion === 'exp.cluster.x-k8s.io/v1alpha3': {
       const status: INodesStatus = {
         min: -1,
         max: -1,
@@ -787,8 +797,9 @@ export function getNodePoolScaling(
         current: -1,
       };
 
-      [status.min, status.max] =
-        capiexpv1alpha3.getMachinePoolScaling(nodePool);
+      [status.min, status.max] = capiexpv1alpha3.getMachinePoolScaling(
+        nodePool as capiexpv1alpha3.IMachinePool
+      );
 
       status.desired = nodePool.status?.replicas ?? -1;
       status.current = nodePool.status?.readyReplicas ?? -1;
@@ -796,7 +807,9 @@ export function getNodePoolScaling(
       return status;
     }
 
-    case 'cluster.x-k8s.io/v1alpha4': {
+    // CAPZ alpha
+    case kind === capiv1alpha4.MachinePool &&
+      apiVersion === 'cluster.x-k8s.io/v1alpha4': {
       const status: INodesStatus = {
         min: -1,
         max: -1,
@@ -816,21 +829,18 @@ export function getNodePoolScaling(
       return status;
     }
 
-    case 'cluster.x-k8s.io/v1alpha3': {
-      if (
-        providerNodePool?.apiVersion ===
-          'infrastructure.giantswarm.io/v1alpha2' ||
-        providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
-      ) {
-        return {
-          min: providerNodePool.spec.nodePool.scaling.min,
-          max: providerNodePool.spec.nodePool.scaling.max,
-          desired: nodePool.status?.replicas ?? -1,
-          current: nodePool.status?.readyReplicas ?? -1,
-        };
-      }
-
-      return { min: -1, max: -1, desired: -1, current: -1 };
+    // AWS
+    case kind === capiv1alpha3.MachineDeployment: {
+      return {
+        min:
+          (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec
+            .nodePool.scaling.min ?? -1,
+        max:
+          (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec
+            .nodePool.scaling.max ?? -1,
+        desired: nodePool.status?.replicas ?? -1,
+        current: nodePool.status?.readyReplicas ?? -1,
+      };
     }
 
     default:
@@ -842,21 +852,20 @@ export function getNodePoolAvailabilityZones(
   nodePool: NodePool,
   providerNodePool: ProviderNodePool
 ): string[] {
-  switch (nodePool.apiVersion) {
-    case 'exp.cluster.x-k8s.io/v1alpha3':
-    case 'cluster.x-k8s.io/v1alpha4':
+  switch (nodePool.kind) {
+    // Azure, CAPZ alpha
+    case capiexpv1alpha3.MachinePool:
+    case capiv1alpha4.MachinePool:
       return nodePool.spec?.failureDomains ?? [];
-    case 'cluster.x-k8s.io/v1alpha3': {
-      if (
-        providerNodePool?.apiVersion ===
-          'infrastructure.giantswarm.io/v1alpha2' ||
-        providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
-      ) {
-        return providerNodePool.spec.provider.availabilityZones;
-      }
 
-      return [];
+    // AWS
+    case capiv1alpha3.MachineDeployment: {
+      return (
+        (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec.provider
+          .availabilityZones ?? []
+      );
     }
+
     default:
       return [];
   }
