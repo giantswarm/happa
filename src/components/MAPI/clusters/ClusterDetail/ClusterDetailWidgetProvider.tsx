@@ -8,6 +8,8 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect } from 'react';
@@ -29,11 +31,11 @@ import { getCredentialsAccountID } from './utils';
 export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
 
-  switch (cluster.spec?.infrastructureRef?.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
+  switch (cluster.spec?.infrastructureRef?.kind) {
+    case capzv1alpha3.AzureCluster:
       return 'Azure region';
 
-    case 'awscluster':
+    case infrav1alpha3.AWSCluster:
       return 'AWS region';
 
     default:
@@ -44,11 +46,11 @@ export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
 export function getClusterAccountIDLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
 
-  switch (cluster.spec?.infrastructureRef?.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
+  switch (cluster.spec?.infrastructureRef?.kind) {
+    case capzv1alpha3.AzureCluster:
       return 'Subscription ID';
 
-    case 'awscluster':
+    case infrav1alpha3.AWSCluster:
       return 'Account ID';
 
     default:
@@ -62,11 +64,11 @@ export function getClusterAccountIDPath(
 ) {
   if (!cluster || !accountID) return undefined;
 
-  switch (cluster.spec?.infrastructureRef?.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
+  switch (cluster.spec?.infrastructureRef?.kind) {
+    case capzv1alpha3.AzureCluster:
       return 'https://portal.azure.com/';
 
-    case 'awscluster':
+    case infrav1alpha3.AWSCluster:
       return `https://${accountID}.signin.aws.amazon.com/console`;
 
     default:

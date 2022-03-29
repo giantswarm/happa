@@ -118,8 +118,8 @@ export async function fetchNodePoolListForCluster(
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let list: NodePoolList;
 
-  switch (infrastructureRef.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
       if (isCAPZCluster(cluster)) {
         list = await capiv1alpha4.getMachinePoolList(
           httpClientFactory(),
@@ -150,7 +150,7 @@ export async function fetchNodePoolListForCluster(
 
       break;
 
-    case 'awscluster':
+    case infrav1alpha3.AWSCluster:
       list = await capiv1alpha3.getMachineDeploymentList(
         httpClientFactory(),
         auth,
@@ -187,8 +187,8 @@ export function fetchNodePoolListForClusterKey(
     return null;
   }
 
-  switch (infrastructureRef.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
       if (isCAPZCluster(cluster)) {
         return capiv1alpha4.getMachinePoolListKey({
           labelSelector: {
@@ -209,7 +209,7 @@ export function fetchNodePoolListForClusterKey(
         namespace,
       });
 
-    case 'awscluster':
+    case infrav1alpha3.AWSCluster:
       return capiv1alpha3.getMachineDeploymentListKey({
         labelSelector: {
           matchingLabels: {
@@ -431,8 +431,8 @@ export async function fetchControlPlaneNodesForCluster(
     );
   }
 
-  switch (infrastructureRef.kind.toLocaleLowerCase()) {
-    case 'azurecluster': {
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster: {
       const cpNodes = await capzv1alpha3.getAzureMachineList(
         httpClientFactory(),
         auth,
@@ -450,7 +450,7 @@ export async function fetchControlPlaneNodesForCluster(
       return cpNodes.items;
     }
 
-    case 'awscluster': {
+    case infrav1alpha3.AWSCluster: {
       const [awsCP, g8sCP] = await Promise.allSettled([
         infrav1alpha3.getAWSControlPlaneList(httpClientFactory(), auth, {
           labelSelector: {
@@ -498,8 +498,8 @@ export function fetchControlPlaneNodesForClusterKey(
     return null;
   }
 
-  switch (infrastructureRef.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
       return capzv1alpha3.getAzureMachineListKey({
         labelSelector: {
           matchingLabels: {
@@ -509,7 +509,7 @@ export function fetchControlPlaneNodesForClusterKey(
         namespace: cluster.metadata.namespace,
       });
 
-    case 'awscluster':
+    case infrav1alpha3.AWSCluster:
       return infrav1alpha3.getAWSControlPlaneListKey({
         labelSelector: {
           matchingLabels: {
@@ -536,8 +536,8 @@ export async function fetchProviderClusterForCluster(
     );
   }
 
-  switch (infrastructureRef.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
       return capzv1alpha3.getAzureCluster(
         httpClientFactory(),
         auth,
@@ -545,7 +545,7 @@ export async function fetchProviderClusterForCluster(
         infrastructureRef.name
       );
 
-    case 'awscluster':
+    case infrav1alpha3.AWSCluster:
       return infrav1alpha3.getAWSCluster(
         httpClientFactory(),
         auth,
@@ -562,14 +562,14 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) return null;
 
-  switch (infrastructureRef.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
       return capzv1alpha3.getAzureClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
       );
 
-    case 'awscluster':
+    case infrav1alpha3.AWSCluster:
       return infrav1alpha3.getAWSClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
@@ -892,14 +892,14 @@ export function getClusterDescription(
     return defaultValue;
   }
 
-  switch (infrastructureRef.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
       return (
         cluster.metadata.annotations?.[
           capiv1alpha3.annotationClusterDescription
         ] || defaultValue
       );
-    case 'awscluster':
+    case infrav1alpha3.AWSCluster:
       return (
         (providerCluster as infrav1alpha3.IAWSCluster)?.spec?.cluster
           .description ||
@@ -916,12 +916,11 @@ export function getClusterDescription(
 export function getProviderClusterLocation(
   providerCluster: ProviderCluster
 ): string | undefined {
-  switch (providerCluster?.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+  switch (providerCluster?.kind) {
+    case capzv1alpha3.AzureCluster:
       return providerCluster.spec?.location ?? '';
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3': {
+    case infrav1alpha3.AWSCluster: {
       const region = providerCluster.spec?.provider.region;
       if (typeof region === 'undefined') return '';
 
@@ -936,16 +935,15 @@ export function getProviderClusterLocation(
 export function getProviderClusterAccountID(
   providerCluster: ProviderCluster
 ): string | undefined {
-  switch (providerCluster?.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3': {
+  switch (providerCluster?.kind) {
+    case capzv1alpha3.AzureCluster: {
       const id = providerCluster.spec?.subscriptionID;
       if (typeof id === 'undefined') return '';
 
       return id;
     }
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case infrav1alpha3.AWSCluster:
       return '';
 
     default:
@@ -1110,11 +1108,11 @@ export function supportsClientCertificates(cluster: Cluster): boolean {
     return false;
   }
 
-  switch (infrastructureRef.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
       return true;
 
-    case 'awscluster': {
+    case infrav1alpha3.AWSCluster: {
       const releaseVersion = getClusterReleaseVersion(cluster);
       if (!releaseVersion) return false;
 

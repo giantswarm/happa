@@ -57,13 +57,11 @@ export async function updateClusterDescription(
     return cluster;
   }
 
-  const apiVersion = providerCluster?.apiVersion;
   if (
-    (apiVersion === 'infrastructure.giantswarm.io/v1alpha2' ||
-      apiVersion === 'infrastructure.giantswarm.io/v1alpha3') &&
-    typeof providerCluster!.spec !== 'undefined'
+    providerCluster?.kind === infrav1alpha3.AWSCluster &&
+    typeof providerCluster.spec !== 'undefined'
   ) {
-    providerCluster!.spec.cluster.description = newDescription;
+    providerCluster.spec.cluster.description = newDescription;
 
     const updatedProviderCluster = await infrav1alpha3.updateAWSCluster(
       httpClientFactory(),
@@ -149,9 +147,8 @@ export async function deleteProviderClusterForCluster(
     cluster
   );
 
-  switch (providerCluster?.apiVersion) {
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3': {
+  switch (providerCluster?.kind) {
+    case infrav1alpha3.AWSCluster: {
       const client = httpClientFactory();
 
       await infrav1alpha3.deleteAWSCluster(
@@ -239,11 +236,8 @@ export async function deleteClusterResources(
   try {
     await deleteCluster(httpClientFactory, auth, cluster);
 
-    const apiVersion = cluster.spec?.infrastructureRef?.apiVersion;
-    if (
-      apiVersion === 'infrastructure.giantswarm.io/v1alpha2' ||
-      apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
-    ) {
+    const kind = cluster.spec?.infrastructureRef?.kind;
+    if (kind === infrav1alpha3.AWSCluster) {
       await deleteProviderClusterForCluster(httpClientFactory, auth, cluster);
       await deleteControlPlaneNodesForCluster(httpClientFactory, auth, cluster);
     }

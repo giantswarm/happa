@@ -359,10 +359,9 @@ function createDefaultAWSCluster(config: {
 export function createDefaultCluster(config: {
   providerCluster: ProviderCluster;
 }) {
-  switch (config.providerCluster?.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+  switch (config.providerCluster?.kind) {
+    case capzv1alpha3.AzureCluster:
+    case infrav1alpha3.AWSCluster:
       return createDefaultV1Alpha3Cluster(config);
 
     default:
@@ -410,11 +409,10 @@ function createDefaultV1Alpha3Cluster(config: {
 export function createDefaultControlPlaneNodes(config: {
   providerCluster: ProviderCluster;
 }): ControlPlaneNode[] {
-  switch (config.providerCluster?.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3':
+  switch (config.providerCluster?.kind) {
+    case capzv1alpha3.AzureCluster:
       return [createDefaultAzureMachine(config)];
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3': {
+    case infrav1alpha3.AWSCluster: {
       const name = generateUID(5);
       const awsCP = createDefaultAWSControlPlane({ ...config, name });
       const g8sCP = createDefaultG8sControlPlane({
@@ -558,8 +556,8 @@ export async function createCluster(
   providerCluster: ProviderCluster;
   controlPlaneNodes: ControlPlaneNode[];
 }> {
-  switch (config.providerCluster!.apiVersion) {
-    case 'infrastructure.cluster.x-k8s.io/v1alpha3': {
+  switch (config.providerCluster!.kind) {
+    case capzv1alpha3.AzureCluster: {
       const providerCluster = await capzv1alpha3.createAzureCluster(
         httpClientFactory(),
         auth,
@@ -617,8 +615,7 @@ export async function createCluster(
       return { cluster, providerCluster, controlPlaneNodes };
     }
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3': {
+    case infrav1alpha3.AWSCluster: {
       const providerCluster = await infrav1alpha3.createAWSCluster(
         httpClientFactory(),
         auth,
@@ -798,14 +795,14 @@ export function getClusterConditions(
     return statuses;
   }
 
-  switch (infrastructureRef.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
+  switch (infrastructureRef.kind) {
+    case capzv1alpha3.AzureCluster:
       statuses.isConditionUnknown = typeof cluster.status === 'undefined';
       statuses.isCreating = isClusterCreating(cluster);
       statuses.isUpgrading = isClusterUpgrading(cluster);
       break;
 
-    case 'awscluster': {
+    case infrav1alpha3.AWSCluster: {
       if (!providerCluster) break;
 
       statuses.isConditionUnknown = infrav1alpha3.isConditionUnknown(
