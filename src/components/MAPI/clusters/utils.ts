@@ -17,6 +17,8 @@ import { IProviderNodePoolForNodePool } from 'MAPI/workernodes/utils';
 import { Constants, Providers } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -50,9 +52,9 @@ export function getWorkerNodesCPU(
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
-    switch (providerNodePool?.apiVersion) {
-      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
-      case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+    switch (providerNodePool?.kind) {
+      case capzexpv1alpha3.AzureMachinePool:
+      case capzv1alpha4.AzureMachinePool:
         {
           const vmSize = providerNodePool.spec?.template.vmSize;
           const readyReplicas = nodePool.status?.readyReplicas;
@@ -71,8 +73,7 @@ export function getWorkerNodesCPU(
 
         break;
 
-      case 'infrastructure.giantswarm.io/v1alpha2':
-      case 'infrastructure.giantswarm.io/v1alpha3': {
+      case infrav1alpha3.AWSMachineDeployment: {
         const instanceType = providerNodePool.spec.provider.worker.instanceType;
         const readyReplicas = nodePool.status?.readyReplicas;
 
@@ -105,9 +106,9 @@ export function getWorkerNodesMemory(
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
-    switch (providerNodePool?.apiVersion) {
-      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
-      case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
+    switch (providerNodePool?.kind) {
+      case capzexpv1alpha3.AzureMachinePool:
+      case capzv1alpha4.AzureMachinePool: {
         const vmSize = providerNodePool.spec?.template.vmSize;
         const readyReplicas = nodePool.status?.readyReplicas;
 
@@ -125,8 +126,7 @@ export function getWorkerNodesMemory(
         break;
       }
 
-      case 'infrastructure.giantswarm.io/v1alpha2':
-      case 'infrastructure.giantswarm.io/v1alpha3': {
+      case infrav1alpha3.AWSMachineDeployment: {
         const instanceType = providerNodePool.spec.provider.worker.instanceType;
         const readyReplicas = nodePool.status?.readyReplicas;
 

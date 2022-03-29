@@ -7,6 +7,8 @@ import {
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
 import { Providers } from 'model/constants';
+import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import React, { useState } from 'react';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import InputGroup from 'UI/Inputs/InputGroup';
@@ -20,11 +22,10 @@ import WorkerNodesCreateNodePoolSpotInstancesAWS from './WorkerNodesCreateNodePo
 import WorkerNodesCreateNodePoolSpotInstancesAzure from './WorkerNodesCreateNodePoolSpotInstancesAzure';
 
 function getLabel(providerNodePool: ProviderNodePool): string {
-  switch (providerNodePool?.apiVersion) {
-    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+  switch (providerNodePool?.kind) {
+    case capzexpv1alpha3.AzureMachinePool:
       return 'Spot virtual machines';
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case infrav1alpha3.AWSMachineDeployment:
       return 'Instance distribution';
     default:
       return '';
@@ -32,11 +33,10 @@ function getLabel(providerNodePool: ProviderNodePool): string {
 }
 
 function getToggleLabel(providerNodePool: ProviderNodePool): string {
-  switch (providerNodePool?.apiVersion) {
-    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+  switch (providerNodePool?.kind) {
+    case capzexpv1alpha3.AzureMachinePool:
       return 'Enabled';
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case infrav1alpha3.AWSMachineDeployment:
       return 'Enable Spot instances';
     default:
       return '';

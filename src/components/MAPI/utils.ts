@@ -236,8 +236,12 @@ export async function fetchProviderNodePoolForNodePool(
     );
   }
 
-  switch (infrastructureRef.apiVersion) {
-    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+  const apiVersion = infrastructureRef.apiVersion;
+  const kind = infrastructureRef.kind;
+
+  switch (true) {
+    case kind === capzexpv1alpha3.AzureMachinePool &&
+      apiVersion === 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       return capzexpv1alpha3.getAzureMachinePool(
         httpClientFactory(),
         auth,
@@ -245,7 +249,8 @@ export async function fetchProviderNodePoolForNodePool(
         infrastructureRef.name
       );
 
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+    case kind === capzv1alpha4.AzureMachinePool &&
+      apiVersion === 'infrastructure.cluster.x-k8s.io/v1alpha4':
       return capzv1alpha4.getAzureMachinePool(
         httpClientFactory(),
         auth,
@@ -253,8 +258,7 @@ export async function fetchProviderNodePoolForNodePool(
         infrastructureRef.name
       );
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case kind === infrav1alpha3.AWSMachineDeployment:
       return infrav1alpha3.getAWSMachineDeployment(
         httpClientFactory(),
         auth,
@@ -681,12 +685,11 @@ export type NodePoolMachineTypes =
 export function getProviderNodePoolMachineTypes(
   providerNodePool: ProviderNodePool
 ): NodePoolMachineTypes | undefined {
-  switch (providerNodePool?.apiVersion) {
-    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (providerNodePool?.kind) {
+    case capzexpv1alpha3.AzureMachinePool:
+    case capzv1alpha4.AzureMachinePool:
       return { primary: providerNodePool.spec?.template.vmSize ?? '' };
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case infrav1alpha3.AWSMachineDeployment:
       return {
         primary: providerNodePool.spec.provider.worker.instanceType,
         all: providerNodePool.status?.provider?.worker?.instanceTypes ?? [
@@ -719,9 +722,9 @@ export type NodePoolSpotInstances =
 export function getProviderNodePoolSpotInstances(
   providerNodePool: ProviderNodePool
 ): NodePoolSpotInstances | undefined {
-  switch (providerNodePool?.apiVersion) {
-    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4': {
+  switch (providerNodePool?.kind) {
+    case capzexpv1alpha3.AzureMachinePool:
+    case capzv1alpha4.AzureMachinePool: {
       try {
         const maxPriceQty =
           providerNodePool.spec?.template.spotVMOptions?.maxPrice;
@@ -747,8 +750,7 @@ export function getProviderNodePoolSpotInstances(
       }
     }
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3': {
+    case infrav1alpha3.AWSMachineDeployment: {
       const onDemandBaseCapacity =
         providerNodePool.spec.provider.instanceDistribution
           ?.onDemandBaseCapacity ?? 0;
@@ -954,9 +956,9 @@ export function getProviderClusterAccountID(
 export function getProviderNodePoolLocation(
   providerNodePool: ProviderNodePool
 ): string {
-  switch (providerNodePool?.apiVersion) {
-    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (providerNodePool?.kind) {
+    case capzexpv1alpha3.AzureMachinePool:
+    case capzv1alpha4.AzureMachinePool:
       return providerNodePool.spec?.location ?? '';
     default:
       return '';
