@@ -70,27 +70,17 @@ export function getClusterAccountIDPath(
   }
 }
 
-const Groups = styled(Box).attrs({
-  align: 'center',
-  direction: 'row',
-  overflow: 'hidden',
-  wrap: true,
-})``;
+const GROUP_LABEL_SIZE = {
+  small: 90,
+  medium: 115,
+};
 
-const Group = styled(Box).attrs({
-  align: 'center',
-  direction: 'row',
-  gap: 'xsmall',
-})`
-  margin-left: -14px;
-  padding: 0 14px;
-  position: relative;
+interface IGroupLabelProps {
+  size: 'small' | 'medium';
+}
 
-  &::before {
-    content: '·';
-    position: absolute;
-    left: 5px;
-  }
+const GroupLabel = styled.div<IGroupLabelProps>`
+  min-width: ${({ size }) => GROUP_LABEL_SIZE[size]}px;
 `;
 
 const StyledLink = styled.a`
@@ -169,73 +159,81 @@ const ClusterDetailWidgetProvider: React.FC<
 
   return (
     <ClusterDetailWidget title='Provider' inline={true} {...props}>
-      <Groups>
-        <Group data-testid='provider-group'>
+      <Box direction='row' data-testid='provider-group'>
+        <GroupLabel size={provider === 'aws' ? 'small' : 'medium'}>
           <OptionalValue
-            value={getClusterRegionLabel(cluster)}
             loaderWidth={85}
+            value={getClusterRegionLabel(cluster)}
           >
             {(value) => <Text>{value}</Text>}
           </OptionalValue>
-          <OptionalValue value={region} loaderWidth={80}>
-            {(value) => (
-              <Text>
-                <code>{value}</code>
-              </Text>
-            )}
-          </OptionalValue>
-        </Group>
-        <Group data-testid='provider-group'>
-          <OptionalValue value={getClusterAccountIDLabel(cluster)}>
-            {(value) => <Text>{value}</Text>}
-          </OptionalValue>
+        </GroupLabel>
+        <OptionalValue value={region}>
+          {(value) => (
+            <Text>
+              <code>{value}</code>
+            </Text>
+          )}
+        </OptionalValue>
+      </Box>
+      <Box direction='row' data-testid='provider-group'>
+        <GroupLabel size={provider === 'aws' ? 'small' : 'medium'}>
           <OptionalValue
-            value={accountID}
-            loaderWidth={200}
-            replaceEmptyValue={false}
+            loaderWidth={85}
+            value={getClusterAccountIDLabel(cluster)}
           >
-            {(value) =>
-              value === '' ? (
-                <NotAvailable />
-              ) : accountIDPath === '' ? (
-                <code>{value}</code>
-              ) : (
-                <StyledLink
-                  color='text-weak'
-                  href={accountIDPath}
-                  rel='noopener noreferrer'
-                  target='_blank'
-                >
-                  <code>{value}</code>
-                  <i
-                    className='fa fa-open-in-new'
-                    aria-hidden={true}
-                    role='presentation'
-                  />
-                </StyledLink>
-              )
-            }
+            {(value) => <Text>{value}</Text>}
           </OptionalValue>
-        </Group>
-        {provider === 'azure' && (
-          <Group data-testid='provider-group'>
+        </GroupLabel>
+        <OptionalValue
+          value={accountID}
+          loaderWidth={200}
+          replaceEmptyValue={false}
+        >
+          {(value) =>
+            value === '' ? (
+              <NotAvailable />
+            ) : accountIDPath === '' ? (
+              <code>{value}</code>
+            ) : (
+              <StyledLink
+                color='text-weak'
+                href={accountIDPath}
+                rel='noopener noreferrer'
+                target='_blank'
+              >
+                <code>{value}</code>
+                <i
+                  className='fa fa-open-in-new'
+                  aria-hidden={true}
+                  role='presentation'
+                />
+              </StyledLink>
+            )
+          }
+        </OptionalValue>
+      </Box>
+      {provider === 'azure' && (
+        <Box direction='row' data-testid='provider-group'>
+          <GroupLabel size='medium'>
             <OptionalValue
+              loaderWidth={85}
               value={azureTenantID !== undefined ? 'Tenant ID' : undefined}
             >
               {(value) => <Text>{value}</Text>}
             </OptionalValue>
-            <OptionalValue
-              value={azureTenantID}
-              loaderWidth={200}
-              replaceEmptyValue={false}
-            >
-              {(value) =>
-                value === '' ? <NotAvailable /> : <code>{value}</code>
-              }
-            </OptionalValue>
-          </Group>
-        )}
-      </Groups>
+          </GroupLabel>
+          <OptionalValue
+            value={azureTenantID}
+            loaderWidth={250}
+            replaceEmptyValue={false}
+          >
+            {(value) =>
+              value === '' ? <NotAvailable /> : <code>{value}</code>
+            }
+          </OptionalValue>
+        </Box>
+      )}
     </ClusterDetailWidget>
   );
 };
