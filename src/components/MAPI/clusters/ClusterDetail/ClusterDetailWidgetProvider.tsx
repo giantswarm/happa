@@ -1,5 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { Text } from 'grommet';
+import { Box, Text } from 'grommet';
 import { ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -7,6 +7,7 @@ import {
   getProviderClusterLocation,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { Providers } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { selectOrganizations } from 'model/stores/organization/selectors';
@@ -14,17 +15,15 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import styled from 'styled-components';
-import { Dot } from 'styles';
 import useSWR from 'swr';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import { usePermissionsForOrgCredentials } from '../permissions/usePermissionsForOrgCredentials';
-import { getCredentialsAccountID } from './utils';
+import { getCredentialsAccountID, getCredentialsAzureTenantID } from './utils';
 
 export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
   if (!cluster) return undefined;
@@ -63,9 +62,6 @@ export function getClusterAccountIDPath(
   if (!cluster || !accountID) return undefined;
 
   switch (cluster.spec?.infrastructureRef?.kind.toLocaleLowerCase()) {
-    case 'azurecluster':
-      return 'https://portal.azure.com/';
-
     case 'awscluster':
       return `https://${accountID}.signin.aws.amazon.com/console`;
 
@@ -74,8 +70,17 @@ export function getClusterAccountIDPath(
   }
 }
 
-const StyledDot = styled(Dot)`
-  padding: 0;
+const GROUP_LABEL_SIZE = {
+  small: 90,
+  medium: 115,
+};
+
+interface IGroupLabelProps {
+  size: 'small' | 'medium';
+}
+
+const GroupLabel = styled.div<IGroupLabelProps>`
+  min-width: ${({ size }) => GROUP_LABEL_SIZE[size]}px;
 `;
 
 const StyledLink = styled.a`
@@ -110,7 +115,7 @@ const ClusterDetailWidgetProvider: React.FC<
   );
 
   const credentialListKey =
-    canList && selectedOrgID
+    cluster && canList && selectedOrgID
       ? legacyCredentials.getCredentialListKey(selectedOrgID)
       : null;
 
@@ -138,65 +143,84 @@ const ClusterDetailWidgetProvider: React.FC<
     }
   }, [credentialListError, orgId]);
 
-  const credentialAccountID = getCredentialsAccountID(credentialList?.items);
   const accountID = credentialListKey
-    ? credentialAccountID
+    ? getCredentialsAccountID(credentialList?.items)
     : getProviderClusterAccountID(providerCluster);
   const accountIDPath = getClusterAccountIDPath(cluster, accountID);
+
+  const azureTenantID = credentialListKey
+    ? getCredentialsAzureTenantID(credentialList?.items)
+    : providerCluster
+    ? ''
+    : undefined;
 
   const region = getProviderClusterLocation(providerCluster);
 
   return (
-    <ClusterDetailWidget
-      title='Provider'
-      inline={true}
-      contentProps={{
-        direction: 'row',
-        gap: 'xsmall',
-        wrap: true,
-        align: 'center',
-      }}
-      {...props}
-    >
-      <OptionalValue value={getClusterRegionLabel(cluster)} loaderWidth={85}>
-        {(value) => <Text>{value}</Text>}
-      </OptionalValue>
-      <OptionalValue value={region} loaderWidth={80}>
-        {(value) => (
-          <Text>
-            <code>{value}</code>
-          </Text>
-        )}
-      </OptionalValue>
-      <StyledDot />
-      <OptionalValue value={getClusterAccountIDLabel(cluster)}>
-        {(value) => <Text>{value}</Text>}
-      </OptionalValue>
-      <OptionalValue
-        value={accountID}
-        loaderWidth={300}
-        replaceEmptyValue={false}
-      >
-        {(value) =>
-          value === '' ? (
-            <NotAvailable />
-          ) : (
-            <StyledLink
-              color='text-weak'
-              href={accountIDPath}
-              rel='noopener noreferrer'
-              target='_blank'
-            >
+    <ClusterDetailWidget title='Provider' inline={true} {...props}>
+      <Box direction='row' align='center' data-testid='provider-group'>
+        <GroupLabel size={provider === Providers.AWS ? 'small' : 'medium'}>
+          <OptionalValue
+            loaderWidth={85}
+            value={getClusterRegionLabel(cluster)}
+          >
+            {(value) => <Text>{value}</Text>}
+          </OptionalValue>
+        </GroupLabel>
+        <OptionalValue value={region}>
+          {(value) => (
+            <Text>
               <code>{value}</code>
-              <i
-                className='fa fa-open-in-new'
-                aria-hidden={true}
-                role='presentation'
-              />
-            </StyledLink>
-          )
-        }
-      </OptionalValue>
+            </Text>
+          )}
+        </OptionalValue>
+      </Box>
+      <Box direction='row' align='center' data-testid='provider-group'>
+        <GroupLabel size={provider === Providers.AWS ? 'small' : 'medium'}>
+          <OptionalValue
+            loaderWidth={85}
+            value={getClusterAccountIDLabel(cluster)}
+          >
+            {(value) => <Text>{value}</Text>}
+          </OptionalValue>
+        </GroupLabel>
+        <OptionalValue value={accountID} loaderWidth={200}>
+          {(value) =>
+            accountIDPath === '' ? (
+              <code>{value}</code>
+            ) : (
+              <StyledLink
+                color='text-weak'
+                href={accountIDPath}
+                rel='noopener noreferrer'
+                target='_blank'
+              >
+                <code>{value}</code>
+                <i
+                  className='fa fa-open-in-new'
+                  aria-hidden={true}
+                  role='presentation'
+                />
+              </StyledLink>
+            )
+          }
+        </OptionalValue>
+      </Box>
+      {provider === Providers.AZURE && (
+        <Box direction='row' align='center' data-testid='provider-group'>
+          <GroupLabel size='medium'>
+            <OptionalValue
+              loaderWidth={85}
+              value={azureTenantID !== undefined ? 'Tenant ID' : undefined}
+            >
+              {(value) => <Text>{value}</Text>}
+            </OptionalValue>
+          </GroupLabel>
+          <OptionalValue value={azureTenantID} loaderWidth={250}>
+            {(value) => <code>{value}</code>}
+          </OptionalValue>
+        </Box>
+      )}
     </ClusterDetailWidget>
   );
 };
