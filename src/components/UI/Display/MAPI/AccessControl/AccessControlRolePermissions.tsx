@@ -84,7 +84,6 @@ const AccessControlRolePermissions: React.FC<
       </TableHeader>
       <TableBody>
         <InfiniteScroll
-          replace={true}
           items={permissions}
           step={50}
           renderMarker={(marker) => (
