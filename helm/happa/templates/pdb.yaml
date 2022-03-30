@@ -1,0 +1,11 @@
+{{- if .Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: happa
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: happa
+{{- end }}
