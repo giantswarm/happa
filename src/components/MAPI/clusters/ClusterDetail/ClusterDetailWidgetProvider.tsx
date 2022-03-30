@@ -7,6 +7,7 @@ import {
   getProviderClusterLocation,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { Providers } from 'model/constants';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { selectOrganizations } from 'model/stores/organization/selectors';
@@ -160,7 +161,7 @@ const ClusterDetailWidgetProvider: React.FC<
   return (
     <ClusterDetailWidget title='Provider' inline={true} {...props}>
       <Box direction='row' data-testid='provider-group'>
-        <GroupLabel size={provider === 'aws' ? 'small' : 'medium'}>
+        <GroupLabel size={provider === Providers.AWS ? 'small' : 'medium'}>
           <OptionalValue
             loaderWidth={85}
             value={getClusterRegionLabel(cluster)}
@@ -177,7 +178,7 @@ const ClusterDetailWidgetProvider: React.FC<
         </OptionalValue>
       </Box>
       <Box direction='row' data-testid='provider-group'>
-        <GroupLabel size={provider === 'aws' ? 'small' : 'medium'}>
+        <GroupLabel size={provider === Providers.AWS ? 'small' : 'medium'}>
           <OptionalValue
             loaderWidth={85}
             value={getClusterAccountIDLabel(cluster)}
@@ -213,7 +214,7 @@ const ClusterDetailWidgetProvider: React.FC<
           }
         </OptionalValue>
       </Box>
-      {provider === 'azure' && (
+      {provider === Providers.AZURE && (
         <Box direction='row' data-testid='provider-group'>
           <GroupLabel size='medium'>
             <OptionalValue
