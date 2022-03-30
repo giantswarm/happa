@@ -159,7 +159,7 @@ const ClusterDetailWidgetProvider: React.FC<
 
   return (
     <ClusterDetailWidget title='Provider' inline={true} {...props}>
-      <Box direction='row' data-testid='provider-group'>
+      <Box direction='row' align='center' data-testid='provider-group'>
         <GroupLabel size={provider === Providers.AWS ? 'small' : 'medium'}>
           <OptionalValue
             loaderWidth={85}
@@ -176,7 +176,7 @@ const ClusterDetailWidgetProvider: React.FC<
           )}
         </OptionalValue>
       </Box>
-      <Box direction='row' data-testid='provider-group'>
+      <Box direction='row' align='center' data-testid='provider-group'>
         <GroupLabel size={provider === Providers.AWS ? 'small' : 'medium'}>
           <OptionalValue
             loaderWidth={85}
@@ -208,7 +208,7 @@ const ClusterDetailWidgetProvider: React.FC<
         </OptionalValue>
       </Box>
       {provider === Providers.AZURE && (
-        <Box direction='row' data-testid='provider-group'>
+        <Box direction='row' align='center' data-testid='provider-group'>
           <GroupLabel size='medium'>
             <OptionalValue
               loaderWidth={85}
