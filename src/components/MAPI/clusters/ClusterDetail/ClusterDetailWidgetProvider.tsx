@@ -115,7 +115,7 @@ const ClusterDetailWidgetProvider: React.FC<
   );
 
   const credentialListKey =
-    canList && selectedOrgID
+    cluster && canList && selectedOrgID
       ? legacyCredentials.getCredentialListKey(selectedOrgID)
       : null;
 
@@ -143,10 +143,9 @@ const ClusterDetailWidgetProvider: React.FC<
     }
   }, [credentialListError, orgId]);
 
-  const accountID =
-    cluster && credentialListKey
-      ? getCredentialsAccountID(credentialList?.items)
-      : getProviderClusterAccountID(providerCluster);
+  const accountID = credentialListKey
+    ? getCredentialsAccountID(credentialList?.items)
+    : getProviderClusterAccountID(providerCluster);
   const accountIDPath = getClusterAccountIDPath(cluster, accountID);
 
   const azureTenantID = credentialListKey
