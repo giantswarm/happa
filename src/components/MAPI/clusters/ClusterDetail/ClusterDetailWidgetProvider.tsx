@@ -17,7 +17,6 @@ import { useParams } from 'react-router';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
-import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
@@ -186,15 +185,9 @@ const ClusterDetailWidgetProvider: React.FC<
             {(value) => <Text>{value}</Text>}
           </OptionalValue>
         </GroupLabel>
-        <OptionalValue
-          value={accountID}
-          loaderWidth={200}
-          replaceEmptyValue={false}
-        >
+        <OptionalValue value={accountID} loaderWidth={200}>
           {(value) =>
-            value === '' ? (
-              <NotAvailable />
-            ) : accountIDPath === '' ? (
+            accountIDPath === '' ? (
               <code>{value}</code>
             ) : (
               <StyledLink
@@ -224,14 +217,8 @@ const ClusterDetailWidgetProvider: React.FC<
               {(value) => <Text>{value}</Text>}
             </OptionalValue>
           </GroupLabel>
-          <OptionalValue
-            value={azureTenantID}
-            loaderWidth={250}
-            replaceEmptyValue={false}
-          >
-            {(value) =>
-              value === '' ? <NotAvailable /> : <code>{value}</code>
-            }
+          <OptionalValue value={azureTenantID} loaderWidth={250}>
+            {(value) => <code>{value}</code>}
           </OptionalValue>
         </Box>
       )}
