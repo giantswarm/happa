@@ -5,11 +5,21 @@ import * as metav1 from '../metav1';
 export const ApiVersion = 'infrastructure.cluster.x-k8s.io/v1beta1';
 export type Tags = Record<string, string>;
 
+export interface IPeerings {
+  /**
+   * RemoteVnetName defines name of the remote virtual network.
+   */
+  remoteVnetName: string;
+  /**
+   * ResourceGroup is the resource group name of the remote virtual network.
+   */
+  resourceGroup?: string;
+}
 export interface IVnetSpec {
   /**
    * CIDRBlocks defines the virtual network's address space, specified as one or more address prefixes in CIDR notation.
    */
-  cidrBlocks?: Array<string>;
+  cidrBlocks?: string[];
   /**
    * ID is the Azure resource ID of the virtual network. READ-ONLY
    */
@@ -21,16 +31,7 @@ export interface IVnetSpec {
   /**
    * Peerings defines a list of peerings of the newly created virtual network with existing virtual networks.
    */
-  peerings?: Array<{
-    /**
-     * RemoteVnetName defines name of the remote virtual network.
-     */
-    remoteVnetName: string;
-    /**
-     * ResourceGroup is the resource group name of the remote virtual network.
-     */
-    resourceGroup?: string;
-  }>;
+  peerings?: IPeerings[];
   /**
    * ResourceGroup is the name of the resource group of the existing virtual network or the resource group where a managed virtual network should be created.
    */
@@ -38,9 +39,7 @@ export interface IVnetSpec {
   /**
    * Tags is a collection of tags describing the resource.
    */
-  tags?: {
-    [key: string]: string;
-  };
+  tags?: Record<string, string>;
 }
 
 export interface ISecurityRule {
@@ -195,17 +194,7 @@ export interface INetworkSpec {
    * ControlPlaneOutboundLB is the configuration for the control-plane outbound load balancer. This is different from APIServerLB, and is used only in private clusters (optionally) for enabling outbound traffic.
    */
   controlPlaneOutboundLB?: {
-    frontendIPs?: Array<{
-      name: string;
-      privateIP?: string;
-      /**
-       * PublicIPSpec defines the inputs to create an Azure public IP address.
-       */
-      publicIP?: {
-        dnsName?: string;
-        name: string;
-      };
-    }>;
+    frontendIPs?: IFrontendIP[];
     /**
      * FrontendIPsCount specifies the number of frontend IP addresses for the load balancer.
      */
@@ -232,17 +221,7 @@ export interface INetworkSpec {
    * NodeOutboundLB is the configuration for the node outbound load balancer.
    */
   nodeOutboundLB?: {
-    frontendIPs?: Array<{
-      name: string;
-      privateIP?: string;
-      /**
-       * PublicIPSpec defines the inputs to create an Azure public IP address.
-       */
-      publicIP?: {
-        dnsName?: string;
-        name: string;
-      };
-    }>;
+    frontendIPs?: IFrontendIP[];
     /**
      * FrontendIPsCount specifies the number of frontend IP addresses for the load balancer.
      */
@@ -296,6 +275,38 @@ export interface IBastionSpec {
   };
 }
 
+export interface IRateLimits {
+  /**
+   * RateLimitConfig indicates the rate limit config options.
+   */
+  config?: {
+    cloudProviderRateLimit?: boolean;
+    cloudProviderRateLimitBucket?: number;
+    cloudProviderRateLimitBucketWrite?: number;
+    cloudProviderRateLimitQPS?: number;
+    cloudProviderRateLimitQPSWrite?: number;
+  };
+  /**
+   * Name is the name of the rate limit spec.
+   */
+  name:
+    | 'defaultRateLimit'
+    | 'routeRateLimit'
+    | 'subnetsRateLimit'
+    | 'interfaceRateLimit'
+    | 'routeTableRateLimit'
+    | 'loadBalancerRateLimit'
+    | 'publicIPAddressRateLimit'
+    | 'securityGroupRateLimit'
+    | 'virtualMachineRateLimit'
+    | 'storageAccountRateLimit'
+    | 'diskRateLimit'
+    | 'snapshotRateLimit'
+    | 'virtualMachineScaleSetRateLimit'
+    | 'virtualMachineSizesRateLimit'
+    | 'availabilitySetRateLimit';
+}
+
 /**
  * IAzureClusterSpec defines the desired state of AzureCluster.
  */
@@ -326,37 +337,7 @@ export interface IAzureClusterSpec {
       cloudProviderBackoffJitter?: number;
       cloudProviderBackoffRetries?: number;
     };
-    rateLimits?: Array<{
-      /**
-       * RateLimitConfig indicates the rate limit config options.
-       */
-      config?: {
-        cloudProviderRateLimit?: boolean;
-        cloudProviderRateLimitBucket?: number;
-        cloudProviderRateLimitBucketWrite?: number;
-        cloudProviderRateLimitQPS?: number;
-        cloudProviderRateLimitQPSWrite?: number;
-      };
-      /**
-       * Name is the name of the rate limit spec.
-       */
-      name:
-        | 'defaultRateLimit'
-        | 'routeRateLimit'
-        | 'subnetsRateLimit'
-        | 'interfaceRateLimit'
-        | 'routeTableRateLimit'
-        | 'loadBalancerRateLimit'
-        | 'publicIPAddressRateLimit'
-        | 'securityGroupRateLimit'
-        | 'virtualMachineRateLimit'
-        | 'storageAccountRateLimit'
-        | 'diskRateLimit'
-        | 'snapshotRateLimit'
-        | 'virtualMachineScaleSetRateLimit'
-        | 'virtualMachineSizesRateLimit'
-        | 'availabilitySetRateLimit';
-    }>;
+    rateLimits?: IRateLimits[];
   };
   /**
    * ControlPlaneEndpoint represents the endpoint used to communicate with the control plane.
@@ -728,4 +709,242 @@ export const AzureMachineList = 'AzureMachineList';
 export interface IAzureMachineList extends metav1.IList<IAzureMachine> {
   apiVersion: typeof ApiVersion;
   kind: typeof AzureMachineList;
+}
+
+export interface IFuture {
+  /**
+   * Data is the base64 url encoded json Azure AutoRest Future.
+   */
+  data: string;
+  /**
+   * Name is the name of the Azure resource. Together with the service name, this forms the unique identifier for the future.
+   */
+  name: string;
+  /**
+   * ResourceGroup is the Azure resource group for the resource.
+   */
+  resourceGroup?: string;
+  /**
+   * ServiceName is the name of the Azure service. Together with the name of the resource, this forms the unique identifier for the future.
+   */
+  serviceName: string;
+  /**
+   * Type describes the type of future, such as update, create, delete, etc.
+   */
+  type: string;
+}
+
+export interface IAzureMachinePoolMachineTemplate {
+  /**
+   * AcceleratedNetworking enables or disables Azure accelerated networking. If omitted, it will be set based on whether the requested VMSize supports accelerated networking. If AcceleratedNetworking is set to true with a VMSize that does not support it, Azure will return an error.
+   */
+  acceleratedNetworking?: boolean;
+  /**
+   * DataDisks specifies the list of data disks to be created for a Virtual Machine
+   */
+  dataDisks?: IDataDisk[];
+  /**
+   * Image is used to provide details of an image to use during VM creation. If image details are omitted the image will default the Azure Marketplace "capi" offer, which is based on Ubuntu.
+   */
+  image?: IImage;
+  /**
+   * OSDisk contains the operating system disk information for a Virtual Machine
+   */
+  osDisk: IOSDisk;
+  /**
+   * SecurityProfile specifies the Security profile settings for a virtual machine.
+   */
+  securityProfile?: ISecurityProfile;
+  /**
+   * SpotVMOptions allows the ability to specify the Machine should use a Spot VM
+   */
+  spotVMOptions?: ISpotVMOptions;
+  /**
+   * SSHPublicKey is the SSH public key string base64 encoded to add to a Virtual Machine
+   */
+  sshPublicKey?: string;
+  /**
+   * SubnetName selects the Subnet where the VMSS will be placed
+   */
+  subnetName?: string;
+  /**
+   * TerminateNotificationTimeout enables or disables VMSS scheduled events termination notification with specified timeout allowed values are between 5 and 15 (mins)
+   */
+  terminateNotificationTimeout?: number;
+  /**
+   * VMSize is the size of the Virtual Machine to build. See https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/createorupdate#virtualmachinesizetypes
+   */
+  vmSize: string;
+}
+
+export interface IAzureMachinePoolDeploymentStrategyRollingUpdate {
+  /**
+   * DeletePolicy defines the policy used by the MachineDeployment to identify nodes to delete when downscaling. Valid values are "Random, "Newest", "Oldest" When no value is supplied, the default is Oldest
+   */
+  deletePolicy?: 'Random' | 'Newest' | 'Oldest';
+  /**
+   * The maximum number of machines that can be scheduled above the desired number of machines. Value can be an absolute number (ex: 5) or a percentage of desired machines (ex: 10%). This can not be 0 if MaxUnavailable is 0. Absolute number is calculated from percentage by rounding up. Defaults to 1. Example: when this is set to 30%, the new MachineSet can be scaled up immediately when the rolling update starts, such that the total number of old and new machines do not exceed 130% of desired machines. Once old machines have been killed, new MachineSet can be scaled up further, ensuring that total number of machines running at any time during the update is at most 130% of desired machines.
+   */
+  maxSurge?: number | string;
+  /**
+   * The maximum number of machines that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of desired machines (ex: 10%). Absolute number is calculated from percentage by rounding down. This can not be 0 if MaxSurge is 0. Defaults to 0. Example: when this is set to 30%, the old MachineSet can be scaled down to 70% of desired machines immediately when the rolling update starts. Once new machines are ready, old MachineSet can be scaled down further, followed by scaling up the new MachineSet, ensuring that the total number of machines available at all times during the update is at least 70% of desired machines.
+   */
+  maxUnavailable?: number | string;
+}
+
+export interface IAzureMachinePoolDeploymentStrategy {
+  /**
+   * Rolling update config params. Present only if MachineDeploymentStrategyType = RollingUpdate.
+   */
+  rollingUpdate?: IAzureMachinePoolDeploymentStrategyRollingUpdate;
+  /**
+   * Type of deployment. Currently the only supported strategy is RollingUpdate
+   */
+  type?: 'RollingUpdate';
+}
+
+/**
+ * IAzureMachinePoolSpec defines the desired state of AzureMachinePool.
+ */
+export interface IAzureMachinePoolSpec {
+  /**
+   * AdditionalTags is an optional set of tags to add to an instance, in addition to the ones added by default by the Azure provider. If both the AzureCluster and the AzureMachine specify the same tag name with different values, the AzureMachine's value takes precedence.
+   */
+  additionalTags?: Tags;
+  /**
+   * Identity is the type of identity used for the Virtual Machine Scale Set. The type 'SystemAssigned' is an implicitly created identity. The generated identity will be assigned a Subscription contributor role. The type 'UserAssigned' is a standalone Azure resource provided by the user and assigned to the VM
+   */
+  identity?: 'None' | 'SystemAssigned' | 'UserAssigned';
+  /**
+   * Location is the Azure region location e.g. westus2
+   */
+  location: string;
+  /**
+   * NodeDrainTimeout is the total amount of time that the controller will spend on draining a node. The default value is 0, meaning that the node can be drained without any time limitations. NOTE: NodeDrainTimeout is different from `kubectl drain --timeout`
+   */
+  nodeDrainTimeout?: string;
+  /**
+   * ProviderID is the identification ID of the Virtual Machine Scale Set
+   */
+  providerID?: string;
+  /**
+   * ProviderIDList are the identification IDs of machine instances provided by the provider. This field must match the provider IDs as seen on the node objects corresponding to a machine pool's machine instances.
+   */
+  providerIDList?: string[];
+  /**
+   * RoleAssignmentName is the name of the role assignment to create for a system assigned identity. It can be any valid GUID. If not specified, a random GUID will be generated.
+   */
+  roleAssignmentName?: string;
+  /**
+   * The deployment strategy to use to replace existing AzureMachinePoolMachines with new ones.
+   */
+  strategy?: IAzureMachinePoolDeploymentStrategy;
+  /**
+   * Template contains the details used to build a replica virtual machine within the Machine Pool
+   */
+  template: IAzureMachinePoolMachineTemplate;
+  /**
+   * UserAssignedIdentities is a list of standalone Azure identities provided by the user The lifecycle of a user-assigned identity is managed separately from the lifecycle of the AzureMachinePool. See https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
+   */
+  userAssignedIdentities?: IUserAssignedIdentity[];
+}
+
+export interface IAzureMachinePoolInstanceStatus {
+  /**
+   * InstanceID is the identification of the Machine Instance within the VMSS
+   */
+  instanceID?: string;
+  /**
+   * InstanceName is the name of the Machine Instance within the VMSS
+   */
+  instanceName?: string;
+  /**
+   * LatestModelApplied indicates the instance is running the most up-to-date VMSS model. A VMSS model describes the image version the VM is running. If the instance is not running the latest model, it means the instance may not be running the version of Kubernetes the Machine Pool has specified and needs to be updated.
+   */
+  latestModelApplied: boolean;
+  /**
+   * ProviderID is the provider identification of the VMSS Instance
+   */
+  providerID?: string;
+  /**
+   * ProvisioningState is the provisioning state of the Azure virtual machine instance.
+   */
+  provisioningState?: string;
+  /**
+   * Version defines the Kubernetes version for the VM Instance
+   */
+  version?: string;
+}
+
+/**
+ * IAzureMachinePoolStatus defines the observed state of AzureMachinePool.
+ */
+export interface IAzureMachinePoolStatus {
+  /**
+   * Conditions defines current service state of the AzureMachinePool.
+   */
+  conditions?: capiv1beta1.ICondition[];
+  /**
+   * FailureMessage will be set in the event that there is a terminal problem reconciling the MachinePool and will contain a more verbose string suitable for logging and human consumption.
+   *  This field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the MachinePool's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.
+   *  Any transient errors that occur during the reconciliation of MachinePools can be added as events to the MachinePool object and/or logged in the controller's output.
+   */
+  failureMessage?: string;
+  /**
+   * FailureReason will be set in the event that there is a terminal problem reconciling the MachinePool and will contain a succinct value suitable for machine interpretation.
+   *  This field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the MachinePool's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.
+   *  Any transient errors that occur during the reconciliation of MachinePools can be added as events to the MachinePool object and/or logged in the controller's output.
+   */
+  failureReason?: string;
+  /**
+   * Image is the current image used in the AzureMachinePool. When the spec image is nil, this image is populated with the details of the defaulted Azure Marketplace "capi" offer.
+   */
+  image?: IImage;
+  /**
+   * Instances is the VM instance status for each VM in the VMSS
+   */
+  instances?: IAzureMachinePoolInstanceStatus[];
+  /**
+   * LongRunningOperationStates saves the state for Azure long-running operations so they can be continued on the next reconciliation loop.
+   */
+  longRunningOperationState?: IFuture;
+  /**
+   * ProvisioningState is the provisioning state of the Azure virtual machine.
+   */
+  provisioningState?: string;
+  /**
+   * Ready is true when the provider resource is ready.
+   */
+  ready?: boolean;
+  /**
+   * Replicas is the most recently observed number of replicas.
+   */
+  replicas?: number;
+  /**
+   * Version is the Kubernetes version for the current VMSS model
+   */
+  version?: string;
+}
+
+export const AzureMachinePool = 'AzureMachinePool';
+
+export interface IAzureMachinePool {
+  /**
+   * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+   */
+  apiVersion: typeof ApiVersion;
+  /**
+   * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+   */
+  kind: typeof AzureMachinePool;
+  metadata: metav1.IObjectMeta;
+  spec?: IAzureMachinePoolSpec;
+  status?: IAzureMachinePoolStatus;
+}
+
+export const AzureMachinePoolList = 'AzureMachinePoolList';
+
+export interface IAzureMachinePoolList extends metav1.IList<IAzureMachinePool> {
+  apiVersion: typeof ApiVersion;
+  kind: typeof AzureMachinePoolList;
 }
