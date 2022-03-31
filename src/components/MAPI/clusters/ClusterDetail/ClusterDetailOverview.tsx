@@ -12,7 +12,7 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -24,6 +24,7 @@ import ClusterDetailWidgetWorkerNodes from '../../workernodes/ClusterDetailWidge
 import InspectClusterGuide from '../guides/InspectClusterGuide';
 import InspectClusterReleaseGuide from '../guides/InspectClusterReleaseGuide';
 import SetClusterLabelsGuide from '../guides/SetClusterLabelsGuide';
+import UpgradeClusterGuide from '../guides/UpgradeClusterGuide';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
@@ -91,6 +92,8 @@ const ClusterDetailOverview: React.FC<{}> = () => {
     ? capiv1alpha3.getReleaseVersion(cluster)
     : undefined;
 
+  const [targetReleaseVersion, setTargetReleaseVersion] = useState('');
+
   return (
     <StyledBox wrap={true} direction='row'>
       <ClusterDetailWidgetWorkerNodes
@@ -107,6 +110,7 @@ const ClusterDetailOverview: React.FC<{}> = () => {
         cluster={cluster}
         providerCluster={providerCluster}
         canUpdateCluster={canUpdateCluster}
+        onTargetReleaseVersionChange={setTargetReleaseVersion}
         basis='100%'
       />
       <ClusterDetailWidgetLabels
@@ -140,6 +144,13 @@ const ClusterDetailOverview: React.FC<{}> = () => {
             clusterName={cluster.metadata.name}
             clusterNamespace={cluster.metadata.namespace!}
           />
+          {targetReleaseVersion && (
+            <UpgradeClusterGuide
+              clusterName={cluster.metadata.name}
+              clusterNamespace={cluster.metadata.namespace!}
+              targetReleaseVersion={targetReleaseVersion}
+            />
+          )}
 
           {releaseVersion && (
             <InspectClusterReleaseGuide
