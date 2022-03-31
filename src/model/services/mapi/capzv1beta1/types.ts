@@ -371,8 +371,8 @@ export interface IAzureClusterSpec {
    * NetworkSpec encapsulates all things related to Azure network.
    */
   networkSpec?: INetworkSpec;
-  // resourceGroup?: string;
-  // subscriptionID?: string;
+  resourceGroup?: string;
+  subscriptionID?: string;
 }
 
 export interface ILongRunningOperationStates {
