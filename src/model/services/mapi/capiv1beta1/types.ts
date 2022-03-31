@@ -351,3 +351,163 @@ export interface IMachineDeploymentList
   apiVersion: typeof ApiVersion;
   kind: typeof MachineDeploymentList;
 }
+
+export interface IMachineSpecBootstrap {
+  /**
+   * ConfigRef is a reference to a bootstrap provider-specific resource that holds configuration details. The reference is optional to allow users/operators to specify Bootstrap.DataSecretName without the need of a controller.
+   */
+  configRef?: corev1.IObjectReference;
+  /**
+   * DataSecretName is the name of the secret that stores the bootstrap data script. If nil, the Machine should remain in the Pending state.
+   */
+  dataSecretName?: string;
+}
+
+export interface IMachineSpec {
+  /**
+   * Bootstrap is a reference to a local struct which encapsulates fields to configure the Machine’s bootstrapping mechanism.
+   */
+  bootstrap: IMachineSpecBootstrap;
+  /**
+   * ClusterName is the name of the Cluster this object belongs to.
+   */
+  clusterName: string;
+  /**
+   * FailureDomain is the failure domain the machine will be created in. Must match a key in the FailureDomains map stored on the cluster object.
+   */
+  failureDomain?: string;
+  /**
+   * InfrastructureRef is a required reference to a custom resource offered by an infrastructure provider.
+   */
+  infrastructureRef: corev1.IObjectReference;
+  /**
+   * NodeDrainTimeout is the total amount of time that the controller will spend on draining a node. The default value is 0, meaning that the node can be drained without any time limitations. NOTE: NodeDrainTimeout is different from `kubectl drain --timeout`
+   */
+  nodeDrainTimeout?: string;
+  /**
+   * ProviderID is the identification ID of the machine provided by the provider. This field must match the provider ID as seen on the node object corresponding to this machine. This field is required by higher level consumers of cluster-api. Example use case is cluster autoscaler with cluster-api as provider. Clean-up logic in the autoscaler compares machines to nodes to find out machines at provider which could not get registered as Kubernetes nodes. With cluster-api as a generic out-of-tree provider for autoscaler, this field is required by autoscaler to be able to have a provider view of the list of machines. Another list of nodes is queried from the k8s apiserver and then a comparison is done to find out unregistered machines and are marked for delete. This field will be set by the actuators and consumed by higher level entities like autoscaler that will be interfacing with cluster-api as generic provider.
+   */
+  providerID?: string;
+  /**
+   * Version defines the desired Kubernetes version. This field is meant to be optionally used by bootstrap providers.
+   */
+  version?: string;
+}
+
+export interface IMachineTemplateSpec {
+  metadata?: metav1.IObjectMeta;
+  /**
+   * Specification of the desired behavior of the machine. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+   */
+  spec?: IMachineSpec;
+}
+
+/**
+ * IMachinePoolSpec defines the desired state of MachinePool.
+ */
+export interface IMachinePoolSpec {
+  /**
+   * ClusterName is the name of the Cluster this object belongs to.
+   */
+  clusterName: string;
+  /**
+   * FailureDomains is the list of failure domains this MachinePool should be attached to.
+   */
+  failureDomains?: string[];
+  /**
+   * Minimum number of seconds for which a newly created machine instances should be ready. Defaults to 0 (machine instance will be considered available as soon as it is ready)
+   */
+  minReadySeconds?: number;
+  /**
+   * ProviderIDList are the identification IDs of machine instances provided by the provider. This field must match the provider IDs as seen on the node objects corresponding to a machine pool's machine instances.
+   */
+  providerIDList?: string[];
+  /**
+   * Number of desired machines. Defaults to 1. This is a pointer to distinguish between explicit zero and not specified.
+   */
+  replicas?: number;
+  /**
+   * Template describes the machines that will be created.
+   */
+  template: IMachineTemplateSpec;
+}
+
+/**
+ * IMachinePoolStatus defines the observed state of MachinePool.
+ */
+export interface IMachinePoolStatus {
+  /**
+   * The number of available replicas (ready for at least minReadySeconds) for this MachinePool.
+   */
+  availableReplicas?: number;
+  /**
+   * BootstrapReady is the state of the bootstrap provider.
+   */
+  bootstrapReady?: boolean;
+  /**
+   * Conditions define the current service state of the MachinePool.
+   */
+  conditions?: ICondition[];
+  /**
+   * FailureMessage indicates that there is a problem reconciling the state, and will be set to a descriptive error message.
+   */
+  failureMessage?: string;
+  /**
+   * FailureReason indicates that there is a problem reconciling the state, and will be set to a token value suitable for programmatic interpretation.
+   */
+  failureReason?: string;
+  /**
+   * InfrastructureReady is the state of the infrastructure provider.
+   */
+  infrastructureReady?: boolean;
+  /**
+   * NodeRefs will point to the corresponding Nodes if it they exist.
+   */
+  nodeRefs?: corev1.IObjectReference[];
+  /**
+   * ObservedGeneration is the latest generation observed by the controller.
+   */
+  observedGeneration?: number;
+  /**
+   * Phase represents the current phase of cluster actuation. E.g. Pending, Running, Terminating, Failed etc.
+   */
+  phase?: string;
+  /**
+   * The number of ready replicas for this MachinePool. A machine is considered ready when the node has been created and is "Ready".
+   */
+  readyReplicas?: number;
+  /**
+   * Replicas is the most recently observed number of replicas.
+   */
+  replicas?: number;
+  /**
+   * Total number of unavailable machine instances targeted by this machine pool. This is the total number of machine instances that are still required for the machine pool to have 100% available capacity. They may either be machine instances that are running but not yet available or machine instances that still have not been created.
+   */
+  unavailableReplicas?: number;
+}
+
+export const MachinePool = 'MachinePool';
+
+/**
+ * MachinePool is the Schema for the machinepools API.
+ */
+export interface IMachinePool {
+  /**
+   * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+   */
+  apiVersion: typeof ApiVersion;
+  /**
+   * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+   */
+  kind: typeof MachinePool;
+  metadata: metav1.IObjectMeta;
+  spec?: IMachinePoolSpec;
+  status?: IMachinePoolStatus;
+}
+
+export const MachinePoolList = 'MachinePoolList';
+
+export interface IMachinePoolList extends metav1.IList<IMachinePool> {
+  apiVersion: typeof ApiVersion;
+  kind: typeof MachinePoolList;
+}

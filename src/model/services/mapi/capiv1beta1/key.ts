@@ -1,19 +1,22 @@
 import { Constants } from 'model/constants';
 import * as corev1 from 'model/services/mapi/corev1';
 
-import { ICluster, ICondition } from './';
+import { ICluster, ICondition, IMachinePool } from './';
 
 export const labelOrganization = 'giantswarm.io/organization';
 export const labelCluster = 'giantswarm.io/cluster';
 export const labelClusterName = 'cluster.x-k8s.io/cluster-name';
 export const labelReleaseVersion = 'release.giantswarm.io/version';
 export const labelMachineControlPlane = 'cluster.x-k8s.io/control-plane';
+export const labelMachinePool = 'giantswarm.io/machine-pool';
 
 export const annotationClusterDescription = 'cluster.giantswarm.io/description';
 export const annotationUpdateScheduleTargetRelease =
   'alpha.giantswarm.io/update-schedule-target-release';
 export const annotationUpdateScheduleTargetTime =
   'alpha.giantswarm.io/update-schedule-target-time';
+export const annotationMachinePoolDescription =
+  'machine-pool.giantswarm.io/name';
 
 export const conditionTypeReady = 'Ready';
 export const conditionTypeCreating = 'Creating';
@@ -53,6 +56,14 @@ export function getClusterLabels(cluster: ICluster): Record<string, string> {
   if (!cluster.metadata.labels) return {};
 
   return cluster.metadata.labels;
+}
+
+export function getMachinePoolDescription(machinePool: IMachinePool): string {
+  let name =
+    machinePool.metadata.annotations?.[annotationMachinePoolDescription];
+  name ||= Constants.DEFAULT_NODEPOOL_DESCRIPTION;
+
+  return name;
 }
 
 interface IConditionGetter {
