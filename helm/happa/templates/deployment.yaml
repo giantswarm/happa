@@ -27,7 +27,7 @@ spec:
             podAffinityTerm:
               labelSelector:
                 matchExpressions:
-                  - key: k8s-app
+                  - key: app
                     operator: In
                     values:
                     - happa

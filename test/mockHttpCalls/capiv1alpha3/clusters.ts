@@ -1,5 +1,51 @@
 import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 
+export const randomAWSCluster1: capiv1alpha3.ICluster = {
+  apiVersion: 'cluster.x-k8s.io/v1alpha3',
+  kind: capiv1alpha3.Cluster,
+  metadata: {
+    annotations: {
+      'cluster.giantswarm.io/description': 'Random Cluster',
+    },
+    creationTimestamp: '2022-03-29T06:38:39Z',
+    finalizers: [
+      'encryption-provider-operator.finalizers.giantswarm.io',
+      'operatorkit.giantswarm.io/cluster-operator-cluster-controller',
+      'operatorkit.giantswarm.io/prometheus-meta-operator-cluster-api-controller',
+    ],
+    generation: 1,
+    labels: {
+      'cluster-operator.giantswarm.io/version': '3.13.0',
+      'cluster.x-k8s.io/cluster-name': 'c7hm5',
+      'giantswarm.io/cluster': 'c7hm5',
+      'giantswarm.io/organization': 'org1',
+      'release.giantswarm.io/version': '17.0.3',
+    },
+    name: 'c7hm5',
+    namespace: 'org-org1',
+    resourceVersion: '540373278',
+    selfLink:
+      '/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/c7hm5',
+    uid: '7a2858d1-fbff-4337-b89f-e8b9dc41b113',
+  },
+  spec: {
+    controlPlaneEndpoint: {
+      host: '',
+      port: 0,
+    },
+    infrastructureRef: {
+      apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+      kind: 'AWSCluster',
+      name: 'c7hm5',
+      namespace: 'org-org1',
+    },
+  },
+  status: {
+    controlPlaneInitialized: false,
+    infrastructureReady: false,
+  },
+};
+
 export const randomCluster1: capiv1alpha3.ICluster = {
   apiVersion: 'cluster.x-k8s.io/v1alpha3',
   kind: capiv1alpha3.Cluster,
