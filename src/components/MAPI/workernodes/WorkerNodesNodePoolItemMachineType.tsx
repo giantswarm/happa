@@ -5,6 +5,9 @@ import {
   INodePoolMachineTypesAWS,
   INodePoolMachineTypesAzure,
 } from 'MAPI/utils';
+import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import React from 'react';
 import styled from 'styled-components';
 import { Code } from 'styles';
@@ -20,13 +23,12 @@ const MixedInstanceType = styled(Code)`
 function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
   const machineTypes = getProviderNodePoolMachineTypes(providerNodePool);
 
-  switch (providerNodePool?.apiVersion) {
-    case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
-    case 'infrastructure.cluster.x-k8s.io/v1alpha4':
+  switch (providerNodePool?.kind) {
+    case capzexpv1alpha3.AzureMachinePool:
+    case capzv1alpha4.AzureMachinePool:
       return `VM size: ${machineTypes?.primary ?? 'n/a'}`;
 
-    case 'infrastructure.giantswarm.io/v1alpha2':
-    case 'infrastructure.giantswarm.io/v1alpha3':
+    case infrav1alpha3.AWSMachineDeployment:
       return `Instance type: ${machineTypes?.primary ?? 'n/a'}`;
 
     default:

@@ -32,10 +32,8 @@ export function withClusterReleaseVersion(
   orgNamespace: string
 ): ClusterPatch {
   return (cluster, providerCluster, controlPlaneNodes) => {
-    const apiVersion = providerCluster?.apiVersion;
     const hasNonNamespacedResources =
-      (apiVersion === 'infrastructure.giantswarm.io/v1alpha2' ||
-        apiVersion === 'infrastructure.giantswarm.io/v1alpha3') &&
+      providerCluster?.kind === infrav1alpha3.AWSCluster &&
       compare(newVersion, Constants.AWS_NAMESPACED_CLUSTERS_VERSION) < 0;
     const defaultNamespace = 'default';
 
@@ -82,13 +80,11 @@ export function withClusterDescription(newDescription: string): ClusterPatch {
     cluster.metadata.annotations[capiv1alpha3.annotationClusterDescription] =
       newDescription;
 
-    const apiVersion = providerCluster?.apiVersion;
     if (
-      (apiVersion === 'infrastructure.giantswarm.io/v1alpha2' ||
-        apiVersion === 'infrastructure.giantswarm.io/v1alpha3') &&
-      providerCluster!.spec
+      providerCluster?.kind === infrav1alpha3.AWSCluster &&
+      providerCluster.spec
     ) {
-      providerCluster!.spec.cluster.description = newDescription;
+      providerCluster.spec.cluster.description = newDescription;
     }
   };
 }
