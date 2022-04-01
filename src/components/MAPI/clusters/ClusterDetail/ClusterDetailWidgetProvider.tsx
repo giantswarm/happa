@@ -8,8 +8,8 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { selectOrganizations } from 'model/stores/organization/selectors';
@@ -27,11 +27,11 @@ import { useHttpClient } from 'utils/hooks/useHttpClient';
 import { usePermissionsForOrgCredentials } from '../permissions/usePermissionsForOrgCredentials';
 import { getCredentialsAccountID, getCredentialsAzureTenantID } from './utils';
 
-export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
+export function getClusterRegionLabel(cluster?: capiv1beta1.ICluster) {
   if (!cluster) return undefined;
 
   switch (cluster.spec?.infrastructureRef?.kind) {
-    case capzv1alpha3.AzureCluster:
+    case capzv1beta1.AzureCluster:
       return 'Azure region';
 
     case infrav1alpha3.AWSCluster:
@@ -42,11 +42,11 @@ export function getClusterRegionLabel(cluster?: capiv1alpha3.ICluster) {
   }
 }
 
-export function getClusterAccountIDLabel(cluster?: capiv1alpha3.ICluster) {
+export function getClusterAccountIDLabel(cluster?: capiv1beta1.ICluster) {
   if (!cluster) return undefined;
 
   switch (cluster.spec?.infrastructureRef?.kind) {
-    case capzv1alpha3.AzureCluster:
+    case capzv1beta1.AzureCluster:
       return 'Subscription ID';
 
     case infrav1alpha3.AWSCluster:
@@ -58,7 +58,7 @@ export function getClusterAccountIDLabel(cluster?: capiv1alpha3.ICluster) {
 }
 
 export function getClusterAccountIDPath(
-  cluster?: capiv1alpha3.ICluster,
+  cluster?: capiv1beta1.ICluster,
   accountID?: string
 ) {
   if (!cluster || !accountID) return undefined;
@@ -94,7 +94,7 @@ interface IClusterDetailWidgetProviderProps
     React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
     'title'
   > {
-  cluster?: capiv1alpha3.ICluster;
+  cluster?: capiv1beta1.ICluster;
   providerCluster?: ProviderCluster;
 }
 

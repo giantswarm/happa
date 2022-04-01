@@ -1,4 +1,4 @@
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
@@ -15,7 +15,7 @@ interface IClusterDetailWidgetCreatedProps
     React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
     'title'
   > {
-  cluster?: capiv1alpha3.ICluster;
+  cluster?: capiv1beta1.ICluster;
 }
 
 const ClusterDetailWidgetCreated: React.FC<

@@ -10,7 +10,7 @@ import {
   fetchProviderClusterForClusterKey,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useRef } from 'react';
 import { useRouteMatch } from 'react-router';
@@ -88,7 +88,7 @@ const ClusterDetailOverview: React.FC<{}> = () => {
   }, [providerClusterError]);
 
   const releaseVersion = cluster
-    ? capiv1alpha3.getReleaseVersion(cluster)
+    ? capiv1beta1.getReleaseVersion(cluster)
     : undefined;
 
   return (

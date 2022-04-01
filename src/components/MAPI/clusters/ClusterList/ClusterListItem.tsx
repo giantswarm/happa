@@ -19,7 +19,7 @@ import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePerm
 import { mapNodePoolsToProviderNodePools } from 'MAPI/workernodes/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import {
   getIsImpersonatingNonAdmin,
@@ -74,7 +74,7 @@ const StyledLink = styled(Link)`
 
 interface IClusterListItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
-  cluster?: capiv1alpha3.ICluster;
+  cluster?: capiv1beta1.ICluster;
   providerCluster?: ProviderCluster | null;
   releases?: releasev1alpha1.IRelease[];
   organizations?: Record<string, IOrganization>;
@@ -101,13 +101,13 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
   }, [cluster, providerCluster]);
 
   const releaseVersion = cluster
-    ? capiv1alpha3.getReleaseVersion(cluster)
+    ? capiv1beta1.getReleaseVersion(cluster)
     : undefined;
 
   const organization = useMemo(() => {
     if (!organizations || !cluster) return undefined;
 
-    const org = capiv1alpha3.getClusterOrganization(cluster);
+    const org = capiv1beta1.getClusterOrganization(cluster);
     if (!org) return undefined;
 
     return Object.values(organizations).find(

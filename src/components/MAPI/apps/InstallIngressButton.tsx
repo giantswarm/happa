@@ -5,7 +5,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Constants } from 'model/constants';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -49,7 +49,7 @@ const StyledLink = styled(Link)`
 interface IInstallIngressButtonProps
   extends React.ComponentPropsWithoutRef<'div'> {
   clusterID: string;
-  mutateCluster?: KeyedMutator<capiv1alpha3.ICluster>;
+  mutateCluster?: KeyedMutator<capiv1beta1.ICluster>;
 }
 
 // eslint-disable-next-line complexity
