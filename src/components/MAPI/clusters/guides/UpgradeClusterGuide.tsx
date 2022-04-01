@@ -57,13 +57,10 @@ const UpgradeClusterGuide: React.FC<IUpgradeClusterGuideProps> = ({
         <CLIGuideStep
           title='2. Update the release label'
           command={`
-          kubectl \\
-            --context ${context} \\
+          kubectl --context ${context} \\
+            label clusters.cluster.x-k8s.io ${clusterName} \\
             --namespace ${clusterNamespace} \\
-            label clusters.cluster.x-k8s.io \\
-            ${clusterName} \\
-            --overwrite \\
-            release.giantswarm.io/version=${targetReleaseVersion}
+            --overwrite release.giantswarm.io/version=${targetReleaseVersion}
           `}
         />
       </CLIGuideStepList>
