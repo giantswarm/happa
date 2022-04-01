@@ -1,5 +1,7 @@
 import { NodePool, ProviderNodePool } from 'MAPI/types';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
+import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 
 export type NodePoolPatch = (
   nodePool: NodePool,
@@ -27,11 +29,7 @@ export function withNodePoolDescription(newDescription: string): NodePoolPatch {
       nodePool.metadata.annotations[
         capiexpv1alpha3.annotationMachinePoolDescription
       ] = newDescription;
-    } else if (
-      providerNodePool?.apiVersion ===
-        'infrastructure.giantswarm.io/v1alpha2' ||
-      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
-    ) {
+    } else if (providerNodePool?.kind === infrav1alpha3.AWSMachineDeployment) {
       providerNodePool.spec.nodePool.description = newDescription;
     }
   };
@@ -54,12 +52,11 @@ export function withNodePoolMachineType(
   config: NodePoolMachineTypesConfig
 ): NodePoolPatch {
   return (_, providerNodePool) => {
-    switch (providerNodePool?.apiVersion) {
-      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+    switch (providerNodePool?.kind) {
+      case capzexpv1alpha3.AzureMachinePool:
         providerNodePool.spec!.template.vmSize = config.primary;
         break;
-      case 'infrastructure.giantswarm.io/v1alpha2':
-      case 'infrastructure.giantswarm.io/v1alpha3':
+      case infrav1alpha3.AWSMachineDeployment:
         providerNodePool.spec.provider.worker.instanceType = config.primary;
         providerNodePool.spec.provider.worker.useAlikeInstanceTypes = (
           config as INodePoolMachineTypesConfigAWS
@@ -73,11 +70,7 @@ export function withNodePoolAvailabilityZones(zones?: string[]): NodePoolPatch {
   return (nodePool, providerNodePool) => {
     if (nodePool.kind === capiexpv1alpha3.MachinePool) {
       nodePool.spec!.failureDomains = zones;
-    } else if (
-      providerNodePool?.apiVersion ===
-        'infrastructure.giantswarm.io/v1alpha2' ||
-      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
-    ) {
+    } else if (providerNodePool?.kind === infrav1alpha3.AWSMachineDeployment) {
       providerNodePool.spec.provider.availabilityZones = zones ?? [];
     }
   };
@@ -95,11 +88,7 @@ export function withNodePoolScaling(min: number, max: number): NodePoolPatch {
       nodePool.metadata.annotations[
         capiexpv1alpha3.annotationMachinePoolMaxSize
       ] = max.toString();
-    } else if (
-      providerNodePool?.apiVersion ===
-        'infrastructure.giantswarm.io/v1alpha2' ||
-      providerNodePool?.apiVersion === 'infrastructure.giantswarm.io/v1alpha3'
-    ) {
+    } else if (providerNodePool?.kind === infrav1alpha3.AWSMachineDeployment) {
       providerNodePool.spec.nodePool.scaling.min = min;
       providerNodePool.spec.nodePool.scaling.max = max;
     }
@@ -125,8 +114,8 @@ export function withNodePoolSpotInstances(
   config: NodePoolSpotInstancesConfig
 ): NodePoolPatch {
   return (_, providerNodePool: ProviderNodePool) => {
-    switch (providerNodePool?.apiVersion) {
-      case 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
+    switch (providerNodePool?.kind) {
+      case capzexpv1alpha3.AzureMachinePool:
         if (!config.enabled) {
           providerNodePool.spec!.template.spotVMOptions = undefined;
 
@@ -141,8 +130,7 @@ export function withNodePoolSpotInstances(
 
         break;
 
-      case 'infrastructure.giantswarm.io/v1alpha2':
-      case 'infrastructure.giantswarm.io/v1alpha3':
+      case infrav1alpha3.AWSMachineDeployment:
         providerNodePool.spec.provider.instanceDistribution = {
           onDemandBaseCapacity: (config as INodePoolSpotInstancesConfigAWS)
             .onDemandBaseCapacity,
