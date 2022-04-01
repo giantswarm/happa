@@ -105,7 +105,7 @@ describe('Clusters', () => {
     });
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.NotFound, {
         apiVersion: 'v1',
         kind: 'Status',
@@ -136,9 +136,9 @@ describe('Clusters', () => {
     });
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
-        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        apiVersion: 'cluster.x-k8s.io/v1beta1',
         items: [],
         kind: 'ClusterList',
       });

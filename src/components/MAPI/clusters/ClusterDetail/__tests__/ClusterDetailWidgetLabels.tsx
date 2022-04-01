@@ -4,7 +4,7 @@ import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
@@ -50,7 +50,7 @@ describe('ClusterDetailWidgetLabels', () => {
   it('displays the label editor', () => {
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
         canUpdateCluster: true,
       })
     );
@@ -66,20 +66,20 @@ describe('ClusterDetailWidgetLabels', () => {
   it('can add a new label to the cluster', async () => {
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .put(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, {
-        ...capiv1alpha3Mocks.randomCluster1,
+        ...capiv1beta1Mocks.randomCluster1,
         metadata: {
-          ...capiv1alpha3Mocks.randomCluster1.metadata,
+          ...capiv1beta1Mocks.randomCluster1.metadata,
           labels: {
-            ...capiv1alpha3Mocks.randomCluster1.metadata.labels!,
+            ...capiv1beta1Mocks.randomCluster1.metadata.labels!,
             'some-key': 'some-value',
           },
         },
@@ -87,7 +87,7 @@ describe('ClusterDetailWidgetLabels', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
         canUpdateCluster: true,
       })
     );
@@ -118,11 +118,11 @@ describe('ClusterDetailWidgetLabels', () => {
 
   it('can remove a label from a cluster', async () => {
     const cluster = {
-      ...capiv1alpha3Mocks.randomCluster1,
+      ...capiv1beta1Mocks.randomCluster1,
       metadata: {
-        ...capiv1alpha3Mocks.randomCluster1.metadata,
+        ...capiv1beta1Mocks.randomCluster1.metadata,
         labels: {
-          ...capiv1alpha3Mocks.randomCluster1.metadata.labels!,
+          ...capiv1beta1Mocks.randomCluster1.metadata.labels!,
           'some-key': 'some-value',
         },
       },
@@ -130,15 +130,15 @@ describe('ClusterDetailWidgetLabels', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, cluster);
 
     nock(window.config.mapiEndpoint)
       .put(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomCluster1);
 
     render(getComponent({ cluster, canUpdateCluster: true }));
 
@@ -161,11 +161,11 @@ describe('ClusterDetailWidgetLabels', () => {
 
   it('displays cluster labels as read-only if the user does not have permissions to update cluster resources', () => {
     const cluster = {
-      ...capiv1alpha3Mocks.randomCluster1,
+      ...capiv1beta1Mocks.randomCluster1,
       metadata: {
-        ...capiv1alpha3Mocks.randomCluster1.metadata,
+        ...capiv1beta1Mocks.randomCluster1.metadata,
         labels: {
-          ...capiv1alpha3Mocks.randomCluster1.metadata.labels!,
+          ...capiv1beta1Mocks.randomCluster1.metadata.labels!,
           'some-key': 'some-value',
         },
       },

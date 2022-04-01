@@ -12,7 +12,7 @@ import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
 import * as ui from 'UI/Display/MAPI/releases/types';
@@ -88,7 +88,7 @@ describe('ClusterDetailWidgetRelease', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
       })
     );
 
@@ -106,7 +106,7 @@ describe('ClusterDetailWidgetRelease', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
       })
     );
 
@@ -157,7 +157,7 @@ describe('ClusterDetailWidgetRelease', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
         canUpdateCluster: false,
       })
     );
@@ -193,11 +193,11 @@ describe('ClusterDetailWidgetRelease', () => {
     render(
       getComponent({
         cluster: {
-          ...capiv1alpha3Mocks.randomCluster1,
+          ...capiv1beta1Mocks.randomCluster1,
           metadata: {
-            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            ...capiv1beta1Mocks.randomCluster1.metadata,
             annotations: {
-              ...capiv1alpha3Mocks.randomCluster1.metadata.annotations,
+              ...capiv1beta1Mocks.randomCluster1.metadata.annotations,
               'alpha.giantswarm.io/update-schedule-target-release': '15.0.0',
               'alpha.giantswarm.io/update-schedule-target-time': targetTime,
             },
@@ -220,7 +220,7 @@ describe('ClusterDetailWidgetRelease', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
       })
     );
 
@@ -238,20 +238,20 @@ describe('ClusterDetailWidgetRelease', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomCluster1);
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .put(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, {
-        ...capiv1alpha3Mocks.randomCluster1,
+        ...capiv1beta1Mocks.randomCluster1,
         metadata: {
-          ...capiv1alpha3Mocks.randomCluster1.metadata,
+          ...capiv1beta1Mocks.randomCluster1.metadata,
           labels: {
-            ...capiv1alpha3Mocks.randomCluster1.metadata.labels,
+            ...capiv1beta1Mocks.randomCluster1.metadata.labels,
             'release.giantswarm.io/version':
               releasev1alpha1Mocks.v15_0_0.metadata.name.slice(1),
           },
@@ -260,7 +260,7 @@ describe('ClusterDetailWidgetRelease', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
         canUpdateCluster: true,
       })
     );
@@ -337,7 +337,7 @@ describe('ClusterDetailWidgetRelease', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
         canUpdateCluster: false,
       })
     );

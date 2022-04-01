@@ -5,8 +5,8 @@ import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import * as mockCapiv1alpha3 from 'test/mockHttpCalls/capiv1alpha3';
-import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
+import * as mockCapiv1beta1 from 'test/mockHttpCalls/capiv1beta1';
+import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import * as securityv1alpha1Mocks from 'test/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -50,7 +50,7 @@ jest.mock('react-router', () => ({
     url: '',
     params: {
       orgId: 'org1',
-      clusterId: mockCapiv1alpha3.randomCluster1.metadata.name,
+      clusterId: mockCapiv1beta1.randomCluster1.metadata.name,
     },
   }),
 }));
@@ -89,19 +89,19 @@ describe('ClusterDetail', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1beta1.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
+      .reply(StatusCodes.Ok, mockCapiv1beta1.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${
-          mockCapiv1alpha3.randomCluster1.metadata.namespace
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${
+          mockCapiv1beta1.randomCluster1.metadata.namespace
         }/azureclusters/${
-          mockCapiv1alpha3.randomCluster1.spec!.infrastructureRef!.name
+          mockCapiv1beta1.randomCluster1.spec!.infrastructureRef!.name
         }/`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureCluster1);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureCluster1);
 
     render(getComponent({}));
 
@@ -119,46 +119,46 @@ describe('ClusterDetail', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1beta1.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
+      .reply(StatusCodes.Ok, mockCapiv1beta1.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${
-          mockCapiv1alpha3.randomCluster1.metadata.namespace
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${
+          mockCapiv1beta1.randomCluster1.metadata.namespace
         }/azureclusters/${
-          mockCapiv1alpha3.randomCluster1.spec!.infrastructureRef!.name
+          mockCapiv1beta1.randomCluster1.spec!.infrastructureRef!.name
         }/`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureCluster1);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureCluster1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1beta1.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
+      .reply(StatusCodes.Ok, mockCapiv1beta1.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${
-          mockCapiv1alpha3.randomCluster1.metadata.namespace
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${
+          mockCapiv1beta1.randomCluster1.metadata.namespace
         }/azureclusters/${
-          mockCapiv1alpha3.randomCluster1.spec!.infrastructureRef!.name
+          mockCapiv1beta1.randomCluster1.spec!.infrastructureRef!.name
         }/`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureCluster1);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureCluster1);
 
     nock(window.config.mapiEndpoint)
       .put(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1beta1.randomCluster1.metadata.name}/`
       )
       .reply(StatusCodes.Ok, {
-        ...mockCapiv1alpha3.randomCluster1,
+        ...mockCapiv1beta1.randomCluster1,
         metadata: {
-          ...mockCapiv1alpha3.randomCluster1.metadata,
+          ...mockCapiv1beta1.randomCluster1.metadata,
           annotations: {
-            ...mockCapiv1alpha3.randomCluster1.metadata.annotations,
+            ...mockCapiv1beta1.randomCluster1.metadata.annotations,
             'cluster.giantswarm.io/description': 'Some Cluster',
           },
         },
@@ -189,19 +189,19 @@ describe('ClusterDetail', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1alpha3.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1beta1.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, mockCapiv1alpha3.randomCluster1);
+      .reply(StatusCodes.Ok, mockCapiv1beta1.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${
-          mockCapiv1alpha3.randomCluster1.metadata.namespace
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${
+          mockCapiv1beta1.randomCluster1.metadata.namespace
         }/azureclusters/${
-          mockCapiv1alpha3.randomCluster1.spec!.infrastructureRef!.name
+          mockCapiv1beta1.randomCluster1.spec!.infrastructureRef!.name
         }/`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureCluster1);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureCluster1);
 
     render(getComponent({}));
 

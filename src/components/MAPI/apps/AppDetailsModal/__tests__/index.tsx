@@ -7,7 +7,7 @@ import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
@@ -42,7 +42,7 @@ describe('AppDetailsModal', () => {
     render(
       getComponent({
         appName: app.metadata.name,
-        clusterName: capiv1alpha3Mocks.randomCluster1.metadata.name,
+        clusterName: capiv1beta1Mocks.randomCluster1.metadata.name,
         onClose: jest.fn(),
       })
     );
@@ -53,14 +53,14 @@ describe('AppDetailsModal', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
       )
       .reply(StatusCodes.Ok, app);
 
     render(
       getComponent({
         appName: app.metadata.name,
-        clusterName: capiv1alpha3Mocks.randomCluster1.metadata.name,
+        clusterName: capiv1beta1Mocks.randomCluster1.metadata.name,
         onClose: jest.fn(),
         visible: true,
       })
@@ -78,19 +78,19 @@ describe('AppDetailsModal', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
       )
       .reply(StatusCodes.Ok, app);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
       )
       .reply(StatusCodes.Ok, app);
 
     nock(window.config.mapiEndpoint)
       .delete(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
       )
       .reply(StatusCodes.Ok, {
         apiVersion: 'v1',
@@ -104,7 +104,7 @@ describe('AppDetailsModal', () => {
     render(
       getComponent({
         appName: app.metadata.name,
-        clusterName: capiv1alpha3Mocks.randomCluster1.metadata.name,
+        clusterName: capiv1beta1Mocks.randomCluster1.metadata.name,
         onClose: jest.fn(),
         visible: true,
       })
@@ -130,7 +130,7 @@ describe('AppDetailsModal', () => {
 
     expect(
       await withMarkup(screen.findByText)(
-        `App ${app.metadata.name} was scheduled for deletion on ${capiv1alpha3Mocks.randomCluster1.metadata.name}. This may take a couple of minutes.`
+        `App ${app.metadata.name} was scheduled for deletion on ${capiv1beta1Mocks.randomCluster1.metadata.name}. This may take a couple of minutes.`
       )
     ).toBeInTheDocument();
   });
@@ -149,19 +149,19 @@ describe('AppDetailsModal', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
       )
       .reply(StatusCodes.Ok, app);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
       )
       .reply(StatusCodes.Ok, app);
 
     nock(window.config.mapiEndpoint)
       .put(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/apps/${app.metadata.name}/`
       )
       .reply(StatusCodes.Ok, {
         ...app,
@@ -171,7 +171,7 @@ describe('AppDetailsModal', () => {
     render(
       getComponent({
         appName: app.metadata.name,
-        clusterName: capiv1alpha3Mocks.randomCluster1.metadata.name,
+        clusterName: capiv1beta1Mocks.randomCluster1.metadata.name,
         onClose: jest.fn(),
         visible: true,
       })
@@ -197,7 +197,7 @@ describe('AppDetailsModal', () => {
 
     expect(
       await withMarkup(screen.findByText)(
-        `App ${app.metadata.name} on ${capiv1alpha3Mocks.randomCluster1.metadata.name} has been updated. Changes might take some time to take effect.`
+        `App ${app.metadata.name} on ${capiv1beta1Mocks.randomCluster1.metadata.name} has been updated. Changes might take some time to take effect.`
       )
     ).toBeInTheDocument();
   });

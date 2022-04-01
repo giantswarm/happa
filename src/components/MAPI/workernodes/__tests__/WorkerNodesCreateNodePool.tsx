@@ -12,10 +12,10 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
-import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
+import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import * as gscorev1alpha1Mocks from 'test/mockHttpCalls/gscorev1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -88,8 +88,8 @@ describe('WorkerNodesCreateNodePool', () => {
     render(
       getComponent({
         open: true,
-        cluster: capiv1alpha3Mocks.randomCluster1,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
         id: 'test',
       })
     );
@@ -99,8 +99,8 @@ describe('WorkerNodesCreateNodePool', () => {
     render(
       getComponent({
         open: true,
-        cluster: capiv1alpha3Mocks.randomCluster1,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
         id: 'test',
       })
     );
@@ -118,15 +118,15 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureMachineList1);
 
     render(
       getComponent({
         open: true,
-        cluster: capiv1alpha3Mocks.randomCluster1,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
         id: 'test',
       })
     );
@@ -180,15 +180,15 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureMachineList1);
 
     render(
       getComponent({
         open: true,
-        cluster: capiv1alpha3Mocks.randomCluster1,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
         id: 'test',
       })
     );
@@ -248,15 +248,15 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureMachineList1);
 
     render(
       getComponent({
         open: true,
-        cluster: capiv1alpha3Mocks.randomCluster1,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
         id: 'test',
       })
     );
@@ -308,15 +308,15 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureMachineList1);
 
     render(
       getComponent({
         open: true,
-        cluster: capiv1alpha3Mocks.randomCluster1,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
         id: 'test',
       })
     );
@@ -377,15 +377,15 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureMachineList1);
 
     render(
       getComponent({
         open: true,
-        cluster: capiv1alpha3Mocks.randomCluster1,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
         id: 'test',
       })
     );
@@ -446,15 +446,15 @@ describe('WorkerNodesCreateNodePool', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureMachineList1);
 
     render(
       getComponent({
         open: true,
-        cluster: capiv1alpha3Mocks.randomCluster1,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
         id: 'test',
       })
     );

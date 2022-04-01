@@ -5,7 +5,7 @@ import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import * as mockCapiv1alpha3 from 'test/mockHttpCalls/capiv1alpha3';
+import * as mockCapiv1beta1 from 'test/mockHttpCalls/capiv1beta1';
 import * as legacyMocks from 'test/mockHttpCalls/legacy';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -47,7 +47,7 @@ jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useParams: jest.fn().mockReturnValue({
     orgId: 'org1',
-    clusterId: mockCapiv1alpha3.randomCluster1.metadata.name,
+    clusterId: mockCapiv1beta1.randomCluster1.metadata.name,
   }),
 }));
 

@@ -8,7 +8,7 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
@@ -19,7 +19,7 @@ function generateApp(
   name: string = 'some-app',
   version: string = '1.2.1'
 ): applicationv1alpha1.IApp {
-  const namespace = capiv1alpha3Mocks.randomCluster1.metadata.name;
+  const namespace = capiv1beta1Mocks.randomCluster1.metadata.name;
 
   return {
     apiVersion: 'application.giantswarm.io/v1alpha1',
