@@ -13,10 +13,9 @@ import {
 } from 'MAPI/workernodes/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
-import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -37,7 +36,7 @@ import { compare } from 'utils/semver';
 export async function fetchClustersSummary(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  clusters: capiv1alpha3.ICluster[],
+  clusters: capiv1beta1.ICluster[],
   CPNodesPermissions: IPermissions,
   nodePoolsPermissions: IPermissions
 ): Promise<ui.IOrganizationDetailClustersSummary> {
@@ -61,7 +60,7 @@ export async function fetchClustersSummary(
  * @param clusters
  */
 export function fetchClustersSummaryKey(
-  clusters?: capiv1alpha3.ICluster[]
+  clusters?: capiv1beta1.ICluster[]
 ): string | null {
   if (!clusters) return null;
 
@@ -71,7 +70,7 @@ export function fetchClustersSummaryKey(
 async function fetchSingleClusterSummary(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  cluster: capiv1alpha3.ICluster,
+  cluster: capiv1beta1.ICluster,
   CPNodesPermissions: IPermissions,
   nodePoolsPermissions: IPermissions
 ): Promise<ui.IOrganizationDetailClustersSummary> {
@@ -129,7 +128,7 @@ async function fetchSingleClusterSummary(
   return summary;
 }
 
-function fetchSingleClusterSummaryKey(cluster: capiv1alpha3.ICluster): string {
+function fetchSingleClusterSummaryKey(cluster: capiv1beta1.ICluster): string {
   return `fetchSingleClusterSummary/${cluster.metadata.namespace}/${cluster.metadata.name}`;
 }
 
@@ -142,7 +141,7 @@ function appendControlPlaneNodeStats(
 
   for (const cpNode of controlPlaneNodes) {
     switch (cpNode.kind) {
-      case capzv1alpha3.AzureMachine: {
+      case capzv1beta1.AzureMachine: {
         summary.nodesCount++;
 
         const vmSize = cpNode.spec?.vmSize;
@@ -210,7 +209,7 @@ function appendProviderNodePoolsStats(
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
     switch (providerNodePool?.kind) {
       case capzexpv1alpha3.AzureMachinePool:
-      case capzv1alpha4.AzureMachinePool: {
+      case capzv1beta1.AzureMachinePool: {
         const vmSize = providerNodePool.spec?.template.vmSize;
         const readyReplicas = nodePool.status?.readyReplicas;
 
@@ -311,13 +310,13 @@ function mergeClusterSummaries(
 export async function fetchReleasesSummary(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  clusters: capiv1alpha3.ICluster[]
+  clusters: capiv1beta1.ICluster[]
 ): Promise<ui.IOrganizationDetailReleasesSummary> {
   const summary: ui.IOrganizationDetailReleasesSummary = {};
 
   let releases: string[] = [];
   for (const cluster of clusters) {
-    const version = capiv1alpha3.getReleaseVersion(cluster);
+    const version = capiv1beta1.getReleaseVersion(cluster);
     if (!version) continue;
 
     releases.push(version);
@@ -371,7 +370,7 @@ export async function fetchReleasesSummary(
  * @param clusters
  */
 export function fetchReleasesSummaryKey(
-  clusters?: capiv1alpha3.ICluster[]
+  clusters?: capiv1beta1.ICluster[]
 ): string | null {
   if (!clusters) return null;
 
@@ -391,7 +390,7 @@ export function fetchReleasesSummaryKey(
 export async function fetchAppsSummary(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  clusters: capiv1alpha3.ICluster[]
+  clusters: capiv1beta1.ICluster[]
 ): Promise<ui.IOrganizationDetailAppsSummary> {
   const summary: ui.IOrganizationDetailAppsSummary = {};
 
@@ -439,7 +438,7 @@ export async function fetchAppsSummary(
  * @param clusters
  */
 export function fetchAppsSummaryKey(
-  clusters?: capiv1alpha3.ICluster[]
+  clusters?: capiv1beta1.ICluster[]
 ): string | null {
   if (!clusters) return null;
 
