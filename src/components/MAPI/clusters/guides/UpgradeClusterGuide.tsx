@@ -1,4 +1,5 @@
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
+import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
 import * as docs from 'model/constants/docs';
 import React from 'react';
@@ -12,12 +13,14 @@ interface IUpgradeClusterGuideProps
   clusterName: string;
   clusterNamespace: string;
   targetReleaseVersion: string;
+  canUpdateCluster?: boolean;
 }
 
 const UpgradeClusterGuide: React.FC<IUpgradeClusterGuideProps> = ({
   clusterName,
   clusterNamespace,
   targetReleaseVersion,
+  canUpdateCluster,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -49,6 +52,7 @@ const UpgradeClusterGuide: React.FC<IUpgradeClusterGuideProps> = ({
       {...props}
     >
       <CLIGuideStepList>
+        {!canUpdateCluster && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
           title='2. Update the release label'

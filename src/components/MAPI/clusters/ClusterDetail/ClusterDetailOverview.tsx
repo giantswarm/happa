@@ -149,6 +149,7 @@ const ClusterDetailOverview: React.FC<{}> = () => {
               clusterName={cluster.metadata.name}
               clusterNamespace={cluster.metadata.namespace!}
               targetReleaseVersion={targetReleaseVersion}
+              canUpdateCluster={canUpdateCluster}
             />
           )}
 
