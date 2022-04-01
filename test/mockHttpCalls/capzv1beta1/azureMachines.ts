@@ -1,7 +1,7 @@
-import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 
-export const randomAzureMachine1: capzv1alpha3.IAzureMachine = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+export const randomAzureMachine1: capzv1beta1.IAzureMachine = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
   kind: 'AzureMachine',
   metadata: {
     annotations: {
@@ -24,11 +24,10 @@ export const randomAzureMachine1: capzv1alpha3.IAzureMachine = {
     namespace: 'org-org1',
     resourceVersion: '294232688',
     selfLink:
-      '/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachines/j5y9m-master-0',
+      '/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachines/j5y9m-master-0',
     uid: '9f42172b-f87e-41ac-8fb6-49e0247ad1dc',
   },
   spec: {
-    location: 'westeurope',
     failureDomain: '2',
     identity: 'None',
     image: {
@@ -89,8 +88,8 @@ export const randomAzureMachine1: capzv1alpha3.IAzureMachine = {
   },
 };
 
-export const randomAzureMachine2: capzv1alpha3.IAzureMachine = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+export const randomAzureMachine2: capzv1beta1.IAzureMachine = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
   kind: 'AzureMachine',
   metadata: {
     annotations: {
@@ -113,11 +112,10 @@ export const randomAzureMachine2: capzv1alpha3.IAzureMachine = {
     namespace: 'org-org1',
     resourceVersion: '294232688',
     selfLink:
-      '/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachines/as43z-master-0',
+      '/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachines/as43z-master-0',
     uid: '9f42172b-f87e-41ac-8fb6-49e0247ad1dc',
   },
   spec: {
-    location: 'westeurope',
     identity: 'None',
     image: {
       marketplace: {
@@ -164,8 +162,8 @@ export const randomAzureMachine2: capzv1alpha3.IAzureMachine = {
   },
 };
 
-export const randomAzureMachine3: capzv1alpha3.IAzureMachine = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+export const randomAzureMachine3: capzv1beta1.IAzureMachine = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
   kind: 'AzureMachine',
   metadata: {
     annotations: {
@@ -188,11 +186,10 @@ export const randomAzureMachine3: capzv1alpha3.IAzureMachine = {
     namespace: 'org-org1',
     resourceVersion: '294232688',
     selfLink:
-      '/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachines/0fa12-master-0',
+      '/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachines/0fa12-master-0',
     uid: '9f42172b-f87e-41ac-8fb6-49e0247ad1dc',
   },
   spec: {
-    location: 'westeurope',
     failureDomain: '2',
     identity: 'None',
     image: {
@@ -253,23 +250,23 @@ export const randomAzureMachine3: capzv1alpha3.IAzureMachine = {
   },
 };
 
-export const randomAzureMachineList1: capzv1alpha3.IAzureMachineList = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
-  kind: capzv1alpha3.AzureMachineList,
+export const randomAzureMachineList1: capzv1beta1.IAzureMachineList = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+  kind: capzv1beta1.AzureMachineList,
   metadata: {},
   items: [randomAzureMachine1],
 };
 
-export const randomAzureMachineList2: capzv1alpha3.IAzureMachineList = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
-  kind: capzv1alpha3.AzureMachineList,
+export const randomAzureMachineList2: capzv1beta1.IAzureMachineList = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+  kind: capzv1beta1.AzureMachineList,
   metadata: {},
   items: [randomAzureMachine2],
 };
 
-export const randomAzureMachineList3: capzv1alpha3.IAzureMachineList = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
-  kind: capzv1alpha3.AzureMachineList,
+export const randomAzureMachineList3: capzv1beta1.IAzureMachineList = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+  kind: capzv1beta1.AzureMachineList,
   metadata: {},
   items: [randomAzureMachine3],
 };

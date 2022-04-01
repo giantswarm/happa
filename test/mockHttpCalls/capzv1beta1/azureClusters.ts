@@ -1,7 +1,7 @@
-import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 
-export const randomAzureCluster1: capzv1alpha3.IAzureCluster = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+export const randomAzureCluster1: capzv1beta1.IAzureCluster = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
   kind: 'AzureCluster',
   metadata: {
     creationTimestamp: '2021-04-27T10:45:06Z',
@@ -21,7 +21,7 @@ export const randomAzureCluster1: capzv1alpha3.IAzureCluster = {
     namespace: 'org-org1',
     resourceVersion: '391239110',
     selfLink:
-      '/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azureclusters/j5y9m',
+      '/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azureclusters/j5y9m',
     uid: 'a4eeba9e-6a58-4151-b8ad-d1389ae1e223',
   },
   spec: {
@@ -90,8 +90,8 @@ export const randomAzureCluster1: capzv1alpha3.IAzureCluster = {
   },
 };
 
-export const randomCluster2: capzv1alpha3.IAzureCluster = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+export const randomCluster2: capzv1beta1.IAzureCluster = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
   kind: 'AzureCluster',
   metadata: {
     creationTimestamp: '2021-02-27T08:40:06Z',
@@ -111,7 +111,7 @@ export const randomCluster2: capzv1alpha3.IAzureCluster = {
     namespace: 'org-org1',
     resourceVersion: '391239110',
     selfLink:
-      '/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azureclusters/as43z',
+      '/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azureclusters/as43z',
     uid: 'a4eeba9e-6a58-4151-b8ad-d1389ae1e223',
   },
   spec: {
@@ -180,8 +180,8 @@ export const randomCluster2: capzv1alpha3.IAzureCluster = {
   },
 };
 
-export const randomCluster3: capzv1alpha3.IAzureCluster = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+export const randomCluster3: capzv1beta1.IAzureCluster = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
   kind: 'AzureCluster',
   metadata: {
     creationTimestamp: '2020-12-01T08:40:06Z',
@@ -201,7 +201,7 @@ export const randomCluster3: capzv1alpha3.IAzureCluster = {
     namespace: 'org-org1',
     resourceVersion: '391239110',
     selfLink:
-      '/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azureclusters/0fa12',
+      '/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azureclusters/0fa12',
     uid: 'a4eeba9e-6a58-4151-b8ad-d1389ae1e223',
   },
   spec: {
@@ -270,12 +270,12 @@ export const randomCluster3: capzv1alpha3.IAzureCluster = {
   },
 };
 
-export const randomAzureClusterList: capzv1alpha3.IAzureClusterList = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+export const randomAzureClusterList: capzv1beta1.IAzureClusterList = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
   kind: 'AzureClusterList',
   metadata: {
     resourceVersion: '294659579',
-    selfLink: '/apis/infrastructure.cluster.x-k8s.io/v1alpha3/azureclusters/',
+    selfLink: '/apis/infrastructure.cluster.x-k8s.io/v1beta1/azureclusters/',
   },
   items: [randomAzureCluster1, randomCluster2, randomCluster3],
 };
