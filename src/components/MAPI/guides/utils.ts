@@ -234,6 +234,38 @@ export function withTemplateCluster(
 }
 
 /**
+ * All the configuration options supported by the
+ * `update cluster` command.
+ * Taken from:
+ * {@link https://docs.giantswarm.io/ui-api/kubectl-gs/update-cluster/}
+ * */
+export interface IKubectlGSUpdateClusterCommandConfig {
+  provider: string;
+  namespace: string;
+  name: string;
+  releaseVersion: string;
+}
+
+/**
+ * Generate modifier for constructing the
+ * `kubectl gs update cluster` command.
+ * */
+export function withUpdateCluster(
+  config: IKubectlGSUpdateClusterCommandConfig
+): KubectlGSCommandModifier {
+  return (parts) => {
+    const newParts = [...parts, 'update', 'cluster'];
+
+    newParts.push('--provider', config.provider);
+    newParts.push('--namespace', config.namespace);
+    newParts.push('--name', config.name);
+    newParts.push('--release-version', config.releaseVersion);
+
+    return newParts;
+  };
+}
+
+/**
  * Configuration options supported by the `template nodepool` command.
  * {@link https://github.com/giantswarm/kubectl-gs/blob/master/cmd/template/nodepool/flag.go#L13}
  * */

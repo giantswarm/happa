@@ -3,6 +3,7 @@ import {
   IKubectlGSGetClustersCommandConfig,
   IKubectlGSTemplateClusterCommandConfig,
   IKubectlGSTemplateNodePoolCommandConfig,
+  IKubectlGSUpdateClusterCommandConfig,
   KubectlGSCommandModifier,
   makeKubectlGSCommand,
   withContext,
@@ -11,6 +12,7 @@ import {
   withGetClusters,
   withTemplateCluster,
   withTemplateNodePool,
+  withUpdateCluster,
 } from '../utils';
 
 describe('utils', () => {
@@ -177,6 +179,38 @@ describe('utils', () => {
       it(tc.name, () => {
         const output = makeKubectlGSCommand(
           withTemplateCluster(tc.modifierConfig)
+        );
+
+        expect(output).toEqual(tc.expectedOutput);
+      });
+    }
+  });
+
+  describe('withUpdateCluster', () => {
+    interface ITestCase {
+      name: string;
+      modifierConfig: IKubectlGSUpdateClusterCommandConfig;
+      expectedOutput: string;
+    }
+
+    const testCases: ITestCase[] = [
+      {
+        name: 'returns correct output with only required options',
+        modifierConfig: {
+          provider: 'some-provider',
+          namespace: 'the-namespace',
+          name: 'some-resource',
+          releaseVersion: '16.0.0',
+        },
+        expectedOutput:
+          'kubectl gs update cluster --provider some-provider --namespace the-namespace --name some-resource --release-version 16.0.0',
+      },
+    ];
+
+    for (const tc of testCases) {
+      it(tc.name, () => {
+        const output = makeKubectlGSCommand(
+          withUpdateCluster(tc.modifierConfig)
         );
 
         expect(output).toEqual(tc.expectedOutput);

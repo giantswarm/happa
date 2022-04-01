@@ -146,6 +146,7 @@ const ClusterDetailOverview: React.FC<{}> = () => {
           />
           {targetReleaseVersion && (
             <UpgradeClusterGuide
+              provider={provider}
               clusterName={cluster.metadata.name}
               clusterNamespace={cluster.metadata.namespace!}
               targetReleaseVersion={targetReleaseVersion}

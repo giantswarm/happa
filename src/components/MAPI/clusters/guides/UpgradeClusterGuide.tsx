@@ -1,6 +1,13 @@
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
-import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
+import {
+  getCurrentInstallationContextName,
+  makeKubectlGSCommand,
+  withContext,
+  withFormatting,
+  withUpdateCluster,
+} from 'MAPI/guides/utils';
+import { Providers } from 'model/constants';
 import * as docs from 'model/constants/docs';
 import React from 'react';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -10,6 +17,7 @@ import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
 interface IUpgradeClusterGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+  provider: PropertiesOf<typeof Providers>;
   clusterName: string;
   clusterNamespace: string;
   targetReleaseVersion: string;
@@ -17,6 +25,7 @@ interface IUpgradeClusterGuideProps
 }
 
 const UpgradeClusterGuide: React.FC<IUpgradeClusterGuideProps> = ({
+  provider,
   clusterName,
   clusterNamespace,
   targetReleaseVersion,
@@ -55,13 +64,17 @@ const UpgradeClusterGuide: React.FC<IUpgradeClusterGuideProps> = ({
         {!canUpdateCluster && <UnauthorizedMessage />}
         <LoginGuideStep />
         <CLIGuideStep
-          title='2. Update the release label'
-          command={`
-          kubectl --context ${context} \\
-            label clusters.cluster.x-k8s.io ${clusterName} \\
-            --namespace ${clusterNamespace} \\
-            --overwrite release.giantswarm.io/version=${targetReleaseVersion}
-          `}
+          title='2. Upgrade the cluster'
+          command={makeKubectlGSCommand(
+            withContext(context),
+            withUpdateCluster({
+              provider: provider,
+              namespace: clusterNamespace,
+              name: clusterName,
+              releaseVersion: targetReleaseVersion,
+            }),
+            withFormatting()
+          )}
         />
       </CLIGuideStepList>
     </CLIGuide>
