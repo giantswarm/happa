@@ -674,7 +674,7 @@ export interface IAzureMachineStatus {
   /**
    * LongRunningOperationStates saves the states for Azure long-running operations so they can be continued on the next reconciliation loop.
    */
-  longRunningOperationStates: ILongRunningOperationStates;
+  longRunningOperationStates?: ILongRunningOperationStates;
   /**
    * Ready is true when the provider resource is ready.
    */

@@ -1,5 +1,4 @@
-import * as capiv1alpha3 from '../../capiv1alpha3';
-import * as metav1 from '../../metav1';
+import * as capiv1beta1 from '../../capiv1beta1';
 import {
   IDataDisk,
   IImage,
@@ -8,7 +7,8 @@ import {
   ISpotVMOptions,
   IUserAssignedIdentity,
   Tags,
-} from '../types';
+} from '../../capzv1beta1';
+import * as metav1 from '../../metav1';
 
 export interface IAzureMachinePoolTemplate {
   vmSize: string;
@@ -57,7 +57,7 @@ export interface IAzureMachinePoolStatus {
   provisioningState?: string;
   failureReason?: string;
   failureMessage?: string;
-  conditions?: capiv1alpha3.ICondition[];
+  conditions?: capiv1beta1.ICondition[];
   longRunningOperationState?: IAzureMachinePoolFuture;
 }
 
