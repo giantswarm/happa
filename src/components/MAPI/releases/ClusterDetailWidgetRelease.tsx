@@ -69,11 +69,18 @@ interface IClusterDetailWidgetReleaseProps
   cluster?: capiv1alpha3.ICluster;
   providerCluster?: ProviderCluster;
   canUpdateCluster?: boolean;
+  onTargetReleaseVersionChange?: (version: string) => void;
 }
 
 const ClusterDetailWidgetRelease: React.FC<
   IClusterDetailWidgetReleaseProps
-> = ({ cluster, providerCluster, canUpdateCluster, ...props }) => {
+> = ({
+  cluster,
+  providerCluster,
+  canUpdateCluster,
+  onTargetReleaseVersionChange,
+  ...props
+}) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
@@ -153,6 +160,12 @@ const ClusterDetailWidgetRelease: React.FC<
 
   const canUpgrade =
     !isUpgrading && !isCreating && !isConditionUnknown && isUpgradable;
+
+  useEffect(() => {
+    if (onTargetReleaseVersionChange) {
+      onTargetReleaseVersionChange(canUpgrade ? nextVersion : '');
+    }
+  }, [onTargetReleaseVersionChange, canUpgrade, nextVersion]);
 
   const clusterUpdateSchedule = getClusterUpdateSchedule(cluster);
 
