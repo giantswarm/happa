@@ -15,10 +15,9 @@ import {
 } from 'MAPI/utils';
 import { IProviderNodePoolForNodePool } from 'MAPI/workernodes/utils';
 import { Constants, Providers } from 'model/constants';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
-import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -54,7 +53,7 @@ export function getWorkerNodesCPU(
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
     switch (providerNodePool?.kind) {
       case capzexpv1alpha3.AzureMachinePool:
-      case capzv1alpha4.AzureMachinePool:
+      case capzv1beta1.AzureMachinePool:
         {
           const vmSize = providerNodePool.spec?.template.vmSize;
           const readyReplicas = nodePool.status?.readyReplicas;
@@ -108,7 +107,7 @@ export function getWorkerNodesMemory(
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
     switch (providerNodePool?.kind) {
       case capzexpv1alpha3.AzureMachinePool:
-      case capzv1alpha4.AzureMachinePool: {
+      case capzv1beta1.AzureMachinePool: {
         const vmSize = providerNodePool.spec?.template.vmSize;
         const readyReplicas = nodePool.status?.readyReplicas;
 
@@ -182,14 +181,14 @@ export function compareClusters(
 }
 
 export function isClusterUpgradable(
-  cluster: capiv1alpha3.ICluster,
+  cluster: capiv1beta1.ICluster,
   provider: PropertiesOf<typeof Providers>,
   isAdmin: boolean,
   releases?: releasev1alpha1.IRelease[]
 ): boolean {
   if (!releases) return false;
 
-  const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+  const releaseVersion = capiv1beta1.getReleaseVersion(cluster);
   if (!releaseVersion) return false;
 
   try {
@@ -208,30 +207,30 @@ export function isClusterUpgradable(
   }
 }
 
-export function isClusterUpgrading(cluster: capiv1alpha3.ICluster): boolean {
+export function isClusterUpgrading(cluster: capiv1beta1.ICluster): boolean {
   return (
-    capiv1alpha3.isConditionTrue(
+    capiv1beta1.isConditionTrue(
       cluster,
-      capiv1alpha3.conditionTypeUpgrading,
-      capiv1alpha3.withReasonUpgradePending()
+      capiv1beta1.conditionTypeUpgrading,
+      capiv1beta1.withReasonUpgradePending()
     ) &&
-    capiv1alpha3.isConditionFalse(
+    capiv1beta1.isConditionFalse(
       cluster,
-      capiv1alpha3.conditionTypeUpgrading,
-      capiv1alpha3.withReasonUpgradeNotStarted(),
-      capiv1alpha3.withReasonUpgradeCompleted()
+      capiv1beta1.conditionTypeUpgrading,
+      capiv1beta1.withReasonUpgradeNotStarted(),
+      capiv1beta1.withReasonUpgradeCompleted()
     )
   );
 }
 
-export function isClusterCreating(cluster: capiv1alpha3.ICluster): boolean {
+export function isClusterCreating(cluster: capiv1beta1.ICluster): boolean {
   return (
-    capiv1alpha3.isConditionTrue(cluster, capiv1alpha3.conditionTypeCreating) &&
-    capiv1alpha3.isConditionFalse(
+    capiv1beta1.isConditionTrue(cluster, capiv1beta1.conditionTypeCreating) &&
+    capiv1beta1.isConditionFalse(
       cluster,
-      capiv1alpha3.conditionTypeCreating,
-      capiv1alpha3.withReasonCreationCompleted(),
-      capiv1alpha3.withReasonExistingObject()
+      capiv1beta1.conditionTypeCreating,
+      capiv1beta1.withReasonCreationCompleted(),
+      capiv1beta1.withReasonExistingObject()
     )
   );
 }
@@ -260,18 +259,18 @@ function createDefaultAzureCluster(config: {
   name: string;
   organization: string;
   releaseVersion: string;
-}): capzv1alpha3.IAzureCluster {
+}): capzv1beta1.IAzureCluster {
   return {
-    apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
-    kind: capzv1alpha3.AzureCluster,
+    apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+    kind: capzv1beta1.AzureCluster,
     metadata: {
       namespace: config.namespace,
       name: config.name,
       labels: {
-        [capiv1alpha3.labelCluster]: config.name,
-        [capiv1alpha3.labelClusterName]: config.name,
-        [capiv1alpha3.labelOrganization]: config.organization,
-        [capiv1alpha3.labelReleaseVersion]: config.releaseVersion,
+        [capiv1beta1.labelCluster]: config.name,
+        [capiv1beta1.labelClusterName]: config.name,
+        [capiv1beta1.labelOrganization]: config.organization,
+        [capiv1beta1.labelReleaseVersion]: config.releaseVersion,
       },
     },
     spec: {
@@ -311,7 +310,7 @@ function createDefaultAWSCluster(config: {
       name: config.name,
       labels: {
         [infrav1alpha3.labelCluster]: config.name,
-        [capiv1alpha3.labelClusterName]: config.name,
+        [capiv1beta1.labelClusterName]: config.name,
         [infrav1alpha3.labelOrganization]: config.organization,
         [infrav1alpha3.labelReleaseVersion]: config.releaseVersion,
       },
@@ -360,7 +359,7 @@ export function createDefaultCluster(config: {
   providerCluster: ProviderCluster;
 }) {
   switch (config.providerCluster?.kind) {
-    case capzv1alpha3.AzureCluster:
+    case capzv1beta1.AzureCluster:
     case infrav1alpha3.AWSCluster:
       return createDefaultV1Alpha3Cluster(config);
 
@@ -371,28 +370,28 @@ export function createDefaultCluster(config: {
 
 function createDefaultV1Alpha3Cluster(config: {
   providerCluster: ProviderCluster;
-}): capiv1alpha3.ICluster {
+}): capiv1beta1.ICluster {
   const namespace = config.providerCluster!.metadata.namespace;
   const name = config.providerCluster!.metadata.name;
   const organization =
-    config.providerCluster!.metadata.labels![capiv1alpha3.labelOrganization];
+    config.providerCluster!.metadata.labels![capiv1beta1.labelOrganization];
   const releaseVersion =
-    config.providerCluster!.metadata.labels![capiv1alpha3.labelReleaseVersion];
+    config.providerCluster!.metadata.labels![capiv1beta1.labelReleaseVersion];
 
   return {
-    apiVersion: 'cluster.x-k8s.io/v1alpha3',
-    kind: capiv1alpha3.Cluster,
+    apiVersion: 'cluster.x-k8s.io/v1beta1',
+    kind: capiv1beta1.Cluster,
     metadata: {
       name,
       namespace,
       labels: {
-        [capiv1alpha3.labelCluster]: name,
-        [capiv1alpha3.labelClusterName]: name,
-        [capiv1alpha3.labelOrganization]: organization,
-        [capiv1alpha3.labelReleaseVersion]: releaseVersion,
+        [capiv1beta1.labelCluster]: name,
+        [capiv1beta1.labelClusterName]: name,
+        [capiv1beta1.labelOrganization]: organization,
+        [capiv1beta1.labelReleaseVersion]: releaseVersion,
       },
       annotations: {
-        [capiv1alpha3.annotationClusterDescription]:
+        [capiv1beta1.annotationClusterDescription]:
           Constants.DEFAULT_CLUSTER_DESCRIPTION,
       },
     },
@@ -410,7 +409,7 @@ export function createDefaultControlPlaneNodes(config: {
   providerCluster: ProviderCluster;
 }): ControlPlaneNode[] {
   switch (config.providerCluster?.kind) {
-    case capzv1alpha3.AzureCluster:
+    case capzv1beta1.AzureCluster:
       return [createDefaultAzureMachine(config)];
     case infrav1alpha3.AWSCluster: {
       const name = generateUID(5);
@@ -430,32 +429,31 @@ export function createDefaultControlPlaneNodes(config: {
 
 function createDefaultAzureMachine(config: {
   providerCluster: ProviderCluster;
-}): capzv1alpha3.IAzureMachine {
+}): capzv1beta1.IAzureMachine {
   const namespace = config.providerCluster!.metadata.namespace;
   const name = config.providerCluster!.metadata.name;
   const organization =
-    config.providerCluster!.metadata.labels![capiv1alpha3.labelOrganization];
+    config.providerCluster!.metadata.labels![capiv1beta1.labelOrganization];
   const releaseVersion =
-    config.providerCluster!.metadata.labels![capiv1alpha3.labelReleaseVersion];
+    config.providerCluster!.metadata.labels![capiv1beta1.labelReleaseVersion];
 
   return {
-    apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
-    kind: capzv1alpha3.AzureMachine,
+    apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+    kind: capzv1beta1.AzureMachine,
     metadata: {
       namespace: namespace,
       name: `${name}-master-0`,
       labels: {
-        [capiv1alpha3.labelCluster]: name,
-        [capiv1alpha3.labelClusterName]: name,
-        [capiv1alpha3.labelMachineControlPlane]: 'true',
-        [capiv1alpha3.labelOrganization]: organization,
-        [capiv1alpha3.labelReleaseVersion]: releaseVersion,
+        [capiv1beta1.labelCluster]: name,
+        [capiv1beta1.labelClusterName]: name,
+        [capiv1beta1.labelMachineControlPlane]: 'true',
+        [capiv1beta1.labelOrganization]: organization,
+        [capiv1beta1.labelReleaseVersion]: releaseVersion,
       },
     },
     spec: {
       vmSize: Constants.AZURE_CONTROL_PLANE_DEFAULT_VM_SIZE,
       failureDomain: '',
-      location: '',
       sshPublicKey: '',
       image: {
         marketplace: {
@@ -516,9 +514,9 @@ function createDefaultG8sControlPlane(config: {
   const namespace = config.providerCluster!.metadata.namespace;
   const clusterName = config.providerCluster!.metadata.name;
   const organization =
-    config.providerCluster!.metadata.labels![capiv1alpha3.labelOrganization];
+    config.providerCluster!.metadata.labels![capiv1beta1.labelOrganization];
   const releaseVersion =
-    config.providerCluster!.metadata.labels![capiv1alpha3.labelReleaseVersion];
+    config.providerCluster!.metadata.labels![capiv1beta1.labelReleaseVersion];
 
   const name = config.awsControlPlane.metadata.name;
 
@@ -529,10 +527,10 @@ function createDefaultG8sControlPlane(config: {
       namespace,
       name,
       labels: {
-        [capiv1alpha3.labelCluster]: clusterName,
+        [capiv1beta1.labelCluster]: clusterName,
         [infrav1alpha3.labelControlPlane]: name,
-        [capiv1alpha3.labelOrganization]: organization,
-        [capiv1alpha3.labelReleaseVersion]: releaseVersion,
+        [capiv1beta1.labelOrganization]: organization,
+        [capiv1beta1.labelReleaseVersion]: releaseVersion,
       },
     },
     spec: {
@@ -557,11 +555,11 @@ export async function createCluster(
   controlPlaneNodes: ControlPlaneNode[];
 }> {
   switch (config.providerCluster!.kind) {
-    case capzv1alpha3.AzureCluster: {
-      const providerCluster = await capzv1alpha3.createAzureCluster(
+    case capzv1beta1.AzureCluster: {
+      const providerCluster = await capzv1beta1.createAzureCluster(
         httpClientFactory(),
         auth,
-        config.providerCluster as capzv1alpha3.IAzureCluster
+        config.providerCluster as capzv1beta1.IAzureCluster
       );
 
       mutate(
@@ -572,10 +570,10 @@ export async function createCluster(
 
       const controlPlaneNodes = await Promise.all(
         config.controlPlaneNodes.map((n) =>
-          capzv1alpha3.createAzureMachine(
+          capzv1beta1.createAzureMachine(
             httpClientFactory(),
             auth,
-            n as capzv1alpha3.IAzureMachine
+            n as capzv1beta1.IAzureMachine
           )
         )
       );
@@ -586,14 +584,14 @@ export async function createCluster(
         false
       );
 
-      const cluster = await capiv1alpha3.createCluster(
+      const cluster = await capiv1beta1.createCluster(
         httpClientFactory(),
         auth,
         config.cluster
       );
 
       mutate(
-        capiv1alpha3.getClusterKey(
+        capiv1beta1.getClusterKey(
           cluster.metadata.namespace!,
           cluster.metadata.name
         ),
@@ -603,10 +601,10 @@ export async function createCluster(
 
       // Add the created cluster to the existing list.
       mutate(
-        capiv1alpha3.getClusterListKey({
+        capiv1beta1.getClusterListKey({
           namespace: cluster.metadata.namespace!,
         }),
-        (draft?: capiv1alpha3.IClusterList) => {
+        (draft?: capiv1beta1.IClusterList) => {
           draft?.items.push(cluster);
         },
         false
@@ -628,14 +626,14 @@ export async function createCluster(
         false
       );
 
-      const cluster = await capiv1alpha3.createCluster(
+      const cluster = await capiv1beta1.createCluster(
         httpClientFactory(),
         auth,
         config.cluster
       );
 
       mutate(
-        capiv1alpha3.getClusterKey(
+        capiv1beta1.getClusterKey(
           cluster.metadata.namespace!,
           cluster.metadata.name
         ),
@@ -645,10 +643,10 @@ export async function createCluster(
 
       // Add the created cluster to the existing list.
       mutate(
-        capiv1alpha3.getClusterListKey({
+        capiv1beta1.getClusterListKey({
           namespace: cluster.metadata.namespace!,
         }),
-        (draft?: capiv1alpha3.IClusterList) => {
+        (draft?: capiv1beta1.IClusterList) => {
           draft?.items.push(cluster);
         },
         false
@@ -775,7 +773,7 @@ export interface IClusterConditions {
 }
 
 export function getClusterConditions(
-  cluster: capiv1alpha3.ICluster | undefined,
+  cluster: capiv1beta1.ICluster | undefined,
   providerCluster: ProviderCluster
 ): IClusterConditions {
   const statuses: IClusterConditions = {
@@ -796,7 +794,7 @@ export function getClusterConditions(
   }
 
   switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
+    case capzv1beta1.AzureCluster:
       statuses.isConditionUnknown = typeof cluster.status === 'undefined';
       statuses.isCreating = isClusterCreating(cluster);
       statuses.isUpgrading = isClusterUpgrading(cluster);
@@ -829,13 +827,13 @@ export interface IClusterUpdateSchedule {
 }
 
 export function getClusterUpdateSchedule(
-  cluster: capiv1alpha3.ICluster | undefined
+  cluster: capiv1beta1.ICluster | undefined
 ): IClusterUpdateSchedule | undefined {
   if (!cluster) return undefined;
 
   const targetRelease =
-    capiv1alpha3.getClusterUpdateScheduleTargetRelease(cluster);
-  const targetTime = capiv1alpha3.getClusterUpdateScheduleTargetTime(cluster);
+    capiv1beta1.getClusterUpdateScheduleTargetRelease(cluster);
+  const targetTime = capiv1beta1.getClusterUpdateScheduleTargetTime(cluster);
   if (!targetRelease || !targetTime) return undefined;
 
   return {

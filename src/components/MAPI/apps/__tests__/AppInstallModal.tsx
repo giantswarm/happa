@@ -13,7 +13,7 @@ import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
 import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -125,8 +125,8 @@ describe('AppInstallModal', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
       );
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomClusterList);
+      .get('/apis/cluster.x-k8s.io/v1beta1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterList);
 
     render(
       getComponent({
@@ -142,24 +142,24 @@ describe('AppInstallModal', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Install in cluster' }));
 
     fireEvent.click(
-      await screen.findByText(capiv1alpha3Mocks.randomCluster1.metadata.name)
+      await screen.findByText(capiv1beta1Mocks.randomCluster1.metadata.name)
     );
 
     expect(
       await withMarkup(screen.findByText)(
-        `Install ${app.spec.name} on ${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `Install ${app.spec.name} on ${capiv1beta1Mocks.randomCluster1.metadata.name}`
       )
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText('Pick a different cluster'));
 
     fireEvent.click(
-      await screen.findByText(capiv1alpha3Mocks.randomCluster2.metadata.name)
+      await screen.findByText(capiv1beta1Mocks.randomCluster2.metadata.name)
     );
 
     expect(
       await withMarkup(screen.findByText)(
-        `Install ${app.spec.name} on ${capiv1alpha3Mocks.randomCluster2.metadata.name}`
+        `Install ${app.spec.name} on ${capiv1beta1Mocks.randomCluster2.metadata.name}`
       )
     ).toBeInTheDocument();
   });
@@ -185,12 +185,12 @@ describe('AppInstallModal', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
       );
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomClusterList);
+      .get('/apis/cluster.x-k8s.io/v1beta1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterList);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/api/v1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/configmaps/${app.metadata.name}-user-values/`
+        `/api/v1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/configmaps/${app.metadata.name}-user-values/`
       )
       .reply(StatusCodes.NotFound, {
         apiVersion: 'v1',
@@ -203,13 +203,13 @@ describe('AppInstallModal', () => {
 
     nock(window.config.mapiEndpoint)
       .post(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/apps/`
       )
       .reply(StatusCodes.Ok, app);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/api/v1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/secrets/${app.metadata.name}-user-secrets/`
+        `/api/v1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/secrets/${app.metadata.name}-user-secrets/`
       )
       .reply(StatusCodes.NotFound, {
         apiVersion: 'v1',
@@ -241,14 +241,14 @@ describe('AppInstallModal', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Install in cluster' }));
 
     fireEvent.click(
-      await screen.findByText(capiv1alpha3Mocks.randomCluster1.metadata.name)
+      await screen.findByText(capiv1beta1Mocks.randomCluster1.metadata.name)
     );
 
     fireEvent.click(await screen.findByRole('button', { name: 'Install app' }));
 
     expect(
       await withMarkup(screen.findByText)(
-        `Your app ${app.metadata.name} is being installed on ${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `Your app ${app.metadata.name} is being installed on ${capiv1beta1Mocks.randomCluster1.metadata.name}`
       )
     ).toBeInTheDocument();
   });

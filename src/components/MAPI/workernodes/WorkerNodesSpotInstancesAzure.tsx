@@ -4,7 +4,7 @@ import {
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
-import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import React from 'react';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
@@ -12,7 +12,7 @@ import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 interface IWorkerNodesSpotInstancesAzureProps {
   providerNodePool?:
     | capzexpv1alpha3.IAzureMachinePool
-    | capzv1alpha4.IAzureMachinePool;
+    | capzv1beta1.IAzureMachinePool;
 }
 
 const WorkerNodesSpotInstancesAzure: React.FC<

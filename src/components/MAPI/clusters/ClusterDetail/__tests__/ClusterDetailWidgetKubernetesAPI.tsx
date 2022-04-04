@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import { renderWithStore } from 'test/renderUtils';
 
 import { usePermissionsForKeyPairs } from '../../../keypairs/permissions/usePermissionsForKeyPairs';
@@ -42,7 +42,7 @@ describe('ClusterDetailWidgetKubernetesAPI', () => {
     );
 
     renderWithStore(ClusterDetailWidgetKubernetesAPI, {
-      cluster: capiv1alpha3Mocks.randomCluster1,
+      cluster: capiv1beta1Mocks.randomCluster1,
     });
 
     expect(screen.getByText('https://test.k8s.gs.com')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('ClusterDetailWidgetKubernetesAPI', () => {
     );
 
     renderWithStore(ClusterDetailWidgetKubernetesAPI, {
-      cluster: capiv1alpha3Mocks.randomCluster1,
+      cluster: capiv1beta1Mocks.randomCluster1,
     });
 
     expect(
@@ -71,7 +71,7 @@ describe('ClusterDetailWidgetKubernetesAPI', () => {
     });
 
     renderWithStore(ClusterDetailWidgetKubernetesAPI, {
-      cluster: capiv1alpha3Mocks.randomCluster1,
+      cluster: capiv1beta1Mocks.randomCluster1,
     });
 
     expect(

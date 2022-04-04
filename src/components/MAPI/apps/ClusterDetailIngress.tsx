@@ -6,7 +6,7 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React, { useEffect, useMemo } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useLocation, useParams } from 'react-router';
@@ -40,7 +40,7 @@ interface IClusterDetailIngressProps
   k8sEndpoint?: string;
   kvmTCPHTTPPort?: number;
   kvmTCPHTTPSPort?: number;
-  mutateCluster?: KeyedMutator<capiv1alpha3.ICluster>;
+  mutateCluster?: KeyedMutator<capiv1beta1.ICluster>;
 }
 
 const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({

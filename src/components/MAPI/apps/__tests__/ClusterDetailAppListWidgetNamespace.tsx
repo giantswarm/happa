@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import { renderWithTheme } from 'test/renderUtils';
 
 import ClusterDetailAppListWidgetNamespace from '../ClusterDetailAppListWidgetNamespace';
@@ -9,7 +9,7 @@ function generateApp(
   name: string = 'some-app',
   version: string = '1.2.1'
 ): applicationv1alpha1.IApp {
-  const namespace = capiv1alpha3Mocks.randomCluster1.metadata.name;
+  const namespace = capiv1beta1Mocks.randomCluster1.metadata.name;
 
   return {
     apiVersion: 'application.giantswarm.io/v1alpha1',

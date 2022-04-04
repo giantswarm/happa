@@ -1,10 +1,10 @@
-import * as corev1 from '../../corev1';
-import * as metav1 from '../../metav1';
 import {
   ICondition,
   IMachineDeploymentStrategy,
   IMachineDeploymentTemplate,
-} from '../types';
+} from '../../capiv1beta1';
+import * as corev1 from '../../corev1';
+import * as metav1 from '../../metav1';
 
 export interface IMachinePoolSpec {
   clusterName: string;

@@ -11,8 +11,8 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, Providers } from 'model/constants';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -80,10 +80,10 @@ export async function updateClusterDescription(
   }
 
   cluster.metadata.annotations ??= {};
-  cluster.metadata.annotations[capiv1alpha3.annotationClusterDescription] =
+  cluster.metadata.annotations[capiv1beta1.annotationClusterDescription] =
     newDescription;
 
-  return capiv1alpha3.updateCluster(httpClientFactory(), auth, cluster);
+  return capiv1beta1.updateCluster(httpClientFactory(), auth, cluster);
 }
 
 export async function deleteCluster(
@@ -91,22 +91,22 @@ export async function deleteCluster(
   auth: IOAuth2Provider,
   cluster: Cluster
 ) {
-  if (cluster.kind === capiv1alpha3.Cluster) {
+  if (cluster.kind === capiv1beta1.Cluster) {
     const client = httpClientFactory();
 
-    const updatedCluster = await capiv1alpha3.getCluster(
+    const updatedCluster = await capiv1beta1.getCluster(
       client,
       auth,
       cluster.metadata.namespace!,
       cluster.metadata.name
     );
 
-    await capiv1alpha3.deleteCluster(client, auth, updatedCluster);
+    await capiv1beta1.deleteCluster(client, auth, updatedCluster);
 
     updatedCluster.metadata.deletionTimestamp = new Date().toISOString();
 
     mutate(
-      capiv1alpha3.getClusterKey(
+      capiv1beta1.getClusterKey(
         cluster.metadata.namespace!,
         cluster.metadata.name
       ),
@@ -115,10 +115,10 @@ export async function deleteCluster(
     );
 
     mutate(
-      capiv1alpha3.getClusterListKey({
+      capiv1beta1.getClusterListKey({
         namespace: cluster.metadata.namespace!,
       }),
-      produce((draft?: capiv1alpha3.IClusterList) => {
+      produce((draft?: capiv1beta1.IClusterList) => {
         if (!draft) return;
 
         for (let i = 0; i < draft.items.length; i++) {
@@ -255,10 +255,10 @@ export async function deleteClusterResources(
   return Promise.resolve();
 }
 
-export function getVisibleLabels(cluster?: capiv1alpha3.ICluster) {
+export function getVisibleLabels(cluster?: capiv1beta1.ICluster) {
   if (!cluster) return undefined;
 
-  const existingLabels = capiv1alpha3.getClusterLabels(cluster);
+  const existingLabels = capiv1beta1.getClusterLabels(cluster);
 
   return filterLabels(existingLabels);
 }
@@ -270,7 +270,7 @@ export async function updateClusterLabels(
   name: string,
   patch: ILabelChange
 ) {
-  const cluster = await capiv1alpha3.getCluster(
+  const cluster = await capiv1beta1.getCluster(
     httpClient,
     auth,
     namespace,
@@ -289,7 +289,7 @@ export async function updateClusterLabels(
     cluster.metadata.labels[patch.key] = patch.value;
   }
 
-  return capiv1alpha3.updateCluster(httpClient, auth, cluster);
+  return capiv1beta1.updateCluster(httpClient, auth, cluster);
 }
 
 function getMainCredential(credentials: legacyCredentials.ICredential[]) {
@@ -350,12 +350,10 @@ export function computeControlPlaneNodesStats(
 
   for (const node of nodes) {
     switch (node.kind) {
-      case capzv1alpha3.AzureMachine:
+      case capzv1beta1.AzureMachine:
         stats.totalCount++;
 
-        if (
-          capiv1alpha3.isConditionTrue(node, capiv1alpha3.conditionTypeReady)
-        ) {
+        if (capiv1beta1.isConditionTrue(node, capiv1beta1.conditionTypeReady)) {
           stats.readyCount++;
         }
 
@@ -390,13 +388,13 @@ export async function updateClusterReleaseVersion(
   name: string,
   newVersion: string
 ) {
-  const cluster = await capiv1alpha3.getCluster(
+  const cluster = await capiv1beta1.getCluster(
     httpClient,
     auth,
     namespace,
     name
   );
-  const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+  const releaseVersion = capiv1beta1.getReleaseVersion(cluster);
   if (releaseVersion === newVersion) {
     return cluster;
   }
@@ -405,23 +403,23 @@ export async function updateClusterReleaseVersion(
   // the current version we're upgrading to is newer or equal to the
   // schedule release version. Otherwise the update request will be denied.
   const scheduleReleaseVersion =
-    capiv1alpha3.getClusterUpdateScheduleTargetRelease(cluster);
+    capiv1beta1.getClusterUpdateScheduleTargetRelease(cluster);
   if (
     scheduleReleaseVersion &&
     compare(scheduleReleaseVersion, newVersion) <= 0
   ) {
     delete cluster.metadata.annotations?.[
-      capiv1alpha3.annotationUpdateScheduleTargetRelease
+      capiv1beta1.annotationUpdateScheduleTargetRelease
     ];
     delete cluster.metadata.annotations?.[
-      capiv1alpha3.annotationUpdateScheduleTargetTime
+      capiv1beta1.annotationUpdateScheduleTargetTime
     ];
   }
 
   cluster.metadata.labels ??= {};
-  cluster.metadata.labels[capiv1alpha3.labelReleaseVersion] = newVersion;
+  cluster.metadata.labels[capiv1beta1.labelReleaseVersion] = newVersion;
 
-  return capiv1alpha3.updateCluster(httpClient, auth, cluster);
+  return capiv1beta1.updateCluster(httpClient, auth, cluster);
 }
 
 export function canSwitchClusterToHACPNodes(
@@ -430,7 +428,7 @@ export function canSwitchClusterToHACPNodes(
   providerCluster: ProviderCluster,
   controlPlaneNodes: ControlPlaneNode[]
 ): boolean {
-  const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+  const releaseVersion = capiv1beta1.getReleaseVersion(cluster);
   if (!releaseVersion) return false;
 
   if (!supportsHACPNodes(provider, releaseVersion)) return false;
