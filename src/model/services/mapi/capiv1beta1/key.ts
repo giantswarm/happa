@@ -10,7 +10,7 @@ export const labelReleaseVersion = 'release.giantswarm.io/version';
 export const labelMachineControlPlane = 'cluster.x-k8s.io/control-plane';
 export const labelMachinePool = 'giantswarm.io/machine-pool';
 export const labelClusterOperator = 'cluster-operator.giantswarm.io/version';
-export const labelAzureOperator = 'azure-operator.giantswarm.io/version';
+export const labelAzureOperatorVersion = 'azure-operator.giantswarm.io/version';
 
 export const annotationClusterDescription = 'cluster.giantswarm.io/description';
 export const annotationUpdateScheduleTargetRelease =

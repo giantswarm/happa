@@ -52,7 +52,7 @@ export function withClusterReleaseVersion(
       clusterOperatorVersion ?? '';
 
     if (providerCluster && providerCluster.kind === capzv1beta1.AzureCluster) {
-      cluster.metadata.labels[capiv1beta1.labelAzureOperator] =
+      cluster.metadata.labels[capiv1beta1.labelAzureOperatorVersion] =
         azureOperatorVersion ?? '';
     }
 
@@ -93,8 +93,9 @@ export function withClusterReleaseVersion(
         providerCluster &&
         controlPlaneNode.kind === capzv1beta1.AzureMachine
       ) {
-        controlPlaneNode.metadata.labels[capiv1beta1.labelAzureOperator] =
-          azureOperatorVersion ?? '';
+        controlPlaneNode.metadata.labels[
+          capiv1beta1.labelAzureOperatorVersion
+        ] = azureOperatorVersion ?? '';
       }
     }
   };

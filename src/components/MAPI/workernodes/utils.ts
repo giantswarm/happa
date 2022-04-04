@@ -547,6 +547,7 @@ export function createDefaultProviderNodePool(
     clusterName: string;
     organization: string;
     location: string;
+    releaseVersion: string;
     azureOperatorVersion: string;
   }
 ) {
@@ -566,6 +567,7 @@ export function createDefaultAzureMachinePool(config: {
   clusterName: string;
   organization: string;
   location: string;
+  releaseVersion: string;
   azureOperatorVersion: string;
 }): capzexpv1alpha3.IAzureMachinePool {
   return {
@@ -579,7 +581,9 @@ export function createDefaultAzureMachinePool(config: {
         [capiv1beta1.labelCluster]: config.clusterName,
         [capiv1beta1.labelClusterName]: config.clusterName,
         [capiv1beta1.labelOrganization]: config.organization,
-        [capiexpv1alpha3.labelAzureOperator]: config.azureOperatorVersion ?? '',
+        [capiv1beta1.labelReleaseVersion]: config.releaseVersion,
+        [capiexpv1alpha3.labelAzureOperatorVersion]:
+          config.azureOperatorVersion,
       },
     },
     spec: {
@@ -673,9 +677,11 @@ function createDefaultMachinePool(config: {
   const clusterName =
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     config.providerNodePool!.metadata.labels![capiv1beta1.labelClusterName];
+  const releaseVersion =
+    config.providerNodePool!.metadata.labels![capiv1beta1.labelReleaseVersion];
   const azureOperatorVersion =
     config.providerNodePool!.metadata.labels![
-      capiexpv1alpha3.labelAzureOperator
+      capiexpv1alpha3.labelAzureOperatorVersion
     ];
 
   return {
@@ -689,7 +695,8 @@ function createDefaultMachinePool(config: {
         [capiv1beta1.labelCluster]: clusterName,
         [capiv1beta1.labelClusterName]: clusterName,
         [capiv1beta1.labelOrganization]: organization,
-        [capiexpv1alpha3.labelAzureOperator]: azureOperatorVersion,
+        [capiv1beta1.labelReleaseVersion]: releaseVersion,
+        [capiexpv1alpha3.labelAzureOperatorVersion]: azureOperatorVersion,
       },
       annotations: {
         [capiexpv1alpha3.annotationMachinePoolDescription]:

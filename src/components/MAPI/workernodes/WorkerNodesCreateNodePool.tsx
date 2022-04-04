@@ -24,6 +24,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
+import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { supportsNodePoolSpotInstances } from 'model/stores/nodepool/utils';
@@ -98,6 +99,7 @@ interface IReducerConfig {
   clusterName: string;
   organization: string;
   location: string;
+  releaseVersion: string;
   azureOperatorVersion: string;
 }
 
@@ -158,7 +160,12 @@ const reducer: React.Reducer<INodePoolState, NodePoolAction> = produce(
           location: getProviderNodePoolLocation(draft.providerNodePool),
           organization:
             draft.nodePool.metadata.labels![capiv1beta1.labelOrganization],
-          azureOperatorVersion: '',
+          releaseVersion:
+            draft.nodePool.metadata.labels![capiv1beta1.labelReleaseVersion],
+          azureOperatorVersion:
+            draft.nodePool.metadata.labels![
+              capiexpv1alpha3.labelAzureOperatorVersion
+            ] ?? '',
         });
         draft.nodePool = newState.nodePool;
         draft.providerNodePool = newState.providerNodePool;
@@ -230,6 +237,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
 
     return release;
   }, [releaseList?.items, releaseVersion]);
+
   const [state, dispatch] = useReducer(
     reducer,
     makeInitialState(provider, {
@@ -237,6 +245,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
       namespace: cluster.metadata.namespace!,
       organization: cluster.metadata.labels![capiv1beta1.labelOrganization],
       location: getProviderClusterLocation(providerCluster)!,
+      releaseVersion: currentRelease?.metadata.name.slice(1) ?? '',
       azureOperatorVersion: getAzureOperatorVersion(currentRelease),
     })
   );
