@@ -165,7 +165,7 @@ const reducer: React.Reducer<INodePoolState, NodePoolAction> = produce(
           azureOperatorVersion:
             draft.nodePool.metadata.labels![
               capiexpv1alpha3.labelAzureOperatorVersion
-            ] ?? '',
+            ],
         });
         draft.nodePool = newState.nodePool;
         draft.providerNodePool = newState.providerNodePool;
@@ -223,9 +223,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
     }
   }, [releaseListError]);
 
-  const releaseVersion = cluster
-    ? capiv1beta1.getReleaseVersion(cluster)
-    : undefined;
+  const releaseVersion = capiv1beta1.getReleaseVersion(cluster) ?? '';
 
   const currentRelease = useMemo(() => {
     const formattedReleaseVersion = `v${releaseVersion}`;
@@ -245,7 +243,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
       namespace: cluster.metadata.namespace!,
       organization: cluster.metadata.labels![capiv1beta1.labelOrganization],
       location: getProviderClusterLocation(providerCluster)!,
-      releaseVersion: releaseVersion ?? '',
+      releaseVersion: releaseVersion,
       azureOperatorVersion: getAzureOperatorVersion(currentRelease),
     })
   );

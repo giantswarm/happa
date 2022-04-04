@@ -32,12 +32,12 @@ export function withClusterReleaseVersion(
   releaseComponents: IReleaseComponent[],
   orgNamespace: string
 ): ClusterPatch {
-  const clusterOperatorVersion = releaseComponents.find(
-    (component) => component.name === 'cluster-operator'
-  )?.version;
-  const azureOperatorVersion = releaseComponents.find(
-    (component) => component.name === 'azure-operator'
-  )?.version;
+  const clusterOperatorVersion =
+    releaseComponents.find((component) => component.name === 'cluster-operator')
+      ?.version ?? '';
+  const azureOperatorVersion =
+    releaseComponents.find((component) => component.name === 'azure-operator')
+      ?.version ?? '';
 
   // eslint-disable-next-line complexity
   return (cluster, providerCluster, controlPlaneNodes) => {
@@ -49,11 +49,11 @@ export function withClusterReleaseVersion(
     cluster.metadata.labels ??= {};
     cluster.metadata.labels[capiv1beta1.labelReleaseVersion] = newVersion;
     cluster.metadata.labels[capiv1beta1.labelClusterOperator] =
-      clusterOperatorVersion ?? '';
+      clusterOperatorVersion;
 
     if (providerCluster && providerCluster.kind === capzv1beta1.AzureCluster) {
       cluster.metadata.labels[capiv1beta1.labelAzureOperatorVersion] =
-        azureOperatorVersion ?? '';
+        azureOperatorVersion;
     }
 
     cluster.metadata.namespace = hasNonNamespacedResources
@@ -95,7 +95,7 @@ export function withClusterReleaseVersion(
       ) {
         controlPlaneNode.metadata.labels[
           capiv1beta1.labelAzureOperatorVersion
-        ] = azureOperatorVersion ?? '';
+        ] = azureOperatorVersion;
       }
     }
   };
