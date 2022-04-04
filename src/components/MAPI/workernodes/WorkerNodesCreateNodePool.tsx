@@ -245,7 +245,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
       namespace: cluster.metadata.namespace!,
       organization: cluster.metadata.labels![capiv1beta1.labelOrganization],
       location: getProviderClusterLocation(providerCluster)!,
-      releaseVersion: currentRelease?.metadata.name.slice(1) ?? '',
+      releaseVersion: releaseVersion ?? '',
       azureOperatorVersion: getAzureOperatorVersion(currentRelease),
     })
   );
