@@ -29,8 +29,13 @@ export interface IClusterPropertyProps {
 
 export function withClusterReleaseVersion(
   newVersion: string,
+  releaseComponents: IReleaseComponent[],
   orgNamespace: string
 ): ClusterPatch {
+  const clusterOperatorVersion = releaseComponents.find(
+    (component) => component.name === 'cluster-operator'
+  )?.version;
+
   return (cluster, providerCluster, controlPlaneNodes) => {
     const hasNonNamespacedResources =
       providerCluster?.kind === infrav1alpha3.AWSCluster &&
@@ -39,6 +44,8 @@ export function withClusterReleaseVersion(
 
     cluster.metadata.labels ??= {};
     cluster.metadata.labels[capiv1beta1.labelReleaseVersion] = newVersion;
+    cluster.metadata.labels[capiv1beta1.labelClusterOperator] =
+      clusterOperatorVersion ?? '';
     cluster.metadata.namespace = hasNonNamespacedResources
       ? defaultNamespace
       : orgNamespace;
