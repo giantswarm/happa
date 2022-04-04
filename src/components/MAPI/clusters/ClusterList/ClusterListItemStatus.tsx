@@ -1,7 +1,7 @@
 import { Box, Text } from 'grommet';
 import { ProviderCluster } from 'MAPI/types';
 import { Providers } from 'model/constants';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useMemo } from 'react';
 import { useTheme } from 'styled-components';
@@ -15,7 +15,7 @@ import {
 } from '../utils';
 
 interface IClusterListItemStatusProps {
-  cluster: capiv1alpha3.ICluster;
+  cluster: capiv1beta1.ICluster;
   providerCluster: ProviderCluster;
   isAdmin: boolean;
   provider: PropertiesOf<typeof Providers>;

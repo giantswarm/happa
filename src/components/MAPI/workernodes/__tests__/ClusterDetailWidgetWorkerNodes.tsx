@@ -6,8 +6,8 @@ import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -77,7 +77,7 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}`
       )
       .reply(StatusCodes.Ok, {
         apiVersion: 'exp.cluster.x-k8s.io/v1alpha3',
@@ -88,7 +88,7 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
       })
     );
 
@@ -106,7 +106,7 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}`
       )
       .reply(StatusCodes.Ok, {
         apiVersion: 'exp.cluster.x-k8s.io/v1alpha3',
@@ -117,7 +117,7 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
       })
     );
 
@@ -134,7 +134,7 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
@@ -159,7 +159,7 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
       })
     );
 
@@ -176,7 +176,7 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
@@ -209,7 +209,7 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
       })
     );
 
@@ -230,7 +230,7 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
@@ -262,7 +262,7 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
       })
     );
 

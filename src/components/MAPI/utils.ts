@@ -1,11 +1,9 @@
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { Constants, Providers } from 'model/constants';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
-import * as capiv1alpha4 from 'model/services/mapi/capiv1alpha4';
-import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
-import * as capzv1alpha4 from 'model/services/mapi/capzv1alpha4';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -86,13 +84,15 @@ export function compareNodePools(a: NodePool, b: NodePool) {
   }
 
   if (
-    a.apiVersion === 'cluster.x-k8s.io/v1alpha4' &&
+    a.kind === capiv1beta1.MachinePool &&
+    a.kind === b.kind &&
+    a.apiVersion === 'cluster.x-k8s.io/v1beta1' &&
     a.apiVersion === b.apiVersion
   ) {
     // Sort by description.
-    const descriptionComparison = capiv1alpha4
+    const descriptionComparison = capiv1beta1
       .getMachinePoolDescription(a)
-      .localeCompare(capiv1alpha4.getMachinePoolDescription(b));
+      .localeCompare(capiv1beta1.getMachinePoolDescription(b));
     if (descriptionComparison !== 0) {
       return descriptionComparison;
     }
@@ -105,7 +105,7 @@ export function compareNodePools(a: NodePool, b: NodePool) {
 export async function fetchNodePoolListForCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  cluster?: capiv1alpha3.ICluster,
+  cluster?: capiv1beta1.ICluster,
   namespace?: string
 ): Promise<NodePoolList> {
   const infrastructureRef = cluster?.spec?.infrastructureRef;
@@ -119,20 +119,16 @@ export async function fetchNodePoolListForCluster(
   let list: NodePoolList;
 
   switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
+    case capzv1beta1.AzureCluster:
       if (isCAPZCluster(cluster)) {
-        list = await capiv1alpha4.getMachinePoolList(
-          httpClientFactory(),
-          auth,
-          {
-            labelSelector: {
-              matchingLabels: {
-                [capiv1alpha4.labelClusterName]: cluster.metadata.name,
-              },
+        list = await capiv1beta1.getMachinePoolList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
             },
-            namespace,
-          }
-        );
+          },
+          namespace,
+        });
       } else {
         list = await capiexpv1alpha3.getMachinePoolList(
           httpClientFactory(),
@@ -140,7 +136,7 @@ export async function fetchNodePoolListForCluster(
           {
             labelSelector: {
               matchingLabels: {
-                [capiv1alpha3.labelCluster]: cluster.metadata.name,
+                [capiv1beta1.labelCluster]: cluster.metadata.name,
               },
             },
             namespace,
@@ -151,13 +147,13 @@ export async function fetchNodePoolListForCluster(
       break;
 
     case infrav1alpha3.AWSCluster:
-      list = await capiv1alpha3.getMachineDeploymentList(
+      list = await capiv1beta1.getMachineDeploymentList(
         httpClientFactory(),
         auth,
         {
           labelSelector: {
             matchingLabels: {
-              [capiv1alpha3.labelCluster]: cluster.metadata.name,
+              [capiv1beta1.labelCluster]: cluster.metadata.name,
             },
           },
           namespace,
@@ -176,7 +172,7 @@ export async function fetchNodePoolListForCluster(
 }
 
 export function fetchNodePoolListForClusterKey(
-  cluster?: capiv1alpha3.ICluster,
+  cluster?: capiv1beta1.ICluster,
   namespace?: string
 ) {
   const infrastructureRef = cluster?.spec?.infrastructureRef;
@@ -188,12 +184,12 @@ export function fetchNodePoolListForClusterKey(
   }
 
   switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
+    case capzv1beta1.AzureCluster:
       if (isCAPZCluster(cluster)) {
-        return capiv1alpha4.getMachinePoolListKey({
+        return capiv1beta1.getMachinePoolListKey({
           labelSelector: {
             matchingLabels: {
-              [capiv1alpha4.labelClusterName]: cluster.metadata.name,
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
             },
           },
           namespace,
@@ -203,17 +199,17 @@ export function fetchNodePoolListForClusterKey(
       return capiexpv1alpha3.getMachinePoolListKey({
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster.metadata.name,
+            [capiv1beta1.labelCluster]: cluster.metadata.name,
           },
         },
         namespace,
       });
 
     case infrav1alpha3.AWSCluster:
-      return capiv1alpha3.getMachineDeploymentListKey({
+      return capiv1beta1.getMachineDeploymentListKey({
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster.metadata.name,
+            [capiv1beta1.labelCluster]: cluster.metadata.name,
           },
         },
         namespace,
@@ -249,9 +245,9 @@ export async function fetchProviderNodePoolForNodePool(
         infrastructureRef.name
       );
 
-    case kind === capzv1alpha4.AzureMachinePool &&
-      apiVersion === 'infrastructure.cluster.x-k8s.io/v1alpha4':
-      return capzv1alpha4.getAzureMachinePool(
+    case kind === capzv1beta1.AzureMachinePool &&
+      apiVersion === 'infrastructure.cluster.x-k8s.io/v1beta1':
+      return capzv1beta1.getAzureMachinePool(
         httpClientFactory(),
         auth,
         nodePool.metadata.namespace!,
@@ -326,8 +322,8 @@ export async function fetchCluster(
 ): Promise<Cluster> {
   if (namespace && provider === Providers.AWS) {
     const [namespacedCluster, nonNamespacedCluster] = await Promise.allSettled([
-      capiv1alpha3.getCluster(httpClientFactory(), auth, namespace, name),
-      capiv1alpha3.getCluster(httpClientFactory(), auth, 'default', name),
+      capiv1beta1.getCluster(httpClientFactory(), auth, namespace, name),
+      capiv1beta1.getCluster(httpClientFactory(), auth, 'default', name),
     ]);
 
     if (namespacedCluster.status === 'fulfilled') {
@@ -341,7 +337,7 @@ export async function fetchCluster(
     return Promise.reject(nonNamespacedCluster.reason);
   }
 
-  return capiv1alpha3.getCluster(httpClientFactory(), auth, namespace, name);
+  return capiv1beta1.getCluster(httpClientFactory(), auth, namespace, name);
 }
 
 export function fetchClusterKey(
@@ -349,7 +345,7 @@ export function fetchClusterKey(
   namespace: string,
   name: string
 ): string {
-  return capiv1alpha3.getClusterKey(namespace, name);
+  return capiv1beta1.getClusterKey(namespace, name);
 }
 
 export async function fetchClusterList(
@@ -362,11 +358,11 @@ export async function fetchClusterList(
   if (namespace && organization && provider === Providers.AWS) {
     const [namespacedClusters, nonNamespacedClusters] =
       await Promise.allSettled([
-        capiv1alpha3.getClusterList(httpClientFactory(), auth, { namespace }),
-        capiv1alpha3.getClusterList(httpClientFactory(), auth, {
+        capiv1beta1.getClusterList(httpClientFactory(), auth, { namespace }),
+        capiv1beta1.getClusterList(httpClientFactory(), auth, {
           namespace: 'default',
           labelSelector: {
-            matchingLabels: { [capiv1alpha3.labelOrganization]: organization },
+            matchingLabels: { [capiv1beta1.labelOrganization]: organization },
           },
         }),
       ]);
@@ -378,9 +374,9 @@ export async function fetchClusterList(
       return Promise.reject(nonNamespacedClusters.reason);
     }
 
-    const clusterList: capiv1alpha3.IClusterList = {
-      apiVersion: 'cluster.x-k8s.io/v1alpha3',
-      kind: capiv1alpha3.ClusterList,
+    const clusterList: capiv1beta1.IClusterList = {
+      apiVersion: 'cluster.x-k8s.io/v1beta1',
+      kind: capiv1beta1.ClusterList,
       metadata: {},
       items: [],
     };
@@ -396,9 +392,9 @@ export async function fetchClusterList(
     return clusterList;
   }
 
-  const getOptions: capiv1alpha3.IGetClusterListOptions = { namespace };
+  const getOptions: capiv1beta1.IGetClusterListOptions = { namespace };
 
-  return capiv1alpha3.getClusterList(httpClientFactory(), auth, getOptions);
+  return capiv1beta1.getClusterList(httpClientFactory(), auth, getOptions);
 }
 
 export function fetchClusterListKey(
@@ -408,21 +404,21 @@ export function fetchClusterListKey(
 ): string | null {
   if (typeof namespace === 'undefined') return null;
 
-  const getOptions: capiv1alpha3.IGetClusterListOptions = { namespace };
+  const getOptions: capiv1beta1.IGetClusterListOptions = { namespace };
 
   if (organization && provider === Providers.AWS) {
     getOptions.labelSelector = {
-      matchingLabels: { [capiv1alpha3.labelOrganization]: organization },
+      matchingLabels: { [capiv1beta1.labelOrganization]: organization },
     };
   }
 
-  return capiv1alpha3.getClusterListKey(getOptions);
+  return capiv1beta1.getClusterListKey(getOptions);
 }
 
 export async function fetchControlPlaneNodesForCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  cluster: capiv1alpha3.ICluster
+  cluster: capiv1beta1.ICluster
 ): Promise<ControlPlaneNode[]> {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
@@ -432,15 +428,15 @@ export async function fetchControlPlaneNodesForCluster(
   }
 
   switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster: {
-      const cpNodes = await capzv1alpha3.getAzureMachineList(
+    case capzv1beta1.AzureCluster: {
+      const cpNodes = await capzv1beta1.getAzureMachineList(
         httpClientFactory(),
         auth,
         {
           labelSelector: {
             matchingLabels: {
-              [capiv1alpha3.labelCluster]: cluster.metadata.name,
-              [capzv1alpha3.labelControlPlane]: 'true',
+              [capiv1beta1.labelCluster]: cluster.metadata.name,
+              [capzv1beta1.labelControlPlane]: 'true',
             },
           },
           namespace: cluster.metadata.namespace,
@@ -491,7 +487,7 @@ export async function fetchControlPlaneNodesForCluster(
 }
 
 export function fetchControlPlaneNodesForClusterKey(
-  cluster: capiv1alpha3.ICluster
+  cluster: capiv1beta1.ICluster
 ) {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
@@ -499,11 +495,11 @@ export function fetchControlPlaneNodesForClusterKey(
   }
 
   switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
-      return capzv1alpha3.getAzureMachineListKey({
+    case capzv1beta1.AzureCluster:
+      return capzv1beta1.getAzureMachineListKey({
         labelSelector: {
           matchingLabels: {
-            [capiv1alpha3.labelCluster]: cluster.metadata.name,
+            [capiv1beta1.labelCluster]: cluster.metadata.name,
           },
         },
         namespace: cluster.metadata.namespace,
@@ -537,8 +533,8 @@ export async function fetchProviderClusterForCluster(
   }
 
   switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
-      return capzv1alpha3.getAzureCluster(
+    case capzv1beta1.AzureCluster:
+      return capzv1beta1.getAzureCluster(
         httpClientFactory(),
         auth,
         cluster.metadata.namespace!,
@@ -563,8 +559,8 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
   if (!infrastructureRef) return null;
 
   switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
-      return capzv1alpha3.getAzureClusterKey(
+    case capzv1beta1.AzureCluster:
+      return capzv1beta1.getAzureClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
       );
@@ -649,16 +645,16 @@ export function getNodePoolDescription(
       );
 
     // CAPZ alpha
-    case kind === capiv1alpha4.MachinePool &&
-      apiVersion === 'cluster.x-k8s.io/v1alpha4':
+    case kind === capiv1beta1.MachinePool &&
+      apiVersion === 'cluster.x-k8s.io/v1beta1':
       return (
         nodePool.metadata.annotations?.[
-          capiv1alpha4.annotationMachinePoolDescription
+          capiv1beta1.annotationMachinePoolDescription
         ] || defaultValue
       );
 
     // AWS
-    case kind === capiv1alpha3.MachineDeployment:
+    case kind === capiv1beta1.MachineDeployment:
       return (
         (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec.nodePool
           .description || defaultValue
@@ -687,7 +683,7 @@ export function getProviderNodePoolMachineTypes(
 ): NodePoolMachineTypes | undefined {
   switch (providerNodePool?.kind) {
     case capzexpv1alpha3.AzureMachinePool:
-    case capzv1alpha4.AzureMachinePool:
+    case capzv1beta1.AzureMachinePool:
       return { primary: providerNodePool.spec?.template.vmSize ?? '' };
     case infrav1alpha3.AWSMachineDeployment:
       return {
@@ -724,7 +720,7 @@ export function getProviderNodePoolSpotInstances(
 ): NodePoolSpotInstances | undefined {
   switch (providerNodePool?.kind) {
     case capzexpv1alpha3.AzureMachinePool:
-    case capzv1alpha4.AzureMachinePool: {
+    case capzv1beta1.AzureMachinePool: {
       try {
         const maxPriceQty =
           providerNodePool.spec?.template.spotVMOptions?.maxPrice;
@@ -810,8 +806,8 @@ export function getNodePoolScaling(
     }
 
     // CAPZ alpha
-    case kind === capiv1alpha4.MachinePool &&
-      apiVersion === 'cluster.x-k8s.io/v1alpha4': {
+    case kind === capiv1beta1.MachinePool &&
+      apiVersion === 'cluster.x-k8s.io/v1beta1': {
       const status: INodesStatus = {
         min: -1,
         max: -1,
@@ -820,8 +816,8 @@ export function getNodePoolScaling(
       };
 
       if (providerNodePool) {
-        [status.min, status.max] = capzv1alpha4.getAzureMachinePoolScaling(
-          providerNodePool as capzv1alpha4.IAzureMachinePool
+        [status.min, status.max] = capzv1beta1.getAzureMachinePoolScaling(
+          providerNodePool as capzv1beta1.IAzureMachinePool
         );
       }
 
@@ -832,7 +828,7 @@ export function getNodePoolScaling(
     }
 
     // AWS
-    case kind === capiv1alpha3.MachineDeployment: {
+    case kind === capiv1beta1.MachineDeployment: {
       return {
         min:
           (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec
@@ -857,11 +853,11 @@ export function getNodePoolAvailabilityZones(
   switch (nodePool.kind) {
     // Azure, CAPZ alpha
     case capiexpv1alpha3.MachinePool:
-    case capiv1alpha4.MachinePool:
+    case capiv1beta1.MachinePool:
       return nodePool.spec?.failureDomains ?? [];
 
     // AWS
-    case capiv1alpha3.MachineDeployment: {
+    case capiv1beta1.MachineDeployment: {
       return (
         (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec.provider
           .availabilityZones ?? []
@@ -875,8 +871,8 @@ export function getNodePoolAvailabilityZones(
 
 export function getClusterReleaseVersion(cluster: Cluster) {
   switch (cluster.apiVersion) {
-    case 'cluster.x-k8s.io/v1alpha3':
-      return capiv1alpha3.getReleaseVersion(cluster);
+    case 'cluster.x-k8s.io/v1beta1':
+      return capiv1beta1.getReleaseVersion(cluster);
     default:
       return undefined;
   }
@@ -893,10 +889,10 @@ export function getClusterDescription(
   }
 
   switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
+    case capzv1beta1.AzureCluster:
       return (
         cluster.metadata.annotations?.[
-          capiv1alpha3.annotationClusterDescription
+          capiv1beta1.annotationClusterDescription
         ] || defaultValue
       );
     case infrav1alpha3.AWSCluster:
@@ -904,7 +900,7 @@ export function getClusterDescription(
         (providerCluster as infrav1alpha3.IAWSCluster)?.spec?.cluster
           .description ||
         cluster.metadata.annotations?.[
-          capiv1alpha3.annotationClusterDescription
+          capiv1beta1.annotationClusterDescription
         ] ||
         defaultValue
       );
@@ -917,7 +913,7 @@ export function getProviderClusterLocation(
   providerCluster: ProviderCluster
 ): string | undefined {
   switch (providerCluster?.kind) {
-    case capzv1alpha3.AzureCluster:
+    case capzv1beta1.AzureCluster:
       return providerCluster.spec?.location ?? '';
 
     case infrav1alpha3.AWSCluster: {
@@ -936,7 +932,7 @@ export function getProviderClusterAccountID(
   providerCluster: ProviderCluster
 ): string | undefined {
   switch (providerCluster?.kind) {
-    case capzv1alpha3.AzureCluster: {
+    case capzv1beta1.AzureCluster: {
       const id = providerCluster.spec?.subscriptionID;
       if (typeof id === 'undefined') return '';
 
@@ -956,7 +952,7 @@ export function getProviderNodePoolLocation(
 ): string {
   switch (providerNodePool?.kind) {
     case capzexpv1alpha3.AzureMachinePool:
-    case capzv1alpha4.AzureMachinePool:
+    case capzv1beta1.AzureMachinePool:
       return providerNodePool.spec?.location ?? '';
     default:
       return '';
@@ -1088,11 +1084,11 @@ export function getK8sAPIUrl(): string {
 }
 
 export function isCAPZCluster(cluster: Cluster): boolean {
-  if (cluster.spec?.infrastructureRef?.kind !== capzv1alpha3.AzureCluster) {
+  if (cluster.spec?.infrastructureRef?.kind !== capzv1beta1.AzureCluster) {
     return false;
   }
 
-  const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+  const releaseVersion = capiv1beta1.getReleaseVersion(cluster);
   if (!releaseVersion) return false;
 
   return compare(releaseVersion, Constants.AZURE_CAPZ_VERSION) >= 0;
@@ -1109,7 +1105,7 @@ export function supportsClientCertificates(cluster: Cluster): boolean {
   }
 
   switch (infrastructureRef.kind) {
-    case capzv1alpha3.AzureCluster:
+    case capzv1beta1.AzureCluster:
       return true;
 
     case infrav1alpha3.AWSCluster: {

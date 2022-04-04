@@ -23,7 +23,7 @@ import {
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
 import { Providers } from 'model/constants';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import { supportsNodePoolSpotInstances } from 'model/stores/nodepool/utils';
 import React, { useReducer } from 'react';
 import Button from 'UI/Controls/Button';
@@ -153,7 +153,7 @@ const reducer: React.Reducer<INodePoolState, NodePoolAction> = produce(
           namespace: draft.nodePool.metadata.namespace!,
           location: getProviderNodePoolLocation(draft.providerNodePool),
           organization:
-            draft.nodePool.metadata.labels![capiv1alpha3.labelOrganization],
+            draft.nodePool.metadata.labels![capiv1beta1.labelOrganization],
         });
         draft.nodePool = newState.nodePool;
         draft.providerNodePool = newState.providerNodePool;
@@ -188,7 +188,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
     makeInitialState(provider, {
       clusterName: cluster.metadata.name,
       namespace: cluster.metadata.namespace!,
-      organization: cluster.metadata.labels![capiv1alpha3.labelOrganization],
+      organization: cluster.metadata.labels![capiv1beta1.labelOrganization],
       location: getProviderClusterLocation(providerCluster)!,
     })
   );
@@ -270,7 +270,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
     ? supportsNodePoolSpotInstances(provider, clusterReleaseVersion)
     : false;
   const orgName =
-    state.nodePool.metadata.labels![capiv1alpha3.labelOrganization];
+    state.nodePool.metadata.labels![capiv1beta1.labelOrganization];
   const description = getNodePoolDescription(
     state.nodePool,
     state.providerNodePool

@@ -1,8 +1,8 @@
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import { determineRandomAZs, getSupportedAvailabilityZones } from 'MAPI/utils';
 import { Constants } from 'model/constants';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
-import * as capzv1alpha3 from 'model/services/mapi/capzv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import { compare } from 'utils/semver';
 
@@ -38,14 +38,14 @@ export function withClusterReleaseVersion(
     const defaultNamespace = 'default';
 
     cluster.metadata.labels ??= {};
-    cluster.metadata.labels[capiv1alpha3.labelReleaseVersion] = newVersion;
+    cluster.metadata.labels[capiv1beta1.labelReleaseVersion] = newVersion;
     cluster.metadata.namespace = hasNonNamespacedResources
       ? defaultNamespace
       : orgNamespace;
 
     if (providerCluster) {
       providerCluster.metadata.labels ??= {};
-      providerCluster.metadata.labels[capiv1alpha3.labelReleaseVersion] =
+      providerCluster.metadata.labels[capiv1beta1.labelReleaseVersion] =
         newVersion;
       providerCluster.metadata.namespace = hasNonNamespacedResources
         ? defaultNamespace
@@ -58,7 +58,7 @@ export function withClusterReleaseVersion(
 
     for (const controlPlaneNode of controlPlaneNodes) {
       controlPlaneNode.metadata.labels ??= {};
-      controlPlaneNode.metadata.labels[capiv1alpha3.labelReleaseVersion] =
+      controlPlaneNode.metadata.labels[capiv1beta1.labelReleaseVersion] =
         newVersion;
       controlPlaneNode.metadata.namespace = hasNonNamespacedResources
         ? defaultNamespace
@@ -77,7 +77,7 @@ export function withClusterReleaseVersion(
 export function withClusterDescription(newDescription: string): ClusterPatch {
   return (cluster, providerCluster) => {
     cluster.metadata.annotations ??= {};
-    cluster.metadata.annotations[capiv1alpha3.annotationClusterDescription] =
+    cluster.metadata.annotations[capiv1beta1.annotationClusterDescription] =
       newDescription;
 
     if (
@@ -92,7 +92,7 @@ export function withClusterDescription(newDescription: string): ClusterPatch {
 export function withClusterControlPlaneNodeAZs(zones?: string[]): ClusterPatch {
   return (_, _p, controlPlaneNodes) => {
     for (const controlPlaneNode of controlPlaneNodes) {
-      if (controlPlaneNode.kind === capzv1alpha3.AzureMachine) {
+      if (controlPlaneNode.kind === capzv1beta1.AzureMachine) {
         controlPlaneNode.spec!.failureDomain = zones?.[0];
       }
     }

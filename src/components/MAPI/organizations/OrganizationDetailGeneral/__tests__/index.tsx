@@ -18,10 +18,10 @@ import * as React from 'react';
 import { SWRConfig } from 'swr';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
 import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
-import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
+import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
 import * as securityv1alpha1Mocks from 'test/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
@@ -113,9 +113,9 @@ describe('OrganizationDetailGeneral', () => {
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationListResponse);
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
-        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        apiVersion: 'cluster.x-k8s.io/v1beta1',
         items: [],
         kind: 'ClusterList',
       });
@@ -156,9 +156,9 @@ describe('OrganizationDetailGeneral', () => {
       });
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
-        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        apiVersion: 'cluster.x-k8s.io/v1beta1',
         items: [],
         kind: 'ClusterList',
       });
@@ -186,9 +186,9 @@ describe('OrganizationDetailGeneral', () => {
 
   it('can cancel deletion', async () => {
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
-        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        apiVersion: 'cluster.x-k8s.io/v1beta1',
         items: [],
         kind: 'ClusterList',
       });
@@ -213,12 +213,12 @@ describe('OrganizationDetailGeneral', () => {
 
   it('cannot delete the organization if there are still clusters that belong to it', async () => {
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
-        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        apiVersion: 'cluster.x-k8s.io/v1beta1',
         items: [
           {
-            apiVersion: 'cluster.x-k8s.io/v1alpha3',
+            apiVersion: 'cluster.x-k8s.io/v1beta1',
             kind: 'Cluster',
             metadata: {
               annotations: {
@@ -246,7 +246,7 @@ describe('OrganizationDetailGeneral', () => {
                   port: 0,
                 },
                 infrastructureRef: {
-                  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+                  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
                   kind: 'AzureCluster',
                   name: 'ed30d',
                   namespace: 'org-org1',
@@ -292,7 +292,7 @@ describe('OrganizationDetailGeneral', () => {
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationListResponse);
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.NotFound);
 
     render(
@@ -322,9 +322,9 @@ describe('OrganizationDetailGeneral', () => {
     });
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, {
-        apiVersion: 'cluster.x-k8s.io/v1alpha3',
+        apiVersion: 'cluster.x-k8s.io/v1beta1',
         items: [],
         kind: 'ClusterList',
       });
@@ -345,26 +345,26 @@ describe('OrganizationDetailGeneral', () => {
     jest.setTimeout(10000);
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomClusterList);
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterList);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList1);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureMachineList1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster2.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList2);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureMachineList2);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster3.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachines/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster3.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3Dtrue`
       )
-      .reply(StatusCodes.Ok, capzv1alpha3Mocks.randomAzureMachineList3);
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureMachineList3);
 
     nock(window.config.mapiEndpoint)
       .get(
@@ -380,7 +380,7 @@ describe('OrganizationDetailGeneral', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
@@ -407,7 +407,7 @@ describe('OrganizationDetailGeneral', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster2.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster2.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1beta1Mocks.randomCluster2.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster2.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
@@ -425,7 +425,7 @@ describe('OrganizationDetailGeneral', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster3.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster3.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1beta1Mocks.randomCluster3.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster3.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
@@ -434,19 +434,19 @@ describe('OrganizationDetailGeneral', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.name}/apps/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/apps/`
       )
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.randomCluster1AppsList);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster2.metadata.name}/apps/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster2.metadata.name}/apps/`
       )
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.randomCluster2AppsList);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1alpha3Mocks.randomCluster3.metadata.name}/apps/`
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster3.metadata.name}/apps/`
       )
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.randomCluster3AppsList);
 
@@ -530,8 +530,8 @@ describe('OrganizationDetailGeneral', () => {
     jest.setTimeout(10000);
 
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
-      .reply(StatusCodes.Ok, capiv1alpha3Mocks.randomClusterList);
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterList);
 
     render(
       getComponent({

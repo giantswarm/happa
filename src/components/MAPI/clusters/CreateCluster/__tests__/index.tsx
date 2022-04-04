@@ -7,8 +7,8 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
-import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
+import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -50,7 +50,7 @@ jest.mock('react-router', () => ({
 
 const generateUIDMockFn = jest.spyOn(MAPIUtils, 'generateUID');
 generateUIDMockFn.mockReturnValue(
-  capiv1alpha3Mocks.randomCluster1.metadata.name
+  capiv1beta1Mocks.randomCluster1.metadata.name
 );
 
 describe('ClusterCreate', () => {
@@ -88,9 +88,9 @@ describe('ClusterCreate', () => {
   it('can set the description', async () => {
     const createClusterMockFn = jest.spyOn(CreateClusterUtils, 'createCluster');
     createClusterMockFn.mockResolvedValue({
-      cluster: capiv1alpha3Mocks.randomCluster1,
-      providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
-      controlPlaneNodes: [capzv1alpha3Mocks.randomAzureMachine1],
+      cluster: capiv1beta1Mocks.randomCluster1,
+      providerCluster: capzv1beta1Mocks.randomAzureCluster1,
+      controlPlaneNodes: [capzv1beta1Mocks.randomAzureMachine1],
     });
 
     nock(window.config.mapiEndpoint)
@@ -135,9 +135,9 @@ describe('ClusterCreate', () => {
   it('can set the release version', async () => {
     const createClusterMockFn = jest.spyOn(CreateClusterUtils, 'createCluster');
     createClusterMockFn.mockResolvedValue({
-      cluster: capiv1alpha3Mocks.randomCluster1,
-      providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
-      controlPlaneNodes: [capzv1alpha3Mocks.randomAzureMachine1],
+      cluster: capiv1beta1Mocks.randomCluster1,
+      providerCluster: capzv1beta1Mocks.randomAzureCluster1,
+      controlPlaneNodes: [capzv1beta1Mocks.randomAzureMachine1],
     });
 
     nock(window.config.mapiEndpoint)
@@ -211,9 +211,9 @@ describe('ClusterCreate', () => {
   it('can configure the availability zone', async () => {
     const createClusterMockFn = jest.spyOn(CreateClusterUtils, 'createCluster');
     createClusterMockFn.mockResolvedValue({
-      cluster: capiv1alpha3Mocks.randomCluster1,
-      providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
-      controlPlaneNodes: [capzv1alpha3Mocks.randomAzureMachine1],
+      cluster: capiv1beta1Mocks.randomCluster1,
+      providerCluster: capzv1beta1Mocks.randomAzureCluster1,
+      controlPlaneNodes: [capzv1beta1Mocks.randomAzureMachine1],
     });
 
     nock(window.config.mapiEndpoint)
@@ -261,21 +261,21 @@ describe('ClusterCreate', () => {
 
     nock(window.config.mapiEndpoint)
       .post(
-        `/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/${capiv1alpha3Mocks.randomCluster1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Created, capiv1alpha3Mocks.randomCluster1);
+      .reply(StatusCodes.Created, capiv1beta1Mocks.randomCluster1);
 
     nock(window.config.mapiEndpoint)
       .post(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azureclusters/${capzv1alpha3Mocks.randomAzureCluster1.metadata.name}/`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azureclusters/${capzv1beta1Mocks.randomAzureCluster1.metadata.name}/`
       )
-      .reply(StatusCodes.Created, capzv1alpha3Mocks.randomAzureCluster1);
+      .reply(StatusCodes.Created, capzv1beta1Mocks.randomAzureCluster1);
 
     nock(window.config.mapiEndpoint)
       .post(
-        `/apis/infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachines/${capzv1alpha3Mocks.randomAzureMachine1.metadata.name}/`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachines/${capzv1beta1Mocks.randomAzureMachine1.metadata.name}/`
       )
-      .reply(StatusCodes.Created, capzv1alpha3Mocks.randomAzureMachine1);
+      .reply(StatusCodes.Created, capzv1beta1Mocks.randomAzureMachine1);
 
     render(getComponent({}));
 

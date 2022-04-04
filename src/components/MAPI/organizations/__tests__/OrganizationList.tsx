@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { StatusCodes } from 'model/constants';
 import * as featureFlags from 'model/featureFlags';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
 import { IMainState } from 'model/stores/main/types';
 import { mapOAuth2UserToUser } from 'model/stores/main/utils';
@@ -24,10 +24,10 @@ import { usePermissionsForOrganizations } from '../permissions/usePermissionsFor
 const generateCluster = (
   orgName: string = 'org1',
   namespace: string = 'org-org1'
-): capiv1alpha3.ICluster => {
+): capiv1beta1.ICluster => {
   return {
-    apiVersion: 'cluster.x-k8s.io/v1alpha3',
-    kind: capiv1alpha3.Cluster,
+    apiVersion: 'cluster.x-k8s.io/v1beta1',
+    kind: capiv1beta1.Cluster,
     metadata: {
       annotations: {
         'cluster.giantswarm.io/description': 'Random Cluster',
@@ -48,7 +48,7 @@ const generateCluster = (
       name: '0fa12',
       namespace,
       resourceVersion: '294578552',
-      selfLink: `/apis/cluster.x-k8s.io/v1alpha3/namespaces/${namespace}/clusters/0fa12`,
+      selfLink: `/apis/cluster.x-k8s.io/v1beta1/namespaces/${namespace}/clusters/0fa12`,
       uid: '2d448421-8735-4964-929b-2adce693d874',
     },
     spec: {
@@ -64,7 +64,7 @@ const generateCluster = (
         port: 0,
       },
       infrastructureRef: {
-        apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha3',
+        apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
         kind: 'AzureCluster',
         name: '0fa12',
         namespace,
@@ -73,21 +73,20 @@ const generateCluster = (
       },
     },
     status: {
-      controlPlaneInitialized: true,
       infrastructureReady: false,
     },
   };
 };
 
 const generateClusterList = (
-  items: capiv1alpha3.ICluster[]
-): capiv1alpha3.IClusterList => {
+  items: capiv1beta1.ICluster[]
+): capiv1beta1.IClusterList => {
   return {
-    apiVersion: 'cluster.x-k8s.io/v1alpha3',
+    apiVersion: 'cluster.x-k8s.io/v1beta1',
     kind: 'ClusterList',
     metadata: {
       resourceVersion: '294659579',
-      selfLink: '/apis/cluster.x-k8s.io/v1alpha3/clusters/',
+      selfLink: '/apis/cluster.x-k8s.io/v1beta1/clusters/',
     },
     items,
   };
@@ -191,7 +190,7 @@ describe('OrganizationIndex', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
       );
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/clusters/')
       .reply(StatusCodes.Ok, randomClusterList);
 
     render(getComponent({}));
@@ -236,10 +235,10 @@ describe('OrganizationIndex', () => {
         status: { allowed: false },
       });
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org1/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, randomClusterList1);
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/namespaces/org-org2/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org2/clusters/')
       .reply(StatusCodes.Ok, randomClusterList2);
 
     render(getComponent({}));
@@ -277,7 +276,7 @@ describe('OrganizationIndex', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
       );
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/clusters/')
       .reply(StatusCodes.Ok, randomClusterList);
 
     render(getComponent({}));
@@ -313,7 +312,7 @@ describe('OrganizationIndex', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
       );
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/clusters/')
       .reply(StatusCodes.Ok, randomClusterList);
 
     nock(window.config.mapiEndpoint)
@@ -400,7 +399,7 @@ describe('OrganizationIndex', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
       );
     nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1alpha3/clusters/')
+      .get('/apis/cluster.x-k8s.io/v1beta1/clusters/')
       .reply(StatusCodes.Ok, randomClusterList);
 
     render(getComponent({}));

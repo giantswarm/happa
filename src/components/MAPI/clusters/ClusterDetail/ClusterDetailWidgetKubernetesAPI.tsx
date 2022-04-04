@@ -1,7 +1,7 @@
 import URIBlock from 'Cluster/ClusterDetail/URIBlock';
 import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
 import { OrganizationsRoutes } from 'model/constants/routes';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ interface IClusterDetailWidgetKubernetesAPIProps
     React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
     'title'
   > {
-  cluster?: capiv1alpha3.ICluster;
+  cluster?: capiv1beta1.ICluster;
 }
 
 const ClusterDetailWidgetKubernetesAPI: React.FC<
@@ -34,7 +34,7 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<
   const namespace = selectedOrg?.namespace;
 
   const k8sApiURL = cluster
-    ? capiv1alpha3.getKubernetesAPIEndpointURL(cluster)
+    ? capiv1beta1.getKubernetesAPIEndpointURL(cluster)
     : undefined;
 
   const gettingStartedPath = useMemo(() => {

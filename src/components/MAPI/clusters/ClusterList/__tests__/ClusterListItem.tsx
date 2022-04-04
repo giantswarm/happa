@@ -11,10 +11,10 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
-import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
+import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -97,9 +97,9 @@ describe('ClusterListItem', () => {
     render(
       getComponent({
         cluster: {
-          ...capiv1alpha3Mocks.randomCluster1,
+          ...capiv1beta1Mocks.randomCluster1,
           metadata: {
-            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            ...capiv1beta1Mocks.randomCluster1.metadata,
             deletionTimestamp: deletionDate.toISOString(),
           },
         },
@@ -127,9 +127,9 @@ describe('ClusterListItem', () => {
     const { rerender } = render(
       getComponent({
         cluster: {
-          ...capiv1alpha3Mocks.randomCluster1,
+          ...capiv1beta1Mocks.randomCluster1,
           metadata: {
-            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            ...capiv1beta1Mocks.randomCluster1.metadata,
             creationTimestamp: creationDate.toISOString(),
           },
         },
@@ -149,9 +149,9 @@ describe('ClusterListItem', () => {
     rerender(
       getComponent({
         cluster: {
-          ...capiv1alpha3Mocks.randomCluster1,
+          ...capiv1beta1Mocks.randomCluster1,
           metadata: {
-            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            ...capiv1beta1Mocks.randomCluster1.metadata,
             creationTimestamp: creationDate.toISOString(),
           },
         },
@@ -175,7 +175,7 @@ describe('ClusterListItem', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
         releases: releasev1alpha1Mocks.releasesList.items,
         canCreateClusters: false,
       })
@@ -201,13 +201,13 @@ describe('ClusterListItem', () => {
     render(
       getComponent({
         cluster: {
-          ...capiv1alpha3Mocks.randomCluster1,
+          ...capiv1beta1Mocks.randomCluster1,
           metadata: {
-            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            ...capiv1beta1Mocks.randomCluster1.metadata,
             creationTimestamp: creationDate.toISOString(),
           },
         },
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
         releases: releasev1alpha1Mocks.releasesList.items,
       })
     );
@@ -237,7 +237,7 @@ describe('ClusterListItem', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1alpha3Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1alpha3Mocks.randomCluster1.metadata.name}`
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}`
       )
       .reply(
         StatusCodes.Ok,
@@ -262,7 +262,7 @@ describe('ClusterListItem', () => {
 
     render(
       getComponent({
-        cluster: capiv1alpha3Mocks.randomCluster1,
+        cluster: capiv1beta1Mocks.randomCluster1,
         releases: releasev1alpha1Mocks.releasesList.items,
       })
     );
@@ -284,19 +284,20 @@ describe('ClusterListItem', () => {
     const { rerender } = render(
       getComponent({
         cluster: {
-          ...capiv1alpha3Mocks.randomCluster1,
+          ...capiv1beta1Mocks.randomCluster1,
           status: {
-            ...capiv1alpha3Mocks.randomCluster1.status,
+            ...capiv1beta1Mocks.randomCluster1.status,
             conditions: [
               {
                 status: 'True',
                 type: 'Creating',
+                lastTransitionTime: '2020-04-01T12:00:00Z',
               },
             ],
           },
         },
         releases: releasev1alpha1Mocks.releasesList.items,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
       })
     );
 
@@ -307,20 +308,21 @@ describe('ClusterListItem', () => {
     rerender(
       getComponent({
         cluster: {
-          ...capiv1alpha3Mocks.randomCluster1,
+          ...capiv1beta1Mocks.randomCluster1,
           status: {
-            ...capiv1alpha3Mocks.randomCluster1.status,
+            ...capiv1beta1Mocks.randomCluster1.status,
             conditions: [
               {
                 status: 'True',
                 type: 'Upgrading',
                 reason: 'UpgradePending',
+                lastTransitionTime: '2020-04-01T12:00:00Z',
               },
             ],
           },
         },
         releases: releasev1alpha1Mocks.releasesList.items,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
       })
     );
 
@@ -331,24 +333,26 @@ describe('ClusterListItem', () => {
     rerender(
       getComponent({
         cluster: {
-          ...capiv1alpha3Mocks.randomCluster1,
+          ...capiv1beta1Mocks.randomCluster1,
           status: {
-            ...capiv1alpha3Mocks.randomCluster1.status,
+            ...capiv1beta1Mocks.randomCluster1.status,
             conditions: [
               {
                 status: 'False',
                 type: 'Creating',
                 reason: 'CreationCompleted',
+                lastTransitionTime: '2020-04-01T12:00:00Z',
               },
               {
                 status: 'True',
                 type: 'Ready',
+                lastTransitionTime: '2020-04-01T12:01:00Z',
               },
             ],
           },
         },
         releases: releasev1alpha1Mocks.releasesList.items,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
       })
     );
 
@@ -372,17 +376,17 @@ describe('ClusterListItem', () => {
     render(
       getComponent({
         cluster: {
-          ...capiv1alpha3Mocks.randomCluster1,
+          ...capiv1beta1Mocks.randomCluster1,
           metadata: {
-            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            ...capiv1beta1Mocks.randomCluster1.metadata,
             annotations: {
-              ...capiv1alpha3Mocks.randomCluster1.metadata.annotations,
+              ...capiv1beta1Mocks.randomCluster1.metadata.annotations,
               'alpha.giantswarm.io/update-schedule-target-release': '15.0.0',
               'alpha.giantswarm.io/update-schedule-target-time': targetTime,
             },
           },
         },
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
       })
     );
 
@@ -393,17 +397,17 @@ describe('ClusterListItem', () => {
     render(
       getComponent({
         cluster: {
-          ...capiv1alpha3Mocks.randomCluster1,
+          ...capiv1beta1Mocks.randomCluster1,
           metadata: {
-            ...capiv1alpha3Mocks.randomCluster1.metadata,
+            ...capiv1beta1Mocks.randomCluster1.metadata,
             labels: {
-              ...capiv1alpha3Mocks.randomCluster1.metadata.labels,
+              ...capiv1beta1Mocks.randomCluster1.metadata.labels,
               'release.giantswarm.io/version': '15.0.0',
             },
           },
         },
         releases: releasev1alpha1Mocks.releasesList.items,
-        providerCluster: capzv1alpha3Mocks.randomAzureCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
       })
     );
     expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();

@@ -12,7 +12,7 @@ import {
 import { ProviderCluster } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import {
   getIsImpersonatingNonAdmin,
@@ -66,7 +66,7 @@ interface IClusterDetailWidgetReleaseProps
     React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
     'title'
   > {
-  cluster?: capiv1alpha3.ICluster;
+  cluster?: capiv1beta1.ICluster;
   providerCluster?: ProviderCluster;
   canUpdateCluster?: boolean;
   onTargetReleaseVersionChange?: (version: string) => void;
@@ -109,7 +109,7 @@ const ClusterDetailWidgetRelease: React.FC<
   }, [releaseListError]);
 
   const releaseVersion = cluster
-    ? capiv1alpha3.getReleaseVersion(cluster)
+    ? capiv1beta1.getReleaseVersion(cluster)
     : undefined;
 
   const currentRelease = useMemo(() => {
@@ -246,7 +246,7 @@ const ClusterDetailWidgetRelease: React.FC<
         );
 
       mutate(
-        capiv1alpha3.getClusterKey(
+        capiv1beta1.getClusterKey(
           cluster.metadata.namespace!,
           cluster.metadata.name
         ),
@@ -254,7 +254,7 @@ const ClusterDetailWidgetRelease: React.FC<
       );
 
       mutate(
-        capiv1alpha3.getClusterListKey({
+        capiv1beta1.getClusterListKey({
           namespace: cluster.metadata.namespace!,
         })
       );
