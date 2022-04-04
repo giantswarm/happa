@@ -35,7 +35,11 @@ export function withClusterReleaseVersion(
   const clusterOperatorVersion = releaseComponents.find(
     (component) => component.name === 'cluster-operator'
   )?.version;
+  const azureOperatorVersion = releaseComponents.find(
+    (component) => component.name === 'azure-operator'
+  )?.version;
 
+  // eslint-disable-next-line complexity
   return (cluster, providerCluster, controlPlaneNodes) => {
     const hasNonNamespacedResources =
       providerCluster?.kind === infrav1alpha3.AWSCluster &&
@@ -46,6 +50,12 @@ export function withClusterReleaseVersion(
     cluster.metadata.labels[capiv1beta1.labelReleaseVersion] = newVersion;
     cluster.metadata.labels[capiv1beta1.labelClusterOperator] =
       clusterOperatorVersion ?? '';
+
+    if (providerCluster && providerCluster.kind === capzv1beta1.AzureCluster) {
+      cluster.metadata.labels[capiv1beta1.labelAzureOperator] =
+        azureOperatorVersion ?? '';
+    }
+
     cluster.metadata.namespace = hasNonNamespacedResources
       ? defaultNamespace
       : orgNamespace;
@@ -70,12 +80,21 @@ export function withClusterReleaseVersion(
       controlPlaneNode.metadata.namespace = hasNonNamespacedResources
         ? defaultNamespace
         : orgNamespace;
+
       if (
         providerCluster &&
         controlPlaneNode.kind === infrav1alpha3.G8sControlPlane
       ) {
         controlPlaneNode.spec.infrastructureRef.namespace =
           providerCluster.metadata.namespace;
+      }
+
+      if (
+        providerCluster &&
+        controlPlaneNode.kind === capzv1beta1.AzureMachine
+      ) {
+        controlPlaneNode.metadata.labels[capiv1beta1.labelAzureOperator] =
+          azureOperatorVersion ?? '';
       }
     }
   };
