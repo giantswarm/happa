@@ -65,19 +65,14 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
           title='2. Add a label to this cluster'
           command={`
           kubectl --context ${context} \\
-            patch ${
-              provider === Providers.AWS
-                ? 'clusters.cluster.x-k8s.io'
-                : 'cluster'
-            } ${clusterName} \\
+            label clusters.cluster.x-k8s.io ${clusterName} \\
             --namespace ${clusterNamespace} \\
-            --type merge \\
-            --patch '{"metadata": {"labels": {"foo": "bar"}}}'
+            LABEL=VALUE'
           `}
         >
           <Text>
-            The above command would add the label <code>foo</code> with the
-            value <code>bar</code>.
+            Replace <code>LABEL</code> with the label name and
+            <code>VALUE</code> with the label value.
           </Text>
         </CLIGuideStep>
       </CLIGuideStepList>
