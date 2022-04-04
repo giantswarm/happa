@@ -3,7 +3,7 @@ import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
 import { Cache } from 'swr';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
@@ -63,7 +63,7 @@ export function validateOrganizationName(orgName: string): {
 
 export function computeClusterCountersForOrganizations(clusters?: Cluster[]) {
   return clusters?.reduce((acc: Record<string, number>, cluster: Cluster) => {
-    const clusterOrg = capiv1alpha3.getClusterOrganization(cluster);
+    const clusterOrg = capiv1beta1.getClusterOrganization(cluster);
     if (!clusterOrg) return acc;
 
     acc[clusterOrg] ??= 0;
@@ -102,9 +102,9 @@ export async function fetchClusterListForOrganizations(
     return fetchClusterList(httpClientFactory, auth, provider, '');
   }
 
-  const clusterList: capiv1alpha3.IClusterList = {
-    apiVersion: 'cluster.x-k8s.io/v1alpha3',
-    kind: capiv1alpha3.ClusterList,
+  const clusterList: capiv1beta1.IClusterList = {
+    apiVersion: 'cluster.x-k8s.io/v1beta1',
+    kind: capiv1beta1.ClusterList,
     metadata: {},
     items: [],
   };
@@ -116,7 +116,7 @@ export async function fetchClusterListForOrganizations(
         organizationEntry.namespace,
         organizationName
       );
-      const cachedClusterList: capiv1alpha3.IClusterList | undefined =
+      const cachedClusterList: capiv1beta1.IClusterList | undefined =
         cache.get(clusterListKey);
 
       if (cachedClusterList) {

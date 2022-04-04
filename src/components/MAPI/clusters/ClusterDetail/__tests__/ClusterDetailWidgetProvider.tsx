@@ -8,7 +8,7 @@ import { createMemoryHistory } from 'history';
 import { usePermissionsForOrgCredentials } from 'MAPI/clusters/permissions/usePermissionsForOrgCredentials';
 import { ProviderCluster } from 'MAPI/types';
 import * as providers from 'model/constants/providers';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { IMainState } from 'model/stores/main/types';
 import { IOrganizationState } from 'model/stores/organization/types';
@@ -16,8 +16,8 @@ import { IState } from 'model/stores/state';
 import React from 'react';
 import { useParams } from 'react-router';
 import { SWRConfig } from 'swr';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
-import * as capzv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
+import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import * as infrav1alpha3Mocks from 'test/mockHttpCalls/infrastructurev1alpha3';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -85,7 +85,7 @@ const defaultState: IState = {
 } as IState;
 
 function setup(
-  cluster?: capiv1alpha3.ICluster,
+  cluster?: capiv1beta1.ICluster,
   providerCluster?: ProviderCluster
 ) {
   (useParams as jest.Mock).mockReturnValue({
@@ -110,7 +110,7 @@ function setup(
 
 async function setupAWS() {
   const utils = setup(
-    capiv1alpha3Mocks.randomAWSCluster1,
+    capiv1beta1Mocks.randomAWSCluster1,
     infrav1alpha3Mocks.randomAWSCluster1
   );
 
@@ -125,8 +125,8 @@ async function setupAWS() {
 
 async function setupAzure() {
   const utils = setup(
-    capiv1alpha3Mocks.randomCluster1,
-    capzv1alpha3Mocks.randomAzureCluster1
+    capiv1beta1Mocks.randomCluster1,
+    capzv1beta1Mocks.randomAzureCluster1
   );
 
   if (screen.queryAllByText('Loading...').length > 0) {

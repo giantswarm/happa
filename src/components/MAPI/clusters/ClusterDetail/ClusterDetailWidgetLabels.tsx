@@ -1,7 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import ClusterLabels from 'Cluster/ClusterDetail/ClusterLabels/ClusterLabels';
 import { extractErrorMessage } from 'MAPI/utils';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React, { useMemo, useState } from 'react';
 import { mutate } from 'swr';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
@@ -17,7 +17,7 @@ interface IClusterDetailWidgetLabelsProps
     React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
     'title'
   > {
-  cluster?: capiv1alpha3.ICluster;
+  cluster?: capiv1beta1.ICluster;
   canUpdateCluster?: boolean;
 }
 
@@ -50,14 +50,14 @@ const ClusterDetailWidgetLabels: React.FC<IClusterDetailWidgetLabelsProps> = ({
       );
 
       mutate(
-        capiv1alpha3.getClusterKey(
+        capiv1beta1.getClusterKey(
           cluster.metadata.namespace!,
           cluster.metadata.name
         ),
         updatedCluster
       );
       mutate(
-        capiv1alpha3.getClusterListKey({
+        capiv1beta1.getClusterListKey({
           namespace: cluster.metadata.namespace!,
         })
       );

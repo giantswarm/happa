@@ -9,8 +9,8 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, Providers } from 'model/constants';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
@@ -66,8 +66,8 @@ export async function updateNodePoolDescription(
         capiexpv1alpha3.getMachinePoolListKey({
           labelSelector: {
             matchingLabels: {
-              [capiv1alpha3.labelCluster]:
-                machinePool.metadata.labels![capiv1alpha3.labelCluster],
+              [capiv1beta1.labelCluster]:
+                machinePool.metadata.labels![capiv1beta1.labelCluster],
             },
           },
           namespace: nodePool.metadata.namespace,
@@ -78,7 +78,7 @@ export async function updateNodePoolDescription(
     }
 
     // AWS
-    case capiv1alpha3.MachineDeployment: {
+    case capiv1beta1.MachineDeployment: {
       let providerNodePool = await fetchProviderNodePoolForNodePool(
         httpClientFactory,
         auth,
@@ -108,7 +108,7 @@ export async function updateNodePoolDescription(
         false
       );
 
-      const nodePoolList = await capiv1alpha3.getMachineDeploymentList(
+      const nodePoolList = await capiv1beta1.getMachineDeploymentList(
         httpClientFactory(),
         auth,
         {
@@ -130,6 +130,7 @@ export async function updateNodePoolDescription(
           if (!draft) return;
 
           for (let i = 0; i < draft.length; i++) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             if (draft[i]!.nodePoolName === providerNodePool!.metadata.name) {
               draft[i] = { ...draft[i], providerNodePool };
             }
@@ -181,8 +182,8 @@ export async function deleteNodePool(
         capiexpv1alpha3.getMachinePoolListKey({
           labelSelector: {
             matchingLabels: {
-              [capiv1alpha3.labelCluster]:
-                machinePool.metadata.labels![capiv1alpha3.labelCluster],
+              [capiv1beta1.labelCluster]:
+                machinePool.metadata.labels![capiv1beta1.labelCluster],
             },
           },
           namespace: nodePool.metadata.namespace,
@@ -205,17 +206,17 @@ export async function deleteNodePool(
     }
 
     // AWS
-    case capiv1alpha3.MachineDeployment: {
+    case capiv1beta1.MachineDeployment: {
       const client = httpClientFactory();
 
-      const machineDeployment = await capiv1alpha3.getMachineDeployment(
+      const machineDeployment = await capiv1beta1.getMachineDeployment(
         client,
         auth,
         nodePool.metadata.namespace!,
         nodePool.metadata.name
       );
 
-      await capiv1alpha3.deleteMachineDeployment(
+      await capiv1beta1.deleteMachineDeployment(
         client,
         auth,
         machineDeployment
@@ -224,7 +225,7 @@ export async function deleteNodePool(
       machineDeployment.metadata.deletionTimestamp = new Date().toISOString();
 
       mutate(
-        capiv1alpha3.getMachineDeploymentKey(
+        capiv1beta1.getMachineDeploymentKey(
           machineDeployment.metadata.namespace!,
           machineDeployment.metadata.name
         ),
@@ -233,16 +234,16 @@ export async function deleteNodePool(
       );
 
       mutate(
-        capiv1alpha3.getMachineDeploymentListKey({
+        capiv1beta1.getMachineDeploymentListKey({
           labelSelector: {
             matchingLabels: {
-              [capiv1alpha3.labelCluster]:
-                machineDeployment.metadata.labels![capiv1alpha3.labelCluster],
+              [capiv1beta1.labelCluster]:
+                machineDeployment.metadata.labels![capiv1beta1.labelCluster],
             },
           },
           namespace: nodePool.metadata.namespace,
         }),
-        produce((draft?: capiv1alpha3.IMachineDeploymentList) => {
+        produce((draft?: capiv1beta1.IMachineDeploymentList) => {
           if (!draft) return;
 
           for (let i = 0; i < draft.items.length; i++) {
@@ -395,8 +396,8 @@ export async function updateNodePoolScaling(
         capiexpv1alpha3.getMachinePoolListKey({
           labelSelector: {
             matchingLabels: {
-              [capiv1alpha3.labelCluster]:
-                machinePool.metadata.labels![capiv1alpha3.labelCluster],
+              [capiv1beta1.labelCluster]:
+                machinePool.metadata.labels![capiv1beta1.labelCluster],
             },
           },
           namespace: nodePool.metadata.namespace,
@@ -419,7 +420,7 @@ export async function updateNodePoolScaling(
     }
 
     // AWS
-    case capiv1alpha3.MachineDeployment: {
+    case capiv1beta1.MachineDeployment: {
       let providerNodePool = await fetchProviderNodePoolForNodePool(
         httpClientFactory,
         auth,
@@ -457,7 +458,7 @@ export async function updateNodePoolScaling(
         false
       );
 
-      const nodePoolList = await capiv1alpha3.getMachineDeploymentList(
+      const nodePoolList = await capiv1beta1.getMachineDeploymentList(
         httpClientFactory(),
         auth,
         {
@@ -479,7 +480,11 @@ export async function updateNodePoolScaling(
           if (!draft) return;
 
           for (let i = 0; i < draft.length; i++) {
-            if (draft[i]!.nodePoolName === providerNodePool!.metadata.name) {
+            if (
+              draft[i]!.nodePoolName ===
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+              providerNodePool!.metadata.name
+            ) {
               draft[i] = { ...draft[i], providerNodePool };
             }
           }
@@ -525,8 +530,8 @@ export function createDefaultSpark(config: {
       namespace: config.namespace,
       name: config.name,
       labels: {
-        [capiv1alpha3.labelCluster]: config.clusterName,
-        [capiv1alpha3.labelClusterName]: config.clusterName,
+        [capiv1beta1.labelCluster]: config.clusterName,
+        [capiv1beta1.labelClusterName]: config.clusterName,
       },
     },
     spec: {},
@@ -569,9 +574,9 @@ export function createDefaultAzureMachinePool(config: {
       name: config.name,
       labels: {
         [capiexpv1alpha3.labelMachinePool]: config.name,
-        [capiv1alpha3.labelCluster]: config.clusterName,
-        [capiv1alpha3.labelClusterName]: config.clusterName,
-        [capiv1alpha3.labelOrganization]: config.organization,
+        [capiv1beta1.labelCluster]: config.clusterName,
+        [capiv1beta1.labelClusterName]: config.clusterName,
+        [capiv1beta1.labelOrganization]: config.organization,
       },
     },
     spec: {
@@ -655,12 +660,16 @@ function createDefaultMachinePool(config: {
   providerNodePool: ProviderNodePool;
   bootstrapConfig: BootstrapConfig;
 }): capiexpv1alpha3.IMachinePool {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const namespace = config.providerNodePool!.metadata.namespace;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const name = config.providerNodePool!.metadata.name;
   const organization =
-    config.providerNodePool!.metadata.labels![capiv1alpha3.labelOrganization];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    config.providerNodePool!.metadata.labels![capiv1beta1.labelOrganization];
   const clusterName =
-    config.providerNodePool!.metadata.labels![capiv1alpha3.labelClusterName];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    config.providerNodePool!.metadata.labels![capiv1beta1.labelClusterName];
 
   return {
     apiVersion: 'exp.cluster.x-k8s.io/v1alpha3',
@@ -670,9 +679,9 @@ function createDefaultMachinePool(config: {
       namespace,
       labels: {
         [capiexpv1alpha3.labelMachinePool]: name,
-        [capiv1alpha3.labelCluster]: clusterName,
-        [capiv1alpha3.labelClusterName]: clusterName,
-        [capiv1alpha3.labelOrganization]: organization,
+        [capiv1beta1.labelCluster]: clusterName,
+        [capiv1beta1.labelClusterName]: clusterName,
+        [capiv1beta1.labelOrganization]: organization,
       },
       annotations: {
         [capiexpv1alpha3.annotationMachinePoolDescription]:
@@ -696,6 +705,7 @@ function createDefaultMachinePool(config: {
               : undefined,
           },
           infrastructureRef: corev1.getObjectReference(
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             config.providerNodePool!
           ),
         },
@@ -707,25 +717,29 @@ function createDefaultMachinePool(config: {
 function createDefaultMachineDeployment(config: {
   providerNodePool: ProviderNodePool;
   bootstrapConfig: BootstrapConfig;
-}): capiv1alpha3.IMachineDeployment {
+}): capiv1beta1.IMachineDeployment {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const namespace = config.providerNodePool!.metadata.namespace;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const name = config.providerNodePool!.metadata.name;
   const organization =
-    config.providerNodePool!.metadata.labels![capiv1alpha3.labelOrganization];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    config.providerNodePool!.metadata.labels![capiv1beta1.labelOrganization];
   const clusterName =
-    config.providerNodePool!.metadata.labels![capiv1alpha3.labelCluster];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    config.providerNodePool!.metadata.labels![capiv1beta1.labelCluster];
 
   return {
-    apiVersion: 'cluster.x-k8s.io/v1alpha3',
-    kind: capiv1alpha3.MachineDeployment,
+    apiVersion: 'cluster.x-k8s.io/v1beta1',
+    kind: capiv1beta1.MachineDeployment,
     metadata: {
       name,
       namespace,
       labels: {
         [infrav1alpha3.labelMachineDeployment]: name,
-        [capiv1alpha3.labelCluster]: clusterName,
-        [capiv1alpha3.labelClusterName]: clusterName,
-        [capiv1alpha3.labelOrganization]: organization,
+        [capiv1beta1.labelCluster]: clusterName,
+        [capiv1beta1.labelClusterName]: clusterName,
+        [capiv1beta1.labelOrganization]: organization,
       },
     },
     spec: {
@@ -736,6 +750,7 @@ function createDefaultMachineDeployment(config: {
           clusterName,
           bootstrap: {},
           infrastructureRef: corev1.getObjectReference(
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             config.providerNodePool!
           ),
         },
@@ -811,8 +826,8 @@ export async function createNodePool(
         capiexpv1alpha3.getMachinePoolListKey({
           labelSelector: {
             matchingLabels: {
-              [capiv1alpha3.labelCluster]:
-                nodePool.metadata.labels![capiv1alpha3.labelCluster],
+              [capiv1beta1.labelCluster]:
+                nodePool.metadata.labels![capiv1beta1.labelCluster],
             },
           },
           namespace: nodePool.metadata.namespace,
@@ -845,14 +860,14 @@ export async function createNodePool(
         false
       );
 
-      const nodePool = await capiv1alpha3.createMachineDeployment(
+      const nodePool = await capiv1beta1.createMachineDeployment(
         httpClient,
         auth,
-        config.nodePool as capiv1alpha3.IMachineDeployment
+        config.nodePool as capiv1beta1.IMachineDeployment
       );
 
       mutate(
-        capiv1alpha3.getMachineDeploymentKey(
+        capiv1beta1.getMachineDeploymentKey(
           nodePool.metadata.namespace!,
           nodePool.metadata.name
         ),
@@ -862,16 +877,16 @@ export async function createNodePool(
 
       // Add the created node pool to the existing list.
       mutate(
-        capiv1alpha3.getMachineDeploymentListKey({
+        capiv1beta1.getMachineDeploymentListKey({
           labelSelector: {
             matchingLabels: {
-              [capiv1alpha3.labelCluster]:
-                nodePool.metadata.labels![capiv1alpha3.labelCluster],
+              [capiv1beta1.labelCluster]:
+                nodePool.metadata.labels![capiv1beta1.labelCluster],
             },
           },
           namespace: nodePool.metadata.namespace,
         }),
-        produce((draft?: capiv1alpha3.IMachineDeploymentList) => {
+        produce((draft?: capiv1beta1.IMachineDeploymentList) => {
           if (!draft) return;
 
           draft.items.push(nodePool);

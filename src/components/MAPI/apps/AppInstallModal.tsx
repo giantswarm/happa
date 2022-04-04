@@ -25,7 +25,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
@@ -58,7 +58,7 @@ function getOrganizationForCluster(
   cluster: Cluster,
   organizations: Record<string, IOrganization>
 ): IOrganization | undefined {
-  const organization = capiv1alpha3.getClusterOrganization(cluster);
+  const organization = capiv1beta1.getClusterOrganization(cluster);
   if (!organization) return undefined;
 
   return Object.values(organizations).find((o) => o.name === organization);

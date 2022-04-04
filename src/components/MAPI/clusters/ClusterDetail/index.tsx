@@ -18,7 +18,7 @@ import {
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
-import * as capiv1alpha3 from 'model/services/mapi/capiv1alpha3';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
@@ -249,7 +249,7 @@ const ClusterDetail: React.FC<{}> = () => {
   const isPreviewRelease = useMemo(() => {
     if (!cluster || !releaseList?.items) return undefined;
 
-    const releaseVersion = capiv1alpha3.getReleaseVersion(cluster);
+    const releaseVersion = capiv1beta1.getReleaseVersion(cluster);
     const previewReleaseVersions = getPreviewReleaseVersions(
       releaseList?.items
     );
@@ -306,10 +306,10 @@ const ClusterDetail: React.FC<{}> = () => {
     return getClusterDescription(cluster, providerCluster, '');
   }, [cluster, providerCluster, providerClusterIsLoading]);
   const clusterReleaseVersion = cluster
-    ? capiv1alpha3.getReleaseVersion(cluster)
+    ? capiv1beta1.getReleaseVersion(cluster)
     : undefined;
   const clusterK8sApiURL = cluster
-    ? capiv1alpha3.getKubernetesAPIEndpointURL(cluster)
+    ? capiv1beta1.getKubernetesAPIEndpointURL(cluster)
     : undefined;
 
   const updateDescription = async (newValue: string) => {

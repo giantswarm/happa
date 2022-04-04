@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import sub from 'date-fns/fp/sub';
-import * as capiv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import { renderWithTheme } from 'test/renderUtils';
 
 import ClusterDetailWidgetCreated from '../ClusterDetailWidgetCreated';
@@ -20,7 +20,7 @@ describe('ClusterDetailWidgetCreated', () => {
 
   it('displays the absolute date when the cluster was created', () => {
     renderWithTheme(ClusterDetailWidgetCreated, {
-      cluster: capiv1alpha3Mocks.randomCluster1,
+      cluster: capiv1beta1Mocks.randomCluster1,
     });
 
     expect(screen.getByLabelText('Created')).toBeInTheDocument();
@@ -32,10 +32,10 @@ describe('ClusterDetailWidgetCreated', () => {
       hours: 1,
     })(new Date());
 
-    const cluster: typeof capiv1alpha3Mocks.randomCluster1 = {
-      ...capiv1alpha3Mocks.randomCluster1,
+    const cluster: typeof capiv1beta1Mocks.randomCluster1 = {
+      ...capiv1beta1Mocks.randomCluster1,
       metadata: {
-        ...capiv1alpha3Mocks.randomCluster1.metadata,
+        ...capiv1beta1Mocks.randomCluster1.metadata,
         creationTimestamp: creationDate.toISOString(),
       },
     };
