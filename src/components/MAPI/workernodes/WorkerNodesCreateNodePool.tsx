@@ -22,10 +22,13 @@ import {
   INodePoolSpotInstancesAWS,
   INodePoolSpotInstancesAzure,
 } from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { supportsNodePoolSpotInstances } from 'model/stores/nodepool/utils';
-import React, { useReducer } from 'react';
+import React, { useEffect, useMemo, useReducer, useRef } from 'react';
+import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
@@ -95,6 +98,7 @@ interface IReducerConfig {
   clusterName: string;
   organization: string;
   location: string;
+  azureOperatorVersion: string;
 }
 
 function makeInitialState(
@@ -154,6 +158,7 @@ const reducer: React.Reducer<INodePoolState, NodePoolAction> = produce(
           location: getProviderNodePoolLocation(draft.providerNodePool),
           organization:
             draft.nodePool.metadata.labels![capiv1beta1.labelOrganization],
+          azureOperatorVersion: '',
         });
         draft.nodePool = newState.nodePool;
         draft.providerNodePool = newState.providerNodePool;
@@ -165,6 +170,16 @@ const reducer: React.Reducer<INodePoolState, NodePoolAction> = produce(
     }
   }
 );
+
+function getAzureOperatorVersion(
+  release: releasev1alpha1.IRelease | undefined
+): string {
+  return (
+    release?.spec.components.find(
+      (component) => component.name === 'azure-operator'
+    )?.version ?? ''
+  );
+}
 
 interface IWorkerNodesCreateNodePoolProps
   extends React.ComponentPropsWithoutRef<typeof Collapsible> {
@@ -183,6 +198,38 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
 }) => {
   const provider = window.config.info.general.provider;
 
+  const clientFactory = useHttpClientFactory();
+
+  const releaseListClient = useRef(clientFactory());
+  const auth = useAuthProvider();
+
+  const { data: releaseList, error: releaseListError } = useSWR<
+    releasev1alpha1.IReleaseList,
+    GenericResponseError
+  >(releasev1alpha1.getReleaseListKey(), () =>
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  );
+
+  useEffect(() => {
+    if (releaseListError) {
+      ErrorReporter.getInstance().notify(releaseListError);
+    }
+  }, [releaseListError]);
+
+  const releaseVersion = cluster
+    ? capiv1beta1.getReleaseVersion(cluster)
+    : undefined;
+
+  const currentRelease = useMemo(() => {
+    const formattedReleaseVersion = `v${releaseVersion}`;
+
+    const release = releaseList?.items.find(
+      (r) => r.metadata.name === formattedReleaseVersion
+    );
+    if (!release) return undefined;
+
+    return release;
+  }, [releaseList?.items, releaseVersion]);
   const [state, dispatch] = useReducer(
     reducer,
     makeInitialState(provider, {
@@ -190,6 +237,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
       namespace: cluster.metadata.namespace!,
       organization: cluster.metadata.labels![capiv1beta1.labelOrganization],
       location: getProviderClusterLocation(providerCluster)!,
+      azureOperatorVersion: getAzureOperatorVersion(currentRelease),
     })
   );
 
@@ -216,9 +264,6 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
     };
 
   const isValid = Object.values(state.validationResults).every((r) => r);
-
-  const clientFactory = useHttpClientFactory();
-  const auth = useAuthProvider();
 
   const handleCreation = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
