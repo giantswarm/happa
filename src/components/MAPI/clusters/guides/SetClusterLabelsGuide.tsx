@@ -67,7 +67,7 @@ const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
           kubectl --context ${context} \\
             label clusters.cluster.x-k8s.io ${clusterName} \\
             --namespace ${clusterNamespace} \\
-            LABEL=VALUE'
+            LABEL=VALUE
           `}
         >
           <Text>
