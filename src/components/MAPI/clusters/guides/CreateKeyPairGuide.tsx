@@ -60,25 +60,27 @@ const CreateKeyPairGuide: React.FC<ICreateKeyPairGuideProps> = ({
               managementCluster: context,
               workloadCluster: clusterName,
               workloadClusterOrganization: organizationName,
-              certificateGroup: ['my-group'],
+              certificateGroup: ['GROUP'],
               certificateTTL: '3h',
             }),
             withFormatting()
           )}
         />
         <Text>
-          If you want to assign the certificate to one or several RBAC groups,
-          apply <code>--certificate-group</code> as often as required with a
-          proper group name. Otherwise remove it. Also adjust{' '}
-          <code>--certificate-ttl</code> to the required life time.
+          <strong>Note:</strong> To grant permissions to the client presenting
+          the certificate, adapt <code>--certificate-group GROUP</code> to a
+          name matched by a group subject in your RBAC role binding(s).
+          Alternatively, you will have to create role bindings matching the
+          unique user name (CN) of the generated client certificate.
         </Text>
         <Text>
-          On execution, the required user, cluster, and context entries will be
-          added/updated in your <code>kubectl</code> configuration file.
+          The flag <code>--certificate-ttl</code> is used to specify the
+          lifetime of the certificate.
         </Text>
         <Text>
-          <strong>Note:</strong> An existing cluster and user entry for the same
-          workload cluster will get overwritten.
+          On execution, your <code>kubectl</code> configuration file will be
+          modified to set the required user, cluster, and context entries.
+          Existing entries from previous executions will be overwritten.
         </Text>
       </CLIGuideStepList>
     </CLIGuide>
