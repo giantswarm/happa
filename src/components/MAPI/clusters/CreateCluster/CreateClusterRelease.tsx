@@ -1,4 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import * as releasesUtils from 'MAPI/releases/utils';
 import { extractErrorMessage, getClusterReleaseVersion } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -76,6 +77,8 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
           return acc;
         }
 
+        const components = releasesUtils.reduceReleaseToComponents(curr);
+
         const k8sVersion = releasev1alpha1.getK8sVersion(curr);
         const k8sVersionEOLDate = k8sVersion
           ? getK8sVersionEOLDate(k8sVersion) ?? undefined
@@ -85,6 +88,7 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
           version: normalizedVersion,
           state: curr.spec.state,
           timestamp: curr.metadata.creationTimestamp ?? '',
+          components: Object.values(components),
           kubernetesVersion: k8sVersion,
           k8sVersionEOLDate: k8sVersionEOLDate,
           releaseNotesURL: releasev1alpha1.getReleaseNotesURL(curr),
@@ -96,10 +100,17 @@ const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
     );
   }, [isAdmin, isImpersonatingNonAdmin, releaseList]);
 
-  const handleChange = (newVersion: string) => {
+  const handleChange = (
+    release: string,
+    releaseComponents: IReleaseComponent[]
+  ) => {
     onChange({
       isValid: true,
-      patch: withClusterReleaseVersion(newVersion, orgNamespace),
+      patch: withClusterReleaseVersion(
+        release,
+        releaseComponents,
+        orgNamespace
+      ),
     });
   };
 
