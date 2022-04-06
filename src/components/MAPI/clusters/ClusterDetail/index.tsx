@@ -46,9 +46,9 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
 import ClusterStatusComponent from '../ClusterStatus/ClusterStatus';
+import { useClusterStatus } from '../hooks/useClusterStatus';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import { ClusterStatus } from '../utils';
-import { useClusterStatus } from '../utils';
 import ClusterDetailActions from './ClusterDetailActions';
 import ClusterDetailOverview from './ClusterDetailOverview';
 import { updateClusterDescription } from './utils';

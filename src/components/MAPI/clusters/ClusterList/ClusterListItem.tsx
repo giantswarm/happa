@@ -39,11 +39,11 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
 import ClusterStatus from '../ClusterStatus/ClusterStatus';
+import { useClusterStatus } from '../hooks/useClusterStatus';
 import {
   getWorkerNodesCount,
   getWorkerNodesCPU,
   getWorkerNodesMemory,
-  useClusterStatus,
 } from '../utils';
 
 const StyledLink = styled(Link)`

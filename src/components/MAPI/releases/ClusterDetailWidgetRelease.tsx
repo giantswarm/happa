@@ -2,11 +2,8 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Keyboard, Text } from 'grommet';
 import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
 import ClusterStatusComponent from 'MAPI/clusters/ClusterStatus/ClusterStatus';
-import {
-  ClusterStatus,
-  getClusterConditions,
-  useClusterStatus,
-} from 'MAPI/clusters/utils';
+import { useClusterStatus } from 'MAPI/clusters/hooks/useClusterStatus';
+import { ClusterStatus, getClusterConditions } from 'MAPI/clusters/utils';
 import {
   getSupportedUpgradeVersions,
   reduceReleaseToComponents,
