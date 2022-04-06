@@ -29,10 +29,12 @@ import { Switch, useRouteMatch } from 'react-router';
 import Route from 'Route';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
+import { FlashMessageType } from 'styles';
 import useSWR from 'swr';
 import ClusterIDLabel, {
   ClusterIDLabelType,
 } from 'UI/Display/Cluster/ClusterIDLabel';
+import FlashMessageComponent from 'UI/Display/FlashMessage';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 import ViewAndEditName, {
@@ -43,7 +45,10 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
+import ClusterStatusComponent from '../ClusterStatus/ClusterStatus';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
+import { ClusterStatus } from '../utils';
+import { useClusterStatus } from '../utils';
 import ClusterDetailActions from './ClusterDetailActions';
 import ClusterDetailOverview from './ClusterDetailOverview';
 import { updateClusterDescription } from './utils';
@@ -93,6 +98,11 @@ const StyledViewAndEditName = styled(ViewAndEditName)`
   input {
     font-size: 100%;
   }
+`;
+
+const StyledFlashMessage = styled(FlashMessageComponent)`
+  display: flex;
+  margin-bottom: ${({ theme }) => theme.spacingPx * 5}px;
 `;
 
 const ClusterDetail: React.FC<{}> = () => {
@@ -312,6 +322,12 @@ const ClusterDetail: React.FC<{}> = () => {
     ? capiv1beta1.getKubernetesAPIEndpointURL(cluster)
     : undefined;
 
+  const { status: clusterStatus, clusterUpdateSchedule } = useClusterStatus(
+    cluster,
+    providerCluster,
+    releaseList?.items
+  );
+
   const updateDescription = async (newValue: string) => {
     if (!cluster) return;
 
@@ -355,7 +371,15 @@ const ClusterDetail: React.FC<{}> = () => {
         }}
       >
         <Box>
-          <Heading level={1} margin={{ bottom: 'large' }}>
+          <Heading
+            level={1}
+            margin={{
+              bottom:
+                clusterStatus === ClusterStatus.CreationInProgress
+                  ? 'medium'
+                  : 'large',
+            }}
+          >
             <Box direction='row' align='center'>
               <ClusterIDLabel
                 clusterID={clusterId}
@@ -380,6 +404,15 @@ const ClusterDetail: React.FC<{}> = () => {
               </OptionalValue>
             </Box>
           </Heading>
+          {clusterStatus === ClusterStatus.CreationInProgress && (
+            <StyledFlashMessage type={FlashMessageType.Info}>
+              <ClusterStatusComponent
+                status={clusterStatus}
+                clusterUpdateSchedule={clusterUpdateSchedule}
+                inheritColor={true}
+              />
+            </StyledFlashMessage>
+          )}
           <Tabs useRoutes={true}>
             <Tab path={paths.Home} title='Overview' />
             <Tab path={paths.WorkerNodes} title='Worker nodes' />

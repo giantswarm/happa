@@ -1,68 +1,75 @@
 import { Box, Text } from 'grommet';
-import { IClusterUpdateSchedule } from 'MAPI/clusters/utils';
 import React from 'react';
 import { useTheme } from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import { formatDate } from 'utils/helpers';
 
-interface IClusterDetailStatusProps
+import {
+  ClusterStatus as ClusterStatusType,
+  IClusterUpdateSchedule,
+} from '../utils';
+
+interface IClusterStatusProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
-  isCreating?: boolean;
-  isDeleting?: boolean;
-  isConditionUnknown?: boolean;
-  isUpgrading?: boolean;
-  isUpgradable?: boolean;
+  status: ClusterStatusType;
   clusterUpdateSchedule?: IClusterUpdateSchedule;
+  inheritColor?: boolean;
 }
 
-const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
-  isCreating,
-  isDeleting,
-  isConditionUnknown,
-  isUpgrading,
-  isUpgradable,
+const ClusterStatus: React.FC<IClusterStatusProps> = ({
+  status,
   clusterUpdateSchedule,
+  inheritColor,
   ...props
 }) => {
   const theme = useTheme();
+
   let color = theme.colors.yellow1;
   let iconClassName = '';
   let message = '';
   let tooltip = '';
 
-  switch (true) {
-    case isCreating:
-    case isDeleting:
-    case isConditionUnknown:
-      return null;
+  switch (status) {
+    case ClusterStatusType.CreationInProgress:
+      color = theme.colors.gray;
+      iconClassName = 'fa fa-change-in-progress';
+      message = 'Cluster creating…';
+      tooltip =
+        'The cluster is currently creating. This step usually takes about 15 minutes.';
+      break;
 
-    case isUpgrading:
+    case ClusterStatusType.UpgradeInProgress:
       iconClassName = 'fa fa-version-upgrade';
       message = 'Upgrade in progress…';
       tooltip =
         'The cluster is currently upgrading. This step usually takes about 30 minutes.';
       break;
 
-    case typeof clusterUpdateSchedule !== 'undefined':
+    case ClusterStatusType.UpgradeScheduled:
       color = theme.colors.gray;
       iconClassName = 'fa fa-version-upgrade';
       message = 'Upgrade scheduled';
-      tooltip = `The cluster will upgrade to v${
-        clusterUpdateSchedule!.targetRelease
-      } on ${formatDate(clusterUpdateSchedule!.targetTime)}`;
+      tooltip = clusterUpdateSchedule
+        ? `The cluster will upgrade to v${
+            clusterUpdateSchedule.targetRelease
+          } on ${formatDate(clusterUpdateSchedule.targetTime)}`
+        : '';
       break;
 
-    case isUpgradable:
+    case ClusterStatusType.UpgradeAvailable:
       iconClassName = 'fa fa-warning';
       message = 'Upgrade available';
       tooltip = `There's a new release version available. Upgrade now to get the latest features.`;
       break;
+
+    default:
+      return null;
   }
 
   return (
     <TooltipContainer content={<Tooltip>{tooltip}</Tooltip>}>
       <Box aria-label='Cluster status' {...props}>
-        <Text color={color}>
+        <Text color={inheritColor ? undefined : color}>
           <i className={iconClassName} role='presentation' aria-hidden='true' />{' '}
           {message}
         </Text>
@@ -71,4 +78,4 @@ const ClusterDetailStatus: React.FC<IClusterDetailStatusProps> = ({
   );
 };
 
-export default ClusterDetailStatus;
+export default ClusterStatus;

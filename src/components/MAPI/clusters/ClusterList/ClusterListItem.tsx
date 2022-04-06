@@ -21,12 +21,8 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import {
-  getIsImpersonatingNonAdmin,
-  getUserIsAdmin,
-} from 'model/stores/main/selectors';
 import React, { useEffect, useMemo, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -42,12 +38,13 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
+import ClusterStatus from '../ClusterStatus/ClusterStatus';
 import {
   getWorkerNodesCount,
   getWorkerNodesCPU,
   getWorkerNodesMemory,
+  useClusterStatus,
 } from '../utils';
-import ClusterListItemStatus from './ClusterListItemStatus';
 
 const StyledLink = styled(Link)`
   transition: box-shadow 0.1s ease-in-out;
@@ -99,6 +96,12 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
 
     return getClusterDescription(cluster, providerCluster, '');
   }, [cluster, providerCluster]);
+
+  const { status: clusterStatus, clusterUpdateSchedule } = useClusterStatus(
+    cluster,
+    providerCluster === null ? undefined : providerCluster,
+    releases
+  );
 
   const releaseVersion = cluster
     ? capiv1beta1.getReleaseVersion(cluster)
@@ -219,9 +222,6 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
           machineTypes.current
         );
 
-  const isAdmin = useSelector(getUserIsAdmin);
-  const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
-
   const workerNodePoolsCount = hasReadPermissionsForNodePools
     ? nodePoolList?.items.length
     : -1;
@@ -335,13 +335,10 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
                 )}
               </OptionalValue>
 
-              {cluster && providerCluster && (
-                <ClusterListItemStatus
-                  cluster={cluster}
-                  providerCluster={providerCluster}
-                  provider={provider}
-                  isAdmin={isAdmin && !isImpersonatingNonAdmin}
-                  releases={releases}
+              {clusterStatus && (
+                <ClusterStatus
+                  status={clusterStatus}
+                  clusterUpdateSchedule={clusterUpdateSchedule}
                 />
               )}
             </Box>
