@@ -804,7 +804,8 @@ export function getClusterConditions(
   switch (infrastructureRef.kind) {
     case capzv1beta1.AzureCluster:
       statuses.isConditionUnknown =
-        cluster.status === undefined || cluster.status.conditions === undefined;
+        typeof cluster.status === 'undefined' ||
+        typeof cluster.status.conditions === 'undefined';
       statuses.isCreating = isClusterCreating(cluster);
       statuses.isUpgrading = isClusterUpgrading(cluster);
       break;
@@ -885,7 +886,7 @@ export function useClusterStatus(
 
   const clusterUpdateSchedule = getClusterUpdateSchedule(cluster);
 
-  if (cluster === undefined) {
+  if (typeof cluster === 'undefined') {
     return { status: undefined };
   }
 
