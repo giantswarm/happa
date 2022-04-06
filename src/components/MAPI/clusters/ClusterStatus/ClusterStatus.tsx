@@ -35,14 +35,14 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
       iconClassName = 'fa fa-change-in-progress';
       message = 'Cluster creating…';
       tooltip =
-        'The cluster is currently creating. This step usually takes about 15 minutes.';
+        'The cluster is currently being created. This step usually takes about 15 minutes.';
       break;
 
     case ClusterStatusType.UpgradeInProgress:
       iconClassName = 'fa fa-version-upgrade';
       message = 'Upgrade in progress…';
       tooltip =
-        'The cluster is currently upgrading. This step usually takes about 30 minutes.';
+        'The cluster is currently being upgraded. This step usually takes about 30 minutes.';
       break;
 
     case ClusterStatusType.UpgradeScheduled:
@@ -50,7 +50,7 @@ const ClusterStatus: React.FC<IClusterStatusProps> = ({
       iconClassName = 'fa fa-version-upgrade';
       message = 'Upgrade scheduled';
       tooltip = clusterUpdateSchedule
-        ? `The cluster will upgrade to v${
+        ? `The cluster will be upgraded to v${
             clusterUpdateSchedule.targetRelease
           } on ${formatDate(clusterUpdateSchedule.targetTime)}`
         : '';
