@@ -94,6 +94,7 @@ export const randomCluster1: capiv1beta1.ICluster = {
   status: {
     controlPlaneReady: true,
     infrastructureReady: false,
+    conditions: [],
   },
 };
 
