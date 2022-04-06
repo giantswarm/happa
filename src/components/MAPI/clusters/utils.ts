@@ -697,8 +697,8 @@ export async function createCluster(
 
 export function findLatestReleaseVersion(
   releases: releasev1alpha1.IRelease[]
-): string | undefined {
-  const versions: string[] = [];
+): releasev1alpha1.IRelease | undefined {
+  const versions: releasev1alpha1.IRelease[] = [];
   for (const release of releases) {
     if (release.spec.state !== 'active') continue;
 
@@ -706,7 +706,7 @@ export function findLatestReleaseVersion(
       const version = new VersionImpl(release.metadata.name.slice(1));
       if (version.getPreRelease().length > 1) continue;
 
-      versions.push(version.toString());
+      versions.push(release);
     } catch (err) {
       ErrorReporter.getInstance().notify(err as Error);
 
@@ -715,7 +715,9 @@ export function findLatestReleaseVersion(
   }
 
   // Sort versions in a descending order, taking into account the SemVer formatting.
-  const sortedVersions = versions.sort((a, b) => compare(b, a));
+  const sortedVersions = versions.sort((a, b) =>
+    compare(b.metadata.name.slice(1), a.metadata.name.slice(1))
+  );
 
   return sortedVersions[0];
 }

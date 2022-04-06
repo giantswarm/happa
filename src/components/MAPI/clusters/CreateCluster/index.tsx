@@ -80,7 +80,7 @@ interface IEndCreationAction {
 
 interface ISetLatestReleaseAction {
   type: 'setLatestRelease';
-  value: string;
+  value: { version: string; components: IReleaseComponent[] };
 }
 
 type ClusterAction =
@@ -98,6 +98,7 @@ interface IClusterState {
   validationResults: Record<ClusterPropertyField, boolean>;
   isCreating: boolean;
   latestRelease: string;
+  latestReleaseComponents: IReleaseComponent[];
   orgNamespace: string;
 }
 
@@ -135,6 +136,7 @@ function makeInitialState(
     },
     isCreating: false,
     latestRelease: '',
+    latestReleaseComponents: [],
     orgNamespace: config.orgNamespace,
   };
 }
@@ -161,14 +163,15 @@ const reducer: React.Reducer<IClusterState, ClusterAction> = produce(
       case 'setLatestRelease':
         // Apply the version to the CRs if no version was set before.
         if (!draft.latestRelease) {
-          withClusterReleaseVersion(action.value, draft.orgNamespace)(
-            draft.cluster,
-            draft.providerCluster,
-            draft.controlPlaneNodes
-          );
+          withClusterReleaseVersion(
+            action.value.version,
+            action.value.components,
+            draft.orgNamespace
+          )(draft.cluster, draft.providerCluster, draft.controlPlaneNodes);
         }
 
-        draft.latestRelease = action.value;
+        draft.latestRelease = action.value.version;
+        draft.latestReleaseComponents = action.value.components;
         break;
     }
   }
@@ -245,7 +248,10 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
 
     dispatch({
       type: 'setLatestRelease',
-      value: latestRelease ?? '',
+      value: {
+        version: latestRelease?.metadata.name.slice(1) ?? '',
+        components: latestRelease?.spec.components ?? [],
+      },
     });
   }, [releaseList?.items]);
 

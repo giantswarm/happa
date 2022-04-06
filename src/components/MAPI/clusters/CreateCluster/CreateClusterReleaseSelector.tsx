@@ -38,13 +38,17 @@ export interface IRelease {
   version: string;
   state: ReleaseState;
   timestamp: string;
+  components: IReleaseComponent[];
   kubernetesVersion?: string;
   releaseNotesURL?: string;
   k8sVersionEOLDate?: string;
 }
 
 interface ICreateClusterReleaseSelectorProps {
-  selectRelease: (releaseVersion: string) => void;
+  selectRelease: (
+    releaseVersion: string,
+    releaseComponents: IReleaseComponent[]
+  ) => void;
   releases: Record<string, IRelease>;
   selectedRelease: string;
   isLoading?: boolean;

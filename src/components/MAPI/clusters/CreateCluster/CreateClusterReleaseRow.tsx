@@ -32,7 +32,10 @@ const StyledTableRow = styled(TableRow)`
 interface IReleaseRow extends IRelease {
   isSelected: boolean;
 
-  selectRelease(releaseVersion: string): void;
+  selectRelease: (
+    releaseVersion: string,
+    components: IReleaseComponent[]
+  ) => void;
 }
 
 const ReleaseRow: FC<IReleaseRow> = ({
@@ -44,12 +47,13 @@ const ReleaseRow: FC<IReleaseRow> = ({
   selectRelease,
   timestamp,
   version,
+  components,
 }) => {
   const isPreviewRelease = state === 'preview';
 
   const handleSelectRelease = () => {
     if (isPreviewRelease) return;
-    selectRelease(version);
+    selectRelease(version, components);
   };
 
   const handleTabSelect = (e: React.KeyboardEvent<HTMLTableRowElement>) => {

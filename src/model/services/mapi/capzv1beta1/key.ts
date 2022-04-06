@@ -1,6 +1,7 @@
 import { IAzureMachinePool } from './';
 
 export const labelControlPlane = 'cluster.x-k8s.io/control-plane';
+export const labelAzureOperatorVersion = 'azure-operator.giantswarm.io/version';
 
 export const tagAutoscalerMinSize = 'min';
 export const tagAutoscalerMaxSize = 'max';
