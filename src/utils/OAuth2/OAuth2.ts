@@ -242,9 +242,8 @@ class OAuth2 implements IOAuth2Provider {
     this.eventEmitter.dispatchEvent(event);
   };
 
-  protected onAccessTokenExpiring = () => {
-    const event = new CustomEvent(OAuth2Events.TokenExpiring);
-    this.eventEmitter.dispatchEvent(event);
+  protected onAccessTokenExpiring = async () => {
+    await this.renewUser();
   };
 
   protected onUserUnloaded = () => {
