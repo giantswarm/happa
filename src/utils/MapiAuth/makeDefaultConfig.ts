@@ -24,7 +24,7 @@ export function makeDefaultConfig(): IOAuth2Config {
     responseType: 'code',
     responseMode: 'query',
     prompt: 'none',
-    automaticSilentRenew: true,
+    automaticSilentRenew: false,
     includeIDTokenInSilentRenew: true,
     loadUserInfo: false,
     revokeAccessTokenOnLogout: true,
