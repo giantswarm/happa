@@ -3,6 +3,7 @@ import {
   render,
   screen,
   waitForElementToBeRemoved,
+  within,
 } from '@testing-library/react';
 import add from 'date-fns/fp/add';
 import format from 'date-fns/fp/format';
@@ -268,10 +269,13 @@ describe('ClusterDetail', () => {
       );
     }
 
-    expect(screen.getByText('Cluster creating…')).toBeInTheDocument();
-    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+    const clusterStatus = screen.getByTestId('cluster-status');
+    expect(clusterStatus).toBeInTheDocument();
+    expect(
+      within(clusterStatus).getByText(
+        'The cluster is currently being created. This step usually takes about 15 minutes.'
+      )
+    ).toBeInTheDocument();
   });
 
   it('does not display a warning when cluster upgrade in progress', async () => {
@@ -320,10 +324,7 @@ describe('ClusterDetail', () => {
       );
     }
 
-    expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('cluster-status')).not.toBeInTheDocument();
   });
 
   it('does not display a warning when cluster upgrade available', async () => {
@@ -381,10 +382,7 @@ describe('ClusterDetail', () => {
       );
     }
 
-    expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('cluster-status')).not.toBeInTheDocument();
   });
 
   it('does not display a warning when cluster upgrade scheduled', async () => {
@@ -433,9 +431,6 @@ describe('ClusterDetail', () => {
       );
     }
 
-    expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('cluster-status')).not.toBeInTheDocument();
   });
 });

@@ -405,11 +405,15 @@ const ClusterDetail: React.FC<{}> = () => {
             </Box>
           </Heading>
           {clusterStatus === ClusterStatus.CreationInProgress && (
-            <StyledFlashMessage type={FlashMessageType.Info}>
+            <StyledFlashMessage
+              type={FlashMessageType.Info}
+              data-testid='cluster-status'
+            >
               <ClusterStatusComponent
                 status={clusterStatus}
                 clusterUpdateSchedule={clusterUpdateSchedule}
                 inheritColor={true}
+                showFullMessage={true}
               />
             </StyledFlashMessage>
           )}
