@@ -1,10 +1,9 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Keyboard, Text } from 'grommet';
 import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
-import {
-  getClusterConditions,
-  getClusterUpdateSchedule,
-} from 'MAPI/clusters/utils';
+import ClusterStatusComponent from 'MAPI/clusters/ClusterStatus/ClusterStatus';
+import { useClusterStatus } from 'MAPI/clusters/hooks/useClusterStatus';
+import { ClusterStatus, getClusterConditions } from 'MAPI/clusters/utils';
 import {
   getSupportedUpgradeVersions,
   reduceReleaseToComponents,
@@ -25,7 +24,6 @@ import { Dot } from 'styles';
 import useSWR, { mutate } from 'swr';
 import Button from 'UI/Controls/Button';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
-import ClusterDetailStatus from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailStatus';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import * as ui from 'UI/Display/MAPI/releases/types';
 import NotAvailable from 'UI/Display/NotAvailable';
@@ -155,8 +153,10 @@ const ClusterDetailWidgetRelease: React.FC<
 
   const isUpgradable = typeof nextVersion !== 'undefined';
 
-  const { isConditionUnknown, isCreating, isUpgrading, isDeleting } =
-    getClusterConditions(cluster, providerCluster);
+  const { isConditionUnknown, isCreating, isUpgrading } = getClusterConditions(
+    cluster,
+    providerCluster
+  );
 
   const canUpgrade =
     !isUpgrading && !isCreating && !isConditionUnknown && isUpgradable;
@@ -166,8 +166,6 @@ const ClusterDetailWidgetRelease: React.FC<
       onTargetReleaseVersionChange(canUpgrade ? nextVersion : '');
     }
   }, [onTargetReleaseVersionChange, canUpgrade, nextVersion]);
-
-  const clusterUpdateSchedule = getClusterUpdateSchedule(cluster);
 
   const [versionModalVisible, setVersionModalVisible] = useState(false);
 
@@ -201,6 +199,12 @@ const ClusterDetailWidgetRelease: React.FC<
       (v) => v.metadata.name.slice(1) === targetVersion
     );
   }, [releaseList, targetVersion]);
+
+  const { status: clusterStatus, clusterUpdateSchedule } = useClusterStatus(
+    cluster,
+    providerCluster,
+    releaseList?.items
+  );
 
   const [upgradeModalVisible, setUpgradeModalVisible] = useState(false);
 
@@ -331,13 +335,11 @@ const ClusterDetailWidgetRelease: React.FC<
           )}
         </OptionalValue>
 
-        {cluster && (
-          <ClusterDetailStatus
-            isCreating={isCreating}
-            isDeleting={isDeleting}
-            isConditionUnknown={isConditionUnknown}
-            isUpgrading={isUpgrading}
-            isUpgradable={isUpgradable}
+        {(clusterStatus === ClusterStatus.UpgradeAvailable ||
+          clusterStatus === ClusterStatus.UpgradeInProgress ||
+          clusterStatus === ClusterStatus.UpgradeScheduled) && (
+          <ClusterStatusComponent
+            status={clusterStatus}
             clusterUpdateSchedule={clusterUpdateSchedule}
             margin={{ left: 'small' }}
           />

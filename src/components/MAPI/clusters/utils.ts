@@ -797,7 +797,9 @@ export function getClusterConditions(
 
   switch (infrastructureRef.kind) {
     case capzv1beta1.AzureCluster:
-      statuses.isConditionUnknown = typeof cluster.status === 'undefined';
+      statuses.isConditionUnknown =
+        typeof cluster.status === 'undefined' ||
+        typeof cluster.status.conditions === 'undefined';
       statuses.isCreating = isClusterCreating(cluster);
       statuses.isUpgrading = isClusterUpgrading(cluster);
       break;
@@ -842,4 +844,13 @@ export function getClusterUpdateSchedule(
     targetRelease,
     targetTime: parseRFC822DateFormat(targetTime),
   };
+}
+
+export enum ClusterStatus {
+  Idle = 'IDLE',
+  DeletionInProgress = 'DELETION_IN_PROGRESS',
+  CreationInProgress = 'CREATION_IN_PROGRESS',
+  UpgradeInProgress = 'UPGRADE_IN_PROGRESS',
+  UpgradeScheduled = 'UPGRADE_SCHEDULED',
+  UpgradeAvailable = 'UPGRADE_AVAILABLE',
 }

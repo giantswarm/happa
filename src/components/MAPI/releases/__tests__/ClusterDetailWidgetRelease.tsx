@@ -207,6 +207,9 @@ describe('ClusterDetailWidgetRelease', () => {
     );
 
     expect(await screen.findByText('Upgrade scheduled')).toBeInTheDocument();
+    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
   });
 
   it('displays a warning when there is an upgrade available', async () => {
@@ -225,6 +228,43 @@ describe('ClusterDetailWidgetRelease', () => {
     );
 
     expect(await screen.findByText('Upgrade available')).toBeInTheDocument();
+    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+    expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
+  });
+
+  it('displays a warning when upgrade in progress', async () => {
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/release.giantswarm.io/v1alpha1/releases/')
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
+
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1beta1Mocks.randomCluster1,
+          status: {
+            ...capiv1beta1Mocks.randomCluster1.status,
+            conditions: [
+              {
+                status: 'True',
+                type: 'Upgrading',
+                reason: 'UpgradePending',
+                lastTransitionTime: '2020-04-01T12:00:00Z',
+              },
+            ],
+          },
+        },
+      })
+    );
+
+    expect(await screen.findByText('Upgrade in progress…')).toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+    expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
   });
 
   it('can upgrade a cluster', async () => {
