@@ -273,7 +273,7 @@ describe('ClusterListItem', () => {
     expect(await screen.findByText('171.8 GB RAM')).toBeInTheDocument();
   });
 
-  it(`displays the cluster's current status`, () => {
+  it(`displays the cluster's current status`, async () => {
     (usePermissionsForNodePools as jest.Mock).mockReturnValue(
       defaultPermissions
     );
@@ -301,9 +301,10 @@ describe('ClusterListItem', () => {
       })
     );
 
-    expect(screen.queryByText('Cluster creating…')).toBeInTheDocument();
+    expect(await screen.findByText('Cluster creating…')).toBeInTheDocument();
     expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
     expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
 
     rerender(
       getComponent({
@@ -326,9 +327,10 @@ describe('ClusterListItem', () => {
       })
     );
 
+    expect(await screen.findByText('Upgrade in progress…')).toBeInTheDocument();
     expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade in progress…')).toBeInTheDocument();
     expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
 
     rerender(
       getComponent({
@@ -356,9 +358,10 @@ describe('ClusterListItem', () => {
       })
     );
 
+    expect(await screen.findByText('Upgrade available')).toBeInTheDocument();
     expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
     expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
-    expect(screen.queryByText('Upgrade available')).toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
   });
 
   it('displays information if an upgrade has been scheduled', async () => {
@@ -391,6 +394,9 @@ describe('ClusterListItem', () => {
     );
 
     expect(await screen.findByText('Upgrade scheduled')).toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
   });
 
   it(`does not display an available upgrade to preview releases`, () => {
