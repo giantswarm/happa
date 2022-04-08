@@ -5,7 +5,6 @@ import ClusterIDLabel, {
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import Date from 'UI/Display/Date';
 import NotAvailable from 'UI/Display/NotAvailable';
-import { getRelativeDateFromNow } from 'utils/helpers';
 
 import { ClusterDetailDeleteActionNameVariant } from './ClusterDetailDeleteAction';
 
@@ -111,7 +110,7 @@ const ClusterDetailDeleteActionClusterDetails: React.FC<
       </Box>
       <Box direction='row'>
         <Text>
-          Created: {getRelativeDateFromNow(creationDate)} (
+          Created: <Date value={creationDate} relative={true} /> (
           <Date value={creationDate} />)
         </Text>
       </Box>
