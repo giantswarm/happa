@@ -182,11 +182,23 @@ export function formatDate(date: string | number | Date): string {
  * @param date
  */
 export function getRelativeDateFromNow(date: string | number | Date): string {
-  const givenDate = parseDate(date);
-  const now = new Date();
-  let distance = formatDistance(now)(givenDate);
+  return getRelativeDate(date, new Date());
+}
 
-  if (compareAsc(now)(givenDate) < 0) {
+/**
+ * Get a formatted date structure, relative to other date (e.g. 2 days ago, or 1 year ago).
+ * @param dateA
+ * @param dateB
+ */
+export function getRelativeDate(
+  dateA: string | number | Date,
+  dateB: string | number | Date
+): string {
+  const baseDate = parseDate(dateA);
+  const date = parseDate(dateB);
+  let distance = formatDistance(date)(baseDate);
+
+  if (compareAsc(date)(baseDate) < 0) {
     distance += ' ago';
   } else {
     distance = `in ${distance}`;

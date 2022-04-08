@@ -2,9 +2,9 @@ import { Box, Text } from 'grommet';
 import React from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
+import Date from 'UI/Display/Date';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import Truncated from 'UI/Util/Truncated';
-import { getRelativeDateFromNow } from 'utils/helpers';
 
 const StyledText = styled(Text)`
   line-height: unset;
@@ -62,7 +62,7 @@ const AppVersionInspectorOption: React.FC<IAppVersionInspectorOptionProps> = ({
       >
         {(value) => (
           <StyledText weight={textWeight}>
-            released {getRelativeDateFromNow(value as string)}
+            released <Date value={value as string} relative={true} />
           </StyledText>
         )}
       </OptionalValue>

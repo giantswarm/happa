@@ -6,7 +6,6 @@ import Button from 'UI/Controls/Button';
 import Date from 'UI/Display/Date';
 import NotAvailable from 'UI/Display/NotAvailable';
 import Modal from 'UI/Layout/Modal';
-import { getRelativeDateFromNow } from 'utils/helpers';
 
 const Label = styled(Text).attrs({
   color: 'text-weak',
@@ -87,7 +86,7 @@ const ClusterDetailKeyPairDetailsModal: React.FC<
           {creationDate ? (
             <Text>
               <Date value={creationDate} /> &ndash;{' '}
-              {getRelativeDateFromNow(creationDate)}
+              <Date value={creationDate} relative={true} />
             </Text>
           ) : (
             <NotAvailable />
@@ -98,7 +97,7 @@ const ClusterDetailKeyPairDetailsModal: React.FC<
           {expirationDate ? (
             <Text color={isExpiringSoon ? 'status-warning' : undefined}>
               <Date value={expirationDate} /> &ndash;{' '}
-              {getRelativeDateFromNow(expirationDate)}
+              <Date value={expirationDate} relative={true} />
             </Text>
           ) : (
             <NotAvailable />
