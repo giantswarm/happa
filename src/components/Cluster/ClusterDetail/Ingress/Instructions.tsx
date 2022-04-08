@@ -37,7 +37,7 @@ const Steps = styled.ol`
 enum IngressPathPrefixes {
   Pattern = 'YOUR_PREFIX',
   LoadBalancer = 'ingress',
-  Example = 'example',
+  Example = 'EXAMPLE',
 }
 
 interface IInstructionsProps {
@@ -179,7 +179,7 @@ const Instructions: React.FC<IInstructionsProps> = ({
           <Steps>
             <li>
               Define a DNS prefix unique within the cluster, e. g.{' '}
-              <code>example</code>.
+              <code>EXAMPLE</code>.
             </li>
             <li>
               Set the <code>hostname</code> in your workload&apos;s Ingress

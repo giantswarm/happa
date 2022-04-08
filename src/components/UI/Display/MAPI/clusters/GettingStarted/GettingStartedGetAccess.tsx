@@ -98,8 +98,7 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
         </Paragraph>
         <ul>
           <li>
-            Create a new client certificate (certificate and private key) for
-            you to access this cluster
+            Create a new client certificate for you to access this cluster
           </li>
           <li>Download your client certificate</li>
           <li>Download the CA certificate for your cluster</li>
@@ -123,31 +122,21 @@ const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
         <Paragraph fill={true}>In case you were wondering:</Paragraph>
         <ul>
           <li>
-            <code>--workload-cluster &lt;cluster_name&gt;</code> selects the
-            cluster to provide access to.
+            <code>--workload-cluster</code> selects the cluster to provide
+            access to.
           </li>
           <li>
-            <code>--certificate-group system:masters</code> ensures that you
-            will be authorized as an administrator when using this client
-            certificate.
+            <code>--certificate-group</code> specifies which RBAC group the
+            client using this certificate will be assigned to. The value{' '}
+            <code>system:masters</code> is a fake group name defined by
+            Kubernetes, granted all possible permissions. Please be careful with
+            this powerful certificate!
           </li>
           <li>
-            <code>--certificate-ttl &lt;ttl&gt;</code> specifies how long the
-            client certificate should live for.
+            <code>--certificate-ttl</code> specifies how long the client
+            certificate should live for.
           </li>
         </ul>
-        <Aside>
-          <i
-            className='fa fa-info'
-            aria-label='For learners'
-            role='presentation'
-            aria-hidden={true}
-          />{' '}
-          <code>--certificate-group</code> is a flag that sets what group you
-          belong to when authenticating against the Kubernetes API. The default
-          superadmin group on RBAC (Role Based Access Control) enabled clusters
-          is <code>system:masters</code>.
-        </Aside>
         <Paragraph fill={true}>
           After execution, you should see what happened in detail. After
           credentials and settings have been added, the context matching your
