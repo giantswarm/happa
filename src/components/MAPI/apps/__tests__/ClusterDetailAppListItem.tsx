@@ -196,7 +196,9 @@ describe('ClusterDetailAppListItem', () => {
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByText('released less than a minute ago')
+      await screen.findByText((_content, node) =>
+        node ? node.textContent === 'released less than a minute ago' : false
+      )
     ).toBeInTheDocument();
     expect(
       screen.getByText('includes upstream version 1.6.5')
@@ -209,7 +211,9 @@ describe('ClusterDetailAppListItem', () => {
       const row = await screen.findByLabelText(entry.spec.version);
       expect(within(row).getByText(entry.spec.version)).toBeInTheDocument();
       expect(
-        within(row).getByText('released less than a minute ago')
+        within(row).getByText((_content, node) =>
+          node ? node.textContent === 'released less than a minute ago' : false
+        )
       ).toBeInTheDocument();
       expect(
         within(row).getByText(
