@@ -7,6 +7,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { getAppCatalogEntryReadmeURL } from 'model/services/mapi/applicationv1alpha1';
+import { selectCluster } from 'model/stores/main/actions';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -18,6 +19,7 @@ import DocumentTitle from 'shared/DocumentTitle';
 import useSWR, { useSWRConfig } from 'swr';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
+import AppInstallationSelectedCluster from 'UI/Display/MAPI/apps/AppInstallationSelectedCluster';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
@@ -129,6 +131,10 @@ const AppDetail: React.FC<{}> = () => {
   const selectedClusterID = useSelector(
     (state: IState) => state.main.selectedClusterID
   );
+
+  const deselectCluster = () => {
+    dispatch(selectCluster(''));
+  };
 
   const selectVersion = (v: string) => {
     if (v.length < 1) return;
@@ -310,6 +316,14 @@ const AppDetail: React.FC<{}> = () => {
                   versions={otherEntries}
                   selectedClusterID={selectedClusterID}
                   appsPermissions={appsPermissions}
+                />
+              ) : undefined
+            }
+            selectedClusterBanner={
+              selectedClusterID ? (
+                <AppInstallationSelectedCluster
+                  clusterName={selectedClusterID}
+                  onDeselectCluster={deselectCluster}
                 />
               ) : undefined
             }
