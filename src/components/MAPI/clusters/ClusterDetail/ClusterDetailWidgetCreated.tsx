@@ -10,6 +10,12 @@ const StyledDot = styled(Dot)`
   padding: 0;
 `;
 
+const CapitalizedText = styled.div`
+  &:first-letter {
+    text-transform: uppercase;
+  }
+`;
+
 interface IClusterDetailWidgetCreatedProps
   extends Omit<
     React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
@@ -36,7 +42,11 @@ const ClusterDetailWidgetCreated: React.FC<
       {...props}
     >
       <OptionalValue value={creationDate}>
-        {(value) => <Date relative={true} value={value as string} />}
+        {(value) => (
+          <CapitalizedText>
+            <Date relative={true} value={value as string} />
+          </CapitalizedText>
+        )}
       </OptionalValue>
       <StyledDot />
       <OptionalValue value={creationDate} loaderWidth={150}>
