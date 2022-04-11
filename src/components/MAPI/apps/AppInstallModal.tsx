@@ -73,16 +73,20 @@ function getOrganizationForCluster(
 
 function mapClusterToClusterPickerInput(
   entry: IProviderClusterForCluster,
-  organizations: Record<string, IOrganization>
+  organizations: Record<string, IOrganization>,
+  clustersWithAppInstalled: string[]
 ): React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters'][0] {
   const { cluster, providerCluster } = entry;
   const organization = getOrganizationForCluster(cluster, organizations);
+  const isInstalledInCluster = clustersWithAppInstalled.includes(
+    `${cluster.metadata.namespace}/${cluster.metadata.name}`
+  );
 
   return {
     id: cluster.metadata.name,
     name: getClusterDescription(cluster, providerCluster),
     owner: organization?.id ?? '',
-    isAvailable: true,
+    isAvailable: !isInstalledInCluster,
   };
 }
 
@@ -282,14 +286,14 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = ({
     return getPreviewReleaseVersions(releaseList.items);
   }, [releaseList]);
 
-  const appListKey = clusterList?.items
+  const appsForClustersKey = clusterList?.items
     ? fetchAppsForClustersKey(clusterList.items)
     : null;
 
   const { data: appsForClusters, error: appsForClustersError } = useSWR<
     Record<string, { appName: string; catalogName: string }[]>,
     GenericResponseError
-  >(appListKey, () =>
+  >(appsForClustersKey, () =>
     fetchAppsForClusters(clientFactory, auth, clusterList!.items)
   );
 
@@ -307,22 +311,40 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = ({
     );
   }, [clusterList?.items, selectedClusterID]);
 
-  const isAppInstalledInSelectedCluster = useMemo(() => {
-    if (!selectedCluster || !appsForClusters) return false;
+  const clustersWithAppInstalled = useMemo(() => {
+    if (!appsForClusters) return [];
 
-    return appsForClusters[
+    return Object.keys(appsForClusters).reduce((acc, clusterWithOrg) => {
+      const apps = appsForClusters[clusterWithOrg];
+      const appEntry = apps.find(
+        (entry) =>
+          entry.appName === appName && entry.catalogName === catalogName
+      );
+
+      if (appEntry) {
+        acc.push(clusterWithOrg);
+      }
+
+      return acc;
+    }, [] as string[]);
+  }, [appsForClusters, appName, catalogName]);
+
+  const isAppInstalledInSelectedCluster = useMemo(() => {
+    if (!selectedCluster) return false;
+
+    return clustersWithAppInstalled.includes(
       `${selectedCluster.metadata.namespace}/${selectedCluster.metadata.name}`
-    ]?.some(
-      (app) => app.appName === appName && app.catalogName === catalogName
     );
-  }, [appsForClusters, appName, catalogName, selectedCluster]);
+  }, [selectedCluster, clustersWithAppInstalled]);
 
   useEffect(() => {
     const clusterCollection = filterClusters(
       clustersWithProviderClusters,
       previewReleaseVersions,
       debouncedQuery
-    ).map((c) => mapClusterToClusterPickerInput(c, organizations));
+    ).map((c) =>
+      mapClusterToClusterPickerInput(c, organizations, clustersWithAppInstalled)
+    );
 
     setFilteredClusters(clusterCollection);
   }, [
@@ -332,6 +354,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = ({
     clustersWithProviderClusters,
     releaseList?.items,
     previewReleaseVersions,
+    clustersWithAppInstalled,
   ]);
 
   const updateNamespace = useCallback(
