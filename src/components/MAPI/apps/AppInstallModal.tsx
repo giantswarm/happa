@@ -96,7 +96,14 @@ interface IAppInstallModalProps {
   appsPermissions?: IAppsPermissions;
 }
 
-const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
+const AppInstallModal: React.FC<IAppInstallModalProps> = ({
+  appName,
+  chartName,
+  catalogName,
+  versions,
+  selectedClusterID,
+  appsPermissions,
+}) => {
   const [page, setPage] = useState(0);
   const [visible, setVisible] = useState(false);
 
@@ -117,7 +124,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   const debouncedQuery = useDebounce(query, SEARCH_DEBOUNCE_RATE);
 
-  const [version, setVersion] = useState(props.versions[0]?.chartVersion ?? '');
+  const [version, setVersion] = useState(versions[0]?.chartVersion ?? '');
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
@@ -138,14 +145,14 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   };
 
   const openModal = () => {
-    if (props.selectedClusterID) {
+    if (selectedClusterID) {
       setPage(1);
     } else {
       setPage(0);
     }
-    setName(props.appName);
+    setName(appName);
     setNameError('');
-    setNamespace(props.appName);
+    setNamespace(appName);
     setNamespaceError('');
     setVisible(true);
   };
@@ -271,9 +278,9 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   const appListClient = useRef(clientFactory());
 
   const appListKey =
-    props.appsPermissions?.canList && props.selectedClusterID
+    appsPermissions?.canList && selectedClusterID
       ? applicationv1alpha1.getAppListKey({
-          namespace: props.selectedClusterID,
+          namespace: selectedClusterID,
         })
       : null;
 
@@ -282,7 +289,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     GenericResponseError
   >(appListKey, () =>
     applicationv1alpha1.getAppList(appListClient.current, auth, {
-      namespace: props.selectedClusterID!,
+      namespace: selectedClusterID!,
     })
   );
 
@@ -293,10 +300,10 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   }, [appListError]);
 
   const isAppInstalledInSelectedCluster = useMemo(() => {
-    if (!props.selectedClusterID || !appList?.items) return false;
+    if (!selectedClusterID || !appList?.items) return false;
 
-    return appList.items.some((a) => a.metadata.name === props.appName);
-  }, [appList?.items, props.appName, props.selectedClusterID]);
+    return appList.items.some((a) => a.metadata.name === appName);
+  }, [appList?.items, appName, selectedClusterID]);
 
   useEffect(() => {
     const clusterCollection = filterClusters(
@@ -394,13 +401,13 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   };
 
   const canInstallApps =
-    props.appsPermissions?.canCreate && props.appsPermissions?.canConfigure;
+    appsPermissions?.canCreate && appsPermissions?.canConfigure;
 
   const installApp = async () => {
-    if (!props.selectedClusterID || !canInstallApps) return;
+    if (!selectedClusterID || !canInstallApps) return;
 
     const cluster = clusterList?.items.find(
-      (c) => c.metadata.name === props.selectedClusterID
+      (c) => c.metadata.name === selectedClusterID
     );
     if (!cluster) return;
 
@@ -410,10 +417,10 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     try {
       setLoading(true);
 
-      await createApp(clientFactory, auth, props.selectedClusterID, {
+      await createApp(clientFactory, auth, selectedClusterID, {
         name: name,
-        catalogName: props.catalogName,
-        chartName: props.chartName,
+        catalogName: catalogName,
+        chartName: chartName,
         version: version,
         namespace: namespace,
         configMapContents: valuesYAML ?? '',
@@ -427,7 +434,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         OrganizationsRoutes.Clusters.Detail.Apps,
         {
           orgId: organization.id,
-          clusterId: props.selectedClusterID,
+          clusterId: selectedClusterID,
         }
       );
 
@@ -437,7 +444,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         (
           <>
             Your app <code>{name}</code> is being installed on{' '}
-            <code>{props.selectedClusterID}</code>
+            <code>{selectedClusterID}</code>
           </>
         ),
         messageType.SUCCESS,
@@ -473,7 +480,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
           errorMessage = (
             <>
               An app called <code>{name}</code> already exists on cluster{' '}
-              <code>{props.selectedClusterID}</code>
+              <code>{selectedClusterID}</code>
             </>
           );
 
@@ -537,7 +544,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                   </Button>
                 }
                 onClose={onClose}
-                title={`Install ${props.chartName}: Pick a cluster`}
+                title={`Install ${chartName}: Pick a cluster`}
                 visible={visible}
               >
                 <ClusterPicker
@@ -545,7 +552,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                   onChangeQuery={setQuery}
                   onSelectCluster={onSelectCluster}
                   query={query}
-                  selectedClusterID={props.selectedClusterID}
+                  selectedClusterID={selectedClusterID}
                 />
               </Modal>
             );
@@ -574,20 +581,20 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                 onClose={onClose}
                 title={
                   <>
-                    {`Install ${props.chartName} on`}{' '}
-                    <ClusterIDLabel clusterID={props.selectedClusterID!} />
+                    {`Install ${chartName} on`}{' '}
+                    <ClusterIDLabel clusterID={selectedClusterID!} />
                   </>
                 }
                 visible={visible}
               >
                 <InstallAppForm
-                  appName={props.chartName}
+                  appName={chartName}
                   name={name}
                   nameError={nameError}
                   namespace={namespace}
                   namespaceError={namespaceError}
                   version={version}
-                  availableVersions={props.versions}
+                  availableVersions={versions}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
                   onChangeSecretsYAML={updateSecretsYAML}
