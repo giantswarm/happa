@@ -1,4 +1,6 @@
-import ClusterPicker from 'Apps/AppDetail/InstallAppModal/ClusterPicker';
+import ClusterPicker, {
+  ClusterPickerVariant,
+} from 'Apps/AppDetail/InstallAppModal/ClusterPicker';
 import InstallAppForm from 'Apps/AppDetail/InstallAppModal/InstallAppForm';
 import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
@@ -43,7 +45,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import useSWR, { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
-import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import ClusterIDLabel, {
+  ClusterIDLabelType,
+} from 'UI/Display/Cluster/ClusterIDLabel';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import Modal from 'UI/Layout/Modal';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -588,6 +592,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = ({
                   onSelectCluster={onSelectCluster}
                   query={query}
                   selectedClusterID={selectedClusterID}
+                  variant={ClusterPickerVariant.Name}
                 />
               </Modal>
             );
@@ -617,7 +622,10 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = ({
                 title={
                   <>
                     {`Install ${chartName} on`}{' '}
-                    <ClusterIDLabel clusterID={selectedClusterID!} />
+                    <ClusterIDLabel
+                      clusterID={selectedClusterID!}
+                      variant={ClusterIDLabelType.Name}
+                    />
                   </>
                 }
                 visible={visible}

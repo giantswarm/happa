@@ -2,7 +2,9 @@ import { Box, Keyboard } from 'grommet';
 import ClusterStatus from 'Home/ClusterStatus';
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import ClusterIDLabel, {
+  ClusterIDLabelType,
+} from 'UI/Display/Cluster/ClusterIDLabel';
 import TextInput from 'UI/Inputs/TextInput';
 
 const Cluster = styled(Box)`
@@ -50,12 +52,18 @@ interface IClusterPickerCluster
   isAvailable: boolean;
 }
 
+export enum ClusterPickerVariant {
+  ID,
+  Name,
+}
+
 interface IClusterPicker {
   clusters: IClusterPickerCluster[];
   onChangeQuery: (query: string) => void;
   onSelectCluster: (clusterId: string) => void;
   query: string;
   selectedClusterID: string | null;
+  variant?: ClusterPickerVariant;
 }
 
 const ClusterPicker: FC<IClusterPicker> = (props) => {
@@ -111,10 +119,18 @@ const ClusterPicker: FC<IClusterPicker> = (props) => {
                   !cluster.isAvailable ? 'disabled' : '',
                 ].join(' ')}
                 data-clusterid={cluster.id}
+                data-testid={cluster.id}
                 key={cluster.id}
                 onClick={cluster.isAvailable ? onSelectCluster : undefined}
               >
-                <ClusterIDLabel clusterID={cluster.id} />
+                <ClusterIDLabel
+                  clusterID={cluster.id}
+                  variant={
+                    props.variant === ClusterPickerVariant.ID
+                      ? ClusterIDLabelType.ID
+                      : ClusterIDLabelType.Name
+                  }
+                />
                 <ClusterTitle>{cluster.name}</ClusterTitle>
                 <ClusterNotice>
                   <ClusterStatus clusterId={cluster.id} />
@@ -127,6 +143,10 @@ const ClusterPicker: FC<IClusterPicker> = (props) => {
       </Keyboard>
     </Box>
   );
+};
+
+ClusterPicker.defaultProps = {
+  variant: ClusterPickerVariant.ID,
 };
 
 export default ClusterPicker;
