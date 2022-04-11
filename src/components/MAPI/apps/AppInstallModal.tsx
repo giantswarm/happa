@@ -25,7 +25,6 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
-import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -54,7 +53,13 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
 import { IAppsPermissions } from './permissions/types';
-import { createApp, filterClusters, formatYAMLError } from './utils';
+import {
+  createApp,
+  fetchAppsForClusters,
+  fetchAppsForClustersKey,
+  filterClusters,
+  formatYAMLError,
+} from './utils';
 
 function getOrganizationForCluster(
   cluster: Cluster,
@@ -92,7 +97,6 @@ interface IAppInstallModalProps {
   chartName: string;
   catalogName: string;
   versions: IVersion[];
-  selectedClusterID: string | null;
   appsPermissions?: IAppsPermissions;
 }
 
@@ -101,7 +105,6 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = ({
   chartName,
   catalogName,
   versions,
-  selectedClusterID,
   appsPermissions,
 }) => {
   const [page, setPage] = useState(0);
@@ -143,6 +146,10 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = ({
   const onClose = () => {
     setVisible(false);
   };
+
+  const selectedClusterID = useSelector(
+    (state: IState) => state.main.selectedClusterID
+  );
 
   const openModal = () => {
     if (selectedClusterID) {
@@ -275,35 +282,40 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = ({
     return getPreviewReleaseVersions(releaseList.items);
   }, [releaseList]);
 
-  const appListClient = useRef(clientFactory());
+  const appListKey = clusterList?.items
+    ? fetchAppsForClustersKey(clusterList.items)
+    : null;
 
-  const appListKey =
-    appsPermissions?.canList && selectedClusterID
-      ? applicationv1alpha1.getAppListKey({
-          namespace: selectedClusterID,
-        })
-      : null;
-
-  const { data: appList, error: appListError } = useSWR<
-    applicationv1alpha1.IAppList,
+  const { data: appsForClusters, error: appsForClustersError } = useSWR<
+    Record<string, { appName: string; catalogName: string }[]>,
     GenericResponseError
   >(appListKey, () =>
-    applicationv1alpha1.getAppList(appListClient.current, auth, {
-      namespace: selectedClusterID!,
-    })
+    fetchAppsForClusters(clientFactory, auth, clusterList!.items)
   );
 
   useEffect(() => {
-    if (appListError) {
-      ErrorReporter.getInstance().notify(appListError);
+    if (appsForClustersError) {
+      ErrorReporter.getInstance().notify(appsForClustersError);
     }
-  }, [appListError]);
+  }, [appsForClustersError]);
+
+  const selectedCluster = useMemo(() => {
+    if (!clusterList?.items) return undefined;
+
+    return clusterList?.items.find(
+      (cluster) => cluster.metadata.name === selectedClusterID
+    );
+  }, [clusterList?.items, selectedClusterID]);
 
   const isAppInstalledInSelectedCluster = useMemo(() => {
-    if (!selectedClusterID || !appList?.items) return false;
+    if (!selectedCluster || !appsForClusters) return false;
 
-    return appList.items.some((a) => a.metadata.name === appName);
-  }, [appList?.items, appName, selectedClusterID]);
+    return appsForClusters[
+      `${selectedCluster.metadata.namespace}/${selectedCluster.metadata.name}`
+    ]?.some(
+      (app) => app.appName === appName && app.catalogName === catalogName
+    );
+  }, [appsForClusters, appName, catalogName, selectedCluster]);
 
   useEffect(() => {
     const clusterCollection = filterClusters(

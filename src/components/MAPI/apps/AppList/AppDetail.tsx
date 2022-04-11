@@ -314,7 +314,6 @@ const AppDetail: React.FC<{}> = () => {
                   chartName={appName!}
                   catalogName={catalog.metadata.name}
                   versions={otherEntries}
-                  selectedClusterID={selectedClusterID}
                   appsPermissions={appsPermissions}
                 />
               ) : undefined
