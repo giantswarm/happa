@@ -40,8 +40,16 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import ClusterDetailAppList from './ClusterDetailAppList';
 import ClusterDetailAppLoadingPlaceholder from './ClusterDetailAppLoadingPlaceholder';
 import { usePermissionsForApps } from './permissions/usePermissionsForApps';
-import { filterUserInstalledApps, mapDefaultApps } from './utils';
+import {
+  filterUserInstalledApps,
+  isAppChangingVersion,
+  mapDefaultApps,
+} from './utils';
 
+// eslint-disable-next-line no-magic-numbers
+const APP_LIST_REFRESH_INTERVAL = 60 * 1000; // 1 minute
+// eslint-disable-next-line no-magic-numbers
+const APP_LIST_SHORT_REFRESH_INTERVAL = 5 * 1000; // 5 seconds
 const LOADING_COMPONENTS = new Array(6).fill(0);
 
 function formatAppVersion(appMeta: AppConstants.IAppMetaApp) {
@@ -124,7 +132,17 @@ const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
         appListClient.current,
         auth,
         appListGetOptions
-      )
+      ),
+    {
+      refreshInterval: (latestData) => {
+        const appChangingVersion =
+          latestData?.items?.find(isAppChangingVersion);
+
+        return typeof appChangingVersion !== 'undefined'
+          ? APP_LIST_SHORT_REFRESH_INTERVAL
+          : APP_LIST_REFRESH_INTERVAL;
+      },
+    }
   );
   const appListIsLoading =
     typeof appsPermissions.canList === 'undefined' ||
