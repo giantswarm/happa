@@ -133,7 +133,7 @@ const AppDetail: React.FC<{}> = () => {
   );
 
   const deselectCluster = () => {
-    dispatch(selectCluster(''));
+    dispatch(selectCluster(null));
   };
 
   const selectVersion = (v: string) => {

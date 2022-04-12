@@ -76,7 +76,7 @@ const makeMainReducer = () => {
           break;
 
         case CLUSTER_SELECT:
-          draft.selectedClusterID = action.clusterID;
+          draft.selectedClusterID = action.clusterID || null;
 
           break;
 

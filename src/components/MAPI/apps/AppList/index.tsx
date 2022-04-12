@@ -200,7 +200,7 @@ const AppList: React.FC<{}> = () => {
 
   const dispatch = useDispatch();
   const deselectCluster = () => {
-    dispatch(selectCluster(''));
+    dispatch(selectCluster(null));
   };
 
   const clusterListForOrganizationsKey = selectedClusterID
