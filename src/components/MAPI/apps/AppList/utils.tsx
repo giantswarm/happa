@@ -1,6 +1,7 @@
 import { IHttpClient } from 'model/clients/HttpClient';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import { fixTestAppReadmeURLs } from 'model/stores/appcatalog/utils';
 import React from 'react';
 import AppsList from 'UI/Display/Apps/AppList/AppsListPage';
@@ -205,6 +206,10 @@ type AppPageApps = React.ComponentPropsWithoutRef<typeof AppsList>['apps'];
 
 export function mapAppCatalogEntriesToAppPageApps(
   appCatalogEntries: applicationv1alpha1.IAppCatalogEntry[],
+  appsForClusters:
+    | Record<string, { appName: string; catalogName: string }[]>
+    | undefined,
+  selectedCluster: capiv1beta1.ICluster | undefined,
   catalogs: applicationv1alpha1.ICatalog[] = []
 ): AppPageApps {
   const appCatalogs = catalogs.reduce<
@@ -219,6 +224,16 @@ export function mapAppCatalogEntriesToAppPageApps(
     const catalog = appCatalogs[appCatalogEntry.spec.catalog.name];
     const appName = appCatalogEntry.spec.appName;
 
+    const selectedClusterWithOrg = `${selectedCluster?.metadata.namespace}/${selectedCluster?.metadata.name}`;
+    const isInstalledInSelectedCluster = appsForClusters
+      ? appsForClusters[selectedClusterWithOrg]?.some((entry) => {
+          return (
+            entry.appName === appName &&
+            entry.catalogName === catalog.metadata.name
+          );
+        })
+      : false;
+
     return {
       catalogTitle: catalog ? computeAppCatalogUITitle(catalog) : '',
       catalogIconUrl: catalog?.spec.logoURL ?? '',
@@ -230,6 +245,7 @@ export function mapAppCatalogEntriesToAppPageApps(
         appCatalogEntry.spec.version,
         appCatalogEntry.spec.catalog.name
       ),
+      isInstalledInSelectedCluster,
     };
   });
 }

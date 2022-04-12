@@ -1,5 +1,5 @@
 import { appPlatformURL } from 'model/constants/docs';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import App, { IAppProps } from 'UI/Display/Apps/AppList/App';
@@ -59,6 +59,7 @@ export interface IAppsListPageProps {
   apps: IAppProps[];
   facetsIsLoading?: boolean;
   appsIsLoading?: boolean;
+  selectedClusterBanner?: ReactElement;
 }
 
 const AppsList: React.FC<IAppsListPageProps> = (props) => {
@@ -111,6 +112,7 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
 
         {!props.appsIsLoading && props.apps.length > 0 && (
           <ListContainer>
+            {props.selectedClusterBanner}
             <AppGrid
               items={props.apps}
               itemMinHeight={200}
@@ -124,6 +126,9 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
                   catalogIconUrl={app.catalogIconUrl}
                   to={app.to}
                   key={app.to}
+                  isInstalledInSelectedCluster={
+                    app.isInstalledInSelectedCluster
+                  }
                 />
               )}
             />

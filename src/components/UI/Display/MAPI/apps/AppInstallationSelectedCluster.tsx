@@ -1,4 +1,4 @@
-import { Anchor, Box, Keyboard, Paragraph } from 'grommet';
+import { Anchor, Box, BoxProps, Keyboard, Paragraph } from 'grommet';
 import React from 'react';
 import { useTheme } from 'styled-components';
 import styled from 'styled-components';
@@ -25,7 +25,7 @@ const StyledAnchor = styled(Anchor)`
   }
 `;
 
-interface IAppInstallationSelectedClusterProps {
+interface IAppInstallationSelectedClusterProps extends BoxProps {
   clusterName: string;
   onDeselectCluster: () => void;
 }
@@ -43,7 +43,6 @@ const AppInstallationSelectedCluster: React.FC<
       align='center'
       flex='grow'
       min-height='xxsmall'
-      margin={{ top: 'medium' }}
       pad='small'
       round='xsmall'
       background={theme.colors.darkBlueDarker2}

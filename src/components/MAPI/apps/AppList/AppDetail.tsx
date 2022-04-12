@@ -323,6 +323,7 @@ const AppDetail: React.FC<{}> = () => {
                 <AppInstallationSelectedCluster
                   clusterName={selectedClusterID}
                   onDeselectCluster={deselectCluster}
+                  margin={{ top: 'medium' }}
                 />
               ) : undefined
             }
