@@ -567,7 +567,9 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = ({
                 typeof canInstallApps !== 'undefined' && !canInstallApps
               }
             >
-              Install in cluster
+              {selectedClusterID
+                ? 'Install in this cluster'
+                : 'Install in cluster'}
             </Button>
           </Box>
         </TooltipContainer>
