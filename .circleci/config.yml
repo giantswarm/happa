@@ -102,7 +102,7 @@ workflows:
           # Needed to trigger job only on git tag.
           filters:
             branches:
-              only: master
+              only: main
             tags:
               only: /^v.*/
 
