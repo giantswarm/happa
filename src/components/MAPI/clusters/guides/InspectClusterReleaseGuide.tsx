@@ -82,7 +82,7 @@ const InspectClusterReleaseGuide: React.FC<
         >
           <Text>
             <strong>Note:</strong> You will need the <code>v</code> prefix
-            appended to the version number.
+            prepended to the version number.
           </Text>
         </CLIGuideStep>
       </CLIGuideStepList>
