@@ -538,7 +538,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = ({
   return (
     <>
       {isAppInstalledInSelectedCluster ? (
-        <Text margin={{ top: '8px' }} color='text-strong'>
+        <Text color='text-strong'>
           <i className='fa fa-done' aria-hidden='true' role='presentation' />{' '}
           Installed in this cluster
         </Text>
