@@ -11,7 +11,9 @@ import Toolbar from './Toolbar';
 
 const LOADING_COMPONENTS = new Array(9).fill(0);
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  margin-top: -10px;
+`;
 
 const ListAndFacets = styled.div`
   display: flex;
@@ -65,7 +67,7 @@ export interface IAppsListPageProps {
 const AppsList: React.FC<IAppsListPageProps> = (props) => {
   return (
     <Wrapper>
-      <h1 data-testid='apps-browser'>Apps</h1>
+      {props.selectedClusterBanner}
       <p>
         Managed apps for use in your clusters. Learn more in our{' '}
         <a target='_blank' rel='noopener noreferrer' href={appPlatformURL}>
@@ -112,7 +114,6 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
 
         {!props.appsIsLoading && props.apps.length > 0 && (
           <ListContainer>
-            {props.selectedClusterBanner}
             <AppGrid
               items={props.apps}
               itemMinHeight={200}

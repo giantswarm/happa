@@ -311,7 +311,7 @@ const AppList: React.FC<{}> = () => {
             <AppInstallationSelectedCluster
               clusterName={selectedClusterID}
               onDeselectCluster={deselectCluster}
-              margin={{ bottom: 'medium' }}
+              margin={{ bottom: 'medium', top: 'small' }}
             />
           ) : undefined
         }
