@@ -197,12 +197,20 @@ workflows:
       - build-fe-docs:
           requires:
             - checkout
-          <<: *job_filters
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
 
       - build-fe-docs-container:
           requires:
             - build-fe-docs
-          <<: *job_filters
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
 
       - architect/push-to-docker:
           name: push-fe-docs-to-quay
@@ -213,8 +221,9 @@ workflows:
           dockerfile: "./Dockerfile.fe-docs"
           requires:
             - build-fe-docs-container
-          # Needed to trigger job also on git tag.
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
 
@@ -227,8 +236,9 @@ workflows:
           explicit_allow_chart_name_mismatch: true
           requires:
             - push-fe-docs-to-quay
-          # Needed to trigger job also on git tag.
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
 
