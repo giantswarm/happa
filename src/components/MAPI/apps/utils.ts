@@ -1266,3 +1266,61 @@ export function fetchAppCatalogEntryListForOrganizationsKey(
     appCatalogEntryGetOptions
   )}/${Object.keys(organizations).join('/')}`;
 }
+
+export async function fetchAppsForClusters(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  clusters: capiv1beta1.ICluster[]
+): Promise<Record<string, { appName: string; catalogName: string }[]>> {
+  const appsForClusters: Record<
+    string,
+    { appName: string; catalogName: string }[]
+  > = {};
+
+  const responses = await Promise.allSettled(
+    clusters.map((cluster) => {
+      return applicationv1alpha1.getAppList(httpClientFactory(), auth, {
+        namespace: cluster.metadata.name,
+      });
+    })
+  );
+
+  for (let i = 0; i < responses.length; i++) {
+    const response = responses[i];
+    const cluster = clusters[i];
+
+    if (
+      response.status === 'rejected' &&
+      !metav1.isStatusError(
+        (response.reason as GenericResponse).data,
+        metav1.K8sStatusErrorReasons.Forbidden
+      )
+    ) {
+      ErrorReporter.getInstance().notify(response.reason as Error);
+    }
+
+    if (response.status === 'fulfilled') {
+      const appList = response.value;
+
+      const clusterWithOrg = `${cluster.metadata.namespace}/${cluster.metadata.name}`;
+
+      appsForClusters[clusterWithOrg] = appList.items.map((app) => {
+        return { appName: app.metadata.name, catalogName: app.spec.catalog };
+      });
+    }
+  }
+
+  return appsForClusters;
+}
+
+export function fetchAppsForClustersKey(
+  clusters?: capiv1beta1.ICluster[]
+): string | null {
+  if (!clusters) return null;
+
+  const clusterKeys = clusters.map(
+    (c) => `${c.metadata.namespace}/${c.metadata.name}`
+  );
+
+  return `fetchAppsForClusters/${clusterKeys.join()}`;
+}

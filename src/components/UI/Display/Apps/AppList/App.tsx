@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import AppIcon from './AppIcon';
 import CatalogLabel from './CatalogLabel';
@@ -58,6 +59,7 @@ export interface IAppProps {
   catalogTitle: string;
   catalogIconUrl: string;
   catalogIsManaged?: boolean;
+  isInstalledInSelectedCluster?: boolean;
 }
 
 const App: React.FC<IAppProps> = (props) => {
@@ -67,7 +69,20 @@ const App: React.FC<IAppProps> = (props) => {
         <AppIcon src={props.appIconURL} name={props.name} />
       </IconWrapper>
       <DetailWrapper>
-        <Name>{props.name}</Name>
+        <Name>
+          {props.name}{' '}
+          {props.isInstalledInSelectedCluster && (
+            <TooltipContainer
+              content={<Tooltip>Installed in this cluster</Tooltip>}
+            >
+              <i
+                className='fa fa-done'
+                aria-hidden='true'
+                title='Installed in this cluster'
+              />
+            </TooltipContainer>
+          )}
+        </Name>
         <StyledCatalogLabel
           catalogName={props.catalogTitle}
           isManaged={props.catalogIsManaged}

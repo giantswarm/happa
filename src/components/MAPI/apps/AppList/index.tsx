@@ -1,17 +1,25 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
+import {
+  fetchClusterListForOrganizations,
+  fetchClusterListForOrganizationsKey,
+} from 'MAPI/organizations/utils';
+import { ClusterList } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import { selectCluster } from 'model/stores/main/actions';
 import {
   getIsImpersonatingNonAdmin,
   getUserIsAdmin,
 } from 'model/stores/main/selectors';
 import { selectOrganizations } from 'model/stores/organization/selectors';
+import { IState } from 'model/stores/state';
 import React, { useEffect, useLayoutEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useSWR, { useSWRConfig } from 'swr';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
+import AppInstallationSelectedCluster from 'UI/Display/MAPI/apps/AppInstallationSelectedCluster';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import useDebounce from 'utils/hooks/useDebounce';
@@ -25,6 +33,8 @@ import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatal
 import {
   fetchAppCatalogEntryListForOrganizations,
   fetchAppCatalogEntryListForOrganizationsKey,
+  fetchAppsForClusters,
+  fetchAppsForClustersKey,
   fetchCatalogListForOrganizations,
   fetchCatalogListForOrganizationsKey,
 } from '../utils';
@@ -184,6 +194,63 @@ const AppList: React.FC<{}> = () => {
     (typeof appCatalogEntryList === 'undefined' &&
       appCatalogEntryListIsValidating);
 
+  const selectedClusterID = useSelector(
+    (state: IState) => state.main.selectedClusterID
+  );
+
+  const dispatch = useDispatch();
+  const deselectCluster = () => {
+    dispatch(selectCluster(null));
+  };
+
+  const clusterListForOrganizationsKey = selectedClusterID
+    ? fetchClusterListForOrganizationsKey(organizations)
+    : null;
+
+  const { data: clusterList, error: clusterListError } = useSWR<
+    ClusterList,
+    GenericResponseError
+  >(clusterListForOrganizationsKey, () =>
+    fetchClusterListForOrganizations(
+      clientFactory,
+      auth,
+      cache,
+      provider,
+      organizations
+    )
+  );
+
+  useEffect(() => {
+    if (clusterListError) {
+      ErrorReporter.getInstance().notify(clusterListError);
+    }
+  }, [clusterListError]);
+
+  const appsForClustersKey = clusterList?.items
+    ? fetchAppsForClustersKey(clusterList.items)
+    : null;
+
+  const { data: appsForClusters, error: appsForClustersError } = useSWR<
+    Record<string, { appName: string; catalogName: string }[]>,
+    GenericResponseError
+  >(appsForClustersKey, () =>
+    fetchAppsForClusters(clientFactory, auth, clusterList!.items)
+  );
+
+  useEffect(() => {
+    if (appsForClustersError) {
+      ErrorReporter.getInstance().notify(appsForClustersError);
+    }
+  }, [appsForClustersError]);
+
+  const selectedCluster = useMemo(() => {
+    if (!clusterList?.items) return undefined;
+
+    return clusterList?.items.find(
+      (cluster) => cluster.metadata.name === selectedClusterID
+    );
+  }, [clusterList?.items, selectedClusterID]);
+
   const apps = useMemo(() => {
     if (!appCatalogEntryList) return [];
 
@@ -199,13 +266,17 @@ const AppList: React.FC<{}> = () => {
 
     return mapAppCatalogEntriesToAppPageApps(
       filteredAppCatalogEntryList,
+      appsForClusters,
+      selectedCluster,
       catalogList?.items
     );
   }, [
     appCatalogEntryList,
+    appsForClusters,
     debouncedSearchQuery,
     selectedCatalogs,
     sortOrder,
+    selectedCluster,
     catalogList?.items,
   ]);
 
@@ -235,6 +306,15 @@ const AppList: React.FC<{}> = () => {
         )}
         facetsIsLoading={catalogListIsLoading}
         appsIsLoading={appCatalogEntryListIsLoading}
+        selectedClusterBanner={
+          selectedClusterID ? (
+            <AppInstallationSelectedCluster
+              clusterName={selectedClusterID}
+              onDeselectCluster={deselectCluster}
+              margin={{ bottom: 'medium', top: 'small' }}
+            />
+          ) : undefined
+        }
       />
       {catalogList && (
         <Box margin={{ top: 'medium' }} direction='column' gap='small'>

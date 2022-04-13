@@ -1,4 +1,5 @@
 import {
+  fireEvent,
   render,
   screen,
   waitForElementToBeRemoved,
@@ -8,17 +9,33 @@ import AppsProvider from 'MAPI/apps/AppsProvider';
 import { usePermissionsForAppCatalogEntries } from 'MAPI/apps/permissions/usePermissionsForAppCatalogEntries';
 import { usePermissionsForCatalogs } from 'MAPI/apps/permissions/usePermissionsForCatalogs';
 import { StatusCodes } from 'model/constants';
+import { IState } from 'model/stores/state';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
+import { withMarkup } from 'test/assertUtils';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
 import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
+import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import AppDetail from '../AppDetail';
 
-function getComponent(props: React.ComponentPropsWithoutRef<typeof AppDetail>) {
+function createState(selectedClusterID: string | null) {
+  return {
+    ...preloginState,
+    main: {
+      ...preloginState.main,
+      selectedClusterID,
+    },
+  } as IState;
+}
+
+function getComponent(
+  props: React.ComponentPropsWithoutRef<typeof AppDetail>,
+  selectedClusterID?: string
+) {
   const history = createMemoryHistory();
   const auth = new TestOAuth2(history, true);
 
@@ -33,7 +50,7 @@ function getComponent(props: React.ComponentPropsWithoutRef<typeof AppDetail>) {
   return getComponentWithStore(
     Component,
     props,
-    undefined,
+    createState(selectedClusterID ?? null),
     undefined,
     history,
     auth
@@ -131,5 +148,113 @@ describe('AppDetail', () => {
     expect(
       screen.getByRole('link', { name: appCatalogEntry.spec.chart.home })
     ).toBeInTheDocument();
+  });
+
+  it('displays the current selected cluster', async () => {
+    const appCatalogEntry =
+      applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1;
+    const catalog = applicationv1alpha1Mocks.defaultAppCatalog;
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'application.giantswarm.io',
+            resource: 'appcatalogentries',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListAppCatalogEntriesAtClusterScope
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3D${appCatalogEntry.spec.appName}%2Capplication.giantswarm.io%2Fcatalog%3D${appCatalogEntry.spec.catalog.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${catalog.metadata.namespace}/catalogs/${catalog.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, catalog);
+
+    const testClusterID = 'test1';
+
+    render(getComponent({}, testClusterID));
+
+    await waitForElementToBeRemoved(() =>
+      screen.getAllByLabelText('Loading...')
+    );
+
+    expect(
+      withMarkup(screen.getByText)(
+        ' Your selected cluster is test1 and install status will be shown for this cluster.'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('allows deselecting the current selected cluster', async () => {
+    const appCatalogEntry =
+      applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1;
+    const catalog = applicationv1alpha1Mocks.defaultAppCatalog;
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'application.giantswarm.io',
+            resource: 'appcatalogentries',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListAppCatalogEntriesAtClusterScope
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3D${appCatalogEntry.spec.appName}%2Capplication.giantswarm.io%2Fcatalog%3D${appCatalogEntry.spec.catalog.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${catalog.metadata.namespace}/catalogs/${catalog.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, catalog);
+
+    const testClusterID = 'test1';
+
+    render(getComponent({}, testClusterID));
+
+    await waitForElementToBeRemoved(() =>
+      screen.getAllByLabelText('Loading...')
+    );
+
+    const selectedClusterElement = withMarkup(screen.getByText)(
+      ' Your selected cluster is test1 and install status will be shown for this cluster.'
+    );
+
+    expect(selectedClusterElement).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTitle(`Deselect cluster ${testClusterID}`));
+
+    expect(selectedClusterElement).not.toBeInTheDocument();
   });
 });

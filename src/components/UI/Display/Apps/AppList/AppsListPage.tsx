@@ -1,5 +1,5 @@
 import { appPlatformURL } from 'model/constants/docs';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import App, { IAppProps } from 'UI/Display/Apps/AppList/App';
@@ -11,7 +11,9 @@ import Toolbar from './Toolbar';
 
 const LOADING_COMPONENTS = new Array(9).fill(0);
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  margin-top: -10px;
+`;
 
 const ListAndFacets = styled.div`
   display: flex;
@@ -59,12 +61,13 @@ export interface IAppsListPageProps {
   apps: IAppProps[];
   facetsIsLoading?: boolean;
   appsIsLoading?: boolean;
+  selectedClusterBanner?: ReactElement;
 }
 
 const AppsList: React.FC<IAppsListPageProps> = (props) => {
   return (
     <Wrapper>
-      <h1 data-testid='apps-browser'>Apps</h1>
+      {props.selectedClusterBanner}
       <p>
         Managed apps for use in your clusters. Learn more in our{' '}
         <a target='_blank' rel='noopener noreferrer' href={appPlatformURL}>
@@ -124,6 +127,9 @@ const AppsList: React.FC<IAppsListPageProps> = (props) => {
                   catalogIconUrl={app.catalogIconUrl}
                   to={app.to}
                   key={app.to}
+                  isInstalledInSelectedCluster={
+                    app.isInstalledInSelectedCluster
+                  }
                 />
               )}
             />

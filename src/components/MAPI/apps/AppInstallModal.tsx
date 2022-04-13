@@ -1,9 +1,11 @@
-import ClusterPicker from 'Apps/AppDetail/InstallAppModal/ClusterPicker';
+import ClusterPicker, {
+  ClusterPickerVariant,
+} from 'Apps/AppDetail/InstallAppModal/ClusterPicker';
 import InstallAppForm from 'Apps/AppDetail/InstallAppModal/InstallAppForm';
 import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
-import { Box } from 'grommet';
+import { Box, Text } from 'grommet';
 import yaml from 'js-yaml';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import {
@@ -29,6 +31,7 @@ import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
+import { selectCluster } from 'model/stores/main/actions';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, {
@@ -42,7 +45,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import useSWR, { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
-import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
+import ClusterIDLabel, {
+  ClusterIDLabelType,
+} from 'UI/Display/Cluster/ClusterIDLabel';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import Modal from 'UI/Layout/Modal';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -52,7 +57,13 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
 import { IAppsPermissions } from './permissions/types';
-import { createApp, filterClusters, formatYAMLError } from './utils';
+import {
+  createApp,
+  fetchAppsForClusters,
+  fetchAppsForClustersKey,
+  filterClusters,
+  formatYAMLError,
+} from './utils';
 
 function getOrganizationForCluster(
   cluster: Cluster,
@@ -66,16 +77,20 @@ function getOrganizationForCluster(
 
 function mapClusterToClusterPickerInput(
   entry: IProviderClusterForCluster,
-  organizations: Record<string, IOrganization>
+  organizations: Record<string, IOrganization>,
+  clustersWithAppInstalled: string[]
 ): React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters'][0] {
   const { cluster, providerCluster } = entry;
   const organization = getOrganizationForCluster(cluster, organizations);
+  const isInstalledInCluster = clustersWithAppInstalled.includes(
+    `${cluster.metadata.namespace}/${cluster.metadata.name}`
+  );
 
   return {
     id: cluster.metadata.name,
     name: getClusterDescription(cluster, providerCluster),
     owner: organization?.id ?? '',
-    isAvailable: true,
+    isAvailable: !isInstalledInCluster,
   };
 }
 
@@ -90,14 +105,18 @@ interface IAppInstallModalProps {
   chartName: string;
   catalogName: string;
   versions: IVersion[];
-  selectedClusterID: string | null;
   appsPermissions?: IAppsPermissions;
 }
 
-const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
+const AppInstallModal: React.FC<IAppInstallModalProps> = ({
+  appName,
+  chartName,
+  catalogName,
+  versions,
+  appsPermissions,
+}) => {
   const [page, setPage] = useState(0);
   const [visible, setVisible] = useState(false);
-  const [clusterName, setClusterName] = useState(props.selectedClusterID);
 
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState('');
@@ -116,7 +135,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   const debouncedQuery = useDebounce(query, SEARCH_DEBOUNCE_RATE);
 
-  const [version, setVersion] = useState(props.versions[0]?.chartVersion ?? '');
+  const [version, setVersion] = useState(versions[0]?.chartVersion ?? '');
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
@@ -136,21 +155,25 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     setVisible(false);
   };
 
+  const selectedClusterID = useSelector(
+    (state: IState) => state.main.selectedClusterID
+  );
+
   const openModal = () => {
-    if (clusterName) {
+    if (selectedClusterID) {
       setPage(1);
     } else {
       setPage(0);
     }
-    setName(props.appName);
+    setName(appName);
     setNameError('');
-    setNamespace(props.appName);
+    setNamespace(appName);
     setNamespaceError('');
     setVisible(true);
   };
 
   const onSelectCluster = (newClusterID: string) => {
-    setClusterName(newClusterID);
+    dispatch(selectCluster(newClusterID));
     next();
   };
 
@@ -267,12 +290,65 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     return getPreviewReleaseVersions(releaseList.items);
   }, [releaseList]);
 
+  const appsForClustersKey = clusterList?.items
+    ? fetchAppsForClustersKey(clusterList.items)
+    : null;
+
+  const { data: appsForClusters, error: appsForClustersError } = useSWR<
+    Record<string, { appName: string; catalogName: string }[]>,
+    GenericResponseError
+  >(appsForClustersKey, () =>
+    fetchAppsForClusters(clientFactory, auth, clusterList!.items)
+  );
+
+  useEffect(() => {
+    if (appsForClustersError) {
+      ErrorReporter.getInstance().notify(appsForClustersError);
+    }
+  }, [appsForClustersError]);
+
+  const selectedCluster = useMemo(() => {
+    if (!clusterList?.items) return undefined;
+
+    return clusterList?.items.find(
+      (cluster) => cluster.metadata.name === selectedClusterID
+    );
+  }, [clusterList?.items, selectedClusterID]);
+
+  const clustersWithAppInstalled = useMemo(() => {
+    if (!appsForClusters) return [];
+
+    return Object.keys(appsForClusters).reduce((acc, clusterWithOrg) => {
+      const apps = appsForClusters[clusterWithOrg];
+      const appEntry = apps.find(
+        (entry) =>
+          entry.appName === appName && entry.catalogName === catalogName
+      );
+
+      if (appEntry) {
+        acc.push(clusterWithOrg);
+      }
+
+      return acc;
+    }, [] as string[]);
+  }, [appsForClusters, appName, catalogName]);
+
+  const isAppInstalledInSelectedCluster = useMemo(() => {
+    if (!selectedCluster) return false;
+
+    return clustersWithAppInstalled.includes(
+      `${selectedCluster.metadata.namespace}/${selectedCluster.metadata.name}`
+    );
+  }, [selectedCluster, clustersWithAppInstalled]);
+
   useEffect(() => {
     const clusterCollection = filterClusters(
       clustersWithProviderClusters,
       previewReleaseVersions,
       debouncedQuery
-    ).map((c) => mapClusterToClusterPickerInput(c, organizations));
+    ).map((c) =>
+      mapClusterToClusterPickerInput(c, organizations, clustersWithAppInstalled)
+    );
 
     setFilteredClusters(clusterCollection);
   }, [
@@ -282,6 +358,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     clustersWithProviderClusters,
     releaseList?.items,
     previewReleaseVersions,
+    clustersWithAppInstalled,
   ]);
 
   const updateNamespace = useCallback(
@@ -363,13 +440,13 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
   };
 
   const canInstallApps =
-    props.appsPermissions?.canCreate && props.appsPermissions?.canConfigure;
+    appsPermissions?.canCreate && appsPermissions?.canConfigure;
 
   const installApp = async () => {
-    if (!clusterName || !canInstallApps) return;
+    if (!selectedClusterID || !canInstallApps) return;
 
     const cluster = clusterList?.items.find(
-      (c) => c.metadata.name === clusterName
+      (c) => c.metadata.name === selectedClusterID
     );
     if (!cluster) return;
 
@@ -379,10 +456,10 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
     try {
       setLoading(true);
 
-      await createApp(clientFactory, auth, clusterName, {
+      await createApp(clientFactory, auth, selectedClusterID, {
         name: name,
-        catalogName: props.catalogName,
-        chartName: props.chartName,
+        catalogName: catalogName,
+        chartName: chartName,
         version: version,
         namespace: namespace,
         configMapContents: valuesYAML ?? '',
@@ -396,7 +473,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         OrganizationsRoutes.Clusters.Detail.Apps,
         {
           orgId: organization.id,
-          clusterId: clusterName,
+          clusterId: selectedClusterID,
         }
       );
 
@@ -406,7 +483,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
         (
           <>
             Your app <code>{name}</code> is being installed on{' '}
-            <code>{clusterName}</code>
+            <code>{selectedClusterID}</code>
           </>
         ),
         messageType.SUCCESS,
@@ -442,7 +519,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
           errorMessage = (
             <>
               An app called <code>{name}</code> already exists on cluster{' '}
-              <code>{clusterName}</code>
+              <code>{selectedClusterID}</code>
             </>
           );
 
@@ -460,34 +537,43 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
 
   return (
     <>
-      <TooltipContainer
-        content={
-          <Tooltip>
-            {!canInstallApps
-              ? 'For installing this app, you need additional permissions'
-              : 'No clusters available for app installation'}
-          </Tooltip>
-        }
-        show={!canInstallApps || filteredClusters.length === 0}
-      >
-        <Box>
-          <Button
-            primary={true}
-            onClick={openModal}
-            icon={<i className='fa fa-add-circle' />}
-            disabled={
-              clusterList &&
-              providerClusterList &&
-              filteredClusters.length === 0
-            }
-            unauthorized={
-              typeof canInstallApps !== 'undefined' && !canInstallApps
-            }
-          >
-            Install in cluster
-          </Button>
-        </Box>
-      </TooltipContainer>
+      {isAppInstalledInSelectedCluster ? (
+        <Text color='text-strong'>
+          <i className='fa fa-done' aria-hidden='true' role='presentation' />{' '}
+          Installed in this cluster
+        </Text>
+      ) : (
+        <TooltipContainer
+          content={
+            <Tooltip>
+              {!canInstallApps
+                ? 'For installing this app, you need additional permissions'
+                : 'No clusters available for app installation'}
+            </Tooltip>
+          }
+          show={!canInstallApps || filteredClusters.length === 0}
+        >
+          <Box>
+            <Button
+              primary={true}
+              onClick={openModal}
+              icon={<i className='fa fa-add-circle' />}
+              disabled={
+                clusterList &&
+                providerClusterList &&
+                filteredClusters.length === 0
+              }
+              unauthorized={
+                typeof canInstallApps !== 'undefined' && !canInstallApps
+              }
+            >
+              {selectedClusterID
+                ? 'Install in this cluster'
+                : 'Install in cluster'}
+            </Button>
+          </Box>
+        </TooltipContainer>
+      )}
       {(() => {
         switch (pages[page]) {
           case CLUSTER_PICKER_PAGE:
@@ -499,7 +585,7 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                   </Button>
                 }
                 onClose={onClose}
-                title={`Install ${props.chartName}: Pick a cluster`}
+                title={`Install ${chartName}: Pick a cluster`}
                 visible={visible}
               >
                 <ClusterPicker
@@ -507,7 +593,8 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                   onChangeQuery={setQuery}
                   onSelectCluster={onSelectCluster}
                   query={query}
-                  selectedClusterID={clusterName}
+                  selectedClusterID={selectedClusterID}
+                  variant={ClusterPickerVariant.Name}
                 />
               </Modal>
             );
@@ -536,20 +623,23 @@ const AppInstallModal: React.FC<IAppInstallModalProps> = (props) => {
                 onClose={onClose}
                 title={
                   <>
-                    {`Install ${props.chartName} on`}{' '}
-                    <ClusterIDLabel clusterID={clusterName!} />
+                    {`Install ${chartName} on`}{' '}
+                    <ClusterIDLabel
+                      clusterID={selectedClusterID!}
+                      variant={ClusterIDLabelType.Name}
+                    />
                   </>
                 }
                 visible={visible}
               >
                 <InstallAppForm
-                  appName={props.chartName}
+                  appName={chartName}
                   name={name}
                   nameError={nameError}
                   namespace={namespace}
                   namespaceError={namespaceError}
                   version={version}
-                  availableVersions={props.versions}
+                  availableVersions={versions}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
                   onChangeSecretsYAML={updateSecretsYAML}
