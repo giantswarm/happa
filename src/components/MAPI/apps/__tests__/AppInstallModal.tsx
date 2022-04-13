@@ -324,7 +324,7 @@ describe('AppInstallModal', () => {
     ).toBeInTheDocument();
   });
 
-  it('allows to select another cluster for app installation', async () => {
+  it('cannot select a cluster for app installation if the app is already installed on that cluster', async () => {
     const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
 
     nock(window.config.mapiEndpoint)
@@ -366,10 +366,14 @@ describe('AppInstallModal', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Install in cluster' }));
 
-    await waitFor(() => {
-      expect(
-        screen.getByTestId(capiv1beta1Mocks.randomCluster1.metadata.name)
-      ).toHaveClass('disabled');
-    });
+    for (const c of capiv1beta1Mocks.randomClusterList.items) {
+      if (c.metadata.name === capiv1beta1Mocks.randomCluster1.metadata.name) {
+        await waitFor(() => {
+          expect(screen.getByTestId(c.metadata.name)).toHaveClass('disabled');
+        });
+      } else {
+        expect(screen.getByTestId(c.metadata.name)).not.toHaveClass('disabled');
+      }
+    }
   });
 });
