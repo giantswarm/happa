@@ -1,4 +1,5 @@
 import {
+  fireEvent,
   render,
   screen,
   waitForElementToBeRemoved,
@@ -246,10 +247,14 @@ describe('AppDetail', () => {
       screen.getAllByLabelText('Loading...')
     );
 
-    expect(
-      withMarkup(screen.getByText)(
-        ' Your selected cluster is test1 and install status will be shown for this cluster.'
-      )
-    ).toBeInTheDocument();
+    const selectedClusterElement = withMarkup(screen.getByText)(
+      ' Your selected cluster is test1 and install status will be shown for this cluster.'
+    );
+
+    expect(selectedClusterElement).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTitle(`Deselect cluster ${testClusterID}`));
+
+    expect(selectedClusterElement).not.toBeInTheDocument();
   });
 });
