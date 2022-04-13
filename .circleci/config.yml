@@ -57,6 +57,7 @@ workflows:
             - gather-facts
           <<: *job_filters
       - build-container:
+          context: architect
           requires:
             - test
             - lint
@@ -64,32 +65,6 @@ workflows:
             - typecheck
             - build
           <<: *job_filters
-
-      - architect/push-to-docker:
-          name: push-happa-to-docker
-          context: "architect"
-          image: "docker.io/giantswarm/happa"
-          username_envar: "DOCKER_USERNAME"
-          password_envar: "DOCKER_PASSWORD"
-          requires:
-            - build-container
-          # Needed to trigger job also on git tag.
-          filters:
-            tags:
-              only: /^v.*/
-
-      - architect/push-to-docker:
-          name: push-happa-to-quay
-          context: architect
-          image: *image_name
-          username_envar: "QUAY_USERNAME"
-          password_envar: "QUAY_PASSWORD"
-          requires:
-            - build-container
-          # Needed to trigger job also on git tag.
-          filters:
-            tags:
-              only: /^v.*/
 
       - architect/push-to-docker:
           name: push-happa-to-aliyun
@@ -112,8 +87,7 @@ workflows:
           app_catalog_test: "control-plane-test-catalog"
           chart: "happa"
           requires:
-            - push-happa-to-quay
-            - push-happa-to-docker
+            - build-container
           # Needed to trigger job also on git tag.
           filters:
             tags:
@@ -392,10 +366,17 @@ jobs:
           command: |
             echo -n "${IMAGE_NAME}:$(cat VERSION)" > .docker_image_name
 
-      - run:
-          name: Build Docker image
-          command: |
-            docker build -t "$(cat .docker_image_name)" .
+      - architect/push-to-docker:
+          tag-latest-branch: "main"
+          image: "docker.io/giantswarm/happa"
+          username_envar: "DOCKER_USERNAME"
+          password_envar: "DOCKER_PASSWORD"
+
+      - architect/push-to-docker:
+          tag-latest-branch: "main"
+          image: *image_name
+          username_envar: "QUAY_USERNAME"
+          password_envar: "QUAY_PASSWORD"
 
       - run:
           name: Launch container for tests
