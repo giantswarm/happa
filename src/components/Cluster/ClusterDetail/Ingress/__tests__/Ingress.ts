@@ -67,7 +67,7 @@ describe('Ingress', () => {
     elParent = getByText(/ingress resource to the according name/i)
       .parentNode as HTMLDivElement;
     expect(
-      getByTextInParent(elParent, 'example.t3st.k8s.giantswarm.io')
+      getByTextInParent(elParent, 'EXAMPLE.t3st.k8s.giantswarm.io')
     ).toBeInTheDocument();
   });
 
