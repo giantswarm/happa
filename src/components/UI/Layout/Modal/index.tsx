@@ -1,5 +1,5 @@
 import { Box, Heading, Layer, Text } from 'grommet';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { VerticalScroll } from 'styles';
 import Button from 'UI/Controls/Button';
@@ -20,6 +20,8 @@ const Content = styled(Box)`
   ${VerticalScroll}
 `;
 
+export const BODY_CLASS_MODIFIER = 'modal-open';
+
 interface IModalProps
   extends Omit<React.ComponentPropsWithoutRef<typeof Layer>, 'title'> {
   title: React.ReactNode;
@@ -34,6 +36,19 @@ const Modal = React.forwardRef<HTMLDivElement, IModalProps>(
     { onClose, visible, title, footer, children, contentProps, ...props },
     ref
   ) => {
+    const bodyClassModified = useRef(false);
+    useEffect(() => {
+      if (visible && !document.body.classList.contains(BODY_CLASS_MODIFIER)) {
+        document.body.classList.add(BODY_CLASS_MODIFIER);
+        bodyClassModified.current = true;
+      } else {
+        if (bodyClassModified.current) {
+          document.body.classList.remove(BODY_CLASS_MODIFIER);
+          bodyClassModified.current = false;
+        }
+      }
+    }, [visible]);
+
     if (!visible) return null;
 
     return (

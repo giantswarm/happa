@@ -1,4 +1,4 @@
-import { Layer } from 'grommet';
+import { Layer, ThemeContext } from 'grommet';
 import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import SlideTransition from 'styles/transitions/SlideTransition';
@@ -69,24 +69,50 @@ const FlashMessagesProvider: React.FC<IFlashMessagesProviderProps> = ({
   }, [onEnqueue, onRemove, onClear, controller]);
 
   return (
-    <Layer
-      position='top-right'
-      modal={false}
-      margin={{ vertical: 'large', horizontal: 'medium' }}
-      responsive={false}
-      plain={true}
-      role='log'
-      animation='none'
+    <ThemeContext.Extend
+      value={{
+        layer: {
+          zIndex: 10100, // To appear above the header, which has z-index of 10000
+        },
+      }}
     >
-      {animate && (
-        <TransitionGroup id='flash-messages'>
-          {queue.map((entry) => (
-            <SlideTransition
-              key={JSON.stringify(entry)}
-              appear={true}
-              direction='up'
-            >
+      <Layer
+        position='top-right'
+        modal={false}
+        margin={{ vertical: 'large', horizontal: 'medium' }}
+        responsive={false}
+        plain={true}
+        role='log'
+        animation='none'
+      >
+        {animate && (
+          <TransitionGroup id='flash-messages'>
+            {queue.map((entry) => (
+              <SlideTransition
+                key={JSON.stringify(entry)}
+                appear={true}
+                direction='up'
+              >
+                <FlashMessagesNotification
+                  onMouseEnter={() => controller.pause(entry)}
+                  onMouseLeave={() => controller.resume(entry)}
+                  onClose={() => controller.remove(entry)}
+                  title={entry.title}
+                  type={entry.type}
+                  margin={{ bottom: 'small' }}
+                >
+                  {entry.message}
+                </FlashMessagesNotification>
+              </SlideTransition>
+            ))}
+          </TransitionGroup>
+        )}
+
+        {!animate && (
+          <div id='flash-messages'>
+            {queue.map((entry) => (
               <FlashMessagesNotification
+                key={JSON.stringify(entry)}
                 onMouseEnter={() => controller.pause(entry)}
                 onMouseLeave={() => controller.resume(entry)}
                 onClose={() => controller.remove(entry)}
@@ -96,29 +122,11 @@ const FlashMessagesProvider: React.FC<IFlashMessagesProviderProps> = ({
               >
                 {entry.message}
               </FlashMessagesNotification>
-            </SlideTransition>
-          ))}
-        </TransitionGroup>
-      )}
-
-      {!animate && (
-        <div id='flash-messages'>
-          {queue.map((entry) => (
-            <FlashMessagesNotification
-              key={JSON.stringify(entry)}
-              onMouseEnter={() => controller.pause(entry)}
-              onMouseLeave={() => controller.resume(entry)}
-              onClose={() => controller.remove(entry)}
-              title={entry.title}
-              type={entry.type}
-              margin={{ bottom: 'small' }}
-            >
-              {entry.message}
-            </FlashMessagesNotification>
-          ))}
-        </div>
-      )}
-    </Layer>
+            ))}
+          </div>
+        )}
+      </Layer>
+    </ThemeContext.Extend>
   );
 };
 
