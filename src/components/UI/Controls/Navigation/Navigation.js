@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 import { mq } from 'styles';
+import { BODY_CLASS_MODIFIER } from 'UI/Layout/Modal';
 
 import MainMenu from './MainMenu';
 import OrganizationDropdown from './OrganizationDropdown';
@@ -21,8 +22,14 @@ const OuterNav = styled.nav`
   top: 0px;
   left: 0px;
   right: 0px;
-  z-index: 1;
+  z-index: 10000; // To appear above other components fith fixed position
   background-color: ${(props) => props.theme.colors.shade1};
+  transition: z-index 0ms linear 500ms;
+
+  .${BODY_CLASS_MODIFIER} & {
+    z-index: 1;
+    transition-delay: 0ms;
+  }
 
   a {
     text-decoration: none;
