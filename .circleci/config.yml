@@ -44,14 +44,6 @@ workflows:
           requires:
             - checkout
           <<: *job_filters
-      - prettier:
-          requires:
-            - checkout
-          <<: *job_filters
-      - typecheck:
-          requires:
-            - checkout
-          <<: *job_filters
       - build:
           requires:
             - gather-facts
@@ -61,8 +53,6 @@ workflows:
           requires:
             - test
             - lint
-            - prettier
-            - typecheck
             - build
           <<: *job_filters
 
@@ -264,7 +254,7 @@ jobs:
           root: ~/happa
           <<: *whitelist
 
-  typecheck:
+  lint:
     <<: *defaults
 
     steps:
@@ -277,27 +267,9 @@ jobs:
           name: Typecheck code using the TypeScript compiler
           command: yarn run typecheck
 
-  lint:
-    <<: *defaults
-
-    steps:
-      - checkout
-
-      - attach_workspace:
-          at: ~/happa
-
       - run:
           name: Lint code using ESlint
           command: yarn run lint --no-color
-
-  prettier:
-    <<: *defaults
-
-    steps:
-      - checkout
-
-      - attach_workspace:
-          at: ~/happa
 
       - run:
           name: Validate code style using prettier
