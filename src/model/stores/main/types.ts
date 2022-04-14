@@ -35,7 +35,7 @@ export interface IMainState {
 
 export interface IMainSelectClusterAction {
   type: typeof CLUSTER_SELECT;
-  clusterID: string;
+  clusterID: string | null;
 }
 
 export interface IGlobalLoadRequestAction {

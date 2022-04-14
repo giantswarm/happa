@@ -37,7 +37,7 @@ const NonBreakingLink = styled.a`
 const Upper = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: baseline;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBlueLighter3};
   margin-bottom: 20px;
 
@@ -200,6 +200,7 @@ export interface IAppDetailPageProps {
   readme?: string;
   readmeError?: string;
   readmeURL?: string;
+  selectedClusterBanner?: ReactElement;
 }
 
 const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
@@ -213,7 +214,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
           Back to Apps
         </Button>
       </Link>
-
+      {props.selectedClusterBanner}
       <Header>
         <AppIconWrapper>
           <StyledAppIcon src={props.appIconURL} name={props.appTitle ?? ''} />

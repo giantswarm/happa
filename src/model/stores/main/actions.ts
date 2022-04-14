@@ -50,7 +50,7 @@ import Passage, {
 import { LoggedInUserTypes } from './types';
 import { mapOAuth2UserToUser } from './utils';
 
-export function selectCluster(clusterID: string): MainActions {
+export function selectCluster(clusterID: string | null): MainActions {
   return {
     type: CLUSTER_SELECT,
     clusterID,
