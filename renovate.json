@@ -80,7 +80,7 @@
       "enabled": false
     }
   ],
-  "prConcurrentLimit": 3,
+  "prConcurrentLimit": 1,
   "schedule": [
     "every weekend",
     "every weekday after 6pm",
