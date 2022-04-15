@@ -44,52 +44,17 @@ workflows:
           requires:
             - checkout
           <<: *job_filters
-      - prettier:
-          requires:
-            - checkout
-          <<: *job_filters
-      - typecheck:
-          requires:
-            - checkout
-          <<: *job_filters
       - build:
           requires:
             - gather-facts
           <<: *job_filters
       - build-container:
+          context: architect
           requires:
             - test
             - lint
-            - prettier
-            - typecheck
             - build
           <<: *job_filters
-
-      - architect/push-to-docker:
-          name: push-happa-to-docker
-          context: "architect"
-          image: "docker.io/giantswarm/happa"
-          username_envar: "DOCKER_USERNAME"
-          password_envar: "DOCKER_PASSWORD"
-          requires:
-            - build-container
-          # Needed to trigger job also on git tag.
-          filters:
-            tags:
-              only: /^v.*/
-
-      - architect/push-to-docker:
-          name: push-happa-to-quay
-          context: architect
-          image: *image_name
-          username_envar: "QUAY_USERNAME"
-          password_envar: "QUAY_PASSWORD"
-          requires:
-            - build-container
-          # Needed to trigger job also on git tag.
-          filters:
-            tags:
-              only: /^v.*/
 
       - architect/push-to-docker:
           name: push-happa-to-aliyun
@@ -102,7 +67,7 @@ workflows:
           # Needed to trigger job only on git tag.
           filters:
             branches:
-              only: master
+              only: main
             tags:
               only: /^v.*/
 
@@ -112,8 +77,7 @@ workflows:
           app_catalog_test: "control-plane-test-catalog"
           chart: "happa"
           requires:
-            - push-happa-to-quay
-            - push-happa-to-docker
+            - build-container
           # Needed to trigger job also on git tag.
           filters:
             tags:
@@ -197,12 +161,11 @@ workflows:
       - build-fe-docs:
           requires:
             - checkout
-          <<: *job_filters
-
-      - build-fe-docs-container:
-          requires:
-            - build-fe-docs
-          <<: *job_filters
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
 
       - architect/push-to-docker:
           name: push-fe-docs-to-quay
@@ -212,9 +175,10 @@ workflows:
           password_envar: "QUAY_PASSWORD"
           dockerfile: "./Dockerfile.fe-docs"
           requires:
-            - build-fe-docs-container
-          # Needed to trigger job also on git tag.
+            - build-fe-docs
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
 
@@ -227,8 +191,9 @@ workflows:
           explicit_allow_chart_name_mismatch: true
           requires:
             - push-fe-docs-to-quay
-          # Needed to trigger job also on git tag.
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
 
@@ -289,7 +254,7 @@ jobs:
           root: ~/happa
           <<: *whitelist
 
-  typecheck:
+  lint:
     <<: *defaults
 
     steps:
@@ -302,27 +267,9 @@ jobs:
           name: Typecheck code using the TypeScript compiler
           command: yarn run typecheck
 
-  lint:
-    <<: *defaults
-
-    steps:
-      - checkout
-
-      - attach_workspace:
-          at: ~/happa
-
       - run:
           name: Lint code using ESlint
           command: yarn run lint --no-color
-
-  prettier:
-    <<: *defaults
-
-    steps:
-      - checkout
-
-      - attach_workspace:
-          at: ~/happa
 
       - run:
           name: Validate code style using prettier
@@ -382,10 +329,17 @@ jobs:
           command: |
             echo -n "${IMAGE_NAME}:$(cat VERSION)" > .docker_image_name
 
-      - run:
-          name: Build Docker image
-          command: |
-            docker build -t "$(cat .docker_image_name)" .
+      - architect/push-to-docker:
+          tag-latest-branch: "main"
+          image: "docker.io/giantswarm/happa"
+          username_envar: "DOCKER_USERNAME"
+          password_envar: "DOCKER_PASSWORD"
+
+      - architect/push-to-docker:
+          tag-latest-branch: "main"
+          image: *image_name
+          username_envar: "QUAY_USERNAME"
+          password_envar: "QUAY_PASSWORD"
 
       - run:
           name: Launch container for tests
@@ -415,27 +369,3 @@ jobs:
       - persist_to_workspace:
           root: ~/happa
           <<: *whitelist
-
-  build-fe-docs-container:
-    executor: architect/architect
-
-    working_directory: ~/happa
-    steps:
-      - checkout
-
-      - setup_remote_docker
-
-      - attach_workspace:
-          at: ~/happa
-
-      - run:
-          environment:
-            IMAGE_NAME: *image_name_fe_docs
-          name: Generate container image tag
-          command: |
-            echo -n "${IMAGE_NAME}:$(architect project version)" > .docker_image_name_fe_docs
-
-      - run:
-          name: Build Docker image
-          command: |
-            docker build -t "$(cat .docker_image_name_fe_docs)" . --file "./Dockerfile.fe-docs"
