@@ -91,7 +91,7 @@ const UpgradeClusterGuide: React.FC<IUpgradeClusterGuideProps> = ({
             <code>
               <var>TIME</var>
             </code>{' '}
-            should be in the <code>&quot;YYYY-MM-DD HH:MM&quot;</code> format.
+            must be in the <code>&quot;YYYY-MM-DD HH:MM&quot;</code> format.
             Timezone UTC is assumed. If not given, the upgrade happens as soon
             as possible.
           </Text>
