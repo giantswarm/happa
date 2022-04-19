@@ -6,6 +6,7 @@ import {
   fetchProviderNodePoolsForNodePoolsKey,
   IProviderNodePoolForNodePoolName,
 } from 'MAPI/utils';
+import { GenericResponse } from 'model/clients/GenericResponse';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, Providers } from 'model/constants';
@@ -788,17 +789,23 @@ export async function createNodePool(
     nodePool: NodePool;
     providerNodePool: ProviderNodePool;
     bootstrapConfig: BootstrapConfig;
-  }
+  },
+  isRetrying: boolean
 ): Promise<{
   nodePool: NodePool;
   providerNodePool: ProviderNodePool;
   bootstrapConfig: BootstrapConfig;
 }> {
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let nodePool: NodePool;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let providerNodePool: ProviderNodePool;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let bootstrapConfig: BootstrapConfig;
+
   switch (config.providerNodePool?.kind) {
     case capzexpv1alpha3.AzureMachinePool: {
-      // eslint-disable-next-line @typescript-eslint/init-declarations
-      let bootstrapConfig: BootstrapConfig;
-      if (config.bootstrapConfig) {
+      if (config.bootstrapConfig && !isRetrying) {
         bootstrapConfig = await gscorev1alpha1.createSpark(
           httpClient,
           auth,
@@ -806,11 +813,29 @@ export async function createNodePool(
         );
       }
 
-      const providerNodePool = await capzexpv1alpha3.createAzureMachinePool(
-        httpClient,
-        auth,
-        config.providerNodePool as capzexpv1alpha3.IAzureMachinePool
-      );
+      try {
+        providerNodePool = await capzexpv1alpha3.createAzureMachinePool(
+          httpClient,
+          auth,
+          config.providerNodePool as capzexpv1alpha3.IAzureMachinePool
+        );
+      } catch (err) {
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        providerNodePool = await capzexpv1alpha3.getAzureMachinePool(
+          httpClient,
+          auth,
+          config.providerNodePool.metadata.namespace!,
+          config.providerNodePool.metadata.name
+        );
+      }
 
       mutate(
         capzexpv1alpha3.getAzureMachinePoolKey(
@@ -821,11 +846,29 @@ export async function createNodePool(
         false
       );
 
-      const nodePool = await capiexpv1alpha3.createMachinePool(
-        httpClient,
-        auth,
-        config.nodePool as capiexpv1alpha3.IMachinePool
-      );
+      try {
+        nodePool = await capiexpv1alpha3.createMachinePool(
+          httpClient,
+          auth,
+          config.nodePool as capiexpv1alpha3.IMachinePool
+        );
+      } catch (err) {
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        nodePool = await capiexpv1alpha3.getMachinePool(
+          httpClient,
+          auth,
+          config.nodePool.metadata.namespace!,
+          config.nodePool.metadata.name
+        );
+      }
 
       mutate(
         capiexpv1alpha3.getMachinePoolKey(
@@ -850,7 +893,7 @@ export async function createNodePool(
         produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
           if (!draft) return;
 
-          draft.items.push(nodePool);
+          draft.items.push(nodePool as capiexpv1alpha3.IMachinePool);
           draft.items = draft.items.sort(compareNodePools);
         }),
         false
@@ -860,11 +903,29 @@ export async function createNodePool(
     }
 
     case infrav1alpha3.AWSMachineDeployment: {
-      const providerNodePool = await infrav1alpha3.createAWSMachineDeployment(
-        httpClient,
-        auth,
-        config.providerNodePool as infrav1alpha3.IAWSMachineDeployment
-      );
+      try {
+        providerNodePool = await infrav1alpha3.createAWSMachineDeployment(
+          httpClient,
+          auth,
+          config.providerNodePool as infrav1alpha3.IAWSMachineDeployment
+        );
+      } catch (err) {
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        providerNodePool = await infrav1alpha3.getAWSMachineDeployment(
+          httpClient,
+          auth,
+          config.providerNodePool.metadata.namespace!,
+          config.providerNodePool.metadata.name
+        );
+      }
 
       mutate(
         infrav1alpha3.getAWSMachineDeploymentKey(
@@ -875,11 +936,29 @@ export async function createNodePool(
         false
       );
 
-      const nodePool = await capiv1beta1.createMachineDeployment(
-        httpClient,
-        auth,
-        config.nodePool as capiv1beta1.IMachineDeployment
-      );
+      try {
+        nodePool = await capiv1beta1.createMachineDeployment(
+          httpClient,
+          auth,
+          config.nodePool as capiv1beta1.IMachineDeployment
+        );
+      } catch (err) {
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        nodePool = await capiv1beta1.getMachineDeployment(
+          httpClient,
+          auth,
+          config.nodePool.metadata.namespace!,
+          config.nodePool.metadata.name
+        );
+      }
 
       mutate(
         capiv1beta1.getMachineDeploymentKey(
@@ -904,7 +983,7 @@ export async function createNodePool(
         produce((draft?: capiv1beta1.IMachineDeploymentList) => {
           if (!draft) return;
 
-          draft.items.push(nodePool);
+          draft.items.push(nodePool as capiv1beta1.IMachineDeployment);
           draft.items = draft.items.sort(compareNodePools);
         }),
         false
