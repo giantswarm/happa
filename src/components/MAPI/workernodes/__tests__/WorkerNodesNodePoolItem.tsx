@@ -204,17 +204,19 @@ describe('WorkerNodesNodePoolItem', () => {
           ...capiexpv1alpha3Mocks.randomCluster1MachinePool1,
           metadata: {
             ...capiexpv1alpha3Mocks.randomCluster1MachinePool1.metadata,
-            name: 't6yo90',
+            name: 'qwertyuiopq',
           },
         },
         providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
       })
     );
 
-    expect(screen.getByLabelText('Name: t6yo90')).toHaveTextContent('t6y…0');
-    const label: HTMLSpanElement = screen.getByText('t6y…0');
+    expect(screen.getByLabelText('Name: qwertyuiopq')).toHaveTextContent(
+      'qwer…uiopq'
+    );
+    const label: HTMLSpanElement = screen.getByText('qwer…uiopq');
     fireEvent.mouseOver(label);
-    expect(screen.getByText('t6yo90')).toBeInTheDocument();
+    expect(screen.getByText('qwertyuiopq')).toBeInTheDocument();
   });
 
   it('can delete a node pool', async () => {

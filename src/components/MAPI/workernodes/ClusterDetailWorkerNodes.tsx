@@ -26,8 +26,10 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useLocation, useParams } from 'react-router';
 import { TransitionGroup } from 'react-transition-group';
+import { COPYABLE_PADDING } from 'shared/Copyable';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
+import { CODE_CHAR_WIDTH, CODE_PADDING } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
@@ -44,7 +46,9 @@ import { usePermissionsForNodePools } from './permissions/usePermissionsForNodeP
 import { IWorkerNodesAdditionalColumn } from './types';
 import { mapNodePoolsToProviderNodePools } from './utils';
 import WorkerNodesCreateNodePool from './WorkerNodesCreateNodePool';
-import WorkerNodesNodePoolItem from './WorkerNodesNodePoolItem';
+import WorkerNodesNodePoolItem, {
+  MAX_NAME_LENGTH,
+} from './WorkerNodesNodePoolItem';
 import WorkerNodesSpotInstancesAWS from './WorkerNodesSpotInstancesAWS';
 import WorkerNodesSpotInstancesAzure from './WorkerNodesSpotInstancesAzure';
 
@@ -117,15 +121,29 @@ function getProviderNodePoolResourceName(
   }
 }
 
-const Header = styled(Box)<{ additionalColumnsCount?: number }>`
-  ${({ additionalColumnsCount }) => NodePoolGridRow(additionalColumnsCount)}
+function getNameColumnWidth(nameLength: number) {
+  const charCount = Math.min(nameLength, MAX_NAME_LENGTH);
+
+  return charCount * CODE_CHAR_WIDTH + COPYABLE_PADDING + CODE_PADDING * 2;
+}
+
+const Header = styled(Box)<{
+  additionalColumnsCount?: number;
+  nameColumnWidth?: number;
+}>`
+  ${({ additionalColumnsCount, nameColumnWidth }) =>
+    NodePoolGridRow(additionalColumnsCount, nameColumnWidth)}
 
   text-transform: uppercase;
   color: #ccc;
 `;
 
-const ColumnInfo = styled(Box)<{ additionalColumnsCount?: number }>`
-  ${({ additionalColumnsCount }) => NodePoolGridRow(additionalColumnsCount)}
+const ColumnInfo = styled(Box)<{
+  additionalColumnsCount?: number;
+  nameColumnWidth?: number;
+}>`
+  ${({ additionalColumnsCount, nameColumnWidth }) =>
+    NodePoolGridRow(additionalColumnsCount, nameColumnWidth)}
 
   padding-bottom: 0;
   margin-bottom: -5px;
@@ -349,6 +367,16 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
       );
     }, [nodePoolList?.items, providerNodePools]);
 
+    const longestNameLength = nodePoolsWithProviderNodePools.reduce(
+      (maxLength, item) => {
+        const length = item.nodePool.metadata.name.length;
+
+        return Math.max(length, maxLength);
+      },
+      0
+    );
+    const nameColumnWidth = getNameColumnWidth(longestNameLength);
+
     const additionalColumns = useMemo(
       () => getAdditionalColumns(provider),
       [provider]
@@ -390,6 +418,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
               <Box>
                 <ColumnInfo
                   additionalColumnsCount={additionalColumns.length}
+                  nameColumnWidth={nameColumnWidth}
                   margin={{ top: 'xsmall' }}
                 >
                   <NodesInfo>
@@ -404,9 +433,13 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                 </ColumnInfo>
                 <Header
                   additionalColumnsCount={additionalColumns.length}
+                  nameColumnWidth={nameColumnWidth}
                   height='xxsmall'
                 >
-                  <Box align='center' margin={{ left: '-12px' }}>
+                  <Box
+                    align='center'
+                    margin={{ right: `${COPYABLE_PADDING}px` }}
+                  >
                     <Text size='xsmall'>Name</Text>
                   </Box>
                   <Box>
@@ -451,6 +484,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                       <WorkerNodesNodePoolItem
                         key={idx}
                         additionalColumns={additionalColumns}
+                        nameColumnWidth={nameColumnWidth}
                         margin={{ bottom: 'small' }}
                         readOnly={isReadOnly}
                       />
@@ -474,6 +508,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                                 nodePool={nodePool}
                                 providerNodePool={providerNodePool}
                                 additionalColumns={additionalColumns}
+                                nameColumnWidth={nameColumnWidth}
                                 margin={{ bottom: 'small' }}
                                 readOnly={isReadOnly}
                                 canUpdateNodePools={canUpdateNodePools}

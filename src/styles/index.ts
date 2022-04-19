@@ -97,11 +97,13 @@ export const FlexRowWithTwoBlocksOnEdges = styled.div`
 
 /* Style Wrappers & Reusable elements */
 
+export const CODE_CHAR_WIDTH = 6.75;
+export const CODE_PADDING = 12;
 export const Code = styled.code`
   font-family: ${(props) => props.theme.fontFamilies.console};
   background-color: ${(props) => props.theme.colors.shade2};
   border-radius: 2px;
-  padding: 0 12px;
+  padding: 0 ${CODE_PADDING}px;
   height: 30px;
   line-height: 30px;
   display: inline-block;

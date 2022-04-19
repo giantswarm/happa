@@ -14,8 +14,9 @@ const TooltipWrapper = styled.div`
   opacity: 0;
 `;
 
+export const COPYABLE_PADDING = 20;
 const Wrapper = styled.div`
-  padding-right: 20px;
+  padding-right: ${COPYABLE_PADDING}px;
   position: relative;
   overflow: inherit;
   text-overflow: inherit;

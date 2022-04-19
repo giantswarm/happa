@@ -3,6 +3,7 @@ import {
   compareDates,
   dedent,
   formatDate,
+  getTruncationParams,
   hasAppropriateLength,
   humanFileSize,
   IHumanFileSizeValue,
@@ -298,6 +299,24 @@ token: can't be blank`)
       const result = truncate(initial, 'NotReallyHelpful', 10, 8);
 
       expect(result).toBe('someReallyNotReallyHelpfulTruncate');
+    });
+  });
+
+  describe('getTruncationParams', () => {
+    it('returns correct parameters for the truncate function', () => {
+      // eslint-disable-next-line no-magic-numbers
+      expect(getTruncationParams(10)).toEqual({ numStart: 4, numEnd: 5 });
+      expect(getTruncationParams(9)).toEqual({ numStart: 4, numEnd: 4 });
+      expect(getTruncationParams(8)).toEqual({ numStart: 3, numEnd: 4 });
+      expect(getTruncationParams(7)).toEqual({ numStart: 3, numEnd: 3 });
+      expect(getTruncationParams(6)).toEqual({ numStart: 2, numEnd: 3 });
+      expect(getTruncationParams(5)).toEqual({ numStart: 2, numEnd: 2 });
+      expect(getTruncationParams(4)).toEqual({ numStart: 1, numEnd: 2 });
+      expect(getTruncationParams(3)).toEqual({ numStart: 1, numEnd: 1 });
+      expect(getTruncationParams(2)).toEqual({ numStart: 0, numEnd: 1 });
+      expect(getTruncationParams(1)).toEqual({ numStart: 0, numEnd: 0 });
+      expect(getTruncationParams(0)).toEqual({ numStart: 0, numEnd: 0 });
+      expect(getTruncationParams(-1)).toEqual({ numStart: 0, numEnd: 0 });
     });
   });
 

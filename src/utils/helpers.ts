@@ -257,6 +257,29 @@ export function truncate(
 }
 
 /**
+ * Calculates numStart and numEnd parameters for the truncate function
+ * based on the desired string length.
+ *
+ * @param length - number of characters you want to keep, including a replacer symbol.
+ */
+export function getTruncationParams(length: number) {
+  if (length <= 1) {
+    return {
+      numStart: 0,
+      numEnd: 0,
+    };
+  }
+
+  const numEnd = Math.floor(length / 2);
+  const numStart = length - numEnd - 1;
+
+  return {
+    numStart,
+    numEnd,
+  };
+}
+
+/**
  * Generate a kubeconfig YAML file.
  * @param cluster
  * @param keyPair
