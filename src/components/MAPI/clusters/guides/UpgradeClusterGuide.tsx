@@ -1,3 +1,4 @@
+import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import UnauthorizedMessage from 'MAPI/guides/UnauthorizedMessage';
 import {
@@ -46,6 +47,11 @@ const UpgradeClusterGuide: React.FC<IUpgradeClusterGuideProps> = ({
               external: true,
             },
             {
+              label: 'kubectl gs update cluster command',
+              href: docs.kubectlGSUpdateClusterURL,
+              external: true,
+            },
+            {
               label: 'Cluster CRD schema',
               href: docs.crdSchemaURL(docs.crds.xk8sio.cluster),
               external: true,
@@ -75,7 +81,21 @@ const UpgradeClusterGuide: React.FC<IUpgradeClusterGuideProps> = ({
             }),
             withFormatting()
           )}
-        />
+        >
+          <Text>
+            <strong>Note:</strong> Add{' '}
+            <code>
+              --scheduled-time <var>TIME</var>
+            </code>{' '}
+            to schedule a workload cluster upgrade in the future.{' '}
+            <code>
+              <var>TIME</var>
+            </code>{' '}
+            should be in the <code>&quot;YYYY-MM-DD HH:MM&quot;</code> format.
+            Timezone UTC is assumed. If not given, the upgrade happens as soon
+            as possible.
+          </Text>
+        </CLIGuideStep>
       </CLIGuideStepList>
     </CLIGuide>
   );
