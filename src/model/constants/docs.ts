@@ -75,6 +75,9 @@ export const kubectlGSLoginURL =
 export const kubectlGSGetClustersURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/get-clusters/';
 
+export const kubectlGSUpdateClusterURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/update-cluster/';
+
 export const kubectlGSGetCatalogsURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/get-catalogs/';
 

@@ -14,6 +14,10 @@ const StyledAccordion = styled(Accordion)`
     background-color: ${({ theme }) =>
       theme.global.colors['accent-strong'].dark};
     font-size: 1em;
+
+    var {
+      font-style: normal;
+    }
   }
 `;
 

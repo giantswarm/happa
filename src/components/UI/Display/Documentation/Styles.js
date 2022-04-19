@@ -24,6 +24,10 @@ const Styles = styled.div`
     padding-right: 55px;
     overflow: visible;
     font-size: 15px;
+
+    var {
+      font-style: normal;
+    }
   }
   .codeblock--container .content {
     overflow-x: auto;
