@@ -574,6 +574,11 @@ export async function createCluster(
           auth,
           config.providerCluster as capzv1beta1.IAzureCluster
         );
+        mutate(
+          fetchProviderClusterForClusterKey(config.cluster),
+          providerCluster,
+          false
+        );
       } catch (err) {
         // if we are retrying, we ignore "already exists" errors
         // and get the resource
@@ -604,6 +609,11 @@ export async function createCluster(
               n as capzv1beta1.IAzureMachine
             )
           )
+        );
+        mutate(
+          fetchControlPlaneNodesForClusterKey(config.cluster),
+          controlPlaneNodes,
+          false
         );
       } catch (err) {
         if (
@@ -638,6 +648,24 @@ export async function createCluster(
           auth,
           config.cluster
         );
+        mutate(
+          capiv1beta1.getClusterKey(
+            cluster.metadata.namespace!,
+            cluster.metadata.name
+          ),
+          cluster,
+          false
+        );
+        // Add the created cluster to the existing list.
+        mutate(
+          capiv1beta1.getClusterListKey({
+            namespace: cluster.metadata.namespace!,
+          }),
+          (draft?: capiv1beta1.IClusterList) => {
+            draft?.items.push(cluster);
+          },
+          false
+        );
       } catch (err) {
         if (
           !isRetrying ||
@@ -667,6 +695,11 @@ export async function createCluster(
           auth,
           config.providerCluster as infrav1alpha3.IAWSCluster
         );
+        mutate(
+          fetchProviderClusterForClusterKey(config.cluster),
+          providerCluster,
+          false
+        );
       } catch (err) {
         if (
           !isRetrying ||
@@ -691,6 +724,24 @@ export async function createCluster(
           httpClientFactory(),
           auth,
           config.cluster
+        );
+        mutate(
+          capiv1beta1.getClusterKey(
+            cluster.metadata.namespace!,
+            cluster.metadata.name
+          ),
+          cluster,
+          false
+        );
+        // Add the created cluster to the existing list.
+        mutate(
+          capiv1beta1.getClusterListKey({
+            namespace: cluster.metadata.namespace!,
+          }),
+          (draft?: capiv1beta1.IClusterList) => {
+            draft?.items.push(cluster);
+          },
+          false
         );
       } catch (err) {
         if (
@@ -733,6 +784,11 @@ export async function createCluster(
                 );
             }
           })
+        );
+        mutate(
+          fetchControlPlaneNodesForClusterKey(config.cluster),
+          controlPlaneNodes,
+          false
         );
       } catch (err) {
         if (
@@ -777,35 +833,6 @@ export async function createCluster(
     default:
       return Promise.reject(new Error('Unsupported provider.'));
   }
-
-  mutate(
-    fetchProviderClusterForClusterKey(config.cluster),
-    providerCluster,
-    false
-  );
-  mutate(
-    fetchControlPlaneNodesForClusterKey(config.cluster),
-    controlPlaneNodes,
-    false
-  );
-  mutate(
-    capiv1beta1.getClusterKey(
-      cluster.metadata.namespace!,
-      cluster.metadata.name
-    ),
-    cluster,
-    false
-  );
-  // Add the created cluster to the existing list.
-  mutate(
-    capiv1beta1.getClusterListKey({
-      namespace: cluster.metadata.namespace!,
-    }),
-    (draft?: capiv1beta1.IClusterList) => {
-      draft?.items.push(cluster);
-    },
-    false
-  );
 
   return { cluster, providerCluster, controlPlaneNodes };
 }

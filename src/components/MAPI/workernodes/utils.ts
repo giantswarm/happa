@@ -819,6 +819,15 @@ export async function createNodePool(
           auth,
           config.providerNodePool as capzexpv1alpha3.IAzureMachinePool
         );
+
+        mutate(
+          capzexpv1alpha3.getAzureMachinePoolKey(
+            providerNodePool.metadata.namespace!,
+            providerNodePool.metadata.name
+          ),
+          providerNodePool,
+          false
+        );
       } catch (err) {
         if (
           !isRetrying ||
@@ -837,20 +846,39 @@ export async function createNodePool(
         );
       }
 
-      mutate(
-        capzexpv1alpha3.getAzureMachinePoolKey(
-          providerNodePool.metadata.namespace!,
-          providerNodePool.metadata.name
-        ),
-        providerNodePool,
-        false
-      );
-
       try {
         nodePool = await capiexpv1alpha3.createMachinePool(
           httpClient,
           auth,
           config.nodePool as capiexpv1alpha3.IMachinePool
+        );
+
+        mutate(
+          capiexpv1alpha3.getMachinePoolKey(
+            nodePool.metadata.namespace!,
+            nodePool.metadata.name
+          ),
+          nodePool,
+          false
+        );
+        // Add the created node pool to the existing list.
+        mutate(
+          capiexpv1alpha3.getMachinePoolListKey({
+            labelSelector: {
+              matchingLabels: {
+                [capiv1beta1.labelCluster]:
+                  nodePool.metadata.labels![capiv1beta1.labelCluster],
+              },
+            },
+            namespace: nodePool.metadata.namespace,
+          }),
+          produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
+            if (!draft) return;
+
+            draft.items.push(nodePool as capiexpv1alpha3.IMachinePool);
+            draft.items = draft.items.sort(compareNodePools);
+          }),
+          false
         );
       } catch (err) {
         if (
@@ -870,35 +898,6 @@ export async function createNodePool(
         );
       }
 
-      mutate(
-        capiexpv1alpha3.getMachinePoolKey(
-          nodePool.metadata.namespace!,
-          nodePool.metadata.name
-        ),
-        nodePool,
-        false
-      );
-
-      // Add the created node pool to the existing list.
-      mutate(
-        capiexpv1alpha3.getMachinePoolListKey({
-          labelSelector: {
-            matchingLabels: {
-              [capiv1beta1.labelCluster]:
-                nodePool.metadata.labels![capiv1beta1.labelCluster],
-            },
-          },
-          namespace: nodePool.metadata.namespace,
-        }),
-        produce((draft?: capiexpv1alpha3.IMachinePoolList) => {
-          if (!draft) return;
-
-          draft.items.push(nodePool as capiexpv1alpha3.IMachinePool);
-          draft.items = draft.items.sort(compareNodePools);
-        }),
-        false
-      );
-
       return { nodePool, providerNodePool, bootstrapConfig };
     }
 
@@ -908,6 +907,14 @@ export async function createNodePool(
           httpClient,
           auth,
           config.providerNodePool as infrav1alpha3.IAWSMachineDeployment
+        );
+        mutate(
+          infrav1alpha3.getAWSMachineDeploymentKey(
+            providerNodePool.metadata.namespace!,
+            providerNodePool.metadata.name
+          ),
+          providerNodePool,
+          false
         );
       } catch (err) {
         if (
@@ -927,20 +934,40 @@ export async function createNodePool(
         );
       }
 
-      mutate(
-        infrav1alpha3.getAWSMachineDeploymentKey(
-          providerNodePool.metadata.namespace!,
-          providerNodePool.metadata.name
-        ),
-        providerNodePool,
-        false
-      );
-
       try {
         nodePool = await capiv1beta1.createMachineDeployment(
           httpClient,
           auth,
           config.nodePool as capiv1beta1.IMachineDeployment
+        );
+
+        mutate(
+          capiv1beta1.getMachineDeploymentKey(
+            nodePool.metadata.namespace!,
+            nodePool.metadata.name
+          ),
+          nodePool,
+          false
+        );
+
+        // Add the created node pool to the existing list.
+        mutate(
+          capiv1beta1.getMachineDeploymentListKey({
+            labelSelector: {
+              matchingLabels: {
+                [capiv1beta1.labelCluster]:
+                  nodePool.metadata.labels![capiv1beta1.labelCluster],
+              },
+            },
+            namespace: nodePool.metadata.namespace,
+          }),
+          produce((draft?: capiv1beta1.IMachineDeploymentList) => {
+            if (!draft) return;
+
+            draft.items.push(nodePool as capiv1beta1.IMachineDeployment);
+            draft.items = draft.items.sort(compareNodePools);
+          }),
+          false
         );
       } catch (err) {
         if (
@@ -959,35 +986,6 @@ export async function createNodePool(
           config.nodePool.metadata.name
         );
       }
-
-      mutate(
-        capiv1beta1.getMachineDeploymentKey(
-          nodePool.metadata.namespace!,
-          nodePool.metadata.name
-        ),
-        nodePool,
-        false
-      );
-
-      // Add the created node pool to the existing list.
-      mutate(
-        capiv1beta1.getMachineDeploymentListKey({
-          labelSelector: {
-            matchingLabels: {
-              [capiv1beta1.labelCluster]:
-                nodePool.metadata.labels![capiv1beta1.labelCluster],
-            },
-          },
-          namespace: nodePool.metadata.namespace,
-        }),
-        produce((draft?: capiv1beta1.IMachineDeploymentList) => {
-          if (!draft) return;
-
-          draft.items.push(nodePool as capiv1beta1.IMachineDeployment);
-          draft.items = draft.items.sort(compareNodePools);
-        }),
-        false
-      );
 
       return { nodePool, providerNodePool, bootstrapConfig: undefined };
     }
