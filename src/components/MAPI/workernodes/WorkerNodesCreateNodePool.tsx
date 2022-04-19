@@ -28,7 +28,7 @@ import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { supportsNodePoolSpotInstances } from 'model/stores/nodepool/utils';
-import React, { useEffect, useMemo, useReducer, useRef } from 'react';
+import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -79,11 +79,16 @@ interface IEndCreationAction {
   type: 'endCreation';
 }
 
+interface ISetInitialStateAction {
+  type: 'setInitialState';
+}
+
 type NodePoolAction =
   | IApplyPatchAction
   | IChangeValidationResultAction
   | IStartCreationAction
-  | IEndCreationAction;
+  | IEndCreationAction
+  | ISetInitialStateAction;
 
 interface INodePoolState {
   provider: PropertiesOf<typeof Providers>;
@@ -152,7 +157,10 @@ const reducer: React.Reducer<INodePoolState, NodePoolAction> = produce(
       case 'startCreation':
         draft.isCreating = true;
         break;
-      case 'endCreation': {
+      case 'endCreation':
+        draft.isCreating = false;
+        break;
+      case 'setInitialState': {
         // Reset to initial state.
         const newState = makeInitialState(draft.provider, {
           clusterName: draft.nodePool.spec!.clusterName,
@@ -171,7 +179,6 @@ const reducer: React.Reducer<INodePoolState, NodePoolAction> = produce(
         draft.providerNodePool = newState.providerNodePool;
         draft.bootstrapConfig = newState.bootstrapConfig;
         draft.validationResults = newState.validationResults;
-        draft.isCreating = false;
         break;
       }
     }
@@ -252,6 +259,7 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
     onCancel?.();
     setTimeout(() => {
       dispatch({ type: 'endCreation' });
+      dispatch({ type: 'setInitialState' });
       // eslint-disable-next-line no-magic-numbers
     }, 200);
   };
@@ -272,17 +280,21 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
 
   const isValid = Object.values(state.validationResults).every((r) => r);
 
+  const [isRetrying, setIsRetrying] = useState(false);
+
   const handleCreation = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
 
     dispatch({ type: 'startCreation' });
 
     try {
-      await createNodePool(clientFactory(), auth, state);
+      await createNodePool(clientFactory(), auth, state, isRetrying);
 
       onCancel?.();
       setTimeout(() => {
         dispatch({ type: 'endCreation' });
+        dispatch({ type: 'setInitialState' });
+
         // eslint-disable-next-line no-magic-numbers
       }, 200);
 
@@ -305,16 +317,18 @@ const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
         (
           <>
             Could not create node pool{' '}
-            <code>{state.nodePool.metadata.name}</code>
+            <code>{state.nodePool.metadata.name}</code>: {errorMessage}
           </>
         ),
         messageType.ERROR,
         messageTTL.LONG,
-        errorMessage
+        'Please try again or contact support: support@giantswarm.io'
       );
 
       ErrorReporter.getInstance().notify(err as Error);
     }
+
+    setIsRetrying(true);
   };
 
   const clusterReleaseVersion = getClusterReleaseVersion(cluster);
