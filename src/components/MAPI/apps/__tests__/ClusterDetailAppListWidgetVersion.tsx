@@ -157,14 +157,14 @@ describe('ClusterDetailAppListWidgetVersion', () => {
   it('displays a warning if a newer version is available', async () => {
     nock(window.config.mapiEndpoint)
       .get(
-        '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
+        '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns-app%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
       )
       .reply(
         StatusCodes.Ok,
         applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
       );
 
-    const app = generateApp('coredns', '1.1.0');
+    const app = generateApp('coredns-app', '1.1.0');
     delete app.status;
 
     render(getComponent({ app, canListAppCatalogEntries: true }));

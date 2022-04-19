@@ -309,7 +309,7 @@ describe('AppInstallModal', () => {
     render(
       getComponent(
         {
-          appName: app.metadata.name,
+          appName: app.spec.name,
           chartName: app.spec.name,
           catalogName: app.spec.catalog,
           versions: [],
@@ -356,7 +356,7 @@ describe('AppInstallModal', () => {
 
     render(
       getComponent({
-        appName: app.metadata.name,
+        appName: app.spec.name,
         chartName: app.spec.name,
         catalogName: app.spec.catalog,
         versions: [],
