@@ -15,7 +15,7 @@ import { Providers } from 'model/constants';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { selectOrganizations } from 'model/stores/organization/selectors';
-import React, { useEffect, useMemo, useReducer, useRef } from 'react';
+import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
@@ -255,13 +255,15 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
     });
   }, [releaseList?.items]);
 
+  const [isRetrying, setIsRetrying] = useState(false);
+
   const handleCreation = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
 
     dispatch({ type: 'startCreation' });
 
     try {
-      await createCluster(clientFactory, auth, state);
+      await createCluster(clientFactory, auth, state, isRetrying);
 
       dispatch({ type: 'endCreation' });
 
@@ -294,15 +296,18 @@ const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
       new FlashMessage(
         (
           <>
-            Could not create cluster <code>{state.cluster.metadata.name}</code>
+            Could not create cluster <code>{state.cluster.metadata.name}</code>:{' '}
+            {errorMessage}
           </>
         ),
         messageType.ERROR,
         messageTTL.LONG,
-        errorMessage
+        'Please try again or contact support: support@giantswarm.io'
       );
 
       ErrorReporter.getInstance().notify(err as Error);
+
+      setIsRetrying(true);
     }
   };
 
