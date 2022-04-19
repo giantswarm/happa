@@ -1,10 +1,13 @@
 import { css } from 'styled-components';
 
-export const NodePoolGridRow = (extraColumnCount: number = 0) => css`
+export const NodePoolGridRow = (
+  extraColumnCount: number = 0,
+  nameColumnWidth: number = 0
+) => css`
   display: grid;
   grid-gap: 0 ${({ theme }) => theme.global.edgeSize.small};
   grid-template-columns:
-    minmax(80px, 1fr)
+    minmax(80px, ${nameColumnWidth}px)
     minmax(50px, 4fr)
     4fr
     3fr

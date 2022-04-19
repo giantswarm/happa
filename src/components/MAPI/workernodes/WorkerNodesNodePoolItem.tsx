@@ -22,6 +22,7 @@ import ViewAndEditName, {
 import Truncated from 'UI/Util/Truncated';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { getTruncationParams } from 'utils/helpers';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { IWorkerNodesAdditionalColumn } from './types';
@@ -38,8 +39,12 @@ function formatAvailabilityZonesLabel(zones: string[]) {
   return `Availability zones: ${zones.join(', ')}`;
 }
 
-const Row = styled(Box)<{ additionalColumnsCount?: number }>`
-  ${({ additionalColumnsCount }) => NodePoolGridRow(additionalColumnsCount)}
+const Row = styled(Box)<{
+  additionalColumnsCount?: number;
+  nameColumnWidth?: number;
+}>`
+  ${({ additionalColumnsCount, nameColumnWidth }) =>
+    NodePoolGridRow(additionalColumnsCount, nameColumnWidth)}
 `;
 
 const StyledViewAndEditName = styled(ViewAndEditName)`
@@ -60,6 +65,8 @@ const StyledDescriptionWrapper = styled(Box)<{ full?: boolean }>`
   ${({ full }) => (full ? 'grid-column: 2 / fit-content' : undefined)}
 `;
 
+export const MAX_NAME_LENGTH = 10;
+
 interface IWorkerNodesNodePoolItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   nodePool?: NodePool;
@@ -68,6 +75,7 @@ interface IWorkerNodesNodePoolItemProps
   readOnly?: boolean;
   canUpdateNodePools?: boolean;
   canDeleteNodePools?: boolean;
+  nameColumnWidth?: number;
 }
 
 const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
@@ -77,6 +85,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   readOnly,
   canUpdateNodePools,
   canDeleteNodePools,
+  nameColumnWidth,
   ...props
 }) => {
   const clientFactory = useHttpClientFactory();
@@ -201,8 +210,9 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
         background={isDeleting ? 'background-back' : 'background-front'}
         round='xsmall'
         additionalColumnsCount={additionalColumns?.length}
+        nameColumnWidth={nameColumnWidth}
       >
-        <Box align='center'>
+        <Box align='flex-start'>
           <OptionalValue
             value={nodePool?.metadata.name}
             loaderWidth={70}
@@ -213,8 +223,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 <Truncated
                   as={Code}
                   aria-label={`Name: ${value}`}
-                  numEnd={1}
-                  numStart={3}
+                  {...getTruncationParams(MAX_NAME_LENGTH)}
                 >
                   {value as string}
                 </Truncated>
