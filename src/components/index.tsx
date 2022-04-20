@@ -9,7 +9,7 @@ import configureStore from 'model/stores/configureStore';
 import history from 'model/stores/history';
 import { IState } from 'model/stores/state';
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Store } from 'redux';
 import theme from 'styles/theme';
 import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
@@ -59,7 +59,7 @@ body.classList.remove('loading');
 
 // Finally, render the app!
 const appContainer = document.getElementById('app');
-render(
-  <App {...{ store, theme, history, auth, flashMessagesController }} />,
-  appContainer
+const root = createRoot(appContainer!);
+root.render(
+  <App {...{ store, theme, history, auth, flashMessagesController }} />
 );
