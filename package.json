@@ -57,7 +57,6 @@
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
-    "@hot-loader/react-dom": "17.0.2",
     "@sentry/react": "6.19.6",
     "@sentry/tracing": "6.19.6",
     "bootstrap": "3.4.1",
@@ -208,7 +207,6 @@
     "prettier": "2.6.2",
     "raw-loader": "4.0.2",
     "react-docgen-typescript": "2.2.2",
-    "react-hot-loader": "4.13.0",
     "redux-mock-store": "1.5.4",
     "request": "2.88.2",
     "sass-loader": "12.6.0",

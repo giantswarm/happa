@@ -23,7 +23,6 @@
     "transform-class-properties",
     "styled-components",
     "date-fns",
-    "react-hot-loader/babel",
     [
       "transform-imports",
       {

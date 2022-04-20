@@ -38,8 +38,7 @@
     {
       "matchPackagePrefixes": [
         "@types/react",
-        "react",
-        "@hot-loader/react-dom"
+        "react"
       ],
       "groupName": "react packages"
     },
