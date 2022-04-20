@@ -63,7 +63,7 @@ jest.mock('react-router', () => ({
     url: '',
     params: {
       catalogName: 'default',
-      app: 'coredns',
+      app: 'coredns-app',
       version: '1.2.0',
     },
   }),

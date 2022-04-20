@@ -199,7 +199,7 @@ describe('AppList', () => {
   });
 
   it('can search for a specific app', async () => {
-    const app = 'coredns';
+    const app = 'coredns-app';
 
     nock(window.config.mapiEndpoint)
       .get('/apis/application.giantswarm.io/v1alpha1/catalogs/')
@@ -333,7 +333,7 @@ describe('AppList', () => {
       )
     ).toBeInTheDocument();
 
-    const appNameContainer = screen.getByText('coredns');
+    const appNameContainer = screen.getByText('coredns-app');
 
     expect(
       await within(appNameContainer).findByTitle('Installed in this cluster')
