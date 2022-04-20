@@ -1305,7 +1305,7 @@ export async function fetchAppsForClusters(
       const clusterWithOrg = `${cluster.metadata.namespace}/${cluster.metadata.name}`;
 
       appsForClusters[clusterWithOrg] = appList.items.map((app) => {
-        return { appName: app.metadata.name, catalogName: app.spec.catalog };
+        return { appName: app.spec.name, catalogName: app.spec.catalog };
       });
     }
   }

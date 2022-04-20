@@ -295,14 +295,14 @@ describe('ClusterDetailWidgetApps', () => {
       .reply(StatusCodes.Ok, {
         ...applicationv1alpha1Mocks.randomCluster1AppsList,
         items: [
-          generateApp('coredns', 'deployed', '1.2.0'),
-          generateApp('coredns', 'deployed', '1.3.0'),
+          generateApp('coredns-app', 'deployed', '1.2.0'),
+          generateApp('coredns-app', 'deployed', '1.3.0'),
         ],
       });
 
     nock(window.config.mapiEndpoint)
       .get(
-        '/apis/application.giantswarm.io/v1alpha1/namespaces/default/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
+        '/apis/application.giantswarm.io/v1alpha1/namespaces/default/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns-app%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
       )
       .reply(
         StatusCodes.Ok,
@@ -311,7 +311,7 @@ describe('ClusterDetailWidgetApps', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        '/apis/application.giantswarm.io/v1alpha1/namespaces/default/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
+        '/apis/application.giantswarm.io/v1alpha1/namespaces/default/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns-app%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
       )
       .reply(
         StatusCodes.Ok,
@@ -343,8 +343,8 @@ describe('ClusterDetailWidgetApps', () => {
       .reply(StatusCodes.Ok, {
         ...applicationv1alpha1Mocks.randomCluster1AppsList,
         items: [
-          generateApp('coredns', 'deployed', '1.2.0'),
-          generateApp('coredns', 'deployed', '1.3.0'),
+          generateApp('coredns-app', 'deployed', '1.2.0'),
+          generateApp('coredns-app', 'deployed', '1.3.0'),
         ],
       });
 
