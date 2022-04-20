@@ -38,7 +38,8 @@
     {
       "matchPackagePrefixes": [
         "@types/react",
-        "react"
+        "react",
+        "react-refresh"
       ],
       "groupName": "react packages"
     },
@@ -67,7 +68,8 @@
         "file-loader",
         "imports-loader",
         "webpack-bundle-analyzer",
-        "@types/webpack-bundle-analyzer"
+        "@types/webpack-bundle-analyzer",
+        "@pmmmwh/react-refresh-webpack-plugin"
       ],
       "groupName": "webpack packages"
     },
