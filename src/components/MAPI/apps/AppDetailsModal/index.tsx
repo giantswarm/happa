@@ -47,13 +47,9 @@ interface IAppDetailsModalProps
   visible?: boolean;
 }
 
-const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
-  appName,
-  clusterName,
-  onClose,
-  visible,
-  ...props
-}) => {
+const AppDetailsModal: React.FC<
+  React.PropsWithChildren<IAppDetailsModalProps>
+> = ({ appName, clusterName, onClose, visible, ...props }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 

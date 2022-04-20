@@ -108,7 +108,7 @@ const LabelWrapper = styled(Box)<{
   }
 `;
 
-const EditLabelTooltip: FC<IEditLabelTooltip> = ({
+const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
   label,
   onOpen,
   onSave,

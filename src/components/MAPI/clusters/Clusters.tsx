@@ -37,7 +37,7 @@ import {
 } from './utils';
 
 // eslint-disable-next-line complexity
-const Clusters: React.FC<{}> = () => {
+const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
   const selectedOrgName = useSelector(
     (state: IState) => state.main.selectedOrganization
   );

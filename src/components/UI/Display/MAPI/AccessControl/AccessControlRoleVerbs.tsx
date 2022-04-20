@@ -120,10 +120,9 @@ interface IAccessControlRoleVerbsProps
   extends Pick<IAccessControlRoleItemPermission, 'verbs'>,
     React.ComponentPropsWithoutRef<typeof Box> {}
 
-const AccessControlRoleVerbs: React.FC<IAccessControlRoleVerbsProps> = ({
-  verbs,
-  ...props
-}) => {
+const AccessControlRoleVerbs: React.FC<
+  React.PropsWithChildren<IAccessControlRoleVerbsProps>
+> = ({ verbs, ...props }) => {
   const verbMap = useMemo(() => makeVerbMap(verbs), [verbs]);
   const formattedVerbs = useMemo(
     () => formatVerbs(verbs, verbMap),

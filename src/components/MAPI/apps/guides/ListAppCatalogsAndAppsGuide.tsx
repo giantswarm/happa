@@ -12,7 +12,7 @@ interface IListAppCatalogsAndAppsGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {}
 
 const ListAppCatalogsAndAppsGuide: React.FC<
-  IListAppCatalogsAndAppsGuideProps
+  React.PropsWithChildren<IListAppCatalogsAndAppsGuideProps>
 > = ({ ...props }) => {
   const context = getCurrentInstallationContextName();
 

@@ -20,7 +20,7 @@ const Label = styled.span``;
 /**
  * A component that truncates a string/number in a smart way
  */
-const Truncated: React.FC<ITruncatedProps> = ({
+const Truncated: React.FC<React.PropsWithChildren<ITruncatedProps>> = ({
   children,
   labelProps,
   numEnd,

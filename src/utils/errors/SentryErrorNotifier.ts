@@ -84,13 +84,15 @@ export class SentryErrorNotifier implements IErrorReporterNotifier {
     });
   }
 
-  public static decorateComponent<T>(component: React.FC<T>) {
+  public static decorateComponent<T>(
+    component: React.FC<React.PropsWithChildren<T>>
+  ) {
     return Sentry.withProfiler(component);
   }
 
   public static decorateRoute<T extends RouteProps>(
-    routeComponent: React.FC<T>
-  ): React.FC<T> {
+    routeComponent: React.FC<React.PropsWithChildren<T>>
+  ): React.FC<React.PropsWithChildren<T>> {
     return Sentry.withSentryRouting(routeComponent as never);
   }
 }

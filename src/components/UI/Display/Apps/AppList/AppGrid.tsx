@@ -62,7 +62,7 @@ const ItemRenderer: React.FC<GridChildComponentProps> = memo(
   areEqual
 );
 
-const AppGrid: React.FC<IAppGridProps> = ({
+const AppGrid: React.FC<React.PropsWithChildren<IAppGridProps>> = ({
   items,
   itemMinWidth,
   itemMinHeight,

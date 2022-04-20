@@ -34,7 +34,9 @@ const StyledCard = styled(Card)`
 
 interface IGettingStartedOverviewProps {}
 
-const GettingStartedOverview: React.FC<IGettingStartedOverviewProps> = () => {
+const GettingStartedOverview: React.FC<
+  React.PropsWithChildren<IGettingStartedOverviewProps>
+> = () => {
   const { steps } = useGettingStartedContext();
 
   const handleLinkKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {

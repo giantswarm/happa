@@ -66,14 +66,9 @@ interface ITooltipProps extends DropExtendedProps {
   id?: string;
 }
 
-const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = ({
-  placement,
-  id,
-  width,
-  background,
-  children,
-  ...props
-}) => {
+const Tooltip: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<ITooltipProps>>
+> = ({ placement, id, width, background, children, ...props }) => {
   const marginPosition = useMemo(() => {
     switch (placement) {
       case 'bottom':

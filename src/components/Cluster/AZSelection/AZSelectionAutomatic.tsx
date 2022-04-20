@@ -24,7 +24,9 @@ interface IAZSelectionAutomaticProps {
   numOfZones: number;
 }
 
-const AZSelectionAutomatic: React.FC<IAZSelectionAutomaticProps> = ({
+const AZSelectionAutomatic: React.FC<
+  React.PropsWithChildren<IAZSelectionAutomaticProps>
+> = ({
   onUpdateZones,
   variant,
   allZones,

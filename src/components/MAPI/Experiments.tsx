@@ -31,7 +31,9 @@ import { extractErrorMessage } from './utils';
 
 interface IExperimentsProps {}
 
-const Experiments: React.FC<IExperimentsProps> = () => {
+const Experiments: React.FC<
+  React.PropsWithChildren<IExperimentsProps>
+> = () => {
   const visibleExperiments = Object.entries(featureFlags.flags).filter(
     ([, flag]) => flag.experimentName !== 'undefined'
   );

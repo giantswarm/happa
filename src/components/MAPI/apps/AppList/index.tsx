@@ -47,7 +47,7 @@ import {
 
 const SEARCH_THROTTLE_RATE_MS = 250;
 
-const AppList: React.FC<{}> = () => {
+const AppList: React.FC<React.PropsWithChildren<{}>> = () => {
   const isAdmin = useSelector(getUserIsAdmin);
   const organizations = useSelector(selectOrganizations());
   const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);

@@ -38,7 +38,9 @@ interface IAccessControlRoleListProps
   errorMessage?: string;
 }
 
-const AccessControlRoleList: React.FC<IAccessControlRoleListProps> = ({
+const AccessControlRoleList: React.FC<
+  React.PropsWithChildren<IAccessControlRoleListProps>
+> = ({
   roles,
   isLoading,
   activeRoleName,

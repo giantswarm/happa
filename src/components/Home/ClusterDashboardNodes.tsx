@@ -8,10 +8,9 @@ interface IClusterDashboardNodesProps {
 }
 
 // This component outputs 'Nodes not ready' or the actual number of nodes in the cluster.
-const ClusterDashboardNodes: React.FC<IClusterDashboardNodesProps> = ({
-  numberOfNodes,
-  isClusterCreating,
-}) => {
+const ClusterDashboardNodes: React.FC<
+  React.PropsWithChildren<IClusterDashboardNodesProps>
+> = ({ numberOfNodes, isClusterCreating }) => {
   if (numberOfNodes === 0 && isClusterCreating)
     return <FallbackSpan>{FallbackMessages.NODES_NOT_READY}</FallbackSpan>;
 

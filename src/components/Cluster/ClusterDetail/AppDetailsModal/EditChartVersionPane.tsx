@@ -9,11 +9,9 @@ interface IEditChartVersionPaneProps {
   errorMessage?: string;
 }
 
-const EditChartVersionPane: React.FC<IEditChartVersionPaneProps> = ({
-  currentVersion,
-  desiredVersion,
-  errorMessage,
-}) => {
+const EditChartVersionPane: React.FC<
+  React.PropsWithChildren<IEditChartVersionPaneProps>
+> = ({ currentVersion, desiredVersion, errorMessage }) => {
   return (
     <Box direction='column' gap='medium'>
       <Text>

@@ -16,12 +16,9 @@ interface IConfigureAppGuideProps
   canConfigureApps?: boolean;
 }
 
-const ConfigureAppGuide: React.FC<IConfigureAppGuideProps> = ({
-  appName,
-  namespace,
-  canConfigureApps,
-  ...props
-}) => {
+const ConfigureAppGuide: React.FC<
+  React.PropsWithChildren<IConfigureAppGuideProps>
+> = ({ appName, namespace, canConfigureApps, ...props }) => {
   const context = getCurrentInstallationContextName();
 
   return (

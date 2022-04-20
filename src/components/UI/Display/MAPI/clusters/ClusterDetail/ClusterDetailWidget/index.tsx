@@ -13,13 +13,9 @@ interface IClusterDetailWidgetProps
   contentProps?: React.ComponentPropsWithoutRef<typeof CardBody>;
 }
 
-const ClusterDetailWidget: React.FC<IClusterDetailWidgetProps> = ({
-  title,
-  children,
-  inline,
-  contentProps,
-  ...props
-}) => {
+const ClusterDetailWidget: React.FC<
+  React.PropsWithChildren<IClusterDetailWidgetProps>
+> = ({ title, children, inline, contentProps, ...props }) => {
   return (
     <Card
       direction='row'

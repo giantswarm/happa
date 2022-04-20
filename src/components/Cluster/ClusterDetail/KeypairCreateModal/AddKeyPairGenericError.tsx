@@ -8,7 +8,7 @@ const Text = styled.p`
 interface IAddKeyPairFailureTemplateProps {}
 
 const AddKeyPairGenericError: React.FC<
-  IAddKeyPairFailureTemplateProps
+  React.PropsWithChildren<IAddKeyPairFailureTemplateProps>
 > = () => {
   return (
     <>

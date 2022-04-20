@@ -27,7 +27,7 @@ interface IClusterDetailAppListWidgetCatalogProps
 }
 
 const ClusterDetailAppListWidgetCatalog: React.FC<
-  IClusterDetailAppListWidgetCatalogProps
+  React.PropsWithChildren<IClusterDetailAppListWidgetCatalogProps>
 > = ({ app, canReadCatalogs, ...props }) => {
   const auth = useAuthProvider();
   const clientFactory = useHttpClientFactory();

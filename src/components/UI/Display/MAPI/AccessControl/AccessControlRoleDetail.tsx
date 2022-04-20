@@ -56,7 +56,9 @@ interface IAccessControlRoleDetailProps
   isLoading?: boolean;
 }
 
-const AccessControlRoleDetail: React.FC<IAccessControlRoleDetailProps> = ({
+const AccessControlRoleDetail: React.FC<
+  React.PropsWithChildren<IAccessControlRoleDetailProps>
+> = ({
   namespace,
   permissions,
   activeRole,

@@ -13,7 +13,7 @@ interface IGetOrganizationDetailsGuideProps
 }
 
 const GetOrganizationDetailsGuide: React.FC<
-  IGetOrganizationDetailsGuideProps
+  React.PropsWithChildren<IGetOrganizationDetailsGuideProps>
 > = ({ organizationName, ...props }) => {
   return (
     <CLIGuide

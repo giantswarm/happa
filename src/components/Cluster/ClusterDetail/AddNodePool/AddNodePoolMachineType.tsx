@@ -11,12 +11,9 @@ interface IAddNodePoolMachineTypeProps
   onChange?: ChangeHandler;
 }
 
-const AddNodePoolMachineType: React.FC<IAddNodePoolMachineTypeProps> = ({
-  id,
-  onChange,
-  machineType,
-  ...rest
-}) => {
+const AddNodePoolMachineType: React.FC<
+  React.PropsWithChildren<IAddNodePoolMachineTypeProps>
+> = ({ id, onChange, machineType, ...rest }) => {
   const { singular: label } = useInstanceTypeSelectionLabels();
 
   return (

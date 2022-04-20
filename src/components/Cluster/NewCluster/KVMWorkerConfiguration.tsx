@@ -17,7 +17,9 @@ interface IKVMWorkerConfiguration {
   onUpdateMemorySize(args: INumberPickerOnChangePayload): void;
 }
 
-const KVMWorkerConfiguration: FC<IKVMWorkerConfiguration> = ({
+const KVMWorkerConfiguration: FC<
+  React.PropsWithChildren<IKVMWorkerConfiguration>
+> = ({
   cpuCores,
   diskSize,
   memorySize,

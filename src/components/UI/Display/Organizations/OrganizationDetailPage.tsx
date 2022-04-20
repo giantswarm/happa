@@ -38,7 +38,9 @@ interface IOrganizationDetailPageProps {
   appsSummaryLoading?: boolean;
 }
 
-const OrganizationDetailPage: React.FC<IOrganizationDetailPageProps> = ({
+const OrganizationDetailPage: React.FC<
+  React.PropsWithChildren<IOrganizationDetailPageProps>
+> = ({
   organizationName,
   organizationNamespace,
   onDelete,

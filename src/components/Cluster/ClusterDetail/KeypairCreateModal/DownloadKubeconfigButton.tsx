@@ -13,9 +13,9 @@ const getBlob = (fromText: string): Blob => {
   return blob;
 };
 
-const DownloadKubeconfigButton: React.FC<IDownloadKubeconfigButtonProps> = ({
-  content,
-}) => {
+const DownloadKubeconfigButton: React.FC<
+  React.PropsWithChildren<IDownloadKubeconfigButtonProps>
+> = ({ content }) => {
   return (
     <a
       download='giantswarm-kubeconfig'

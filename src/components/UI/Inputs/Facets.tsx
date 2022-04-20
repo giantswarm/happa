@@ -40,7 +40,7 @@ export interface IFacetOption {
   label: JSX.Element;
 }
 
-const Facets: React.FC<IFacetsProps> = (props) => {
+const Facets: React.FC<React.PropsWithChildren<IFacetsProps>> = (props) => {
   const onChangeFacet = (
     value: string,
     event: React.ChangeEvent<HTMLInputElement>

@@ -93,7 +93,7 @@ interface IClusterAppsProps {
   installedApps?: IInstalledApp[];
 }
 
-const ClusterApps: React.FC<IClusterAppsProps> = ({
+const ClusterApps: React.FC<React.PropsWithChildren<IClusterAppsProps>> = ({
   clusterId,
   hasOptionalIngress,
   showInstalledAppsBlock,

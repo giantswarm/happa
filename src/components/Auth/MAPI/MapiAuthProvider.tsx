@@ -19,10 +19,9 @@ interface IMapiAuthProviderProps {
   auth: IOAuth2Provider;
 }
 
-const MapiAuthProvider: React.FC<IMapiAuthProviderProps> = ({
-  children,
-  auth,
-}) => {
+const MapiAuthProvider: React.FC<
+  React.PropsWithChildren<IMapiAuthProviderProps>
+> = ({ children, auth }) => {
   const dispatch = useDispatch();
 
   const onUserInvalid = useCallback(() => {
@@ -75,8 +74,8 @@ export interface IPropsWithAuthProvider {
 }
 
 export function withAuthProvider<T, U extends T & IPropsWithAuthProvider>(
-  Component: React.ComponentType<T>
-): React.ComponentType<U> {
+  Component: React.ComponentType<React.PropsWithChildren<T>>
+): React.ComponentType<React.PropsWithChildren<U>> {
   return class ComponentWithAuthProvider extends React.Component<U> {
     public render(): React.ReactNode {
       return (

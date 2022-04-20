@@ -41,7 +41,10 @@ interface ICopyableProps extends React.ComponentPropsWithoutRef<'div'> {
   copyText: string;
 }
 
-const Copyable: React.FC<ICopyableProps> = ({ children, copyText }) => {
+const Copyable: React.FC<React.PropsWithChildren<ICopyableProps>> = ({
+  children,
+  copyText,
+}) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const handleCopyToClipboard = () => {

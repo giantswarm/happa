@@ -32,9 +32,9 @@ interface IClusterDetailWidgetAppsProps
     'title'
   > {}
 
-const ClusterDetailWidgetApps: React.FC<IClusterDetailWidgetAppsProps> = (
-  props
-) => {
+const ClusterDetailWidgetApps: React.FC<
+  React.PropsWithChildren<IClusterDetailWidgetAppsProps>
+> = (props) => {
   const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 
   const provider = window.config.info.general.provider;

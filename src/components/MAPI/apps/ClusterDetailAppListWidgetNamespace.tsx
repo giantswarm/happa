@@ -13,7 +13,7 @@ interface IClusterDetailAppListWidgetNamespaceProps
 }
 
 const ClusterDetailAppListWidgetNamespace: React.FC<
-  IClusterDetailAppListWidgetNamespaceProps
+  React.PropsWithChildren<IClusterDetailAppListWidgetNamespaceProps>
 > = ({ app, ...props }) => {
   return (
     <ClusterDetailAppListWidget title='Target namespace' {...props}>

@@ -8,7 +8,7 @@ interface INodePoolScalingSpotInstancesDetailsProps {
 }
 
 const NodePoolScalingSpotInstancesDetails: React.FC<
-  INodePoolScalingSpotInstancesDetailsProps
+  React.PropsWithChildren<INodePoolScalingSpotInstancesDetailsProps>
 > = ({ nodePool, provider }) => {
   const { node_spec } = nodePool;
   if (provider === Providers.AWS) {

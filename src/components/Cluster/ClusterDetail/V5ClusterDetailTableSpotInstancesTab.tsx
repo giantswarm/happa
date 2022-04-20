@@ -9,7 +9,7 @@ interface IV5ClusterDetailTableSpotInstancesTabProps {
 }
 
 const V5ClusterDetailTableSpotInstancesTab: React.FC<
-  IV5ClusterDetailTableSpotInstancesTabProps
+  React.PropsWithChildren<IV5ClusterDetailTableSpotInstancesTabProps>
 > = ({ provider }) => {
   const explanation = getExplanation(provider);
   const tabLabel = getTabLabel(provider);

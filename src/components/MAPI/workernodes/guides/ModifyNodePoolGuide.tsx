@@ -17,12 +17,9 @@ interface IModifyNodePoolGuideProps
   canUpdateNodePools?: boolean;
 }
 
-const ModifyNodePoolGuide: React.FC<IModifyNodePoolGuideProps> = ({
-  clusterNamespace,
-  provider,
-  canUpdateNodePools,
-  ...props
-}) => {
+const ModifyNodePoolGuide: React.FC<
+  React.PropsWithChildren<IModifyNodePoolGuideProps>
+> = ({ clusterNamespace, provider, canUpdateNodePools, ...props }) => {
   const context = getCurrentInstallationContextName();
 
   return (

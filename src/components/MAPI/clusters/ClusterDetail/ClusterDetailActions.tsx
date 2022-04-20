@@ -37,8 +37,10 @@ import { deleteClusterResources } from './utils';
 interface IClusterDetailActionsProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
-// eslint-disable-next-line complexity
-const ClusterDetailActions: React.FC<IClusterDetailActionsProps> = (props) => {
+const ClusterDetailActions: React.FC<
+  React.PropsWithChildren<IClusterDetailActionsProps>
+  // eslint-disable-next-line complexity
+> = (props) => {
   const { pathname } = useLocation();
   const { clusterId, orgId } = useParams<{
     clusterId: string;

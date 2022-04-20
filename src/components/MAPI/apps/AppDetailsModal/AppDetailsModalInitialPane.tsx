@@ -54,9 +54,9 @@ interface IAppDetailsModalInitialPaneProps {
   appCatalogEntries?: applicationv1alpha1.IAppCatalogEntry[];
 }
 
-const AppDetailsModalInitialPane: React.FC<IAppDetailsModalInitialPaneProps> = (
-  props
-) => {
+const AppDetailsModalInitialPane: React.FC<
+  React.PropsWithChildren<IAppDetailsModalInitialPaneProps>
+> = (props) => {
   return (
     <div>
       <Upper>

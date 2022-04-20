@@ -7,7 +7,7 @@ interface IOrganizationDetailStatisticPlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
 const OrganizationDetailStatisticPlaceholder: React.FC<
-  IOrganizationDetailStatisticPlaceholderProps
+  React.PropsWithChildren<IOrganizationDetailStatisticPlaceholderProps>
 > = (props) => {
   const theme = useTheme();
 

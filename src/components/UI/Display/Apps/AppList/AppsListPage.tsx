@@ -64,7 +64,9 @@ export interface IAppsListPageProps {
   selectedClusterBanner?: ReactElement;
 }
 
-const AppsList: React.FC<IAppsListPageProps> = (props) => {
+const AppsList: React.FC<React.PropsWithChildren<IAppsListPageProps>> = (
+  props
+) => {
   return (
     <Wrapper>
       {props.selectedClusterBanner}

@@ -56,7 +56,9 @@ interface ICreateClusterReleaseSelectorProps {
   isAdmin?: boolean;
 }
 
-const CreateClusterReleaseSelector: FC<ICreateClusterReleaseSelectorProps> = ({
+const CreateClusterReleaseSelector: FC<
+  React.PropsWithChildren<ICreateClusterReleaseSelectorProps>
+> = ({
   selectRelease,
   selectedRelease,
   releases,

@@ -20,7 +20,7 @@ interface IClusterDetailWidgetKubernetesAPIProps
 }
 
 const ClusterDetailWidgetKubernetesAPI: React.FC<
-  IClusterDetailWidgetKubernetesAPIProps
+  React.PropsWithChildren<IClusterDetailWidgetKubernetesAPIProps>
 > = ({ cluster, ...props }) => {
   const { clusterId, orgId } = useParams<{
     clusterId: string;

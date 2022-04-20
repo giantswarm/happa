@@ -138,7 +138,9 @@ interface IClusterListProps {
   canListReleases: boolean;
 }
 
-const ClusterList: React.FC<IClusterListProps> = (props) => {
+const ClusterList: React.FC<React.PropsWithChildren<IClusterListProps>> = (
+  props
+) => {
   const {
     isLoading,
     hasNoClusters,

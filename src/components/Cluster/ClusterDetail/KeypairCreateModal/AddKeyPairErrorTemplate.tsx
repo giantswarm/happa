@@ -39,10 +39,9 @@ interface IAddKeyPairErrorProps extends React.ComponentProps<'div'> {
   children?: number | null;
 }
 
-const AddKeyPairErrorTemplate: React.FC<IAddKeyPairErrorProps> = ({
-  children,
-  ...rest
-}) => {
+const AddKeyPairErrorTemplate: React.FC<
+  React.PropsWithChildren<IAddKeyPairErrorProps>
+> = ({ children, ...rest }) => {
   return (
     <SlideTransition direction='down' in={children !== null}>
       <StyledFlashMessage type='danger' {...(rest as never)}>

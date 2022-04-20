@@ -15,7 +15,9 @@ interface IListNodePoolsGuideProps
   providerNodePoolResourceName: string;
 }
 
-const ListNodePoolsGuide: React.FC<IListNodePoolsGuideProps> = ({
+const ListNodePoolsGuide: React.FC<
+  React.PropsWithChildren<IListNodePoolsGuideProps>
+> = ({
   clusterName,
   clusterNamespace,
   providerNodePoolResourceName,

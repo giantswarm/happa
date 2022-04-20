@@ -61,7 +61,7 @@ function formatVersion(version: string): string {
 }
 
 // eslint-disable-next-line complexity
-const AppDetail: React.FC<{}> = () => {
+const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   const match = useRouteMatch<{
     catalogName: string;
     app: string;

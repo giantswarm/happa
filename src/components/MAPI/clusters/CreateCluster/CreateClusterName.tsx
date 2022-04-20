@@ -10,14 +10,9 @@ interface ICreateClusterNameProps
   extends IClusterPropertyProps,
     Omit<React.ComponentPropsWithoutRef<typeof Box>, 'onChange' | 'id'> {}
 
-const CreateClusterName: React.FC<ICreateClusterNameProps> = ({
-  id,
-  cluster,
-  onChange,
-  readOnly,
-  disabled,
-  ...props
-}) => {
+const CreateClusterName: React.FC<
+  React.PropsWithChildren<ICreateClusterNameProps>
+> = ({ id, cluster, onChange, readOnly, disabled, ...props }) => {
   return (
     <Box direction='row' gap='small' align='center' {...props}>
       <Text size='large' weight='bold'>

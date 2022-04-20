@@ -41,7 +41,7 @@ interface IReleaseRow extends IRelease {
   selectRelease(releaseVersion: string): void;
 }
 
-const ReleaseRow: FC<IReleaseRow> = ({
+const ReleaseRow: FC<React.PropsWithChildren<IReleaseRow>> = ({
   active,
   components,
   isSelected,

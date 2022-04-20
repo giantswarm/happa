@@ -180,7 +180,9 @@ const reducer: React.Reducer<IClusterState, ClusterAction> = produce(
 interface ICreateClusterProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
-const CreateCluster: React.FC<ICreateClusterProps> = (props) => {
+const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
+  props
+) => {
   const match = useRouteMatch<{ orgId: string }>();
   const { orgId } = match.params;
   const organizations = useSelector(selectOrganizations());

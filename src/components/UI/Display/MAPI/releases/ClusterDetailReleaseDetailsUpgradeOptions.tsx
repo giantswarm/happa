@@ -16,7 +16,7 @@ interface IClusterDetailReleaseDetailsUpgradeOptionsProps {
 }
 
 const ClusterDetailReleaseDetailsUpgradeOptions: React.FC<
-  IClusterDetailReleaseDetailsUpgradeOptionsProps
+  React.PropsWithChildren<IClusterDetailReleaseDetailsUpgradeOptionsProps>
 > = ({ supportedVersions, onVersionClick, canUpdateCluster }) => {
   const handleVersionClick = (version: string) => () => {
     if (canUpdateCluster) onVersionClick(version);

@@ -51,7 +51,7 @@ function getAppUninstallConfirmationInfo(
 }
 
 const ClusterDetailAppListWidgetUninstall: React.FC<
-  IClusterDetailAppListWidgetUninstallProps
+  React.PropsWithChildren<IClusterDetailAppListWidgetUninstallProps>
 > = ({ app, appsPermissions, onAppUninstalled, ...props }) => {
   const auth = useAuthProvider();
   const appClient = useHttpClient();

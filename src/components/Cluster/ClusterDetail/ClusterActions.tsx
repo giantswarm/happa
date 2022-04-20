@@ -19,7 +19,9 @@ import ClusterDetailDeleteAction, {
 interface IClusterActionsProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
-const ClusterActions: React.FC<IClusterActionsProps> = (props) => {
+const ClusterActions: React.FC<
+  React.PropsWithChildren<IClusterActionsProps>
+> = (props) => {
   const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 
   // The case where the cluster is not found is handled by the parent component.

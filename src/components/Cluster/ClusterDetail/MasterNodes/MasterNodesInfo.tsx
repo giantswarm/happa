@@ -40,7 +40,9 @@ interface IMasterNodesInfoProps extends React.ComponentPropsWithoutRef<'div'> {
   onConvert?: () => void;
 }
 
-const MasterNodesInfo: React.FC<IMasterNodesInfoProps> = ({
+const MasterNodesInfo: React.FC<
+  React.PropsWithChildren<IMasterNodesInfoProps>
+> = ({
   canBeConverted,
   availabilityZones,
   supportsReadyNodes,

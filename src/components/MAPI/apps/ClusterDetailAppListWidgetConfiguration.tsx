@@ -24,7 +24,7 @@ interface IClusterDetailAppListWidgetConfigurationProps
 }
 
 const ClusterDetailAppListWidgetConfiguration: React.FC<
-  IClusterDetailAppListWidgetConfigurationProps
+  React.PropsWithChildren<IClusterDetailAppListWidgetConfigurationProps>
 > = ({ app, appsPermissions, ...props }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();

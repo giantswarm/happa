@@ -14,11 +14,9 @@ interface IInspectInstalledAppGuideProps
   namespace: string;
 }
 
-const InspectInstalledAppGuide: React.FC<IInspectInstalledAppGuideProps> = ({
-  appName,
-  namespace,
-  ...props
-}) => {
+const InspectInstalledAppGuide: React.FC<
+  React.PropsWithChildren<IInspectInstalledAppGuideProps>
+> = ({ appName, namespace, ...props }) => {
   const context = getCurrentInstallationContextName();
 
   return (

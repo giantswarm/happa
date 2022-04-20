@@ -29,7 +29,7 @@ interface IClusterDetailAppListWidgetVersionProps
 }
 
 const ClusterDetailAppListWidgetVersion: React.FC<
-  IClusterDetailAppListWidgetVersionProps
+  React.PropsWithChildren<IClusterDetailAppListWidgetVersionProps>
 > = ({ app, catalogNamespace, canListAppCatalogEntries, ...props }) => {
   const auth = useAuthProvider();
   const appCatalogEntryListClient = useHttpClient();

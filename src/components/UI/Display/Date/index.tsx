@@ -16,7 +16,11 @@ interface IDateProps extends React.ComponentPropsWithoutRef<typeof Text> {
 const REFRESH_TIMEOUT = 60 * 1000; // 1 minute
 const REFRESH_PERIOD = 45; // 45 minutes
 
-const DateComponent: React.FC<IDateProps> = ({ value, relative, ...props }) => {
+const DateComponent: React.FC<React.PropsWithChildren<IDateProps>> = ({
+  value,
+  relative,
+  ...props
+}) => {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   const formattedDate = useMemo(() => {

@@ -7,9 +7,9 @@ interface IAZSelectionNotSpecifiedProps {
   variant: AZSelectionVariants;
 }
 
-const AZSelectionNotSpecified: React.FC<IAZSelectionNotSpecifiedProps> = ({
-  variant,
-}) => {
+const AZSelectionNotSpecified: React.FC<
+  React.PropsWithChildren<IAZSelectionNotSpecifiedProps>
+> = ({ variant }) => {
   let descriptionMessage =
     'By not specifying an availability zone, Azure will select a zone by itself, where the requested virtual machine size has the best availability.';
   if (variant === AZSelectionVariants.NodePool) {

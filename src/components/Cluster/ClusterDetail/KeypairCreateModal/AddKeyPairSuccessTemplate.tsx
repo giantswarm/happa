@@ -5,9 +5,9 @@ interface IAddKeyPairSuccessTemplateProps {
   kubeconfig: string;
 }
 
-const AddKeyPairSuccessTemplate: React.FC<IAddKeyPairSuccessTemplateProps> = ({
-  kubeconfig,
-}) => {
+const AddKeyPairSuccessTemplate: React.FC<
+  React.PropsWithChildren<IAddKeyPairSuccessTemplateProps>
+> = ({ kubeconfig }) => {
   return (
     <>
       <p>

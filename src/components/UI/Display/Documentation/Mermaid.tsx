@@ -20,7 +20,11 @@ interface IMermaidProps extends React.ComponentPropsWithoutRef<'div'> {
   config?: mermaidAPI.Config;
 }
 
-const Mermaid: React.FC<IMermaidProps> = ({ chart, config, ...props }) => {
+const Mermaid: React.FC<React.PropsWithChildren<IMermaidProps>> = ({
+  chart,
+  config,
+  ...props
+}) => {
   useEffect(() => {
     const configuration = Object.assign({}, DEFAULT_CONFIG, config);
     mermaid.initialize(configuration);

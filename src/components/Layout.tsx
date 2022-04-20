@@ -47,7 +47,7 @@ const defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
 defaultClient.timeout = window.config.defaultRequestTimeoutSeconds * ONE_SECOND;
 
-const Layout: React.FC<{}> = () => {
+const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
   const dispatch = useDispatch();
 
   const authProvider = useAuthProvider();

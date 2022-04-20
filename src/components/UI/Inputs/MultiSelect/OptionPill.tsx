@@ -6,7 +6,7 @@ interface IOptionPillProps extends React.ComponentPropsWithoutRef<typeof Box> {
   editable?: boolean;
 }
 
-const OptionPill: React.FC<IOptionPillProps> = ({
+const OptionPill: React.FC<React.PropsWithChildren<IOptionPillProps>> = ({
   option,
   editable,
   ...rest

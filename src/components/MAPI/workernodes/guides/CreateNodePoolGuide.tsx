@@ -31,7 +31,9 @@ interface ICreateNodePoolGuide
   nodesMax?: number;
 }
 
-const CreateNodePoolGuide: React.FC<ICreateNodePoolGuide> = ({
+const CreateNodePoolGuide: React.FC<
+  React.PropsWithChildren<ICreateNodePoolGuide>
+> = ({
   provider,
   organizationName,
   clusterName,

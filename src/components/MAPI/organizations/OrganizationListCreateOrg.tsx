@@ -27,13 +27,9 @@ interface IOrganizationListCreateOrgProps
   canCreateOrganizations?: boolean;
 }
 
-const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
-  onSubmit,
-  onCancel,
-  canCreateOrganizations,
-  open,
-  ...props
-}) => {
+const OrganizationListCreateOrg: React.FC<
+  React.PropsWithChildren<IOrganizationListCreateOrgProps>
+> = ({ onSubmit, onCancel, canCreateOrganizations, open, ...props }) => {
   const [orgName, setOrgName] = useState('');
   const [isCreating, setIsCreating] = useState(false);
 

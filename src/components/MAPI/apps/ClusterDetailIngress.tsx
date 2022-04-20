@@ -43,7 +43,9 @@ interface IClusterDetailIngressProps
   mutateCluster?: KeyedMutator<capiv1beta1.ICluster>;
 }
 
-const ClusterDetailIngress: React.FC<IClusterDetailIngressProps> = ({
+const ClusterDetailIngress: React.FC<
+  React.PropsWithChildren<IClusterDetailIngressProps>
+> = ({
   provider,
   k8sEndpoint,
   kvmTCPHTTPPort,

@@ -57,7 +57,7 @@ interface IClusterDetailWidgetWorkerNodesProps
 }
 
 const ClusterDetailWidgetWorkerNodes: React.FC<
-  IClusterDetailWidgetWorkerNodesProps
+  React.PropsWithChildren<IClusterDetailWidgetWorkerNodesProps>
   // eslint-disable-next-line complexity
 > = ({ cluster, ...props }) => {
   const { clusterId, orgId } = useParams<{

@@ -23,7 +23,7 @@ interface IAddNodePoolSpotInstancesAzureProps {
 }
 
 const AddNodePoolSpotInstancesAzure: React.FC<
-  IAddNodePoolSpotInstancesAzureProps
+  React.PropsWithChildren<IAddNodePoolSpotInstancesAzureProps>
 > = ({
   maxPrice,
   setMaxPrice,

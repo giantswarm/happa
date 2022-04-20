@@ -8,7 +8,7 @@ interface ITooltipContainerProps {
 }
 
 const TooltipContainer: React.FC<
-  React.PropsWithChildren<ITooltipContainerProps>
+  React.PropsWithChildren<React.PropsWithChildren<ITooltipContainerProps>>
 > = ({ content, target, show, children }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const createdTargetRef = useRef<HTMLElement>(null);

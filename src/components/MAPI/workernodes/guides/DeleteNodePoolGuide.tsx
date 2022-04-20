@@ -17,12 +17,9 @@ interface IDeleteNodePoolGuideProps
   canDeleteNodePools?: boolean;
 }
 
-const DeleteNodePoolGuide: React.FC<IDeleteNodePoolGuideProps> = ({
-  clusterNamespace,
-  provider,
-  canDeleteNodePools,
-  ...props
-}) => {
+const DeleteNodePoolGuide: React.FC<
+  React.PropsWithChildren<IDeleteNodePoolGuideProps>
+> = ({ clusterNamespace, provider, canDeleteNodePools, ...props }) => {
   const context = getCurrentInstallationContextName();
 
   return (

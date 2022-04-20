@@ -23,7 +23,7 @@ interface IClusterDetailAppListItemStatusProps
 }
 
 const ClusterDetailAppListItemStatus: React.FC<
-  IClusterDetailAppListItemStatusProps
+  React.PropsWithChildren<IClusterDetailAppListItemStatusProps>
 > = ({ app, catalogNamespace, canListAppCatalogEntries, ...props }) => {
   const auth = useAuthProvider();
   const appCatalogEntryListClient = useHttpClient();

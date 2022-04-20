@@ -41,7 +41,9 @@ export interface ICatalogLabelProps {
   error?: string;
 }
 
-const ErrorIcon: React.FC<{ name: string }> = ({ name }) => {
+const ErrorIcon: React.FC<React.PropsWithChildren<{ name: string }>> = ({
+  name,
+}) => {
   return (
     <TooltipContainer
       content={
@@ -56,7 +58,9 @@ const ErrorIcon: React.FC<{ name: string }> = ({ name }) => {
   );
 };
 
-const CatalogLabel: React.FC<ICatalogLabelProps> = (props) => {
+const CatalogLabel: React.FC<React.PropsWithChildren<ICatalogLabelProps>> = (
+  props
+) => {
   const text = (
     <span>
       {props.catalogName}

@@ -51,7 +51,7 @@ interface IWorkerNodesCreateNodePoolSpotInstancesProps
     > {}
 
 const WorkerNodesCreateNodePoolSpotInstances: React.FC<
-  IWorkerNodesCreateNodePoolSpotInstancesProps
+  React.PropsWithChildren<IWorkerNodesCreateNodePoolSpotInstancesProps>
 > = ({ id, providerNodePool, onChange, readOnly, disabled, ...props }) => {
   const provider = window.config.info.general.provider;
 
