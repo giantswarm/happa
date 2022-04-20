@@ -14,12 +14,14 @@ import {
   IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import { IProviderNodePoolForNodePool } from 'MAPI/workernodes/utils';
+import { GenericResponse } from 'model/clients/GenericResponse';
 import { Constants, Providers } from 'model/constants';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
+import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { mutate } from 'swr';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -541,6 +543,7 @@ function createDefaultG8sControlPlane(config: {
   };
 }
 
+// eslint-disable-next-line complexity
 export async function createCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
@@ -548,145 +551,290 @@ export async function createCluster(
     cluster: Cluster;
     providerCluster: ProviderCluster;
     controlPlaneNodes: ControlPlaneNode[];
-  }
+  },
+  isRetrying: boolean
 ): Promise<{
   cluster: Cluster;
   providerCluster: ProviderCluster;
   controlPlaneNodes: ControlPlaneNode[];
 }> {
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let cluster: Cluster;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let providerCluster: ProviderCluster;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let controlPlaneNodes: ControlPlaneNode[];
+
   switch (config.providerCluster!.kind) {
     case capzv1beta1.AzureCluster: {
-      const providerCluster = await capzv1beta1.createAzureCluster(
-        httpClientFactory(),
-        auth,
-        config.providerCluster as capzv1beta1.IAzureCluster
-      );
-
-      mutate(
-        fetchProviderClusterForClusterKey(config.cluster),
-        providerCluster,
-        false
-      );
-
-      const controlPlaneNodes = await Promise.all(
-        config.controlPlaneNodes.map((n) =>
-          capzv1beta1.createAzureMachine(
-            httpClientFactory(),
-            auth,
-            n as capzv1beta1.IAzureMachine
+      // Azure cluster
+      try {
+        providerCluster = await capzv1beta1.createAzureCluster(
+          httpClientFactory(),
+          auth,
+          config.providerCluster as capzv1beta1.IAzureCluster
+        );
+        mutate(
+          fetchProviderClusterForClusterKey(config.cluster),
+          providerCluster,
+          false
+        );
+      } catch (err) {
+        // if we are retrying, we ignore "already exists" errors
+        // and get the resource
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
           )
-        )
-      );
+        ) {
+          return Promise.reject(err);
+        }
+        providerCluster = await capzv1beta1.getAzureCluster(
+          httpClientFactory(),
+          auth,
+          config.providerCluster!.metadata.namespace!,
+          config.providerCluster!.metadata.name
+        );
+      }
 
-      mutate(
-        fetchControlPlaneNodesForClusterKey(config.cluster),
-        controlPlaneNodes,
-        false
-      );
+      // Control plane nodes
+      try {
+        controlPlaneNodes = await Promise.all(
+          config.controlPlaneNodes.map((n) =>
+            capzv1beta1.createAzureMachine(
+              httpClientFactory(),
+              auth,
+              n as capzv1beta1.IAzureMachine
+            )
+          )
+        );
+        mutate(
+          fetchControlPlaneNodesForClusterKey(config.cluster),
+          controlPlaneNodes,
+          false
+        );
+      } catch (err) {
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        const controlPlaneNodesResponse = await capzv1beta1.getAzureMachineList(
+          httpClientFactory(),
+          auth,
+          {
+            labelSelector: {
+              matchingLabels: {
+                [capiv1beta1.labelCluster]: config.cluster.metadata.name,
+                [capzv1beta1.labelControlPlane]: 'true',
+              },
+            },
+            namespace: config.cluster.metadata.namespace,
+          }
+        );
+        controlPlaneNodes = controlPlaneNodesResponse.items;
+      }
 
-      const cluster = await capiv1beta1.createCluster(
-        httpClientFactory(),
-        auth,
-        config.cluster
-      );
+      // Cluster
+      try {
+        cluster = await capiv1beta1.createCluster(
+          httpClientFactory(),
+          auth,
+          config.cluster
+        );
+        mutate(
+          capiv1beta1.getClusterKey(
+            cluster.metadata.namespace!,
+            cluster.metadata.name
+          ),
+          cluster,
+          false
+        );
+        // Add the created cluster to the existing list.
+        mutate(
+          capiv1beta1.getClusterListKey({
+            namespace: cluster.metadata.namespace!,
+          }),
+          (draft?: capiv1beta1.IClusterList) => {
+            draft?.items.push(cluster);
+          },
+          false
+        );
+      } catch (err) {
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        cluster = await capiv1beta1.getCluster(
+          httpClientFactory(),
+          auth,
+          config.cluster.metadata.namespace!,
+          config.cluster.metadata.name
+        );
+      }
 
-      mutate(
-        capiv1beta1.getClusterKey(
-          cluster.metadata.namespace!,
-          cluster.metadata.name
-        ),
-        cluster,
-        false
-      );
-
-      // Add the created cluster to the existing list.
-      mutate(
-        capiv1beta1.getClusterListKey({
-          namespace: cluster.metadata.namespace!,
-        }),
-        (draft?: capiv1beta1.IClusterList) => {
-          draft?.items.push(cluster);
-        },
-        false
-      );
-
-      return { cluster, providerCluster, controlPlaneNodes };
+      break;
     }
 
     case infrav1alpha3.AWSCluster: {
-      const providerCluster = await infrav1alpha3.createAWSCluster(
-        httpClientFactory(),
-        auth,
-        config.providerCluster as infrav1alpha3.IAWSCluster
-      );
+      // AWS cluster
+      try {
+        providerCluster = await infrav1alpha3.createAWSCluster(
+          httpClientFactory(),
+          auth,
+          config.providerCluster as infrav1alpha3.IAWSCluster
+        );
+        mutate(
+          fetchProviderClusterForClusterKey(config.cluster),
+          providerCluster,
+          false
+        );
+      } catch (err) {
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        providerCluster = await infrav1alpha3.getAWSCluster(
+          httpClientFactory(),
+          auth,
+          config.providerCluster!.metadata.namespace!,
+          config.providerCluster!.metadata.name
+        );
+      }
 
-      mutate(
-        fetchProviderClusterForClusterKey(config.cluster),
-        providerCluster,
-        false
-      );
+      // Cluster
+      try {
+        cluster = await capiv1beta1.createCluster(
+          httpClientFactory(),
+          auth,
+          config.cluster
+        );
+        mutate(
+          capiv1beta1.getClusterKey(
+            cluster.metadata.namespace!,
+            cluster.metadata.name
+          ),
+          cluster,
+          false
+        );
+        // Add the created cluster to the existing list.
+        mutate(
+          capiv1beta1.getClusterListKey({
+            namespace: cluster.metadata.namespace!,
+          }),
+          (draft?: capiv1beta1.IClusterList) => {
+            draft?.items.push(cluster);
+          },
+          false
+        );
+      } catch (err) {
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        cluster = await capiv1beta1.getCluster(
+          httpClientFactory(),
+          auth,
+          config.cluster.metadata.namespace!,
+          config.cluster.metadata.name
+        );
+      }
 
-      const cluster = await capiv1beta1.createCluster(
-        httpClientFactory(),
-        auth,
-        config.cluster
-      );
+      // Control plane nodes
+      try {
+        controlPlaneNodes = await Promise.all<ControlPlaneNode>(
+          config.controlPlaneNodes.map((n) => {
+            switch (n.kind) {
+              case infrav1alpha3.AWSControlPlane:
+                return infrav1alpha3.createAWSControlPlane(
+                  httpClientFactory(),
+                  auth,
+                  n as infrav1alpha3.IAWSControlPlane
+                );
+              case infrav1alpha3.G8sControlPlane:
+                return infrav1alpha3.createG8sControlPlane(
+                  httpClientFactory(),
+                  auth,
+                  n as infrav1alpha3.IG8sControlPlane
+                );
+              default:
+                return Promise.reject(
+                  new Error('Unknown control plane node type.')
+                );
+            }
+          })
+        );
+        mutate(
+          fetchControlPlaneNodesForClusterKey(config.cluster),
+          controlPlaneNodes,
+          false
+        );
+      } catch (err) {
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        const options = {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelCluster]: config.cluster.metadata.name,
+            },
+          },
+          namespace: config.cluster.metadata.namespace,
+        };
+        const awsControlPlaneNodesResponse =
+          await infrav1alpha3.getAWSControlPlaneList(
+            httpClientFactory(),
+            auth,
+            options
+          );
+        const g8sControlPlaneNodesResponse =
+          await infrav1alpha3.getG8sControlPlaneList(
+            httpClientFactory(),
+            auth,
+            options
+          );
 
-      mutate(
-        capiv1beta1.getClusterKey(
-          cluster.metadata.namespace!,
-          cluster.metadata.name
-        ),
-        cluster,
-        false
-      );
+        controlPlaneNodes = [
+          ...awsControlPlaneNodesResponse.items,
+          ...g8sControlPlaneNodesResponse.items,
+        ];
+      }
 
-      // Add the created cluster to the existing list.
-      mutate(
-        capiv1beta1.getClusterListKey({
-          namespace: cluster.metadata.namespace!,
-        }),
-        (draft?: capiv1beta1.IClusterList) => {
-          draft?.items.push(cluster);
-        },
-        false
-      );
-
-      const controlPlaneNodes = await Promise.all<ControlPlaneNode>(
-        config.controlPlaneNodes.map((n) => {
-          switch (n.kind) {
-            case infrav1alpha3.AWSControlPlane:
-              return infrav1alpha3.createAWSControlPlane(
-                httpClientFactory(),
-                auth,
-                n as infrav1alpha3.IAWSControlPlane
-              );
-            case infrav1alpha3.G8sControlPlane:
-              return infrav1alpha3.createG8sControlPlane(
-                httpClientFactory(),
-                auth,
-                n as infrav1alpha3.IG8sControlPlane
-              );
-            default:
-              return Promise.reject(
-                new Error('Unknown control plane node type.')
-              );
-          }
-        })
-      );
-
-      mutate(
-        fetchControlPlaneNodesForClusterKey(config.cluster),
-        controlPlaneNodes,
-        false
-      );
-
-      return { cluster, providerCluster, controlPlaneNodes };
+      break;
     }
 
     default:
       return Promise.reject(new Error('Unsupported provider.'));
   }
+
+  return { cluster, providerCluster, controlPlaneNodes };
 }
 
 export function findLatestReleaseVersion(

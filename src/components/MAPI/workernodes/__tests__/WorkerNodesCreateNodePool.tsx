@@ -156,7 +156,8 @@ describe('WorkerNodesCreateNodePool', () => {
             }),
           }),
         }),
-      })
+      }),
+      false
     );
 
     expect(
@@ -224,7 +225,8 @@ describe('WorkerNodesCreateNodePool', () => {
             }),
           }),
         }),
-      })
+      }),
+      false
     );
 
     expect(
@@ -284,7 +286,8 @@ describe('WorkerNodesCreateNodePool', () => {
             failureDomains: ['2', '3'],
           }),
         }),
-      })
+      }),
+      false
     );
 
     expect(
@@ -353,7 +356,8 @@ describe('WorkerNodesCreateNodePool', () => {
             replicas: 1,
           }),
         }),
-      })
+      }),
+      false
     );
 
     expect(
@@ -422,7 +426,8 @@ describe('WorkerNodesCreateNodePool', () => {
             }),
           }),
         }),
-      })
+      }),
+      false
     );
 
     expect(
