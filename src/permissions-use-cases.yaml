@@ -79,6 +79,7 @@ useCases:
           - patch
           - update
   - name: "Impersonate user or group"
+    description: "Use the Kubernetes API impersonation feature to assume a user's or a group's permissions"
     category: "access control"
     scope:
       cluster: true
