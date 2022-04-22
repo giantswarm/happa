@@ -1,6 +1,7 @@
 useCases:
   - name: "Inspect namespaces"
     description: "List namespaces and get an individual namespace's details"
+    category: "access control"
     scope:
       cluster: true
     permissions:
@@ -13,6 +14,7 @@ useCases:
           - list
   - name: "Manage namespaces"
     description: "Create, modify, delete namespaces"
+    category: "access control"
     scope:
       cluster: true
     permissions:
