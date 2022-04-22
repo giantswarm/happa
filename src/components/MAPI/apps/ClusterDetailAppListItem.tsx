@@ -295,6 +295,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
               appName={app.metadata.name}
               namespace={app.metadata.namespace!}
               newVersion={currentSelectedVersion ?? normalizedAppVersion!}
+              appCatalogEntryName={app.spec.name}
               catalogName={app.spec.catalog}
               catalogNamespace={catalogNamespace}
               canUpdateApps={appsPermissions?.canUpdate}

@@ -14,6 +14,7 @@ interface IUpdateAppGuideProps
   appName: string;
   namespace: string;
   newVersion: string;
+  appCatalogEntryName: string;
   catalogName: string;
   catalogNamespace: string;
   canUpdateApps?: boolean;
@@ -23,6 +24,7 @@ const UpdateAppGuide: React.FC<IUpdateAppGuideProps> = ({
   appName,
   namespace,
   newVersion,
+  appCatalogEntryName,
   catalogName,
   catalogNamespace,
   canUpdateApps,
@@ -69,7 +71,7 @@ const UpdateAppGuide: React.FC<IUpdateAppGuideProps> = ({
           command={`
           kubectl --context ${context} \\
             get appcatalogentries \\
-            --selector application.giantswarm.io/catalog=${catalogName},app.kubernetes.io/name=${appName}${
+            --selector application.giantswarm.io/catalog=${catalogName},app.kubernetes.io/name=${appCatalogEntryName}${
             catalogNamespace
               ? ` \\
             --namespace ${catalogNamespace}`
