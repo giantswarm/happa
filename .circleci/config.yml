@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@4.16.0
+  architect: giantswarm/architect@4.17.0
 
 defaults: &defaults
   working_directory: ~/happa
