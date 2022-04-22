@@ -29,7 +29,7 @@ useCases:
           - update
   - name: "Manage organizations"
     description: "Create, modify, delete organizations"
-    group: "access control"
+    category: "access control"
     scope:
       cluster: true
     permissions:
@@ -46,7 +46,7 @@ useCases:
           - update
   - name: "Inspect permissions"
     description: "Read ClusterRoles and ClusterRoleBindings"
-    group: "access control"
+    category: "access control"
     scope:
       cluster: true
     permissions:
@@ -60,7 +60,7 @@ useCases:
           - list
   - name: "Manage permissions"
     description: "Create, modify, delete ClusterRoles and ClusterRoleBindings"
-    group: "access control"
+    category: "access control"
     scope:
       cluster: true
     permissions:
@@ -77,7 +77,7 @@ useCases:
           - patch
           - update
   - name: "Impersonate user or group"
-    group: "access control"
+    category: "access control"
     scope:
       cluster: true
     permissions:
@@ -90,7 +90,7 @@ useCases:
           - impersonate
   - name: "Inspect silences"
     description: "Read Silence CRs"
-    group: "silences"
+    category: "silences"
     scope:
       cluster: true
     permissions:
@@ -103,7 +103,7 @@ useCases:
           - list
   - name: "Manage silences"
     description: "Create, modify, delete Silence CRs"
-    group: "silences"
+    category: "silences"
     scope:
       cluster: true
     permissions:
@@ -120,7 +120,7 @@ useCases:
           - update
   - name: "Inspect releases"
     description: "Read workload cluster releases"
-    group: "releases"
+    category: "releases"
     scope:
       cluster: true
     permissions:
@@ -133,7 +133,7 @@ useCases:
           - list
   - name: "Inspect shared app catalogs"
     description: "Read catalogs and their entries in the \"default\" namespace"
-    group: "app catalogs"
+    category: "app catalogs"
     scope:
       namespaces:
         - default
@@ -148,7 +148,7 @@ useCases:
           - list
   - name: "Inspect app catalogs"
     description: "Read catalogs and their entries in an organization namespace"
-    group: "app catalogs"
+    category: "app catalogs"
     scope:
       namespaces:
         - "*"
@@ -163,7 +163,7 @@ useCases:
           - list
   - name: "Manage app catalogs"
     description: "Create, modify, delete catalogs and their entries in an organization namespace"
-    group: "app catalogs"
+    category: "app catalogs"
     scope:
       namespaces:
         - "*"
@@ -182,7 +182,7 @@ useCases:
           - update
   - name: "Inspect apps"
     description: "Read resources that define installed apps and their configuration"
-    group: "apps"
+    category: "apps"
     scope:
       namespaces:
         - "*"
@@ -204,7 +204,7 @@ useCases:
           - list
   - name: "Manage apps"
     description: "Install and uninstall apps to/from workload clusters and create/modify/delete their configuration"
-    group: "apps"
+    category: "apps"
     scope:
       namespaces:
         - "*"
@@ -234,7 +234,7 @@ useCases:
           - update
   - name: "Inspect provider credentials"
     description: "Read secrets used to store cloud provider credentials in an organization namespace"
-    group: "provider credentials"
+    category: "provider credentials"
     scope:
       namespaces:
         - "*"
@@ -248,7 +248,7 @@ useCases:
           - list
   - name: "Manage provider credentials"
     description: "Create, modify, delete secrets used to store cloud provider credentials in an organization namespace"
-    group: "provider credentials"
+    category: "provider credentials"
     scope:
       namespaces:
         - "*"
@@ -266,7 +266,7 @@ useCases:
           - update
   - name: "Inspect clusters"
     description: "Read resources that form workload clusters"
-    group: "workload clusters"
+    category: "workload clusters"
     scope:
       namespaces:
         - "*"
@@ -297,7 +297,7 @@ useCases:
           - list
   - name: "Manage clusters"
     description: "Create, modify, delete resources that form workload clusters"
-    group: "workload clusters"
+    category: "workload clusters"
     scope:
       namespaces:
         - "*"
@@ -340,7 +340,7 @@ useCases:
           - update
   - name: "Create client certificates"
     description: "Create client certificates for workload cluster access"
-    group: "workload clusters"
+    category: "workload clusters"
     scope:
       namespaces:
         - "*"
