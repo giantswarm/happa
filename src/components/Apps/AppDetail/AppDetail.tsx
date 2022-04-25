@@ -10,6 +10,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
+import { Dispatch } from 'redux';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 import useError from 'utils/hooks/useError';
 import RoutePath from 'utils/routePath';
@@ -34,7 +35,8 @@ const AppDetail: React.FC<React.PropsWithChildren<unknown>> = () => {
     clearReadmeError();
   }, [catalog, app]);
 
-  const dispatch = useDispatch();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dispatch: Dispatch<any> = useDispatch();
 
   useEffect(() => {
     if (catalog && app) {
