@@ -25,10 +25,10 @@ export const Configurable: Story<
     if ((ttl as unknown) === FOREVER_TTL) ttl = false;
 
     new FlashMessage(
-      formValues.title,
+      formValues.title as string,
       formValues.type as typeof messageType[keyof typeof messageType],
       ttl,
-      formValues.subtitle
+      formValues.subtitle as string
     );
   };
 

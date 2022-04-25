@@ -212,7 +212,7 @@ const AccessControlRoleSubjects: React.FC<
         await onAdd(type, values);
         dispatch({ type: 'stopAdding', subjectType: type });
       } catch (err) {
-        let message: React.ReactNode = {};
+        let message: React.ReactNode = null;
         if (type === ui.AccessControlSubjectTypes.ServiceAccount) {
           message = (
             <>
