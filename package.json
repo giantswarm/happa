@@ -22,7 +22,7 @@
     "dist": "./node_modules/.bin/webpack --config webpack.prod.ts",
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook",
-    "postinstall": "husky install"
+    "postinstall": "patch-package && husky install"
   },
   "eslintIgnore": [
     "node_modules",
@@ -205,6 +205,8 @@
     "mini-css-extract-plugin": "2.6.0",
     "nock": "13.2.4",
     "node-sass": "7.0.1",
+    "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "2.6.2",
     "raw-loader": "4.0.2",
     "react-docgen-typescript": "2.2.2",
