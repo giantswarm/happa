@@ -1,0 +1,12 @@
+diff --git a/node_modules/@types/react-breadcrumbs/index.d.ts b/node_modules/@types/react-breadcrumbs/index.d.ts
+index ebc19c7..993aa4f 100755
+--- a/node_modules/@types/react-breadcrumbs/index.d.ts
++++ b/node_modules/@types/react-breadcrumbs/index.d.ts
+@@ -24,6 +24,7 @@ declare module "react-breadcrumbs" {
+     interface BreadcrumbProps {
+         data: LocationDescriptor & { title?: React.ReactNode | undefined };
+         hidden?: boolean | undefined;
++        children: React.ReactNode;
+     }
+ 
+     class Breadcrumb extends React.Component<BreadcrumbProps> {}
