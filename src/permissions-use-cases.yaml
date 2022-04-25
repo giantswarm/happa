@@ -1,0 +1,368 @@
+useCases:
+  - name: "Inspect namespaces"
+    description: "List namespaces and get an individual namespace's details"
+    category: "access control"
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups:
+          - ""
+        resources:
+          - namespaces
+        verbs:
+          - get
+          - list
+  - name: "Manage namespaces"
+    description: "Create, modify, delete namespaces"
+    category: "access control"
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups:
+          - ""
+        resources:
+          - namespaces
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+  - name: "Manage organizations"
+    description: "Create, modify, delete organizations"
+    category: "access control"
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups:
+          - security.giantswarm.io
+        resources:
+          - organizations
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+  - name: "Inspect permissions"
+    description: "Read ClusterRoles and ClusterRoleBindings"
+    category: "access control"
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups:
+          - rbac.authorization.k8s.io
+        resources:
+          - clusterroles
+          - clusterrolebindings
+        verbs:
+          - get
+          - list
+  - name: "Manage permissions"
+    description: "Create, modify, delete ClusterRoles and ClusterRoleBindings"
+    category: "access control"
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups:
+          - rbac.authorization.k8s.io
+        resources:
+          - clusterroles
+          - clusterrolebindings
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+  - name: "Impersonate user or group"
+    description: "Use the Kubernetes API impersonation feature to assume a user's or a group's permissions"
+    category: "access control"
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups:
+          - ""
+        resources:
+          - users
+          - groups
+        verbs:
+          - impersonate
+  - name: "Inspect silences"
+    description: "Read Silence CRs"
+    category: "silences"
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups:
+          - monitoring.giantswarm.io
+        resources:
+          - silences
+        verbs:
+          - get
+          - list
+  - name: "Manage silences"
+    description: "Create, modify, delete Silence CRs"
+    category: "silences"
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups:
+          - monitoring.giantswarm.io
+        resources:
+          - silences
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+  - name: "Inspect releases"
+    description: "Read workload cluster releases"
+    category: "releases"
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups:
+          - release.giantswarm.io
+        resources:
+          - releases
+        verbs:
+          - get
+          - list
+  - name: "Inspect shared app catalogs"
+    description: "Read catalogs and their entries in the \"default\" namespace"
+    category: "app catalogs"
+    scope:
+      namespaces:
+        - default
+    permissions:
+      - apiGroups:
+          - application.giantswarm.io
+        resources:
+          - catalogs
+          - appcatalogentries
+        verbs:
+          - get
+          - list
+  - name: "Inspect app catalogs"
+    description: "Read catalogs and their entries in an organization namespace"
+    category: "app catalogs"
+    scope:
+      namespaces:
+        - "*"
+    permissions:
+      - apiGroups:
+          - application.giantswarm.io
+        resources:
+          - catalogs
+          - appcatalogentries
+        verbs:
+          - get
+          - list
+  - name: "Manage app catalogs"
+    description: "Create, modify, delete catalogs and their entries in an organization namespace"
+    category: "app catalogs"
+    scope:
+      namespaces:
+        - "*"
+    permissions:
+      - apiGroups:
+          - application.giantswarm.io
+        resources:
+          - catalogs
+          - appcatalogentries
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+  - name: "Inspect apps"
+    description: "Read resources that define installed apps and their configuration"
+    category: "apps"
+    scope:
+      namespaces:
+        - "*"
+    permissions:
+      - apiGroups:
+          - application.giantswarm.io
+        resources:
+          - apps
+        verbs:
+          - get
+          - list
+      - apiGroups:
+          - ""
+        resources:
+          - configmaps
+          - secrets
+        verbs:
+          - get
+          - list
+  - name: "Manage apps"
+    description: "Install and uninstall apps to/from workload clusters and create/modify/delete their configuration"
+    category: "apps"
+    scope:
+      namespaces:
+        - "*"
+    permissions:
+      - apiGroups:
+          - application.giantswarm.io
+        resources:
+          - apps
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+      - apiGroups:
+          - ""
+        resources:
+          - configmaps
+          - secrets
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+  - name: "Inspect provider credentials"
+    description: "Read secrets used to store cloud provider credentials in an organization namespace"
+    category: "provider credentials"
+    scope:
+      namespaces:
+        - "*"
+    permissions:
+      - apiGroups:
+          - ""
+        resources:
+          - secrets
+        verbs:
+          - get
+          - list
+  - name: "Manage provider credentials"
+    description: "Create, modify, delete secrets used to store cloud provider credentials in an organization namespace"
+    category: "provider credentials"
+    scope:
+      namespaces:
+        - "*"
+    permissions:
+      - apiGroups:
+          - ""
+        resources:
+          - secrets
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+  - name: "Inspect clusters"
+    description: "Read resources that form workload clusters"
+    category: "workload clusters"
+    scope:
+      namespaces:
+        - "*"
+    permissions:
+      - apiGroups:
+          - cluster.x-k8s.io
+        resources:
+          - clusters
+        verbs:
+          - get
+          - list
+      - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+        resources:
+          - azureclusters
+          - azuremachines
+        verbs:
+          - get
+          - list
+      - apiGroups:
+          - infrastructure.giantswarm.io
+        resources:
+          - awsclusters
+          - awscontrolplanes
+          - g8scontrolplanes
+        verbs:
+          - get
+          - list
+  - name: "Manage clusters"
+    description: "Create, modify, delete resources that form workload clusters"
+    category: "workload clusters"
+    scope:
+      namespaces:
+        - "*"
+    permissions:
+      - apiGroups:
+          - cluster.x-k8s.io
+        resources:
+          - clusters
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+      - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+        resources:
+          - azureclusters
+          - azuremachines
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+      - apiGroups:
+          - infrastructure.giantswarm.io
+        resources:
+          - awsclusters
+          - awscontrolplanes
+          - g8scontrolplanes
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+  - name: "Create client certificates"
+    description: "Create client certificates for workload cluster access"
+    category: "workload clusters"
+    scope:
+      namespaces:
+        - "*"
+    permissions:
+      - apiGroups:
+          - ""
+        resources:
+          - secrets
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+      - apiGroups:
+          - core.giantswarm.io
+        resources:
+          - certconfigs
+        verbs:
+          - get
+          - list
