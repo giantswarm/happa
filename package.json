@@ -228,6 +228,7 @@
   },
   "resolutions": {
     "@braintree/sanitize-url": "6.0.0",
+    "@types/react": "^18.0.5",
     "kind-of": "6.0.3",
     "lodash": "4.17.21",
     "http-proxy": "1.18.1",
