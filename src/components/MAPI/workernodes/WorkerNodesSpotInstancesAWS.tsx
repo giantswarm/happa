@@ -36,11 +36,7 @@ const WorkerNodesSpotInstancesAWS: React.FC<
       {(value) => (
         <TooltipContainer
           content={
-            <Tooltip
-              id={`${
-                (value as infrav1alpha3.IAWSMachineDeployment).metadata.name
-              }-spot-instances-tooltip`}
-            >
+            <Tooltip id={`${value.metadata.name}-spot-instances-tooltip`}>
               <Box>
                 <Text size='xsmall' textAlign='center'>
                   On-demand base capacity:{' '}

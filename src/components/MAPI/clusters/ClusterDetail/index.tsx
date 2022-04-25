@@ -393,10 +393,10 @@ const ClusterDetail: React.FC<{}> = () => {
               >
                 {(value) => (
                   <StyledViewAndEditName
-                    value={value as string}
+                    value={value}
                     typeLabel='cluster'
                     onSave={updateDescription}
-                    aria-label={value as string}
+                    aria-label={value}
                     variant={ViewAndEditNameVariant.Description}
                     unauthorized={!canUpdateCluster}
                   />
