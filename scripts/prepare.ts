@@ -9,11 +9,17 @@ import {
   IConfigurationValues,
 } from './getConfigurationValues';
 import { templateIndex } from './templateIndex';
+import yaml from 'js-yaml';
 
 const indexTemplatePath = path.resolve('www', 'index.ejs');
 const indexOutputPath = path.resolve('www', 'index.html');
 
 const metadataPath = path.resolve('www', 'metadata.json');
+
+const permissionsUseCasesPath = path.resolve(
+  'scripts',
+  'permissions-use-cases.yaml'
+);
 
 interface IMetadataContent {
   version: string;
@@ -103,12 +109,37 @@ async function tryReadConfigFile(): Promise<string> {
   return configFile.toString();
 }
 
+async function readPermissionsUseCasesFile(): Promise<string> {
+  log(
+    `Reading permissions use cases file from path '${permissionsUseCasesPath}'.`
+  );
+
+  const useCasesFileContents = await fs.readFile(permissionsUseCasesPath);
+  const useCases = yaml.load(useCasesFileContents.toString(), {
+    schema: yaml.JSON_SCHEMA,
+  }) as Record<string, any>;
+
+  const useCasesObject = {
+    'permissions-use-cases-json': JSON.stringify(useCases['useCases'])
+      .replace(/\'/g, '&apos;')
+      .replace(/\\"/g, '\\\\"'),
+  };
+
+  log('Read permissions use cases file successfully.');
+
+  return yaml.dump(useCasesObject);
+}
+
 async function main(): Promise<void> {
   try {
     const configContent = await tryReadConfigFile();
 
+    const useCasesFileContent = await readPermissionsUseCasesFile();
+
     log('Computing the configuration values.');
-    const values = await getConfigurationValues(configContent);
+    const values = await getConfigurationValues(
+      configContent + useCasesFileContent
+    );
     log('Computed the configuration values successfully.');
 
     await createIndexTemplate(values);

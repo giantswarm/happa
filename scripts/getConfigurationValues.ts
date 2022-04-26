@@ -1,4 +1,6 @@
 import { Configuration } from './Configuration';
+import yaml from 'js-yaml';
+import fs from 'fs';
 
 export interface IConfigurationValues {
   apiEndpoint: string;
@@ -56,6 +58,8 @@ export interface IConfigurationValues {
       };
     };
   };
+
+  permissionsUseCasesJSON: string;
 }
 
 /**
@@ -169,5 +173,7 @@ export async function getConfigurationValues(
         },
       },
     },
+
+    permissionsUseCasesJSON: config.getString('permissions-use-cases-json'),
   };
 }
