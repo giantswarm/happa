@@ -72,6 +72,8 @@ export async function getConfigurationValues(
 ): Promise<IConfigurationValues> {
   const config = new Configuration();
 
+  config.parse(fromConfig);
+
   config.setDefault('api-endpoint', 'http://localhost:8000');
   config.setDefault('mapi-endpoint', 'http://localhost:8000');
   config.setDefault('audience', 'http://localhost:8000');
@@ -112,8 +114,6 @@ export async function getConfigurationValues(
 
   config.useEnvVariables();
   config.setEnvVariablePrefix('HAPPA');
-
-  config.parse(fromConfig);
 
   return {
     apiEndpoint: config.getString('api-endpoint'),
