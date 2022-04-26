@@ -115,9 +115,10 @@ async function readPermissionsUseCasesFile(): Promise<string> {
   );
 
   const useCasesFileContents = await fs.readFile(permissionsUseCasesPath);
-  const useCases = yaml.load(useCasesFileContents.toString(), {
-    schema: yaml.JSON_SCHEMA,
-  }) as Record<string, any>;
+  const useCases = yaml.load(useCasesFileContents.toString()) as Record<
+    string,
+    any
+  >;
 
   const useCasesObject = {
     'permissions-use-cases-json': JSON.stringify(useCases['useCases'])
