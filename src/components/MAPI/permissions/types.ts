@@ -21,3 +21,21 @@ export interface IPermissions {
   canCreate: boolean;
   canDelete: boolean;
 }
+
+export interface IPermissionsUseCase {
+  name: string;
+  description?: string;
+  category?: string;
+  scope: {
+    cluster?: boolean;
+    namespace?: 'default' | '*' | string;
+  };
+  permissions: IPermissionsForUseCase[];
+}
+
+interface IPermissionsForUseCase {
+  apiGroups: string[];
+  resources: string[];
+  resourceNames?: string[];
+  verbs: PermissionVerb[];
+}

@@ -59,6 +59,7 @@ interface IGlobalConfig {
       };
     };
   };
+  permissionsUseCasesJSON: string;
 }
 
 interface IFeatureFlags {

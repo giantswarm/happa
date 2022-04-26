@@ -5,7 +5,12 @@ import { AccessControlRoleItemVerb } from 'UI/Display/MAPI/AccessControl/types';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { INamespacePermissions, IPermissionMap, PermissionVerb } from './types';
+import {
+  INamespacePermissions,
+  IPermissionMap,
+  IPermissionsUseCase,
+  PermissionVerb,
+} from './types';
 
 export function computePermissions(
   ruleReviews: readonly [
@@ -364,4 +369,16 @@ export function fetchAccessForResourceKey(
   return `getAccessForResource/${namespace}/${verbs.join(
     ','
   )}/${group}/${resource}`;
+}
+
+export function getPermissionsUseCases(): IPermissionsUseCase[] | null {
+  if (!window.config.permissionsUseCasesJSON) {
+    return null;
+  }
+
+  const useCases: IPermissionsUseCase[] = JSON.parse(
+    window.config.permissionsUseCasesJSON
+  );
+
+  return useCases;
 }
