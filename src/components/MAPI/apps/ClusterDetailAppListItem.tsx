@@ -208,7 +208,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
                       numStart={10}
                       color='text-weak'
                     >
-                      {value as string}
+                      {value}
                     </Truncated>
                   )}
                 </OptionalValue>

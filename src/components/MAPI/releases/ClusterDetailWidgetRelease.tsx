@@ -329,8 +329,8 @@ const ClusterDetailWidgetRelease: React.FC<
           {(value) => (
             <KubernetesVersionLabel
               hidePatchVersion={false}
-              version={value as string}
-              eolDate={getK8sVersionEOLDate(value as string) ?? undefined}
+              version={value}
+              eolDate={getK8sVersionEOLDate(value) ?? undefined}
             />
           )}
         </OptionalValue>

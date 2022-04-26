@@ -94,7 +94,7 @@ const ClusterDetailAppListWidgetCatalog: React.FC<
       <OptionalValue value={catalogTitle} loaderWidth={150}>
         {(value) => (
           <CatalogLabel
-            catalogName={value as string}
+            catalogName={value}
             isManaged={isManaged}
             aria-label={`App catalog: ${value}`}
           />

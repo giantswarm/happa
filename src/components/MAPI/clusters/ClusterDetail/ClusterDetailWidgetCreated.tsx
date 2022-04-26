@@ -44,13 +44,13 @@ const ClusterDetailWidgetCreated: React.FC<
       <OptionalValue value={creationDate}>
         {(value) => (
           <CapitalizedText>
-            <Date relative={true} value={value as string} />
+            <Date relative={true} value={value} />
           </CapitalizedText>
         )}
       </OptionalValue>
       <StyledDot />
       <OptionalValue value={creationDate} loaderWidth={150}>
-        {(value) => <Date value={value as string} />}
+        {(value) => <Date value={value} />}
       </OptionalValue>
     </ClusterDetailWidget>
   );

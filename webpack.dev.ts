@@ -9,6 +9,7 @@
 
 import 'webpack-dev-server';
 
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import path from 'path';
 import webpack from 'webpack';
 import merge from 'webpack-merge';
@@ -100,6 +101,7 @@ const config: webpack.Configuration = merge(common, {
         },
       ],
     }),
+    new ReactRefreshWebpackPlugin(),
   ],
   module: {
     rules: [

@@ -8,7 +8,9 @@ export const ValueIsLoading: Story<
   ComponentPropsWithoutRef<typeof OptionalValue>
 > = (args) => {
   return (
-    <OptionalValue {...args}>{(value) => <Text>{value}</Text>}</OptionalValue>
+    <OptionalValue {...args}>
+      {(value) => <Text>{value as undefined}</Text>}
+    </OptionalValue>
   );
 };
 
@@ -20,7 +22,9 @@ export const ValueLoaded: Story<
   ComponentPropsWithoutRef<typeof OptionalValue>
 > = (args) => {
   return (
-    <OptionalValue {...args}>{(value) => <Text>{value}</Text>}</OptionalValue>
+    <OptionalValue {...args}>
+      {(value) => <Text>{value as string}</Text>}
+    </OptionalValue>
   );
 };
 
@@ -32,7 +36,9 @@ export const ValueIsFalsy: Story<
   ComponentPropsWithoutRef<typeof OptionalValue>
 > = (args) => {
   return (
-    <OptionalValue {...args}>{(value) => <Text>{value}</Text>}</OptionalValue>
+    <OptionalValue {...args}>
+      {(value) => <Text>{value as string}</Text>}
+    </OptionalValue>
   );
 };
 

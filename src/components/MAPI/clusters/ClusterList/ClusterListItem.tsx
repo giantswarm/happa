@@ -313,7 +313,7 @@ const ClusterListItem: React.FC<IClusterListItemProps> = ({
               {(value) => (
                 <Text size='large' aria-label={`Name: ${value}`}>
                   <ClusterIDLabel
-                    clusterID={value as string}
+                    clusterID={value}
                     variant={ClusterIDLabelType.Name}
                     copyEnabled={true}
                   />

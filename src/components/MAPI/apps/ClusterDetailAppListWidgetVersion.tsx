@@ -118,7 +118,7 @@ const ClusterDetailAppListWidgetVersion: React.FC<
             aria-label={`App version: ${value}`}
             numStart={10}
           >
-            {value as string}
+            {value}
           </Truncated>
         )}
       </OptionalValue>

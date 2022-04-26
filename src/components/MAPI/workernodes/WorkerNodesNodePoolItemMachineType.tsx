@@ -3,7 +3,6 @@ import { NodePool, ProviderNodePool } from 'MAPI/types';
 import {
   getProviderNodePoolMachineTypes,
   INodePoolMachineTypesAWS,
-  INodePoolMachineTypesAzure,
 } from 'MAPI/utils';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
@@ -98,7 +97,7 @@ const WorkerNodesNodePoolItemMachineType: React.FC<
             </TooltipContainer>
           ) : (
             <Code aria-label={formatMachineTypeLabel(providerNodePool)}>
-              {(value as INodePoolMachineTypesAzure).primary}
+              {value.primary}
             </Code>
           )
         }

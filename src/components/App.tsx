@@ -4,7 +4,6 @@ import Footer from 'Footer/Footer';
 import { Box, Heading, Text } from 'grommet';
 import { History } from 'history';
 import React from 'react';
-import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import ErrorBoundary from 'shared/ErrorBoundary';
@@ -68,4 +67,4 @@ const App: React.FC<IAppProps> = ({
   </ErrorBoundary>
 );
 
-export default hot(module)(App);
+export default App;

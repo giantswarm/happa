@@ -41,7 +41,10 @@ const Modal = React.forwardRef<HTMLDivElement, IModalProps>(
       if (visible && !document.body.classList.contains(BODY_CLASS_MODIFIER)) {
         document.body.classList.add(BODY_CLASS_MODIFIER);
         bodyClassModified.current = true;
-      } else {
+      } else if (
+        !visible &&
+        document.body.classList.contains(BODY_CLASS_MODIFIER)
+      ) {
         if (bodyClassModified.current) {
           document.body.classList.remove(BODY_CLASS_MODIFIER);
           bodyClassModified.current = false;
