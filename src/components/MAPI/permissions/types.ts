@@ -28,7 +28,7 @@ export interface IPermissionsUseCase {
   category?: string;
   scope: {
     cluster?: boolean;
-    namespace?: 'default' | '*' | string;
+    namespaces?: UseCaseScopeNamespace[];
   };
   permissions: IPermissionsForUseCase[];
 }
@@ -39,3 +39,5 @@ interface IPermissionsForUseCase {
   resourceNames?: string[];
   verbs: PermissionVerb[];
 }
+
+type UseCaseScopeNamespace = 'default' | '*' | string;
