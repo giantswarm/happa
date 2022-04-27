@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import sub from 'date-fns/fp/sub';
 import { createMemoryHistory } from 'history';
 import { Providers, StatusCodes } from 'model/constants';
+import { Constants } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
@@ -53,7 +54,7 @@ describe('WorkerNodesNodePoolItem', () => {
   it('displays a loading animation if the node pool is not loaded yet', () => {
     render(getComponent({}));
 
-    expect(screen.getAllByLabelText('Loading...').length).toEqual(8);
+    expect(screen.getAllByLabelText('Loading...').length).toEqual(9);
   });
 
   it('displays if a node pool has been deleted', () => {
@@ -94,6 +95,8 @@ describe('WorkerNodesNodePoolItem', () => {
       getComponent({
         nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
         providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        flatcarContainerLinuxVersion:
+          Constants.FLATCAR_CONTAINERLINUX_CGROUP_V2_VERSION,
       })
     );
 
@@ -104,6 +107,10 @@ describe('WorkerNodesNodePoolItem', () => {
     expect(
       screen.getByLabelText('VM size: Standard_A8_v2')
     ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Control groups version: v2')
+    ).toBeInTheDocument();
+
     expect(screen.getByLabelText('Availability zones: 1')).toBeInTheDocument();
   });
 
