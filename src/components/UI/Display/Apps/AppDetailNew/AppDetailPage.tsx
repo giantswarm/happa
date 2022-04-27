@@ -241,7 +241,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
             >
               {(value) => (
                 <CatalogLabel
-                  catalogName={value as string}
+                  catalogName={value}
                   description={props.catalogDescription}
                   iconUrl={props.catalogIcon}
                 />
@@ -316,7 +316,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
                 loaderWidth={200}
                 loaderHeight={28}
               >
-                {(value) => <Truncated as='span'>{value as string}</Truncated>}
+                {(value) => <Truncated as='span'>{value}</Truncated>}
               </OptionalValue>
             </Detail>
 
@@ -327,7 +327,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
                 loaderWidth={200}
                 loaderHeight={28}
               >
-                {(value) => <Date relative={true} value={value as string} />}
+                {(value) => <Date relative={true} value={value} />}
               </OptionalValue>
             </Detail>
 
@@ -338,7 +338,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
                 loaderWidth={200}
                 loaderHeight={28}
               >
-                {(value) => <Truncated as='span'>{value as string}</Truncated>}
+                {(value) => <Truncated as='span'>{value}</Truncated>}
               </OptionalValue>
             </Detail>
           </DetailGroup>
@@ -364,7 +364,7 @@ const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
             >
               {(value) => (
                 <NonBreakingLink
-                  href={value as string}
+                  href={value}
                   target='_blank'
                   rel='noopener noreferrer'
                 >

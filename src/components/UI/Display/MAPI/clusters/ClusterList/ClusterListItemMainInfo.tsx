@@ -49,8 +49,8 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
       <OptionalValue value={k8sVersion} replaceEmptyValue={false}>
         {(value) => (
           <KubernetesVersionLabel
-            version={value as string}
-            eolDate={getK8sVersionEOLDate(value as string) ?? undefined}
+            version={value}
+            eolDate={getK8sVersionEOLDate(value) ?? undefined}
           />
         )}
       </OptionalValue>
@@ -58,7 +58,7 @@ const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
       <OptionalValue value={creationDate} replaceEmptyValue={false}>
         {(value) => (
           <Text>
-            Created <Date relative={true} value={value as string} />
+            Created <Date relative={true} value={value} />
           </Text>
         )}
       </OptionalValue>

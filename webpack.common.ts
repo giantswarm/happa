@@ -97,9 +97,6 @@ const config: webpack.Configuration = {
       path.resolve(`${__dirname}/src`),
       path.resolve(`${__dirname}/src/components`),
     ],
-    alias: {
-      'react-dom': '@hot-loader/react-dom',
-    },
     fallback: {
       fs: false,
       path: false,

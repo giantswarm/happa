@@ -48,7 +48,7 @@ const AppVersionInspectorOption: React.FC<IAppVersionInspectorOptionProps> = ({
       >
         {(value) => (
           <Truncated as={Text} numStart={10} weight={textWeight}>
-            {value as string}
+            {value}
           </Truncated>
         )}
       </OptionalValue>
@@ -62,7 +62,7 @@ const AppVersionInspectorOption: React.FC<IAppVersionInspectorOptionProps> = ({
       >
         {(value) => (
           <StyledText weight={textWeight}>
-            released <Date value={value as string} relative={true} />
+            released <Date value={value} relative={true} />
           </StyledText>
         )}
       </OptionalValue>

@@ -219,13 +219,13 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
             loaderHeight={26}
           >
             {(value) => (
-              <Copyable copyText={value as string}>
+              <Copyable copyText={value}>
                 <Truncated
                   as={Code}
                   aria-label={`Name: ${value}`}
                   {...getTruncationParams(MAX_NAME_LENGTH)}
                 >
-                  {value as string}
+                  {value}
                 </Truncated>
               </Copyable>
             )}
@@ -247,7 +247,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 </Box>
               ) : (
                 <StyledViewAndEditName
-                  value={value as string}
+                  value={value}
                   typeLabel='node pool'
                   onToggleEditingState={setIsEditingDescription}
                   aria-label={`Description: ${value}`}
@@ -272,7 +272,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 {(value) => (
                   <Box
                     direction='row'
-                    aria-label={formatAvailabilityZonesLabel(value as string[])}
+                    aria-label={formatAvailabilityZonesLabel(value)}
                   >
                     <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
                   </Box>

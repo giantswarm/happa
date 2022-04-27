@@ -66,21 +66,17 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
               {value === -1 ? (
                 <NotAvailable />
               ) : (
-                formatWorkerNodePoolsCount(value as number)
+                formatWorkerNodePoolsCount(value)
               )}{' '}
-              {pluralizeLabel(value as number, 'node pool')},
+              {pluralizeLabel(value, 'node pool')},
             </Text>
           )}
         </OptionalValue>
         <OptionalValue value={workerNodesCount} replaceEmptyValue={false}>
           {(value) => (
             <Text>
-              {value === -1 ? (
-                <NotAvailable />
-              ) : (
-                formatWorkerNodesCount(value as number)
-              )}{' '}
-              {pluralizeLabel(value as number, 'worker node')}
+              {value === -1 ? <NotAvailable /> : formatWorkerNodesCount(value)}{' '}
+              {pluralizeLabel(value, 'worker node')}
             </Text>
           )}
         </OptionalValue>
@@ -89,8 +85,8 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
       <OptionalValue value={workerNodesCPU} replaceEmptyValue={false}>
         {(value) => (
           <Text>
-            {value === -1 ? <NotAvailable /> : formatCPU(value as number)}{' '}
-            {pluralizeLabel(value as number, 'CPU core')}
+            {value === -1 ? <NotAvailable /> : formatCPU(value)}{' '}
+            {pluralizeLabel(value, 'CPU core')}
           </Text>
         )}
       </OptionalValue>
@@ -98,8 +94,7 @@ const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
       <OptionalValue value={workerNodesMemory} replaceEmptyValue={false}>
         {(value) => (
           <Text>
-            {value === -1 ? <NotAvailable /> : formatMemory(value as number)} GB
-            RAM
+            {value === -1 ? <NotAvailable /> : formatMemory(value)} GB RAM
           </Text>
         )}
       </OptionalValue>

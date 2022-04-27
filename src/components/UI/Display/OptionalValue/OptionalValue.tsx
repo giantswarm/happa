@@ -9,26 +9,23 @@ const StyledRefreshableLabel = styled(RefreshableLabel)`
   margin: 0;
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Value = string | number | Record<string, any>;
-
-interface IOptionalValueProps {
-  children: (value: Value) => React.ReactElement;
-  value?: Value;
+interface IOptionalValueProps<T> {
+  children: (value: T) => React.ReactElement;
+  value?: T;
   replaceEmptyValue?: boolean;
   loaderHeight?: number;
   loaderWidth?: number;
   flashOnValueChange?: boolean;
 }
 
-const OptionalValue: React.FC<IOptionalValueProps> = ({
+const OptionalValue = <T,>({
   value,
   children,
   replaceEmptyValue,
   loaderHeight,
   loaderWidth,
   flashOnValueChange,
-}) => {
+}: IOptionalValueProps<T>) => {
   if (typeof value === 'undefined') {
     return (
       <LoadingPlaceholder
@@ -39,7 +36,11 @@ const OptionalValue: React.FC<IOptionalValueProps> = ({
     );
   }
 
-  if (replaceEmptyValue && (value === '' || value === -1)) {
+  if (
+    replaceEmptyValue &&
+    ((typeof value === 'string' && value === '') ||
+      (typeof value === 'number' && value === -1))
+  ) {
     return <NotAvailable />;
   }
 
