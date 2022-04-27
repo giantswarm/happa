@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 
 import yaml from 'js-yaml';
 
-export function replacer(_: any, value: any) {
+function replacer(_: any, value: any) {
   if (typeof value === 'string') {
     return value.replace(/\'/g, '&apos;').replace(/\"/g, '&quot;');
   }

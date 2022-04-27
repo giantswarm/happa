@@ -9,10 +9,7 @@ import {
   IConfigurationValues,
 } from './getConfigurationValues';
 import { templateIndex } from './templateIndex';
-import getPermissionsUseCasesConfig, {
-  replacer,
-} from './getPermissionsUseCasesConfig';
-import yaml from 'js-yaml';
+import getPermissionsUseCasesConfig from './getPermissionsUseCasesConfig';
 
 const indexTemplatePath = path.resolve('www', 'index.ejs');
 const indexOutputPath = path.resolve('www', 'index.html');

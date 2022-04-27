@@ -1,6 +1,4 @@
 import { Configuration } from './Configuration';
-import yaml from 'js-yaml';
-import fs from 'fs';
 
 export interface IConfigurationValues {
   apiEndpoint: string;
