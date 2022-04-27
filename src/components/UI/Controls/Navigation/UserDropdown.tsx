@@ -130,6 +130,7 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
                     <MenuItem
                       href={AccountSettingsRoutes.Experiments}
                       to={AccountSettingsRoutes.Experiments}
+                      onClick={onBlurHandler}
                     >
                       <i
                         className='fa fa-experiment'
@@ -140,6 +141,21 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
                     </MenuItem>
                   </li>
                 )}
+
+                <li role='presentation'>
+                  <MenuItem
+                    href={AccountSettingsRoutes.Permissions}
+                    to={AccountSettingsRoutes.Permissions}
+                    onClick={onBlurHandler}
+                  >
+                    <i
+                      className='fa fa-lock'
+                      role='presentation'
+                      aria-hidden='true'
+                    />{' '}
+                    Permissions
+                  </MenuItem>
+                </li>
 
                 <li role='presentation'>
                   <MenuItem href={MainRoutes.Logout} to={MainRoutes.Logout}>

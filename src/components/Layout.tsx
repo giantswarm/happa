@@ -5,6 +5,7 @@ import GiantSwarm from 'giantswarm';
 import AppsMAPI from 'MAPI/apps/Apps';
 import Clusters from 'MAPI/clusters/Clusters';
 import Experiments from 'MAPI/Experiments';
+import Permissions from 'MAPI/permissions/Permissions';
 import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasAppAccess } from 'MAPI/permissions/utils';
 import {
@@ -150,6 +151,12 @@ const Layout: React.FC<{}> = () => {
                       path={AccountSettingsRoutes.Experiments}
                     />
                   )}
+
+                  <Route
+                    component={Permissions}
+                    exact
+                    path={AccountSettingsRoutes.Permissions}
+                  />
 
                   <Route
                     component={ExceptionNotificationTest}
