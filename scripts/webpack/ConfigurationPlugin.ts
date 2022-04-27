@@ -7,7 +7,8 @@ import {
 } from '../getConfigurationValues';
 import { templateIndex } from '../templateIndex';
 import { createProxy } from '../createProxy';
-
+import path from 'path';
+import getPermissionsUseCasesConfig from '../getPermissionsUseCasesConfig';
 interface IConfigurationPluginOptionsProxy {
   port: number;
   host: (configValues: IConfigurationValues) => string;
@@ -116,6 +117,16 @@ export class ConfigurationPlugin implements webpack.WebpackPluginInstance {
       );
       config = await getProdConfiguration(process.env.HAPPA_KUBECTL_CONTEXT!);
     }
+
+    const permissionsUseCasesFilePath = path.resolve(
+      'scripts',
+      'permissions-use-cases.yaml'
+    );
+    logger.info(
+      `Fetching permissions use cases configuration from ${permissionsUseCasesFilePath}`
+    );
+    config ??= '';
+    config += await getPermissionsUseCasesConfig(permissionsUseCasesFilePath);
 
     logger.info('Computing configuration values');
     this.configurationValues = await getConfigurationValues(config);
