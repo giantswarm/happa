@@ -9,7 +9,9 @@ import {
   IConfigurationValues,
 } from './getConfigurationValues';
 import { templateIndex } from './templateIndex';
-import { replacer } from './getPermissionsUseCasesConfig';
+import getPermissionsUseCasesConfig, {
+  replacer,
+} from './getPermissionsUseCasesConfig';
 import yaml from 'js-yaml';
 
 const indexTemplatePath = path.resolve('www', 'index.ejs');
@@ -115,22 +117,13 @@ async function readPermissionsUseCasesFile(): Promise<string> {
     `Reading permissions use cases file from path '${permissionsUseCasesPath}'.`
   );
 
-  const useCasesFileContents = await fs.readFile(permissionsUseCasesPath);
-  const useCases = yaml.load(useCasesFileContents.toString()) as Record<
-    string,
-    any
-  >;
-
-  const useCasesObject = {
-    'permissions-use-cases-json': JSON.stringify(
-      useCases['useCases'],
-      replacer
-    ),
-  };
+  const useCasesFileContents = await getPermissionsUseCasesConfig(
+    permissionsUseCasesPath
+  );
 
   log('Read permissions use cases file successfully.');
 
-  return yaml.dump(useCasesObject);
+  return useCasesFileContents;
 }
 
 async function main(): Promise<void> {
