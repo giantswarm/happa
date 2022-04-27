@@ -1,0 +1,105 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title='Development/Use case definition YAML' />
+
+# Use case definition YAML
+
+## Introduction
+
+The _use case definition_ format is a specification developed by Giant Swarm. Its purpose is to express which Kubernetes RBAC permissions are required in order to fulfill a use case. Here, a "use case" is an activity that is meaningful from a user's perspective.
+
+Example:
+
+For more beackground information, refer to [roadmap#1049](https://github.com/giantswarm/roadmap/issues/1049).
+
+The definition is used to configure happa so that users and admins can evaluate Kubernetes permissions with regard to the use cases defined. Without such a definition, RBAC permissions could only be listed individually (think of `kubectl auth can-i --list`), resulting in information that is very hard to translate into information that is meaningful for end-users.
+
+As of April 2022, the definition resides only in happa (see [`src/permissions-use-cases.yaml`](https://github.com/giantswarm/happa/blob/0405d6b2133de51397a0e989a8e732bed644e891/src/permissions-use-cases.yaml)). In the future, we expect this file to be supplied to happa on a per-installation basis via configuration, so that the use case definition can be individualized for customers who require it.
+
+## Example
+
+Below is an example file defining three use cases.
+
+```yaml
+useCases:
+  - name: Inspect namespaces
+    description: List namespaces and get an individual namespace's details
+    category: Access control
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups: [""]
+        resources:
+          - namespaces
+        verbs:
+          - get
+          - list
+  - name: Inspect shared app catalogs
+    description: Read catalogs and their entries in the default namespace
+    category: App catalogs
+    scope:
+      namespaces:
+        - default
+    permissions:
+      - apiGroups:
+          - application.giantswarm.io
+        resources:
+          - catalogs
+          - appcatalogentries
+        verbs:
+          - get
+          - list
+  - name: Inspect app catalogs
+    description: Read catalogs and their entries in an organization namespace
+    category: App catalogs
+    scope:
+      namespaces: ["*"]
+    permissions:
+      - apiGroups:
+          - application.giantswarm.io
+        resources:
+          - catalogs
+          - appcatalogentries
+        verbs:
+          - get
+          - list
+```
+
+## Schema
+
+A top level array named `useCases` is required. Each entry defines one use case.
+
+### Descriptive metadata
+
+Each use case consists of a `name` which should be unique if possible, and also short. More information can be given in the `description` field. The `category` field is used to assign each use case to a category, so that a hierarchy is created.
+
+### Scope
+
+Under the `scope` field we define whether the permissions for this use case are defined in the cluster scope, or in a paerticular namespace, or in any namespace.
+
+Using `cluster: true`, we specify that the permissions are to be defined in the cluster scope. Example:
+
+```yaml
+scope:
+  cluster: true
+```
+
+In contrast, if a use case's permissions are to be defined in namespaces, `scope.cluster` can be omitted ot set to `false`. In addition, the `namespaces` have to be enumerated, or an `*` string must be used to indicate that the permissions can be looked up in any namespace.
+
+Both examples below are valid.
+
+```yaml
+scope:
+  cluster: false
+  namespaces:
+    - default
+```
+
+```yaml
+scope:
+  namespaces: ["*"]
+```
+
+### Permissions
+
+Under a key named `permissions` we enumerate the rules that describe the permissions needed for the use case. The format used here is directly adapted from the [`rbac.authorization.k8s.io/v1`](https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/role-v1/) API (specifically: the `rules` part) in Kubernetes.
