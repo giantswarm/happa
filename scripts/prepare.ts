@@ -9,6 +9,7 @@ import {
   IConfigurationValues,
 } from './getConfigurationValues';
 import { templateIndex } from './templateIndex';
+import { replacer } from './getPermissionsUseCasesConfig';
 import yaml from 'js-yaml';
 
 const indexTemplatePath = path.resolve('www', 'index.ejs');
@@ -121,9 +122,10 @@ async function readPermissionsUseCasesFile(): Promise<string> {
   >;
 
   const useCasesObject = {
-    'permissions-use-cases-json': JSON.stringify(useCases['useCases'])
-      .replace(/\'/g, '&apos;')
-      .replace(/\\"/g, '\\\\"'),
+    'permissions-use-cases-json': JSON.stringify(
+      useCases['useCases'],
+      replacer
+    ),
   };
 
   log('Read permissions use cases file successfully.');
