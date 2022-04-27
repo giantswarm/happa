@@ -165,7 +165,7 @@ const ColumnInfo = styled(Box)<{
 `;
 
 const NodesInfo = styled.div`
-  grid-column: 5 / span 4;
+  grid-column: 6 / span 4;
   position: relative;
   display: flex;
   justify-content: center;
@@ -405,8 +405,7 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
       }
     }, [releaseError]);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const containerLinuxVersion = useMemo(() => {
+    const flatcarContainerLinuxVersion = useMemo(() => {
       if (!release) return undefined;
 
       return getFlatcarContainerLinuxVersion(release);
@@ -501,6 +500,9 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                     </Text>
                   </Box>
                   <Box align='center'>
+                    <Text size='xsmall'>CGroups</Text>
+                  </Box>
+                  <Box align='center'>
                     <Text size='xsmall'>Min</Text>
                   </Box>
                   <Box align='center'>
@@ -558,6 +560,9 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                                 readOnly={isReadOnly}
                                 canUpdateNodePools={canUpdateNodePools}
                                 canDeleteNodePools={canDeleteNodePools}
+                                flatcarContainerLinuxVersion={
+                                  flatcarContainerLinuxVersion
+                                }
                               />
                             </BaseTransition>
                           )

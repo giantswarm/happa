@@ -16,6 +16,7 @@ import Date from 'UI/Display/Date';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolActions from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolActions';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import ViewAndEditName, {
   ViewAndEditNameVariant,
 } from 'UI/Inputs/ViewEditName';
@@ -26,7 +27,11 @@ import { getTruncationParams } from 'utils/helpers';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { IWorkerNodesAdditionalColumn } from './types';
-import { deleteNodePoolResources, updateNodePoolDescription } from './utils';
+import {
+  deleteNodePoolResources,
+  getCGroupsVersion,
+  updateNodePoolDescription,
+} from './utils';
 import WorkerNodesNodePoolItemDelete from './WorkerNodesNodePoolItemDelete';
 import WorkerNodesNodePoolItemMachineType from './WorkerNodesNodePoolItemMachineType';
 import WorkerNodesNodePoolItemScale from './WorkerNodesNodePoolItemScale';
@@ -76,6 +81,7 @@ interface IWorkerNodesNodePoolItemProps
   canUpdateNodePools?: boolean;
   canDeleteNodePools?: boolean;
   nameColumnWidth?: number;
+  flatcarContainerLinuxVersion?: string;
 }
 
 const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
@@ -86,6 +92,7 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
   canUpdateNodePools,
   canDeleteNodePools,
   nameColumnWidth,
+  flatcarContainerLinuxVersion,
   ...props
 }) => {
   const clientFactory = useHttpClientFactory();
@@ -100,6 +107,13 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
     nodePool && providerNodePool
       ? getNodePoolAvailabilityZones(nodePool, providerNodePool)
       : undefined;
+  const cgroupsVersion = useMemo(() => {
+    if (!nodePool) return undefined;
+    if (!flatcarContainerLinuxVersion) return '';
+
+    return getCGroupsVersion(nodePool, flatcarContainerLinuxVersion);
+  }, [nodePool, flatcarContainerLinuxVersion]);
+
   const scaling = useMemo(() => {
     if (!nodePool || typeof providerNodePool === 'undefined') return undefined;
 
@@ -275,6 +289,37 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                     aria-label={formatAvailabilityZonesLabel(value)}
                   >
                     <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
+                  </Box>
+                )}
+              </OptionalValue>
+            </Box>
+            <Box align='center'>
+              <OptionalValue value={cgroupsVersion} loaderWidth={30}>
+                {(value) => (
+                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                    <Text aria-label={`Control groups version: ${value}`}>
+                      <Code>
+                        {value}
+                        {value === 'v1' && (
+                          <>
+                            {' '}
+                            <TooltipContainer
+                              content={
+                                <Tooltip>
+                                  This node pool uses the deprecated control
+                                  groups version 1.
+                                </Tooltip>
+                              }
+                            >
+                              <i
+                                className='fa fa-warning'
+                                aria-label='Warning: This node pool uses the deprecated control groups version 1.'
+                              />
+                            </TooltipContainer>
+                          </>
+                        )}
+                      </Code>
+                    </Text>
                   </Box>
                 )}
               </OptionalValue>
