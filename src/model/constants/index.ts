@@ -68,6 +68,7 @@ export const Constants = {
   KEYPAIR_UNSAFE_TTL_EXPLANATION: `The desired expiry date is pretty far away. Please keep in mind that there is no way to revoke keypairs once they've been created.`,
 
   FLATCAR_CONTAINERLINUX_SINCE: '2345.3.1',
+  FLATCAR_CONTAINERLINUX_CGROUP_V2_VERSION: '3033.2.0',
 
   // Used to filter cluster labels in api responses
   RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING: 'giantswarm.io',

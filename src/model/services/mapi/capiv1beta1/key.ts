@@ -19,6 +19,7 @@ export const annotationUpdateScheduleTargetTime =
   'alpha.giantswarm.io/update-schedule-target-time';
 export const annotationMachinePoolDescription =
   'machine-pool.giantswarm.io/name';
+export const annotationCGroupV1 = 'node.giantswarm.io/cgroupv1';
 
 export const conditionTypeReady = 'Ready';
 export const conditionTypeCreating = 'Creating';
