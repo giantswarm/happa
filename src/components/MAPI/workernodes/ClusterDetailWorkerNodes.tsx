@@ -18,8 +18,10 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
@@ -119,6 +121,14 @@ function getProviderNodePoolResourceName(
     default:
       return 'MachinePool';
   }
+}
+
+function getFlatcarContainerLinuxVersion(
+  release: releasev1alpha1.IRelease
+): string | undefined {
+  return release.spec.components.find(
+    (component) => component.name === 'containerlinux'
+  )?.version;
 }
 
 function getNameColumnWidth(nameLength: number) {
@@ -366,6 +376,41 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
         providerNodePools
       );
     }, [nodePoolList?.items, providerNodePools]);
+
+    const clusterReleaseVersion = cluster
+      ? capiv1beta1.getReleaseVersion(cluster)
+      : undefined;
+
+    const releaseListKey =
+      !hasNoNodePools && clusterReleaseVersion
+        ? releasev1alpha1.getReleaseKey(`v${clusterReleaseVersion}`)
+        : null;
+
+    const releaseListClient = useRef(clientFactory());
+
+    const { data: release, error: releaseError } = useSWR<
+      releasev1alpha1.IRelease,
+      GenericResponseError
+    >(releaseListKey, () =>
+      releasev1alpha1.getRelease(
+        releaseListClient.current,
+        auth,
+        `v${clusterReleaseVersion}`
+      )
+    );
+
+    useEffect(() => {
+      if (releaseError) {
+        ErrorReporter.getInstance().notify(releaseError);
+      }
+    }, [releaseError]);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const containerLinuxVersion = useMemo(() => {
+      if (!release) return undefined;
+
+      return getFlatcarContainerLinuxVersion(release);
+    }, [release]);
 
     const longestNameLength = nodePoolsWithProviderNodePools.reduce(
       (maxLength, item) => {
