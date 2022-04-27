@@ -75,7 +75,7 @@ Each use case consists of a `name` which should be unique if possible, and also 
 
 ### Scope
 
-Under the `scope` field we define whether the permissions for this use case are defined in the cluster scope, or in a paerticular namespace, or in any namespace.
+Under the `scope` field we define whether the permissions for this use case are defined in the cluster scope, or in a particular namespace, or in any namespace.
 
 Using `cluster: true`, we specify that the permissions are to be defined in the cluster scope. Example:
 
@@ -84,7 +84,7 @@ scope:
   cluster: true
 ```
 
-In contrast, if a use case's permissions are to be defined in namespaces, `scope.cluster` can be omitted ot set to `false`. In addition, the `namespaces` have to be enumerated, or an `*` string must be used to indicate that the permissions can be looked up in any namespace.
+In contrast, if a use case's permissions are to be defined in namespaces, `scope.cluster` can be omitted or set to `false`. In addition, the `namespaces` have to be enumerated, or an `*` string must be used to indicate that the permissions can be looked up in any namespace.
 
 Both examples below are valid.
 
