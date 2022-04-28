@@ -11,7 +11,7 @@ export const NodePoolGridRow = (
     minmax(50px, 4fr)
     4fr
     3fr
-    repeat(4, 2fr)
+    repeat(5, 2fr)
     ${extraColumnCount ? `repeat(${extraColumnCount}, 2fr)` : ''}
     1fr;
   grid-template-rows: ${({ theme }) => theme.global.size.xxsmall};

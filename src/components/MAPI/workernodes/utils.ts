@@ -20,6 +20,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 import { mutate } from 'swr';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import { compare } from 'utils/semver';
 
 export async function updateNodePoolDescription(
   httpClientFactory: HttpClientFactory,
@@ -1035,4 +1036,23 @@ export function mapNodePoolsToProviderNodePools(
   }
 
   return nodePoolsToProviderNodePools;
+}
+
+export function getCGroupsVersion(
+  nodePool: NodePool,
+  flatcarContainerLinuxVersion: string
+): string {
+  if (
+    compare(
+      flatcarContainerLinuxVersion,
+      Constants.FLATCAR_CONTAINERLINUX_CGROUP_V2_VERSION
+    ) < 0
+  ) {
+    return 'v1';
+  }
+  const hasCGroupV1Annotation = nodePool.metadata.annotations?.hasOwnProperty(
+    nodePool.metadata.annotations[capiv1beta1.annotationCGroupV1]
+  );
+
+  return hasCGroupV1Annotation ? 'v1' : 'v2';
 }
