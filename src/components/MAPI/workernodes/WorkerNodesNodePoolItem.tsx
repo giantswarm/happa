@@ -298,27 +298,25 @@ const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
                 {(value) => (
                   <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
                     <Text aria-label={`Control groups version: ${value}`}>
-                      <Code>
-                        {value}
-                        {value === 'v1' && (
-                          <>
-                            {' '}
-                            <TooltipContainer
-                              content={
-                                <Tooltip>
-                                  This node pool uses the deprecated control
-                                  groups version 1.
-                                </Tooltip>
-                              }
-                            >
-                              <i
-                                className='fa fa-warning'
-                                aria-label='Warning: This node pool uses the deprecated control groups version 1.'
-                              />
-                            </TooltipContainer>
-                          </>
-                        )}
-                      </Code>
+                      {value}
+                      {value === 'v1' && (
+                        <>
+                          {' '}
+                          <TooltipContainer
+                            content={
+                              <Tooltip>
+                                This node pool uses the deprecated control
+                                groups version 1.
+                              </Tooltip>
+                            }
+                          >
+                            <i
+                              className='fa fa-warning'
+                              aria-label='Warning: This node pool uses the deprecated control groups version 1.'
+                            />
+                          </TooltipContainer>
+                        </>
+                      )}
                     </Text>
                   </Box>
                 )}
