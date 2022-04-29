@@ -3,6 +3,7 @@ import { AccordionPanel, Box, Text } from 'grommet';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import { isAppManagedByFlux } from 'model/services/mapi/applicationv1alpha1';
 import React, {
   useEffect,
   useLayoutEffect,
@@ -70,27 +71,18 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
   isActive,
   onAppUninstalled,
 }) => {
-  const currentVersion = app
-    ? applicationv1alpha1.getAppCurrentVersion(app)
-    : undefined;
+  const currentVersion = useMemo(() => {
+    if (!app) return undefined;
+    const appVersion = applicationv1alpha1.getAppCurrentVersion(app);
+
+    return isAppManagedByFlux(app)
+      ? normalizeAppVersion(appVersion)
+      : appVersion;
+  }, [app]);
 
   const [currentSelectedVersion, setCurrentSelectedVersion] = useState<
     string | undefined
   >(undefined);
-
-  const normalizedAppVersion = useMemo(() => {
-    if (!app) return undefined;
-
-    return normalizeAppVersion(app.spec.version);
-  }, [app]);
-
-  useEffect(() => {
-    if (
-      typeof normalizedAppVersion !== 'undefined' &&
-      typeof currentSelectedVersion === 'undefined'
-    )
-      setCurrentSelectedVersion(normalizedAppVersion);
-  }, [normalizedAppVersion, currentSelectedVersion]);
 
   const isDeleted = typeof app?.metadata?.deletionTimestamp !== 'undefined';
   const isDisabled = typeof app === 'undefined' || isDeleted;
@@ -259,6 +251,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
           <ClusterDetailAppListWidgetVersionInspector
             app={app}
             appsPermissions={appsPermissions}
+            currentVersion={currentVersion}
             currentSelectedVersion={currentSelectedVersion}
             onSelectVersion={setCurrentSelectedVersion}
             catalogNamespace={catalogNamespace}
@@ -294,7 +287,7 @@ const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
             <UpdateAppGuide
               appName={app.metadata.name}
               namespace={app.metadata.namespace!}
-              newVersion={currentSelectedVersion ?? normalizedAppVersion!}
+              newVersion={currentSelectedVersion ?? currentVersion!}
               appCatalogEntryName={app.spec.name}
               catalogName={app.spec.catalog}
               catalogNamespace={catalogNamespace}
