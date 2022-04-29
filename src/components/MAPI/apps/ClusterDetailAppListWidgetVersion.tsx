@@ -12,11 +12,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
-import {
-  getLatestVersionForApp,
-  isAppChangingVersion,
-  normalizeAppVersion,
-} from './utils';
+import { hasNewerVersionForApp, isAppChangingVersion } from './utils';
 
 interface IClusterDetailAppListWidgetVersionProps
   extends Omit<
@@ -90,14 +86,7 @@ const ClusterDetailAppListWidgetVersion: React.FC<
   const hasNewVersion = useMemo(() => {
     if (!appCatalogEntryList || !app || isChangingVersion) return false;
 
-    const latestVersion = getLatestVersionForApp(
-      appCatalogEntryList.items,
-      app.spec.name
-    );
-
-    return (
-      latestVersion && latestVersion !== normalizeAppVersion(app.spec.version)
-    );
+    return hasNewerVersionForApp(appCatalogEntryList.items, app);
   }, [app, appCatalogEntryList, isChangingVersion]);
 
   return (
