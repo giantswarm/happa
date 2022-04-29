@@ -53,7 +53,7 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
             </>
           ),
           messageType.SUCCESS,
-          messageTTL.SHORT
+          messageTTL.LONG
         );
       } else {
         new FlashMessage(
@@ -66,7 +66,7 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
             </>
           ),
           messageType.SUCCESS,
-          messageTTL.SHORT
+          messageTTL.LONG
         );
       }
     } catch (err) {
@@ -116,7 +116,7 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
             </>
           ),
           messageType.SUCCESS,
-          messageTTL.SHORT
+          messageTTL.LONG
         );
       } else {
         new FlashMessage(
@@ -129,7 +129,7 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
             </>
           ),
           messageType.SUCCESS,
-          messageTTL.SHORT
+          messageTTL.LONG
         );
       }
     } catch (err) {
