@@ -1,5 +1,5 @@
 import { Accordion, AccordionPanel, Box, Text } from 'grommet';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
@@ -29,6 +29,10 @@ const Icon = styled(Text)`
   font-size: 20px;
 `;
 
+const IconSmall = styled(Text)`
+  font-size: 17px;
+`;
+
 interface IStatusProps {
   value?: boolean;
   displayText?: boolean;
@@ -37,7 +41,7 @@ interface IStatusProps {
 const Status: React.FC<IStatusProps> = ({ value, displayText = true }) => (
   <Box direction='row' align='center'>
     {typeof value === 'undefined' ? (
-      <Icon
+      <IconSmall
         className='fa fa-radio-checked'
         role='presentation'
         aria-hidden='true'
@@ -74,13 +78,46 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
   useCasesStatuses,
   organizations,
 }) => {
-  const useCasesByCategory = groupBy(useCases, 'category');
-  const categories = Object.keys(useCasesByCategory);
-  const accordionActiveIndex = categories.map((_, idx) => idx);
+  const [categories, useCasesByCategory] = useMemo(() => {
+    const groupedUseCases = groupBy(useCases, 'category');
+
+    return [Object.keys(groupedUseCases), groupedUseCases];
+  }, [useCases]);
+
+  const categoriesStatuses: Record<
+    string,
+    Record<string, boolean | undefined>
+  > = useMemo(() => {
+    const statuses: Record<string, Record<string, boolean | undefined>> = {};
+    categories.forEach((category) => {
+      statuses[category] = {};
+      const namespaces = organizations
+        ? organizations.map((org) => org.id)
+        : [''];
+
+      namespaces.forEach((namespace) => {
+        const values = useCasesByCategory[category].map(
+          (useCase) => useCasesStatuses[useCase.name][namespace]
+        );
+        statuses[category][namespace] = values.every((v) => v === true)
+          ? true
+          : values.every((v) => v === false)
+          ? false
+          : undefined;
+      });
+    });
+
+    return statuses;
+  }, [categories, useCasesByCategory, useCasesStatuses, organizations]);
+
+  const [activeIndexes, setActiveIndexes] = useState(
+    categories.map((_, idx) => idx)
+  );
 
   return (
     <Box
-      margin={{ horizontal: 'small', top: 'medium' }}
+      margin={{ horizontal: 'small' }}
+      pad={{ vertical: 'medium' }}
       overflow={{ horizontal: 'auto' }}
     >
       {organizations && (
@@ -94,9 +131,11 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
       <Accordion
         multiple={true}
         gap='medium'
-        activeIndex={accordionActiveIndex}
+        activeIndex={activeIndexes}
+        onActive={setActiveIndexes}
+        animate={false}
       >
-        {categories.map((category) => (
+        {categories.map((category, categoryIndex) => (
           <AccordionPanel
             key={category}
             header={
@@ -106,9 +145,22 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
                     <LabelText margin={{ right: 'small' }}>
                       {category}
                     </LabelText>
-                    {/* <Status displayText={false} /> */}
+                    {!organizations &&
+                      !activeIndexes.includes(categoryIndex) && (
+                        <Status
+                          value={categoriesStatuses[category]['']}
+                          displayText={false}
+                        />
+                      )}
                   </Box>
                 </Column>
+                {organizations &&
+                  !activeIndexes.includes(categoryIndex) &&
+                  organizations.map((org) => (
+                    <Column key={org.id}>
+                      <Status value={categoriesStatuses[category][org.id]} />
+                    </Column>
+                  ))}
               </Box>
             }
           >
