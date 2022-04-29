@@ -420,3 +420,12 @@ export function parseDate(date: string | number | Date): Date {
 
   return givenDate;
 }
+
+/**
+ * Returns an array of all possible combinations consisting of one member
+ * from each of passed arrays
+ * @param arrays - set of arrays
+ */
+export function cartesian(...arrays: unknown[][]) {
+  return arrays.reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
+}
