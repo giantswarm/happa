@@ -24,7 +24,7 @@ exports[`CheckBoxInput renders a disabled input 1`] = `
             disabled=""
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 fwUsth"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 cYkuVp"
               disabled=""
               tabindex="-1"
               type="checkbox"
@@ -67,7 +67,7 @@ exports[`CheckBoxInput renders a simple input 1`] = `
             class="StyledBox-sc-13pk1d4-0 krJSvo StyledCheckBox-sc-1dbk5ju-6 eJWclz"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hxUbzp"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 HDHvx"
               tabindex="-1"
               type="checkbox"
               value="Hi people"
@@ -118,7 +118,7 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
             class="StyledBox-sc-13pk1d4-0 krJSvo StyledCheckBox-sc-1dbk5ju-6 eJWclz"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hxUbzp"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 HDHvx"
               tabindex="-1"
               type="checkbox"
             />
@@ -126,7 +126,7 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
               class="StyledCheckBox__StyledCheckBoxToggle-sc-1dbk5ju-4 fQHxSn"
             >
               <span
-                class="StyledCheckBox__StyledCheckBoxKnob-sc-1dbk5ju-5 jQjekO"
+                class="StyledCheckBox__StyledCheckBoxKnob-sc-1dbk5ju-5 cosjYB"
               />
             </span>
           </div>
@@ -172,7 +172,7 @@ exports[`CheckBoxInput renders an input with a form field label 1`] = `
             class="StyledBox-sc-13pk1d4-0 krJSvo StyledCheckBox-sc-1dbk5ju-6 eJWclz"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hxUbzp"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 HDHvx"
               tabindex="-1"
               type="checkbox"
               value="Hi people"
@@ -218,7 +218,7 @@ exports[`CheckBoxInput renders an input with a help message 1`] = `
             class="StyledBox-sc-13pk1d4-0 krJSvo StyledCheckBox-sc-1dbk5ju-6 eJWclz"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hxUbzp"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 HDHvx"
               tabindex="-1"
               type="checkbox"
               value="Hi people"
@@ -259,7 +259,7 @@ exports[`CheckBoxInput renders an input with a validation error 1`] = `
             class="StyledBox-sc-13pk1d4-0 krJSvo StyledCheckBox-sc-1dbk5ju-6 eJWclz"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hxUbzp"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 HDHvx"
               tabindex="-1"
               type="checkbox"
               value="Hi people"
@@ -305,7 +305,7 @@ exports[`CheckBoxInput renders an input with an info message 1`] = `
             class="StyledBox-sc-13pk1d4-0 krJSvo StyledCheckBox-sc-1dbk5ju-6 eJWclz"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hxUbzp"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 HDHvx"
               tabindex="-1"
               type="checkbox"
               value="Hi people"
