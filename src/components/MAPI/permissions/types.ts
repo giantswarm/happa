@@ -41,3 +41,8 @@ interface IPermissionsForUseCase {
 }
 
 type UseCaseScopeNamespace = 'default' | '*' | string;
+
+export type PermissionsUseCaseStatuses = Record<
+  string,
+  Record<string, boolean>
+>;

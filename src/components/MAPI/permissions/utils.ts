@@ -2,6 +2,7 @@ import { getNamespaceFromOrgName } from 'MAPI/utils';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import { LoggedInUserTypes } from 'model/stores/main/types';
 import { AccessControlRoleItemVerb } from 'UI/Display/MAPI/AccessControl/types';
+import { cartesian } from 'utils/helpers';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
@@ -9,6 +10,7 @@ import {
   INamespacePermissions,
   IPermissionMap,
   IPermissionsUseCase,
+  PermissionsUseCaseStatuses,
   PermissionVerb,
 } from './types';
 
@@ -381,4 +383,53 @@ export function getPermissionsUseCases(): IPermissionsUseCase[] | null {
   );
 
   return useCases;
+}
+
+export function isGlobalUseCase(useCase: IPermissionsUseCase): boolean {
+  return (
+    (typeof useCase.scope.namespaces !== undefined &&
+      useCase.scope.namespaces?.[0] === 'default') ||
+    useCase.scope.cluster === true
+  );
+}
+
+/**
+ * Get permissions statuses from a permissions map for given use cases
+ * in the given organizations.
+ * @param permissions
+ * @param useCases
+ * @param organizations
+ */
+export function getStatusesForUseCases(
+  permissions: IPermissionMap,
+  useCases: IPermissionsUseCase[],
+  organizations?: IOrganization[]
+): PermissionsUseCaseStatuses {
+  const statuses: Record<string, Record<string, boolean>> = {};
+  useCases.forEach((useCase) => {
+    const useCasePermissions = useCase.permissions.flatMap((permission) =>
+      cartesian(permission.verbs, permission.resources, permission.apiGroups)
+    );
+
+    statuses[useCase.name] = {};
+    organizations?.forEach((org) => {
+      const permissionsValues = useCasePermissions.map((p) => {
+        const [verb, resource, apiGroup] = p as string[];
+
+        return hasPermission(
+          permissions,
+          org.namespace ?? '',
+          verb,
+          apiGroup,
+          resource
+        );
+      });
+
+      statuses[useCase.name][org.id] = permissionsValues.every(
+        (v) => v === true
+      );
+    });
+  });
+
+  return statuses;
 }
