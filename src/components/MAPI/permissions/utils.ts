@@ -1,5 +1,6 @@
 import { getNamespaceFromOrgName } from 'MAPI/utils';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
+import * as rbacv1 from 'model/services/mapi/rbacv1';
 import { LoggedInUserTypes } from 'model/stores/main/types';
 import { AccessControlRoleItemVerb } from 'UI/Display/MAPI/AccessControl/types';
 import { cartesian } from 'utils/helpers';
@@ -273,6 +274,107 @@ export async function fetchPermissions(
   return permissions;
 }
 
+export async function fetchPermissionsAtClusterScope(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  user?: string,
+  groups?: string[]
+): Promise<IPermissionMap> {
+  const requests: authorizationv1.ISelfSubjectAccessReviewSpec[] = [
+    {
+      resourceAttributes: {
+        verb: 'list',
+        group: 'rbac.authorization.k8s.io',
+        resource: 'clusterrolebindings',
+      },
+    },
+    {
+      resourceAttributes: {
+        verb: 'get',
+        group: 'rbac.authorization.k8s.io',
+        resource: 'clusterroles',
+      },
+    },
+  ];
+
+  // Can the user LIST clusterrolebindings and GET clusterroles?
+  const accessReviewResponse = await Promise.all(
+    requests.map((req) =>
+      authorizationv1.createSelfSubjectAccessReview(
+        httpClientFactory(),
+        auth,
+        req
+      )
+    )
+  );
+
+  // If yes,then get the cluster-scope clusterrolebindings and corresponding clusterroles.
+  if (accessReviewResponse.every((response) => response.status?.allowed)) {
+    const clusterRoleBindingList = await rbacv1.getClusterRoleBindingList(
+      httpClientFactory(),
+      auth
+    );
+
+    // Get names of clusterroles that are bound to the user/group.
+    const clusterRoleNames = clusterRoleBindingList.items
+      .filter((binding) =>
+        binding.subjects?.find(
+          (subject) =>
+            (subject.kind === 'User' && subject.name === user) ||
+            (subject.kind === 'Group' && groups?.includes(subject.name))
+        )
+      )
+      .map((binding) => binding.roleRef.name);
+
+    // Get the corresponding clusterroles.
+    const clusterRoles = await Promise.all(
+      clusterRoleNames.map((name) => {
+        return rbacv1.getClusterRole(httpClientFactory(), auth, name);
+      })
+    );
+
+    // Filter for resource rules.
+    const resourceRules = clusterRoles.reduce<rbacv1.IPolicyRule[]>(
+      (acc, role) => {
+        return role.rules
+          ? acc.concat(
+              role.rules.filter(
+                (rule) =>
+                  rule.hasOwnProperty('apiGroups') &&
+                  rule.hasOwnProperty('resources') &&
+                  rule.hasOwnProperty('verbs')
+              )
+            )
+          : acc;
+      },
+      []
+    );
+
+    const reviewObj: authorizationv1.ISelfSubjectRulesReview = {
+      apiVersion: 'authorization.k8s.io/v1',
+      kind: 'SelfSubjectRulesReview',
+      spec: {},
+      status: {
+        incomplete: false,
+        nonResourceRules: [],
+        resourceRules: resourceRules as authorizationv1.IResourceRule[],
+      },
+    };
+
+    return computePermissions([['', reviewObj]]);
+  }
+
+  // TODO(kuosandys): handle the case when the user does not have permissions to LIST clusterrolebindings and GET clusterroles.
+  return {};
+}
+
+export function fetchPermissionsAtClusterScopeKey(
+  user?: string,
+  groups?: string[]
+): string {
+  return `getUserPermissionsAtClusterScope/${user}/${groups?.join(',')}`;
+}
+
 export function hasAppAccesInNamespace(
   permissions: IPermissionMap,
   namespace: string
@@ -412,7 +514,9 @@ export function getStatusesForUseCases(
     );
 
     statuses[useCase.name] = {};
-    organizations?.forEach((org) => {
+    const placeholderOrg = [{ id: '', namespace: '' }];
+
+    (organizations ?? placeholderOrg).forEach((org) => {
       const permissionsValues = useCasePermissions.map((p) => {
         const [verb, resource, apiGroup] = p as string[];
 
