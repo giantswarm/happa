@@ -941,16 +941,9 @@ export async function hasNewerVersion(
     }
   }
 
-  const latestVersion = getLatestVersionForApp(
-    appCatalogEntryListItems,
-    app.spec.name
-  );
-
   return {
     name: app.spec.name,
-    hasNewerVersion:
-      typeof latestVersion !== 'undefined' &&
-      latestVersion !== normalizeAppVersion(app.spec.version),
+    hasNewerVersion: hasNewerVersionForApp(appCatalogEntryListItems, app),
   };
 }
 
