@@ -1,10 +1,13 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { getLoggedInUser } from 'model/stores/main/selectors';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 import PermissionsUseCases from 'UI/Display/MAPI/permissions/PermissionsUseCases';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { IPermissionMap, IPermissionsUseCase } from '../types';
@@ -33,19 +36,34 @@ const PermissionsOverviewGlobal: React.FC<IPermissionsOverviewGlobalProps> = ({
     ? fetchPermissionsAtClusterScopeKey(user?.email, user?.groups)
     : null;
 
-  const { data: permissionsAtClusterScope } = useSWR<
-    IPermissionMap,
-    GenericResponseError
-  >(permissionsAtClusterScopeKey, () =>
-    fetchPermissionsAtClusterScope(
-      clientFactory,
-      auth,
-      useCases,
-      permissions!,
-      user?.email,
-      user?.groups
-    )
+  const {
+    data: permissionsAtClusterScope,
+    error: permissionsAtClusterScopeError,
+  } = useSWR<IPermissionMap, GenericResponseError>(
+    permissionsAtClusterScopeKey,
+    () =>
+      fetchPermissionsAtClusterScope(
+        clientFactory,
+        auth,
+        useCases,
+        permissions!,
+        user?.email,
+        user?.groups
+      )
   );
+
+  useEffect(() => {
+    if (permissionsAtClusterScopeError) {
+      new FlashMessage(
+        `Something went wrong while trying to compute your user's RBAC permissions at the cluster scope.`,
+        messageType.ERROR,
+        messageTTL.LONG,
+        extractErrorMessage(permissionsAtClusterScopeError)
+      );
+
+      ErrorReporter.getInstance().notify(permissionsAtClusterScopeError);
+    }
+  }, [permissionsAtClusterScopeError]);
 
   const useCasesStatuses = useMemo(() => {
     if (!permissionsAtClusterScope) return undefined;
