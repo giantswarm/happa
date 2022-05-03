@@ -8,6 +8,7 @@ import PermissionsUseCases from 'UI/Display/MAPI/permissions/PermissionsUseCases
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { IPermissionMap, IPermissionsUseCase } from '../types';
+import { usePermissions } from '../usePermissions';
 import {
   fetchPermissionsAtClusterScope,
   fetchPermissionsAtClusterScopeKey,
@@ -21,24 +22,32 @@ interface IPermissionsOverviewGlobalProps {
 const PermissionsOverviewGlobal: React.FC<IPermissionsOverviewGlobalProps> = ({
   useCases,
 }) => {
+  const { data: permissions } = usePermissions();
+  const user = useSelector(getLoggedInUser);
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
-  const user = useSelector(getLoggedInUser);
+
+  const permissionsAtClusterScopeKey = permissions
+    ? fetchPermissionsAtClusterScopeKey(user?.email, user?.groups)
+    : null;
 
   const { data: permissionsAtClusterScope } = useSWR<
     IPermissionMap,
     GenericResponseError
-  >(fetchPermissionsAtClusterScopeKey(user?.email, user?.groups), () =>
+  >(permissionsAtClusterScopeKey, () =>
     fetchPermissionsAtClusterScope(
       clientFactory,
       auth,
+      useCases,
+      permissions!,
       user?.email,
       user?.groups
     )
   );
 
   const useCasesStatuses = useMemo(() => {
-    if (typeof permissionsAtClusterScope === 'undefined') return undefined;
+    if (!permissionsAtClusterScope) return undefined;
 
     return getStatusesForUseCases(permissionsAtClusterScope, useCases);
   }, [permissionsAtClusterScope, useCases]);

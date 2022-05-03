@@ -33,7 +33,7 @@ export interface IPermissionsUseCase {
   permissions: IPermissionsForUseCase[];
 }
 
-interface IPermissionsForUseCase {
+export interface IPermissionsForUseCase {
   apiGroups: string[];
   resources: string[];
   resourceNames?: string[];

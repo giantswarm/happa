@@ -426,6 +426,15 @@ export function parseDate(date: string | number | Date): Date {
  * from each of passed arrays
  * @param arrays - set of arrays
  */
-export function cartesian(...arrays: unknown[][]) {
-  return arrays.reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
+export function cartesian<T extends unknown[][]>(
+  ...arrays: T
+): MapCartesian<T>[] {
+  return arrays.reduce(
+    (a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())),
+    [[]]
+  ) as MapCartesian<T>[];
 }
+
+type MapCartesian<T extends unknown[][]> = {
+  [K in keyof T]: T[K] extends Array<infer U> ? U : never;
+};
