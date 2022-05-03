@@ -14,6 +14,7 @@ interface IPermissionsOverviewOrganizationsProps {
 const PermissionsOverviewOrganizations: React.FC<
   IPermissionsOverviewOrganizationsProps
 > = ({ useCases }) => {
+  const provider = window.config.info.general.provider;
   const { data: permissions } = usePermissions();
   const organizations = useSelector(selectOrganizations());
   const sortedOrganizations = Object.values(organizations).sort((a, b) =>
@@ -23,8 +24,13 @@ const PermissionsOverviewOrganizations: React.FC<
   const useCasesStatuses: PermissionsUseCaseStatuses = useMemo(() => {
     if (typeof permissions === 'undefined') return {};
 
-    return getStatusesForUseCases(permissions, useCases, sortedOrganizations);
-  }, [permissions, useCases, sortedOrganizations]);
+    return getStatusesForUseCases(
+      permissions,
+      useCases,
+      provider,
+      sortedOrganizations
+    );
+  }, [permissions, useCases, provider, sortedOrganizations]);
 
   if (typeof permissions === 'undefined') {
     return null;

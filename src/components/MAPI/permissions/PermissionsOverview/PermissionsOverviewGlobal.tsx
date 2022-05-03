@@ -22,6 +22,7 @@ interface IPermissionsOverviewGlobalProps {
 const PermissionsOverviewGlobal: React.FC<IPermissionsOverviewGlobalProps> = ({
   useCases,
 }) => {
+  const provider = window.config.info.general.provider;
   const { data: permissions } = usePermissions();
   const user = useSelector(getLoggedInUser);
 
@@ -49,8 +50,12 @@ const PermissionsOverviewGlobal: React.FC<IPermissionsOverviewGlobalProps> = ({
   const useCasesStatuses = useMemo(() => {
     if (!permissionsAtClusterScope) return undefined;
 
-    return getStatusesForUseCases(permissionsAtClusterScope, useCases);
-  }, [permissionsAtClusterScope, useCases]);
+    return getStatusesForUseCases(
+      permissionsAtClusterScope,
+      useCases,
+      provider
+    );
+  }, [permissionsAtClusterScope, provider, useCases]);
 
   return (
     <PermissionsUseCases

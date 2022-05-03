@@ -1,4 +1,5 @@
 import { getNamespaceFromOrgName } from 'MAPI/utils';
+import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
 import { LoggedInUserTypes } from 'model/stores/main/types';
@@ -460,6 +461,31 @@ export function isGlobalUseCase(useCase: IPermissionsUseCase): boolean {
 }
 
 /**
+ * Get a list of resources to ignore for a given provider.
+ * @param provider
+ */
+function getResourcesToIgnore(
+  provider: PropertiesOf<typeof Providers>
+): string[] {
+  const providerSpecificResources = [
+    {
+      provider: Providers.AWS,
+      resources: ['awsclusters', 'g8scontrolplanes', 'awscontrolplanes'],
+    },
+    {
+      provider: Providers.AZURE,
+      resources: ['azureclusters', 'azuremachines'],
+    },
+  ];
+
+  return providerSpecificResources.reduce<string[]>((prev, curr) => {
+    if (curr.provider === provider) return prev;
+
+    return prev.concat(...curr.resources);
+  }, []);
+}
+
+/**
  * Get permissions statuses from a permissions map for given use cases
  * in the given organizations.
  * @param permissions
@@ -469,8 +495,11 @@ export function isGlobalUseCase(useCase: IPermissionsUseCase): boolean {
 export function getStatusesForUseCases(
   permissions: IPermissionMap,
   useCases: IPermissionsUseCase[],
+  provider: PropertiesOf<typeof Providers>,
   organizations?: IOrganization[]
 ): PermissionsUseCaseStatuses {
+  const resourcesToIgnore = getResourcesToIgnore(provider);
+
   const statuses: Record<string, Record<string, boolean>> = {};
   useCases.forEach((useCase) => {
     const useCasePermissions = useCase.permissions.flatMap((permission) =>
@@ -483,6 +512,10 @@ export function getStatusesForUseCases(
     (organizations ?? placeholderOrg).forEach((org) => {
       const permissionsValues = useCasePermissions.map((p) => {
         const [verb, resource, apiGroup] = p;
+
+        // If the resource is in the list of resources to ignore,
+        // we skip it.
+        if (resourcesToIgnore.includes(resource)) return true;
 
         return hasPermission(
           permissions,
