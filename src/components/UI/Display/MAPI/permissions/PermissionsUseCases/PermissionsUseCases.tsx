@@ -3,6 +3,7 @@ import { IPermissionsUseCase } from 'MAPI/permissions/types';
 import React, { useMemo, useState } from 'react';
 import { Column } from 'UI/Display/MAPI/permissions/PermissionsUseCases/UseCase';
 import UseCasesForCategory from 'UI/Display/MAPI/permissions/PermissionsUseCases/UseCasesForCategory';
+import UseCasesPreloader from 'UI/Display/MAPI/permissions/PermissionsUseCases/UseCasesPreloader';
 import { groupBy } from 'underscore';
 
 interface IPermissionsUseCasesProps {
@@ -60,7 +61,7 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
           ))}
         </Accordion>
       ) : (
-        <div>loading placeholder</div>
+        <UseCasesPreloader />
       )}
     </Box>
   );
