@@ -34,7 +34,7 @@ const UseCase: React.FC<IUseCaseProps> = ({
   return (
     <Box direction='row'>
       <Column>
-        <Box direction='row' align='center' margin={{ left: 'medium' }}>
+        <Box direction='row' align='center' margin={{ left: '33px' }}>
           <Text margin={{ right: 'small' }}>{useCase.name}</Text>
           <TooltipContainer
             content={

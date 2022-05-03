@@ -13,13 +13,9 @@ const IconSmall = styled(Text)`
 
 interface IUseCaseStatusProps {
   value?: boolean;
-  displayText?: boolean;
 }
 
-const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({
-  value,
-  displayText = true,
-}) => {
+const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({ value }) => {
   return (
     <Box direction='row' align='center'>
       {typeof value === 'undefined' ? (
@@ -37,7 +33,7 @@ const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({
         />
       )}
 
-      {displayText && typeof value !== 'undefined' && (
+      {typeof value !== 'undefined' && (
         <Text
           color={value ? theme.colors.greenNew : theme.colors.error}
           size='16px'

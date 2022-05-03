@@ -28,11 +28,7 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
   );
 
   return (
-    <Box
-      margin={{ horizontal: 'small' }}
-      pad={{ vertical: 'medium' }}
-      overflow={{ horizontal: 'auto' }}
-    >
+    <Box pad={{ vertical: 'medium' }} overflow={{ horizontal: 'auto' }}>
       {organizations && (
         <Box direction='row' margin={{ bottom: 'medium' }}>
           <Column />

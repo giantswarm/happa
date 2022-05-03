@@ -8,6 +8,12 @@ import UseCase, {
 
 import UseCaseStatus from './UseCaseStatus';
 
+const Icon = styled(Text)<{ isActive?: boolean }>`
+  transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
+  transform-origin: center center;
+  transition: 0.15s ease-out;
+`;
+
 const LabelText = styled(Text)`
   text-transform: uppercase;
 `;
@@ -27,12 +33,13 @@ const UseCasesForCategory: React.FC<IUseCasesForCategoryProps> = ({
   organizations,
   isSelected,
 }) => {
+  const namespaces = useMemo(
+    () => (organizations ? organizations.map((org) => org.id) : ['']),
+    [organizations]
+  );
+
   const categoryStatuses = useMemo(() => {
     const statusesByNamespace: Record<string, boolean | undefined> = {};
-
-    const namespaces = organizations
-      ? organizations.map((org) => org.id)
-      : [''];
 
     namespaces.forEach((namespace) => {
       const values = useCases.map(
@@ -46,28 +53,29 @@ const UseCasesForCategory: React.FC<IUseCasesForCategoryProps> = ({
     });
 
     return statusesByNamespace;
-  }, [organizations, statuses, useCases]);
+  }, [namespaces, statuses, useCases]);
 
   return (
     <AccordionPanel
       header={
         <Box direction='row'>
           <Column>
-            <Box direction='row'>
-              <LabelText margin={{ right: 'small' }}>{category}</LabelText>
-              {!organizations && !isSelected && (
-                <UseCaseStatus
-                  value={categoryStatuses['']}
-                  displayText={false}
-                />
-              )}
+            <Box direction='row' align='center'>
+              <Icon
+                className='fa fa-chevron-down'
+                isActive={isSelected}
+                role='presentation'
+                aria-hidden='true'
+                size='28px'
+                margin={{ right: 'xsmall' }}
+              />
+              <LabelText>{category}</LabelText>
             </Box>
           </Column>
-          {organizations &&
-            !isSelected &&
-            organizations.map((org) => (
-              <Column key={org.id}>
-                <UseCaseStatus value={categoryStatuses[org.id]} />
+          {!isSelected &&
+            namespaces.map((namespace) => (
+              <Column key={namespace}>
+                <UseCaseStatus value={categoryStatuses[namespace]} />
               </Column>
             ))}
         </Box>
