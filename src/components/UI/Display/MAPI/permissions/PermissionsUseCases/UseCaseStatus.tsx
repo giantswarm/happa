@@ -2,6 +2,7 @@ import { Box, Text } from 'grommet';
 import React from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
+import ScreenReaderText from 'UI/Display/ScreenReaderText';
 
 const Icon = styled(Text)`
   font-size: 20px;
@@ -13,11 +14,25 @@ const IconSmall = styled(Text)`
 
 interface IUseCaseStatusProps {
   value?: boolean;
+  useCaseName: string;
+  organizationName?: string;
 }
 
-const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({ value }) => {
+const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({
+  value,
+  useCaseName,
+  organizationName,
+}) => {
   return (
-    <Box direction='row' align='center'>
+    <Box
+      direction='row'
+      align='center'
+      aria-label={
+        organizationName
+          ? `${useCaseName} for ${organizationName} organization`
+          : useCaseName
+      }
+    >
       {typeof value === 'undefined' ? (
         <IconSmall
           className='fa fa-radio-checked'
@@ -33,7 +48,7 @@ const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({ value }) => {
         />
       )}
 
-      {typeof value !== 'undefined' && (
+      {typeof value !== 'undefined' ? (
         <Text
           color={value ? theme.colors.greenNew : theme.colors.error}
           size='16px'
@@ -41,6 +56,8 @@ const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({ value }) => {
         >
           {value ? 'Yes' : 'No'}
         </Text>
+      ) : (
+        <ScreenReaderText>Various</ScreenReaderText>
       )}
     </Box>
   );

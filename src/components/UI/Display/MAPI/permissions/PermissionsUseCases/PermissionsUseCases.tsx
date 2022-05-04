@@ -49,6 +49,8 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
         activeIndex={activeIndexes}
         onActive={setActiveIndexes}
         animate={false}
+        role='presentation'
+        aria-hidden='true'
       >
         {categories.map((category, categoryIndex) => (
           <UseCasesForCategory
@@ -61,7 +63,7 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
       </Accordion>
       <ScrollableContainer>
         {organizations && (
-          <Box direction='row'>
+          <Box direction='row' role='presentation' aria-hidden='true'>
             {organizations.map((org) => (
               <Column
                 key={org.id}
@@ -82,6 +84,7 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
         >
           {categories.map((category, categoryIndex) => (
             <StatusesForCategory
+              category={category}
               useCases={useCasesByCategory[category]}
               statuses={useCasesStatuses}
               organizations={organizations}

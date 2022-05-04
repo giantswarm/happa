@@ -13,6 +13,7 @@ export const Column = styled(Box)`
 `;
 
 interface IUseCasesForCategoryProps {
+  category: string;
   useCases: IPermissionsUseCase[];
   statuses: Record<string, Record<string, boolean>>;
   organizations?: IOrganization[];
@@ -20,6 +21,7 @@ interface IUseCasesForCategoryProps {
 }
 
 const StatusesForCategory: React.FC<IUseCasesForCategoryProps> = ({
+  category,
   useCases,
   statuses,
   organizations,
@@ -50,11 +52,15 @@ const StatusesForCategory: React.FC<IUseCasesForCategoryProps> = ({
   return (
     <AccordionPanel
       header={
-        <Box direction='row' height='32px'>
+        <Box direction='row' height='32px' aria-label={category}>
           {!isSelected &&
             namespaces.map((namespace) => (
               <Column key={namespace} justify='center'>
-                <UseCaseStatus value={categoryStatuses[namespace]} />
+                <UseCaseStatus
+                  useCaseName={category}
+                  organizationName={namespace}
+                  value={categoryStatuses[namespace]}
+                />
               </Column>
             ))}
         </Box>
@@ -65,7 +71,11 @@ const StatusesForCategory: React.FC<IUseCasesForCategoryProps> = ({
           <Box direction='row' key={useCase.name}>
             {namespaces.map((namespace) => (
               <Column key={namespace} justify='center'>
-                <UseCaseStatus value={statuses[useCase.name][namespace]} />
+                <UseCaseStatus
+                  useCaseName={useCase.name}
+                  organizationName={namespace}
+                  value={statuses[useCase.name][namespace]}
+                />
               </Column>
             ))}
           </Box>
