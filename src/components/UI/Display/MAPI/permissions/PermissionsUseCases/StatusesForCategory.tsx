@@ -12,6 +12,10 @@ export const Column = styled(Box)`
   text-align: center;
 `;
 
+const RelativeBox = styled(Box)`
+  position: relative;
+`;
+
 interface IUseCasesForCategoryProps {
   category: string;
   useCases: IPermissionsUseCase[];
@@ -52,7 +56,7 @@ const StatusesForCategory: React.FC<IUseCasesForCategoryProps> = ({
   return (
     <AccordionPanel
       header={
-        <Box direction='row' height='32px' aria-label={category}>
+        <RelativeBox direction='row' height='32px' aria-label={category}>
           {!isSelected &&
             namespaces.map((namespace) => (
               <Column key={namespace} justify='center'>
@@ -63,7 +67,7 @@ const StatusesForCategory: React.FC<IUseCasesForCategoryProps> = ({
                 />
               </Column>
             ))}
-        </Box>
+        </RelativeBox>
       }
     >
       <Box margin={{ vertical: 'medium' }} gap='medium'>
