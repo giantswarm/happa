@@ -1,10 +1,16 @@
 import { Accordion, Box } from 'grommet';
 import { IPermissionsUseCase } from 'MAPI/permissions/types';
 import React, { useMemo, useState } from 'react';
-import { Column } from 'UI/Display/MAPI/permissions/PermissionsUseCases/UseCase';
+import StatusesForCategory, {
+  Column,
+} from 'UI/Display/MAPI/permissions/PermissionsUseCases/StatusesForCategory';
 import UseCasesForCategory from 'UI/Display/MAPI/permissions/PermissionsUseCases/UseCasesForCategory';
 import UseCasesPreloader from 'UI/Display/MAPI/permissions/PermissionsUseCases/UseCasesPreloader';
 import { groupBy } from 'underscore';
+
+import ScrollableContainer from './ScrollableContainer';
+
+const ORGANIZATION_LABEL_HEIGHT = 60;
 
 interface IPermissionsUseCasesProps {
   useCases: IPermissionsUseCase[];
@@ -27,17 +33,46 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
     categories.map((_, idx) => idx)
   );
 
+  if (!useCasesStatuses) {
+    return <UseCasesPreloader />;
+  }
+
   return (
-    <Box pad={{ vertical: 'medium' }} overflow={{ horizontal: 'auto' }}>
-      {organizations && (
-        <Box direction='row' margin={{ bottom: 'medium' }}>
-          <Column />
-          {organizations.map((org) => (
-            <Column key={org.id}>{org.id}</Column>
-          ))}
-        </Box>
-      )}
-      {useCasesStatuses ? (
+    <Box direction='row' pad={{ vertical: 'medium' }}>
+      <Accordion
+        multiple={true}
+        gap='medium'
+        width={{ min: '256px' }}
+        margin={{
+          top: organizations ? `${ORGANIZATION_LABEL_HEIGHT}px` : '0',
+        }}
+        activeIndex={activeIndexes}
+        onActive={setActiveIndexes}
+        animate={false}
+      >
+        {categories.map((category, categoryIndex) => (
+          <UseCasesForCategory
+            category={category}
+            useCases={useCasesByCategory[category]}
+            isSelected={activeIndexes.includes(categoryIndex)}
+            key={category}
+          />
+        ))}
+      </Accordion>
+      <ScrollableContainer>
+        {organizations && (
+          <Box direction='row'>
+            {organizations.map((org) => (
+              <Column
+                key={org.id}
+                height={`${ORGANIZATION_LABEL_HEIGHT}px`}
+                justify='start'
+              >
+                {org.id}
+              </Column>
+            ))}
+          </Box>
+        )}
         <Accordion
           multiple={true}
           gap='medium'
@@ -46,8 +81,7 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
           animate={false}
         >
           {categories.map((category, categoryIndex) => (
-            <UseCasesForCategory
-              category={category}
+            <StatusesForCategory
               useCases={useCasesByCategory[category]}
               statuses={useCasesStatuses}
               organizations={organizations}
@@ -56,9 +90,7 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
             />
           ))}
         </Accordion>
-      ) : (
-        <UseCasesPreloader />
-      )}
+      </ScrollableContainer>
     </Box>
   );
 };
