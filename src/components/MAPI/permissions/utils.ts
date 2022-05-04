@@ -644,7 +644,7 @@ async function getPermissionsWithUseCases(
   });
 
   // Fetch access for each unique permission
-  const requests = filteredUniquePermisisons.map(async (p) => {
+  const requests = filteredUniquePermisisons.map((p) => {
     const [verb, resource, apiGroup] = p;
 
     const request: authorizationv1.ISelfSubjectAccessReviewSpec = {
@@ -668,7 +668,10 @@ async function getPermissionsWithUseCases(
 
   for (let i = 0; i < filteredUniquePermisisons.length; i++) {
     const response = responses[i];
-    if (response.status === 'fulfilled') {
+    if (
+      response.status === 'fulfilled' &&
+      response.value.status?.allowed === true
+    ) {
       const permission = filteredUniquePermisisons[i];
       resourceRules.push({
         verbs: [permission[0]],
