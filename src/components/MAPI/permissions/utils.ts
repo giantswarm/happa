@@ -11,6 +11,7 @@ import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import {
   INamespacePermissions,
   IPermissionMap,
+  IPermissionsForUseCase,
   IPermissionsUseCase,
   PermissionsUseCaseStatuses,
   PermissionVerb,
@@ -502,9 +503,7 @@ export function getStatusesForUseCases(
 
   const statuses: Record<string, Record<string, boolean>> = {};
   useCases.forEach((useCase) => {
-    const useCasePermissions = useCase.permissions.flatMap((permission) =>
-      cartesian(permission.verbs, permission.resources, permission.apiGroups)
-    );
+    const useCasePermissions = getPermissionsCartesians(useCase.permissions);
 
     statuses[useCase.name] = {};
     const placeholderOrg = [{ id: '', namespace: '' }];
@@ -619,9 +618,7 @@ async function getPermissionsWithUseCases(
 ): Promise<IPermissionMap> {
   // Get unique use case permissions
   const allPermissions = useCases.flatMap((useCase) =>
-    useCase.permissions.flatMap((permission) =>
-      cartesian(permission.verbs, permission.resources, permission.apiGroups)
-    )
+    getPermissionsCartesians(useCase.permissions)
   );
 
   const uniquePermissions: [string, string, string][] = Array.from(
@@ -693,4 +690,12 @@ async function getPermissionsWithUseCases(
   };
 
   return computePermissions([['', review]]);
+}
+
+export function getPermissionsCartesians(
+  permissions: IPermissionsForUseCase[]
+): [PermissionVerb, string, string][] {
+  return permissions.flatMap((permission) =>
+    cartesian(permission.verbs, permission.resources, permission.apiGroups)
+  );
 }
