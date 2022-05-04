@@ -496,19 +496,25 @@ function getResourcesToIgnore(
 export function getStatusesForUseCases(
   permissions: IPermissionMap,
   useCases: IPermissionsUseCase[],
-  provider: PropertiesOf<typeof Providers>,
+  provider?: PropertiesOf<typeof Providers>,
   organizations?: IOrganization[]
 ): PermissionsUseCaseStatuses {
-  const resourcesToIgnore = getResourcesToIgnore(provider);
+  const resourcesToIgnore = provider ? getResourcesToIgnore(provider) : [];
 
   const statuses: Record<string, Record<string, boolean>> = {};
   useCases.forEach((useCase) => {
     const useCasePermissions = getPermissionsCartesians(useCase.permissions);
 
     statuses[useCase.name] = {};
-    const placeholderOrg = [{ id: '', namespace: '' }];
 
-    (organizations ?? placeholderOrg).forEach((org) => {
+    const orgs =
+      useCase.scope.cluster === true
+        ? [{ id: '', namespace: '' }]
+        : useCase.scope.namespaces?.[0] === '*'
+        ? organizations
+        : useCase.scope.namespaces?.map((ns) => ({ id: '', namespace: ns }));
+
+    orgs?.forEach((org) => {
       const permissionsValues = useCasePermissions.map((p) => {
         const [verb, resource, apiGroup] = p;
 
