@@ -29,8 +29,8 @@ const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({
       align='center'
       aria-label={
         organizationName
-          ? `${useCaseName} for ${organizationName} organization`
-          : useCaseName
+          ? `${useCaseName} for ${organizationName} organization permission status`
+          : `${useCaseName} permission status`
       }
     >
       {typeof value === 'undefined' ? (
