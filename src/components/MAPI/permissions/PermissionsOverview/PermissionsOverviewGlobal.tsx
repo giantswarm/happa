@@ -66,14 +66,14 @@ const PermissionsOverviewGlobal: React.FC<IPermissionsOverviewGlobalProps> = ({
   }, [permissionsAtClusterScopeError]);
 
   const useCasesStatuses = useMemo(() => {
-    if (!permissionsAtClusterScope) return undefined;
+    if (!permissionsAtClusterScope || !permissions) return undefined;
 
     return getStatusesForUseCases(
-      permissionsAtClusterScope,
+      { ...permissions, ...permissionsAtClusterScope },
       useCases,
       provider
     );
-  }, [permissionsAtClusterScope, provider, useCases]);
+  }, [permissions, permissionsAtClusterScope, provider, useCases]);
 
   return (
     <PermissionsUseCases
