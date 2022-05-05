@@ -566,15 +566,22 @@ async function getPermissionsWithClusterRoleBindings(
   );
 
   // Get names of clusterroles that are bound to the user/group.
-  const clusterRoleNames = clusterRoleBindingList.items
-    .filter((binding) =>
-      binding.subjects?.find(
-        (subject) =>
-          (subject.kind === 'User' && subject.name === user) ||
-          (subject.kind === 'Group' && groups?.includes(subject.name))
-      )
-    )
-    .map((binding) => binding.roleRef.name);
+  const clusterRoleNames = clusterRoleBindingList.items.reduce<string[]>(
+    (prev, binding) => {
+      if (
+        binding.subjects?.find(
+          (subject) =>
+            (subject.kind === 'User' && subject.name === user) ||
+            (subject.kind === 'Group' && groups?.includes(subject.name))
+        )
+      ) {
+        return prev.concat(binding.roleRef.name);
+      }
+
+      return prev;
+    },
+    []
+  );
 
   // Get the corresponding clusterroles.
   const clusterRoles = await Promise.all(
