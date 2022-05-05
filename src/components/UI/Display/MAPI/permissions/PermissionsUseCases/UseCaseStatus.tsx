@@ -8,10 +8,6 @@ const Icon = styled(Text)`
   font-size: 20px;
 `;
 
-const IconSmall = styled(Text)`
-  font-size: 17px;
-`;
-
 interface IUseCaseStatusProps {
   value?: boolean;
   useCaseName: string;
@@ -34,8 +30,8 @@ const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({
       }
     >
       {typeof value === 'undefined' ? (
-        <IconSmall
-          className='fa fa-radio-checked'
+        <Icon
+          className='fa fa-mixed-circle'
           role='presentation'
           aria-hidden='true'
         />
