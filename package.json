@@ -169,7 +169,7 @@
     "@typescript-eslint/eslint-plugin": "5.22.0",
     "@typescript-eslint/parser": "5.22.0",
     "babel-cli": "6.26.0",
-    "babel-jest": "27.5.1",
+    "babel-jest": "28.0.3",
     "babel-loader": "8.2.5",
     "babel-plugin-date-fns": "2.0.0",
     "babel-plugin-styled-components": "2.0.7",
