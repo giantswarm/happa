@@ -1,6 +1,8 @@
 import { getNamespaceFromOrgName } from 'MAPI/utils';
+import { GenericResponse } from 'model/clients/GenericResponse';
 import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
+import * as metav1 from 'model/services/mapi/metav1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
 import { LoggedInUserTypes } from 'model/stores/main/types';
 import { AccessControlRoleItemVerb } from 'UI/Display/MAPI/AccessControl/types';
@@ -312,18 +314,25 @@ export async function fetchPermissionsAtClusterScope(
     )
   );
 
-  if (
-    !accessReviewResponses.every(
-      (response) =>
-        response.status === 'fulfilled' && response.value.status?.allowed
-    )
-  ) {
-    return getPermissionsWithUseCases(
-      httpClientFactory,
-      auth,
-      useCases,
-      namespacedPermissions
-    );
+  for (const response of accessReviewResponses) {
+    if (
+      response.status === 'rejected' &&
+      !metav1.isStatusError(
+        (response.reason as GenericResponse).data,
+        metav1.K8sStatusErrorReasons.Forbidden
+      )
+    ) {
+      return Promise.reject(response.reason);
+    }
+
+    if (response.status === 'fulfilled' && !response.value.status?.allowed) {
+      return getPermissionsWithUseCases(
+        httpClientFactory,
+        auth,
+        useCases,
+        namespacedPermissions
+      );
+    }
   }
 
   return getPermissionsWithClusterRoleBindings(
@@ -459,6 +468,10 @@ export function isGlobalUseCase(useCase: IPermissionsUseCase): boolean {
       useCase.scope.namespaces?.[0] === 'default') ||
     useCase.scope.cluster === true
   );
+}
+
+export function isClusterScopeUseCase(useCase: IPermissionsUseCase): boolean {
+  return useCase.scope.cluster === true;
 }
 
 /**

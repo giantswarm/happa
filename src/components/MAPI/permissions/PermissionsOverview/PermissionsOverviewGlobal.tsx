@@ -16,6 +16,7 @@ import {
   fetchPermissionsAtClusterScope,
   fetchPermissionsAtClusterScopeKey,
   getStatusesForUseCases,
+  isClusterScopeUseCase,
 } from '../utils';
 
 interface IPermissionsOverviewGlobalProps {
@@ -36,6 +37,10 @@ const PermissionsOverviewGlobal: React.FC<IPermissionsOverviewGlobalProps> = ({
     ? fetchPermissionsAtClusterScopeKey(user?.email, user?.groups)
     : null;
 
+  const clusterScopeUseCases = useCases.filter((useCase) =>
+    isClusterScopeUseCase(useCase)
+  );
+
   const {
     data: permissionsAtClusterScope,
     error: permissionsAtClusterScopeError,
@@ -45,7 +50,7 @@ const PermissionsOverviewGlobal: React.FC<IPermissionsOverviewGlobalProps> = ({
       fetchPermissionsAtClusterScope(
         clientFactory,
         auth,
-        useCases,
+        clusterScopeUseCases,
         permissions!,
         user?.email,
         user?.groups
