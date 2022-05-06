@@ -21,20 +21,17 @@ const PermissionsOverviewOrganizations: React.FC<
     (a?.name || a.id).localeCompare(b?.name || b.id)
   );
 
-  const useCasesStatuses: PermissionsUseCaseStatuses = useMemo(() => {
-    if (typeof permissions === 'undefined') return {};
+  const useCasesStatuses: PermissionsUseCaseStatuses | undefined =
+    useMemo(() => {
+      if (typeof permissions === 'undefined') return undefined;
 
-    return getStatusesForUseCases(
-      permissions,
-      useCases,
-      provider,
-      sortedOrganizations
-    );
-  }, [permissions, useCases, provider, sortedOrganizations]);
-
-  if (typeof permissions === 'undefined') {
-    return null;
-  }
+      return getStatusesForUseCases(
+        permissions,
+        useCases,
+        provider,
+        sortedOrganizations
+      );
+    }, [permissions, useCases, provider, sortedOrganizations]);
 
   return (
     <PermissionsUseCases
