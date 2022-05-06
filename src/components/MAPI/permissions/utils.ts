@@ -506,7 +506,7 @@ export function getStatusesForUseCases(
 ): PermissionsUseCaseStatuses {
   const resourcesToIgnore = provider ? getResourcesToIgnore(provider) : [];
 
-  const statuses: Record<string, Record<string, boolean>> = {};
+  const statuses: PermissionsUseCaseStatuses = {};
   useCases.forEach((useCase) => {
     const useCasePermissions = getPermissionsCartesians(useCase.permissions);
 

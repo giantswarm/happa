@@ -1,5 +1,8 @@
 import { Accordion, Box } from 'grommet';
-import { IPermissionsUseCase } from 'MAPI/permissions/types';
+import {
+  IPermissionsUseCase,
+  PermissionsUseCaseStatuses,
+} from 'MAPI/permissions/types';
 import React, { useMemo, useState } from 'react';
 import StatusesForCategory, {
   Column,
@@ -14,7 +17,7 @@ const ORGANIZATION_LABEL_HEIGHT = 60;
 
 interface IPermissionsUseCasesProps {
   useCases: IPermissionsUseCase[];
-  useCasesStatuses?: Record<string, Record<string, boolean>>;
+  useCasesStatuses?: PermissionsUseCaseStatuses;
   organizations?: IOrganization[];
 }
 

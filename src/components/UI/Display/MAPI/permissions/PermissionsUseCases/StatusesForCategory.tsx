@@ -1,5 +1,8 @@
 import { AccordionPanel, Box } from 'grommet';
-import { IPermissionsUseCase } from 'MAPI/permissions/types';
+import {
+  IPermissionsUseCase,
+  PermissionsUseCaseStatuses,
+} from 'MAPI/permissions/types';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
@@ -19,7 +22,7 @@ const RelativeBox = styled(Box)`
 interface IUseCasesForCategoryProps {
   category: string;
   useCases: IPermissionsUseCase[];
-  statuses: Record<string, Record<string, boolean>>;
+  statuses: PermissionsUseCaseStatuses;
   organizations?: IOrganization[];
   isSelected: boolean;
 }
