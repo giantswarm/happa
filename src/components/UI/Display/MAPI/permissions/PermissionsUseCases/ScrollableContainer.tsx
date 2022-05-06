@@ -10,6 +10,7 @@ const Container = styled.div`
   &::after {
     content: ' ';
     position: absolute;
+    z-index: 2;
     top: 0;
     width: 20px;
     height: 100%;
