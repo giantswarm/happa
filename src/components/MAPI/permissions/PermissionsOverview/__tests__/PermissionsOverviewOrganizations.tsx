@@ -224,7 +224,7 @@ describe('PermissionsOverviewOrganizations', () => {
     expect(
       within(
         screen.getByLabelText('apps for org2 organization permission status')
-      ).getByText('Various')
+      ).getByText('Partial')
     ).toBeInTheDocument();
   });
 });
