@@ -1,17 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 
-interface IPermissionsProps {}
+import { getPermissionsUseCases, isGlobalUseCase } from '../utils';
+import PermissionsOverviewGlobal from './PermissionsOverviewGlobal';
+import PermissionsOverviewOrganizations from './PermissionsOverviewOrganizations';
 
-const PermissionsOverview: React.FC<IPermissionsProps> = () => {
+const PermissionsOverview: React.FC = () => {
+  const [activeTab, setActiveTab] = useState(0);
+
+  const useCases = getPermissionsUseCases();
+
+  if (!useCases) {
+    return null;
+  }
+
+  const globalUseCases = useCases.filter((useCase) => isGlobalUseCase(useCase));
+  const organizationsUseCases = useCases.filter(
+    (useCase) => !isGlobalUseCase(useCase)
+  );
+
   return (
-    <>
-      <Tabs>
-        <Tab title='Global' />
-        <Tab title='For organizations' />
-      </Tabs>
-      <div>Permissions Overview</div>
-    </>
+    <Tabs activeIndex={activeTab} onActive={setActiveTab}>
+      <Tab title='Global'>
+        <PermissionsOverviewGlobal useCases={globalUseCases} />
+      </Tab>
+      <Tab title='For organizations'>
+        <PermissionsOverviewOrganizations useCases={organizationsUseCases} />
+      </Tab>
+    </Tabs>
   );
 };
 
