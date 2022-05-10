@@ -10,8 +10,9 @@ import UseCaseStatus from './UseCaseStatus';
 
 export const Column = styled(Box)`
   align-items: center;
-  width: 100px;
-  min-width: 100px;
+  width: 120px;
+  min-width: 120px;
+  padding: 0 10px;
   text-align: center;
 `;
 
