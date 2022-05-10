@@ -50,7 +50,7 @@ describe('CustomError', () => {
      * This function name is part of the stack,
      * so we assume the whole stack is correct
      */
-    expect(error.stack).toMatch(/CustomError.generateStack/);
+    expect(error.stack).toMatch(/generateStack/);
   });
 
   it('can be instantiated with a native error object', () => {
@@ -65,7 +65,7 @@ describe('CustomError', () => {
      * This function name is part of the stack,
      * so we assume the whole stack is correct
      */
-    expect(customError.stack).toMatch(/CustomError.generateStack/);
+    expect(customError.stack).toMatch(/generateStack/);
 
     // Instantiate with custom name
     customError = CustomError.createFromError(error, 'Some cool name');
@@ -78,7 +78,7 @@ describe('CustomError', () => {
      * This function name is part of the stack,
      * so we assume the whole stack is correct
      */
-    expect(customError.stack).toMatch(/CustomError.generateStack/);
+    expect(customError.stack).toMatch(/generateStack/);
   });
 
   it('regenerates the stack on demand', () => {
@@ -93,7 +93,7 @@ describe('CustomError', () => {
      * This function name is part of the stack,
      * so we assume the whole stack is correct
      */
-    expect(error.stack).toMatch(/CustomError.generateStack/);
+    expect(error.stack).toMatch(/generateStack/);
   });
 
   it('generates a detailed stack trace if the client is online', async () => {
