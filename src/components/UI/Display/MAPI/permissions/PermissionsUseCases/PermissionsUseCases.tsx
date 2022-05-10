@@ -28,13 +28,14 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
 }) => {
   const [categories, useCasesByCategory] = useMemo(() => {
     const groupedUseCases = groupBy(useCases, 'category');
+    const sortedCategories = Object.keys(groupedUseCases).sort((a, b) =>
+      a.localeCompare(b)
+    );
 
-    return [Object.keys(groupedUseCases), groupedUseCases];
+    return [sortedCategories, groupedUseCases];
   }, [useCases]);
 
-  const [activeIndexes, setActiveIndexes] = useState(
-    categories.map((_, idx) => idx)
-  );
+  const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
 
   if (!useCasesStatuses) {
     return <UseCasesPreloader />;
