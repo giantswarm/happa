@@ -1,19 +1,26 @@
-import { Accordion, Box } from 'grommet';
+import { Accordion, Box, Text } from 'grommet';
 import {
   IPermissionsUseCase,
   PermissionsUseCaseStatuses,
 } from 'MAPI/permissions/types';
 import React, { useMemo, useState } from 'react';
+import styled from 'styled-components';
 import StatusesForCategory, {
   Column,
 } from 'UI/Display/MAPI/permissions/PermissionsUseCases/StatusesForCategory';
 import UseCasesForCategory from 'UI/Display/MAPI/permissions/PermissionsUseCases/UseCasesForCategory';
 import UseCasesPreloader from 'UI/Display/MAPI/permissions/PermissionsUseCases/UseCasesPreloader';
+import Truncated from 'UI/Util/Truncated';
 import { groupBy } from 'underscore';
 
 import ScrollableContainer from './ScrollableContainer';
 
 const ORGANIZATION_LABEL_HEIGHT = 60;
+
+const OrganizationLabel = styled(Text)`
+  font-weight: 700;
+  overflow-wrap: anywhere;
+`;
 
 interface IPermissionsUseCasesProps {
   useCases: IPermissionsUseCase[];
@@ -74,7 +81,7 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
                 height={`${ORGANIZATION_LABEL_HEIGHT}px`}
                 justify='start'
               >
-                {org.id}
+                <Truncated as={OrganizationLabel}>{org.id}</Truncated>
               </Column>
             ))}
           </Box>
