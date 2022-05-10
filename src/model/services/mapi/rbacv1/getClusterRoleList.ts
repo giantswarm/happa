@@ -5,19 +5,28 @@ import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { getResource } from '../generic/getResource';
 import { ClusterRole, IClusterRoleList } from './types';
 
+export interface IGetClusterRoleListOptions {
+  labelSelector?: k8sUrl.IK8sLabelSelector;
+}
+
+const defaultOptions: IGetClusterRoleListOptions = {
+  labelSelector: {
+    matchingLabels: {
+      'ui.giantswarm.io/display': 'true',
+    },
+  },
+};
+
 export async function getClusterRoleList(
   client: IHttpClient,
-  auth: IOAuth2Provider
+  auth: IOAuth2Provider,
+  options?: IGetClusterRoleListOptions
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'rbac.authorization.k8s.io/v1',
     kind: 'clusterroles',
-    labelSelector: {
-      matchingLabels: {
-        'ui.giantswarm.io/display': 'true',
-      },
-    },
+    ...(options ?? defaultOptions),
   });
 
   const list = await getResource<IClusterRoleList>(
@@ -33,6 +42,13 @@ export async function getClusterRoleList(
   return list;
 }
 
-export function getClusterRoleListKey() {
-  return 'getClusterRoleList';
+export function getClusterRoleListKey(options?: IGetClusterRoleListOptions) {
+  const url = k8sUrl.create({
+    baseUrl: window.config.mapiEndpoint,
+    apiVersion: 'rbac.authorization.k8s.io/v1',
+    kind: 'clusterroles',
+    ...(options ?? defaultOptions),
+  });
+
+  return url.toString();
 }
