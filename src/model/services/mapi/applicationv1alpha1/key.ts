@@ -36,3 +36,7 @@ export function getAppCurrentVersion(app: IApp): string {
 
   return app.status.version;
 }
+
+export function isAppManagedByFlux(app: IApp): boolean {
+  return app.metadata.labels?.[labelManagedBy] === 'flux';
+}

@@ -3,6 +3,7 @@ import { Box, Text } from 'grommet';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import { isAppManagedByFlux } from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -10,7 +11,7 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import {
-  getLatestVersionForApp,
+  hasNewerVersionForApp,
   isAppChangingVersion,
   normalizeAppVersion,
 } from './utils';
@@ -77,14 +78,7 @@ const ClusterDetailAppListItemStatus: React.FC<
   const hasNewVersion = useMemo(() => {
     if (!appCatalogEntryList || isChangingVersion) return false;
 
-    const latestVersion = getLatestVersionForApp(
-      appCatalogEntryList.items,
-      app.spec.name
-    );
-
-    return (
-      latestVersion && latestVersion !== normalizeAppVersion(app.spec.version)
-    );
+    return hasNewerVersionForApp(appCatalogEntryList.items, app);
   }, [app, appCatalogEntryList, isChangingVersion]);
 
   return (
@@ -96,7 +90,10 @@ const ClusterDetailAppListItemStatus: React.FC<
             role='presentation'
             aria-hidden='true'
           />{' '}
-          Switching to {normalizeAppVersion(app.spec.version)}
+          Switching to{' '}
+          {isAppManagedByFlux(app)
+            ? normalizeAppVersion(app.spec.version)
+            : app.spec.version}
         </Text>
       )}
 

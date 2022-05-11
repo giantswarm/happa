@@ -18,8 +18,10 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
@@ -121,6 +123,14 @@ function getProviderNodePoolResourceName(
   }
 }
 
+function getFlatcarContainerLinuxVersion(
+  release: releasev1alpha1.IRelease
+): string | undefined {
+  return release.spec.components.find(
+    (component) => component.name === 'containerlinux'
+  )?.version;
+}
+
 function getNameColumnWidth(nameLength: number) {
   const charCount = Math.min(nameLength, MAX_NAME_LENGTH);
 
@@ -155,7 +165,7 @@ const ColumnInfo = styled(Box)<{
 `;
 
 const NodesInfo = styled.div`
-  grid-column: 5 / span 4;
+  grid-column: 6 / span 4;
   position: relative;
   display: flex;
   justify-content: center;
@@ -367,6 +377,40 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
       );
     }, [nodePoolList?.items, providerNodePools]);
 
+    const clusterReleaseVersion = cluster
+      ? capiv1beta1.getReleaseVersion(cluster)
+      : undefined;
+
+    const releaseListKey =
+      !hasNoNodePools && clusterReleaseVersion
+        ? releasev1alpha1.getReleaseKey(`v${clusterReleaseVersion}`)
+        : null;
+
+    const releaseListClient = useRef(clientFactory());
+
+    const { data: release, error: releaseError } = useSWR<
+      releasev1alpha1.IRelease,
+      GenericResponseError
+    >(releaseListKey, () =>
+      releasev1alpha1.getRelease(
+        releaseListClient.current,
+        auth,
+        `v${clusterReleaseVersion}`
+      )
+    );
+
+    useEffect(() => {
+      if (releaseError) {
+        ErrorReporter.getInstance().notify(releaseError);
+      }
+    }, [releaseError]);
+
+    const flatcarContainerLinuxVersion = useMemo(() => {
+      if (!release) return undefined;
+
+      return getFlatcarContainerLinuxVersion(release);
+    }, [release]);
+
     const longestNameLength = nodePoolsWithProviderNodePools.reduce(
       (maxLength, item) => {
         const length = item.nodePool.metadata.name.length;
@@ -456,6 +500,9 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                     </Text>
                   </Box>
                   <Box align='center'>
+                    <Text size='xsmall'>CGroups</Text>
+                  </Box>
+                  <Box align='center'>
                     <Text size='xsmall'>Min</Text>
                   </Box>
                   <Box align='center'>
@@ -513,6 +560,9 @@ const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
                                 readOnly={isReadOnly}
                                 canUpdateNodePools={canUpdateNodePools}
                                 canDeleteNodePools={canDeleteNodePools}
+                                flatcarContainerLinuxVersion={
+                                  flatcarContainerLinuxVersion
+                                }
                               />
                             </BaseTransition>
                           )
