@@ -166,6 +166,15 @@ describe('PermissionsOverviewGlobal', () => {
 
     render(getComponent({ useCases: createMockUseCases() }));
 
+    expect(await screen.findByText('access control')).toBeInTheDocument();
+    expect(screen.queryByText('Inspect namespaces')).not.toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('access control permission status')
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+    // Toggle use case category
+    fireEvent.click(screen.getByLabelText('access control'));
     expect(await screen.findByText('Inspect namespaces')).toBeInTheDocument();
     expect(
       within(
@@ -173,21 +182,15 @@ describe('PermissionsOverviewGlobal', () => {
       ).getByText('Yes')
     ).toBeInTheDocument();
 
+    expect(await screen.findByText('app catalogs')).toBeInTheDocument();
+    // Toggle use case category
+    fireEvent.click(screen.getByLabelText('app catalogs'));
     expect(
       await screen.findByText('Inspect shared app catalogs')
     ).toBeInTheDocument();
     expect(
       within(
         screen.getByLabelText('Inspect shared app catalogs permission status')
-      ).getByText('Yes')
-    ).toBeInTheDocument();
-
-    // Toggle ues case category
-    fireEvent.click(screen.getByLabelText('access control'));
-    expect(screen.queryByText('Inspect namespaces')).not.toBeInTheDocument();
-    expect(
-      within(
-        screen.getByLabelText('access control permission status')
       ).getByText('Yes')
     ).toBeInTheDocument();
   });
@@ -253,6 +256,9 @@ describe('PermissionsOverviewGlobal', () => {
 
     render(getComponent({ useCases: createMockUseCases() }));
 
+    expect(await screen.findByText('access control')).toBeInTheDocument();
+    // Toggle use case category
+    fireEvent.click(screen.getByLabelText('access control'));
     expect(await screen.findByText('Inspect namespaces')).toBeInTheDocument();
     expect(
       within(
@@ -260,6 +266,9 @@ describe('PermissionsOverviewGlobal', () => {
       ).getByText('No')
     ).toBeInTheDocument();
 
+    expect(await screen.findByText('app catalogs')).toBeInTheDocument();
+    // Toggle use case category
+    fireEvent.click(screen.getByLabelText('app catalogs'));
     expect(
       await screen.findByText('Inspect shared app catalogs')
     ).toBeInTheDocument();
@@ -296,6 +305,9 @@ describe('PermissionsOverviewGlobal', () => {
 
     render(getComponent({ useCases: createMockUseCases() }));
 
+    expect(await screen.findByText('access control')).toBeInTheDocument();
+    // Toggle use case category
+    fireEvent.click(screen.getByLabelText('access control'));
     expect(await screen.findByText('Inspect namespaces')).toBeInTheDocument();
     expect(
       within(
@@ -303,6 +315,9 @@ describe('PermissionsOverviewGlobal', () => {
       ).getByText('No')
     ).toBeInTheDocument();
 
+    expect(await screen.findByText('app catalogs')).toBeInTheDocument();
+    // Toggle use case category
+    fireEvent.click(screen.getByLabelText('app catalogs'));
     expect(
       await screen.findByText('Inspect shared app catalogs')
     ).toBeInTheDocument();

@@ -127,7 +127,7 @@ describe('PermissionsOverviewOrganizations', () => {
     render(getComponent({ useCases: createMockUseCases() }));
   });
 
-  it('displays permissions for organizations use cases', async () => {
+  it('displays permissions for categories', async () => {
     (usePermissions as jest.Mock).mockReturnValue({
       data: {
         default: {
@@ -146,6 +146,59 @@ describe('PermissionsOverviewOrganizations', () => {
 
     render(getComponent({ useCases: createMockUseCases() }));
 
+    expect(await screen.findByText('app catalogs')).toBeInTheDocument();
+    expect(screen.queryByText('Inspect app catalogs')).not.toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText(
+          'app catalogs for org1 organization permission status'
+        )
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText(
+          'app catalogs for org2 organization permission status'
+        )
+      ).getByText('No')
+    ).toBeInTheDocument();
+
+    expect(await screen.findByText('apps')).toBeInTheDocument();
+    expect(screen.queryByText('Inspect apps')).not.toBeInTheDocument();
+    expect(screen.queryByText('Manage apps')).not.toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('apps for org1 organization permission status')
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('apps for org2 organization permission status')
+      ).getByText('Partial')
+    ).toBeInTheDocument();
+  });
+
+  it('displays permissions for use cases', async () => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: {
+        default: {
+          '*:*:*': ['*'],
+        },
+        'org-org1': {
+          '*:*:*': ['*'],
+        },
+        'org-org2': {
+          'application.giantswarm.io:apps:*': ['get', 'list'],
+          ':configmaps:*': ['get', 'list'],
+          ':secrets:*': ['get', 'list'],
+        },
+      },
+    });
+
+    render(getComponent({ useCases: createMockUseCases() }));
+
+    // Toggle app catalogs category
+    fireEvent.click(screen.getByLabelText('app catalogs'));
     expect(await screen.findByText('Inspect app catalogs')).toBeInTheDocument();
     expect(
       within(
@@ -162,6 +215,8 @@ describe('PermissionsOverviewOrganizations', () => {
       ).getByText('No')
     ).toBeInTheDocument();
 
+    // Toggle apps category
+    fireEvent.click(screen.getByLabelText('apps'));
     expect(await screen.findByText('Inspect apps')).toBeInTheDocument();
     expect(
       within(
@@ -192,39 +247,6 @@ describe('PermissionsOverviewOrganizations', () => {
           'Manage apps for org2 organization permission status'
         )
       ).getByText('No')
-    ).toBeInTheDocument();
-
-    // Toggle app catalogs category
-    fireEvent.click(screen.getByLabelText('app catalogs'));
-    expect(screen.queryByText('Inspect app catalogs')).not.toBeInTheDocument();
-    expect(
-      within(
-        screen.getByLabelText(
-          'app catalogs for org1 organization permission status'
-        )
-      ).getByText('Yes')
-    ).toBeInTheDocument();
-    expect(
-      within(
-        screen.getByLabelText(
-          'app catalogs for org2 organization permission status'
-        )
-      ).getByText('No')
-    ).toBeInTheDocument();
-
-    // Toggle apps category
-    fireEvent.click(screen.getByLabelText('apps'));
-    expect(screen.queryByText('Inspect apps')).not.toBeInTheDocument();
-    expect(screen.queryByText('Manage apps')).not.toBeInTheDocument();
-    expect(
-      within(
-        screen.getByLabelText('apps for org1 organization permission status')
-      ).getByText('Yes')
-    ).toBeInTheDocument();
-    expect(
-      within(
-        screen.getByLabelText('apps for org2 organization permission status')
-      ).getByText('Partial')
     ).toBeInTheDocument();
   });
 });
