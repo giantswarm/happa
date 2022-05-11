@@ -8,6 +8,7 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
+import * as rbacv1Mocks from 'test/mockHttpCalls/rbacv1';
 import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -121,7 +122,7 @@ describe('PermissionsOverviewGlobal', () => {
         kind: 'SelfSubjectAccessReview',
         spec: {
           resourceAttributes: {
-            verb: 'get',
+            verb: 'list',
             group: 'rbac.authorization.k8s.io',
             resource: 'clusterroles',
           },
@@ -139,6 +140,7 @@ describe('PermissionsOverviewGlobal', () => {
         items: [
           {
             roleRef: {
+              kind: 'ClusterRole',
               name: 'cluster-admin',
             },
             subjects: [
@@ -151,18 +153,8 @@ describe('PermissionsOverviewGlobal', () => {
         ],
       });
     nock(window.config.mapiEndpoint)
-      .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/cluster-admin/')
-      .reply(StatusCodes.Ok, {
-        kind: 'ClusterRoleBindingList',
-        apiVersion: 'authorization.k8s.io/v1',
-        rules: [
-          {
-            verbs: ['*'],
-            apiGroups: ['*'],
-            resources: ['*'],
-          },
-        ],
-      });
+      .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.clusterRoleList);
 
     render(getComponent({ useCases: createMockUseCases() }));
 

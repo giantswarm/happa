@@ -364,107 +364,6 @@ export function fetchPermissionsForSubjectKey(
   }`;
 }
 
-/**
- * Given a list of Roles/ClusterRoles grouped by namespace,
- * create a map of role names to resource rules in each namespace.
- * @param roles
- */
-export function computeResourceRulesFromRoles(
-  rolesForNamespaces: IRolesForNamespaces
-): IResourceRuleMap {
-  const resourceRuleMap: IResourceRuleMap = {};
-
-  for (const [namespace, roles] of Object.entries(rolesForNamespaces)) {
-    const rules: INamespaceResourceRules = {};
-
-    for (const role of roles) {
-      if (!role.rules) continue;
-
-      const resourceRules = role.rules.reduce<authorizationv1.IResourceRule[]>(
-        (prev, rule) => {
-          if (
-            typeof rule.apiGroups === 'undefined' ||
-            typeof rule.resources === 'undefined' ||
-            typeof rule.verbs === 'undefined'
-          ) {
-            return prev;
-          }
-          // Map rbacv1 PolicyRule to authorizationv1 ResourceRule.
-          const resourceRule: authorizationv1.IResourceRule = {
-            apiGroups: rule.apiGroups,
-            resources: rule.resources,
-            verbs: rule.verbs,
-          };
-
-          return prev.concat(resourceRule);
-        },
-        []
-      );
-
-      rules[role.metadata.name] = resourceRules;
-    }
-
-    resourceRuleMap[namespace] = rules;
-  }
-
-  return resourceRuleMap;
-}
-
-/**
- * Create a review response object from Roles/ClusterRoles bound
- * to a given user/groups by aggregating resource rules from
- * each Role/ClusterRole.
- *
- * @param bindings
- * @param rulesMaps
- * @param user
- * @param groups
- */
-export function createRulesReviewResponseFromBindings(
-  bindings: Bindings,
-  rulesMaps: IRulesMaps,
-  user?: string,
-  groups?: string[]
-): authorizationv1.ISelfSubjectRulesReview {
-  const resourceRules: authorizationv1.IResourceRule[] = [];
-
-  // Get all bindings bound to the user/groups.
-  for (const binding of bindings) {
-    if (
-      binding.subjects?.find(
-        (subject) =>
-          (isSubjectKindUser(subject) && subject.name === user) ||
-          (isSubjectKindGroup(subject) && groups?.includes(subject.name))
-      )
-    ) {
-      // Determine role rules map to use based on the Kind of
-      // the role referenced in the binding.
-      const rulesMap =
-        binding.roleRef.kind === rbacv1.ClusterRole
-          ? rulesMaps.clusterRolesRulesMap
-          : rulesMaps.rolesRulesMap;
-
-      const rules = rulesMap[binding.roleRef.name];
-      if (rules) resourceRules.push(...rules);
-    }
-  }
-
-  const uniqueResourceRules: authorizationv1.IResourceRule[] = Array.from(
-    new Set(resourceRules.map((p) => JSON.stringify(p)))
-  ).map((p) => JSON.parse(p));
-
-  return {
-    apiVersion: 'authorization.k8s.io/v1',
-    kind: 'SelfSubjectRulesReview',
-    spec: {},
-    status: {
-      incomplete: false,
-      nonResourceRules: [],
-      resourceRules: uniqueResourceRules,
-    },
-  };
-}
-
 export async function fetchPermissionsAtClusterScope(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
@@ -483,14 +382,14 @@ export async function fetchPermissionsAtClusterScope(
     },
     {
       resourceAttributes: {
-        verb: 'get',
+        verb: 'list',
         group: 'rbac.authorization.k8s.io',
         resource: 'clusterroles',
       },
     },
   ];
 
-  // Can the user LIST clusterrolebindings and GET clusterroles?
+  // Can the user LIST clusterrolebindings and LIST clusterroles?
   const accessReviewResponses = await Promise.allSettled(
     requests.map((req) =>
       authorizationv1.createSelfSubjectAccessReview(
@@ -528,7 +427,9 @@ export function fetchPermissionsAtClusterScopeKey(
   user?: string,
   groups?: string[]
 ): string {
-  return `getUserPermissionsAtClusterScope/${user}/${groups?.join(',')}`;
+  return `getUserPermissionsAtClusterScope/${user ? user : ''}/${
+    groups ? groups?.join(',') : ''
+  }`;
 }
 
 export function hasAppAccesInNamespace(
@@ -754,58 +655,25 @@ async function getPermissionsWithClusterRoleBindings(
     auth
   );
 
-  // Get names of clusterroles that are bound to the user/group.
-  const clusterRoleNames = clusterRoleBindingList.items.reduce<string[]>(
-    (prev, binding) => {
-      if (
-        binding.subjects?.find(
-          (subject) =>
-            (subject.kind === 'User' && subject.name === user) ||
-            (subject.kind === 'Group' && groups?.includes(subject.name))
-        )
-      ) {
-        return prev.concat(binding.roleRef.name);
-      }
-
-      return prev;
-    },
-    []
+  const clusterRoles = await rbacv1.getClusterRoleList(
+    httpClientFactory(),
+    auth,
+    {}
   );
+  // ClusterRoles are not namespaced - we use '' as a placeholder namespace.
+  const clusterRolesRulesMap = computeResourceRulesFromRoles({
+    '': clusterRoles.items,
+  })[''];
 
-  // Get the corresponding clusterroles.
-  const clusterRoles = await Promise.all(
-    clusterRoleNames.map((name) => {
-      return rbacv1.getClusterRole(httpClientFactory(), auth, name);
-    })
-  );
-
-  // Filter for resource rules.
-  const resourceRules = clusterRoles.reduce<rbacv1.IPolicyRule[]>(
-    (prev, role) => {
-      if (!role.rules) return prev;
-
-      return prev.concat(
-        role.rules.filter(
-          (rule) =>
-            rule.hasOwnProperty('apiGroups') &&
-            rule.hasOwnProperty('resources') &&
-            rule.hasOwnProperty('verbs')
-        )
-      );
+  const review = createRulesReviewResponseFromBindings(
+    clusterRoleBindingList.items,
+    {
+      rolesRulesMap: {},
+      clusterRolesRulesMap,
     },
-    []
+    user,
+    groups
   );
-
-  const review: authorizationv1.ISelfSubjectRulesReview = {
-    apiVersion: 'authorization.k8s.io/v1',
-    kind: 'SelfSubjectRulesReview',
-    spec: {},
-    status: {
-      incomplete: false,
-      nonResourceRules: [],
-      resourceRules: resourceRules as authorizationv1.IResourceRule[],
-    },
-  };
 
   return computePermissions([['', review]]);
 }
@@ -897,6 +765,107 @@ async function getPermissionsWithUseCases(
   };
 
   return computePermissions([['', review]]);
+}
+
+/**
+ * Given a list of Roles/ClusterRoles grouped by namespace,
+ * create a map of role names to resource rules in each namespace.
+ * @param roles
+ */
+export function computeResourceRulesFromRoles(
+  rolesForNamespaces: IRolesForNamespaces
+): IResourceRuleMap {
+  const resourceRuleMap: IResourceRuleMap = {};
+
+  for (const [namespace, roles] of Object.entries(rolesForNamespaces)) {
+    const rules: INamespaceResourceRules = {};
+
+    for (const role of roles) {
+      if (!role.rules) continue;
+
+      const resourceRules = role.rules.reduce<authorizationv1.IResourceRule[]>(
+        (prev, rule) => {
+          if (
+            typeof rule.apiGroups === 'undefined' ||
+            typeof rule.resources === 'undefined' ||
+            typeof rule.verbs === 'undefined'
+          ) {
+            return prev;
+          }
+          // Map rbacv1 PolicyRule to authorizationv1 ResourceRule.
+          const resourceRule: authorizationv1.IResourceRule = {
+            apiGroups: rule.apiGroups,
+            resources: rule.resources,
+            verbs: rule.verbs,
+          };
+
+          return prev.concat(resourceRule);
+        },
+        []
+      );
+
+      rules[role.metadata.name] = resourceRules;
+    }
+
+    resourceRuleMap[namespace] = rules;
+  }
+
+  return resourceRuleMap;
+}
+
+/**
+ * Create a review response object from Roles/ClusterRoles bound
+ * to a given user/groups by aggregating resource rules from
+ * each Role/ClusterRole.
+ *
+ * @param bindings
+ * @param rulesMaps
+ * @param user
+ * @param groups
+ */
+export function createRulesReviewResponseFromBindings(
+  bindings: Bindings,
+  rulesMaps: IRulesMaps,
+  user?: string,
+  groups?: string[]
+): authorizationv1.ISelfSubjectRulesReview {
+  const resourceRules: authorizationv1.IResourceRule[] = [];
+
+  // Get all bindings bound to the user/groups.
+  for (const binding of bindings) {
+    if (
+      binding.subjects?.find(
+        (subject) =>
+          (isSubjectKindUser(subject) && subject.name === user) ||
+          (isSubjectKindGroup(subject) && groups?.includes(subject.name))
+      )
+    ) {
+      // Determine role rules map to use based on the Kind of
+      // the role referenced in the binding.
+      const rulesMap =
+        binding.roleRef.kind === rbacv1.ClusterRole
+          ? rulesMaps.clusterRolesRulesMap
+          : rulesMaps.rolesRulesMap;
+
+      const rules = rulesMap[binding.roleRef.name];
+      if (rules) resourceRules.push(...rules);
+    }
+  }
+
+  const uniqueResourceRules: authorizationv1.IResourceRule[] = Array.from(
+    new Set(resourceRules.map((p) => JSON.stringify(p)))
+  ).map((p) => JSON.parse(p));
+
+  return {
+    apiVersion: 'authorization.k8s.io/v1',
+    kind: 'SelfSubjectRulesReview',
+    spec: {},
+    status: {
+      incomplete: false,
+      nonResourceRules: [],
+      resourceRules: uniqueResourceRules,
+    },
+  };
 }
 
 export function getPermissionsCartesians(
