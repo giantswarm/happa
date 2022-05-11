@@ -4577,10 +4577,10 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
-"@types/react-breadcrumbs@2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@types/react-breadcrumbs/-/react-breadcrumbs-2.1.4.tgz#2ace9640cf323f3085e0c745db3b85bb8f233462"
-  integrity sha512-GKqF0qWmCmfFzJ6izbuIjjQ8MNLc6uB0FGSRESdDfsVtk7c1Y+FPwcsxKDb7vRq0YYGg0Z5gueuikiUQZutVxg==
+"@types/react-breadcrumbs@2.1.5":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@types/react-breadcrumbs/-/react-breadcrumbs-2.1.5.tgz#1f6d06e30b140c788321a3ba926b72709f65092d"
+  integrity sha512-iPpAftZYTCXqMTa1m+rkltgk0zEzuQjigU+pQ/oz+2gJgIBEBmtTEEnoKIrmjAoe1I5TZWtKjguwLjfbdjIZKw==
   dependencies:
     "@types/history" "^4.7.11"
     "@types/react" "*"
