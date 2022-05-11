@@ -1,14 +1,21 @@
 import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
+import * as rbacv1Mocks from 'test/mockHttpCalls/rbacv1';
 
 import {
+  Bindings,
   IPermissionMap,
   IPermissionsForUseCase,
   IPermissionsUseCase,
+  IResourceRuleMap,
+  IRolesForNamespaces,
+  IRulesMaps,
   PermissionsUseCaseStatuses,
 } from '../types';
 import {
   computePermissions,
+  computeResourceRulesFromRoles,
+  createRulesReviewResponseFromBindings,
   getPermissionsCartesians,
   getStatusesForUseCases,
   hasPermission,
@@ -631,6 +638,213 @@ describe('permissions::utils', () => {
       });
     }
   });
+
+  describe('computeResourceRulesFromRoles', () => {
+    interface ITestCase {
+      description: string;
+      input: IRolesForNamespaces;
+      expected: IResourceRuleMap;
+    }
+
+    const testCases: ITestCase[] = [
+      {
+        description: 'returns resource rules for empty roles',
+        input: {},
+        expected: {},
+      },
+      {
+        description: 'returns resource rules for cluster roles',
+        input: { '': rbacv1Mocks.clusterRoleList.items },
+        expected: {
+          '': {
+            'read-all': [
+              {
+                verbs: ['get', 'list', 'watch'],
+                apiGroups: ['*'],
+                resources: ['*'],
+              },
+            ],
+            'read-apps': [
+              {
+                verbs: ['get', 'list', 'watch'],
+                apiGroups: ['apps'],
+                resources: ['*'],
+              },
+            ],
+            'cluster-admin': [
+              {
+                verbs: ['*'],
+                apiGroups: ['*'],
+                resources: ['*'],
+              },
+            ],
+            'system:tenant-boss': [
+              {
+                verbs: ['get', 'list'],
+                apiGroups: ['test.giantswarm.io'],
+                resources: ['supertest', 'superboss'],
+              },
+            ],
+          },
+        },
+      },
+      {
+        description: 'returns resource rules for roles in namespaces',
+        input: {
+          'org-giantswarm': rbacv1Mocks.roleList.items,
+        },
+        expected: {
+          'org-giantswarm': {
+            'edit-all': [
+              {
+                verbs: ['get', 'list', 'watch', 'patch', 'update'],
+                apiGroups: ['*'],
+                resources: ['*'],
+              },
+            ],
+            'read-apps': [
+              {
+                verbs: ['get', 'list', 'watch'],
+                apiGroups: ['apps'],
+                resources: ['*'],
+              },
+            ],
+            'have-fun': [],
+          },
+        },
+      },
+    ];
+
+    for (const { description, input, expected } of testCases) {
+      it(description, () => {
+        const output = computeResourceRulesFromRoles(input);
+
+        expect(output).toStrictEqual(expected);
+      });
+    }
+  });
+
+  describe('createRulesReviewResponseFromBindings', () => {
+    interface ITestCase {
+      description: string;
+      input: {
+        bindings: Bindings;
+        rulesMaps: IRulesMaps;
+        user?: string;
+        groups?: string[];
+      };
+      expected: authorizationv1.ISelfSubjectRulesReview;
+    }
+
+    const testCases: ITestCase[] = [
+      {
+        description: 'returns empty rules review response for empty bindings',
+        input: {
+          bindings: [],
+          rulesMaps: createDefaultRulesMaps(),
+        },
+        expected: makeRulesReview({
+          incomplete: false,
+          nonResourceRules: [],
+          resourceRules: [],
+        }),
+      },
+      {
+        description:
+          'returns empty rules review response for no given user/groups',
+        input: {
+          bindings: rbacv1Mocks.roleBindingList.items,
+          rulesMaps: createDefaultRulesMaps(),
+        },
+        expected: makeRulesReview({
+          incomplete: false,
+          nonResourceRules: [],
+          resourceRules: [],
+        }),
+      },
+      {
+        description: 'returns rules review response for a given user',
+        input: {
+          bindings: rbacv1Mocks.roleBindingList.items,
+          rulesMaps: createDefaultRulesMaps(),
+          user: 'system:boss',
+        },
+        expected: makeRulesReview({
+          incomplete: false,
+          nonResourceRules: [],
+          resourceRules: [
+            {
+              apiGroups: ['*'],
+              resources: ['*'],
+              verbs: ['get', 'list', 'watch', 'patch', 'update'],
+            },
+          ],
+        }),
+      },
+      {
+        description: 'returns rules review response for a given group',
+        input: {
+          bindings: rbacv1Mocks.roleBindingList.items,
+          rulesMaps: createDefaultRulesMaps(),
+          groups: ['Admins'],
+        },
+        expected: makeRulesReview({
+          incomplete: false,
+          nonResourceRules: [],
+          resourceRules: [
+            {
+              verbs: ['*'],
+              apiGroups: ['*'],
+              resources: ['*'],
+            },
+            {
+              apiGroups: ['*'],
+              resources: ['*'],
+              verbs: ['get', 'list', 'watch', 'patch', 'update'],
+            },
+          ],
+        }),
+      },
+      {
+        description: 'returns rules review response given both user and groups',
+        input: {
+          bindings: rbacv1Mocks.roleBindingList.items,
+          rulesMaps: createDefaultRulesMaps(),
+          user: 'system:boss',
+          groups: ['Admins'],
+        },
+        expected: makeRulesReview({
+          incomplete: false,
+          nonResourceRules: [],
+          resourceRules: [
+            {
+              verbs: ['*'],
+              apiGroups: ['*'],
+              resources: ['*'],
+            },
+            {
+              apiGroups: ['*'],
+              resources: ['*'],
+              verbs: ['get', 'list', 'watch', 'patch', 'update'],
+            },
+          ],
+        }),
+      },
+    ];
+
+    for (const { description, input, expected } of testCases) {
+      it(description, () => {
+        const output = createRulesReviewResponseFromBindings(
+          input.bindings,
+          input.rulesMaps,
+          input.user,
+          input.groups
+        );
+
+        expect(output).toStrictEqual(expected);
+      });
+    }
+  });
 });
 
 function makeRulesReview(
@@ -698,4 +912,29 @@ function createMockUseCases(): IPermissionsUseCase[] {
       ],
     },
   ];
+}
+
+function createDefaultRulesMaps(): IRulesMaps {
+  return {
+    rolesRulesMap: {
+      'edit-all': [
+        {
+          verbs: ['get', 'list', 'watch', 'patch', 'update'],
+          apiGroups: ['*'],
+          resources: ['*'],
+        },
+      ],
+      'cluster-admin': [],
+    },
+    clusterRolesRulesMap: {
+      'cluster-admin': [
+        {
+          verbs: ['*'],
+          apiGroups: ['*'],
+          resources: ['*'],
+        },
+      ],
+      'edit-all': [],
+    },
+  };
 }

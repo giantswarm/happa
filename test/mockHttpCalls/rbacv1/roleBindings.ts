@@ -1,3 +1,5 @@
+import { SubjectKinds } from 'model/services/mapi/rbacv1';
+
 export const writeAllCustomerRoleBinding = {
   metadata: {
     name: 'write-all-customer-group',
@@ -37,7 +39,7 @@ export const writeAllCustomerRoleBinding = {
   },
   subjects: [
     {
-      kind: 'Group',
+      kind: 'Group' as SubjectKinds.Group,
       apiGroup: 'rbac.authorization.k8s.io',
       name: 'Admins',
     },
@@ -67,18 +69,18 @@ export const editAllRoleBinding = {
   },
   subjects: [
     {
-      kind: 'Group',
+      kind: 'Group' as SubjectKinds.Group,
       apiGroup: 'rbac.authorization.k8s.io',
       name: 'Admins',
     },
     {
-      kind: 'ServiceAccount',
+      kind: 'ServiceAccount' as SubjectKinds.ServiceAccount,
       apiGroup: 'rbac.authorization.k8s.io',
       name: 'el-toro',
       namespace: 'org-giantswarm',
     },
     {
-      kind: 'User',
+      kind: 'User' as SubjectKinds.User,
       apiGroup: 'rbac.authorization.k8s.io',
       name: 'system:boss',
     },
@@ -108,12 +110,12 @@ export const coolRoleBinding = {
   },
   subjects: [
     {
-      kind: 'User',
+      kind: 'User' as SubjectKinds.User,
       apiGroup: 'rbac.authorization.k8s.io',
       name: 'test@test.com',
     },
     {
-      kind: 'User',
+      kind: 'User' as SubjectKinds.User,
       apiGroup: 'rbac.authorization.k8s.io',
       name: 'system:boss',
     },
@@ -164,7 +166,7 @@ export const haveFunRoleBinding = {
   },
   subjects: [
     {
-      kind: 'ServiceAccount',
+      kind: 'ServiceAccount' as SubjectKinds.ServiceAccount,
       apiGroup: 'rbac.authorization.k8s.io',
       name: 'some-random-account',
       namespace: 'org-giantswarm',
