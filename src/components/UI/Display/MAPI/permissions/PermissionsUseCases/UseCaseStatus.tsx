@@ -22,6 +22,7 @@ const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({
   let icon = '';
   let text = '';
   if (typeof value === 'undefined') {
+    color = theme.colors.gray;
     icon = 'fa fa-mixed-circle';
     text = 'Partial';
   } else if (value) {
@@ -38,7 +39,7 @@ const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({
     <Box
       direction='row'
       align='center'
-      width={typeof value === 'undefined' ? 'auto' : '56px'}
+      width='74px'
       aria-label={
         organizationName
           ? `${useCaseName} for ${organizationName} organization permission status`
@@ -52,7 +53,7 @@ const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({
         aria-hidden='true'
       />
 
-      <Text color={color} size='16px' margin={{ left: 'small' }}>
+      <Text color={color} margin={{ left: 'small' }}>
         {text}
       </Text>
     </Box>
