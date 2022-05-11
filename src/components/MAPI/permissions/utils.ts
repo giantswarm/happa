@@ -2,17 +2,27 @@ import { getNamespaceFromOrgName } from 'MAPI/utils';
 import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
+import {
+  isSubjectKindGroup,
+  isSubjectKindUser,
+} from 'model/services/mapi/rbacv1';
 import { LoggedInUserTypes } from 'model/stores/main/types';
 import { AccessControlRoleItemVerb } from 'UI/Display/MAPI/AccessControl/types';
+import { groupBy } from 'underscore';
 import { cartesian } from 'utils/helpers';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import {
+  Bindings,
   INamespacePermissions,
+  INamespaceResourceRules,
   IPermissionMap,
   IPermissionsForUseCase,
   IPermissionsUseCase,
+  IResourceRuleMap,
+  IRolesForNamespaces,
+  IRulesMaps,
   PermissionsUseCaseStatuses,
   PermissionVerb,
 } from './types';
@@ -274,6 +284,185 @@ export async function fetchPermissions(
   const permissions = computePermissions(reviews);
 
   return permissions;
+}
+
+export async function fetchPermissionsForSubject(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  organizations: IOrganization[],
+  user?: string,
+  groups?: string[]
+): Promise<IPermissionMap> {
+  // Get all Roles and ClusterRoles. Map role names to their resource rules, grouping by namespace.
+  const roleList = await rbacv1.getRoleList(httpClientFactory(), auth, {
+    labelSelector: {},
+  });
+  const roleListByNamespace = groupBy(
+    roleList.items,
+    (s) => s.metadata.namespace ?? ''
+  );
+  const rolesRulesMap = computeResourceRulesFromRoles(roleListByNamespace);
+
+  const clusterRoles = await rbacv1.getClusterRoleList(
+    httpClientFactory(),
+    auth,
+    {}
+  );
+  // ClusterRoles are not namespaced - we use '' as a placeholder namespace.
+  const clusterRolesRulesMap = computeResourceRulesFromRoles({
+    '': clusterRoles.items,
+  })[''];
+
+  // Get all RoleBindings and group by namespace.
+  const roleBindingList = await rbacv1.getRoleBindingList(
+    httpClientFactory(),
+    auth,
+    ''
+  );
+  const bindingsByNamespace = groupBy(
+    roleBindingList.items,
+    (s) => s.metadata.namespace ?? ''
+  );
+
+  const reviews: [
+    namespace: string,
+    review: authorizationv1.ISelfSubjectRulesReview
+  ][] = [];
+
+  const namespaces = organizations.map(
+    (o) => o.namespace ?? getNamespaceFromOrgName(o.id)
+  );
+  // These are not organization namespaces, but we have resources in them.
+  namespaces.push('default', 'giantswarm');
+
+  for (const namespace of namespaces) {
+    const bindings = bindingsByNamespace[namespace] ?? [];
+    const review = createRulesReviewResponseFromBindings(
+      bindings,
+      {
+        rolesRulesMap: rolesRulesMap[namespace],
+        clusterRolesRulesMap,
+      },
+      user,
+      groups
+    );
+
+    reviews.push([namespace, review] as [typeof namespace, typeof review]);
+  }
+
+  const permissions = computePermissions(reviews);
+
+  return permissions;
+}
+
+export function fetchPermissionsForSubjectKey(
+  user?: string,
+  groups?: string[]
+) {
+  return `getUserPermissionsForSubject/${user ? user : ''}/${
+    groups ? groups.join(',') : ''
+  }`;
+}
+
+/**
+ * Given a list of Roles/ClusterRoles grouped by namespace,
+ * create a map of role names to resource rules in each namespace.
+ * @param roles
+ */
+export function computeResourceRulesFromRoles(
+  rolesForNamespaces: IRolesForNamespaces
+): IResourceRuleMap {
+  const resourceRuleMap: IResourceRuleMap = {};
+
+  for (const [namespace, roles] of Object.entries(rolesForNamespaces)) {
+    const rules: INamespaceResourceRules = {};
+
+    for (const role of roles) {
+      if (!role.rules) continue;
+
+      const resourceRules = role.rules.reduce<authorizationv1.IResourceRule[]>(
+        (prev, rule) => {
+          if (
+            typeof rule.apiGroups === 'undefined' ||
+            typeof rule.resources === 'undefined' ||
+            typeof rule.verbs === 'undefined'
+          ) {
+            return prev;
+          }
+          // Map rbacv1 PolicyRule to authorizationv1 ResourceRule.
+          const resourceRule: authorizationv1.IResourceRule = {
+            apiGroups: rule.apiGroups,
+            resources: rule.resources,
+            verbs: rule.verbs,
+          };
+
+          return prev.concat(resourceRule);
+        },
+        []
+      );
+
+      rules[role.metadata.name] = resourceRules;
+    }
+
+    resourceRuleMap[namespace] = rules;
+  }
+
+  return resourceRuleMap;
+}
+
+/**
+ * Create a review response object from Roles/ClusterRoles bound
+ * to a given user/groups by aggregating resource rules from
+ * each Role/ClusterRole.
+ *
+ * @param bindings
+ * @param rulesMaps
+ * @param user
+ * @param groups
+ */
+export function createRulesReviewResponseFromBindings(
+  bindings: Bindings,
+  rulesMaps: IRulesMaps,
+  user?: string,
+  groups?: string[]
+): authorizationv1.ISelfSubjectRulesReview {
+  const resourceRules: authorizationv1.IResourceRule[] = [];
+
+  // Get all bindings bound to the user/groups.
+  for (const binding of bindings) {
+    if (
+      binding.subjects?.find(
+        (subject) =>
+          (isSubjectKindUser(subject) && subject.name === user) ||
+          (isSubjectKindGroup(subject) && groups?.includes(subject.name))
+      )
+    ) {
+      // Determine role rules map to use based on the Kind of
+      // the role referenced in the binding.
+      const rulesMap =
+        binding.roleRef.kind === rbacv1.ClusterRole
+          ? rulesMaps.clusterRolesRulesMap
+          : rulesMaps.rolesRulesMap;
+
+      const rules = rulesMap[binding.roleRef.name];
+      if (rules) resourceRules.push(...rules);
+    }
+  }
+
+  const uniqueResourceRules: authorizationv1.IResourceRule[] = Array.from(
+    new Set(resourceRules.map((p) => JSON.stringify(p)))
+  ).map((p) => JSON.parse(p));
+
+  return {
+    apiVersion: 'authorization.k8s.io/v1',
+    kind: 'SelfSubjectRulesReview',
+    spec: {},
+    status: {
+      incomplete: false,
+      nonResourceRules: [],
+      resourceRules: uniqueResourceRules,
+    },
+  };
 }
 
 export async function fetchPermissionsAtClusterScope(

@@ -1,4 +1,4 @@
-import { IClusterRole, IRole } from './types';
+import { IClusterRole, IRole, ISubject, SubjectKinds } from './types';
 
 export function getManagedBy(role: IRole | IClusterRole): string | undefined {
   if (!role.metadata.labels) return undefined;
@@ -26,4 +26,16 @@ export function getRoleDescription(
   if (!role.metadata.annotations) return undefined;
 
   return role.metadata.annotations['giantswarm.io/notes'];
+}
+
+export function isSubjectKindUser(subject: ISubject): boolean {
+  return isSubjectKind(subject, SubjectKinds.User);
+}
+
+export function isSubjectKindGroup(subject: ISubject): boolean {
+  return isSubjectKind(subject, SubjectKinds.Group);
+}
+
+function isSubjectKind(subject: ISubject, kind: SubjectKinds): boolean {
+  return subject.kind === kind;
 }

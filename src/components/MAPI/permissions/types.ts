@@ -1,3 +1,6 @@
+import * as authorizationv1 from 'model/services/mapi/authorizationv1';
+import * as rbacv1 from 'model/services/mapi/rbacv1';
+
 export type PermissionVerb =
   | 'get'
   | 'watch'
@@ -46,3 +49,25 @@ export type PermissionsUseCaseStatuses = Record<
   string,
   Record<string, boolean>
 >;
+
+export interface IRolesForNamespaces
+  extends Record<
+    string,
+    | Omit<rbacv1.IClusterRole, 'apiVersion' | 'kind'>[]
+    | Omit<rbacv1.IRole, 'apiVersion' | 'kind'>[]
+  > {}
+
+export interface INamespaceResourceRules
+  extends Record<string, authorizationv1.IResourceRule[]> {}
+
+export interface IRulesMaps {
+  rolesRulesMap: INamespaceResourceRules;
+  clusterRolesRulesMap: INamespaceResourceRules;
+}
+
+export interface IResourceRuleMap
+  extends Record<string, INamespaceResourceRules> {}
+
+export type Bindings =
+  | Omit<rbacv1.IRoleBinding, 'apiVersion' | 'kind'>[]
+  | Omit<rbacv1.IClusterRoleBinding, 'apiVersion' | 'kind'>[];
