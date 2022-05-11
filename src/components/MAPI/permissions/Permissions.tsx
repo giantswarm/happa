@@ -32,8 +32,8 @@ const Permissions: React.FC<IPermissionsProps> = () => {
           </Heading>
           <Text>
             Here you get an overview of your RBAC permissions in the management
-            cluster. Note that this is not a complete overview of all
-            permissions and restrictions.
+            cluster, with regard to certain use cases. Note that this is not a
+            complete overview of all permissions and restrictions.
           </Text>
         </HeadingWrapper>
         <PermissionsOverview />
