@@ -293,6 +293,64 @@ export async function fetchPermissionsForSubject(
   user?: string,
   groups?: string[]
 ): Promise<IPermissionMap> {
+  // These are not organization namespaces, but we have resources in them.
+  const namespaces = ['default', 'giantswarm'];
+  const orgNamespaces = organizations.map(
+    (o) => o.namespace ?? getNamespaceFromOrgName(o.id)
+  );
+
+  // Can the subject LIST organizations?
+  const listOrgsrequest: authorizationv1.ILocalSubjectAccessReviewSpec = {
+    resourceAttributes: {
+      namespace: 'default',
+      verb: 'list',
+      group: 'security.giantswarm.io',
+      resource: 'organizations',
+    },
+    user,
+    groups,
+  };
+  const accessReviewResponse =
+    await authorizationv1.createLocalSubjectAccessReview(
+      httpClientFactory(),
+      auth,
+      listOrgsrequest
+    );
+
+  if (accessReviewResponse?.status?.allowed) {
+    // If the subject can LIST organizations, add all organizations'
+    // namespaces.
+    namespaces.push(...orgNamespaces);
+  } else {
+    // Find out which organizations the subject can GET.
+    const requests = orgNamespaces.map((namespace) => {
+      const getOrgRequest: authorizationv1.ILocalSubjectAccessReviewSpec = {
+        resourceAttributes: {
+          namespace,
+          verb: 'get',
+          group: 'security.giantswarm.io',
+          resource: 'organizations',
+        },
+        user,
+        groups,
+      };
+
+      return authorizationv1.createLocalSubjectAccessReview(
+        httpClientFactory(),
+        auth,
+        getOrgRequest
+      );
+    });
+    const responses = await Promise.allSettled(requests);
+
+    for (let i = 0; i < orgNamespaces.length; i++) {
+      const response = responses[i];
+      if (response.status === 'fulfilled' && response.value.status?.allowed) {
+        namespaces.push(orgNamespaces[i]);
+      }
+    }
+  }
+
   // Get all Roles and ClusterRoles. Map role names to their resource rules, grouping by namespace.
   const roleList = await rbacv1.getRoleList(httpClientFactory(), auth, {
     labelSelector: {},
@@ -328,12 +386,6 @@ export async function fetchPermissionsForSubject(
     namespace: string,
     review: authorizationv1.ISelfSubjectRulesReview
   ][] = [];
-
-  const namespaces = organizations.map(
-    (o) => o.namespace ?? getNamespaceFromOrgName(o.id)
-  );
-  // These are not organization namespaces, but we have resources in them.
-  namespaces.push('default', 'giantswarm');
 
   for (const namespace of namespaces) {
     const bindings = bindingsByNamespace[namespace] ?? [];
