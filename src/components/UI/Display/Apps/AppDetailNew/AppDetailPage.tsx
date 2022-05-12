@@ -370,9 +370,7 @@ const AppDetail: React.FC<React.PropsWithChildren<IAppDetailPageProps>> = (
                   target='_blank'
                   rel='noopener noreferrer'
                 >
-                  <>
-                    {value} <i className='fa fa-open-in-new' />
-                  </>
+                  {value} <i className='fa fa-open-in-new' />
                 </NonBreakingLink>
               )}
             </OptionalValue>
