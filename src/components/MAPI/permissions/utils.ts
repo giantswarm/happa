@@ -114,7 +114,7 @@ function appendKeyToNamespacePermissions(
   permissions[key] = Array.from(uniqueVerbs);
 }
 
-function optimizeNamespacePermissions(
+export function optimizeNamespacePermissions(
   permissions: INamespacePermissions
 ): INamespacePermissions {
   const newPermissions: INamespacePermissions = Object.assign({}, permissions);
