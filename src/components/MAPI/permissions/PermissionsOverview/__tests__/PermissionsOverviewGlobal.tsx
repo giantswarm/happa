@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { IPermissionsUseCase } from 'MAPI/permissions/types';
-import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { StatusCodes } from 'model/constants';
 import { mapOAuth2UserToUser } from 'model/stores/main/utils';
 import nock from 'nock';
@@ -76,30 +75,24 @@ function createMockUseCases(): IPermissionsUseCase[] {
   ];
 }
 
+function createDefaultPermissions() {
+  return {
+    default: {
+      '*:*:*': ['*'],
+    },
+  };
+}
+
 jest.unmock(
   'model/services/mapi/authorizationv1/createSelfSubjectAccessReview'
 );
-jest.mock('MAPI/permissions/usePermissions');
 
 describe('PermissionsOverviewGlobal', () => {
   it('renders without crashing', () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      default: {
-        '*:*:*': ['*'],
-      },
-    });
     render(getComponent({ useCases: createMockUseCases() }));
   });
 
   it('displays permissions for global use cases', async () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      data: {
-        default: {
-          '*:*:*': ['*'],
-        },
-      },
-    });
-
     nock(window.config.mapiEndpoint)
       .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
         apiVersion: 'authorization.k8s.io/v1',
@@ -156,7 +149,12 @@ describe('PermissionsOverviewGlobal', () => {
       .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
       .reply(StatusCodes.Ok, rbacv1Mocks.clusterRoleList);
 
-    render(getComponent({ useCases: createMockUseCases() }));
+    render(
+      getComponent({
+        useCases: createMockUseCases(),
+        permissions: createDefaultPermissions(),
+      })
+    );
 
     expect(await screen.findByText('access control')).toBeInTheDocument();
     expect(screen.queryByText('Inspect namespaces')).not.toBeInTheDocument();
@@ -188,14 +186,6 @@ describe('PermissionsOverviewGlobal', () => {
   });
 
   it('displays an error message if we cannot get permissions at the cluster scope', async () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      data: {
-        default: {
-          '*:*:*': ['*'],
-        },
-      },
-    });
-
     nock(window.config.mapiEndpoint)
       .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
         apiVersion: 'authorization.k8s.io/v1',
@@ -210,7 +200,12 @@ describe('PermissionsOverviewGlobal', () => {
       })
       .reply(StatusCodes.BadRequest);
 
-    render(getComponent({ useCases: createMockUseCases() }));
+    render(
+      getComponent({
+        useCases: createMockUseCases(),
+        permissions: createDefaultPermissions(),
+      })
+    );
 
     expect(
       await screen.findByText(
@@ -220,15 +215,6 @@ describe('PermissionsOverviewGlobal', () => {
   });
 
   it('displays permissions for global use cases for a user without permissions at the cluster scope', async () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      data: {
-        default: {
-          'application.giantswarm.io:catalogs:*': ['get', 'list'],
-          'application.giantswarm.io:appcatalogentries:*': ['get', 'list'],
-        },
-      },
-    });
-
     nock(window.config.mapiEndpoint)
       .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
         apiVersion: 'authorization.k8s.io/v1',
@@ -246,7 +232,17 @@ describe('PermissionsOverviewGlobal', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
       );
 
-    render(getComponent({ useCases: createMockUseCases() }));
+    render(
+      getComponent({
+        useCases: createMockUseCases(),
+        permissions: {
+          default: {
+            'application.giantswarm.io:catalogs:*': ['get', 'list'],
+            'application.giantswarm.io:appcatalogentries:*': ['get', 'list'],
+          },
+        },
+      })
+    );
 
     expect(await screen.findByText('access control')).toBeInTheDocument();
     // Toggle use case category
@@ -272,12 +268,6 @@ describe('PermissionsOverviewGlobal', () => {
   });
 
   it('displays permissions for global use cases for a user without permissions in the `default` namespace', async () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      data: {
-        default: {},
-      },
-    });
-
     nock(window.config.mapiEndpoint)
       .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
         apiVersion: 'authorization.k8s.io/v1',
@@ -295,7 +285,14 @@ describe('PermissionsOverviewGlobal', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
       );
 
-    render(getComponent({ useCases: createMockUseCases() }));
+    render(
+      getComponent({
+        useCases: createMockUseCases(),
+        permissions: {
+          default: {},
+        },
+      })
+    );
 
     expect(await screen.findByText('access control')).toBeInTheDocument();
     // Toggle use case category

@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { IPermissionsUseCase } from 'MAPI/permissions/types';
-import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { mapOAuth2UserToUser } from 'model/stores/main/utils';
 import { IOrganizationState } from 'model/stores/organization/types';
 import { IState } from 'model/stores/state';
@@ -115,36 +114,36 @@ function createMockUseCases(): IPermissionsUseCase[] {
   ];
 }
 
+function createDefaultPermissions() {
+  return {
+    default: {
+      '*:*:*': ['*'],
+    },
+    'org-org1': {
+      '*:*:*': ['*'],
+    },
+    'org-org2': {
+      'application.giantswarm.io:apps:*': ['get', 'list'],
+      ':configmaps:*': ['get', 'list'],
+      ':secrets:*': ['get', 'list'],
+    },
+  };
+}
+
 jest.mock('MAPI/permissions/usePermissions');
 
 describe('PermissionsOverviewOrganizations', () => {
   it('renders without crashing', () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      default: {
-        '*:*:*': ['*'],
-      },
-    });
     render(getComponent({ useCases: createMockUseCases() }));
   });
 
   it('displays permissions for categories', async () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      data: {
-        default: {
-          '*:*:*': ['*'],
-        },
-        'org-org1': {
-          '*:*:*': ['*'],
-        },
-        'org-org2': {
-          'application.giantswarm.io:apps:*': ['get', 'list'],
-          ':configmaps:*': ['get', 'list'],
-          ':secrets:*': ['get', 'list'],
-        },
-      },
-    });
-
-    render(getComponent({ useCases: createMockUseCases() }));
+    render(
+      getComponent({
+        useCases: createMockUseCases(),
+        permissions: createDefaultPermissions(),
+      })
+    );
 
     expect(await screen.findByText('app catalogs')).toBeInTheDocument();
     expect(screen.queryByText('Inspect app catalogs')).not.toBeInTheDocument();
@@ -179,23 +178,12 @@ describe('PermissionsOverviewOrganizations', () => {
   });
 
   it('displays permissions for use cases', async () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      data: {
-        default: {
-          '*:*:*': ['*'],
-        },
-        'org-org1': {
-          '*:*:*': ['*'],
-        },
-        'org-org2': {
-          'application.giantswarm.io:apps:*': ['get', 'list'],
-          ':configmaps:*': ['get', 'list'],
-          ':secrets:*': ['get', 'list'],
-        },
-      },
-    });
-
-    render(getComponent({ useCases: createMockUseCases() }));
+    render(
+      getComponent({
+        useCases: createMockUseCases(),
+        permissions: createDefaultPermissions(),
+      })
+    );
 
     // Toggle app catalogs category
     fireEvent.click(screen.getByLabelText('app catalogs'));
