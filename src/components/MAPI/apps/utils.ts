@@ -11,6 +11,7 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { AppConstants, Constants } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import { isAppManagedByFlux } from 'model/services/mapi/applicationv1alpha1';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
@@ -749,7 +750,9 @@ export function isAppChangingVersion(app: applicationv1alpha1.IApp): boolean {
 
   return (
     app.status.version.length > 0 &&
-    normalizeAppVersion(app.spec.version) !== app.status.version
+    (isAppManagedByFlux(app)
+      ? normalizeAppVersion(app.spec.version) !== app.status.version
+      : app.spec.version !== app.status.version)
   );
 }
 
@@ -775,6 +778,21 @@ export function getLatestVersionForApp(
   return versions.sort((a, b) =>
     compare(normalizeAppVersion(b), normalizeAppVersion(a))
   )[0];
+}
+
+export function hasNewerVersionForApp(
+  appCatalogEntries: applicationv1alpha1.IAppCatalogEntry[],
+  app: applicationv1alpha1.IApp
+): boolean {
+  const latestVersion = getLatestVersionForApp(
+    appCatalogEntries,
+    app.spec.name
+  );
+  if (!latestVersion) return false;
+
+  return isAppManagedByFlux(app)
+    ? latestVersion !== normalizeAppVersion(app.spec.version)
+    : latestVersion !== app.spec.version;
 }
 
 export function isAppCatalogVisibleToUsers(
@@ -923,16 +941,9 @@ export async function hasNewerVersion(
     }
   }
 
-  const latestVersion = getLatestVersionForApp(
-    appCatalogEntryListItems,
-    app.spec.name
-  );
-
   return {
     name: app.spec.name,
-    hasNewerVersion:
-      typeof latestVersion !== 'undefined' &&
-      latestVersion !== normalizeAppVersion(app.spec.version),
+    hasNewerVersion: hasNewerVersionForApp(appCatalogEntryListItems, app),
   };
 }
 

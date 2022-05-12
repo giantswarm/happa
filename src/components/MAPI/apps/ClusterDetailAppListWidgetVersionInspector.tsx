@@ -34,6 +34,7 @@ interface IClusterDetailAppListWidgetVersionInspectorProps
   > {
   app?: applicationv1alpha1.IApp;
   appsPermissions?: IAppsPermissions;
+  currentVersion?: string;
   currentSelectedVersion?: string;
   onSelectVersion: (newVersion: string) => void;
   catalogNamespace?: string | null;
@@ -49,6 +50,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
 > = ({
   app,
   appsPermissions,
+  currentVersion,
   currentSelectedVersion,
   onSelectVersion,
   catalogNamespace,
@@ -115,12 +117,31 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
       typeof appCatalogEntryListError === 'undefined');
 
   const currentEntry = useMemo(() => {
-    if (!appCatalogEntryList) return undefined;
+    if (!appCatalogEntryList || !currentVersion) return undefined;
 
-    return appCatalogEntryList.items.find(
-      (e) => e.spec.version === currentSelectedVersion
+    return appCatalogEntryList.items.find((e) =>
+      currentSelectedVersion
+        ? e.spec.version === currentSelectedVersion
+        : e.spec.version === currentVersion
     );
-  }, [appCatalogEntryList, currentSelectedVersion]);
+  }, [appCatalogEntryList, currentSelectedVersion, currentVersion]);
+
+  useEffect(() => {
+    // If we cannot find an app catalog entry for the current version,
+    // we set the current selected version to the app's current verison.
+    if (!currentEntry && currentVersion) {
+      onSelectVersion(currentVersion);
+
+      return;
+    }
+
+    // If we have an app catalog entry for the current version,
+    // we set the current selected version to the corresponding
+    // app catalog entry's version.
+    if (currentEntry && currentEntry.spec.version !== currentSelectedVersion) {
+      onSelectVersion(currentEntry.spec.version);
+    }
+  }, [currentEntry, currentSelectedVersion, currentVersion, onSelectVersion]);
 
   const currentCreationDate = isLoading
     ? undefined
@@ -143,24 +164,17 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
       );
   }, [appCatalogEntryList]);
 
-  const normalizedAppVersion = useMemo(() => {
-    if (!app) return undefined;
-
-    return normalizeAppVersion(app.spec.version);
-  }, [app]);
-
-  const isCurrentVersionSelected =
-    currentSelectedVersion === normalizedAppVersion;
+  const isCurrentVersionSelected = currentSelectedVersion === currentVersion;
 
   const appPath = useMemo(() => {
-    if (!app || !normalizedAppVersion) return '';
+    if (!app || !currentSelectedVersion) return '';
 
     return RoutePath.createUsablePath(AppsRoutes.AppDetail, {
       catalogName: app.spec.catalog,
       app: app.spec.name,
-      version: normalizedAppVersion,
+      version: currentSelectedVersion,
     });
-  }, [app, normalizedAppVersion]);
+  }, [app, currentSelectedVersion]);
 
   const [isSwitchingVersion, setIsSwitchingVersion] = useState(false);
 
@@ -169,10 +183,10 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
   };
 
   const versionSwitchComparison = useMemo(() => {
-    if (!currentSelectedVersion || !normalizedAppVersion) return 0;
+    if (!currentSelectedVersion || !currentVersion) return 0;
 
-    return compare(normalizedAppVersion, currentSelectedVersion);
-  }, [normalizedAppVersion, currentSelectedVersion]);
+    return compare(currentVersion, currentSelectedVersion);
+  }, [currentVersion, currentSelectedVersion]);
 
   const isUpgrading = versionSwitchComparison < 0;
   const isDowngrading = versionSwitchComparison > 0;
@@ -322,7 +336,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
               />{' '}
               from version{' '}
               <Truncated as='code' numStart={TRUNCATE_START_CHARS}>
-                {normalizedAppVersion ?? ''}
+                {currentVersion ?? ''}
               </Truncated>{' '}
               to{' '}
               <Truncated as='code' numStart={TRUNCATE_START_CHARS}>

@@ -1051,7 +1051,7 @@ export function getCGroupsVersion(
     return 'v1';
   }
   const hasCGroupV1Annotation = nodePool.metadata.annotations?.hasOwnProperty(
-    nodePool.metadata.annotations[capiv1beta1.annotationCGroupV1]
+    capiv1beta1.annotationCGroupV1
   );
 
   return hasCGroupV1Annotation ? 'v1' : 'v2';

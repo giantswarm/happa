@@ -19,7 +19,9 @@ const esModules = [
 
 const config: Config.InitialOptions = {
   testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
-  testURL: 'http://localhost',
+  testEnvironmentOptions: {
+    url: 'http://localhost',
+  },
   setupFiles: [
     path.resolve(`${__dirname}/test/browserMocks.ts`),
     path.resolve(`${__dirname}/test/modelMocks.ts`),
