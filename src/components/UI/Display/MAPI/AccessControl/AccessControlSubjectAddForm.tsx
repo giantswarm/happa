@@ -43,7 +43,7 @@ interface IAccessControlSubjectAddFormProps
 }
 
 const AccessControlSubjectAddForm: React.FC<
-  IAccessControlSubjectAddFormProps
+  React.PropsWithChildren<IAccessControlSubjectAddFormProps>
 > = ({
   onAdd,
   onToggleAdding,

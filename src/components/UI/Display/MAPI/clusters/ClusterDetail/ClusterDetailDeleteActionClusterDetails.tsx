@@ -75,7 +75,7 @@ interface IClusterDetailDeleteActionClusterDetailsProps
 }
 
 const ClusterDetailDeleteActionClusterDetails: React.FC<
-  IClusterDetailDeleteActionClusterDetailsProps
+  React.PropsWithChildren<IClusterDetailDeleteActionClusterDetailsProps>
 > = ({
   variant,
   name,

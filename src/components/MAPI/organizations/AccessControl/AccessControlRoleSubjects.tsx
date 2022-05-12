@@ -176,7 +176,9 @@ interface IAccessControlRoleSubjectsProps
   onDelete: (type: ui.AccessControlSubjectTypes, name: string) => Promise<void>;
 }
 
-const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
+const AccessControlRoleSubjects: React.FC<
+  React.PropsWithChildren<IAccessControlRoleSubjectsProps>
+> = ({
   namespace,
   roleName,
   groups,

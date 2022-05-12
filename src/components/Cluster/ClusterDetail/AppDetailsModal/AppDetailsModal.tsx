@@ -41,12 +41,9 @@ interface IAppDetailsModalProps {
   visible?: boolean;
 }
 
-const AppDetailsModal: React.FC<IAppDetailsModalProps> = ({
-  app,
-  clusterId,
-  onClose,
-  visible,
-}) => {
+const AppDetailsModal: React.FC<
+  React.PropsWithChildren<IAppDetailsModalProps>
+> = ({ app, clusterId, onClose, visible }) => {
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
   const catalog = useSelector<IState, IAppCatalog | undefined>(

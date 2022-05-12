@@ -84,7 +84,9 @@ interface IWorkerNodesNodePoolItemProps
   flatcarContainerLinuxVersion?: string;
 }
 
-const WorkerNodesNodePoolItem: React.FC<IWorkerNodesNodePoolItemProps> = ({
+const WorkerNodesNodePoolItem: React.FC<
+  React.PropsWithChildren<IWorkerNodesNodePoolItemProps>
+> = ({
   nodePool,
   providerNodePool,
   additionalColumns,

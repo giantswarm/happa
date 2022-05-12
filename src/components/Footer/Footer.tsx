@@ -28,7 +28,9 @@ const FooterGroup = styled.span`
 
 interface IFooterProps extends React.ComponentPropsWithoutRef<'footer'> {}
 
-const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
+const Footer: React.FC<React.PropsWithChildren<IFooterProps>> = (
+  props: IFooterProps
+) => {
   const dispatch = useDispatch();
 
   const currentVersion: string = useSelector(getMetadataCurrentVersion);

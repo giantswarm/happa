@@ -7,7 +7,7 @@ interface IFacetListItemLoadingPlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
 const FacetListItemLoadingPlaceholder: React.FC<
-  IFacetListItemLoadingPlaceholderProps
+  React.PropsWithChildren<IFacetListItemLoadingPlaceholderProps>
 > = (props) => {
   const theme = useTheme();
 

@@ -21,12 +21,9 @@ interface IKubernetesVersionLabelProps {
   hideIcon?: boolean;
 }
 
-const KubernetesVersionLabel: React.FC<IKubernetesVersionLabelProps> = ({
-  version,
-  hidePatchVersion,
-  eolDate,
-  hideIcon,
-}) => {
+const KubernetesVersionLabel: React.FC<
+  React.PropsWithChildren<IKubernetesVersionLabelProps>
+> = ({ version, hidePatchVersion, eolDate, hideIcon }) => {
   let versionLabel = version || <NotAvailable />;
   if (version && hidePatchVersion) {
     const v = version.split('.');

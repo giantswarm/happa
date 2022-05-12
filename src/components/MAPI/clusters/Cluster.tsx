@@ -7,7 +7,7 @@ import ClusterDetail from './ClusterDetail';
 import CreateCluster from './CreateCluster';
 import GettingStarted from './GettingStarted';
 
-const Cluster: React.FC<{}> = () => {
+const Cluster: React.FC<React.PropsWithChildren<{}>> = () => {
   return (
     <Switch>
       <Route

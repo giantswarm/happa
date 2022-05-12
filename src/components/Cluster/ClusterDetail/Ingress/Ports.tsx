@@ -17,7 +17,11 @@ interface IPortsProps extends React.ComponentPropsWithoutRef<'ul'> {
   HTTPS?: number;
 }
 
-const Ports: React.FC<IPortsProps> = ({ HTTP, HTTPS, ...rest }) => {
+const Ports: React.FC<React.PropsWithChildren<IPortsProps>> = ({
+  HTTP,
+  HTTPS,
+  ...rest
+}) => {
   return (
     <List {...rest}>
       <li>

@@ -13,7 +13,7 @@ interface IClusterDetailAppListWidgetProps
 }
 
 const ClusterDetailAppListWidget: React.FC<
-  IClusterDetailAppListWidgetProps
+  React.PropsWithChildren<IClusterDetailAppListWidgetProps>
 > = ({ title, children, contentProps, ...props }) => {
   return (
     <Box pad='xsmall' direction='column' aria-label={title} {...props}>

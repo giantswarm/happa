@@ -13,7 +13,7 @@ interface IClusterDetailAppListWidgetStatusProps
 }
 
 const ClusterDetailAppListWidgetStatus: React.FC<
-  IClusterDetailAppListWidgetStatusProps
+  React.PropsWithChildren<IClusterDetailAppListWidgetStatusProps>
 > = ({ app, ...props }) => {
   let status: string | undefined = '';
   if (!app) status = undefined;

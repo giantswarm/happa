@@ -43,7 +43,7 @@ interface IAZSelectionProps
   selectedZones?: string[];
 }
 
-const AZSelection: React.FC<IAZSelectionProps> = ({
+const AZSelection: React.FC<React.PropsWithChildren<IAZSelectionProps>> = ({
   onChange,
   onUpdateZones,
   variant,

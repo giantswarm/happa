@@ -13,7 +13,7 @@ function reportException() {
   errorReporter.notify('test exception reported from Happa');
 }
 
-const ExceptionNotificationTest: React.FC<{}> = () => {
+const ExceptionNotificationTest: React.FC<React.PropsWithChildren<{}>> = () => {
   return (
     <>
       <h1>Exception Notification Tester</h1>

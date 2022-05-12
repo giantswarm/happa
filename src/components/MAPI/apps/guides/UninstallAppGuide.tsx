@@ -16,12 +16,9 @@ interface IUninstallAppGuideProps
   canUninstallApps?: boolean;
 }
 
-const UninstallAppGuide: React.FC<IUninstallAppGuideProps> = ({
-  appName,
-  namespace,
-  canUninstallApps,
-  ...props
-}) => {
+const UninstallAppGuide: React.FC<
+  React.PropsWithChildren<IUninstallAppGuideProps>
+> = ({ appName, namespace, canUninstallApps, ...props }) => {
   const context = getCurrentInstallationContextName();
 
   return (

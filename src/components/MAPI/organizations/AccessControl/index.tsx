@@ -33,7 +33,7 @@ interface IAccessControlProps
   organizationNamespace: string;
 }
 
-const AccessControl: React.FC<IAccessControlProps> = ({
+const AccessControl: React.FC<React.PropsWithChildren<IAccessControlProps>> = ({
   organizationName,
   organizationNamespace,
   ...props

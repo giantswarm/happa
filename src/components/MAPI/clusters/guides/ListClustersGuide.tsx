@@ -19,10 +19,9 @@ interface IListClustersGuideProps
   namespace: string;
 }
 
-const ListClustersGuide: React.FC<IListClustersGuideProps> = ({
-  namespace,
-  ...props
-}) => {
+const ListClustersGuide: React.FC<
+  React.PropsWithChildren<IListClustersGuideProps>
+> = ({ namespace, ...props }) => {
   const context = useSelector(getCurrentInstallationContextName);
 
   return (

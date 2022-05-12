@@ -24,7 +24,9 @@ interface IAZSelectionManualProps {
   selectedZones: string[];
 }
 
-const AZSelectionManual: React.FC<IAZSelectionManualProps> = ({
+const AZSelectionManual: React.FC<
+  React.PropsWithChildren<IAZSelectionManualProps>
+> = ({
   onUpdateZones,
   variant,
   allZones,

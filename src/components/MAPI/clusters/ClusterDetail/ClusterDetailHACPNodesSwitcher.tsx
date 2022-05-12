@@ -18,7 +18,7 @@ interface IClusterDetailHACPNodesSwitcherProps
 }
 
 const ClusterDetailHACPNodesSwitcher: React.FC<
-  IClusterDetailHACPNodesSwitcherProps
+  React.PropsWithChildren<IClusterDetailHACPNodesSwitcherProps>
 > = ({ cluster, onSubmit, onCancel, ...props }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();

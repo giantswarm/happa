@@ -19,7 +19,9 @@ interface IAZSelectionCheckboxProps
   label?: string;
 }
 
-const AZSelectionCheckbox: React.FC<IAZSelectionCheckboxProps> = ({
+const AZSelectionCheckbox: React.FC<
+  React.PropsWithChildren<IAZSelectionCheckboxProps>
+> = ({
   onChange,
   type,
   value,

@@ -12,10 +12,9 @@ interface IInspectRoleGuideProps
   namespace: string;
 }
 
-const InspectRoleGuide: React.FC<IInspectRoleGuideProps> = ({
-  namespace,
-  ...props
-}) => {
+const InspectRoleGuide: React.FC<
+  React.PropsWithChildren<IInspectRoleGuideProps>
+> = ({ namespace, ...props }) => {
   return (
     <CLIGuide
       title='Inspect a role via the Management API'

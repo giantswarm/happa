@@ -35,7 +35,7 @@ interface IWorkerNodesCreateNodePoolAvailabilityZonesProps
 }
 
 const WorkerNodesCreateNodePoolAvailabilityZones: React.FC<
-  IWorkerNodesCreateNodePoolAvailabilityZonesProps
+  React.PropsWithChildren<IWorkerNodesCreateNodePoolAvailabilityZonesProps>
 > = ({
   id,
   nodePool,

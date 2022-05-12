@@ -36,12 +36,9 @@ interface IDeleteLabelButtonProps
   allowInteraction?: boolean;
 }
 
-const DeleteLabelButton: FC<IDeleteLabelButtonProps> = ({
-  onDelete,
-  onOpen,
-  allowInteraction,
-  ...restProps
-}) => {
+const DeleteLabelButton: FC<
+  React.PropsWithChildren<IDeleteLabelButtonProps>
+> = ({ onDelete, onOpen, allowInteraction, ...restProps }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const divElement = useRef<HTMLDivElement>(null);

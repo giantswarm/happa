@@ -7,7 +7,7 @@ import { SentryErrorNotifier } from 'utils/errors/SentryErrorNotifier';
 
 interface IRouteProps extends ReactRouterRouteProps {}
 
-const Route: React.FC<IRouteProps> = (props) => {
+const Route: React.FC<React.PropsWithChildren<IRouteProps>> = (props) => {
   return <ReactRouterRoute {...props} />;
 };
 

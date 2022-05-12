@@ -47,7 +47,7 @@ interface IAccessControlSubjectSetItemProps
 }
 
 const AccessControlSubjectSetItem: React.FC<
-  IAccessControlSubjectSetItemProps
+  React.PropsWithChildren<IAccessControlSubjectSetItemProps>
 > = ({
   name,
   isEditable,

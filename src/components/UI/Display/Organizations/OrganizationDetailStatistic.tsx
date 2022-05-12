@@ -10,7 +10,7 @@ interface IOrganizationDetailStatisticProps
 }
 
 const OrganizationDetailStatistic: React.FC<
-  IOrganizationDetailStatisticProps
+  React.PropsWithChildren<IOrganizationDetailStatisticProps>
 > = ({ children, isLoading, ...props }) => {
   return (
     <Text {...props}>

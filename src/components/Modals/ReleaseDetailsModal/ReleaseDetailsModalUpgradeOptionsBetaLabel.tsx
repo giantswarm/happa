@@ -14,7 +14,7 @@ interface IReleaseDetailsModalUpgradeOptionsBetaLabelProps
   extends React.ComponentPropsWithoutRef<'span'> {}
 
 const ReleaseDetailsModalUpgradeOptionsBetaLabel: React.FC<
-  IReleaseDetailsModalUpgradeOptionsBetaLabelProps
+  React.PropsWithChildren<IReleaseDetailsModalUpgradeOptionsBetaLabelProps>
 > = (props) => {
   return (
     <BetaLabel role='presentation' {...props}>

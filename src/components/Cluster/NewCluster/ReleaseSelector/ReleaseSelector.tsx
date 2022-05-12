@@ -65,7 +65,7 @@ interface IReleaseSelectorProps {
   versionFilter?: (version: string) => boolean;
 }
 
-const ReleaseSelector: FC<IReleaseSelectorProps> = ({
+const ReleaseSelector: FC<React.PropsWithChildren<IReleaseSelectorProps>> = ({
   selectRelease,
   selectedRelease,
   collapsible,

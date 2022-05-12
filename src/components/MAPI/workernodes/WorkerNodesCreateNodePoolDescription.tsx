@@ -25,7 +25,7 @@ interface IWorkerNodesCreateNodePoolDescriptionProps
 }
 
 const WorkerNodesCreateNodePoolDescription: React.FC<
-  IWorkerNodesCreateNodePoolDescriptionProps
+  React.PropsWithChildren<IWorkerNodesCreateNodePoolDescriptionProps>
 > = ({
   id,
   nodePool,

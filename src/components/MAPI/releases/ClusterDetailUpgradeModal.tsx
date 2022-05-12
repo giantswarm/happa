@@ -76,13 +76,9 @@ interface IClusterDetailUpgradeModalProps {
   visible?: boolean;
 }
 
-const ClusterDetailUpgradeModal: React.FC<IClusterDetailUpgradeModalProps> = ({
-  fromRelease,
-  toRelease,
-  onUpgrade,
-  visible,
-  onClose,
-}) => {
+const ClusterDetailUpgradeModal: React.FC<
+  React.PropsWithChildren<IClusterDetailUpgradeModalProps>
+> = ({ fromRelease, toRelease, onUpgrade, visible, onClose }) => {
   const [currentPane, setCurrentPane] = useState(
     ClusterDetailUpgradeModalPane.Disclaimer
   );

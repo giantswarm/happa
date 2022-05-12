@@ -42,7 +42,7 @@ interface IWorkerNodesNodePoolItemMachineTypeProps
 }
 
 const WorkerNodesNodePoolItemMachineType: React.FC<
-  IWorkerNodesNodePoolItemMachineTypeProps
+  React.PropsWithChildren<IWorkerNodesNodePoolItemMachineTypeProps>
 > = ({ nodePool, providerNodePool, ...props }) => {
   const machineTypes =
     nodePool && providerNodePool

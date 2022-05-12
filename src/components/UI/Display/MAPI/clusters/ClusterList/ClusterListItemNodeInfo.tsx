@@ -50,7 +50,9 @@ interface IClusterListItemNodeInfoProps
   workerNodesMemory?: number;
 }
 
-const ClusterListItemNodeInfo: React.FC<IClusterListItemNodeInfoProps> = ({
+const ClusterListItemNodeInfo: React.FC<
+  React.PropsWithChildren<IClusterListItemNodeInfoProps>
+> = ({
   workerNodePoolsCount,
   workerNodesCPU,
   workerNodesCount,

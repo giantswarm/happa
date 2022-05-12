@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 
 interface IAdminLoginProps {}
 
-const AdminLogin: React.FC<IAdminLoginProps> = () => {
+const AdminLogin: React.FC<React.PropsWithChildren<IAdminLoginProps>> = () => {
   const user = useSelector(getLoggedInUser);
   const auth = useAuthProvider();
   const dispatch = useDispatch();

@@ -14,7 +14,7 @@ import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 import useError from 'utils/hooks/useError';
 import RoutePath from 'utils/routePath';
 
-const AppDetail: React.FC = () => {
+const AppDetail: React.FC<React.PropsWithChildren<unknown>> = () => {
   const match = useRouteMatch();
 
   const params = match.params as {

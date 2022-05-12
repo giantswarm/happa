@@ -20,7 +20,9 @@ interface IUpdateAppGuideProps
   canUpdateApps?: boolean;
 }
 
-const UpdateAppGuide: React.FC<IUpdateAppGuideProps> = ({
+const UpdateAppGuide: React.FC<
+  React.PropsWithChildren<IUpdateAppGuideProps>
+> = ({
   appName,
   namespace,
   newVersion,

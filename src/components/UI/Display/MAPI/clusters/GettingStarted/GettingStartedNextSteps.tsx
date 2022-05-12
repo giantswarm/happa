@@ -7,7 +7,9 @@ import { useRouteMatch } from 'react-router';
 
 interface IGettingStartedNextStepsProps {}
 
-const GettingStartedNextSteps: React.FC<IGettingStartedNextStepsProps> = () => {
+const GettingStartedNextSteps: React.FC<
+  React.PropsWithChildren<IGettingStartedNextStepsProps>
+> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
 
   return (

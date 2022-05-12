@@ -8,7 +8,7 @@ interface ITabsProps extends React.ComponentPropsWithoutRef<typeof GromTabs> {
   useRoutes?: boolean;
 }
 
-const Tabs: React.FC<ITabsProps> = ({
+const Tabs: React.FC<React.PropsWithChildren<ITabsProps>> = ({
   children,
   useRoutes,
   activeIndex: controlledActiveIndex,

@@ -54,13 +54,9 @@ interface IFlashMessagesNotificationProps
   onClose?: () => void;
 }
 
-const FlashMessagesNotification: React.FC<IFlashMessagesNotificationProps> = ({
-  title,
-  type,
-  children,
-  onClose,
-  ...props
-}) => {
+const FlashMessagesNotification: React.FC<
+  React.PropsWithChildren<IFlashMessagesNotificationProps>
+> = ({ title, type, children, onClose, ...props }) => {
   const background = mapMessageTypeToBackgroundColor(type);
 
   return (

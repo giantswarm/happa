@@ -26,7 +26,7 @@ interface IColorSampleProps {
   title?: string;
 }
 
-const ColorSample: React.FC<IColorSampleProps> = ({
+const ColorSample: React.FC<React.PropsWithChildren<IColorSampleProps>> = ({
   children,
   color,
   contrastingColor,

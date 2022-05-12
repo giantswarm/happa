@@ -70,7 +70,7 @@ interface IClusterDetailWidgetControlPlaneNodesProps
 }
 
 const ClusterDetailWidgetControlPlaneNodes: React.FC<
-  IClusterDetailWidgetControlPlaneNodesProps
+  React.PropsWithChildren<IClusterDetailWidgetControlPlaneNodesProps>
 > = ({ cluster, providerCluster, ...props }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();

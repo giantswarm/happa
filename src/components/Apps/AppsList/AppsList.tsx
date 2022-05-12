@@ -55,7 +55,7 @@ const sortFuncs: {
   latest: sortByLatest,
 };
 
-const AppsList: React.FC = () => {
+const AppsList: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useDispatch();
   const isAdmin = useSelector(getUserIsAdmin);
   const catalogs = useSelector(selectCatalogs);

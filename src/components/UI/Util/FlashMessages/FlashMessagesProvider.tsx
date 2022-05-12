@@ -18,10 +18,9 @@ interface IFlashMessagesProviderProps {
   animate?: boolean;
 }
 
-const FlashMessagesProvider: React.FC<IFlashMessagesProviderProps> = ({
-  controller,
-  animate,
-}) => {
+const FlashMessagesProvider: React.FC<
+  React.PropsWithChildren<IFlashMessagesProviderProps>
+> = ({ controller, animate }) => {
   const [queue, setQueue] = useState<IFlashMessageEntry[]>([]);
 
   const setQueueValue = useCallback((q: IFlashMessageEntry[]) => {

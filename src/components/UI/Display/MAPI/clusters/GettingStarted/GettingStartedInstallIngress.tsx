@@ -7,7 +7,7 @@ import { useRouteMatch } from 'react-router';
 interface IGettingStartedInstallIngressProps {}
 
 const GettingStartedInstallIngress: React.FC<
-  IGettingStartedInstallIngressProps
+  React.PropsWithChildren<IGettingStartedInstallIngressProps>
 > = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { clusterId } = match.params;

@@ -8,7 +8,7 @@ interface IClusterListEmptyPlaceholderProps
 }
 
 const ClusterListEmptyPlaceholder: React.FC<
-  IClusterListEmptyPlaceholderProps
+  React.PropsWithChildren<IClusterListEmptyPlaceholderProps>
 > = ({ organizationName, canCreateClusters, ...props }) => {
   return (
     <Box

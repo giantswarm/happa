@@ -12,7 +12,7 @@ export interface IGettingStartedStep {
   description: string;
   url: string;
   path: string;
-  component: React.ComponentType;
+  component: React.ComponentType<React.PropsWithChildren<unknown>>;
 }
 
 export interface IGettingStartedContext {
@@ -35,7 +35,7 @@ interface IGettingStartedProviderProps {
 }
 
 const GettingStartedProvider: React.FC<
-  React.PropsWithChildren<IGettingStartedProviderProps>
+  React.PropsWithChildren<React.PropsWithChildren<IGettingStartedProviderProps>>
 > = ({ homePath, steps, children }) => {
   const { pathname } = useLocation();
 

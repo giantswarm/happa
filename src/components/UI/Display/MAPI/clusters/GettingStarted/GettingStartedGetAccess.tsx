@@ -12,7 +12,9 @@ import Aside from 'UI/Layout/Aside';
 
 interface IGettingStartedGetAccessProps {}
 
-const GettingStartedGetAccess: React.FC<IGettingStartedGetAccessProps> = () => {
+const GettingStartedGetAccess: React.FC<
+  React.PropsWithChildren<IGettingStartedGetAccessProps>
+> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { clusterId } = match.params;
 

@@ -10,7 +10,7 @@ interface INodesRunningProps {
   numNodePools?: number;
 }
 
-const NodesRunning: FC<INodesRunningProps> = ({
+const NodesRunning: FC<React.PropsWithChildren<INodesRunningProps>> = ({
   CPUs,
   RAM,
   isClusterCreating,

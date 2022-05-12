@@ -24,12 +24,9 @@ interface INodePoolScalingProps {
   supportsSpotInstances?: boolean;
 }
 
-const NodePoolScaling: React.FC<INodePoolScalingProps> = ({
-  nodePool,
-  provider,
-  supportsAutoscaling,
-  supportsSpotInstances,
-}) => {
+const NodePoolScaling: React.FC<
+  React.PropsWithChildren<INodePoolScalingProps>
+> = ({ nodePool, provider, supportsAutoscaling, supportsSpotInstances }) => {
   const { id, scaling, status } = nodePool;
 
   const current = status?.nodes_ready ?? 0;

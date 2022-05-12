@@ -38,7 +38,7 @@ interface IFlashMessageProps extends React.HTMLAttributes<HTMLDivElement> {
   type: FlashMessageType;
 }
 
-const FlashMessage: FC<IFlashMessageProps> = ({
+const FlashMessage: FC<React.PropsWithChildren<IFlashMessageProps>> = ({
   type,
   className,
   children,

@@ -13,7 +13,7 @@ interface IWorkerNodesCreateNodePoolScaleProps
     > {}
 
 const WorkerNodesCreateNodePoolScale: React.FC<
-  IWorkerNodesCreateNodePoolScaleProps
+  React.PropsWithChildren<IWorkerNodesCreateNodePoolScaleProps>
 > = ({
   id,
   nodePool,

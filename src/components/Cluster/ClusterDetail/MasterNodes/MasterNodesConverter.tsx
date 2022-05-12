@@ -14,12 +14,9 @@ interface IMasterNodeConverterProps
   isLoading?: boolean;
 }
 
-const MasterNodeConverter: React.FC<IMasterNodeConverterProps> = ({
-  onApply,
-  onCancel,
-  isLoading,
-  ...rest
-}) => {
+const MasterNodeConverter: React.FC<
+  React.PropsWithChildren<IMasterNodeConverterProps>
+> = ({ onApply, onCancel, isLoading, ...rest }) => {
   const handleEventListener = (
     callback?: () => void
   ): ((e: React.MouseEvent<HTMLElement>) => void) => {

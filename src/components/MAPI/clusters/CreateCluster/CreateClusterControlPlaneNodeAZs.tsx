@@ -24,7 +24,7 @@ interface ICreateClusterControlPlaneNodeAZsProps
     > {}
 
 const CreateClusterControlPlaneNodeAZs: React.FC<
-  ICreateClusterControlPlaneNodeAZsProps
+  React.PropsWithChildren<ICreateClusterControlPlaneNodeAZsProps>
 > = ({ id, cluster, controlPlaneNodes, onChange, ...props }) => {
   const [azSelector, setAzSelector] = useState(
     AvailabilityZoneSelection.Automatic

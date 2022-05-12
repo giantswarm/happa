@@ -52,13 +52,9 @@ interface IUserInstalledAppsProps extends React.PropsWithChildren<{}> {
   onShowDetail: (appName: string) => void;
 }
 
-const UserInstalledApps: React.FC<IUserInstalledAppsProps> = ({
-  apps,
-  error,
-  onShowDetail,
-  children,
-  ...rest
-}) => {
+const UserInstalledApps: React.FC<
+  React.PropsWithChildren<IUserInstalledAppsProps>
+> = ({ apps, error, onShowDetail, children, ...rest }) => {
   const [iconErrors, setIconErrors] = useState({});
 
   const onIconError = (e: React.BaseSyntheticEvent) => {
