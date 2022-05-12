@@ -69,15 +69,17 @@ it('renders all the v4 KVM cluster data correctly', async () => {
       clusterId: V4_CLUSTER.id,
     }
   );
-  const { getByText, getAllByText } = renderRouteWithStore(clusterDetailPath);
+  const { findByText, getByText, getAllByText } =
+    renderRouteWithStore(clusterDetailPath);
 
   await waitFor(() => {
     expect(getByText(V4_CLUSTER.name)).toBeInTheDocument();
   });
   expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
 
-  const apiEndpoint = getByText(v4KVMClusterResponse.api_endpoint);
-  expect(apiEndpoint).toBeInTheDocument();
+  expect(
+    await findByText(v4KVMClusterResponse.api_endpoint)
+  ).toBeInTheDocument();
 
   const portsInResponse = v4KVMClusterResponse.kvm.port_mappings;
   const portsContainer = getByText('Ingress ports:');

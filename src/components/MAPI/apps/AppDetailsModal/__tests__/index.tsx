@@ -67,9 +67,9 @@ describe('AppDetailsModal', () => {
     );
 
     expect(await screen.findByText(app.spec.catalog)).toBeInTheDocument();
+    expect(await screen.findByText(app.spec.version)).toBeInTheDocument();
     expect(screen.getByText(app.spec.namespace)).toBeInTheDocument();
     expect(screen.getByText(app.status!.release.status!)).toBeInTheDocument();
-    expect(screen.getByText(app.spec.version)).toBeInTheDocument();
     expect(screen.getByText(app.status!.appVersion)).toBeInTheDocument();
   });
 

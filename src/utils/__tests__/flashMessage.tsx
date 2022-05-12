@@ -13,7 +13,7 @@ describe('FlashMessage', () => {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     renderWithTheme(() => <></>, {});
 
-    await act(async () => {
+    act(() => {
       for (let i = 0; i < 6; i++) {
         new FlashMessage(
           `Yo! Something went wrong.`,
@@ -21,20 +21,21 @@ describe('FlashMessage', () => {
           messageTTL.MEDIUM
         );
       }
-
-      expect(
-        await screen.findAllByText('Yo! Something went wrong.')
-      ).toHaveLength(1);
     });
 
-    await act(async () => {
+    expect(
+      await screen.findAllByText('Yo! Something went wrong.')
+    ).toHaveLength(1);
+
+    act(() => {
       forceRemoveAll();
-      expect(
-        await screen.findByText('Yo! Something went wrong.')
-      ).not.toBeInTheDocument();
     });
 
-    await act(async () => {
+    expect(
+      screen.queryByText('Yo! Something went wrong.')
+    ).not.toBeInTheDocument();
+
+    act(() => {
       new FlashMessage(
         `Yo! Something went wrong.`,
         messageType.ERROR,
@@ -56,18 +57,18 @@ describe('FlashMessage', () => {
         messageType.INFO,
         messageTTL.MEDIUM
       );
-
-      expect(
-        await screen.findAllByText('Yo! Something went wrong.')
-      ).toHaveLength(2);
     });
+
+    expect(
+      await screen.findAllByText('Yo! Something went wrong.')
+    ).toHaveLength(2);
   });
 
   it(`won't display duplicate messages after the first one has been closed`, async () => {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     renderWithTheme(() => <></>, {});
 
-    await act(async () => {
+    act(() => {
       new FlashMessage(
         `Sorry, your request failed.`,
         messageType.ERROR,
@@ -79,11 +80,11 @@ describe('FlashMessage', () => {
         messageType.ERROR,
         messageTTL.MEDIUM
       );
-
-      expect(
-        await screen.findAllByText('Sorry, your request failed.')
-      ).toHaveLength(1);
     });
+
+    expect(
+      await screen.findAllByText('Sorry, your request failed.')
+    ).toHaveLength(1);
 
     fireEvent.click(screen.getByLabelText('Close'));
 

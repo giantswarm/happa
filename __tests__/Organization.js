@@ -288,8 +288,8 @@ describe('', () => {
 describe('Organization deletion', () => {
   it('shows the organization deletion modal when requested and organization deletion success flash', async () => {
     getMockCall('/v4/user/', userResponse);
-    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/`, orgResponse, 2);
-    getMockCallTimes(`/v4/organizations/${ORGANIZATION}/credentials/`, [], 2);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/`, orgResponse);
+    getMockCall(`/v4/organizations/${ORGANIZATION}/credentials/`, []);
     getMockCall('/v4/appcatalogs/', appCatalogsResponse);
     getMockCall('/v4/clusters/', v4ClustersResponse);
     getMockCall(`/v4/clusters/${V4_CLUSTER.id}/`, v4AWSClusterResponse);
@@ -303,7 +303,6 @@ describe('Organization deletion', () => {
       ...orgsResponse,
       { id: organizationID },
     ]);
-    getMockCall('/v4/organizations/', orgsResponse);
     getMockCall(`/v4/organizations/${organizationID}/`, {
       id: organizationID,
       members: [],
@@ -322,11 +321,14 @@ describe('Organization deletion', () => {
       OrganizationsRoutes.Detail,
       { orgId: organizationID }
     );
-    const { findByText, getAllByText, findAllByText } = renderRouteWithStore(
-      organizationDetailsPath
-    );
+    const { findByText, findByRole, getAllByText, findAllByText } =
+      renderRouteWithStore(organizationDetailsPath);
 
-    let deleteButton = await findByText('Delete organization');
+    let deleteButton = await findByRole('button', {
+      name: 'Delete organization',
+    });
+    await waitFor(() => expect(deleteButton).not.toBeDisabled());
+
     fireEvent.click(deleteButton);
 
     const modalTitle = await findByText((_, element) => {
