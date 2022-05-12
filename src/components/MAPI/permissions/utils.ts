@@ -822,7 +822,7 @@ async function getPermissionsWithUseCases(
 /**
  * Given a list of Roles/ClusterRoles grouped by namespace,
  * create a map of role names to resource rules in each namespace.
- * @param roles
+ * @param rolesForNamespaces
  */
 export function computeResourceRulesFromRoles(
   rolesForNamespaces: IRolesForNamespaces
