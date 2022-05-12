@@ -370,10 +370,7 @@ describe('AccessControlRoleSubjects', () => {
 
   it('can delete subjects', async () => {
     jest.useFakeTimers();
-    const onDeleteMockFn = jest.fn(() => {
-      // eslint-disable-next-line no-magic-numbers
-      return new Promise<void>((resolve) => setTimeout(resolve, 1000));
-    });
+    const onDeleteMockFn = jest.fn();
 
     render(
       getComponent({

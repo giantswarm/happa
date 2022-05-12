@@ -376,13 +376,13 @@ scales node pools correctly`, async () => {
     const flashMessage = await findByText(/Your new node pool with ID/i);
     expect(flashMessage).toHaveTextContent(nodePoolCreationResponse.id);
 
-    await act(async () => {
+    act(() => {
       // Remove flash message.
       forceRemoveAll();
-      await waitFor(() =>
-        expect(screen.queryByRole('status')).not.toBeInTheDocument()
-      );
     });
+    await waitFor(() =>
+      expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    );
 
     // Is the new NodePool in the document?
     const newNodePool = await findByText(nodePoolCreationResponse.id);
