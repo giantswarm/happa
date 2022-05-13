@@ -133,7 +133,7 @@ interface IVersionPickerProps {
  * of versions. The list of versions can contain test versions, and this component
  * allows the users to choose whether they want to see the test versions or not.
  */
-const VersionPicker: React.FC<IVersionPickerProps> = ({
+const VersionPicker: React.FC<React.PropsWithChildren<IVersionPickerProps>> = ({
   onChange,
   selectedVersion,
   versions,

@@ -23,7 +23,7 @@ interface IReleaseDetailsModalUpgradeOptionsVersionProps
 }
 
 const ReleaseDetailsModalUpgradeOptionsVersion: React.FC<
-  IReleaseDetailsModalUpgradeOptionsVersionProps
+  React.PropsWithChildren<IReleaseDetailsModalUpgradeOptionsVersionProps>
 > = ({ version, isBeta, unauthorized, ...rest }) => {
   const formattedVersion = `v${version}`;
 

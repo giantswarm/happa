@@ -17,6 +17,7 @@ import {
 import { IState } from 'model/stores/state';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from 'redux';
 import styled from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
@@ -28,8 +29,11 @@ const FooterGroup = styled.span`
 
 interface IFooterProps extends React.ComponentPropsWithoutRef<'footer'> {}
 
-const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
-  const dispatch = useDispatch();
+const Footer: React.FC<React.PropsWithChildren<IFooterProps>> = (
+  props: IFooterProps
+) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dispatch: Dispatch<any> = useDispatch();
 
   const currentVersion: string = useSelector(getMetadataCurrentVersion);
   const newVersion: string | null = useSelector(getMetadataNewVersion);

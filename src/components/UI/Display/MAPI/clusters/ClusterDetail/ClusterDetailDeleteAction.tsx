@@ -45,7 +45,9 @@ interface IClusterDetailDeleteActionProps
   unauthorized?: boolean;
 }
 
-const ClusterDetailDeleteAction: React.FC<IClusterDetailDeleteActionProps> = ({
+const ClusterDetailDeleteAction: React.FC<
+  React.PropsWithChildren<IClusterDetailDeleteActionProps>
+> = ({
   name,
   description,
   creationDate,

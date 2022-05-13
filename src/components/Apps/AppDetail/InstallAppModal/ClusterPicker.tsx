@@ -66,7 +66,7 @@ interface IClusterPicker {
   variant?: ClusterPickerVariant;
 }
 
-const ClusterPicker: FC<IClusterPicker> = (props) => {
+const ClusterPicker: FC<React.PropsWithChildren<IClusterPicker>> = (props) => {
   const onSelectCluster: (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void = (e) => {

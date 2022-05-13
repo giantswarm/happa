@@ -14,11 +14,9 @@ interface IBindRolesToSubjectsGuideProps
   canBindRoles?: boolean;
 }
 
-const BindRolesToSubjectsGuide: React.FC<IBindRolesToSubjectsGuideProps> = ({
-  namespace,
-  canBindRoles,
-  ...props
-}) => {
+const BindRolesToSubjectsGuide: React.FC<
+  React.PropsWithChildren<IBindRolesToSubjectsGuideProps>
+> = ({ namespace, canBindRoles, ...props }) => {
   return (
     <CLIGuide
       title='Bind roles to subjects via the Management API'

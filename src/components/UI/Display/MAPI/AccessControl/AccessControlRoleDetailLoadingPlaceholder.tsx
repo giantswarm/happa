@@ -7,7 +7,7 @@ interface IAccessControlRoleDetailLoadingPlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
 const AccessControlRoleDetailLoadingPlaceholder: React.FC<
-  IAccessControlRoleDetailLoadingPlaceholderProps
+  React.PropsWithChildren<IAccessControlRoleDetailLoadingPlaceholderProps>
 > = (props) => {
   const theme = useTheme();
 

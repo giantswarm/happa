@@ -31,7 +31,7 @@ interface IAppInstallationSelectedClusterProps extends BoxProps {
 }
 
 const AppInstallationSelectedCluster: React.FC<
-  IAppInstallationSelectedClusterProps
+  React.PropsWithChildren<IAppInstallationSelectedClusterProps>
 > = ({ clusterName, onDeselectCluster, ...props }) => {
   const theme = useTheme();
 

@@ -16,13 +16,9 @@ interface IInspectAppGuideProps
   selectedVersion: string;
 }
 
-const InspectAppGuide: React.FC<IInspectAppGuideProps> = ({
-  appName,
-  catalogName,
-  catalogNamespace,
-  selectedVersion,
-  ...props
-}) => {
+const InspectAppGuide: React.FC<
+  React.PropsWithChildren<IInspectAppGuideProps>
+> = ({ appName, catalogName, catalogNamespace, selectedVersion, ...props }) => {
   const context = getCurrentInstallationContextName();
 
   return (

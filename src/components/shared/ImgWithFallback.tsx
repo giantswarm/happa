@@ -16,7 +16,9 @@ interface IImgWithFallback extends ImgHTMLAttributes<HTMLImageElement> {
   fallback: IFallback;
 }
 
-const ImgWithFallback: FC<IImgWithFallback> = (props) => {
+const ImgWithFallback: FC<React.PropsWithChildren<IImgWithFallback>> = (
+  props
+) => {
   const { fallback, src, ...restProps } = props;
   const [loadError, setLoadError] = useState(true);
   const [loading, setLoading] = useState(true);

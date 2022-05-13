@@ -45,7 +45,7 @@ const TRUNCATE_START_CHARS = 10;
 const TRUNCATE_END_CHARS = 5;
 
 const ClusterDetailAppListWidgetVersionInspector: React.FC<
-  IClusterDetailAppListWidgetVersionInspectorProps
+  React.PropsWithChildren<IClusterDetailAppListWidgetVersionInspectorProps>
   // eslint-disable-next-line complexity
 > = ({
   app,

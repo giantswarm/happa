@@ -25,7 +25,9 @@ interface ICreateClusterDescriptionProps
       'onChange' | 'id'
     > {}
 
-const CreateClusterDescription: React.FC<ICreateClusterDescriptionProps> = ({
+const CreateClusterDescription: React.FC<
+  React.PropsWithChildren<ICreateClusterDescriptionProps>
+> = ({
   id,
   cluster,
   providerCluster,

@@ -6,6 +6,7 @@ import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import { organizationsLoadMAPI } from 'model/stores/organization/actions';
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Dispatch } from 'redux';
 import Button from 'UI/Controls/Button';
 import TextInput from 'UI/Inputs/TextInput';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -27,13 +28,9 @@ interface IOrganizationListCreateOrgProps
   canCreateOrganizations?: boolean;
 }
 
-const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
-  onSubmit,
-  onCancel,
-  canCreateOrganizations,
-  open,
-  ...props
-}) => {
+const OrganizationListCreateOrg: React.FC<
+  React.PropsWithChildren<IOrganizationListCreateOrgProps>
+> = ({ onSubmit, onCancel, canCreateOrganizations, open, ...props }) => {
   const [orgName, setOrgName] = useState('');
   const [isCreating, setIsCreating] = useState(false);
 
@@ -77,7 +74,8 @@ const OrganizationListCreateOrg: React.FC<IOrganizationListCreateOrgProps> = ({
   const client = useHttpClient();
   const auth = useAuthProvider();
 
-  const dispatch = useDispatch();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dispatch: Dispatch<any> = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();

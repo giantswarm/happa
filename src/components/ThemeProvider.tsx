@@ -17,7 +17,7 @@ const AppWrapper = styled.div`
 interface IThemeProviderProps
   extends React.ComponentPropsWithoutRef<typeof Grommet> {}
 
-const ThemeProvider: React.FC<IThemeProviderProps> = ({
+const ThemeProvider: React.FC<React.PropsWithChildren<IThemeProviderProps>> = ({
   children,
   ...rest
 }) => {

@@ -15,7 +15,7 @@ const VersionWarning = styled.span`
   }
 `;
 
-const FooterVersion: React.FC<IFooterVersionProps> = ({
+const FooterVersion: React.FC<React.PropsWithChildren<IFooterVersionProps>> = ({
   currentVersion,
   hasUpdateReady,
 }) => {

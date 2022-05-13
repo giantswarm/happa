@@ -2,7 +2,6 @@ import { fireEvent, render, RenderResult } from '@testing-library/react';
 import KeyPairCreateModal from 'Cluster/ClusterDetail/KeypairCreateModal/KeyPairCreateModal';
 import { Providers, StatusCodes } from 'model/constants';
 import React from 'react';
-import { act } from 'react-dom/test-utils';
 import {
   USER_EMAIL,
   v4AWSClusterResponse,
@@ -153,16 +152,13 @@ describe('KeyPairCreateModal', () => {
     const openButton = getByText(/create key pair and kubeconfig/i);
     fireEvent.click(openButton);
 
-    let createButton: HTMLElement | null = null;
-    await act(async () => {
-      createButton = getByText(/^create key pair$/i);
-      fireEvent.click(createButton);
-      expect(
-        await findByText(
-          /perhaps our servers are down, please try again later or contact support/i
-        )
-      ).toBeInTheDocument();
-    });
+    const createButton = getByText(/^create key pair$/i);
+    fireEvent.click(createButton);
+    expect(
+      await findByText(
+        /perhaps our servers are down, please try again later or contact support/i
+      )
+    ).toBeInTheDocument();
 
     expect(createButton).toHaveTextContent(/retry/i);
   });
@@ -177,14 +173,13 @@ describe('KeyPairCreateModal', () => {
     const openButton = getByText(/create key pair and kubeconfig/i);
     fireEvent.click(openButton);
 
-    let errorMessage: HTMLElement | null = null;
-    await act(async () => {
-      fireEvent.click(getByText(/^create key pair$/i));
-      errorMessage = await findByText(
+    const createButton = getByText(/^create key pair$/i);
+    fireEvent.click(createButton);
+    expect(
+      await findByText(
         /backend is not yet available. Please try again in a moment./i
-      );
-    });
-    expect(errorMessage).toBeInTheDocument();
+      )
+    ).toBeInTheDocument();
 
     const pkiLabel = getByText(/pki/i);
     fireEvent.mouseOver(pkiLabel);

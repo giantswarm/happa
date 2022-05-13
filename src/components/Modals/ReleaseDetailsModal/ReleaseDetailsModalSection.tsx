@@ -11,7 +11,7 @@ interface IReleaseDetailsModalSectionProps
 }
 
 const ReleaseDetailsModalSection: React.FC<
-  IReleaseDetailsModalSectionProps
+  React.PropsWithChildren<IReleaseDetailsModalSectionProps>
 > = ({ title, children, ...props }) => {
   return (
     <Wrapper {...props}>

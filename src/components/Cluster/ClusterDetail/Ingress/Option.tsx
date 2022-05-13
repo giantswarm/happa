@@ -37,7 +37,12 @@ type OptionProps = ComponentPropsWithoutRef<typeof Info> & {
   footer?: ReactNode;
 };
 
-const Option: React.FC<OptionProps> = ({ id, footer, children, ...rest }) => {
+const Option: React.FC<React.PropsWithChildren<OptionProps>> = ({
+  id,
+  footer,
+  children,
+  ...rest
+}) => {
   return (
     <Info {...rest}>
       <StyledInfoRow>

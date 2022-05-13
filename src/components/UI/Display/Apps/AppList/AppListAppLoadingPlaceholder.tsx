@@ -11,7 +11,7 @@ interface IAppListAppLoadingPlacholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
 const AppListAppLoadingPlacholder: React.FC<
-  IAppListAppLoadingPlacholderProps
+  React.PropsWithChildren<IAppListAppLoadingPlacholderProps>
 > = (props) => {
   const theme = useTheme();
 

@@ -176,7 +176,9 @@ interface IAccessControlRoleSubjectsProps
   onDelete: (type: ui.AccessControlSubjectTypes, name: string) => Promise<void>;
 }
 
-const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
+const AccessControlRoleSubjects: React.FC<
+  React.PropsWithChildren<IAccessControlRoleSubjectsProps>
+> = ({
   namespace,
   roleName,
   groups,
@@ -210,7 +212,7 @@ const AccessControlRoleSubjects: React.FC<IAccessControlRoleSubjectsProps> = ({
         await onAdd(type, values);
         dispatch({ type: 'stopAdding', subjectType: type });
       } catch (err) {
-        let message: React.ReactNode = {};
+        let message: React.ReactNode = null;
         if (type === ui.AccessControlSubjectTypes.ServiceAccount) {
           message = (
             <>

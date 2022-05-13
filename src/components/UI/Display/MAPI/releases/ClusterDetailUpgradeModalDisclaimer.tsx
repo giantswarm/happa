@@ -5,7 +5,7 @@ import React from 'react';
 interface IClusterDetailUpgradeModalDisclaimerProps {}
 
 const ClusterDetailUpgradeModalDisclaimer: React.FC<
-  IClusterDetailUpgradeModalDisclaimerProps
+  React.PropsWithChildren<IClusterDetailUpgradeModalDisclaimerProps>
 > = () => {
   return (
     <Box direction='column'>

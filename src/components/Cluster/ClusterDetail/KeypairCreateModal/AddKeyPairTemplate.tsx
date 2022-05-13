@@ -29,7 +29,9 @@ interface IAddKeyPairTemplateProps {
   ingressBaseDomain: string;
 }
 
-const AddKeyPairTemplate: React.FC<IAddKeyPairTemplateProps> = ({
+const AddKeyPairTemplate: React.FC<
+  React.PropsWithChildren<IAddKeyPairTemplateProps>
+> = ({
   provider,
   email,
   cnPrefix,

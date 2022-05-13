@@ -10,11 +10,9 @@ interface IYAMLFileUploadProps
   onInputChange: (values: string, done: () => void) => void;
 }
 
-const YAMLFileUpload: React.FC<IYAMLFileUploadProps> = ({
-  buttonText,
-  onInputChange,
-  ...props
-}) => {
+const YAMLFileUpload: React.FC<
+  React.PropsWithChildren<IYAMLFileUploadProps>
+> = ({ buttonText, onInputChange, ...props }) => {
   const [fileUploading, setFileUploading] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
 

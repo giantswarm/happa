@@ -47,10 +47,9 @@ interface IInstallIngressButtonProps
   cluster: Cluster;
 }
 
-const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
-  cluster,
-  ...rest
-}) => {
+const InstallIngressButton: React.FC<
+  React.PropsWithChildren<IInstallIngressButtonProps>
+> = ({ cluster, ...rest }) => {
   const [isNew, setIsNew] = useState(true);
 
   const isInstalling = useSelector<IState, boolean | null>((state) =>

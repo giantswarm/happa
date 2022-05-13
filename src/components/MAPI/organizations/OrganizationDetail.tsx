@@ -39,7 +39,9 @@ function computePaths(orgName: string) {
 
 interface IOrganizationDetailProps {}
 
-const OrganizationDetail: React.FC<IOrganizationDetailProps> = () => {
+const OrganizationDetail: React.FC<
+  React.PropsWithChildren<IOrganizationDetailProps>
+> = () => {
   const { orgId } = useParams<{ orgId: string }>();
 
   const paths = useMemo(() => computePaths(orgId), [orgId]);

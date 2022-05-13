@@ -51,12 +51,9 @@ interface IClusterIDLabelProps extends React.ComponentPropsWithoutRef<'span'> {
   variant?: ClusterIDLabelType;
 }
 
-const ClusterIDLabel: React.FC<IClusterIDLabelProps> = ({
-  clusterID,
-  copyEnabled,
-  variant,
-  ...props
-}) => {
+const ClusterIDLabel: React.FC<
+  React.PropsWithChildren<IClusterIDLabelProps>
+> = ({ clusterID, copyEnabled, variant, ...props }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const copyToClipboard = (e: React.MouseEvent<HTMLElement>) => {

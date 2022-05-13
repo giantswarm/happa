@@ -88,7 +88,9 @@ function computeSteps(
 
 interface IGettingStartedProps {}
 
-const GettingStarted: React.FC<IGettingStartedProps> = () => {
+const GettingStarted: React.FC<
+  React.PropsWithChildren<IGettingStartedProps>
+> = () => {
   const dispatch = useDispatch();
 
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();

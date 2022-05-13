@@ -16,7 +16,7 @@ interface IWorkerNodesSpotInstancesAzureProps {
 }
 
 const WorkerNodesSpotInstancesAzure: React.FC<
-  IWorkerNodesSpotInstancesAzureProps
+  React.PropsWithChildren<IWorkerNodesSpotInstancesAzureProps>
 > = ({ providerNodePool }) => {
   const spotInstances = getProviderNodePoolSpotInstances(providerNodePool) as
     | INodePoolSpotInstancesAzure

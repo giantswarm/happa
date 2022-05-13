@@ -29,10 +29,9 @@ interface IReleaseStateLabelProps extends TextProps {
   state: ReleaseState;
 }
 
-const ReleaseStateLabel: React.FC<IReleaseStateLabelProps> = ({
-  state,
-  ...props
-}) => {
+const ReleaseStateLabel: React.FC<
+  React.PropsWithChildren<IReleaseStateLabelProps>
+> = ({ state, ...props }) => {
   return (
     <StyledText
       color={state === 'deprecated' ? '#768e9d' : 'background'}

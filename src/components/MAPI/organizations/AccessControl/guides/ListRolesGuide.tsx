@@ -12,10 +12,9 @@ interface IListRolesGuideProps
   namespace: string;
 }
 
-const ListRolesGuide: React.FC<IListRolesGuideProps> = ({
-  namespace,
-  ...props
-}) => {
+const ListRolesGuide: React.FC<
+  React.PropsWithChildren<IListRolesGuideProps>
+> = ({ namespace, ...props }) => {
   return (
     <CLIGuide
       title='List roles via the Management API'

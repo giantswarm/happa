@@ -25,7 +25,7 @@ interface IWorkerNodesCreateNodePoolMachineTypeProps
 }
 
 const WorkerNodesCreateNodePoolMachineType: React.FC<
-  IWorkerNodesCreateNodePoolMachineTypeProps
+  React.PropsWithChildren<IWorkerNodesCreateNodePoolMachineTypeProps>
 > = ({
   id,
   providerNodePool,

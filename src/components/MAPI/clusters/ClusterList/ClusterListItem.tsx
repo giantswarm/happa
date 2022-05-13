@@ -79,8 +79,10 @@ interface IClusterListItemProps
   canListReleases?: boolean;
 }
 
-// eslint-disable-next-line complexity
-const ClusterListItem: React.FC<IClusterListItemProps> = ({
+const ClusterListItem: React.FC<
+  React.PropsWithChildren<IClusterListItemProps>
+  // eslint-disable-next-line complexity
+> = ({
   cluster,
   providerCluster,
   releases,

@@ -8,9 +8,9 @@ import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBott
 interface IGettingStartedNavigationProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
-const GettingStartedNavigation: React.FC<IGettingStartedNavigationProps> = (
-  props
-) => {
+const GettingStartedNavigation: React.FC<
+  React.PropsWithChildren<IGettingStartedNavigationProps>
+> = (props) => {
   const { nextStepPath, prevStepPath, currentStepIdx, steps, homePath } =
     useGettingStartedContext();
 

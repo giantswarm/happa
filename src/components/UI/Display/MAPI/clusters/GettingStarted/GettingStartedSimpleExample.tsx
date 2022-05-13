@@ -20,7 +20,7 @@ function getHelloWorldURL(clusterBaseDomain: string) {
 interface IGettingStartedSimpleExampleProps {}
 
 const GettingStartedSimpleExample: React.FC<
-  IGettingStartedSimpleExampleProps
+  React.PropsWithChildren<IGettingStartedSimpleExampleProps>
 > = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { clusterId } = match.params;

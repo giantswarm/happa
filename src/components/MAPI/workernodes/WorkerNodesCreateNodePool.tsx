@@ -203,13 +203,9 @@ interface IWorkerNodesCreateNodePoolProps
   onCancel?: () => void;
 }
 
-const WorkerNodesCreateNodePool: React.FC<IWorkerNodesCreateNodePoolProps> = ({
-  cluster,
-  providerCluster,
-  id,
-  onCancel,
-  ...props
-}) => {
+const WorkerNodesCreateNodePool: React.FC<
+  React.PropsWithChildren<IWorkerNodesCreateNodePoolProps>
+> = ({ cluster, providerCluster, id, onCancel, ...props }) => {
   const provider = window.config.info.general.provider;
 
   const clientFactory = useHttpClientFactory();

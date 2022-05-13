@@ -45,7 +45,9 @@ const clusterNameLengthValidator: IValidationFunction = (value) => {
 
 interface INewClusterWrapperProps {}
 
-const NewClusterWrapper: FC<INewClusterWrapperProps> = () => {
+const NewClusterWrapper: FC<
+  React.PropsWithChildren<INewClusterWrapperProps>
+> = () => {
   const match = useRouteMatch<{ orgId: string }>();
   const { orgId } = match.params;
 

@@ -4,9 +4,9 @@ import React from 'react';
 interface IUnauthorizedMessageProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
-const UnauthorizedMessage: React.FC<IUnauthorizedMessageProps> = ({
-  ...props
-}) => {
+const UnauthorizedMessage: React.FC<
+  React.PropsWithChildren<IUnauthorizedMessageProps>
+> = ({ ...props }) => {
   return (
     <Box
       {...props}

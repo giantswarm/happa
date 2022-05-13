@@ -7,7 +7,7 @@ interface IOrganizationDetailLoadingPlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
 const OrganizationDetailLoadingPlaceholder: React.FC<
-  IOrganizationDetailLoadingPlaceholderProps
+  React.PropsWithChildren<IOrganizationDetailLoadingPlaceholderProps>
 > = (props) => {
   const theme = useTheme();
 

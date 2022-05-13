@@ -5,7 +5,7 @@ interface IAccessControlRolePlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Card> {}
 
 const AccessControlRolePlaceholder: React.FC<
-  IAccessControlRolePlaceholderProps
+  React.PropsWithChildren<IAccessControlRolePlaceholderProps>
 > = (props) => {
   return (
     <Card

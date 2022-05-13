@@ -9,12 +9,9 @@ type BaseTransitionProps = React.ComponentPropsWithoutRef<
   delayTimeout?: number;
 };
 
-const BaseTransition: React.FC<BaseTransitionProps> = ({
-  children,
-  in: inProp,
-  delayTimeout,
-  ...props
-}) => {
+const BaseTransition: React.FC<
+  React.PropsWithChildren<BaseTransitionProps>
+> = ({ children, in: inProp, delayTimeout, ...props }) => {
   const delayedInProp = useDelayedChange(inProp, delayTimeout!);
 
   return (

@@ -11,7 +11,7 @@ interface IErrorFallbackProps {
  * This component will return the error passed to it,
  * if it exists, or the children, if it does not
  */
-const ErrorFallback: React.FC<IErrorFallbackProps> = ({
+const ErrorFallback: React.FC<React.PropsWithChildren<IErrorFallbackProps>> = ({
   error,
   children,
   className,

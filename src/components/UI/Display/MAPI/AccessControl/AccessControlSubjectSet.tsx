@@ -45,7 +45,9 @@ interface IAccessControlSubjectSetProps
   removeFromNewlyAdded?: (name: string) => void;
 }
 
-const AccessControlSubjectSet: React.FC<IAccessControlSubjectSetProps> = ({
+const AccessControlSubjectSet: React.FC<
+  React.PropsWithChildren<IAccessControlSubjectSetProps>
+> = ({
   items,
   permissions,
   renderItem,

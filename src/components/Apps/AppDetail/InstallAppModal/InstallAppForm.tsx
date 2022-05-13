@@ -22,7 +22,9 @@ interface IInstallAppFormProps {
   onChangeSecretsYAML: (files: FileList | null) => void;
 }
 
-const InstallAppForm: React.FC<IInstallAppFormProps> = ({
+const InstallAppForm: React.FC<
+  React.PropsWithChildren<IInstallAppFormProps>
+> = ({
   onChangeNamespace,
   onChangeName,
   onChangeValuesYAML,

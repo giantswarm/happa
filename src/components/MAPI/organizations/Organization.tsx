@@ -13,7 +13,9 @@ import OrganizationDetail from './OrganizationDetail';
 
 interface IOrganizationProps {}
 
-const Organization: React.FC<IOrganizationProps> = () => {
+const Organization: React.FC<
+  React.PropsWithChildren<IOrganizationProps>
+> = () => {
   const { orgId } = useParams<{ orgId: string }>();
   const match = useRouteMatch();
 

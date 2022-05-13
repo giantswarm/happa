@@ -10,7 +10,7 @@ const PKILabel = styled.span`
 interface IAddKeyPairServiceUnavailableErrorTemplateProps {}
 
 const AddKeyPairServiceUnavailableError: React.FC<
-  IAddKeyPairServiceUnavailableErrorTemplateProps
+  React.PropsWithChildren<IAddKeyPairServiceUnavailableErrorTemplateProps>
 > = () => {
   return (
     <>

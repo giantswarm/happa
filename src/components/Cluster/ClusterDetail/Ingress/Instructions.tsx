@@ -47,7 +47,7 @@ interface IInstructionsProps {
   kvmTCPHTTPSPort?: number;
 }
 
-const Instructions: React.FC<IInstructionsProps> = ({
+const Instructions: React.FC<React.PropsWithChildren<IInstructionsProps>> = ({
   provider,
   k8sEndpoint,
   kvmTCPHTTPPort,

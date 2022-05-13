@@ -54,7 +54,7 @@ interface IClusterLabelsProps
   unauthorized?: boolean;
 }
 
-const ClusterLabels: FC<IClusterLabelsProps> = ({
+const ClusterLabels: FC<React.PropsWithChildren<IClusterLabelsProps>> = ({
   labels,
   onChange,
   isLoading,

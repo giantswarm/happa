@@ -7,7 +7,7 @@ interface IClusterListErrorPlaceholderProps
 }
 
 const ClusterListErrorPlaceholder: React.FC<
-  IClusterListErrorPlaceholderProps
+  React.PropsWithChildren<IClusterListErrorPlaceholderProps>
 > = ({ organizationName, ...props }) => {
   return (
     <Box

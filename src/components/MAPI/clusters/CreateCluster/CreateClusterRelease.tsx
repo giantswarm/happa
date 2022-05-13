@@ -27,13 +27,9 @@ interface ICreateClusterReleaseProps
   orgNamespace: string;
 }
 
-const CreateClusterRelease: React.FC<ICreateClusterReleaseProps> = ({
-  id,
-  cluster,
-  onChange,
-  orgNamespace,
-  ...props
-}) => {
+const CreateClusterRelease: React.FC<
+  React.PropsWithChildren<ICreateClusterReleaseProps>
+> = ({ id, cluster, onChange, orgNamespace, ...props }) => {
   const isAdmin = useSelector(getUserIsAdmin);
   const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
 

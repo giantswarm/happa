@@ -17,7 +17,7 @@ interface IClusterStatusProps
   showFullMessage?: boolean;
 }
 
-const ClusterStatus: React.FC<IClusterStatusProps> = ({
+const ClusterStatus: React.FC<React.PropsWithChildren<IClusterStatusProps>> = ({
   status,
   clusterUpdateSchedule,
   inheritColor,

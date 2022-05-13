@@ -21,12 +21,9 @@ interface ICreateKeyPairGuideProps
   canCreateKeyPairs?: boolean;
 }
 
-const CreateKeyPairGuide: React.FC<ICreateKeyPairGuideProps> = ({
-  clusterName,
-  organizationName,
-  canCreateKeyPairs,
-  ...props
-}) => {
+const CreateKeyPairGuide: React.FC<
+  React.PropsWithChildren<ICreateKeyPairGuideProps>
+> = ({ clusterName, organizationName, canCreateKeyPairs, ...props }) => {
   const context = getCurrentInstallationContextName();
 
   return (

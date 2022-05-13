@@ -36,7 +36,7 @@ const StyledBox = styled(Box)`
   gap: ${({ theme }) => theme.global.edgeSize.small};
 `;
 
-const ClusterDetailOverview: React.FC<{}> = () => {
+const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { orgId, clusterId } = match.params;
 

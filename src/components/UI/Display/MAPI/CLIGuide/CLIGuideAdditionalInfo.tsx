@@ -19,10 +19,9 @@ interface ICLIGuideAdditionalInfoProps
   links?: ICLIGuideAdditionalInfoLink[];
 }
 
-const CLIGuideAdditionalInfo: React.FC<ICLIGuideAdditionalInfoProps> = ({
-  links,
-  ...props
-}) => {
+const CLIGuideAdditionalInfo: React.FC<
+  React.PropsWithChildren<ICLIGuideAdditionalInfoProps>
+> = ({ links, ...props }) => {
   return (
     <Box {...props}>
       <Box>

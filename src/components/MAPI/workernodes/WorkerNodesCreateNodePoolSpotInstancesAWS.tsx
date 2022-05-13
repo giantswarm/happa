@@ -17,7 +17,7 @@ interface IWorkerNodesCreateNodePoolSpotInstancesAWSProps {
 }
 
 const WorkerNodesCreateNodePoolSpotInstancesAWS: React.FC<
-  IWorkerNodesCreateNodePoolSpotInstancesAWSProps
+  React.PropsWithChildren<IWorkerNodesCreateNodePoolSpotInstancesAWSProps>
 > = ({ value, onChange }) => {
   // eslint-disable-next-line no-magic-numbers
   const spotPercentage = 100 - value.onDemandPercentageAboveBaseCapacity;

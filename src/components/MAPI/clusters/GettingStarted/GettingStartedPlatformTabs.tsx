@@ -19,7 +19,7 @@ interface IGettingStartedPlatformTabsProps
 }
 
 const GettingStartedPlatformTabs: React.FC<
-  IGettingStartedPlatformTabsProps
+  React.PropsWithChildren<IGettingStartedPlatformTabsProps>
 > = ({ linuxContent, macOSContent, windowsContent, ...props }) => {
   const { selectedPlatform, setSelectedPlatform } = useGettingStartedContext();
 

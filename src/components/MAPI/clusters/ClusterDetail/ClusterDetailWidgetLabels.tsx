@@ -21,11 +21,9 @@ interface IClusterDetailWidgetLabelsProps
   canUpdateCluster?: boolean;
 }
 
-const ClusterDetailWidgetLabels: React.FC<IClusterDetailWidgetLabelsProps> = ({
-  cluster,
-  canUpdateCluster,
-  ...props
-}) => {
+const ClusterDetailWidgetLabels: React.FC<
+  React.PropsWithChildren<IClusterDetailWidgetLabelsProps>
+> = ({ cluster, canUpdateCluster, ...props }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 

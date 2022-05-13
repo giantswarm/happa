@@ -80,7 +80,7 @@ interface IWorkerNodesNodePoolItemScaleProps
 }
 
 const WorkerNodesNodePoolItemScale: React.FC<
-  IWorkerNodesNodePoolItemScaleProps
+  React.PropsWithChildren<IWorkerNodesNodePoolItemScaleProps>
 > = ({ nodePool, providerNodePool, onConfirm, onCancel, open, ...props }) => {
   const initialScaling = useMemo(
     () => getNodePoolScaling(nodePool, providerNodePool),

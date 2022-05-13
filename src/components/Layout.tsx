@@ -28,6 +28,7 @@ import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
+import { Dispatch } from 'redux';
 import Route from 'Route';
 
 import AccountSettings from './AccountSettings/AccountSettings';
@@ -47,8 +48,9 @@ const defaultClient = GiantSwarm.ApiClient.instance;
 defaultClient.basePath = window.config.apiEndpoint;
 defaultClient.timeout = window.config.defaultRequestTimeoutSeconds * ONE_SECOND;
 
-const Layout: React.FC<{}> = () => {
-  const dispatch = useDispatch();
+const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dispatch: Dispatch<any> = useDispatch();
 
   const authProvider = useAuthProvider();
 

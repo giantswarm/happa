@@ -6,10 +6,9 @@ interface IAccessControlRoleTypeProps
   namespace?: string;
 }
 
-const AccessControlRoleType: React.FC<IAccessControlRoleTypeProps> = ({
-  namespace,
-  ...props
-}) => {
+const AccessControlRoleType: React.FC<
+  React.PropsWithChildren<IAccessControlRoleTypeProps>
+> = ({ namespace, ...props }) => {
   const inCluster = namespace!.length < 1;
   const message = inCluster ? 'Cluster role' : 'Namespaced role';
 

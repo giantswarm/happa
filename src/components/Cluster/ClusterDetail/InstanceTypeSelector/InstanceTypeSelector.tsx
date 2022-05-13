@@ -42,10 +42,9 @@ const SelectedInstanceType = styled(InstanceType)`
   line-height: unset;
 `;
 
-const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
-  selectInstanceType,
-  selectedInstanceType,
-}) => {
+const InstanceTypeSelector: FC<
+  React.PropsWithChildren<IInstanceTypeSelector>
+> = ({ selectInstanceType, selectedInstanceType }) => {
   const [collapsed, setCollapsed] = useState(true);
   const { singular, plural } = useInstanceTypeSelectionLabels();
   const { cpu, ram } = useInstanceTypeCapabilities(selectedInstanceType);

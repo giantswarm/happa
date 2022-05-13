@@ -28,7 +28,7 @@ interface IClusterDetailKeyPairDetailsModalProps {
 }
 
 const ClusterDetailKeyPairDetailsModal: React.FC<
-  IClusterDetailKeyPairDetailsModalProps
+  React.PropsWithChildren<IClusterDetailKeyPairDetailsModalProps>
 > = ({
   id,
   commonName,

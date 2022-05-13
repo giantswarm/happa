@@ -6,7 +6,7 @@ interface IAccessControlRoleDescriptionProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
 const AccessControlRoleDescription: React.FC<
-  IAccessControlRoleDescriptionProps
+  React.PropsWithChildren<IAccessControlRoleDescriptionProps>
 > = (props) => {
   return (
     <Box {...props}>

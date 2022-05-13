@@ -35,7 +35,7 @@ interface IWorkerNodesNodePoolActionsProps
 }
 
 const WorkerNodesNodePoolActions: React.FC<
-  IWorkerNodesNodePoolActionsProps
+  React.PropsWithChildren<IWorkerNodesNodePoolActionsProps>
 > = ({
   onDeleteClick,
   onScaleClick,

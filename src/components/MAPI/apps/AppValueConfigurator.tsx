@@ -122,7 +122,9 @@ interface IAppValueConfiguratorProps
   canConfigureApps?: boolean;
 }
 
-const AppValueConfigurator: React.FC<IAppValueConfiguratorProps> = ({
+const AppValueConfigurator: React.FC<
+  React.PropsWithChildren<IAppValueConfiguratorProps>
+> = ({
   configName,
   configNamespace,
   canConfigureApps,

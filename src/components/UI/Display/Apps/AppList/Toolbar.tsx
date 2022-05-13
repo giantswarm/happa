@@ -67,7 +67,7 @@ interface IToolbarProps {
   isLoading?: boolean;
 }
 
-const Toolbar: React.FC<IToolbarProps> = (props) => {
+const Toolbar: React.FC<React.PropsWithChildren<IToolbarProps>> = (props) => {
   function onChangeSearchQueryEvent(
     event: React.ChangeEvent<HTMLInputElement>
   ) {

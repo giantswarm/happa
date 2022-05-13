@@ -17,7 +17,7 @@ interface IIngressProps extends React.ComponentPropsWithoutRef<'div'> {
   kvmTCPHTTPSPort?: number;
 }
 
-const Ingress: React.FC<IIngressProps> = ({
+const Ingress: React.FC<React.PropsWithChildren<IIngressProps>> = ({
   cluster,
   provider,
   k8sEndpoint,

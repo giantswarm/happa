@@ -70,7 +70,7 @@ interface IAccessControlRolePermissionsProps
     React.ComponentPropsWithoutRef<typeof Table> {}
 
 const AccessControlRolePermissions: React.FC<
-  IAccessControlRolePermissionsProps
+  React.PropsWithChildren<IAccessControlRolePermissionsProps>
 > = ({ permissions, ...props }) => {
   return (
     <StyledTable {...props}>

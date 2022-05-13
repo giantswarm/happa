@@ -68,7 +68,9 @@ interface IInstallAppModalProps {
   selectedClusterID: string | null;
 }
 
-const InstallAppModal: React.FC<IInstallAppModalProps> = (props) => {
+const InstallAppModal: React.FC<
+  React.PropsWithChildren<IInstallAppModalProps>
+> = (props) => {
   const [page, setPage] = useState(0);
   const [visible, setVisible] = useState(false);
   const [clusterID, setClusterID] = useState(props.selectedClusterID);

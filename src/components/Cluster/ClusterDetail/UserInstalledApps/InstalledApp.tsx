@@ -34,7 +34,7 @@ interface IInstalledAppProps
   iconErrors?: Record<string, boolean>;
 }
 
-const InstalledApp: React.FC<IInstalledAppProps> = ({
+const InstalledApp: React.FC<React.PropsWithChildren<IInstalledAppProps>> = ({
   name,
   logoUrl,
   version,

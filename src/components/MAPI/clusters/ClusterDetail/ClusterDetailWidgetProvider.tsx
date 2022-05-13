@@ -99,7 +99,7 @@ interface IClusterDetailWidgetProviderProps
 }
 
 const ClusterDetailWidgetProvider: React.FC<
-  IClusterDetailWidgetProviderProps
+  React.PropsWithChildren<IClusterDetailWidgetProviderProps>
 > = ({ cluster, providerCluster, ...props }) => {
   const { orgId } = useParams<{ clusterId: string; orgId: string }>();
   const organizations = useSelector(selectOrganizations());

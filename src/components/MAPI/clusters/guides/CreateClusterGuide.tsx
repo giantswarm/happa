@@ -25,7 +25,9 @@ interface ICreateClusterGuideProps
   controlPlaneAZs?: string[];
 }
 
-const CreateClusterGuide: React.FC<ICreateClusterGuideProps> = ({
+const CreateClusterGuide: React.FC<
+  React.PropsWithChildren<ICreateClusterGuideProps>
+> = ({
   provider,
   clusterName,
   organizationName,

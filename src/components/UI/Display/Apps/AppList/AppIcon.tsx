@@ -50,7 +50,11 @@ interface IIconProps extends React.ComponentPropsWithoutRef<'div'> {
   src?: string;
 }
 
-const Icon: React.FC<IIconProps> = ({ name, src, ...rest }) => {
+const Icon: React.FC<React.PropsWithChildren<IIconProps>> = ({
+  name,
+  src,
+  ...rest
+}) => {
   let imagesrc = src;
   if (imagesrc?.endsWith('light.png')) {
     imagesrc = imagesrc.replace('light.png', 'dark.png');
