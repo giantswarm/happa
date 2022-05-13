@@ -28,7 +28,7 @@ interface IClusterDetailWidgetKeyPairsProps
   > {}
 
 const ClusterDetailWidgetKeyPairs: React.FC<
-  IClusterDetailWidgetKeyPairsProps
+  React.PropsWithChildren<IClusterDetailWidgetKeyPairsProps>
 > = (props) => {
   const { clusterId, orgId } = useParams<{
     clusterId: string;

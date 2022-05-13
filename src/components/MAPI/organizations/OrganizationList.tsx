@@ -33,7 +33,7 @@ import {
   fetchClusterListForOrganizationsKey,
 } from './utils';
 
-const OrganizationIndex: React.FC = () => {
+const OrganizationIndex: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
   const organizations = useSelector(selectOrganizations());
 

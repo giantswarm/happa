@@ -33,7 +33,7 @@ interface IMasterNodesProps extends React.ComponentPropsWithoutRef<'div'> {
   onConvert?: () => Promise<void>;
 }
 
-const MasterNodes: React.FC<IMasterNodesProps> = ({
+const MasterNodes: React.FC<React.PropsWithChildren<IMasterNodesProps>> = ({
   isHA,
   canBeConverted,
   availabilityZones,

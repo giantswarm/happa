@@ -38,7 +38,9 @@ interface IKeyPairCreateModalProps {
   animate?: boolean;
 }
 
-const KeyPairCreateModal: React.FC<IKeyPairCreateModalProps> = (props) => {
+const KeyPairCreateModal: React.FC<
+  React.PropsWithChildren<IKeyPairCreateModalProps>
+> = (props) => {
   const [expireTTL, setExpireTTL] = useState(Constants.KEYPAIR_DEFAULT_TTL);
   const [description, setDescription] = useState(
     getDefaultDescription(props.user.email)

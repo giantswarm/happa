@@ -37,7 +37,7 @@ interface IInstanceTypeRow extends IInstanceType {
   selectInstanceType(instanceType: string): void;
 }
 
-const InstanceTypeRow: FC<IInstanceTypeRow> = ({
+const InstanceTypeRow: FC<React.PropsWithChildren<IInstanceTypeRow>> = ({
   cpu,
   ram,
   name,

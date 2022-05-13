@@ -25,7 +25,9 @@ interface IUpgradeClusterGuideProps
   canUpdateCluster?: boolean;
 }
 
-const UpgradeClusterGuide: React.FC<IUpgradeClusterGuideProps> = ({
+const UpgradeClusterGuide: React.FC<
+  React.PropsWithChildren<IUpgradeClusterGuideProps>
+> = ({
   provider,
   clusterName,
   clusterNamespace,

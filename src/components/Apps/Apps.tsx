@@ -7,7 +7,7 @@ import Route from 'Route';
 import AppDetail from './AppDetail/AppDetail';
 import AppsList from './AppsList/AppsList';
 
-const Apps: React.FC = () => {
+const Apps: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Breadcrumb
       data={{

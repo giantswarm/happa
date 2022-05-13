@@ -14,11 +14,9 @@ interface IDeleteOrganizationGuideProps
   canDeleteOrganization?: boolean;
 }
 
-const DeleteOrganizationGuide: React.FC<IDeleteOrganizationGuideProps> = ({
-  organizationName,
-  canDeleteOrganization,
-  ...props
-}) => {
+const DeleteOrganizationGuide: React.FC<
+  React.PropsWithChildren<IDeleteOrganizationGuideProps>
+> = ({ organizationName, canDeleteOrganization, ...props }) => {
   return (
     <CLIGuide
       title='Delete this organization via the Management API'

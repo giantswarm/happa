@@ -60,12 +60,9 @@ interface IInspectClusterGuideProps
   clusterNamespace: string;
 }
 
-const InspectClusterGuide: React.FC<IInspectClusterGuideProps> = ({
-  provider,
-  clusterName,
-  clusterNamespace,
-  ...props
-}) => {
+const InspectClusterGuide: React.FC<
+  React.PropsWithChildren<IInspectClusterGuideProps>
+> = ({ provider, clusterName, clusterNamespace, ...props }) => {
   const context = getCurrentInstallationContextName();
 
   return (

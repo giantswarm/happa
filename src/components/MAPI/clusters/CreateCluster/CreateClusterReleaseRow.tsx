@@ -38,7 +38,7 @@ interface IReleaseRow extends IRelease {
   ) => void;
 }
 
-const ReleaseRow: FC<IReleaseRow> = ({
+const ReleaseRow: FC<React.PropsWithChildren<IReleaseRow>> = ({
   state,
   isSelected,
   kubernetesVersion,

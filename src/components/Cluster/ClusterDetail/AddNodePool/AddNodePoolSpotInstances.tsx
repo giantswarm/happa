@@ -32,7 +32,9 @@ interface IAddNodePoolSpotInstancesProps {
   setUseOnDemandPricing: (isActive: boolean) => void;
 }
 
-const AddNodePoolSpotInstances: React.FC<IAddNodePoolSpotInstancesProps> = ({
+const AddNodePoolSpotInstances: React.FC<
+  React.PropsWithChildren<IAddNodePoolSpotInstancesProps>
+> = ({
   provider,
   spotPercentage,
   setSpotPercentage,

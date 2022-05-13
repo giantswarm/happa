@@ -82,7 +82,7 @@ const reducer: React.Reducer<IAppsState, AppsAction> = produce(
   initialState
 );
 
-const AppsProvider: React.FC<{}> = ({ children }) => {
+const AppsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const selectedCatalogs = useMemo(

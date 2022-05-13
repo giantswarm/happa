@@ -19,7 +19,7 @@ interface IListAppsGuideProps
   namespace: string;
 }
 
-const ListAppsGuide: React.FC<IListAppsGuideProps> = ({
+const ListAppsGuide: React.FC<React.PropsWithChildren<IListAppsGuideProps>> = ({
   namespace,
   ...props
 }) => {

@@ -18,7 +18,9 @@ interface ISetClusterLabelsGuideProps
   canUpdateCluster?: boolean;
 }
 
-const SetClusterLabelsGuide: React.FC<ISetClusterLabelsGuideProps> = ({
+const SetClusterLabelsGuide: React.FC<
+  React.PropsWithChildren<ISetClusterLabelsGuideProps>
+> = ({
   clusterName,
   clusterNamespace,
   provider,

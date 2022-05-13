@@ -10,7 +10,7 @@ interface IWorkerNodesNodePoolListPlaceholderProps
 }
 
 const WorkerNodesNodePoolListPlaceholder: React.FC<
-  IWorkerNodesNodePoolListPlaceholderProps
+  React.PropsWithChildren<IWorkerNodesNodePoolListPlaceholderProps>
 > = ({ onCreateButtonClick, disabled, canCreateNodePools, ...props }) => {
   return (
     <Box

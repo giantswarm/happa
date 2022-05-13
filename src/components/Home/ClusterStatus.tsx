@@ -47,7 +47,7 @@ interface IClusterStatusProps extends React.ComponentPropsWithoutRef<'div'> {
 
 // This component receive a cluster id, finds if this cluster is 'upgradable' and
 // in case it is, outputs an upgrade notice,
-const ClusterStatus: React.FC<IClusterStatusProps> = ({
+const ClusterStatus: React.FC<React.PropsWithChildren<IClusterStatusProps>> = ({
   clusterId,
   hideText,
   onClick,

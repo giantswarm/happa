@@ -85,7 +85,9 @@ interface IUserDropdownProps {
   user: ILoggedInUser;
 }
 
-const UserDropdown: React.FC<IUserDropdownProps> = ({ user }) => {
+const UserDropdown: React.FC<React.PropsWithChildren<IUserDropdownProps>> = ({
+  user,
+}) => {
   return (
     <Wrapper>
       <DropdownMenu

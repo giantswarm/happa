@@ -9,7 +9,9 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
-const ClusterListPreloader: React.FC = (props) => {
+const ClusterListPreloader: React.FC<React.PropsWithChildren<unknown>> = (
+  props
+) => {
   return (
     <Wrapper {...props}>
       <img className='loader' src={spinner} />

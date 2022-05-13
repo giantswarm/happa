@@ -8,7 +8,9 @@ interface ILoginGuideStepProps
     'title' | 'command'
   > {}
 
-const LoginGuideStep: React.FC<ILoginGuideStepProps> = (props) => {
+const LoginGuideStep: React.FC<
+  React.PropsWithChildren<ILoginGuideStepProps>
+> = (props) => {
   const k8sAPIUrl = useRef(getK8sAPIUrl());
 
   return (

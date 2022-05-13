@@ -52,11 +52,10 @@ interface IInstallIngressButtonProps
   mutateCluster?: KeyedMutator<capiv1beta1.ICluster>;
 }
 
-// eslint-disable-next-line complexity
-const InstallIngressButton: React.FC<IInstallIngressButtonProps> = ({
-  clusterID,
-  mutateCluster,
-}) => {
+const InstallIngressButton: React.FC<
+  React.PropsWithChildren<IInstallIngressButtonProps>
+  // eslint-disable-next-line complexity
+> = ({ clusterID, mutateCluster }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 

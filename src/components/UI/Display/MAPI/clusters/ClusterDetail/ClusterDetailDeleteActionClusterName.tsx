@@ -13,7 +13,7 @@ interface IClusterDetailDeleteActionClusterNameProps
 }
 
 const ClusterDetailDeleteActionClusterName: React.FC<
-  IClusterDetailDeleteActionClusterNameProps
+  React.PropsWithChildren<IClusterDetailDeleteActionClusterNameProps>
 > = ({ variant, value, onChange, onContinue, ...props }) => {
   const handleFormSubmit = (e: React.KeyboardEvent<HTMLElement>) => {
     e.preventDefault();

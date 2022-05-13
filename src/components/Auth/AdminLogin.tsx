@@ -3,6 +3,7 @@ import * as mainActions from 'model/stores/main/actions';
 import { getLoggedInUser } from 'model/stores/main/selectors';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from 'redux';
 import ShadowMask from 'shared/ShadowMask';
 import styled from 'styled-components';
 import { clearQueues } from 'utils/flashMessage';
@@ -26,10 +27,11 @@ const Wrapper = styled.div`
 
 interface IAdminLoginProps {}
 
-const AdminLogin: React.FC<IAdminLoginProps> = () => {
+const AdminLogin: React.FC<React.PropsWithChildren<IAdminLoginProps>> = () => {
   const user = useSelector(getLoggedInUser);
   const auth = useAuthProvider();
-  const dispatch = useDispatch();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dispatch: Dispatch<any> = useDispatch();
 
   useEffect(() => {
     dispatch(

@@ -17,7 +17,7 @@ interface IReleaseDetailsModalUpgradeOptionsBetaDisclaimerProps
   extends React.ComponentPropsWithoutRef<'div'> {}
 
 const ReleaseDetailsModalUpgradeOptionsBetaDisclaimer: React.FC<
-  IReleaseDetailsModalUpgradeOptionsBetaDisclaimerProps
+  React.PropsWithChildren<IReleaseDetailsModalUpgradeOptionsBetaDisclaimerProps>
 > = (props) => {
   return (
     <Wrapper {...props}>

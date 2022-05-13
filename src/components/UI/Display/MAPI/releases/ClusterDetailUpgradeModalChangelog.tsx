@@ -58,7 +58,7 @@ interface IClusterDetailUpgradeModalChangelogProps {
 }
 
 const ClusterDetailUpgradeModalChangelog: React.FC<
-  IClusterDetailUpgradeModalChangelogProps
+  React.PropsWithChildren<IClusterDetailUpgradeModalChangelogProps>
 > = ({ releaseNotesURL, componentsDiff }) => {
   return (
     <Box direction='column' gap='medium'>

@@ -31,7 +31,7 @@ interface IWorkerNodesCreateNodePoolSpotInstancesAzureProps {
 }
 
 const WorkerNodesCreateNodePoolSpotInstancesAzure: React.FC<
-  IWorkerNodesCreateNodePoolSpotInstancesAzureProps
+  React.PropsWithChildren<IWorkerNodesCreateNodePoolSpotInstancesAzureProps>
 > = ({ value, onChange, errorMessage }) => {
   const useOnDemandPricing =
     typeof value.maxPrice === 'number' && value.maxPrice < 0;

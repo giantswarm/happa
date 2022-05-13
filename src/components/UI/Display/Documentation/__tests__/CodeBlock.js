@@ -19,7 +19,7 @@ describe('CodeBlock', () => {
     useCopyToClipboard.mockClear();
 
     setClipboardContentMockFn = jest.fn();
-    useCopyToClipboard.mockReturnValueOnce([false, setClipboardContentMockFn]);
+    useCopyToClipboard.mockReturnValue([false, setClipboardContentMockFn]);
   });
 
   it('renders without crashing', () => {
@@ -68,7 +68,7 @@ describe('CodeBlock', () => {
     expect(setClipboardContentMockFn).toBeCalledWith(null);
 
     // Set content in clipboard
-    useCopyToClipboard.mockReturnValueOnce([true, setClipboardContentMockFn]);
+    useCopyToClipboard.mockReturnValue([true, setClipboardContentMockFn]);
     rerender(getComponentWithProps(componentProps));
 
     // Check if validation is in the document
@@ -78,7 +78,7 @@ describe('CodeBlock', () => {
     expect(copyConfirmationLabel).toBeInTheDocument();
 
     // Reset content in clipboard
-    useCopyToClipboard.mockReturnValueOnce([false, setClipboardContentMockFn]);
+    useCopyToClipboard.mockReturnValue([false, setClipboardContentMockFn]);
     rerender(getComponentWithProps(componentProps));
 
     // Check if the copy confirmation is no longer visible

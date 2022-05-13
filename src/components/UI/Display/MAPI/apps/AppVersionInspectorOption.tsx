@@ -23,7 +23,9 @@ interface IAppVersionInspectorOptionProps
   isCurrent?: boolean;
 }
 
-const AppVersionInspectorOption: React.FC<IAppVersionInspectorOptionProps> = ({
+const AppVersionInspectorOption: React.FC<
+  React.PropsWithChildren<IAppVersionInspectorOptionProps>
+> = ({
   version,
   creationDate,
   upstreamVersion,

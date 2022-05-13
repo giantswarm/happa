@@ -8,7 +8,7 @@ interface ICLIGuideStepProps
   command?: React.ReactNode;
 }
 
-const CLIGuideStep: React.FC<ICLIGuideStepProps> = ({
+const CLIGuideStep: React.FC<React.PropsWithChildren<ICLIGuideStepProps>> = ({
   title,
   command,
   children,

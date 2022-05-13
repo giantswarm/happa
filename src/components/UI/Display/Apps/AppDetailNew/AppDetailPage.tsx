@@ -203,7 +203,9 @@ export interface IAppDetailPageProps {
   selectedClusterBanner?: ReactElement;
 }
 
-const AppDetail: React.FC<IAppDetailPageProps> = (props) => {
+const AppDetail: React.FC<React.PropsWithChildren<IAppDetailPageProps>> = (
+  props
+) => {
   return (
     <Wrapper className={props.readmeURL ? '' : 'no-readme'}>
       <Link to='/apps'>

@@ -102,9 +102,9 @@ interface IClusterDetailApps {
   releaseVersion: string;
 }
 
-const ClusterDetailApps: React.FC<IClusterDetailApps> = ({
-  releaseVersion,
-}) => {
+const ClusterDetailApps: React.FC<
+  React.PropsWithChildren<IClusterDetailApps>
+> = ({ releaseVersion }) => {
   const { pathname } = useLocation();
   const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 

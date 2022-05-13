@@ -93,7 +93,7 @@ describe('V4AzureClusterManagement', () => {
         clusterId: V4_CLUSTER.id,
       }
     );
-    const { getByText, getAllByText, getByTitle } =
+    const { findByText, getByText, getAllByText, getByTitle } =
       renderRouteWithStore(clusterDetailPath);
 
     await waitFor(() => {
@@ -101,8 +101,9 @@ describe('V4AzureClusterManagement', () => {
     });
     expect(getAllByText(V4_CLUSTER.id)).toHaveLength(2);
 
-    const apiEndpoint = getByText(v4AzureClusterResponse.api_endpoint);
-    expect(apiEndpoint).toBeInTheDocument();
+    expect(
+      await findByText(v4AzureClusterResponse.api_endpoint)
+    ).toBeInTheDocument();
 
     const instance = getByText(V4_CLUSTER.AzureInstanceType);
     expect(instance).toBeInTheDocument();

@@ -19,10 +19,9 @@ interface ICreateOrganizationsGuidProps
   canCreateOrganizations?: boolean;
 }
 
-const CreateOrganizationGuide: React.FC<ICreateOrganizationsGuidProps> = ({
-  canCreateOrganizations,
-  ...props
-}) => {
+const CreateOrganizationGuide: React.FC<
+  React.PropsWithChildren<ICreateOrganizationsGuidProps>
+> = ({ canCreateOrganizations, ...props }) => {
   const context = useSelector(getCurrentInstallationContextName);
 
   return (

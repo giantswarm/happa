@@ -37,7 +37,7 @@ interface IReleaseDetailsModalUpgradeOptionsProps
 }
 
 const ReleaseDetailsModalUpgradeOptions: React.FC<
-  IReleaseDetailsModalUpgradeOptionsProps
+  React.PropsWithChildren<IReleaseDetailsModalUpgradeOptionsProps>
 > = ({
   isAdmin,
   releases,

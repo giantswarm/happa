@@ -23,7 +23,7 @@ interface IInspectClusterReleaseGuideProps
 }
 
 const InspectClusterReleaseGuide: React.FC<
-  IInspectClusterReleaseGuideProps
+  React.PropsWithChildren<IInspectClusterReleaseGuideProps>
 > = ({ clusterName, clusterNamespace, releaseVersion, ...props }) => {
   const context = useSelector(getCurrentInstallationContextName);
 

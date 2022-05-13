@@ -12,7 +12,7 @@ interface IV5ClusterDetailTableNodePoolScalingProps {
 }
 
 const V5ClusterDetailTableNodePoolScaling: React.FC<
-  IV5ClusterDetailTableNodePoolScalingProps
+  React.PropsWithChildren<IV5ClusterDetailTableNodePoolScalingProps>
 > = ({ provider, supportsAutoscaling, supportsSpotInstances }) => {
   const desiredCountTooltipMessage = supportsAutoscaling
     ? Constants.DESIRED_NODES_EXPLANATION_AUTOSCALER

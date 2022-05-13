@@ -45,7 +45,7 @@ interface ICLIGuideProps
   footer?: React.ReactNode;
 }
 
-const CLIGuide: React.FC<ICLIGuideProps> = ({
+const CLIGuide: React.FC<React.PropsWithChildren<ICLIGuideProps>> = ({
   children,
   title,
   footer,

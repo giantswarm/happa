@@ -18,7 +18,9 @@ interface IOrganizationDetailDeleteProps
   clusterCount?: number;
 }
 
-const OrganizationDetailDelete: React.FC<IOrganizationDetailDeleteProps> = ({
+const OrganizationDetailDelete: React.FC<
+  React.PropsWithChildren<IOrganizationDetailDeleteProps>
+> = ({
   organizationName,
   organizationNamespace,
   onDelete,

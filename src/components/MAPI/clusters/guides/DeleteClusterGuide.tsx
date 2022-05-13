@@ -19,13 +19,9 @@ interface IDeleteClusterGuideProps
   canDeleteClusters?: boolean;
 }
 
-const DeleteClusterGuide: React.FC<IDeleteClusterGuideProps> = ({
-  clusterName,
-  namespace,
-  provider,
-  canDeleteClusters,
-  ...props
-}) => {
+const DeleteClusterGuide: React.FC<
+  React.PropsWithChildren<IDeleteClusterGuideProps>
+> = ({ clusterName, namespace, provider, canDeleteClusters, ...props }) => {
   const context = useSelector(getCurrentInstallationContextName);
 
   return (

@@ -14,7 +14,7 @@ interface IWorkerNodesSpotInstancesAWSProps {
 }
 
 const WorkerNodesSpotInstancesAWS: React.FC<
-  IWorkerNodesSpotInstancesAWSProps
+  React.PropsWithChildren<IWorkerNodesSpotInstancesAWSProps>
 > = ({ providerNodePool }) => {
   const spotInstances = getProviderNodePoolSpotInstances(providerNodePool) as
     | INodePoolSpotInstancesAWS

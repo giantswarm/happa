@@ -9,11 +9,9 @@ interface ILoadingPlaceholderProps
   width?: number;
 }
 
-const LoadingPlaceholder: React.FC<ILoadingPlaceholderProps> = ({
-  height,
-  width,
-  ...props
-}) => {
+const LoadingPlaceholder: React.FC<
+  React.PropsWithChildren<ILoadingPlaceholderProps>
+> = ({ height, width, ...props }) => {
   const theme = useTheme();
 
   return (

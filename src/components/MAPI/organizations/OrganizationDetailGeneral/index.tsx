@@ -44,10 +44,9 @@ interface IOrganizationDetailGeneralProps {
   organizationNamespace: string;
 }
 
-const OrganizationDetailGeneral: React.FC<IOrganizationDetailGeneralProps> = ({
-  organizationName,
-  organizationNamespace,
-}) => {
+const OrganizationDetailGeneral: React.FC<
+  React.PropsWithChildren<IOrganizationDetailGeneralProps>
+> = ({ organizationName, organizationNamespace }) => {
   const organizations = useSelector(selectOrganizations());
   const selectedOrg = organizations[organizationName];
   const selectedOrgID = selectedOrg?.name ?? selectedOrg?.id;

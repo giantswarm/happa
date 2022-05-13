@@ -9,7 +9,7 @@ interface IMasterNodesProps
   onChange?: (isHA: boolean) => void;
 }
 
-const MasterNodes: React.FC<IMasterNodesProps> = ({
+const MasterNodes: React.FC<React.PropsWithChildren<IMasterNodesProps>> = ({
   isHighAvailability,
   onChange,
   ...props

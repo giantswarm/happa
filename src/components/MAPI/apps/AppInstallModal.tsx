@@ -108,13 +108,9 @@ interface IAppInstallModalProps {
   appsPermissions?: IAppsPermissions;
 }
 
-const AppInstallModal: React.FC<IAppInstallModalProps> = ({
-  appName,
-  chartName,
-  catalogName,
-  versions,
-  appsPermissions,
-}) => {
+const AppInstallModal: React.FC<
+  React.PropsWithChildren<IAppInstallModalProps>
+> = ({ appName, chartName, catalogName, versions, appsPermissions }) => {
   const [page, setPage] = useState(0);
   const [visible, setVisible] = useState(false);
 

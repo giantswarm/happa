@@ -25,10 +25,9 @@ interface IMapiUnauthorizedProps
   user: ILoggedInUser | null;
 }
 
-const MapiUnauthorized: React.FC<IMapiUnauthorizedProps> = ({
-  user,
-  ...props
-}) => {
+const MapiUnauthorized: React.FC<
+  React.PropsWithChildren<IMapiUnauthorizedProps>
+> = ({ user, ...props }) => {
   const auth = useAuthProvider();
 
   const impersonationMetadata = useSelector(

@@ -227,7 +227,9 @@ const AnimationWrapper = styled.div`
 
 interface IClusterDetailWorkerNodesProps {}
 
-const ClusterDetailWorkerNodes: React.FC<IClusterDetailWorkerNodesProps> =
+const ClusterDetailWorkerNodes: React.FC<
+  React.PropsWithChildren<IClusterDetailWorkerNodesProps>
+> =
   // eslint-disable-next-line complexity
   () => {
     const { pathname, state } = useLocation<{ hasNoNodePools?: boolean }>();

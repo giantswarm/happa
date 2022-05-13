@@ -36,7 +36,9 @@ const options: { [index: string]: string } = {
   latest: 'Latest release (newest first)',
 };
 
-const SortingDropdown: React.FC<ISortingDropdownProps> = (props) => {
+const SortingDropdown: React.FC<
+  React.PropsWithChildren<ISortingDropdownProps>
+> = (props) => {
   return (
     <Wrapper {...props}>
       <DropdownMenu

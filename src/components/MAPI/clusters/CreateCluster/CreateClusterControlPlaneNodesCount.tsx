@@ -17,7 +17,7 @@ interface ICreateClusterControlPlaneNodesCountProps
     > {}
 
 const CreateClusterControlPlaneNodesCount: React.FC<
-  ICreateClusterControlPlaneNodesCountProps
+  React.PropsWithChildren<ICreateClusterControlPlaneNodesCountProps>
 > = ({ controlPlaneNodes, onChange, ...props }) => {
   const handleChange = (isHA: boolean) => {
     let count = 1;

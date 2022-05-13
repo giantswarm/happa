@@ -15,7 +15,9 @@ interface IClusterDetailAppListProps
   errorMessage?: string;
 }
 
-const ClusterDetailAppList: React.FC<IClusterDetailAppListProps> = ({
+const ClusterDetailAppList: React.FC<
+  React.PropsWithChildren<IClusterDetailAppListProps>
+> = ({
   apps,
   appsPermissions,
   isLoading,

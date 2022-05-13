@@ -7,7 +7,7 @@ interface IClusterListNoOrgsPlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
 const ClusterListNoOrgsPlaceholder: React.FC<
-  IClusterListNoOrgsPlaceholderProps
+  React.PropsWithChildren<IClusterListNoOrgsPlaceholderProps>
 > = (props) => {
   return (
     <Box

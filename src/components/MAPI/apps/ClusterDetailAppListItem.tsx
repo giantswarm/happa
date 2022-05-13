@@ -65,12 +65,9 @@ interface IClusterDetailAppListItemProps
   onAppUninstalled?: () => void;
 }
 
-const ClusterDetailAppListItem: React.FC<IClusterDetailAppListItemProps> = ({
-  app,
-  appsPermissions,
-  isActive,
-  onAppUninstalled,
-}) => {
+const ClusterDetailAppListItem: React.FC<
+  React.PropsWithChildren<IClusterDetailAppListItemProps>
+> = ({ app, appsPermissions, isActive, onAppUninstalled }) => {
   const currentVersion = useMemo(() => {
     if (!app) return undefined;
     const appVersion = applicationv1alpha1.getAppCurrentVersion(app);

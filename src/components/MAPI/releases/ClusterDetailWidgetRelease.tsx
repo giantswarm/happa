@@ -71,7 +71,7 @@ interface IClusterDetailWidgetReleaseProps
 }
 
 const ClusterDetailWidgetRelease: React.FC<
-  IClusterDetailWidgetReleaseProps
+  React.PropsWithChildren<IClusterDetailWidgetReleaseProps>
 > = ({
   cluster,
   providerCluster,

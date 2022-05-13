@@ -62,7 +62,7 @@ export interface IAppProps {
   isInstalledInSelectedCluster?: boolean;
 }
 
-const App: React.FC<IAppProps> = (props) => {
+const App: React.FC<React.PropsWithChildren<IAppProps>> = (props) => {
   return (
     <Wrapper to={props.to} aria-label={props.name}>
       <IconWrapper>

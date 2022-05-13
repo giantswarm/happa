@@ -23,12 +23,9 @@ interface IClusterDetailCounterProps
   pluralize?: boolean;
 }
 
-const ClusterDetailCounter: React.FC<IClusterDetailCounterProps> = ({
-  label,
-  value,
-  pluralize,
-  ...props
-}) => {
+const ClusterDetailCounter: React.FC<
+  React.PropsWithChildren<IClusterDetailCounterProps>
+> = ({ label, value, pluralize, ...props }) => {
   const formattedLabel = pluralize ? pluralizeLabel(value, label) : label;
 
   let a11yLabel = `Loading ${formattedLabel}...`;

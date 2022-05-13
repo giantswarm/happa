@@ -17,13 +17,9 @@ interface IInstallAppGuideProps
   canInstallApps?: boolean;
 }
 
-const InstallAppGuide: React.FC<IInstallAppGuideProps> = ({
-  appName,
-  catalogName,
-  selectedVersion,
-  canInstallApps,
-  ...props
-}) => {
+const InstallAppGuide: React.FC<
+  React.PropsWithChildren<IInstallAppGuideProps>
+> = ({ appName, catalogName, selectedVersion, canInstallApps, ...props }) => {
   const context = getCurrentInstallationContextName();
 
   return (

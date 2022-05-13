@@ -21,7 +21,9 @@ interface IClusterListItemMainInfoProps
   k8sVersion?: string;
 }
 
-const ClusterListItemMainInfo: React.FC<IClusterListItemMainInfoProps> = ({
+const ClusterListItemMainInfo: React.FC<
+  React.PropsWithChildren<IClusterListItemMainInfoProps>
+> = ({
   releaseVersion,
   isPreviewRelease,
   creationDate,

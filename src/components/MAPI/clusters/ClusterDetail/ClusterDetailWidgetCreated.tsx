@@ -25,7 +25,7 @@ interface IClusterDetailWidgetCreatedProps
 }
 
 const ClusterDetailWidgetCreated: React.FC<
-  IClusterDetailWidgetCreatedProps
+  React.PropsWithChildren<IClusterDetailWidgetCreatedProps>
 > = ({ cluster, ...props }) => {
   const creationDate = cluster?.metadata.creationTimestamp;
 

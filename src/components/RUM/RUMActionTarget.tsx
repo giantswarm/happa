@@ -9,10 +9,9 @@ interface IRUMActionTargetProps {
  * Decorator that adds the RUM element properties to the wrapped
  * child element, for dispatching custom RUM actions.
  */
-const RUMActionTarget: React.FC<IRUMActionTargetProps> = ({
-  name,
-  children,
-}) => {
+const RUMActionTarget: React.FC<
+  React.PropsWithChildren<IRUMActionTargetProps>
+> = ({ name, children }) => {
   if (!children.props) return children;
 
   const newChildren = Object.assign({}, children, {

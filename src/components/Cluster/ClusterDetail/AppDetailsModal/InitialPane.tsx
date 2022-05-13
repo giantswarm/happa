@@ -36,7 +36,9 @@ interface IInitialPaneProps {
   catalogNotFound?: boolean;
 }
 
-const InitialPane: React.FC<IInitialPaneProps> = (props) => {
+const InitialPane: React.FC<React.PropsWithChildren<IInitialPaneProps>> = (
+  props
+) => {
   return (
     <div>
       <Upper>

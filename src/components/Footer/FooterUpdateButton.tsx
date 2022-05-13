@@ -9,13 +9,9 @@ interface IFooterUpdateButtonProps {
   onClick?: () => void;
 }
 
-const FooterUpdateButton: React.FC<IFooterUpdateButtonProps> = ({
-  hasUpdateReady,
-  isUpdating,
-  releaseURL,
-  onClick,
-  ...rest
-}) => {
+const FooterUpdateButton: React.FC<
+  React.PropsWithChildren<IFooterUpdateButtonProps>
+> = ({ hasUpdateReady, isUpdating, releaseURL, onClick, ...rest }) => {
   const label: string = getUpdateButtonMessage(hasUpdateReady, isUpdating);
 
   if (hasUpdateReady) {

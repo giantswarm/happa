@@ -31,7 +31,7 @@ interface IClusterDetailReleaseDetailsModalProps {
 }
 
 const ClusterDetailReleaseDetailsModal: React.FC<
-  IClusterDetailReleaseDetailsModalProps
+  React.PropsWithChildren<IClusterDetailReleaseDetailsModalProps>
 > = ({
   version,
   onClose,

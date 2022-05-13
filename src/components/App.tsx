@@ -23,7 +23,7 @@ interface IAppProps {
   flashMessagesController: FlashMessagesController;
 }
 
-const App: React.FC<IAppProps> = ({
+const App: React.FC<React.PropsWithChildren<IAppProps>> = ({
   store,
   theme,
   history,

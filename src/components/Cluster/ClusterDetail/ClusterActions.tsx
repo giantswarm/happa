@@ -12,6 +12,7 @@ import { IState } from 'model/stores/state';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
+import { Dispatch } from 'redux';
 import ClusterDetailDeleteAction, {
   ClusterDetailDeleteActionNameVariant,
 } from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailDeleteAction';
@@ -19,7 +20,9 @@ import ClusterDetailDeleteAction, {
 interface IClusterActionsProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
-const ClusterActions: React.FC<IClusterActionsProps> = (props) => {
+const ClusterActions: React.FC<
+  React.PropsWithChildren<IClusterActionsProps>
+> = (props) => {
   const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
 
   // The case where the cluster is not found is handled by the parent component.
@@ -38,7 +41,8 @@ const ClusterActions: React.FC<IClusterActionsProps> = (props) => {
     hasOptionalIngress ?? false
   );
 
-  const dispatch = useDispatch();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dispatch: Dispatch<any> = useDispatch();
   const handleDelete = () => {
     dispatch(batchedClusterDelete(cluster));
   };

@@ -7,7 +7,7 @@ interface IClusterDetailAppLoadingPlaceholderProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
 const ClusterDetailAppLoadingPlaceholder: React.FC<
-  IClusterDetailAppLoadingPlaceholderProps
+  React.PropsWithChildren<IClusterDetailAppLoadingPlaceholderProps>
 > = (props) => {
   const theme = useTheme();
 

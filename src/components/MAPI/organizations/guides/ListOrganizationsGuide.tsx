@@ -10,9 +10,9 @@ import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 interface IListOrganizationsGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {}
 
-const ListOrganizationsGuide: React.FC<IListOrganizationsGuideProps> = (
-  props
-) => {
+const ListOrganizationsGuide: React.FC<
+  React.PropsWithChildren<IListOrganizationsGuideProps>
+> = (props) => {
   return (
     <CLIGuide
       title='List organizations via the Management API'

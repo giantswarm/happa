@@ -77,7 +77,9 @@ const formatExpirationDate = (keyPair: legacyKeyPairs.IKeyPair) => {
 
 interface IClusterDetailKeyPairsProps {}
 
-const ClusterDetailKeyPairs: React.FC<IClusterDetailKeyPairsProps> = () => {
+const ClusterDetailKeyPairs: React.FC<
+  React.PropsWithChildren<IClusterDetailKeyPairsProps>
+> = () => {
   const { pathname } = useLocation();
   const { clusterId, orgId } = useParams<{
     clusterId: string;

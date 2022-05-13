@@ -40,7 +40,9 @@ const showReleaseDetailsModal =
   };
 
 // Versions data and icons at the top of cluster details view.
-const RegionAndVersions: FC<IRegionAndVersionsProps> = ({
+const RegionAndVersions: FC<
+  React.PropsWithChildren<IRegionAndVersionsProps>
+> = ({
   clusterId,
   createDate,
   region,

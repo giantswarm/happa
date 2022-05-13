@@ -8,11 +8,9 @@ interface IDeleteConfirmFooterProps {
   onCancel?: () => void;
 }
 
-const DeleteConfirmFooter: React.FC<IDeleteConfirmFooterProps> = ({
-  cta,
-  onConfirm,
-  onCancel,
-}) => {
+const DeleteConfirmFooter: React.FC<
+  React.PropsWithChildren<IDeleteConfirmFooterProps>
+> = ({ cta, onConfirm, onCancel }) => {
   return (
     <Box direction='row' gap='small' justify='end'>
       <Button

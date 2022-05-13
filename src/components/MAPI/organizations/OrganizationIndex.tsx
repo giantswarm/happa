@@ -8,7 +8,7 @@ import LoadingOverlay from 'UI/Display/Loading/LoadingOverlay';
 import Organization from './Organization';
 import OrganizationList from './OrganizationList';
 
-const OrganizationIndex: React.FC = () => {
+const OrganizationIndex: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Breadcrumb
       data={{ title: 'ORGANIZATIONS', pathname: OrganizationsRoutes.Home }}

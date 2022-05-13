@@ -12,7 +12,7 @@ interface IWorkerNodesCreateNodePoolNameProps
     > {}
 
 const WorkerNodesCreateNodePoolName: React.FC<
-  IWorkerNodesCreateNodePoolNameProps
+  React.PropsWithChildren<IWorkerNodesCreateNodePoolNameProps>
 > = ({ id, nodePool, onChange, readOnly, disabled, ...props }) => {
   return (
     <InputGroup htmlFor={id} label='Name' {...props}>

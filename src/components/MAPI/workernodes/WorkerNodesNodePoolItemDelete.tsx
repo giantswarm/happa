@@ -10,7 +10,7 @@ interface IWorkerNodesNodePoolItemDeleteProps
 }
 
 const WorkerNodesNodePoolItemDelete: React.FC<
-  IWorkerNodesNodePoolItemDeleteProps
+  React.PropsWithChildren<IWorkerNodesNodePoolItemDeleteProps>
 > = ({ nodePoolName, onConfirm, isLoading, onCancel, ...props }) => {
   return (
     <ConfirmationPrompt

@@ -105,7 +105,7 @@ const StyledFlashMessage = styled(FlashMessageComponent)`
   margin-bottom: ${({ theme }) => theme.spacingPx * 5}px;
 `;
 
-const ClusterDetail: React.FC<{}> = () => {
+const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   const dispatch = useDispatch();
 
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();

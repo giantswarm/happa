@@ -29,11 +29,9 @@ interface IOrganizationIndexPageProps
   onClickRow: (name: string) => void;
 }
 
-const OrganizationListPage: React.FC<IOrganizationIndexPageProps> = ({
-  organizations,
-  onClickRow,
-  ...props
-}) => {
+const OrganizationListPage: React.FC<
+  React.PropsWithChildren<IOrganizationIndexPageProps>
+> = ({ organizations, onClickRow, ...props }) => {
   const handleRowKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     e.preventDefault();
 
