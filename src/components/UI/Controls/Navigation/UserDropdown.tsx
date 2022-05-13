@@ -1,5 +1,6 @@
 import { AuthorizationTypes, CSSBreakpoints } from 'model/constants';
 import { AccountSettingsRoutes, MainRoutes } from 'model/constants/routes';
+import { LoggedInUserTypes } from 'model/stores/main/types';
 import React from 'react';
 import Gravatar from 'react-gravatar';
 import { NavLink } from 'react-router-dom';
@@ -144,20 +145,22 @@ const UserDropdown: React.FC<React.PropsWithChildren<IUserDropdownProps>> = ({
                   </li>
                 )}
 
-                <li role='presentation'>
-                  <MenuItem
-                    href={AccountSettingsRoutes.Permissions}
-                    to={AccountSettingsRoutes.Permissions}
-                    onClick={onBlurHandler}
-                  >
-                    <i
-                      className='fa fa-lock'
-                      role='presentation'
-                      aria-hidden='true'
-                    />{' '}
-                    Permissions
-                  </MenuItem>
-                </li>
+                {user.type === LoggedInUserTypes.MAPI && (
+                  <li role='presentation'>
+                    <MenuItem
+                      href={AccountSettingsRoutes.Permissions}
+                      to={AccountSettingsRoutes.Permissions}
+                      onClick={onBlurHandler}
+                    >
+                      <i
+                        className='fa fa-lock'
+                        role='presentation'
+                        aria-hidden='true'
+                      />{' '}
+                      Permissions
+                    </MenuItem>
+                  </li>
+                )}
 
                 <li role='presentation'>
                   <MenuItem href={MainRoutes.Logout} to={MainRoutes.Logout}>

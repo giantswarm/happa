@@ -154,11 +154,13 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
                     />
                   )}
 
-                  <Route
-                    component={Permissions}
-                    exact
-                    path={AccountSettingsRoutes.Permissions}
-                  />
+                  {user?.type === LoggedInUserTypes.MAPI && (
+                    <Route
+                      component={Permissions}
+                      exact
+                      path={AccountSettingsRoutes.Permissions}
+                    />
+                  )}
 
                   <Route
                     component={ExceptionNotificationTest}
