@@ -33,7 +33,7 @@ export interface IPermissionsUseCase {
   permissions: IPermissionsForUseCase[];
 }
 
-interface IPermissionsForUseCase {
+export interface IPermissionsForUseCase {
   apiGroups: string[];
   resources: string[];
   resourceNames?: string[];
@@ -41,3 +41,8 @@ interface IPermissionsForUseCase {
 }
 
 type UseCaseScopeNamespace = 'default' | '*' | string;
+
+export type PermissionsUseCaseStatuses = Record<
+  string,
+  Record<string, boolean>
+>;

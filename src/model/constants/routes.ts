@@ -21,6 +21,7 @@ const UsersRoutes = {
 const AccountSettingsRoutes = {
   Home: '/account-settings',
   Experiments: '/account-settings/experiments',
+  Permissions: '/account-settings/permissions',
 };
 
 const ExceptionNotificationTestRoutes = {

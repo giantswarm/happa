@@ -78,3 +78,60 @@ export const selfSubjectAccessReviewCanListAppCatalogEntriesAtClusterScope = {
       'RBAC: allowed by ClusterRoleBinding "write-all-giantswarm-group" of ClusterRole "cluster-admin" to Group "giantswarm:giantswarm-admins"',
   },
 };
+
+export const selfSubjectAccessReviewCanListClusterRoleBindings = {
+  kind: 'SelfSubjectAccessReview',
+  apiVersion: 'authorization.k8s.io/v1',
+  metadata: {
+    creationTimestamp: null,
+  },
+  spec: {
+    resourceAttributes: {
+      verb: 'list',
+      group: 'rbac.authorization.k8s.io',
+      resource: 'clusterrolebindings',
+    },
+  },
+  status: {
+    allowed: true,
+    reason: 'RBAC: ',
+  },
+};
+
+export const selfSubjectAccessReviewCantListClusterRoleBindings = {
+  kind: 'SelfSubjectAccessReview',
+  apiVersion: 'authorization.k8s.io/v1',
+  metadata: {
+    creationTimestamp: null,
+  },
+  spec: {
+    resourceAttributes: {
+      verb: 'list',
+      group: 'rbac.authorization.k8s.io',
+      resource: 'clusterrolebindings',
+    },
+  },
+  status: {
+    allowed: false,
+    reason: 'RBAC: ',
+  },
+};
+
+export const selfSubjectAccessReviewCanGetClusterRoles = {
+  kind: 'SelfSubjectAccessReview',
+  apiVersion: 'authorization.k8s.io/v1',
+  metadata: {
+    creationTimestamp: null,
+  },
+  spec: {
+    resourceAttributes: {
+      verb: 'get',
+      group: 'rbac.authorization.k8s.io',
+      resource: 'clusterroles',
+    },
+  },
+  status: {
+    allowed: true,
+    reason: 'RBAC: ',
+  },
+};

@@ -1,14 +1,19 @@
 import { getNamespaceFromOrgName } from 'MAPI/utils';
+import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
+import * as rbacv1 from 'model/services/mapi/rbacv1';
 import { LoggedInUserTypes } from 'model/stores/main/types';
 import { AccessControlRoleItemVerb } from 'UI/Display/MAPI/AccessControl/types';
+import { cartesian } from 'utils/helpers';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import {
   INamespacePermissions,
   IPermissionMap,
+  IPermissionsForUseCase,
   IPermissionsUseCase,
+  PermissionsUseCaseStatuses,
   PermissionVerb,
 } from './types';
 
@@ -271,6 +276,72 @@ export async function fetchPermissions(
   return permissions;
 }
 
+export async function fetchPermissionsAtClusterScope(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  useCases: IPermissionsUseCase[],
+  namespacedPermissions: IPermissionMap,
+  user?: string,
+  groups?: string[]
+): Promise<IPermissionMap> {
+  const requests: authorizationv1.ISelfSubjectAccessReviewSpec[] = [
+    {
+      resourceAttributes: {
+        verb: 'list',
+        group: 'rbac.authorization.k8s.io',
+        resource: 'clusterrolebindings',
+      },
+    },
+    {
+      resourceAttributes: {
+        verb: 'get',
+        group: 'rbac.authorization.k8s.io',
+        resource: 'clusterroles',
+      },
+    },
+  ];
+
+  // Can the user LIST clusterrolebindings and GET clusterroles?
+  const accessReviewResponses = await Promise.allSettled(
+    requests.map((req) =>
+      authorizationv1.createSelfSubjectAccessReview(
+        httpClientFactory(),
+        auth,
+        req
+      )
+    )
+  );
+
+  for (const response of accessReviewResponses) {
+    if (response.status === 'rejected') {
+      return Promise.reject(response.reason);
+    }
+
+    if (response.status === 'fulfilled' && !response.value.status?.allowed) {
+      return getPermissionsWithUseCases(
+        httpClientFactory,
+        auth,
+        useCases,
+        namespacedPermissions
+      );
+    }
+  }
+
+  return getPermissionsWithClusterRoleBindings(
+    httpClientFactory,
+    auth,
+    user,
+    groups
+  );
+}
+
+export function fetchPermissionsAtClusterScopeKey(
+  user?: string,
+  groups?: string[]
+): string {
+  return `getUserPermissionsAtClusterScope/${user}/${groups?.join(',')}`;
+}
+
 export function hasAppAccesInNamespace(
   permissions: IPermissionMap,
   namespace: string
@@ -381,4 +452,268 @@ export function getPermissionsUseCases(): IPermissionsUseCase[] | null {
   );
 
   return useCases;
+}
+
+export function isGlobalUseCase(useCase: IPermissionsUseCase): boolean {
+  return (
+    (typeof useCase.scope.namespaces !== undefined &&
+      useCase.scope.namespaces?.[0] === 'default') ||
+    useCase.scope.cluster === true
+  );
+}
+
+export function isClusterScopeUseCase(useCase: IPermissionsUseCase): boolean {
+  return useCase.scope.cluster === true;
+}
+
+/**
+ * Get a list of resources to ignore for a given provider.
+ * @param provider
+ */
+function getResourcesToIgnore(
+  provider: PropertiesOf<typeof Providers>
+): string[] {
+  const providerSpecificResources = [
+    {
+      provider: Providers.AWS,
+      resources: ['awsclusters', 'g8scontrolplanes', 'awscontrolplanes'],
+    },
+    {
+      provider: Providers.AZURE,
+      resources: ['azureclusters', 'azuremachines'],
+    },
+  ];
+
+  return providerSpecificResources.reduce<string[]>((prev, curr) => {
+    if (curr.provider === provider) return prev;
+
+    return prev.concat(...curr.resources);
+  }, []);
+}
+
+/**
+ * Get permissions statuses from a permissions map for given use cases
+ * in the given organizations.
+ * @param permissions
+ * @param useCases
+ * @param organizations
+ */
+export function getStatusesForUseCases(
+  permissions: IPermissionMap,
+  useCases: IPermissionsUseCase[],
+  provider?: PropertiesOf<typeof Providers>,
+  organizations?: IOrganization[]
+): PermissionsUseCaseStatuses {
+  const resourcesToIgnore = provider ? getResourcesToIgnore(provider) : [];
+
+  const statuses: PermissionsUseCaseStatuses = {};
+  useCases.forEach((useCase) => {
+    const useCasePermissions = getPermissionsCartesians(useCase.permissions);
+
+    statuses[useCase.name] = {};
+
+    const orgs =
+      useCase.scope.cluster === true
+        ? [{ id: '', namespace: '' }]
+        : useCase.scope.namespaces?.[0] === '*'
+        ? organizations
+        : useCase.scope.namespaces?.map((ns) => ({ id: '', namespace: ns }));
+
+    orgs?.forEach((org) => {
+      const permissionsValues = useCasePermissions.map((p) => {
+        const [verb, resource, apiGroup] = p;
+
+        // If the resource is in the list of resources to ignore,
+        // we skip it.
+        if (resourcesToIgnore.includes(resource)) return true;
+
+        return hasPermission(
+          permissions,
+          org.namespace ?? '',
+          verb,
+          apiGroup,
+          resource
+        );
+      });
+
+      statuses[useCase.name][org.id] = permissionsValues.every(
+        (v) => v === true
+      );
+    });
+  });
+
+  return statuses;
+}
+
+/**
+ * Get permissions by fetching ClusterRoleBindings for
+ * given user/group and aggregating permissions of the
+ * ClusterRoles referenced.
+ * @param httpClientFactory
+ * @param auth
+ * @param user
+ * @param groups
+ */
+async function getPermissionsWithClusterRoleBindings(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  user?: string,
+  groups?: string[]
+): Promise<IPermissionMap> {
+  const clusterRoleBindingList = await rbacv1.getClusterRoleBindingList(
+    httpClientFactory(),
+    auth
+  );
+
+  // Get names of clusterroles that are bound to the user/group.
+  const clusterRoleNames = clusterRoleBindingList.items.reduce<string[]>(
+    (prev, binding) => {
+      if (
+        binding.subjects?.find(
+          (subject) =>
+            (subject.kind === 'User' && subject.name === user) ||
+            (subject.kind === 'Group' && groups?.includes(subject.name))
+        )
+      ) {
+        return prev.concat(binding.roleRef.name);
+      }
+
+      return prev;
+    },
+    []
+  );
+
+  // Get the corresponding clusterroles.
+  const clusterRoles = await Promise.all(
+    clusterRoleNames.map((name) => {
+      return rbacv1.getClusterRole(httpClientFactory(), auth, name);
+    })
+  );
+
+  // Filter for resource rules.
+  const resourceRules = clusterRoles.reduce<rbacv1.IPolicyRule[]>(
+    (prev, role) => {
+      if (!role.rules) return prev;
+
+      return prev.concat(
+        role.rules.filter(
+          (rule) =>
+            rule.hasOwnProperty('apiGroups') &&
+            rule.hasOwnProperty('resources') &&
+            rule.hasOwnProperty('verbs')
+        )
+      );
+    },
+    []
+  );
+
+  const review: authorizationv1.ISelfSubjectRulesReview = {
+    apiVersion: 'authorization.k8s.io/v1',
+    kind: 'SelfSubjectRulesReview',
+    spec: {},
+    status: {
+      incomplete: false,
+      nonResourceRules: [],
+      resourceRules: resourceRules as authorizationv1.IResourceRule[],
+    },
+  };
+
+  return computePermissions([['', review]]);
+}
+
+/**
+ * Get permissions given a list of use cases by performing
+ * SelfSubjectAccessReviews for each use case.
+ * @param httpClientFactory
+ * @param auth
+ * @param useCases
+ */
+async function getPermissionsWithUseCases(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  useCases: IPermissionsUseCase[],
+  namespacedPermissions: IPermissionMap
+): Promise<IPermissionMap> {
+  // Get unique use case permissions
+  const allPermissions = useCases.flatMap((useCase) =>
+    getPermissionsCartesians(useCase.permissions)
+  );
+
+  const uniquePermissions: [string, string, string][] = Array.from(
+    new Set(allPermissions.map((p) => JSON.stringify(p)))
+  ).map((p) => JSON.parse(p));
+
+  // To prevent calling the API for each use case permission, we
+  // check first if the user has permissions in the 'default' namespace.
+  // If not, we know they won't have permissions at the cluster level.
+  const filteredUniquePermisisons = uniquePermissions.filter((p) => {
+    const [verb, resource, apiGroup] = p;
+
+    return hasPermission(
+      namespacedPermissions,
+      'default',
+      verb,
+      apiGroup,
+      resource
+    );
+  });
+
+  // Fetch access for each unique permission
+  const requests = filteredUniquePermisisons.map((p) => {
+    const [verb, resource, apiGroup] = p;
+
+    const request: authorizationv1.ISelfSubjectAccessReviewSpec = {
+      resourceAttributes: {
+        verb,
+        group: apiGroup,
+        resource,
+      },
+    };
+
+    return authorizationv1.createSelfSubjectAccessReview(
+      httpClientFactory(),
+      auth,
+      request
+    );
+  });
+
+  const responses = await Promise.allSettled(requests);
+
+  const resourceRules: authorizationv1.IResourceRule[] = [];
+
+  for (let i = 0; i < filteredUniquePermisisons.length; i++) {
+    const response = responses[i];
+    if (
+      response.status === 'fulfilled' &&
+      response.value.status?.allowed === true
+    ) {
+      const permission = filteredUniquePermisisons[i];
+      resourceRules.push({
+        verbs: [permission[0]],
+        resources: [permission[1]],
+        apiGroups: [permission[2]],
+      });
+    }
+  }
+
+  const review: authorizationv1.ISelfSubjectRulesReview = {
+    apiVersion: 'authorization.k8s.io/v1',
+    kind: 'SelfSubjectRulesReview',
+    spec: {},
+    status: {
+      incomplete: false,
+      nonResourceRules: [],
+      resourceRules: resourceRules,
+    },
+  };
+
+  return computePermissions([['', review]]);
+}
+
+export function getPermissionsCartesians(
+  permissions: IPermissionsForUseCase[]
+): [PermissionVerb, string, string][] {
+  return permissions.flatMap((permission) =>
+    cartesian(permission.verbs, permission.resources, permission.apiGroups)
+  );
 }

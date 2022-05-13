@@ -10,5 +10,6 @@ export * from './getRoleBinding';
 export * from './getClusterRoleList';
 export * from './getRoleBindingList';
 export * from './getRoleList';
+export * from './getClusterRole';
 export * from './types';
 export * from './key';

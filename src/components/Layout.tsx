@@ -5,6 +5,7 @@ import GiantSwarm from 'giantswarm';
 import AppsMAPI from 'MAPI/apps/Apps';
 import Clusters from 'MAPI/clusters/Clusters';
 import Experiments from 'MAPI/Experiments';
+import Permissions from 'MAPI/permissions/Permissions';
 import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasAppAccess } from 'MAPI/permissions/utils';
 import {
@@ -150,6 +151,14 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
                       component={Experiments}
                       exact
                       path={AccountSettingsRoutes.Experiments}
+                    />
+                  )}
+
+                  {user?.type === LoggedInUserTypes.MAPI && (
+                    <Route
+                      component={Permissions}
+                      exact
+                      path={AccountSettingsRoutes.Permissions}
                     />
                   )}
 

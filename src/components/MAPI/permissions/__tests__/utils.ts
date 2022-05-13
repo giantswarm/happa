@@ -1,7 +1,18 @@
+import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 
-import { IPermissionMap } from '../types';
-import { computePermissions, hasPermission } from '../utils';
+import {
+  IPermissionMap,
+  IPermissionsForUseCase,
+  IPermissionsUseCase,
+  PermissionsUseCaseStatuses,
+} from '../types';
+import {
+  computePermissions,
+  getPermissionsCartesians,
+  getStatusesForUseCases,
+  hasPermission,
+} from '../utils';
 
 describe('permissions::utils', () => {
   describe('computePermissions', () => {
@@ -402,6 +413,224 @@ describe('permissions::utils', () => {
       }
     );
   });
+
+  describe('getPermissionsCartesians', () => {
+    interface ITestCase {
+      input: IPermissionsForUseCase[];
+      expected: [string, string, string][];
+    }
+
+    const testCases: ITestCase[] = [
+      {
+        input: [
+          {
+            apiGroups: ['frogs.k8s.io'],
+            resources: ['apps'],
+            verbs: ['get'],
+          },
+        ],
+        expected: [['get', 'apps', 'frogs.k8s.io']],
+      },
+      {
+        input: [
+          {
+            apiGroups: ['frogs.k8s.io'],
+            resources: ['apps'],
+            verbs: ['get', 'list'],
+          },
+        ],
+        expected: [
+          ['get', 'apps', 'frogs.k8s.io'],
+          ['list', 'apps', 'frogs.k8s.io'],
+        ],
+      },
+      {
+        input: [
+          {
+            apiGroups: ['frogs.k8s.io'],
+            resources: ['apps'],
+            verbs: ['get', 'list'],
+          },
+          {
+            apiGroups: ['cats.k8s.io'],
+            resources: ['catalogs', 'appcatalogentries'],
+            verbs: ['create', 'get'],
+          },
+        ],
+        expected: [
+          ['get', 'apps', 'frogs.k8s.io'],
+          ['list', 'apps', 'frogs.k8s.io'],
+          ['create', 'catalogs', 'cats.k8s.io'],
+          ['create', 'appcatalogentries', 'cats.k8s.io'],
+          ['get', 'catalogs', 'cats.k8s.io'],
+          ['get', 'appcatalogentries', 'cats.k8s.io'],
+        ],
+      },
+    ];
+
+    for (const { input, expected } of testCases) {
+      it('computes cartesians for use case permissions', () => {
+        const useCasePermissions = getPermissionsCartesians(input);
+
+        expect(useCasePermissions).toEqual(expected);
+      });
+    }
+  });
+
+  describe('getStatusesForUseCases', () => {
+    interface ITestCase {
+      description: string;
+      input: {
+        permissions: IPermissionMap;
+        useCases: IPermissionsUseCase[];
+        provider?: PropertiesOf<typeof Providers>;
+        organizations?: IOrganization[];
+      };
+      expected: PermissionsUseCaseStatuses;
+    }
+
+    const testCases: ITestCase[] = [
+      {
+        description:
+          'returns permission statuses for use cases in organizations',
+        input: {
+          permissions: {
+            'org-test1': {},
+            'org-test2': {
+              '*:*:*': ['*'],
+            },
+            default: {
+              '*:*:*': ['*'],
+            },
+          },
+          useCases: createMockUseCases(),
+          organizations: [
+            { id: 'test1', namespace: 'org-test1' },
+            { id: 'test2', namespace: 'org-test2' },
+          ],
+        },
+        expected: {
+          'Inspect namespaces': {
+            '': false,
+          },
+          'Inspect shared app catalogs': {
+            '': true,
+          },
+          'Inspect clusters': {
+            test1: false,
+            test2: true,
+          },
+        },
+      },
+      {
+        description:
+          'returns permission statuses without a given list of organizations',
+        input: {
+          permissions: {
+            'org-test1': {},
+            'org-test2': {
+              '*:*:*': ['*'],
+            },
+            default: {
+              '*:*:*': ['*'],
+            },
+          },
+          useCases: createMockUseCases(),
+        },
+        expected: {
+          'Inspect namespaces': {
+            '': false,
+          },
+          'Inspect shared app catalogs': {
+            '': true,
+          },
+          'Inspect clusters': {},
+        },
+      },
+      {
+        description:
+          'returns permission statuses for use cases with cluster-scoped permissions',
+        input: {
+          permissions: {
+            'org-test1': {},
+            'org-test2': {
+              '*:*:*': ['*'],
+            },
+            default: {
+              '*:*:*': ['*'],
+            },
+            '': {
+              '*:*:*': ['*'],
+            },
+          },
+          useCases: createMockUseCases(),
+          organizations: [
+            { id: 'test1', namespace: 'org-test1' },
+            { id: 'test2', namespace: 'org-test2' },
+          ],
+        },
+        expected: {
+          'Inspect namespaces': {
+            '': true,
+          },
+          'Inspect shared app catalogs': {
+            '': true,
+          },
+          'Inspect clusters': {
+            test1: false,
+            test2: true,
+          },
+        },
+      },
+      {
+        description: 'ignores resources not applicable to the given provider',
+        input: {
+          permissions: {
+            'org-test1': {},
+            'org-test2': {
+              'cluster.x-k8s.io:clusters:*': ['*'],
+              'infrastructure.cluster.x-k8s.io:azureclusters:*': ['*'],
+              'infrastructure.cluster.x-k8s.io:azuremachines:*': ['*'],
+            },
+            default: {
+              '*:*:*': ['*'],
+            },
+          },
+          useCases: createMockUseCases(),
+          provider: Providers.AZURE,
+          organizations: [
+            { id: 'test1', namespace: 'org-test1' },
+            { id: 'test2', namespace: 'org-test2' },
+          ],
+        },
+        expected: {
+          'Inspect namespaces': {
+            '': false,
+          },
+          'Inspect shared app catalogs': {
+            '': true,
+          },
+          'Inspect clusters': {
+            test1: false,
+            test2: true,
+          },
+        },
+      },
+    ];
+
+    for (const { description, input, expected } of testCases) {
+      it(description, () => {
+        const statuses = getStatusesForUseCases(
+          input.permissions,
+          input.useCases,
+          input.provider,
+          input.organizations
+        );
+
+        expect(statuses).toStrictEqual(expected);
+      });
+    }
+  });
 });
 
 function makeRulesReview(
@@ -413,4 +642,60 @@ function makeRulesReview(
     spec: {},
     status,
   };
+}
+
+function createMockUseCases(): IPermissionsUseCase[] {
+  return [
+    {
+      name: 'Inspect namespaces',
+      category: 'access control',
+      description:
+        'List namespaces and get an individual namespace&apos;s details',
+      scope: { cluster: true },
+      permissions: [
+        {
+          apiGroups: [''],
+          resources: ['namespaces'],
+          verbs: ['get', 'list'],
+        },
+      ],
+    },
+    {
+      name: 'Inspect shared app catalogs',
+      category: 'app catalogs',
+      description:
+        'Read catalogs and their entries in the &quot;default&quot; namespace',
+      permissions: [
+        {
+          apiGroups: ['application.giantswarm.io'],
+          resources: ['catalogs', 'appcatalogentries'],
+          verbs: ['get', 'list'],
+        },
+      ],
+      scope: { namespaces: ['default'] },
+    },
+    {
+      name: 'Inspect clusters',
+      category: 'workload clusters',
+      description: 'Read resources that form workload clusters',
+      scope: { namespaces: ['*'] },
+      permissions: [
+        {
+          apiGroups: ['cluster.x-k8s.io'],
+          resources: ['clusters'],
+          verbs: ['get', 'list'],
+        },
+        {
+          apiGroups: ['infrastructure.cluster.x-k8s.io'],
+          resources: ['azureclusters', 'azuremachines'],
+          verbs: ['get', 'list'],
+        },
+        {
+          apiGroups: ['infrastructure.giantswarm.io'],
+          resources: ['awsclusters', 'awscontrolplanes', 'g8scontrolplanes'],
+          verbs: ['get', 'list'],
+        },
+      ],
+    },
+  ];
 }
