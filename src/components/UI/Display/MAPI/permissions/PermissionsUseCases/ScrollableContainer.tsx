@@ -41,8 +41,11 @@ const ContainerInner = styled.div`
   padding: 0 20px 10px;
 `;
 
-const ScrollableContainer: React.FC = ({ children }) => (
-  <Container>
+const ScrollableContainer: React.FC<React.PropsWithChildren<{}>> = ({
+  children,
+  ...props
+}) => (
+  <Container {...props}>
     <ContainerInner>{children}</ContainerInner>
   </Container>
 );
