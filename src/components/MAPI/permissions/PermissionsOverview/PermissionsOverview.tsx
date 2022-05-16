@@ -1,16 +1,38 @@
-import React, { useState } from 'react';
+import { selectOrganizations } from 'model/stores/organization/selectors';
+import React, { useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import PermissionsUseCases from 'UI/Display/MAPI/permissions/PermissionsUseCases';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 
 import { useUseCasesPermissions } from '../useUseCasesPermissions';
-import { getPermissionsUseCases, isGlobalUseCase } from '../utils';
-import PermissionsOverviewGlobal from './PermissionsOverviewGlobal';
-import PermissionsOverviewOrganizations from './PermissionsOverviewOrganizations';
+import {
+  getPermissionsUseCases,
+  getStatusesForUseCases,
+  isGlobalUseCase,
+} from '../utils';
 
 const PermissionsOverview: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   const useCases = getPermissionsUseCases();
   const { data: permissions } = useUseCasesPermissions(useCases);
+
+  const provider = window.config.info.general.provider;
+  const organizations = useSelector(selectOrganizations());
+  const sortedOrganizations = Object.values(organizations).sort((a, b) =>
+    (a?.name || a.id).localeCompare(b?.name || b.id)
+  );
+
+  const useCasesStatuses = useMemo(() => {
+    if (typeof permissions === 'undefined' || !useCases) return undefined;
+
+    return getStatusesForUseCases(
+      permissions,
+      useCases,
+      provider,
+      sortedOrganizations
+    );
+  }, [permissions, useCases, provider, sortedOrganizations]);
 
   if (!useCases) {
     return null;
@@ -24,15 +46,16 @@ const PermissionsOverview: React.FC = () => {
   return (
     <Tabs activeIndex={activeTab} onActive={setActiveTab}>
       <Tab title='Global'>
-        <PermissionsOverviewGlobal
+        <PermissionsUseCases
           useCases={globalUseCases}
-          permissions={permissions}
+          useCasesStatuses={useCasesStatuses}
         />
       </Tab>
       <Tab title='For organizations'>
-        <PermissionsOverviewOrganizations
+        <PermissionsUseCases
           useCases={organizationsUseCases}
-          permissions={permissions}
+          useCasesStatuses={useCasesStatuses}
+          organizations={sortedOrganizations}
         />
       </Tab>
     </Tabs>

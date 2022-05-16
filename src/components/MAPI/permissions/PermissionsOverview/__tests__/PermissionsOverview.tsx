@@ -1,8 +1,10 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { StatusCodes } from 'model/constants';
 import { mapOAuth2UserToUser } from 'model/stores/main/utils';
+import { IOrganizationState } from 'model/stores/organization/types';
+import { IState } from 'model/stores/state';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
@@ -33,11 +35,44 @@ function getComponent() {
         ...preloginState.main,
         loggedInUser: mapOAuth2UserToUser(auth.loggedInUser!),
       },
+      entities: {
+        organizations: {
+          ...preloginState.entities.organizations,
+          items: {
+            org1: {
+              id: 'org1',
+              name: 'org1',
+              namespace: 'org-org1',
+            },
+            org2: {
+              id: 'org2',
+              name: 'org2',
+              namespace: 'org-org2',
+            },
+          },
+        } as IOrganizationState,
+      } as IState['entities'],
     },
     undefined,
     history,
     auth
   );
+}
+
+function createDefaultPermissions() {
+  return {
+    default: {
+      '*:*:*': ['*'],
+    },
+    'org-org1': {
+      '*:*:*': ['*'],
+    },
+    'org-org2': {
+      'application.giantswarm.io:apps:*': ['get', 'list'],
+      ':configmaps:*': ['get', 'list'],
+      ':secrets:*': ['get', 'list'],
+    },
+  };
 }
 
 jest.unmock(
@@ -51,13 +86,9 @@ describe('PermissionsOverview', () => {
     render(getComponent());
   });
 
-  it('displays permissions for use cases', async () => {
+  it('displays permissions for global use cases', async () => {
     (usePermissions as jest.Mock).mockReturnValue({
-      data: {
-        default: {
-          '*:*:*': ['*'],
-        },
-      },
+      data: createDefaultPermissions(),
     });
 
     nock(window.config.mapiEndpoint)
@@ -119,26 +150,42 @@ describe('PermissionsOverview', () => {
     render(getComponent());
 
     expect(await screen.findByText('access control')).toBeInTheDocument();
+    expect(screen.queryByText('Inspect namespaces')).not.toBeInTheDocument();
     expect(
       within(
         screen.getByLabelText('access control permission status')
       ).getByText('Yes')
     ).toBeInTheDocument();
+    // Toggle use case category
+    fireEvent.click(screen.getByLabelText('access control'));
+    expect(await screen.findByText('Inspect namespaces')).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('Inspect namespaces permission status')
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+
     expect(await screen.findByText('app catalogs')).toBeInTheDocument();
     expect(
       within(screen.getByLabelText('app catalogs permission status')).getByText(
         'Yes'
       )
     ).toBeInTheDocument();
+    // Toggle use case category
+    fireEvent.click(screen.getByLabelText('app catalogs'));
+    expect(
+      await screen.findByText('Inspect shared app catalogs')
+    ).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('Inspect shared app catalogs permission status')
+      ).getByText('Yes')
+    ).toBeInTheDocument();
   });
 
   it('displays an error message if we cannot get permissions at the cluster scope', async () => {
     (usePermissions as jest.Mock).mockReturnValue({
-      data: {
-        default: {
-          '*:*:*': ['*'],
-        },
-      },
+      data: createDefaultPermissions(),
     });
 
     nock(window.config.mapiEndpoint)
@@ -245,6 +292,149 @@ describe('PermissionsOverview', () => {
       within(screen.getByLabelText('app catalogs permission status')).getByText(
         'No'
       )
+    ).toBeInTheDocument();
+  });
+
+  it('displays organization permissions for categories', async () => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: createDefaultPermissions(),
+    });
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Created,
+        authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
+      );
+
+    render(getComponent());
+
+    expect(await screen.findByText('access control')).toBeInTheDocument();
+
+    // Toggle 'For organizations' tab
+    fireEvent.click(screen.getByRole('tab', { name: 'For organizations' }));
+
+    expect(await screen.findByText('app catalogs')).toBeInTheDocument();
+    expect(screen.queryByText('Inspect app catalogs')).not.toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText(
+          'app catalogs for org1 organization permission status'
+        )
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText(
+          'app catalogs for org2 organization permission status'
+        )
+      ).getByText('No')
+    ).toBeInTheDocument();
+
+    expect(await screen.findByText('apps')).toBeInTheDocument();
+    expect(screen.queryByText('Inspect apps')).not.toBeInTheDocument();
+    expect(screen.queryByText('Manage apps')).not.toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('apps for org1 organization permission status')
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('apps for org2 organization permission status')
+      ).getByText('Partial')
+    ).toBeInTheDocument();
+  });
+
+  it('displays organization permissions for use cases', async () => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: createDefaultPermissions(),
+    });
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Created,
+        authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
+      );
+
+    render(getComponent());
+
+    expect(await screen.findByText('access control')).toBeInTheDocument();
+
+    // Toggle 'For organizations' tab
+    fireEvent.click(screen.getByRole('tab', { name: 'For organizations' }));
+
+    // Toggle app catalogs category
+    fireEvent.click(screen.getByLabelText('app catalogs'));
+    expect(await screen.findByText('Inspect app catalogs')).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText(
+          'Inspect app catalogs for org1 organization permission status'
+        )
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText(
+          'Inspect app catalogs for org2 organization permission status'
+        )
+      ).getByText('No')
+    ).toBeInTheDocument();
+
+    // Toggle apps category
+    fireEvent.click(screen.getByLabelText('apps'));
+    expect(await screen.findByText('Inspect apps')).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText(
+          'Inspect apps for org1 organization permission status'
+        )
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText(
+          'Inspect apps for org2 organization permission status'
+        )
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+
+    expect(await screen.findByText('Manage apps')).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText(
+          'Manage apps for org1 organization permission status'
+        )
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText(
+          'Manage apps for org2 organization permission status'
+        )
+      ).getByText('No')
     ).toBeInTheDocument();
   });
 });
