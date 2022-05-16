@@ -117,3 +117,21 @@ export interface ISelfSubjectAccessReviewStatus {
   // For instance, RBAC can be missing a role, but enough roles are still present and bound to reason about the request.
   evaluationError: string;
 }
+
+export interface ILocalSubjectAccessReviewStatus
+  extends ISelfSubjectAccessReviewStatus {}
+
+export interface ILocalSubjectAccessReview {
+  apiVersion: string;
+  kind: string;
+  metadata?: metav1.IObjectMeta;
+  spec: ILocalSubjectAccessReviewSpec;
+  status?: ILocalSubjectAccessReviewStatus;
+}
+
+export interface ILocalSubjectAccessReviewSpec {
+  resourceAttributes?: IResourceAttributes;
+  nonResourceAttributes?: INonResourceAttributes;
+  user?: string;
+  groups?: string[];
+}

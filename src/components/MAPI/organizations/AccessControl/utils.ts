@@ -260,7 +260,7 @@ export async function getRoleItems(
   }
 
   if (permissions.roles[namespace]?.canList) {
-    requests.push(rbacv1.getRoleList(clientFactory(), auth, namespace));
+    requests.push(rbacv1.getRoleList(clientFactory(), auth, { namespace }));
   }
 
   requests.push(rbacv1.getRoleBindingList(clientFactory(), auth, namespace));
@@ -290,7 +290,7 @@ export function getRoleItemsKey(
   }
 
   if (permissions.roles[namespace]?.canList) {
-    keyParts.push(rbacv1.getRoleListKey(namespace));
+    keyParts.push(rbacv1.getRoleListKey({ namespace }));
   }
 
   keyParts.push(rbacv1.getRoleBindingListKey(namespace));
