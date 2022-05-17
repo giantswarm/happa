@@ -72,7 +72,7 @@
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
     "grommet": "2.23.0",
     "history": "4.10.1",
-    "immer": "9.0.12",
+    "immer": "9.0.14",
     "js-base64": "3.7.2",
     "js-yaml": "4.1.0",
     "lunr": "2.3.9",
