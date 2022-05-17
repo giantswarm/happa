@@ -521,6 +521,51 @@ export function hasAppAccess(
   );
 }
 
+export function hasAccessToInspectPermissions(
+  permissions: IPermissionMap
+): boolean {
+  switch (true) {
+    case hasPermission(
+      permissions,
+      '',
+      'list',
+      'rbac.authorization.k8s.io',
+      'clusterroles'
+    ):
+    case hasPermission(
+      permissions,
+      '',
+      'list',
+      'rbac.authorization.k8s.io',
+      'clusterrolebindings'
+    ):
+    case hasPermission(
+      permissions,
+      '',
+      'list',
+      'rbac.authorization.k8s.io',
+      'roles'
+    ):
+    case hasPermission(
+      permissions,
+      '',
+      'list',
+      'rbac.authorization.k8s.io',
+      'rolebindings'
+    ):
+    case hasPermission(
+      permissions,
+      'default',
+      'create',
+      'authorization.k8s.io',
+      'localsubjectaccessreviews'
+    ):
+      return true;
+    default:
+      return false;
+  }
+}
+
 /**
  * Fetch access to a resource within a given namespace.
  * Returns an object mapping each given verb to a boolean indicating access.
