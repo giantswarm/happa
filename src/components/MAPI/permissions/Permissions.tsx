@@ -6,11 +6,18 @@ import { Breadcrumb } from 'react-breadcrumbs';
 
 import PermissionsOverview from './PermissionsOverview';
 import SubjectForm, { SubjectType } from './SubjectForm';
+import { useUseCasesPermissions } from './useUseCasesPermissions';
+import { getPermissionsUseCases, hasAccessToInspectPermissions } from './utils';
 
 interface IPermissionsProps {}
 
 const Permissions: React.FC<IPermissionsProps> = () => {
-  const canInspectPermissions = true;
+  const useCases = getPermissionsUseCases();
+  const { data: ownPermissions } = useUseCasesPermissions(useCases);
+
+  const canInspectPermissions = ownPermissions
+    ? hasAccessToInspectPermissions(ownPermissions)
+    : false;
 
   const [subjectType, setSubjectType] = useState(SubjectType.Myself);
   const [subjectGroupName, setSubjectGroupName] = useState('');
