@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import PermissionsUseCases from 'UI/Display/MAPI/permissions/PermissionsUseCases';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 
+import { SubjectType } from '../SubjectForm';
 import { useUseCasesPermissions } from '../useUseCasesPermissions';
 import {
   getPermissionsUseCases,
@@ -11,11 +12,23 @@ import {
   isGlobalUseCase,
 } from '../utils';
 
-const PermissionsOverview: React.FC = () => {
+interface IPermissionsOverviewProps {
+  subjectType?: SubjectType;
+  subjectName?: string;
+}
+
+const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
+  subjectType,
+  subjectName,
+}) => {
   const [activeTab, setActiveTab] = useState(0);
 
   const useCases = getPermissionsUseCases();
-  const { data: permissions } = useUseCasesPermissions(useCases);
+  const { data: permissions } = useUseCasesPermissions(
+    useCases,
+    subjectName,
+    subjectType
+  );
 
   const provider = window.config.info.general.provider;
   const organizations = useSelector(selectOrganizations());

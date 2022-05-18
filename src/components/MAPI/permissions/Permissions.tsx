@@ -69,7 +69,16 @@ const Permissions: React.FC<IPermissionsProps> = () => {
             onSubmit={handleSubjectFormSubmit}
           />
         )}
-        <PermissionsOverview />
+        <PermissionsOverview
+          subjectType={subjectType}
+          subjectName={
+            subjectType === SubjectType.Group
+              ? subjectGroupName
+              : subjectType === SubjectType.User
+              ? subjectUserName
+              : ''
+          }
+        />
       </DocumentTitle>
     </Breadcrumb>
   );
