@@ -1,19 +1,29 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { Box, Heading, Text } from 'grommet';
 import { AccountSettingsRoutes } from 'model/constants/routes';
-import React from 'react';
+import React, { useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import styled from 'styled-components';
 
 import PermissionsOverview from './PermissionsOverview';
-
-const HeadingWrapper = styled(Box)`
-  max-width: 900px;
-`;
+import SubjectForm, { SubjectType } from './SubjectForm';
 
 interface IPermissionsProps {}
 
 const Permissions: React.FC<IPermissionsProps> = () => {
+  const [subjectType, setSubjectType] = useState(SubjectType.Myself);
+  const [subjectGroupName, setSubjectGroupName] = useState('');
+  const [subjectUserName, setSubjectUserName] = useState('');
+
+  const handleSubjectFormSubmit = function (value: string) {
+    if (subjectType === SubjectType.Group) {
+      setSubjectGroupName(value);
+    } else if (subjectType === SubjectType.User) {
+      setSubjectUserName(value);
+    }
+  };
+
+  const isAdmin = true;
+
   return (
     <Breadcrumb
       data={{
@@ -22,7 +32,8 @@ const Permissions: React.FC<IPermissionsProps> = () => {
       }}
     >
       <DocumentTitle title='Permissions'>
-        <HeadingWrapper
+        <Box
+          width={{ max: '900px' }}
           margin={{ bottom: 'large' }}
           gap='medium'
           direction='column'
@@ -31,11 +42,26 @@ const Permissions: React.FC<IPermissionsProps> = () => {
             Inspect permissions
           </Heading>
           <Text>
-            Here you get an overview of your RBAC permissions in the management
-            cluster, with regard to certain use cases. Note that this is not a
-            complete overview of all permissions and restrictions.
+            Here you get an overview of your
+            {isAdmin ? (
+              <span> own, a group&apos;s or a user&apos;s </span>
+            ) : (
+              ' '
+            )}
+            RBAC permissions in the management cluster, with regard to certain
+            use cases. Note that this is not a complete overview of all
+            permissions and restrictions.
           </Text>
-        </HeadingWrapper>
+        </Box>
+        {isAdmin && (
+          <SubjectForm
+            subjectType={subjectType}
+            groupName={subjectGroupName}
+            userName={subjectUserName}
+            onSubjectTypeChange={setSubjectType}
+            onSubmit={handleSubjectFormSubmit}
+          />
+        )}
         <PermissionsOverview />
       </DocumentTitle>
     </Breadcrumb>
