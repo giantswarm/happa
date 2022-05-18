@@ -3,7 +3,7 @@ import {
   IPermissionsUseCase,
   PermissionsUseCaseStatuses,
 } from 'MAPI/permissions/types';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import StatusesForCategory, {
   Column,
@@ -26,12 +26,16 @@ interface IPermissionsUseCasesProps {
   useCases: IPermissionsUseCase[];
   useCasesStatuses?: PermissionsUseCaseStatuses;
   organizations?: IOrganization[];
+  activeIndexes: number[];
+  onActive: (activeIndexes: number[]) => void;
 }
 
 const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
   useCases,
   useCasesStatuses,
   organizations,
+  activeIndexes,
+  onActive,
 }) => {
   const [categories, useCasesByCategory] = useMemo(() => {
     const groupedUseCases = groupBy(useCases, 'category');
@@ -41,8 +45,6 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
 
     return [sortedCategories, groupedUseCases];
   }, [useCases]);
-
-  const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
 
   if (!useCasesStatuses) {
     return <UseCasesPreloader />;
@@ -58,7 +60,7 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
           top: organizations ? `${ORGANIZATION_LABEL_HEIGHT}px` : '0',
         }}
         activeIndex={activeIndexes}
-        onActive={setActiveIndexes}
+        onActive={onActive}
         animate={false}
         role='presentation'
         aria-hidden='true'
@@ -90,7 +92,7 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
           multiple={true}
           gap='medium'
           activeIndex={activeIndexes}
-          onActive={setActiveIndexes}
+          onActive={onActive}
           animate={false}
         >
           {categories.map((category, categoryIndex) => (

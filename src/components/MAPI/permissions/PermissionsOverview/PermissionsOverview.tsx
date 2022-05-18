@@ -47,6 +47,11 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
     );
   }, [permissions, useCases, provider, sortedOrganizations]);
 
+  const [globalActiveIndexes, setGlobalActiveIndexes] = useState<number[]>([]);
+  const [organizationsActiveIndexes, setOrganizationsActiveIndexes] = useState<
+    number[]
+  >([]);
+
   if (!useCases || (subjectType !== SubjectType.Myself && subjectName === '')) {
     return null;
   }
@@ -62,6 +67,8 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
         <PermissionsUseCases
           useCases={globalUseCases}
           useCasesStatuses={useCasesStatuses}
+          activeIndexes={globalActiveIndexes}
+          onActive={setGlobalActiveIndexes}
         />
       </Tab>
       <Tab title='For organizations'>
@@ -69,6 +76,8 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
           useCases={organizationsUseCases}
           useCasesStatuses={useCasesStatuses}
           organizations={sortedOrganizations}
+          activeIndexes={organizationsActiveIndexes}
+          onActive={setOrganizationsActiveIndexes}
         />
       </Tab>
     </Tabs>

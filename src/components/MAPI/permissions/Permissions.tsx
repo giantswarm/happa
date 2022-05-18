@@ -70,6 +70,7 @@ const Permissions: React.FC<IPermissionsProps> = () => {
           />
         )}
         <PermissionsOverview
+          key={subjectType}
           subjectType={subjectType}
           subjectName={
             subjectType === SubjectType.Group
