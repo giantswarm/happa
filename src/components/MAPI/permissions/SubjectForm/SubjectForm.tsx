@@ -26,6 +26,11 @@ const RadioGroupLabel = styled(Text)`
   }
 `;
 
+const FormWrapper = styled(Box).attrs({
+  width: { max: '880px' },
+  pad: { top: 'large', bottom: 'xsmall' },
+})``;
+
 const FormGroup = styled(Box)`
   display: flex;
   flex-direction: row;
@@ -175,10 +180,10 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
         </Box>
       </RadioGroup>
 
-      <Box width={{ max: '880px' }}>
-        {subjectType === SubjectType.Group && (
+      {subjectType === SubjectType.Group && (
+        <FormWrapper>
           <Form onSubmit={handleGroupFormSubmit}>
-            <FormGroup pad={{ top: 'large' }} margin={{ bottom: 'medium' }}>
+            <FormGroup margin={{ bottom: 'medium' }}>
               <Label htmlFor='groupName'>Group name</Label>
               <InputWrapper>
                 <StyledTextInput
@@ -200,11 +205,13 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
               <code>customer:</code>
             </Text>
           </Form>
-        )}
+        </FormWrapper>
+      )}
 
-        {subjectType === SubjectType.User && (
+      {subjectType === SubjectType.User && (
+        <FormWrapper>
           <Form onSubmit={handleUserFormSubmit}>
-            <FormGroup pad={{ top: 'large' }} margin={{ bottom: 'medium' }}>
+            <FormGroup margin={{ bottom: 'medium' }}>
               <Label htmlFor='userName'>User name</Label>
               <InputWrapper>
                 <StyledTextInput
@@ -225,8 +232,8 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
               ClusterRoleBinding resources, including upper/lower case.
             </Text>
           </Form>
-        )}
-      </Box>
+        </FormWrapper>
+      )}
     </Box>
   );
 };
