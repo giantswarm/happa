@@ -47,7 +47,7 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
     );
   }, [permissions, useCases, provider, sortedOrganizations]);
 
-  if (!useCases) {
+  if (!useCases || (subjectType !== SubjectType.Myself && subjectName === '')) {
     return null;
   }
 
