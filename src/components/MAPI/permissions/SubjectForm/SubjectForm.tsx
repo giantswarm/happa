@@ -188,6 +188,7 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
                   dark={groupNameValue === GROUP_NAME_PREFIX}
                   value={groupNameValue}
                   onChange={handleGroupNameChange}
+                  spellCheck={false}
                 />
               </InputWrapper>
               <Button type='submit'>Show permissions</Button>
@@ -212,6 +213,7 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
                   margin='none'
                   value={userNameValue}
                   onChange={handleUserNameChange}
+                  spellCheck={false}
                 />
               </InputWrapper>
               <Button type='submit'>Show permissions</Button>
