@@ -524,46 +524,43 @@ export function hasAppAccess(
 export function hasAccessToInspectPermissions(
   permissions: IPermissionMap
 ): boolean {
-  switch (true) {
-    case hasPermission(
+  return (
+    hasPermission(
       permissions,
       '',
       'list',
       'rbac.authorization.k8s.io',
       'clusterroles'
-    ):
-    case hasPermission(
+    ) &&
+    hasPermission(
       permissions,
       '',
       'list',
       'rbac.authorization.k8s.io',
       'clusterrolebindings'
-    ):
-    case hasPermission(
+    ) &&
+    hasPermission(
       permissions,
       '',
       'list',
       'rbac.authorization.k8s.io',
       'roles'
-    ):
-    case hasPermission(
+    ) &&
+    hasPermission(
       permissions,
       '',
       'list',
       'rbac.authorization.k8s.io',
       'rolebindings'
-    ):
-    case hasPermission(
+    ) &&
+    hasPermission(
       permissions,
       'default',
       'create',
       'authorization.k8s.io',
       'localsubjectaccessreviews'
-    ):
-      return true;
-    default:
-      return false;
-  }
+    )
+  );
 }
 
 /**
