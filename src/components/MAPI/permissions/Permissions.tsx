@@ -10,6 +10,8 @@ import SubjectForm, { SubjectType } from './SubjectForm';
 interface IPermissionsProps {}
 
 const Permissions: React.FC<IPermissionsProps> = () => {
+  const canInspectPermissions = true;
+
   const [subjectType, setSubjectType] = useState(SubjectType.Myself);
   const [subjectGroupName, setSubjectGroupName] = useState('');
   const [subjectUserName, setSubjectUserName] = useState('');
@@ -21,8 +23,6 @@ const Permissions: React.FC<IPermissionsProps> = () => {
       setSubjectUserName(value);
     }
   };
-
-  const isAdmin = true;
 
   return (
     <Breadcrumb
@@ -43,7 +43,7 @@ const Permissions: React.FC<IPermissionsProps> = () => {
           </Heading>
           <Text>
             Here you get an overview of your
-            {isAdmin ? (
+            {canInspectPermissions ? (
               <span> own, a group&apos;s or a user&apos;s </span>
             ) : (
               ' '
@@ -53,7 +53,7 @@ const Permissions: React.FC<IPermissionsProps> = () => {
             permissions and restrictions.
           </Text>
         </Box>
-        {isAdmin && (
+        {canInspectPermissions && (
           <SubjectForm
             subjectType={subjectType}
             groupName={subjectGroupName}
