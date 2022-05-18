@@ -196,7 +196,12 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
                   spellCheck={false}
                 />
               </InputWrapper>
-              <Button type='submit'>Show permissions</Button>
+              <Button
+                type='submit'
+                disabled={groupNameValue === GROUP_NAME_PREFIX}
+              >
+                Show permissions
+              </Button>
             </FormGroup>
             <Text size='small'>
               The group name refers to a group in your identity provider. Here
@@ -223,7 +228,9 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
                   spellCheck={false}
                 />
               </InputWrapper>
-              <Button type='submit'>Show permissions</Button>
+              <Button type='submit' disabled={userNameValue === ''}>
+                Show permissions
+              </Button>
             </FormGroup>
             <Text size='small'>
               The user name refers to a user as defined in your identity
