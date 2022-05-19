@@ -63,16 +63,17 @@ const StatusesForCategory: React.FC<IUseCasesForCategoryProps> = ({
     <AccordionPanel
       header={
         <RelativeBox direction='row' height='32px' aria-label={category}>
-          {!isSelected &&
-            namespaces.map((namespace) => (
-              <Column key={namespace} justify='center'>
+          {namespaces.map((namespace) => (
+            <Column key={namespace} justify='center'>
+              {!isSelected && (
                 <UseCaseStatus
                   useCaseName={category}
                   organizationName={namespace}
                   value={categoryStatuses[namespace]}
                 />
-              </Column>
-            ))}
+              )}
+            </Column>
+          ))}
         </RelativeBox>
       }
     >
