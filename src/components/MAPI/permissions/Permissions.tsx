@@ -6,6 +6,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import styled from 'styled-components';
 
 import PermissionsOverview from './PermissionsOverview';
+import PermissionsPreloader from './PermissionsPreloader';
 import SubjectForm, { SubjectType } from './SubjectForm';
 import { useUseCasesPermissions } from './useUseCasesPermissions';
 import { getPermissionsUseCases, hasAccessToInspectPermissions } from './utils';
@@ -63,26 +64,32 @@ const Permissions: React.FC<IPermissionsProps> = () => {
             permissions.
           </IntroText>
         </Box>
-        {canInspectPermissions && (
-          <SubjectForm
-            subjectType={subjectType}
-            groupName={subjectGroupName}
-            userName={subjectUserName}
-            onSubjectTypeChange={setSubjectType}
-            onSubmit={handleSubjectFormSubmit}
-          />
+        {ownPermissions ? (
+          <>
+            {canInspectPermissions && (
+              <SubjectForm
+                subjectType={subjectType}
+                groupName={subjectGroupName}
+                userName={subjectUserName}
+                onSubjectTypeChange={setSubjectType}
+                onSubmit={handleSubjectFormSubmit}
+              />
+            )}
+            <PermissionsOverview
+              key={subjectType}
+              subjectType={subjectType}
+              subjectName={
+                subjectType === SubjectType.Group
+                  ? subjectGroupName
+                  : subjectType === SubjectType.User
+                  ? subjectUserName
+                  : ''
+              }
+            />
+          </>
+        ) : (
+          <PermissionsPreloader />
         )}
-        <PermissionsOverview
-          key={subjectType}
-          subjectType={subjectType}
-          subjectName={
-            subjectType === SubjectType.Group
-              ? subjectGroupName
-              : subjectType === SubjectType.User
-              ? subjectUserName
-              : ''
-          }
-        />
       </DocumentTitle>
     </Breadcrumb>
   );
