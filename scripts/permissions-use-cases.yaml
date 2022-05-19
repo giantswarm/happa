@@ -197,14 +197,6 @@ useCases:
         verbs:
           - get
           - list
-      - apiGroups:
-          - ""
-        resources:
-          - configmaps
-          - secrets
-        verbs:
-          - get
-          - list
   - name: "Manage apps"
     description: "Install and uninstall apps to/from workload clusters and create/modify/delete their configuration"
     category: "apps"
