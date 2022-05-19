@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import PermissionsUseCases from 'UI/Display/MAPI/permissions/PermissionsUseCases';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 
+import { SubjectType } from '../SubjectForm';
 import { useUseCasesPermissions } from '../useUseCasesPermissions';
 import {
   getPermissionsUseCases,
@@ -11,11 +12,23 @@ import {
   isGlobalUseCase,
 } from '../utils';
 
-const PermissionsOverview: React.FC = () => {
+interface IPermissionsOverviewProps {
+  subjectType?: SubjectType;
+  subjectName?: string;
+}
+
+const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
+  subjectType,
+  subjectName,
+}) => {
   const [activeTab, setActiveTab] = useState(0);
 
   const useCases = getPermissionsUseCases();
-  const { data: permissions } = useUseCasesPermissions(useCases);
+  const { data: permissions } = useUseCasesPermissions(
+    useCases,
+    subjectName,
+    subjectType
+  );
 
   const provider = window.config.info.general.provider;
   const organizations = useSelector(selectOrganizations());
@@ -34,7 +47,12 @@ const PermissionsOverview: React.FC = () => {
     );
   }, [permissions, useCases, provider, sortedOrganizations]);
 
-  if (!useCases) {
+  const [globalActiveIndexes, setGlobalActiveIndexes] = useState<number[]>([]);
+  const [organizationsActiveIndexes, setOrganizationsActiveIndexes] = useState<
+    number[]
+  >([]);
+
+  if (!useCases || (subjectType !== SubjectType.Myself && subjectName === '')) {
     return null;
   }
 
@@ -49,6 +67,8 @@ const PermissionsOverview: React.FC = () => {
         <PermissionsUseCases
           useCases={globalUseCases}
           useCasesStatuses={useCasesStatuses}
+          activeIndexes={globalActiveIndexes}
+          onActive={setGlobalActiveIndexes}
         />
       </Tab>
       <Tab title='For organizations'>
@@ -56,6 +76,8 @@ const PermissionsOverview: React.FC = () => {
           useCases={organizationsUseCases}
           useCasesStatuses={useCasesStatuses}
           organizations={sortedOrganizations}
+          activeIndexes={organizationsActiveIndexes}
+          onActive={setOrganizationsActiveIndexes}
         />
       </Tab>
     </Tabs>

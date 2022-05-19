@@ -1,19 +1,44 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { Box, Heading, Text } from 'grommet';
 import { AccountSettingsRoutes } from 'model/constants/routes';
-import React from 'react';
+import React, { useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import styled from 'styled-components';
 
 import PermissionsOverview from './PermissionsOverview';
+import PermissionsPreloader from './PermissionsPreloader';
+import SubjectForm, { SubjectType } from './SubjectForm';
+import { useUseCasesPermissions } from './useUseCasesPermissions';
+import { getPermissionsUseCases, hasAccessToInspectPermissions } from './utils';
 
-const HeadingWrapper = styled(Box)`
-  max-width: 900px;
+const IntroText = styled(Text)`
+  abbr {
+    text-decoration: none;
+  }
 `;
 
 interface IPermissionsProps {}
 
 const Permissions: React.FC<IPermissionsProps> = () => {
+  const useCases = getPermissionsUseCases();
+  const { data: ownPermissions } = useUseCasesPermissions(useCases);
+
+  const canInspectPermissions = ownPermissions
+    ? hasAccessToInspectPermissions(ownPermissions)
+    : false;
+
+  const [subjectType, setSubjectType] = useState(SubjectType.Myself);
+  const [subjectGroupName, setSubjectGroupName] = useState('');
+  const [subjectUserName, setSubjectUserName] = useState('');
+
+  const handleSubjectFormSubmit = function (value: string) {
+    if (subjectType === SubjectType.Group) {
+      setSubjectGroupName(value);
+    } else if (subjectType === SubjectType.User) {
+      setSubjectUserName(value);
+    }
+  };
+
   return (
     <Breadcrumb
       data={{
@@ -22,7 +47,8 @@ const Permissions: React.FC<IPermissionsProps> = () => {
       }}
     >
       <DocumentTitle title='Permissions'>
-        <HeadingWrapper
+        <Box
+          width={{ max: '900px' }}
           margin={{ bottom: 'large' }}
           gap='medium'
           direction='column'
@@ -30,13 +56,40 @@ const Permissions: React.FC<IPermissionsProps> = () => {
           <Heading level={1} margin='none'>
             Inspect permissions
           </Heading>
-          <Text>
-            Here you get an overview of your RBAC permissions in the management
-            cluster, with regard to certain use cases. Note that this is not a
-            complete overview of all permissions and restrictions.
-          </Text>
-        </HeadingWrapper>
-        <PermissionsOverview />
+          <IntroText>
+            Here you can check which{' '}
+            <abbr title='role based access control'>RBAC</abbr> permissions you
+            have in the management cluster, with regard to certain use cases. As
+            an admin, you can also inspect other users&apos; and groups&apos;
+            permissions.
+          </IntroText>
+        </Box>
+        {ownPermissions ? (
+          <>
+            {canInspectPermissions && (
+              <SubjectForm
+                subjectType={subjectType}
+                groupName={subjectGroupName}
+                userName={subjectUserName}
+                onSubjectTypeChange={setSubjectType}
+                onSubmit={handleSubjectFormSubmit}
+              />
+            )}
+            <PermissionsOverview
+              key={subjectType}
+              subjectType={subjectType}
+              subjectName={
+                subjectType === SubjectType.Group
+                  ? subjectGroupName
+                  : subjectType === SubjectType.User
+                  ? subjectUserName
+                  : ''
+              }
+            />
+          </>
+        ) : (
+          <PermissionsPreloader />
+        )}
       </DocumentTitle>
     </Breadcrumb>
   );

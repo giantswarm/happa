@@ -93,6 +93,8 @@ const theme = deepMerge(generate(16), {
         text: '#8a6d3b',
       },
     },
+
+    darkGray: '#a4a4a4',
   },
   border_radius: '4px',
   spacingPx: 4,

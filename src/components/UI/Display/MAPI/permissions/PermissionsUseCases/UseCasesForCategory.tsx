@@ -18,12 +18,14 @@ interface IUseCasesForCategoryProps {
   category: string;
   useCases: IPermissionsUseCase[];
   isSelected: boolean;
+  isLastCategory: boolean;
 }
 
 const UseCasesForCategory: React.FC<IUseCasesForCategoryProps> = ({
   category,
   useCases,
   isSelected,
+  isLastCategory,
 }) => {
   return (
     <AccordionPanel
@@ -41,7 +43,13 @@ const UseCasesForCategory: React.FC<IUseCasesForCategoryProps> = ({
         </Box>
       }
     >
-      <Box margin={{ vertical: 'medium' }} gap='medium'>
+      <Box
+        margin={{
+          top: 'medium',
+          bottom: isLastCategory ? 'none' : 'medium',
+        }}
+        gap='medium'
+      >
         {useCases.map((useCase) => (
           <UseCaseLabel useCase={useCase} key={useCase.name} />
         ))}
