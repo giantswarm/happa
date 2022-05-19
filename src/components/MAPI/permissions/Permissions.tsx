@@ -3,11 +3,18 @@ import { Box, Heading, Text } from 'grommet';
 import { AccountSettingsRoutes } from 'model/constants/routes';
 import React, { useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
+import styled from 'styled-components';
 
 import PermissionsOverview from './PermissionsOverview';
 import SubjectForm, { SubjectType } from './SubjectForm';
 import { useUseCasesPermissions } from './useUseCasesPermissions';
 import { getPermissionsUseCases, hasAccessToInspectPermissions } from './utils';
+
+const IntroText = styled(Text)`
+  abbr {
+    text-decoration: none;
+  }
+`;
 
 interface IPermissionsProps {}
 
@@ -48,17 +55,13 @@ const Permissions: React.FC<IPermissionsProps> = () => {
           <Heading level={1} margin='none'>
             Inspect permissions
           </Heading>
-          <Text>
-            Here you get an overview of your
-            {canInspectPermissions ? (
-              <span> own, a group&apos;s or a user&apos;s </span>
-            ) : (
-              ' '
-            )}
-            RBAC permissions in the management cluster, with regard to certain
-            use cases. Note that this is not a complete overview of all
-            permissions and restrictions.
-          </Text>
+          <IntroText>
+            Here you can check which{' '}
+            <abbr title='role based access control'>RBAC</abbr> permissions you
+            have in the management cluster, with regard to certain use cases. As
+            an admin, you can also inspect other users&apos; and groups&apos;
+            permissions.
+          </IntroText>
         </Box>
         {canInspectPermissions && (
           <SubjectForm
