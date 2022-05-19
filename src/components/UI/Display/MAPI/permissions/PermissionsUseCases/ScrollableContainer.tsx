@@ -12,8 +12,8 @@ const Container = styled.div`
     position: absolute;
     z-index: 2;
     top: 0;
+    bottom: 30px;
     width: 20px;
-    height: 100%;
   }
 
   &::before {
@@ -38,7 +38,7 @@ const Container = styled.div`
 const ContainerInner = styled.div`
   overflow-x: auto;
   width: 100%;
-  padding: 0 20px 10px;
+  padding: 0 20px 30px;
 `;
 
 const ScrollableContainer: React.FC<React.PropsWithChildren<{}>> = ({

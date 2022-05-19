@@ -26,6 +26,7 @@ interface IUseCasesForCategoryProps {
   statuses: PermissionsUseCaseStatuses;
   organizations?: IOrganization[];
   isSelected: boolean;
+  isLastCategory: boolean;
 }
 
 const StatusesForCategory: React.FC<IUseCasesForCategoryProps> = ({
@@ -34,6 +35,7 @@ const StatusesForCategory: React.FC<IUseCasesForCategoryProps> = ({
   statuses,
   organizations,
   isSelected,
+  isLastCategory,
 }) => {
   const namespaces = useMemo(
     () => (organizations ? organizations.map((org) => org.id) : ['']),
@@ -74,7 +76,13 @@ const StatusesForCategory: React.FC<IUseCasesForCategoryProps> = ({
         </RelativeBox>
       }
     >
-      <Box margin={{ vertical: 'medium' }} gap='medium'>
+      <Box
+        margin={{
+          top: 'medium',
+          bottom: isLastCategory ? 'none' : 'medium',
+        }}
+        gap='medium'
+      >
         {useCases.map((useCase) => (
           <Box direction='row' key={useCase.name}>
             {namespaces.map((namespace) => (

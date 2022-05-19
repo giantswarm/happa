@@ -70,6 +70,7 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
             category={category}
             useCases={useCasesByCategory[category]}
             isSelected={activeIndexes.includes(categoryIndex)}
+            isLastCategory={categoryIndex === categories.length - 1}
             key={category}
           />
         ))}
@@ -102,6 +103,7 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
               statuses={useCasesStatuses}
               organizations={organizations}
               isSelected={activeIndexes.includes(categoryIndex)}
+              isLastCategory={categoryIndex === categories.length - 1}
               key={category}
             />
           ))}
