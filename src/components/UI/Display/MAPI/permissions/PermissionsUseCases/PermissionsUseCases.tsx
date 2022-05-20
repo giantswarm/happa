@@ -12,9 +12,11 @@ import UseCasesForCategory from 'UI/Display/MAPI/permissions/PermissionsUseCases
 import UseCasesPreloader from 'UI/Display/MAPI/permissions/PermissionsUseCases/UseCasesPreloader';
 import Truncated from 'UI/Util/Truncated';
 import { groupBy } from 'underscore';
+import { getTruncationParams } from 'utils/helpers';
 
 import ScrollableContainer from './ScrollableContainer';
 
+const ORGANIZATION_MAX_LENGTH = 30;
 const ORGANIZATION_LABEL_HEIGHT = 60;
 
 const OrganizationLabel = styled(Text)`
@@ -84,7 +86,12 @@ const PermissionsUseCases: React.FC<IPermissionsUseCasesProps> = ({
                 height={`${ORGANIZATION_LABEL_HEIGHT}px`}
                 justify='start'
               >
-                <Truncated as={OrganizationLabel}>{org.id}</Truncated>
+                <Truncated
+                  as={OrganizationLabel}
+                  {...getTruncationParams(ORGANIZATION_MAX_LENGTH)}
+                >
+                  {org.id}
+                </Truncated>
               </Column>
             ))}
           </Box>
