@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import PermissionsUseCases from 'UI/Display/MAPI/permissions/PermissionsUseCases';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 
+import InspectPermissionsGuide from '../guides/InspectPermissionsGuide';
 import { SubjectType } from '../SubjectForm';
 import { useUseCasesPermissions } from '../useUseCasesPermissions';
 import {
@@ -62,25 +63,33 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
   );
 
   return (
-    <Tabs activeIndex={activeTab} onActive={setActiveTab}>
-      <Tab title='Global'>
-        <PermissionsUseCases
-          useCases={globalUseCases}
-          useCasesStatuses={useCasesStatuses}
-          activeIndexes={globalActiveIndexes}
-          onActive={setGlobalActiveIndexes}
-        />
-      </Tab>
-      <Tab title='For organizations'>
-        <PermissionsUseCases
-          useCases={organizationsUseCases}
-          useCasesStatuses={useCasesStatuses}
-          organizations={sortedOrganizations}
-          activeIndexes={organizationsActiveIndexes}
-          onActive={setOrganizationsActiveIndexes}
-        />
-      </Tab>
-    </Tabs>
+    <>
+      <Tabs activeIndex={activeTab} onActive={setActiveTab}>
+        <Tab title='Global'>
+          <PermissionsUseCases
+            useCases={globalUseCases}
+            useCasesStatuses={useCasesStatuses}
+            activeIndexes={globalActiveIndexes}
+            onActive={setGlobalActiveIndexes}
+          />
+        </Tab>
+        <Tab title='For organizations'>
+          <PermissionsUseCases
+            useCases={organizationsUseCases}
+            useCasesStatuses={useCasesStatuses}
+            organizations={sortedOrganizations}
+            activeIndexes={organizationsActiveIndexes}
+            onActive={setOrganizationsActiveIndexes}
+          />
+        </Tab>
+      </Tabs>
+      <InspectPermissionsGuide
+        forOrganizations={activeTab === 1}
+        subjectType={subjectType}
+        subjectName={subjectName}
+        animation={{ type: 'fadeIn', duration: 300 }}
+      />
+    </>
   );
 };
 
