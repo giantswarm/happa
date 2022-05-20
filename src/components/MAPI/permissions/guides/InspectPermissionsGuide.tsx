@@ -124,7 +124,10 @@ const InspectPermissionsGuide: React.FC<IInspectPermissionsGuideProps> = ({
                 the <code>org-ORGANIZATION</code> namespace.
               </>
             ) : (
-              <>all namespaces.</>
+              <>
+                all namespaces. This command also works for non-namespaced
+                resources.
+              </>
             )}
           </Text>
         </CLIGuideStep>
