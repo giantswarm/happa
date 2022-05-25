@@ -202,7 +202,7 @@
     "jest": "28.1.0",
     "jest-environment-jsdom": "28.1.0",
     "json-loader": "0.5.7",
-    "lint-staged": "12.4.1",
+    "lint-staged": "12.4.2",
     "mini-css-extract-plugin": "2.6.0",
     "nock": "13.2.4",
     "node-sass": "7.0.1",
