@@ -3,6 +3,7 @@
   "private": true,
   "src": "src",
   "test": "test",
+  "type": "module",
   "scripts": {
     "lint": "./node_modules/.bin/eslint --ext .js,.ts,.tsx ./src/",
     "lint:fix": "yarn lint --fix",
