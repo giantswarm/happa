@@ -473,12 +473,20 @@ const theme = deepMerge(generate(16), {
     toggle: {
       radius: '18px',
       size: '32px',
+      color: 'text',
       extend: (props: { theme: ThemeType; checked: boolean }) => ({
+        height: '16px',
         transition: 'background 0.3s ease-out',
         background: props.checked
-          ? props.theme.global!.colors!['status-ok']
+          ? props.theme.global!.colors!['input-highlight']
           : props.theme.global!.colors!['input-background'],
       }),
+      knob: {
+        extend: () => css`
+          width: 16px;
+          height: 16px;
+        `,
+      },
     },
     check: {
       radius: '4px',

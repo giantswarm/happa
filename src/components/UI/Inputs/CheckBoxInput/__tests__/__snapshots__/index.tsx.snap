@@ -123,10 +123,10 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
               type="checkbox"
             />
             <span
-              class="StyledCheckBox__StyledCheckBoxToggle-sc-1dbk5ju-4 fQHxSn"
+              class="StyledCheckBox__StyledCheckBoxToggle-sc-1dbk5ju-4 gsthpG"
             >
               <span
-                class="StyledCheckBox__StyledCheckBoxKnob-sc-1dbk5ju-5 cosjYB"
+                class="StyledCheckBox__StyledCheckBoxKnob-sc-1dbk5ju-5 dogEZB"
               />
             </span>
           </div>
