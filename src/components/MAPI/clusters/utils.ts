@@ -1013,7 +1013,7 @@ export function getClusterLabels(
 
 export function getClusterLabelsWithDisplayInfo(
   labels: IClusterLabelMap,
-  filterHiddenLabels: boolean
+  filterHiddenLabels: boolean = true
 ): IClusterLabelWithDisplayInfo[] {
   const filteredLabels = filterHiddenLabels
     ? filterLabels(labels) ?? {}

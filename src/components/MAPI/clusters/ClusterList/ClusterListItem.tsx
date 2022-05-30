@@ -2,7 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import differenceInHours from 'date-fns/fp/differenceInHours';
 import toDate from 'date-fns-tz/toDate';
-import { Box, Card, CardBody, Text } from 'grommet';
+import { Box, Card, CardBody, ResponsiveContext, Text } from 'grommet';
 import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
 import { NodePoolList, ProviderCluster } from 'MAPI/types';
 import {
@@ -21,7 +21,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -31,6 +31,11 @@ import ClusterIDLabel, {
   ClusterIDLabelType,
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import FormattedDate from 'UI/Display/Date';
+import {
+  DotSeparatedList,
+  DotSeparatedListItem,
+} from 'UI/Display/DotSeparatedList/DotSeparatedList';
+import ClusterListItemLabels from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemLabels';
 import ClusterListItemMainInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemMainInfo';
 import ClusterListItemNodeInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemNodeInfo';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
@@ -41,6 +46,8 @@ import RoutePath from 'utils/routePath';
 import ClusterStatus from '../ClusterStatus/ClusterStatus';
 import { useClusterStatus } from '../hooks/useClusterStatus';
 import {
+  getClusterLabels,
+  getClusterLabelsWithDisplayInfo,
   getWorkerNodesCount,
   getWorkerNodesCPU,
   getWorkerNodesMemory,
@@ -270,6 +277,16 @@ const ClusterListItem: React.FC<
     clusterInOrgNamespace,
   ]);
 
+  const labels = useMemo(() => {
+    if (typeof cluster === 'undefined') {
+      return undefined;
+    }
+
+    const existingLabels = getClusterLabels(cluster);
+
+    return getClusterLabelsWithDisplayInfo(existingLabels);
+  }, [cluster]);
+
   const dispatch = useDispatch();
 
   const handleGetStartedClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -290,6 +307,8 @@ const ClusterListItem: React.FC<
 
   const disableNavigation = isDeleting || isLoading || isPreviewRelease;
 
+  const screenSize = useContext(ResponsiveContext);
+
   return (
     <StyledLink
       className={className}
@@ -309,21 +328,22 @@ const ClusterListItem: React.FC<
         gap='small'
         {...props}
       >
-        <CardBody direction='row' gap='xsmall' wrap={true}>
-          <Box>
-            <OptionalValue value={name}>
-              {(value) => (
-                <Text size='large' aria-label={`Name: ${value}`}>
-                  <ClusterIDLabel
-                    clusterID={value}
-                    variant={ClusterIDLabelType.Name}
-                    copyEnabled={true}
-                  />
-                </Text>
-              )}
-            </OptionalValue>
-          </Box>
-          <Box basis='75%'>
+        <CardBody
+          direction={screenSize === 'small' ? 'column' : 'row'}
+          gap='xsmall'
+        >
+          <OptionalValue value={name}>
+            {(value) => (
+              <Text size='large' aria-label={`Name: ${value}`}>
+                <ClusterIDLabel
+                  clusterID={value}
+                  variant={ClusterIDLabelType.Name}
+                  copyEnabled={true}
+                />
+              </Text>
+            )}
+          </OptionalValue>
+          <Box flex={{ grow: 1, shrink: 1 }} basis='0%'>
             <Box direction='row' align='center' wrap={true} gap='small'>
               <OptionalValue value={description}>
                 {(value) => (
@@ -350,21 +370,34 @@ const ClusterListItem: React.FC<
                 Deleted <FormattedDate relative={true} value={deletionDate} />
               </Text>
             ) : (
-              <ClusterListItemMainInfo
-                creationDate={creationDate}
-                releaseVersion={releaseVersion}
-                isPreviewRelease={isPreviewRelease}
-                k8sVersion={k8sVersion}
-              />
-            )}
-
-            {!hasError && !isDeleting && !isPreviewRelease && (
-              <ClusterListItemNodeInfo
-                workerNodePoolsCount={workerNodePoolsCount}
-                workerNodesCPU={workerNodesCPU}
-                workerNodesCount={workerNodesCount}
-                workerNodesMemory={workerNodesMemory}
-              />
+              <>
+                <DotSeparatedList wrap={true}>
+                  <DotSeparatedListItem>
+                    <ClusterListItemMainInfo
+                      creationDate={creationDate}
+                      releaseVersion={releaseVersion}
+                      isPreviewRelease={isPreviewRelease}
+                      k8sVersion={k8sVersion}
+                    />
+                  </DotSeparatedListItem>
+                  {!hasError && !isPreviewRelease && (
+                    <DotSeparatedListItem>
+                      <ClusterListItemNodeInfo
+                        workerNodePoolsCount={workerNodePoolsCount}
+                        workerNodesCPU={workerNodesCPU}
+                        workerNodesCount={workerNodesCount}
+                        workerNodesMemory={workerNodesMemory}
+                      />
+                    </DotSeparatedListItem>
+                  )}
+                </DotSeparatedList>
+                {labels && labels.length > 0 && (
+                  <ClusterListItemLabels
+                    labels={labels}
+                    margin={{ top: 'small' }}
+                  />
+                )}
+              </>
             )}
 
             {hasError && !isDeleting && (
@@ -375,12 +408,7 @@ const ClusterListItem: React.FC<
           </Box>
 
           {shouldDisplayGetStarted && (
-            <Box
-              align='end'
-              basis='15%'
-              width={{ min: '120px' }}
-              flex={{ grow: 1 }}
-            >
+            <Box align='end'>
               <Button
                 onClick={handleGetStartedClick}
                 icon={

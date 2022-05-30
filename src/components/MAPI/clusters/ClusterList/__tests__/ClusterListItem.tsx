@@ -79,7 +79,7 @@ describe('ClusterListItem', () => {
     expect(
       screen.getByRole('link', { name: 'Loading cluster...' })
     ).toBeInTheDocument();
-    expect(screen.getAllByLabelText('Loading...')).toHaveLength(9);
+    expect(screen.getAllByLabelText('Loading...')).toHaveLength(8);
   });
 
   it('displays if a cluster was deleted', () => {
@@ -221,9 +221,6 @@ describe('ClusterListItem', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByLabelText('Kubernetes version: 1.19')
-    ).toBeInTheDocument();
-    expect(
-      withMarkup(screen.getByText)('Created about 1 hour ago')
     ).toBeInTheDocument();
   });
 

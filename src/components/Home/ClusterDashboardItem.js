@@ -1,6 +1,7 @@
 import { push } from 'connected-react-router';
 import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
 import toDate from 'date-fns-tz/toDate';
+import { getClusterLabelsWithDisplayInfo } from 'MAPI/clusters/utils';
 import { CSSBreakpoints } from 'model/constants';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import { selectClusterById } from 'model/stores/cluster/selectors';
@@ -20,11 +21,16 @@ import Button from 'UI/Controls/Button';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import FormattedDate from 'UI/Display/Date';
+import {
+  DotSeparatedList,
+  DotSeparatedListItem,
+} from 'UI/Display/DotSeparatedList/DotSeparatedList';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
 import ErrorFallback from 'UI/Util/ErrorFallback/ErrorFallback';
 import ErrorText from 'UI/Util/ErrorFallback/ErrorText';
 import RoutePath from 'utils/routePath';
 
+import ClusterDashboardLabelsV5 from './ClusterDashboardLabelsV5';
 import ClusterDashboardResourcesV4 from './ClusterDashboardResourcesV4';
 import ClusterDashboardResourcesV5 from './ClusterDashboardResourcesV5';
 import ClusterStatus from './ClusterStatus';
@@ -151,6 +157,8 @@ function ClusterDashboardItem({
   const release = releases[cluster.release_version] ?? null;
   const isCreating = isClusterCreating(cluster);
 
+  const labels = getClusterLabelsWithDisplayInfo(cluster.labels);
+
   /**
    * Returns true if the cluster is younger than 30 days
    */
@@ -242,56 +250,62 @@ function ClusterDashboardItem({
             </Link>
           </TitleWrapper>
 
-          <>
-            <RefreshableLabel value={cluster.release_version}>
-              <span>
-                <i className='fa fa-version-tag' title='Release version' />{' '}
-                {cluster.release_version}
-              </span>
-            </RefreshableLabel>
-            <Dot style={{ paddingLeft: 0 }} />
-            <RefreshableLabel value={release?.kubernetesVersion}>
-              <KubernetesVersionLabel
-                version={release?.kubernetesVersion}
-                eolDate={release?.k8sVersionEOLDate}
-              />
-            </RefreshableLabel>
-            <Dot style={{ paddingLeft: 0 }} />
-            Created{' '}
-            <FormattedDate relative={true} value={cluster.create_date} />
-          </>
+          <DotSeparatedList align='center' height={27}>
+            <DotSeparatedListItem>
+              <RefreshableLabel value={cluster.release_version}>
+                <span>
+                  <i className='fa fa-version-tag' title='Release version' />{' '}
+                  {cluster.release_version}
+                </span>
+              </RefreshableLabel>
+              <Dot style={{ paddingLeft: 0 }} />
+              <RefreshableLabel value={release?.kubernetesVersion}>
+                <KubernetesVersionLabel
+                  version={release?.kubernetesVersion}
+                  eolDate={release?.k8sVersionEOLDate}
+                />
+              </RefreshableLabel>
+            </DotSeparatedListItem>
+            <DotSeparatedListItem>
+              {/* Cluster resources */}
+              <StyledErrorFallback error={nodePoolsLoadError}>
+                <ClusterDetailsDiv>
+                  {isV5Cluster ? (
+                    <ClusterDashboardResourcesV5
+                      cluster={cluster}
+                      nodePools={nodePools}
+                      isClusterCreating={isCreating}
+                    />
+                  ) : (
+                    <ClusterDashboardResourcesV4
+                      cluster={cluster}
+                      isClusterCreating={isCreating}
+                    />
+                  )}
+                </ClusterDetailsDiv>
+              </StyledErrorFallback>
+            </DotSeparatedListItem>
+          </DotSeparatedList>
 
-          {/* Cluster resources */}
-          <StyledErrorFallback error={nodePoolsLoadError}>
-            <ClusterDetailsDiv>
-              {isV5Cluster ? (
-                <ClusterDashboardResourcesV5
-                  cluster={cluster}
-                  nodePools={nodePools}
-                  isClusterCreating={isCreating}
-                />
-              ) : (
-                <ClusterDashboardResourcesV4
-                  cluster={cluster}
-                  isClusterCreating={isCreating}
-                />
-              )}
-            </ClusterDetailsDiv>
-          </StyledErrorFallback>
+          {/* Cluster labels */}
+          {isV5Cluster && labels.length > 0 && (
+            <ClusterDashboardLabelsV5
+              labels={labels}
+              margin={{ top: 'small' }}
+            />
+          )}
         </ContentWrapper>
 
-        <ButtonsWrapper>
-          {clusterYoungerThan30Days() ? (
+        {clusterYoungerThan30Days() ? (
+          <ButtonsWrapper>
             <Button
               onClick={accessCluster}
               icon={<i className='fa fa-start' />}
             >
               Get started
             </Button>
-          ) : (
-            ''
-          )}
-        </ButtonsWrapper>
+          </ButtonsWrapper>
+        ) : null}
       </Wrapper>
     </ErrorBoundary>
   );
