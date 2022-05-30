@@ -6,7 +6,7 @@ interface IButtonProps {}
 
 const StyledAnchor = styled(Anchor)`
   vertical-align: middle;
-  color: ${({ theme }) => theme.colors.white3};
+  color: ${({ color, theme }) => color ?? theme.colors.white3};
 
   :focus {
     outline: 0;
@@ -21,7 +21,8 @@ const StyledAnchor = styled(Anchor)`
   }
 
   :hover {
-    color: ${({ theme }) => theme.colors.white2};
+    color: ${({ color, theme }) => color ?? theme.colors.white3};
+    opacity: 0.8;
   }
 `;
 

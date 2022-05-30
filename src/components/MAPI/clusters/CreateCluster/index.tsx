@@ -27,10 +27,7 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
-import {
-  computeControlPlaneNodesStats,
-  getVisibleLabels,
-} from '../ClusterDetail/utils';
+import { computeControlPlaneNodesStats } from '../ClusterDetail/utils';
 import CreateClusterGuide from '../guides/CreateClusterGuide';
 import {
   createCluster,
@@ -38,6 +35,7 @@ import {
   createDefaultControlPlaneNodes,
   createDefaultProviderCluster,
   findLatestReleaseVersion,
+  getClusterLabels,
 } from '../utils';
 import CreateClusterControlPlaneNodeAZs from './CreateClusterControlPlaneNodeAZs';
 import CreateClusterControlPlaneNodesCount from './CreateClusterControlPlaneNodesCount';
@@ -322,7 +320,7 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
     return computeControlPlaneNodesStats(state.controlPlaneNodes)
       .availabilityZones;
   }, [state.controlPlaneNodes]);
-  const labels = getVisibleLabels(state.cluster);
+  const labels = state.cluster ? getClusterLabels(state.cluster) : undefined;
 
   return (
     <Breadcrumb data={{ title: 'CREATE CLUSTER', pathname: match.url }}>

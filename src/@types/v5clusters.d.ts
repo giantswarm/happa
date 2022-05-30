@@ -24,6 +24,7 @@ declare namespace V5 {
     master_nodes: IClusterMasterNodes | null;
 
     labels?: IClusterLabelMap;
+    rawLabels?: IClusterLabelMap;
     conditions?: IClusterCondition[];
     versions?: IClusterVersion[];
 

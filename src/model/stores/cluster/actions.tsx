@@ -246,6 +246,7 @@ export function clusterLoadDetails(
       }
 
       if ((cluster as V5.ICluster).labels) {
+        (cluster as V5.ICluster).rawLabels = (cluster as V5.ICluster).labels;
         (cluster as V5.ICluster).labels = filterLabels(
           (cluster as V5.ICluster).labels
         );
@@ -601,6 +602,9 @@ function reduceClustersIntoMap(
     };
 
     if ((newCluster as V5.ICluster).labels) {
+      (newCluster as V5.ICluster).rawLabels = (
+        newCluster as V5.ICluster
+      ).labels;
       (newCluster as V5.ICluster).labels = filterLabels(
         (newCluster as V5.ICluster).labels
       );

@@ -10,7 +10,8 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
-import { getVisibleLabels, updateClusterLabels } from './utils';
+import { getClusterLabels } from '../utils';
+import { updateClusterLabels } from './utils';
 
 interface IClusterDetailWidgetLabelsProps
   extends Omit<
@@ -27,7 +28,13 @@ const ClusterDetailWidgetLabels: React.FC<
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const labels = useMemo(() => getVisibleLabels(cluster), [cluster]);
+  const labels = useMemo(() => {
+    if (typeof cluster === 'undefined') {
+      return undefined;
+    }
+
+    return getClusterLabels(cluster);
+  }, [cluster]);
 
   const [labelsError, setLabelsError] = useState('');
   const [labelsIsLoading, setLabelsIsLoading] = useState(false);
@@ -84,21 +91,16 @@ const ClusterDetailWidgetLabels: React.FC<
   };
 
   return (
-    <ClusterDetailWidget
-      title='Labels'
-      inline={true}
-      contentProps={{
-        direction: 'row',
-        gap: 'xsmall',
-        wrap: true,
-        align: 'center',
-      }}
-      {...props}
-    >
-      <OptionalValue value={labels} loaderHeight={34} loaderWidth={350}>
+    <ClusterDetailWidget title='Labels' inline={true} {...props}>
+      <OptionalValue
+        value={labels}
+        loaderHeight={34}
+        loaderWidth={350}
+        flashOnValueChange={false}
+      >
         {(value) => (
           <ClusterLabels
-            labels={value as Record<string, string>}
+            labels={value}
             onChange={handleLabelsChange}
             errorMessage={labelsError}
             isLoading={labelsIsLoading}

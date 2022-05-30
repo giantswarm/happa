@@ -23,6 +23,8 @@ import * as corev1 from 'model/services/mapi/corev1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { filterLabels } from 'model/stores/cluster/utils';
+import theme from 'styles/theme';
 import { mutate } from 'swr';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { parseRFC822DateFormat } from 'utils/helpers';
@@ -1001,4 +1003,93 @@ export enum ClusterStatus {
   UpgradeInProgress = 'UPGRADE_IN_PROGRESS',
   UpgradeScheduled = 'UPGRADE_SCHEDULED',
   UpgradeAvailable = 'UPGRADE_AVAILABLE',
+}
+
+export function getClusterLabels(
+  cluster: capiv1beta1.ICluster
+): IClusterLabelMap {
+  return capiv1beta1.getClusterLabels(cluster);
+}
+
+export function getClusterLabelsWithDisplayInfo(
+  labels: IClusterLabelMap,
+  filterHiddenLabels: boolean
+): IClusterLabelWithDisplayInfo[] {
+  const filteredLabels = filterHiddenLabels
+    ? filterLabels(labels) ?? {}
+    : labels;
+
+  const labelsWithDisplayInfo = Object.entries(filteredLabels).map(
+    ([key, value]) => {
+      return {
+        key,
+        value,
+        ...getClusterLabelKeyDisplayInfo(key),
+        ...getClusterLabelValueDisplayInfo(key, value),
+      };
+    }
+  );
+
+  const sortedLabelsWithDisplayInfo = labelsWithDisplayInfo.sort((a, b) => {
+    if (!filterHiddenLabels) {
+      return a.key.localeCompare(b.key);
+    }
+
+    // Sort by special purpose first and then by displayKey
+
+    const aIsImportant = isSpecialPurposeLabel(a.key);
+    const bIsImportant = isSpecialPurposeLabel(b.key);
+
+    return (
+      Number(bIsImportant) - Number(aIsImportant) ||
+      a.displayKey.localeCompare(b.displayKey)
+    );
+  });
+
+  return sortedLabelsWithDisplayInfo;
+}
+
+function getClusterLabelKeyDisplayInfo(key: string) {
+  switch (key) {
+    case 'giantswarm.io/service-priority':
+      return { displayKey: 'Service priority' };
+
+    default:
+      return { displayKey: key };
+  }
+}
+
+function getClusterLabelValueDisplayInfo(key: string, value: string) {
+  switch (`${key}:${value}`) {
+    case 'giantswarm.io/service-priority:highest':
+      return {
+        displayValue: 'Highest',
+        textColor: theme.colors.darkBlueDarker2,
+        backgroundColor: theme.colors.brown1,
+      };
+    case 'giantswarm.io/service-priority:medium':
+      return {
+        displayValue: 'Medium',
+        textColor: theme.colors.darkBlueDarker2,
+        backgroundColor: theme.colors.yellow2,
+      };
+    case 'giantswarm.io/service-priority:lowest':
+      return {
+        displayValue: 'Lowest',
+        textColor: theme.colors.white4,
+        backgroundColor: theme.colors.darkBlueLighter2,
+      };
+
+    default:
+      return { displayValue: value };
+  }
+}
+
+function isSpecialPurposeLabel(key: string) {
+  switch (key) {
+    case 'giantswarm.io/service-priority':
+      return true;
+    default:
+      return false;
+  }
 }

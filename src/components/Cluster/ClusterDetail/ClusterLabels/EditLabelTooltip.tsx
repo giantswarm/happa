@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ValidationError from 'UI/Display/Cluster/ClusterLabels/ValidationError';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
-import ValueLabel from 'UI/Display/ValueLabel';
+import ValueLabel, { KeyWrapper, ValueWrapper } from 'UI/Display/ValueLabel';
 import TextInput from 'UI/Inputs/TextInput';
 import useValidatingInternalValue from 'utils/hooks/useValidatingInternalValue';
 import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
@@ -12,14 +12,14 @@ import { validateLabelKey, validateLabelValue } from 'utils/labelUtils';
 import DeleteLabelButton from './DeleteLabelButton';
 
 interface IEditLabelTooltip {
-  label: string;
+  label?: IClusterLabelWithDisplayInfo;
   onOpen(isOpen: boolean): void;
   onSave(change: ILabelChange): void;
-  value: string;
 
   allowInteraction?: boolean;
   className?: string;
   unauthorized?: boolean;
+  displayRawLabels?: boolean;
 }
 
 const EditLabelTooltipWrapper = styled.div`
@@ -31,6 +31,9 @@ const StyledValueLabel = styled(ValueLabel)<{
   unauthorized?: boolean;
 }>`
   margin-bottom: 0;
+  line-height: 24px;
+  height: 24px;
+  font-size: 13px;
 
   cursor: ${({ allowInteraction, unauthorized }) => {
     switch (true) {
@@ -44,9 +47,11 @@ const StyledValueLabel = styled(ValueLabel)<{
   }};
 
   :hover {
-    text-decoration: ${({ allowInteraction }) =>
-      allowInteraction ? 'underline' : 'none'};
-    text-decoration-style: dotted;
+    ${KeyWrapper}, ${ValueWrapper} {
+      text-decoration: ${({ allowInteraction }) =>
+        allowInteraction ? 'underline' : 'none'};
+      text-decoration-style: dotted;
+    }
   }
 `;
 
@@ -96,11 +101,10 @@ const StyledTooltip = styled(Tooltip)`
 
 const LabelWrapper = styled(Box)<{
   allowInteraction?: boolean;
-  unauthorized?: boolean;
 }>`
-  padding-right: ${({ unauthorized }) => (unauthorized ? 0 : '8px')};
-  border-radius: 5px;
-  outline: 1px solid ${({ theme }) => theme.colors.shade5};
+  border-radius: 3px;
+  border: 1px solid ${({ theme }) => theme.colors.darkBlue};
+  overflow: hidden;
 
   :hover {
     pointer-events: ${({ allowInteraction }) =>
@@ -112,10 +116,10 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
   label,
   onOpen,
   onSave,
-  value,
   allowInteraction,
   className,
   unauthorized,
+  displayRawLabels,
 }) => {
   const [currentlyEditing, setCurrentlyEditing] = useState(false);
 
@@ -128,7 +132,7 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
       validationError: keyValidationError,
     },
     setInternalKeyValue,
-  ] = useValidatingInternalValue(label, validateLabelKey);
+  ] = useValidatingInternalValue(label ? label.key : '', validateLabelKey);
   const [
     {
       internalValue: internalValueValue,
@@ -136,7 +140,7 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
       validationError: valueValidationError,
     },
     setInternalValueValue,
-  ] = useValidatingInternalValue(value, validateLabelValue);
+  ] = useValidatingInternalValue(label ? label.value : '', validateLabelValue);
 
   const onClose = () => {
     setCurrentlyEditing(false);
@@ -148,8 +152,8 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
       key: internalKeyValue,
       value: internalValueValue,
     };
-    if (internalKeyValue !== label) {
-      savePayload.replaceLabelWithKey = label;
+    if (label && label.key !== internalKeyValue) {
+      savePayload.replaceLabelWithKey = label.key;
     }
     onSave(savePayload);
     onClose();
@@ -157,8 +161,8 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
 
   const open = () => {
     if (allowInteraction === true && !unauthorized) {
-      setInternalKeyValue(label);
-      setInternalValueValue(value);
+      setInternalKeyValue(label ? label.key : '');
+      setInternalValueValue(label ? label.value : '');
       setCurrentlyEditing(true);
       onOpen(currentlyEditing);
     }
@@ -184,13 +188,13 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
 
   return (
     <EditLabelTooltipWrapper ref={divElement} className={className}>
-      {label === '' ? (
+      {typeof label === 'undefined' ? (
         <Button
           disabled={!allowInteraction || currentlyEditing}
           onClick={open}
           data-testid='add-label-button'
           icon={<i className='fa fa-add-circle' />}
-          margin={{ left: 'small' }}
+          size='small'
         >
           Add label
         </Button>
@@ -198,54 +202,55 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
         <LabelWrapper
           direction='row'
           align='center'
-          margin={{ right: 'xsmall', vertical: 'xxsmall' }}
           allowInteraction={allowInteraction}
-          unauthorized={unauthorized}
         >
           <Keyboard onSpace={handleLabelKeyDown} onEnter={handleLabelKeyDown}>
-            <span>
-              <TooltipContainer
-                target={divElement}
-                content={
-                  <StyledTooltip>
-                    {unauthorized
-                      ? 'For editing labels, you need additional permissions.'
-                      : 'Click to edit label'}
-                  </StyledTooltip>
+            <TooltipContainer
+              target={divElement}
+              content={
+                <StyledTooltip>
+                  {unauthorized
+                    ? 'For editing labels, you need additional permissions.'
+                    : 'Click to edit label'}
+                </StyledTooltip>
+              }
+            >
+              <StyledValueLabel
+                onClick={open}
+                label={
+                  <Editable allowInteraction={allowInteraction}>
+                    {displayRawLabels ? label.key : label.displayKey}
+                  </Editable>
                 }
-              >
-                <StyledValueLabel
-                  onClick={open}
-                  label={
-                    <Editable allowInteraction={allowInteraction}>
-                      {label}
-                    </Editable>
-                  }
-                  value={
-                    <Editable allowInteraction={allowInteraction}>
-                      {value}
-                    </Editable>
-                  }
-                  tabIndex={allowInteraction ? 0 : -1}
-                  role='button'
-                  aria-label={`Label ${label} with value ${value}`}
-                  aria-disabled={!allowInteraction || currentlyEditing}
-                  allowInteraction={allowInteraction}
-                  unauthorized={unauthorized}
-                  outline={false}
-                />
-              </TooltipContainer>
-            </span>
+                value={
+                  <Editable allowInteraction={allowInteraction}>
+                    {displayRawLabels ? label.value : label.displayValue}
+                  </Editable>
+                }
+                valueBackgroundColor={label.backgroundColor}
+                valueTextColor={label.textColor}
+                tabIndex={allowInteraction ? 0 : -1}
+                role='button'
+                aria-label={`Label ${label.key} with value ${label.value}`}
+                aria-disabled={!allowInteraction || currentlyEditing}
+                allowInteraction={allowInteraction}
+                unauthorized={unauthorized}
+                outline={false}
+                rounded={false}
+              />
+            </TooltipContainer>
           </Keyboard>
           {!unauthorized && (
             <DeleteLabelButton
               allowInteraction={allowInteraction}
               onOpen={onOpen}
               onDelete={() => {
-                onSave({ key: label, value: null });
+                onSave({ key: label.key, value: null });
               }}
               role='button'
-              aria-label={`Delete '${label}' label`}
+              backgroundColor={label.backgroundColor}
+              color={label.textColor}
+              aria-label={`Delete '${label.key}' label`}
               aria-disabled={!allowInteraction || currentlyEditing}
             />
           )}

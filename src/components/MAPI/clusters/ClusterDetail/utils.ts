@@ -16,7 +16,6 @@ import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import * as metav1 from 'model/services/mapi/metav1';
-import { filterLabels } from 'model/stores/cluster/utils';
 import { supportsHACPNodes } from 'model/stores/nodepool/utils';
 import { mutate } from 'swr';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
@@ -253,14 +252,6 @@ export async function deleteClusterResources(
   }
 
   return Promise.resolve();
-}
-
-export function getVisibleLabels(cluster?: capiv1beta1.ICluster) {
-  if (!cluster) return undefined;
-
-  const existingLabels = capiv1beta1.getClusterLabels(cluster);
-
-  return filterLabels(existingLabels);
 }
 
 export async function updateClusterLabels(

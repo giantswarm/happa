@@ -369,7 +369,7 @@ class V5ClusterDetailTable extends React.Component {
       setUpgradeVersion,
     } = this.props;
 
-    const { create_date, api_endpoint, labels, master_nodes } = cluster;
+    const { create_date, api_endpoint, rawLabels, master_nodes } = cluster;
     const { numberOfNodes, memory, cores } = resources;
 
     const {
@@ -428,7 +428,6 @@ class V5ClusterDetailTable extends React.Component {
             />
           </div>
         </FlexRowWithTwoBlocksOnEdges>
-
         {master_nodes && (
           <MasterNodesRow
             isHA={master_nodes.high_availability}
@@ -440,7 +439,7 @@ class V5ClusterDetailTable extends React.Component {
           />
         )}
         <LabelsRow
-          labels={labels}
+          labels={rawLabels}
           onChange={handleLabelChange}
           errorMessage={this.props.labelsErrorMessage}
           isLoading={this.props.labelsIsLoading}
@@ -458,15 +457,12 @@ class V5ClusterDetailTable extends React.Component {
             </Button>
           </GetStartedWrapper>
         </KubernetesURIWrapper>
-
         <PortMappingsRow cluster={cluster} />
-
         <CredentialInfoRow
           cluster={cluster}
           credentials={credentials}
           provider={provider}
         />
-
         <NodePoolsWrapper>
           <h2>Node Pools</h2>
           {!zeroNodePools && !loadingNodePools && (
