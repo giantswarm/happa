@@ -97,4 +97,6 @@ export const Constants = {
 
   // README FILE - What we expect the name of a README file to be.
   README_FILE: 'README.md',
+
+  SERVICE_ACCOUNT_PREFIX: 'system:serviceaccount:',
 };

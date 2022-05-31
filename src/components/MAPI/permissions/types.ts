@@ -81,3 +81,9 @@ export const SubjectTypes = {
   ...rbacv1.SubjectKinds,
   ...PermissionsSubjectTypes,
 };
+
+export interface IPermissionsSubject {
+  user?: string;
+  groups?: string[];
+  serviceAccount?: string;
+}

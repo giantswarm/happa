@@ -36,6 +36,10 @@ export function isSubjectKindGroup(subject: ISubject): boolean {
   return isSubjectKind(subject, SubjectKinds.Group);
 }
 
+export function isSubjectKindServiceAccount(subject: ISubject): boolean {
+  return isSubjectKind(subject, SubjectKinds.ServiceAccount);
+}
+
 function isSubjectKind(subject: ISubject, kind: SubjectKinds): boolean {
   return subject.kind === kind;
 }
