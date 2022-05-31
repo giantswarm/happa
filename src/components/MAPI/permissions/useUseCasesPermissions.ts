@@ -10,7 +10,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
-import { SubjectType } from './SubjectForm';
+import { SubjectTypes } from './types';
 import { IPermissionMap, IPermissionsUseCase } from './types';
 import { usePermissions } from './usePermissions';
 import { useSubjectPermissions } from './useSubjectPermissions';
@@ -38,7 +38,7 @@ function getCombinedPermissions(
 export function useUseCasesPermissions(
   useCases: IPermissionsUseCase[] | null,
   subjectName: string = '',
-  subjectType: SubjectType = SubjectType.Myself
+  subjectType: SubjectTypes = SubjectTypes.Myself
 ): {
   data: IPermissionMap | undefined;
   error: GenericResponseError | undefined;
@@ -48,9 +48,9 @@ export function useUseCasesPermissions(
     if (subjectName === '') return undefined;
 
     switch (subjectType) {
-      case SubjectType.User:
+      case SubjectTypes.User:
         return { user: subjectName };
-      case SubjectType.Group:
+      case SubjectTypes.Group:
         return { groups: [subjectName] };
       default:
         return undefined;
@@ -68,7 +68,7 @@ export function useUseCasesPermissions(
     isLoading: subjectPermissionsIsLoading,
   } = useSubjectPermissions(currentSubject);
   const namespacePermissions =
-    subjectType === SubjectType.Myself ? ownPermissions : subjectPermissions;
+    subjectType === SubjectTypes.Myself ? ownPermissions : subjectPermissions;
 
   const loggedInUser = useSelector(getLoggedInUser);
   const impersonation = useSelector(
@@ -76,7 +76,7 @@ export function useUseCasesPermissions(
   );
 
   const currentUser = useMemo(() => {
-    if (subjectType === SubjectType.Myself) {
+    if (subjectType === SubjectTypes.Myself) {
       return (
         impersonation || {
           user: loggedInUser?.email,

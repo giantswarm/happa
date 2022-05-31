@@ -7,7 +7,8 @@ import styled from 'styled-components';
 
 import PermissionsOverview from './PermissionsOverview';
 import PermissionsPreloader from './PermissionsPreloader';
-import SubjectForm, { SubjectType } from './SubjectForm';
+import SubjectForm from './SubjectForm';
+import { SubjectTypes } from './types';
 import { useUseCasesPermissions } from './useUseCasesPermissions';
 import { getPermissionsUseCases, hasAccessToInspectPermissions } from './utils';
 
@@ -27,14 +28,16 @@ const Permissions: React.FC<IPermissionsProps> = () => {
     ? hasAccessToInspectPermissions(ownPermissions)
     : false;
 
-  const [subjectType, setSubjectType] = useState(SubjectType.Myself);
+  const [subjectType, setSubjectType] = useState<SubjectTypes>(
+    SubjectTypes.Myself
+  );
   const [subjectGroupName, setSubjectGroupName] = useState('');
   const [subjectUserName, setSubjectUserName] = useState('');
 
   const handleSubjectFormSubmit = function (value: string) {
-    if (subjectType === SubjectType.Group) {
+    if (subjectType === SubjectTypes.Group) {
       setSubjectGroupName(value);
-    } else if (subjectType === SubjectType.User) {
+    } else if (subjectType === SubjectTypes.User) {
       setSubjectUserName(value);
     }
   };
@@ -79,9 +82,9 @@ const Permissions: React.FC<IPermissionsProps> = () => {
               key={subjectType}
               subjectType={subjectType}
               subjectName={
-                subjectType === SubjectType.Group
+                subjectType === SubjectTypes.Group
                   ? subjectGroupName
-                  : subjectType === SubjectType.User
+                  : subjectType === SubjectTypes.User
                   ? subjectUserName
                   : ''
               }

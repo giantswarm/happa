@@ -7,6 +7,8 @@ import Button from 'UI/Controls/Button';
 import RadioInput from 'UI/Inputs/RadioInput';
 import TextInput from 'UI/Inputs/TextInput';
 
+import { SubjectTypes } from '../types';
+
 const RadioGroup = styled(Box)`
   display: flex;
   flex-direction: row;
@@ -74,12 +76,6 @@ const StyledTextInput = styled(TextInput)<StyledTextInputProps>`
   }
 `;
 
-export enum SubjectType {
-  Myself = 'MYSELF',
-  Group = 'GROUP',
-  User = 'USER',
-}
-
 const GROUP_NAME_PREFIX = 'customer:';
 function formatGroupName(value: string) {
   if (value.startsWith(GROUP_NAME_PREFIX)) {
@@ -90,10 +86,10 @@ function formatGroupName(value: string) {
 }
 
 interface ISubjectFormProps {
-  subjectType: SubjectType;
+  subjectType: SubjectTypes;
   groupName: string;
   userName: string;
-  onSubjectTypeChange: (value: SubjectType) => void;
+  onSubjectTypeChange: (value: SubjectTypes) => void;
   onSubmit: (value: string) => void;
 }
 
@@ -112,16 +108,16 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
   const groupNameInputRef = useRef<HTMLInputElement>(null);
   const userNameInputRef = useRef<HTMLInputElement>(null);
   useLayoutEffect(() => {
-    if (subjectType === SubjectType.Group) {
+    if (subjectType === SubjectTypes.Group) {
       setTimeout(() => {
         groupNameInputRef.current?.focus();
       });
-    } else if (subjectType === SubjectType.User) {
+    } else if (subjectType === SubjectTypes.User) {
       userNameInputRef.current?.focus();
     }
   }, [subjectType]);
 
-  const handleSubjectTypeChange = (type: SubjectType) => () => {
+  const handleSubjectTypeChange = (type: SubjectTypes) => () => {
     setGroupNameValue(formatGroupName(groupName));
     setUserNameValue(userName);
     onSubjectTypeChange(type);
@@ -156,31 +152,31 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
           <RadioInput
             id='permissions-type-myself'
             label='Myself'
-            checked={subjectType === SubjectType.Myself}
+            checked={subjectType === SubjectTypes.Myself}
             name='permissions-type-myself'
-            onChange={handleSubjectTypeChange(SubjectType.Myself)}
+            onChange={handleSubjectTypeChange(SubjectTypes.Myself)}
             formFieldProps={{ margin: { bottom: 'none' } }}
           />
           <RadioInput
             id='permissions-type-group'
             label='Group'
-            checked={subjectType === SubjectType.Group}
+            checked={subjectType === SubjectTypes.Group}
             name='permissions-type-group'
-            onChange={handleSubjectTypeChange(SubjectType.Group)}
+            onChange={handleSubjectTypeChange(SubjectTypes.Group)}
             formFieldProps={{ margin: { bottom: 'none' } }}
           />
           <RadioInput
             id='permissions-type-user'
             label='User'
-            checked={subjectType === SubjectType.User}
+            checked={subjectType === SubjectTypes.User}
             name='permissions-type-user'
-            onChange={handleSubjectTypeChange(SubjectType.User)}
+            onChange={handleSubjectTypeChange(SubjectTypes.User)}
             formFieldProps={{ margin: { bottom: 'none' } }}
           />
         </Box>
       </RadioGroup>
 
-      {subjectType === SubjectType.Group && (
+      {subjectType === SubjectTypes.Group && (
         <FormWrapper>
           <Form onSubmit={handleGroupFormSubmit}>
             <FormGroup margin={{ bottom: 'medium' }}>
@@ -213,7 +209,7 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
         </FormWrapper>
       )}
 
-      {subjectType === SubjectType.User && (
+      {subjectType === SubjectTypes.User && (
         <FormWrapper>
           <Form onSubmit={handleUserFormSubmit}>
             <FormGroup margin={{ bottom: 'medium' }}>
@@ -246,7 +242,7 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
 };
 
 SubjectForm.defaultProps = {
-  subjectType: SubjectType.Myself,
+  subjectType: SubjectTypes.Myself,
   groupName: '',
   userName: '',
 };
