@@ -33,12 +33,16 @@ const Permissions: React.FC<IPermissionsProps> = () => {
   );
   const [subjectGroupName, setSubjectGroupName] = useState('');
   const [subjectUserName, setSubjectUserName] = useState('');
+  const [subjectServiceAccountName, setSubjectServiceAccountName] =
+    useState('');
 
   const handleSubjectFormSubmit = function (value: string) {
     if (subjectType === SubjectTypes.Group) {
       setSubjectGroupName(value);
     } else if (subjectType === SubjectTypes.User) {
       setSubjectUserName(value);
+    } else if (subjectType === SubjectTypes.ServiceAccount) {
+      setSubjectServiceAccountName(value);
     }
   };
 
@@ -74,6 +78,7 @@ const Permissions: React.FC<IPermissionsProps> = () => {
                 subjectType={subjectType}
                 groupName={subjectGroupName}
                 userName={subjectUserName}
+                serviceAccountName={subjectServiceAccountName}
                 onSubjectTypeChange={setSubjectType}
                 onSubmit={handleSubjectFormSubmit}
               />
@@ -86,6 +91,8 @@ const Permissions: React.FC<IPermissionsProps> = () => {
                   ? subjectGroupName
                   : subjectType === SubjectTypes.User
                   ? subjectUserName
+                  : subjectType === SubjectTypes.ServiceAccount
+                  ? subjectServiceAccountName
                   : ''
               }
             />
