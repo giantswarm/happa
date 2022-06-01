@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
+import { SubjectTypes } from 'MAPI/permissions/types';
 import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { StatusCodes } from 'model/constants';
 import { mapOAuth2UserToUser } from 'model/stores/main/utils';
@@ -14,21 +15,23 @@ import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
-import PermissionsOverview from '../PermissionsOverview';
+import PermissionsOverview, {
+  IPermissionsOverviewProps,
+} from '../PermissionsOverview';
 
-function getComponent() {
+function getComponent(props: IPermissionsOverviewProps) {
   const history = createMemoryHistory();
   const auth = new TestOAuth2(history, true);
 
-  const Component = () => (
+  const Component = (p: typeof props) => (
     <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
-      <PermissionsOverview />
+      <PermissionsOverview {...p} />
     </SWRConfig>
   );
 
   return getComponentWithStore(
     Component,
-    undefined,
+    props,
     {
       ...preloginState,
       main: {
@@ -78,12 +81,15 @@ function createDefaultPermissions() {
 jest.unmock(
   'model/services/mapi/authorizationv1/createSelfSubjectAccessReview'
 );
+jest.unmock(
+  'model/services/mapi/authorizationv1/createLocalSubjectAccessReview'
+);
 jest.mock('MAPI/permissions/usePermissions');
 
 describe('PermissionsOverview', () => {
   it('renders without crashing', () => {
     (usePermissions as jest.Mock).mockReturnValue({});
-    render(getComponent());
+    render(getComponent({}));
   });
 
   it('displays permissions for global use cases', async () => {
@@ -147,7 +153,7 @@ describe('PermissionsOverview', () => {
       .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
       .reply(StatusCodes.Ok, rbacv1Mocks.clusterRoleList);
 
-    render(getComponent());
+    render(getComponent({}));
 
     expect(await screen.findByText('access control')).toBeInTheDocument();
     expect(screen.queryByText('Inspect namespaces')).not.toBeInTheDocument();
@@ -202,7 +208,7 @@ describe('PermissionsOverview', () => {
       })
       .reply(StatusCodes.BadRequest);
 
-    render(getComponent());
+    render(getComponent({}));
 
     expect(
       await screen.findByText(
@@ -238,7 +244,7 @@ describe('PermissionsOverview', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
       );
 
-    render(getComponent());
+    render(getComponent({}));
 
     expect(await screen.findByText('access control')).toBeInTheDocument();
     expect(
@@ -278,7 +284,7 @@ describe('PermissionsOverview', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
       );
 
-    render(getComponent());
+    render(getComponent({}));
 
     expect(await screen.findByText('access control')).toBeInTheDocument();
     expect(
@@ -317,7 +323,7 @@ describe('PermissionsOverview', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
       );
 
-    render(getComponent());
+    render(getComponent({}));
 
     expect(await screen.findByText('access control')).toBeInTheDocument();
 
@@ -378,7 +384,7 @@ describe('PermissionsOverview', () => {
         authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
       );
 
-    render(getComponent());
+    render(getComponent({}));
 
     expect(await screen.findByText('access control')).toBeInTheDocument();
 
@@ -434,6 +440,316 @@ describe('PermissionsOverview', () => {
         screen.getByLabelText(
           'Manage apps for org2 organization permission status'
         )
+      ).getByText('No')
+    ).toBeInTheDocument();
+  });
+
+  it.only('allows inspecting permissions for users', async () => {
+    nock(window.config.mapiEndpoint)
+      .post(
+        '/apis/authorization.k8s.io/v1/namespaces/default/localsubjectaccessreviews/',
+        {
+          apiVersion: 'authorization.k8s.io/v1',
+          kind: 'LocalSubjectAccessReview',
+          metadata: { name: '', namespace: 'default' },
+          spec: {
+            resourceAttributes: {
+              namespace: 'default',
+              verb: 'list',
+              group: 'security.giantswarm.io',
+              resource: 'organizations',
+            },
+            user: 'test-user',
+          },
+        }
+      )
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.localSubjectAccssReviewCanListOrgs
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.clusterRoleList);
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/roles/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.roleList);
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/rolebindings/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.roleBindingList);
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClusterRoleBindings
+      );
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterroles',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanGetClusterRoles
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/clusterrolebindings/')
+      .reply(StatusCodes.Ok, {
+        kind: 'ClusterRoleBindingList',
+        apiVersion: 'authorization.k8s.io/v1',
+        items: [
+          {
+            roleRef: {
+              kind: 'ClusterRole',
+              name: 'read-all',
+            },
+            subjects: [
+              {
+                kind: 'User',
+                name: 'test-user',
+              },
+            ],
+          },
+        ],
+      });
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.clusterRoleList);
+
+    render(
+      getComponent({
+        subjectType: SubjectTypes.User,
+        subjectName: 'test-user',
+      })
+    );
+
+    expect(await screen.findByText('access control')).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('access control permission status')
+      ).getByText('Partial')
+    ).toBeInTheDocument();
+  });
+
+  it.only('allows inspecting permissions for groups', async () => {
+    nock(window.config.mapiEndpoint)
+      .post(
+        '/apis/authorization.k8s.io/v1/namespaces/default/localsubjectaccessreviews/',
+        {
+          apiVersion: 'authorization.k8s.io/v1',
+          kind: 'LocalSubjectAccessReview',
+          metadata: { name: '', namespace: 'default' },
+          spec: {
+            resourceAttributes: {
+              namespace: 'default',
+              verb: 'list',
+              group: 'security.giantswarm.io',
+              resource: 'organizations',
+            },
+            groups: ['customer:giantswarm:test-group'],
+          },
+        }
+      )
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.localSubjectAccssReviewCanListOrgs
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.clusterRoleList);
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/roles/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.roleList);
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/rolebindings/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.roleBindingList);
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClusterRoleBindings
+      );
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterroles',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanGetClusterRoles
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/clusterrolebindings/')
+      .reply(StatusCodes.Ok, {
+        kind: 'ClusterRoleBindingList',
+        apiVersion: 'authorization.k8s.io/v1',
+        items: [
+          {
+            roleRef: {
+              kind: 'ClusterRole',
+              name: 'cluster-admin',
+            },
+            subjects: [
+              {
+                kind: 'Group',
+                name: 'customer:giantswarm:test-group',
+              },
+            ],
+          },
+        ],
+      });
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.clusterRoleList);
+
+    render(
+      getComponent({
+        subjectType: SubjectTypes.Group,
+        subjectName: 'customer:giantswarm:test-group',
+      })
+    );
+
+    expect(await screen.findByText('access control')).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('access control permission status')
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+  });
+
+  it.only('allows inspecting permissions for service accounts', async () => {
+    nock(window.config.mapiEndpoint)
+      .post(
+        '/apis/authorization.k8s.io/v1/namespaces/default/localsubjectaccessreviews/',
+        {
+          apiVersion: 'authorization.k8s.io/v1',
+          kind: 'LocalSubjectAccessReview',
+          metadata: { name: '', namespace: 'default' },
+          spec: {
+            resourceAttributes: {
+              namespace: 'default',
+              verb: 'list',
+              group: 'security.giantswarm.io',
+              resource: 'organizations',
+            },
+            user: 'system:serviceaccount:default:test-service-account',
+          },
+        }
+      )
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.localSubjectAccssReviewCanListOrgs
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.clusterRoleList);
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/roles/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.roleList);
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/rolebindings/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.roleBindingList);
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClusterRoleBindings
+      );
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterroles',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanGetClusterRoles
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/clusterrolebindings/')
+      .reply(StatusCodes.Ok, {
+        kind: 'ClusterRoleBindingList',
+        apiVersion: 'authorization.k8s.io/v1',
+        items: [
+          {
+            roleRef: {
+              kind: 'ClusterRole',
+              name: 'yolo',
+            },
+            subjects: [
+              {
+                kind: 'Service Account',
+                name: 'test-service-account',
+                namespace: 'default',
+              },
+            ],
+          },
+        ],
+      });
+    nock(window.config.mapiEndpoint)
+      .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
+      .reply(StatusCodes.Ok, rbacv1Mocks.clusterRoleList);
+
+    render(
+      getComponent({
+        subjectType: SubjectTypes.ServiceAccount,
+        subjectName: 'system:serviceaccount:default:test-service-account',
+      })
+    );
+
+    expect(await screen.findByText('access control')).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('access control permission status')
       ).getByText('No')
     ).toBeInTheDocument();
   });

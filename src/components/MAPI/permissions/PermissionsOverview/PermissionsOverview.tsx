@@ -13,7 +13,7 @@ import {
   isGlobalUseCase,
 } from '../utils';
 
-interface IPermissionsOverviewProps {
+export interface IPermissionsOverviewProps {
   subjectType?: SubjectTypes;
   subjectName?: string;
 }
