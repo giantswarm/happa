@@ -1,4 +1,9 @@
 import { Box, Keyboard, Text } from 'grommet';
+import {
+  canClusterLabelBeDeleted,
+  canClusterLabelBeEdited,
+  canClusterLabelKeyBeEdited,
+} from 'MAPI/clusters/ClusterDetail/utils';
 import React, { FC, KeyboardEventHandler, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
@@ -29,15 +34,17 @@ const EditLabelTooltipWrapper = styled.div`
 const StyledValueLabel = styled(ValueLabel)<{
   allowInteraction?: boolean;
   unauthorized?: boolean;
+  canBeEdited?: boolean;
 }>`
   margin-bottom: 0;
   line-height: 24px;
   height: 24px;
   font-size: 13px;
 
-  cursor: ${({ allowInteraction, unauthorized }) => {
+  cursor: ${({ allowInteraction, unauthorized, canBeEdited }) => {
     switch (true) {
       case unauthorized:
+      case !canBeEdited:
         return 'not-allowed';
       case allowInteraction:
         return 'pointer';
@@ -160,7 +167,11 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
   };
 
   const open = () => {
-    if (allowInteraction === true && !unauthorized) {
+    if (
+      allowInteraction === true &&
+      (label ? canClusterLabelBeEdited(label.key) : true) &&
+      !unauthorized
+    ) {
       setInternalKeyValue(label ? label.key : '');
       setInternalValueValue(label ? label.value : '');
       setCurrentlyEditing(true);
@@ -211,7 +222,9 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
                 <StyledTooltip>
                   {unauthorized
                     ? 'For editing labels, you need additional permissions.'
-                    : 'Click to edit label'}
+                    : canClusterLabelBeEdited(label.key)
+                    ? 'Click to edit label'
+                    : 'This label cannot be edited'}
                 </StyledTooltip>
               }
             >
@@ -235,12 +248,13 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
                 aria-disabled={!allowInteraction || currentlyEditing}
                 allowInteraction={allowInteraction}
                 unauthorized={unauthorized}
+                canBeEdited={canClusterLabelBeEdited(label.key)}
                 outline={false}
                 rounded={false}
               />
             </TooltipContainer>
           </Keyboard>
-          {!unauthorized && (
+          {!unauthorized && canClusterLabelBeDeleted(label.key) && (
             <DeleteLabelButton
               allowInteraction={allowInteraction}
               onOpen={onOpen}
@@ -280,6 +294,7 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
                     internalKeyValue.length > 0 ||
                     internalValueValue.length >= 0
                   }
+                  disabled={label && !canClusterLabelKeyBeEdited(label.key)}
                 />
               </KeyInputWrapper>
               <Separator>:</Separator>

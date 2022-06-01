@@ -19,6 +19,11 @@ import * as metav1 from 'model/services/mapi/metav1';
 import { supportsHACPNodes } from 'model/stores/nodepool/utils';
 import { mutate } from 'swr';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import {
+  labelKeyHasRestrictedSubstring,
+  labelKeyIsAllowed,
+  labelKeyIsRestricted,
+} from 'utils/labelUtils';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
 
@@ -478,4 +483,31 @@ export async function switchClusterToHACPNodes(
     updatedControlPlaneNodes,
     false
   );
+}
+
+export function canClusterLabelBeDeleted(key: string) {
+  if (labelKeyIsRestricted(key) || labelKeyHasRestrictedSubstring(key)) {
+    return false;
+  }
+
+  return true;
+}
+
+export function canClusterLabelBeEdited(key: string) {
+  if (
+    labelKeyIsRestricted(key) ||
+    (!labelKeyIsAllowed(key) && labelKeyHasRestrictedSubstring(key))
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+export function canClusterLabelKeyBeEdited(key: string) {
+  if (labelKeyIsRestricted(key) || labelKeyHasRestrictedSubstring(key)) {
+    return false;
+  }
+
+  return true;
 }

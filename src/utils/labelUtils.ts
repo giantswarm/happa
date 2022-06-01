@@ -131,6 +131,22 @@ const isQualifiedName: IValidationFunction = (key) => {
   };
 };
 
+export const labelKeyIsRestricted = (key: string) => {
+  return Constants.RESTRICTED_CLUSTER_LABEL_KEYS.some(
+    (restrictedKeyItem) => key.toLowerCase() === restrictedKeyItem
+  );
+};
+
+export const labelKeyHasRestrictedSubstring = (key: string) => {
+  return Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRINGS.some((substring) =>
+    key.toLowerCase().includes(substring)
+  );
+};
+
+export const labelKeyIsAllowed = (key: string) => {
+  return Constants.ALLOWED_CLUSTER_LABEL_KEYS.includes(key.toLowerCase());
+};
+
 export const validateLabelKey: IValidationFunction = (key) => {
   const strKey = `${key}`;
   if (!strKey) {
@@ -140,36 +156,29 @@ export const validateLabelKey: IValidationFunction = (key) => {
     };
   }
 
-  if (
-    strKey
-      .toLowerCase()
-      .includes(Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING)
-  ) {
-    return {
-      isValid: false,
-      validationError: `Key cannot contain '${Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING}'`,
-    };
+  if (labelKeyIsRestricted(strKey)) {
+    const restrictedKey = Constants.RESTRICTED_CLUSTER_LABEL_KEYS.find(
+      (restrictedKeyItem) => strKey.toLowerCase() === restrictedKeyItem
+    );
+    if (restrictedKey) {
+      return {
+        isValid: false,
+        validationError: `Key cannot be '${restrictedKey}'`,
+      };
+    }
   }
 
-  /**
-   * Hide CAPI cluster name label, because we don't allow editing it at this time.
-   * https://github.com/giantswarm/giantswarm/issues/12431
-   */
-  if (strKey.toLowerCase() === 'cluster.x-k8s.io/cluster-name') {
-    return {
-      isValid: false,
-      validationError: `Key cannot be 'cluster.x-k8s.io/cluster-name'`,
-    };
-  }
-
-  /**
-   * Hide CAPI watch-filter label, because we don't allow editing it at this time.
-   */
-  if (strKey.toLowerCase() === 'cluster.x-k8s.io/watch-filter') {
-    return {
-      isValid: false,
-      validationError: `Key cannot be 'cluster.x-k8s.io/watch-filter'`,
-    };
+  if (!labelKeyIsAllowed(strKey) && labelKeyHasRestrictedSubstring(strKey)) {
+    const restrictedSubstring =
+      Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRINGS.find((substring) =>
+        strKey.toLowerCase().includes(substring)
+      );
+    if (restrictedSubstring) {
+      return {
+        isValid: false,
+        validationError: `Key cannot contain '${restrictedSubstring}'`,
+      };
+    }
   }
 
   return isQualifiedName(strKey);

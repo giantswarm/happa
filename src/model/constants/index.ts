@@ -71,7 +71,15 @@ export const Constants = {
   FLATCAR_CONTAINERLINUX_CGROUP_V2_VERSION: '3033.2.0',
 
   // Used to filter cluster labels in api responses
-  RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRING: 'giantswarm.io',
+  RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRINGS: [
+    'giantswarm.io',
+    'kustomize.toolkit.fluxcd.io',
+  ],
+  RESTRICTED_CLUSTER_LABEL_KEYS: [
+    'cluster.x-k8s.io/cluster-name',
+    'cluster.x-k8s.io/watch-filter',
+  ],
+  ALLOWED_CLUSTER_LABEL_KEYS: ['giantswarm.io/service-priority'],
 
   // Cluster & node pool name length restrictions
   MIN_NAME_LENGTH: 3,
