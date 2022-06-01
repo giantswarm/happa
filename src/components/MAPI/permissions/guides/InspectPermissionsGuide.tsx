@@ -30,6 +30,8 @@ const InspectPermissionsGuide: React.FC<IInspectPermissionsGuideProps> = ({
       ? 'for a user'
       : subjectType === SubjectTypes.Group
       ? 'for a group'
+      : subjectType === SubjectTypes.ServiceAccount
+      ? 'for a service account'
       : '';
 
   const currentSubjectPossessive =
@@ -41,12 +43,17 @@ const InspectPermissionsGuide: React.FC<IInspectPermissionsGuideProps> = ({
       <>
         a member of group <code>{subjectName}</code> has
       </>
+    ) : subjectType === SubjectTypes.ServiceAccount ? (
+      <>
+        service account <code>{subjectName}</code> has
+      </>
     ) : (
       `you have`
     );
 
   const impersonationFlags =
-    subjectType === SubjectTypes.User
+    subjectType === SubjectTypes.User ||
+    subjectType === SubjectTypes.ServiceAccount
       ? ` \\\n  --as ${subjectName}`
       : subjectType === SubjectTypes.Group
       ? ` \\\n  --as example@acme.org --as-group ${subjectName}`
