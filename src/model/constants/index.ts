@@ -99,4 +99,5 @@ export const Constants = {
   README_FILE: 'README.md',
 
   SERVICE_ACCOUNT_PREFIX: 'system:serviceaccount:',
+  SERVICE_ACCOUNTS_PREFIX: 'system:serviceaccounts:',
 };

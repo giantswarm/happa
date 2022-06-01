@@ -927,6 +927,8 @@ export function createRulesReviewResponseFromBindings(
 
   // Get all bindings bound to the subject.
   for (const binding of bindings) {
+    if (!binding.subjects) continue;
+
     if (
       binding.subjects?.find(
         (boundSubject) =>
@@ -936,7 +938,15 @@ export function createRulesReviewResponseFromBindings(
             subject.groups?.includes(boundSubject.name)) ||
           (isSubjectKindServiceAccount(boundSubject) &&
             boundSubject.namespace === serviceAccountNamespace &&
-            boundSubject.name === serviceAccountName)
+            boundSubject.name === serviceAccountName) ||
+          (subject.serviceAccount &&
+            isSubjectKindGroup(boundSubject) &&
+            subject.groups?.includes(Constants.SERVICE_ACCOUNTS_PREFIX)) ||
+          (subject.serviceAccount &&
+            isSubjectKindGroup(boundSubject) &&
+            subject.groups?.includes(
+              `${Constants.SERVICE_ACCOUNTS_PREFIX}${serviceAccountNamespace}`
+            ))
       )
     ) {
       // Determine role rules map to use based on the Kind of
