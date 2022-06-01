@@ -12,6 +12,10 @@ export const DotSeparatedListItem = styled.div`
   padding: 0 16px;
   margin-left: -16px;
 
+  &:last-child {
+    padding-right: 0;
+  }
+
   &::before {
     content: '·';
     position: absolute;
