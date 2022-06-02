@@ -136,7 +136,7 @@ export const selfSubjectAccessReviewCanGetClusterRoles = {
   },
 };
 
-export const localSubjectAccssReviewCanListOrgs = {
+export const localSubjectAccessReviewCanListOrgs = {
   kind: 'LocalSubjectAccessReview',
   apiVersion: 'authorization.k8s.io/v1',
   metadata: {

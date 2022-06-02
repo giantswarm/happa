@@ -465,7 +465,7 @@ describe('PermissionsOverview', () => {
       )
       .reply(
         StatusCodes.Ok,
-        authorizationv1Mocks.localSubjectAccssReviewCanListOrgs
+        authorizationv1Mocks.localSubjectAccessReviewCanListOrgs
       );
     nock(window.config.mapiEndpoint)
       .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
@@ -568,7 +568,7 @@ describe('PermissionsOverview', () => {
       )
       .reply(
         StatusCodes.Ok,
-        authorizationv1Mocks.localSubjectAccssReviewCanListOrgs
+        authorizationv1Mocks.localSubjectAccessReviewCanListOrgs
       );
     nock(window.config.mapiEndpoint)
       .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
@@ -671,7 +671,7 @@ describe('PermissionsOverview', () => {
       )
       .reply(
         StatusCodes.Ok,
-        authorizationv1Mocks.localSubjectAccssReviewCanListOrgs
+        authorizationv1Mocks.localSubjectAccessReviewCanListOrgs
       );
     nock(window.config.mapiEndpoint)
       .get('/apis/rbac.authorization.k8s.io/v1/clusterroles/')
