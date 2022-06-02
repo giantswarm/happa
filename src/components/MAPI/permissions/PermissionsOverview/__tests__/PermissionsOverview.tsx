@@ -444,7 +444,7 @@ describe('PermissionsOverview', () => {
     ).toBeInTheDocument();
   });
 
-  it.only('allows inspecting permissions for users', async () => {
+  it('allows inspecting permissions for users', async () => {
     nock(window.config.mapiEndpoint)
       .post(
         '/apis/authorization.k8s.io/v1/namespaces/default/localsubjectaccessreviews/',
@@ -547,7 +547,7 @@ describe('PermissionsOverview', () => {
     ).toBeInTheDocument();
   });
 
-  it.only('allows inspecting permissions for groups', async () => {
+  it('allows inspecting permissions for groups', async () => {
     nock(window.config.mapiEndpoint)
       .post(
         '/apis/authorization.k8s.io/v1/namespaces/default/localsubjectaccessreviews/',
@@ -650,7 +650,7 @@ describe('PermissionsOverview', () => {
     ).toBeInTheDocument();
   });
 
-  it.only('allows inspecting permissions for service accounts', async () => {
+  it('allows inspecting permissions for service accounts', async () => {
     nock(window.config.mapiEndpoint)
       .post(
         '/apis/authorization.k8s.io/v1/namespaces/default/localsubjectaccessreviews/',
