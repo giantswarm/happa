@@ -270,6 +270,34 @@ describe('ClusterListItem', () => {
     expect(await screen.findByText('171.8 GB RAM')).toBeInTheDocument();
   });
 
+  it('displays cluster labels', () => {
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1beta1Mocks.randomCluster1,
+          metadata: {
+            ...capiv1beta1Mocks.randomCluster1.metadata,
+            labels: {
+              ...capiv1beta1Mocks.randomCluster1.metadata.labels!,
+              'giantswarm.io/service-priority': 'highest',
+            },
+          },
+        },
+      })
+    );
+
+    expect(screen.queryByText('Service priority')).toBeInTheDocument();
+    expect(
+      screen.queryByText('giantswarm.io/service-priority')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('azure-operator.giantswarm.io/version')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('cluster.x-k8s.io/cluster-name')
+    ).not.toBeInTheDocument();
+  });
+
   it(`displays the cluster's current status`, async () => {
     (usePermissionsForNodePools as jest.Mock).mockReturnValue(
       defaultPermissions
