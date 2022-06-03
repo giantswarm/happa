@@ -6,6 +6,7 @@ import {
   Bindings,
   IPermissionMap,
   IPermissionsForUseCase,
+  IPermissionsSubject,
   IPermissionsUseCase,
   IResourceRuleMap,
   IRolesForNamespaces,
@@ -730,8 +731,7 @@ describe('permissions::utils', () => {
       input: {
         bindings: Bindings;
         rulesMaps: IRulesMaps;
-        user?: string;
-        groups?: string[];
+        subject: IPermissionsSubject;
       };
       expected: authorizationv1.ISelfSubjectRulesReview;
     }
@@ -742,6 +742,7 @@ describe('permissions::utils', () => {
         input: {
           bindings: [],
           rulesMaps: createDefaultRulesMaps(),
+          subject: {},
         },
         expected: makeRulesReview({
           incomplete: false,
@@ -755,6 +756,7 @@ describe('permissions::utils', () => {
         input: {
           bindings: rbacv1Mocks.roleBindingList.items,
           rulesMaps: createDefaultRulesMaps(),
+          subject: {},
         },
         expected: makeRulesReview({
           incomplete: false,
@@ -767,7 +769,7 @@ describe('permissions::utils', () => {
         input: {
           bindings: rbacv1Mocks.roleBindingList.items,
           rulesMaps: createDefaultRulesMaps(),
-          user: 'system:boss',
+          subject: { user: 'system:boss' },
         },
         expected: makeRulesReview({
           incomplete: false,
@@ -786,7 +788,7 @@ describe('permissions::utils', () => {
         input: {
           bindings: rbacv1Mocks.roleBindingList.items,
           rulesMaps: createDefaultRulesMaps(),
-          groups: ['Admins'],
+          subject: { groups: ['Admins'] },
         },
         expected: makeRulesReview({
           incomplete: false,
@@ -810,8 +812,10 @@ describe('permissions::utils', () => {
         input: {
           bindings: rbacv1Mocks.roleBindingList.items,
           rulesMaps: createDefaultRulesMaps(),
-          user: 'system:boss',
-          groups: ['Admins'],
+          subject: {
+            user: 'system:boss',
+            groups: ['Admins'],
+          },
         },
         expected: makeRulesReview({
           incomplete: false,
@@ -830,6 +834,28 @@ describe('permissions::utils', () => {
           ],
         }),
       },
+      {
+        description:
+          'returns rules review response for a given service account',
+        input: {
+          bindings: rbacv1Mocks.roleBindingList.items,
+          rulesMaps: createDefaultRulesMaps(),
+          subject: {
+            serviceAccount: 'system:serviceaccount:org-giantswarm:el-toro',
+          },
+        },
+        expected: makeRulesReview({
+          incomplete: false,
+          nonResourceRules: [],
+          resourceRules: [
+            {
+              apiGroups: ['*'],
+              resources: ['*'],
+              verbs: ['get', 'list', 'watch', 'patch', 'update'],
+            },
+          ],
+        }),
+      },
     ];
 
     for (const { description, input, expected } of testCases) {
@@ -837,8 +863,7 @@ describe('permissions::utils', () => {
         const output = createRulesReviewResponseFromBindings(
           input.bindings,
           input.rulesMaps,
-          input.user,
-          input.groups
+          input.subject
         );
 
         expect(output).toStrictEqual(expected);

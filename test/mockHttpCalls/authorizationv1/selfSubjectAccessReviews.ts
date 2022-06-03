@@ -135,3 +135,24 @@ export const selfSubjectAccessReviewCanGetClusterRoles = {
     reason: 'RBAC: ',
   },
 };
+
+export const localSubjectAccessReviewCanListOrgs = {
+  kind: 'LocalSubjectAccessReview',
+  apiVersion: 'authorization.k8s.io/v1',
+  metadata: {
+    creationTimestamp: null,
+    namespace: 'default',
+  },
+  spec: {
+    resourceAttributes: {
+      namespace: 'default',
+      verb: 'list',
+      group: 'security.giantswarm.io',
+      resource: 'organizations',
+    },
+  },
+  status: {
+    allowed: true,
+    reason: 'RBAC: ',
+  },
+};

@@ -8,47 +8,54 @@ import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalI
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-import { SubjectType } from '../SubjectForm';
+import { SubjectTypes } from '../types';
 
 interface IInspectPermissionsGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   forOrganizations: boolean;
   subjectName?: string;
-  subjectType?: SubjectType;
+  subjectType?: SubjectTypes;
 }
 
 const InspectPermissionsGuide: React.FC<IInspectPermissionsGuideProps> = ({
   forOrganizations,
   subjectName,
-  subjectType = SubjectType.Myself,
+  subjectType = SubjectTypes.Myself,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
 
   const currentSubjectType =
-    subjectType === SubjectType.User
+    subjectType === SubjectTypes.User
       ? 'for a user'
-      : subjectType === SubjectType.Group
+      : subjectType === SubjectTypes.Group
       ? 'for a group'
+      : subjectType === SubjectTypes.ServiceAccount
+      ? 'for a service account'
       : '';
 
   const currentSubjectPossessive =
-    subjectType === SubjectType.User ? (
+    subjectType === SubjectTypes.User ? (
       <>
         user <code>{subjectName}</code> has
       </>
-    ) : subjectType === SubjectType.Group ? (
+    ) : subjectType === SubjectTypes.Group ? (
       <>
         a member of group <code>{subjectName}</code> has
+      </>
+    ) : subjectType === SubjectTypes.ServiceAccount ? (
+      <>
+        service account <code>{subjectName}</code> has
       </>
     ) : (
       `you have`
     );
 
   const impersonationFlags =
-    subjectType === SubjectType.User
+    subjectType === SubjectTypes.User ||
+    subjectType === SubjectTypes.ServiceAccount
       ? ` \\\n  --as ${subjectName}`
-      : subjectType === SubjectType.Group
+      : subjectType === SubjectTypes.Group
       ? ` \\\n  --as example@acme.org --as-group ${subjectName}`
       : '';
 

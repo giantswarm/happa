@@ -10,7 +10,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
-import { SubjectType } from './SubjectForm';
+import { IPermissionsSubject, SubjectTypes } from './types';
 import { IPermissionMap, IPermissionsUseCase } from './types';
 import { usePermissions } from './usePermissions';
 import { useSubjectPermissions } from './useSubjectPermissions';
@@ -38,55 +38,49 @@ function getCombinedPermissions(
 export function useUseCasesPermissions(
   useCases: IPermissionsUseCase[] | null,
   subjectName: string = '',
-  subjectType: SubjectType = SubjectType.Myself
+  subjectType: SubjectTypes = SubjectTypes.Myself
 ): {
   data: IPermissionMap | undefined;
   error: GenericResponseError | undefined;
   isLoading: boolean;
 } {
-  const currentSubject = useMemo(() => {
-    if (subjectName === '') return undefined;
-
-    switch (subjectType) {
-      case SubjectType.User:
-        return { user: subjectName };
-      case SubjectType.Group:
-        return { groups: [subjectName] };
-      default:
-        return undefined;
-    }
-  }, [subjectName, subjectType]);
-
-  const {
-    data: ownPermissions,
-    error: ownPermissionsError,
-    isLoading: ownPermissionsIsLoading,
-  } = usePermissions();
-  const {
-    data: subjectPermissions,
-    error: subjectPermissionsError,
-    isLoading: subjectPermissionsIsLoading,
-  } = useSubjectPermissions(currentSubject);
-  const namespacePermissions =
-    subjectType === SubjectType.Myself ? ownPermissions : subjectPermissions;
-
   const loggedInUser = useSelector(getLoggedInUser);
   const impersonation = useSelector(
     (state: IState) => state.main.impersonation
   );
 
-  const currentUser = useMemo(() => {
-    if (subjectType === SubjectType.Myself) {
-      return (
-        impersonation || {
-          user: loggedInUser?.email,
-          groups: loggedInUser?.groups,
-        }
-      );
-    }
+  const currentSubject: IPermissionsSubject | undefined = useMemo(() => {
+    if (subjectName === '' && subjectType !== SubjectTypes.Myself)
+      return undefined;
 
-    return currentSubject;
-  }, [currentSubject, impersonation, loggedInUser, subjectType]);
+    switch (subjectType) {
+      case SubjectTypes.Myself:
+        return (
+          impersonation || {
+            user: loggedInUser?.email,
+            groups: loggedInUser?.groups,
+          }
+        );
+      case SubjectTypes.User:
+        return { user: subjectName };
+      case SubjectTypes.Group:
+        return { groups: [subjectName] };
+      case SubjectTypes.ServiceAccount:
+        return { serviceAccount: subjectName };
+      default:
+        return undefined;
+    }
+  }, [impersonation, loggedInUser, subjectName, subjectType]);
+
+  const useNamespacePermissions =
+    subjectType === SubjectTypes.Myself
+      ? usePermissions
+      : useSubjectPermissions;
+  const {
+    data: namespacePermissions,
+    error: namespacePermissionsError,
+    isLoading: namespacePermissionsIsLoading,
+  } = useNamespacePermissions(currentSubject);
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -95,11 +89,8 @@ export function useUseCasesPermissions(
     isClusterScopeUseCase(useCase)
   );
   const permissionsAtClusterScopeKey =
-    namespacePermissions && clusterScopeUseCases
-      ? fetchPermissionsAtClusterScopeKey(
-          currentUser?.user,
-          currentUser?.groups
-        )
+    namespacePermissions && clusterScopeUseCases && currentSubject
+      ? fetchPermissionsAtClusterScopeKey(currentSubject)
       : null;
   const {
     data: permissionsAtClusterScope,
@@ -113,8 +104,7 @@ export function useUseCasesPermissions(
         auth,
         clusterScopeUseCases!,
         namespacePermissions!,
-        currentUser?.user,
-        currentUser?.groups
+        currentSubject!
       )
   );
 
@@ -136,14 +126,9 @@ export function useUseCasesPermissions(
     typeof permissionsAtClusterScopeError === 'undefined' &&
     permissionsAtClusterScopeIsValidating;
 
-  const error =
-    ownPermissionsError ||
-    subjectPermissionsError ||
-    permissionsAtClusterScopeError;
+  const error = namespacePermissionsError || permissionsAtClusterScopeError;
   const isLoading =
-    ownPermissionsIsLoading ||
-    subjectPermissionsIsLoading ||
-    permissionsAtClusterScopeIsLoading;
+    namespacePermissionsIsLoading || permissionsAtClusterScopeIsLoading;
 
   const combinedPermissions = useMemo(() => {
     if (!permissionsAtClusterScope || !namespacePermissions) return undefined;

@@ -71,3 +71,19 @@ export interface IResourceRuleMap
 export type Bindings =
   | Omit<rbacv1.IRoleBinding, 'apiVersion' | 'kind'>[]
   | Omit<rbacv1.IClusterRoleBinding, 'apiVersion' | 'kind'>[];
+
+enum PermissionsSubjectTypes {
+  Myself = 'Myself',
+}
+
+export type SubjectTypes = rbacv1.SubjectKinds | PermissionsSubjectTypes;
+export const SubjectTypes = {
+  ...rbacv1.SubjectKinds,
+  ...PermissionsSubjectTypes,
+};
+
+export interface IPermissionsSubject {
+  user?: string;
+  groups?: string[];
+  serviceAccount?: string;
+}
