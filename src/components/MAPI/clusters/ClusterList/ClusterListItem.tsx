@@ -46,7 +46,6 @@ import RoutePath from 'utils/routePath';
 import ClusterStatus from '../ClusterStatus/ClusterStatus';
 import { useClusterStatus } from '../hooks/useClusterStatus';
 import {
-  getClusterLabels,
   getClusterLabelsWithDisplayInfo,
   getWorkerNodesCount,
   getWorkerNodesCPU,
@@ -282,7 +281,7 @@ const ClusterListItem: React.FC<
       return undefined;
     }
 
-    const existingLabels = getClusterLabels(cluster);
+    const existingLabels = capiv1beta1.getClusterLabels(cluster);
 
     return getClusterLabelsWithDisplayInfo(existingLabels);
   }, [cluster]);

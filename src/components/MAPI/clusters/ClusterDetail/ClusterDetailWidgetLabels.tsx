@@ -10,7 +10,6 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
-import { getClusterLabels } from '../utils';
 import { updateClusterLabels } from './utils';
 
 interface IClusterDetailWidgetLabelsProps
@@ -33,7 +32,7 @@ const ClusterDetailWidgetLabels: React.FC<
       return undefined;
     }
 
-    return getClusterLabels(cluster);
+    return capiv1beta1.getClusterLabels(cluster);
   }, [cluster]);
 
   const [labelsError, setLabelsError] = useState('');

@@ -13,6 +13,7 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
@@ -35,7 +36,6 @@ import {
   createDefaultControlPlaneNodes,
   createDefaultProviderCluster,
   findLatestReleaseVersion,
-  getClusterLabels,
 } from '../utils';
 import CreateClusterControlPlaneNodeAZs from './CreateClusterControlPlaneNodeAZs';
 import CreateClusterControlPlaneNodesCount from './CreateClusterControlPlaneNodesCount';
@@ -320,7 +320,7 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
     return computeControlPlaneNodesStats(state.controlPlaneNodes)
       .availabilityZones;
   }, [state.controlPlaneNodes]);
-  const labels = state.cluster ? getClusterLabels(state.cluster) : undefined;
+  const labels = capiv1beta1.getClusterLabels(state.cluster);
 
   return (
     <Breadcrumb data={{ title: 'CREATE CLUSTER', pathname: match.url }}>

@@ -1005,12 +1005,6 @@ export enum ClusterStatus {
   UpgradeAvailable = 'UPGRADE_AVAILABLE',
 }
 
-export function getClusterLabels(
-  cluster: capiv1beta1.ICluster
-): IClusterLabelMap {
-  return capiv1beta1.getClusterLabels(cluster);
-}
-
 export function getClusterLabelsWithDisplayInfo(
   labels: IClusterLabelMap,
   filterHiddenLabels: boolean = true
