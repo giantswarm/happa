@@ -342,7 +342,7 @@ const ClusterListItem: React.FC<
               </Text>
             )}
           </OptionalValue>
-          <Box flex={{ grow: 1, shrink: 1 }} basis='0%'>
+          <Box flex={{ grow: 1, shrink: 1 }} basis='0%' align='flex-start'>
             <Box direction='row' align='center' wrap={true} gap='small'>
               <OptionalValue value={description}>
                 {(value) => (

@@ -5,7 +5,7 @@ import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ValueLabel from 'UI/Display/ValueLabel';
 
 const StyledValueLabel = styled(ValueLabel)`
-  margin: 0 10px 10px 0;
+  margin-bottom: 10px;
   line-height: 26px;
   height: 26px;
   font-size: 13px;
@@ -28,6 +28,7 @@ const ClusterListItemLabels: React.FC<
             wrap={true}
             align='center'
             margin={{ bottom: '-10px' }}
+            gap='10px'
           >
             {value.map((label) => (
               <StyledValueLabel
