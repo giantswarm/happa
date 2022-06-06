@@ -3,6 +3,7 @@ import AddKeyPairServiceUnavailableError from 'Cluster/ClusterDetail/KeypairCrea
 import { StatusCodes } from 'model/constants';
 import React from 'react';
 import styled from 'styled-components';
+import { FlashMessageType } from 'styles';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import FlashMessage from 'UI/Display/FlashMessage';
 
@@ -44,7 +45,7 @@ const AddKeyPairErrorTemplate: React.FC<
 > = ({ children, ...rest }) => {
   return (
     <SlideTransition direction='down' in={children !== null}>
-      <StyledFlashMessage type='danger' {...(rest as never)}>
+      <StyledFlashMessage type={FlashMessageType.Danger} {...rest}>
         {getErrorMarkup(children as PropertiesOf<typeof StatusCodes>)}
       </StyledFlashMessage>
     </SlideTransition>
