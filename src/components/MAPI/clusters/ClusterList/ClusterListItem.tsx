@@ -400,7 +400,11 @@ const ClusterListItem: React.FC<
             )}
 
             {hasError && !isDeleting && (
-              <Text color='status-critical' aria-label='Cluster load error'>
+              <Text
+                color='status-critical'
+                aria-label='Cluster load error'
+                margin={{ top: 'small' }}
+              >
                 {extractErrorMessage(nodePoolListError)}
               </Text>
             )}
