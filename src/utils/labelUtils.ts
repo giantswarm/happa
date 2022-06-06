@@ -131,7 +131,7 @@ const isQualifiedName: IValidationFunction = (key) => {
   };
 };
 
-export const labelKeyIsRestricted = (key: string) => {
+export const isLabelKeyRestricted = (key: string) => {
   return Constants.RESTRICTED_CLUSTER_LABEL_KEYS.some(
     (restrictedKeyItem) => key.toLowerCase() === restrictedKeyItem
   );
@@ -143,7 +143,7 @@ export const labelKeyHasRestrictedSubstring = (key: string) => {
   );
 };
 
-export const labelKeyIsAllowed = (key: string) => {
+export const isLabelKeyAllowed = (key: string) => {
   return Constants.ALLOWED_CLUSTER_LABEL_KEYS.includes(key.toLowerCase());
 };
 
@@ -156,7 +156,7 @@ export const validateLabelKey: IValidationFunction = (key) => {
     };
   }
 
-  if (labelKeyIsRestricted(strKey)) {
+  if (isLabelKeyRestricted(strKey)) {
     const restrictedKey = Constants.RESTRICTED_CLUSTER_LABEL_KEYS.find(
       (restrictedKeyItem) => strKey.toLowerCase() === restrictedKeyItem
     );
@@ -168,7 +168,7 @@ export const validateLabelKey: IValidationFunction = (key) => {
     }
   }
 
-  if (!labelKeyIsAllowed(strKey) && labelKeyHasRestrictedSubstring(strKey)) {
+  if (!isLabelKeyAllowed(strKey) && labelKeyHasRestrictedSubstring(strKey)) {
     const restrictedSubstring =
       Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRINGS.find((substring) =>
         strKey.toLowerCase().includes(substring)
