@@ -144,7 +144,9 @@ export const labelKeyHasRestrictedSubstring = (key: string) => {
 };
 
 export const isLabelKeyAllowed = (key: string) => {
-  return Constants.ALLOWED_CLUSTER_LABEL_KEYS.includes(key.toLowerCase());
+  return Constants.ALLOWED_CLUSTER_LABEL_KEYS.some(
+    (allowedKeyItem) => key.toLowerCase() === allowedKeyItem
+  );
 };
 
 export const validateLabelKey: IValidationFunction = (key) => {
