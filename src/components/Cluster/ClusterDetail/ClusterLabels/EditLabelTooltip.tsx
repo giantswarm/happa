@@ -55,8 +55,8 @@ const StyledValueLabel = styled(ValueLabel)<{
 
   :hover {
     ${KeyWrapper}, ${ValueWrapper} {
-      text-decoration: ${({ allowInteraction }) =>
-        allowInteraction ? 'underline' : 'none'};
+      text-decoration: ${({ allowInteraction, canBeEdited }) =>
+        allowInteraction && canBeEdited ? 'underline' : 'none'};
       text-decoration-style: dotted;
     }
   }
