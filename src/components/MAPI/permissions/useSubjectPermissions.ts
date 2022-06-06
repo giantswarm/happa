@@ -9,18 +9,13 @@ import useSWR from 'swr';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
-import { IPermissionMap } from './types';
+import { IPermissionMap, IPermissionsSubject } from './types';
 import {
   fetchPermissionsForSubject,
   fetchPermissionsForSubjectKey,
 } from './utils';
 
-export interface ISubject {
-  user?: string;
-  groups?: string[];
-}
-
-export function useSubjectPermissions(subject?: ISubject) {
+export function useSubjectPermissions(subject?: IPermissionsSubject) {
   const httpClientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
@@ -28,21 +23,13 @@ export function useSubjectPermissions(subject?: ISubject) {
     Object.values(selectOrganizations()(state))
   );
 
-  const key = subject
-    ? fetchPermissionsForSubjectKey(subject.user, subject.groups)
-    : null;
+  const key = subject ? fetchPermissionsForSubjectKey(subject) : null;
 
   const { data, error, isValidating } = useSWR<
     IPermissionMap,
     GenericResponseError
   >(key, () =>
-    fetchPermissionsForSubject(
-      httpClientFactory,
-      auth,
-      organizations,
-      subject?.user,
-      subject?.groups
-    )
+    fetchPermissionsForSubject(httpClientFactory, auth, organizations, subject!)
   );
 
   const isLoading =

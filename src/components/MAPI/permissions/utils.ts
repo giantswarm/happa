@@ -1,9 +1,11 @@
 import { getNamespaceFromOrgName } from 'MAPI/utils';
+import { Constants } from 'model/constants';
 import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
 import {
   isSubjectKindGroup,
+  isSubjectKindServiceAccount,
   isSubjectKindUser,
 } from 'model/services/mapi/rbacv1';
 import { LoggedInUserTypes } from 'model/stores/main/types';
@@ -19,6 +21,7 @@ import {
   INamespaceResourceRules,
   IPermissionMap,
   IPermissionsForUseCase,
+  IPermissionsSubject,
   IPermissionsUseCase,
   IResourceRuleMap,
   IRolesForNamespaces,
@@ -290,8 +293,7 @@ export async function fetchPermissionsForSubject(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   organizations: IOrganization[],
-  user?: string,
-  groups?: string[]
+  subject: IPermissionsSubject
 ): Promise<IPermissionMap> {
   // These are not organization namespaces, but we have resources in them.
   const namespaces = ['default', 'giantswarm'];
@@ -307,8 +309,8 @@ export async function fetchPermissionsForSubject(
       group: 'security.giantswarm.io',
       resource: 'organizations',
     },
-    user,
-    groups,
+    user: subject.user ?? subject.serviceAccount,
+    groups: subject.groups,
   };
   const accessReviewResponse =
     await authorizationv1.createLocalSubjectAccessReview(
@@ -331,8 +333,8 @@ export async function fetchPermissionsForSubject(
           group: 'security.giantswarm.io',
           resource: 'organizations',
         },
-        user,
-        groups,
+        user: subject.user ?? subject.serviceAccount,
+        groups: subject.groups,
       };
 
       return authorizationv1.createLocalSubjectAccessReview(
@@ -395,8 +397,7 @@ export async function fetchPermissionsForSubject(
         rolesRulesMap: rolesRulesMap[namespace],
         clusterRolesRulesMap,
       },
-      user,
-      groups
+      subject
     );
 
     reviews.push([namespace, review] as [typeof namespace, typeof review]);
@@ -407,13 +408,10 @@ export async function fetchPermissionsForSubject(
   return permissions;
 }
 
-export function fetchPermissionsForSubjectKey(
-  user?: string,
-  groups?: string[]
-) {
-  return `getUserPermissionsForSubject/${user ? user : ''}/${
-    groups ? groups.join(',') : ''
-  }`;
+export function fetchPermissionsForSubjectKey(subject: IPermissionsSubject) {
+  return `getUserPermissionsForSubject/${subject.user ?? ''}/${
+    subject.groups?.join(',') ?? ''
+  }/${subject.serviceAccount ?? ''}`;
 }
 
 export async function fetchPermissionsAtClusterScope(
@@ -421,8 +419,7 @@ export async function fetchPermissionsAtClusterScope(
   auth: IOAuth2Provider,
   useCases: IPermissionsUseCase[],
   namespacedPermissions: IPermissionMap,
-  user?: string,
-  groups?: string[]
+  subject: IPermissionsSubject
 ): Promise<IPermissionMap> {
   const requests: authorizationv1.ISelfSubjectAccessReviewSpec[] = [
     {
@@ -470,18 +467,16 @@ export async function fetchPermissionsAtClusterScope(
   return getPermissionsWithClusterRoleBindings(
     httpClientFactory,
     auth,
-    user,
-    groups
+    subject
   );
 }
 
 export function fetchPermissionsAtClusterScopeKey(
-  user?: string,
-  groups?: string[]
+  subject: IPermissionsSubject
 ): string {
-  return `getUserPermissionsAtClusterScope/${user ? user : ''}/${
-    groups ? groups?.join(',') : ''
-  }`;
+  return `getUserPermissionsAtClusterScope/${subject.user ?? ''}/${
+    subject.groups?.join(',') ?? ''
+  }/${subject.serviceAccount ?? ''}`;
 }
 
 export function hasAppAccesInNamespace(
@@ -730,19 +725,17 @@ export function getStatusesForUseCases(
 }
 
 /**
- * Get permissions by fetching ClusterRoleBindings for
- * given user/group and aggregating permissions of the
- * ClusterRoles referenced.
+ * Get permissions by fetching ClusterRoleBindings for the
+ * given subject and aggregating permissions of the ClusterRoles
+ * referenced.
  * @param httpClientFactory
  * @param auth
- * @param user
- * @param groups
+ * @param subject
  */
 async function getPermissionsWithClusterRoleBindings(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  user?: string,
-  groups?: string[]
+  subject: IPermissionsSubject
 ): Promise<IPermissionMap> {
   const clusterRoleBindingList = await rbacv1.getClusterRoleBindingList(
     httpClientFactory(),
@@ -765,8 +758,7 @@ async function getPermissionsWithClusterRoleBindings(
       rolesRulesMap: {},
       clusterRolesRulesMap,
     },
-    user,
-    groups
+    subject
   );
 
   return computePermissions([['', review]]);
@@ -909,29 +901,52 @@ export function computeResourceRulesFromRoles(
 
 /**
  * Create a review response object from Roles/ClusterRoles bound
- * to a given user/groups by aggregating resource rules from
- * each Role/ClusterRole.
+ * to given subjects by aggregating resource rules from each
+ * Role/ClusterRole.
  *
  * @param bindings
  * @param rulesMaps
- * @param user
- * @param groups
+ * @param subject
  */
 export function createRulesReviewResponseFromBindings(
   bindings: Bindings,
   rulesMaps: IRulesMaps,
-  user?: string,
-  groups?: string[]
+  subject: IPermissionsSubject
 ): authorizationv1.ISelfSubjectRulesReview {
   const resourceRules: authorizationv1.IResourceRule[] = [];
 
-  // Get all bindings bound to the user/groups.
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let serviceAccountNamespace: string | undefined;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let serviceAccountName: string | undefined;
+  if (subject.serviceAccount) {
+    [serviceAccountNamespace, serviceAccountName] = subject.serviceAccount
+      .replace(Constants.SERVICE_ACCOUNT_PREFIX, '')
+      .split(':', 2);
+  }
+
+  // Get all bindings bound to the subject.
   for (const binding of bindings) {
+    if (!binding.subjects) continue;
+
     if (
       binding.subjects?.find(
-        (subject) =>
-          (isSubjectKindUser(subject) && subject.name === user) ||
-          (isSubjectKindGroup(subject) && groups?.includes(subject.name))
+        (boundSubject) =>
+          (isSubjectKindUser(boundSubject) &&
+            boundSubject.name === subject.user) ||
+          (isSubjectKindGroup(boundSubject) &&
+            subject.groups?.includes(boundSubject.name)) ||
+          (isSubjectKindServiceAccount(boundSubject) &&
+            boundSubject.namespace === serviceAccountNamespace &&
+            boundSubject.name === serviceAccountName) ||
+          (subject.serviceAccount &&
+            isSubjectKindGroup(boundSubject) &&
+            subject.groups?.includes(Constants.SERVICE_ACCOUNTS_PREFIX)) ||
+          (subject.serviceAccount &&
+            isSubjectKindGroup(boundSubject) &&
+            subject.groups?.includes(
+              `${Constants.SERVICE_ACCOUNTS_PREFIX}${serviceAccountNamespace}`
+            ))
       )
     ) {
       // Determine role rules map to use based on the Kind of

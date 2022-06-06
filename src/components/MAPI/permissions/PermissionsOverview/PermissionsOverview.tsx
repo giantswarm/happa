@@ -5,7 +5,7 @@ import PermissionsUseCases from 'UI/Display/MAPI/permissions/PermissionsUseCases
 import { Tab, Tabs } from 'UI/Display/Tabs';
 
 import InspectPermissionsGuide from '../guides/InspectPermissionsGuide';
-import { SubjectType } from '../SubjectForm';
+import { SubjectTypes } from '../types';
 import { useUseCasesPermissions } from '../useUseCasesPermissions';
 import {
   getPermissionsUseCases,
@@ -13,8 +13,8 @@ import {
   isGlobalUseCase,
 } from '../utils';
 
-interface IPermissionsOverviewProps {
-  subjectType?: SubjectType;
+export interface IPermissionsOverviewProps {
+  subjectType?: SubjectTypes;
   subjectName?: string;
 }
 
@@ -53,7 +53,10 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
     number[]
   >([]);
 
-  if (!useCases || (subjectType !== SubjectType.Myself && subjectName === '')) {
+  if (
+    !useCases ||
+    (subjectType !== SubjectTypes.Myself && subjectName === '')
+  ) {
     return null;
   }
 

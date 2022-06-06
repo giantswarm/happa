@@ -1,4 +1,3 @@
-import SubjectForm, { SubjectType } from './SubjectForm';
+import SubjectForm from './SubjectForm';
 
-export { SubjectType };
 export default SubjectForm;
