@@ -104,6 +104,7 @@ const ValueLabel = React.forwardRef(
           {label}
         </KeyWrapper>
         <ValueWrapper
+          color={color}
           textColor={valueTextColor}
           backgroundColor={valueBackgroundColor}
           outline={Boolean(outline)}
