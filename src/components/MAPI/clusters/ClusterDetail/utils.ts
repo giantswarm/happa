@@ -20,9 +20,9 @@ import { supportsHACPNodes } from 'model/stores/nodepool/utils';
 import { mutate } from 'swr';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import {
+  hasRestrictedSubstring,
   isLabelKeyAllowed,
   isLabelKeyRestricted,
-  labelKeyHasRestrictedSubstring,
 } from 'utils/labelUtils';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
@@ -486,7 +486,7 @@ export async function switchClusterToHACPNodes(
 }
 
 export function canClusterLabelBeDeleted(key: string) {
-  if (isLabelKeyRestricted(key) || labelKeyHasRestrictedSubstring(key)) {
+  if (isLabelKeyRestricted(key) || hasRestrictedSubstring(key)) {
     return false;
   }
 
@@ -496,7 +496,7 @@ export function canClusterLabelBeDeleted(key: string) {
 export function canClusterLabelBeEdited(key: string) {
   if (
     isLabelKeyRestricted(key) ||
-    (!isLabelKeyAllowed(key) && labelKeyHasRestrictedSubstring(key))
+    (!isLabelKeyAllowed(key) && hasRestrictedSubstring(key))
   ) {
     return false;
   }
@@ -505,7 +505,7 @@ export function canClusterLabelBeEdited(key: string) {
 }
 
 export function canClusterLabelKeyBeEdited(key: string) {
-  if (isLabelKeyRestricted(key) || labelKeyHasRestrictedSubstring(key)) {
+  if (isLabelKeyRestricted(key) || hasRestrictedSubstring(key)) {
     return false;
   }
 

@@ -137,7 +137,7 @@ export const isLabelKeyRestricted = (key: string) => {
   );
 };
 
-export const labelKeyHasRestrictedSubstring = (key: string) => {
+export const hasRestrictedSubstring = (key: string) => {
   return Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRINGS.some((substring) =>
     key.toLowerCase().includes(substring)
   );
@@ -170,7 +170,7 @@ export const validateLabelKey: IValidationFunction = (key) => {
     }
   }
 
-  if (!isLabelKeyAllowed(strKey) && labelKeyHasRestrictedSubstring(strKey)) {
+  if (!isLabelKeyAllowed(strKey) && hasRestrictedSubstring(strKey)) {
     const restrictedSubstring =
       Constants.RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRINGS.find((substring) =>
         strKey.toLowerCase().includes(substring)
