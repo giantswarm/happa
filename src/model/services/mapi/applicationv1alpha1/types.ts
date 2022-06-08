@@ -101,7 +101,7 @@ export interface ICatalogSpecStorage {
   URL: string;
 }
 
-export interface ICatalogSpecReposiotry {
+export interface ICatalogSpecRepository {
   type: string;
   URL: string;
 }
