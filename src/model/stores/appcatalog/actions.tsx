@@ -148,7 +148,7 @@ async function loadIndexForCatalog(catalog: IAppCatalog): Promise<IAppCatalog> {
   if (typeof helmRepositoryURL === undefined) {
     return Promise.reject(
         new Error(
-          `Could not find repository of type "helm" in for catalog ${catalog.metadata.namespace}/${catalog.metadata.name}`
+          `Could not find repository of type "helm" in for catalog ${catalog.metadata.name}`
         )
     );
   }
