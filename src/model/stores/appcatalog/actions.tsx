@@ -144,7 +144,15 @@ export function catalogLoadIndex(
 }
 
 async function loadIndexForCatalog(catalog: IAppCatalog): Promise<IAppCatalog> {
-  const indexURL = normalizeAppCatalogIndexURL(catalog.spec.storage.URL);
+  const helmRepositoryURL = catalog.spec.repositories.find(repo => repo.type == 'helm');
+  if (typeof helmRepositoryURL === undefined) {
+    return Promise.reject(
+        new Error(
+          `Could not find repository of type "helm" in for catalog ${catalog.metadata.namespace}/${catalog.metadata.name}`
+        )
+    );
+  }
+  const indexURL = normalizeAppCatalogIndexURL(helmRepositoryURL);
 
   const response = await fetch(indexURL, { mode: 'cors' });
   if (response.status !== StatusCodes.Ok) {
