@@ -39,6 +39,10 @@ export const defaultAppCatalog: applicationv1alpha1.ICatalog = {
       URL: 'https://catalogs.com/default-catalog/',
       type: 'helm',
     },
+    repositories: [{
+      URL: 'https://catalogs.com/default-catalog/',
+      type: 'helm',
+    }],
     title: 'Giant Swarm Default Catalog',
   },
 };
@@ -81,6 +85,10 @@ export const giantswarmAppCatalog: applicationv1alpha1.ICatalog = {
       URL: 'https://catalogs.com/giantswarm-catalog/',
       type: 'helm',
     },
+    repositories: [{
+      URL: 'https://catalogs.com/giantswarm-catalog/',
+      type: 'helm',
+    }],
     title: 'Giant Swarm Catalog',
   },
 };
