@@ -368,15 +368,15 @@ describe('OrganizationDetailGeneral', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/release.giantswarm.io/v1alpha1/releases/${releasev1alpha1Mocks.v14_1_5.metadata.name}/`
+        `/apis/release.giantswarm.io/v1alpha1/releases/${releasev1alpha1Mocks.v14_0_1.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, releasev1alpha1Mocks.v14_1_5);
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.v14_0_1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/release.giantswarm.io/v1alpha1/releases/${releasev1alpha1Mocks.v13_1_0.metadata.name}/`
+        `/apis/release.giantswarm.io/v1alpha1/releases/${releasev1alpha1Mocks.v17_1_0.metadata.name}/`
       )
-      .reply(StatusCodes.Ok, releasev1alpha1Mocks.v13_1_0);
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.v17_1_0);
 
     nock(window.config.mapiEndpoint)
       .get(
@@ -416,21 +416,15 @@ describe('OrganizationDetailGeneral', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachinepools/${capzexpv1alpha3Mocks.randomCluster2AzureMachinePool1.metadata.name}/`
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomCluster3.metadata.namespace}/machinepools/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomCluster3.metadata.name}`
       )
-      .reply(
-        StatusCodes.Ok,
-        capzexpv1alpha3Mocks.randomCluster2AzureMachinePool1
-      );
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomCluster3MachinePoolList);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1beta1Mocks.randomCluster3.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster3.metadata.name}`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinepools/${capiv1beta1Mocks.randomCluster3MachinePool1.metadata.name}/`
       )
-      .reply(
-        StatusCodes.Ok,
-        capiexpv1alpha3Mocks.randomCluster3MachinePoolList
-      );
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomCluster3AzureMachinePool1);
 
     nock(window.config.mapiEndpoint)
       .get(
@@ -493,23 +487,23 @@ describe('OrganizationDetailGeneral', () => {
     // Releases summary.
     await waitFor(() =>
       expect(screen.getByLabelText('Oldest release')).toHaveTextContent(
-        '13.1.0'
+        '14.0.1'
       )
     );
     await waitFor(() =>
       expect(
         screen.getByLabelText('Oldest release Kubernetes version')
-      ).toHaveTextContent('1.17')
+      ).toHaveTextContent('1.18')
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Newest release')).toHaveTextContent(
-        '14.1.5'
+        '17.1.0'
       )
     );
     await waitFor(() =>
       expect(
         screen.getByLabelText('Newest release Kubernetes version')
-      ).toHaveTextContent('1.19')
+      ).toHaveTextContent('1.22')
     );
 
     await waitFor(() =>
@@ -576,7 +570,7 @@ describe('OrganizationDetailGeneral', () => {
     // Releases summary.
     await waitFor(() =>
       expect(screen.getByLabelText('Oldest release')).toHaveTextContent(
-        '13.1.0'
+        '14.0.1'
       )
     );
     await waitFor(() =>
@@ -586,7 +580,7 @@ describe('OrganizationDetailGeneral', () => {
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Newest release')).toHaveTextContent(
-        '14.1.5'
+        '17.1.0'
       )
     );
     await waitFor(() =>
