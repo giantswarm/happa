@@ -120,7 +120,7 @@ export async function fetchNodePoolListForCluster(
 
   switch (infrastructureRef.kind) {
     case capzv1beta1.AzureCluster:
-      if (isCAPZCluster(cluster)) {
+      if (supportsNonExpMachinePools(cluster)) {
         list = await capiv1beta1.getMachinePoolList(httpClientFactory(), auth, {
           labelSelector: {
             matchingLabels: {
@@ -185,7 +185,7 @@ export function fetchNodePoolListForClusterKey(
 
   switch (infrastructureRef.kind) {
     case capzv1beta1.AzureCluster:
-      if (isCAPZCluster(cluster)) {
+      if (supportsNonExpMachinePools(cluster)) {
         return capiv1beta1.getMachinePoolListKey({
           labelSelector: {
             matchingLabels: {
@@ -1096,6 +1096,15 @@ export function isCAPZCluster(cluster: Cluster): boolean {
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
   return isCAPZCluster(cluster);
+}
+
+export function supportsNonExpMachinePools(cluster: Cluster): boolean {
+  const releaseVersion = capiv1beta1.getReleaseVersion(cluster);
+  if (!releaseVersion) return false;
+
+  return (
+    compare(releaseVersion, Constants.AZURE_NON_EXP_MACHINE_POOLS_VERSION) >= 0
+  );
 }
 
 export function supportsClientCertificates(cluster: Cluster): boolean {
