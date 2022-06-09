@@ -150,6 +150,7 @@ export const randomCluster2: capiv1beta1.ICluster = {
   },
 };
 
+// uses Azure release v17.1.0
 export const randomCluster3: capiv1beta1.ICluster = {
   apiVersion: 'cluster.x-k8s.io/v1beta1',
   kind: capiv1beta1.Cluster,
@@ -161,12 +162,12 @@ export const randomCluster3: capiv1beta1.ICluster = {
     finalizers: ['operatorkit.giantswarm.io/azure-operator-cluster-controller'],
     generation: 4,
     labels: {
-      'azure-operator.giantswarm.io/version': '5.5.2',
-      'cluster-operator.giantswarm.io/version': '0.23.22',
+      'azure-operator.giantswarm.io/version': '5.20.0',
+      'cluster-operator.giantswarm.io/version': '3.12.0',
       'cluster.x-k8s.io/cluster-name': '0fa12',
       'giantswarm.io/cluster': '0fa12',
       'giantswarm.io/organization': 'org1',
-      'release.giantswarm.io/version': '13.1.0',
+      'release.giantswarm.io/version': '17.1.0',
     },
     name: '0fa12',
     namespace: 'org-org1',
