@@ -42,6 +42,7 @@ import CreateClusterControlPlaneNodesCount from './CreateClusterControlPlaneNode
 import CreateClusterDescription from './CreateClusterDescription';
 import CreateClusterName from './CreateClusterName';
 import CreateClusterRelease from './CreateClusterRelease';
+import CreateClusterServicePriority from './CreateClusterServicePriority';
 import {
   ClusterPatch,
   IClusterPropertyValue,
@@ -52,6 +53,7 @@ enum ClusterPropertyField {
   Name,
   Description,
   Release,
+  ServicePriority,
   ControlPlaneNodeAZs,
   ControlPlaneNodesCount,
 }
@@ -112,7 +114,12 @@ function makeInitialState(
 ): IClusterState {
   const name = generateUID(5);
 
-  const resourceConfig = { ...config, name, releaseVersion: '' };
+  const resourceConfig = {
+    ...config,
+    name,
+    releaseVersion: '',
+    servicePriority: 'highest',
+  };
   const providerCluster = createDefaultProviderCluster(
     provider,
     resourceConfig
@@ -128,6 +135,7 @@ function makeInitialState(
     validationResults: {
       [ClusterPropertyField.Name]: true,
       [ClusterPropertyField.Description]: true,
+      [ClusterPropertyField.ServicePriority]: true,
       [ClusterPropertyField.Release]: true,
       [ClusterPropertyField.ControlPlaneNodeAZs]: true,
       [ClusterPropertyField.ControlPlaneNodesCount]: true,
@@ -363,7 +371,13 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
               onChange={handleChange(ClusterPropertyField.Release)}
               orgNamespace={state.orgNamespace}
             />
-
+            <CreateClusterServicePriority
+              id={`cluster-${ClusterPropertyField.ServicePriority}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNodes={state.controlPlaneNodes}
+              onChange={handleChange(ClusterPropertyField.ServicePriority)}
+            />
             {provider === Providers.AZURE && (
               <CreateClusterControlPlaneNodeAZs
                 id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
@@ -375,7 +389,6 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
                 )}
               />
             )}
-
             {provider === Providers.AWS && (
               <CreateClusterControlPlaneNodesCount
                 id={`cluster-${ClusterPropertyField.ControlPlaneNodesCount}`}
@@ -387,7 +400,6 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
                 )}
               />
             )}
-
             <Box margin={{ top: 'medium' }}>
               <Box direction='row' gap='small'>
                 <Button

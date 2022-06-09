@@ -246,6 +246,7 @@ export function createDefaultProviderCluster(
     name: string;
     organization: string;
     releaseVersion: string;
+    servicePriority: string;
   }
 ) {
   switch (provider) {
@@ -263,6 +264,7 @@ function createDefaultAzureCluster(config: {
   name: string;
   organization: string;
   releaseVersion: string;
+  servicePriority: string;
 }): capzv1beta1.IAzureCluster {
   return {
     apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
@@ -275,6 +277,7 @@ function createDefaultAzureCluster(config: {
         [capiv1beta1.labelClusterName]: config.name,
         [capiv1beta1.labelOrganization]: config.organization,
         [capiv1beta1.labelReleaseVersion]: config.releaseVersion,
+        [capiv1beta1.labelServicePriority]: config.servicePriority,
       },
     },
     spec: {
@@ -305,6 +308,7 @@ function createDefaultAWSCluster(config: {
   name: string;
   organization: string;
   releaseVersion: string;
+  servicePriority: string;
 }): infrav1alpha3.IAWSCluster {
   return {
     apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
@@ -317,6 +321,7 @@ function createDefaultAWSCluster(config: {
         [capiv1beta1.labelClusterName]: config.name,
         [infrav1alpha3.labelOrganization]: config.organization,
         [infrav1alpha3.labelReleaseVersion]: config.releaseVersion,
+        [capiv1beta1.labelServicePriority]: config.servicePriority,
       },
     },
     spec: {
@@ -381,6 +386,8 @@ function createDefaultV1Alpha3Cluster(config: {
     config.providerCluster!.metadata.labels![capiv1beta1.labelOrganization];
   const releaseVersion =
     config.providerCluster!.metadata.labels![capiv1beta1.labelReleaseVersion];
+  const servicePriority =
+    config.providerCluster!.metadata.labels![capiv1beta1.labelServicePriority];
 
   return {
     apiVersion: 'cluster.x-k8s.io/v1beta1',
@@ -393,6 +400,7 @@ function createDefaultV1Alpha3Cluster(config: {
         [capiv1beta1.labelClusterName]: name,
         [capiv1beta1.labelOrganization]: organization,
         [capiv1beta1.labelReleaseVersion]: releaseVersion,
+        [capiv1beta1.labelServicePriority]: servicePriority,
       },
       annotations: {
         [capiv1beta1.annotationClusterDescription]:
@@ -1045,7 +1053,7 @@ export function getClusterLabelsWithDisplayInfo(
 
 function getClusterLabelKeyDisplayInfo(key: string) {
   switch (key) {
-    case 'giantswarm.io/service-priority':
+    case capiv1beta1.labelServicePriority:
       return { displayKey: 'Service priority' };
 
     default:
@@ -1055,19 +1063,19 @@ function getClusterLabelKeyDisplayInfo(key: string) {
 
 function getClusterLabelValueDisplayInfo(key: string, value: string) {
   switch (`${key}:${value}`) {
-    case 'giantswarm.io/service-priority:highest':
+    case `${capiv1beta1.labelServicePriority}:highest`:
       return {
         displayValue: 'Highest',
         textColor: theme.colors.darkBlueDarker2,
         backgroundColor: theme.colors.brown1,
       };
-    case 'giantswarm.io/service-priority:medium':
+    case `${capiv1beta1.labelServicePriority}:medium`:
       return {
         displayValue: 'Medium',
         textColor: theme.colors.darkBlueDarker2,
         backgroundColor: theme.colors.yellow2,
       };
-    case 'giantswarm.io/service-priority:lowest':
+    case `${capiv1beta1.labelServicePriority}:lowest`:
       return {
         displayValue: 'Lowest',
         textColor: theme.colors.white4,
@@ -1081,7 +1089,7 @@ function getClusterLabelValueDisplayInfo(key: string, value: string) {
 
 function isSpecialPurposeLabel(key: string) {
   switch (key) {
-    case 'giantswarm.io/service-priority':
+    case capiv1beta1.labelServicePriority:
       return true;
     default:
       return false;

@@ -1,3 +1,5 @@
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+
 import * as AppConstants from './apps';
 import * as AuthorizationTypes from './authorizationTypes';
 import { CSSBreakpoints } from './cssBreakpoints';
@@ -26,6 +28,7 @@ export const Constants = {
   DEFAULT_NODEPOOL_NAME: 'Unnamed node pool',
   DEFAULT_NODEPOOL_DESCRIPTION: 'Please add description',
   DEFAULT_CLUSTER_DESCRIPTION: 'Please add description',
+  DEFAULT_CLUSTER_SERVICE_PRIORITY: 'highest',
   AZURE_NODEPOOL_DEFAULT_VM_SIZE: 'Standard_D4s_v3',
   AZURE_CONTROL_PLANE_DEFAULT_VM_SIZE: 'Standard_D4s_v3',
   AWS_CONTROL_PLANE_DEFAULT_INSTANCE_TYPE: 'm5.xlarge',
@@ -79,7 +82,7 @@ export const Constants = {
     'cluster.x-k8s.io/cluster-name',
     'cluster.x-k8s.io/watch-filter',
   ],
-  ALLOWED_CLUSTER_LABEL_KEYS: ['giantswarm.io/service-priority'],
+  ALLOWED_CLUSTER_LABEL_KEYS: [capiv1beta1.labelServicePriority],
 
   // Cluster & node pool name length restrictions
   MIN_NAME_LENGTH: 3,
