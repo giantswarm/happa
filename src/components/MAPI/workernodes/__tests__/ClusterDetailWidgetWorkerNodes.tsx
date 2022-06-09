@@ -9,6 +9,7 @@ import { SWRConfig } from 'swr';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
+import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
@@ -167,6 +168,34 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
     expect(await screen.findByLabelText('10 nodes')).toBeInTheDocument();
     expect(await screen.findByLabelText('80 CPUs')).toBeInTheDocument();
     expect(await screen.findByLabelText('172 GB RAM')).toBeInTheDocument();
+  });
+
+  it('displays stats about node pools with non-experimental MachinePools and AzureMachinePools', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomCluster3.metadata.namespace}/machinepools/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomCluster3.metadata.name}`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomCluster3MachinePoolList);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinepools/${capzv1beta1Mocks.randomCluster3AzureMachinePool1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomCluster3AzureMachinePool1);
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomCluster3,
+      })
+    );
+
+    expect(await screen.findByLabelText('1 node pool')).toBeInTheDocument();
+    expect(await screen.findByLabelText('2 nodes')).toBeInTheDocument();
+    expect(await screen.findByLabelText('16 CPUs')).toBeInTheDocument();
+    expect(await screen.findByLabelText('34 GB RAM')).toBeInTheDocument();
   });
 
   it('only displays a part of the stats if provider-specific resources fail to load', async () => {
