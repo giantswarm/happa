@@ -457,10 +457,14 @@ export async function updateNodePoolScaling(
   nodePool: NodePool,
   min: number,
   max: number
-) {
-  switch (nodePool.kind) {
+): Promise<NodePool> {
+  const kind = nodePool.kind;
+  const apiVersion = nodePool.apiVersion;
+
+  switch (true) {
     // Azure
-    case capiexpv1alpha3.MachinePool: {
+    case kind === capiexpv1alpha3.MachinePool &&
+      apiVersion === capiexpv1alpha3.ApiVersion: {
       const client = httpClientFactory();
 
       let machinePool = await capiexpv1alpha3.getMachinePool(
@@ -532,8 +536,82 @@ export async function updateNodePoolScaling(
       return machinePool;
     }
 
+    // Azure (non-exp MachinePools)
+    case kind === capiv1beta1.MachinePool &&
+      apiVersion === capiv1beta1.ApiVersion: {
+      const client = httpClientFactory();
+
+      let machinePool = await capiv1beta1.getMachinePool(
+        client,
+        auth,
+        nodePool.metadata.namespace!,
+        nodePool.metadata.name
+      );
+
+      if (
+        nodePool.metadata.annotations?.[
+          capiv1beta1.annotationMachinePoolMinSize
+        ] === min.toString() &&
+        nodePool.metadata.annotations?.[
+          capiv1beta1.annotationMachinePoolMaxSize
+        ] === max.toString()
+      ) {
+        return machinePool;
+      }
+
+      machinePool.metadata.annotations ??= {};
+      machinePool.metadata.annotations[
+        capiv1beta1.annotationMachinePoolMinSize
+      ] = min.toString();
+      machinePool.metadata.annotations[
+        capiv1beta1.annotationMachinePoolMaxSize
+      ] = max.toString();
+
+      machinePool = await capiv1beta1.updateMachinePool(
+        client,
+        auth,
+        machinePool
+      );
+
+      mutate(
+        capiv1beta1.getMachinePoolKey(
+          machinePool.metadata.namespace!,
+          machinePool.metadata.name
+        ),
+        machinePool,
+        false
+      );
+
+      // Update the updated machine pool in place.
+      mutate(
+        capiv1beta1.getMachinePoolListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]:
+                machinePool.metadata.labels![capiv1beta1.labelClusterName],
+            },
+          },
+          namespace: nodePool.metadata.namespace,
+        }),
+        produce((draft?: capiv1beta1.IMachinePoolList) => {
+          if (!draft) return;
+
+          for (let i = 0; i < draft.items.length; i++) {
+            if (draft.items[i].metadata.name === machinePool.metadata.name) {
+              draft.items[i] = machinePool;
+            }
+          }
+
+          draft.items = draft.items.sort(compareNodePools);
+        }),
+        false
+      );
+
+      return machinePool;
+    }
+
     // AWS
-    case capiv1beta1.MachineDeployment: {
+    case kind === capiv1beta1.MachineDeployment: {
       let providerNodePool = await fetchProviderNodePoolForNodePool(
         httpClientFactory,
         auth,

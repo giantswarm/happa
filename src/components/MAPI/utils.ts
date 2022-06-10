@@ -637,7 +637,7 @@ export function getNodePoolDescription(
   switch (true) {
     // Azure
     case kind === capiexpv1alpha3.MachinePool &&
-      apiVersion === 'exp.cluster.x-k8s.io/v1alpha3':
+      apiVersion === capiexpv1alpha3.ApiVersion:
       return (
         nodePool.metadata.annotations?.[
           capiexpv1alpha3.annotationMachinePoolDescription
@@ -646,7 +646,7 @@ export function getNodePoolDescription(
 
     // CAPZ alpha
     case kind === capiv1beta1.MachinePool &&
-      apiVersion === 'cluster.x-k8s.io/v1beta1':
+      apiVersion === capiv1beta1.ApiVersion:
       return (
         nodePool.metadata.annotations?.[
           capiv1beta1.annotationMachinePoolDescription
@@ -784,10 +784,35 @@ export function getNodePoolScaling(
   const kind = nodePool.kind;
   const apiVersion = nodePool.apiVersion;
 
+  const nodePoolReleaseVersion =
+    nodePool.metadata.labels?.[capiv1beta1.labelReleaseVersion];
+
   switch (true) {
+    // CAPZ alpha
+    case nodePoolReleaseVersion &&
+      compare(nodePoolReleaseVersion, Constants.AZURE_CAPZ_VERSION) >= 0: {
+      const status: INodesStatus = {
+        min: -1,
+        max: -1,
+        desired: -1,
+        current: -1,
+      };
+
+      if (providerNodePool) {
+        [status.min, status.max] = capzv1beta1.getAzureMachinePoolScaling(
+          providerNodePool as capzv1beta1.IAzureMachinePool
+        );
+      }
+
+      status.desired = nodePool.status?.replicas ?? -1;
+      status.current = nodePool.status?.readyReplicas ?? -1;
+
+      return status;
+    }
+
     // Azure
     case kind === capiexpv1alpha3.MachinePool &&
-      apiVersion === 'exp.cluster.x-k8s.io/v1alpha3': {
+      apiVersion === capiexpv1alpha3.ApiVersion: {
       const status: INodesStatus = {
         min: -1,
         max: -1,
@@ -805,9 +830,9 @@ export function getNodePoolScaling(
       return status;
     }
 
-    // CAPZ alpha
+    // Azure (non-exp MachinePools)
     case kind === capiv1beta1.MachinePool &&
-      apiVersion === 'cluster.x-k8s.io/v1beta1': {
+      apiVersion === capiv1beta1.ApiVersion: {
       const status: INodesStatus = {
         min: -1,
         max: -1,
@@ -815,11 +840,9 @@ export function getNodePoolScaling(
         current: -1,
       };
 
-      if (providerNodePool) {
-        [status.min, status.max] = capzv1beta1.getAzureMachinePoolScaling(
-          providerNodePool as capzv1beta1.IAzureMachinePool
-        );
-      }
+      [status.min, status.max] = capiv1beta1.getMachinePoolScaling(
+        nodePool as capiv1beta1.IMachinePool
+      );
 
       status.desired = nodePool.status?.replicas ?? -1;
       status.current = nodePool.status?.readyReplicas ?? -1;
