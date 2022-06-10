@@ -13,6 +13,7 @@ import { Constants, Providers } from 'model/constants';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
@@ -186,7 +187,6 @@ export async function updateNodePoolDescription(
           if (!draft) return;
 
           for (let i = 0; i < draft.length; i++) {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             if (draft[i]!.nodePoolName === providerNodePool!.metadata.name) {
               draft[i] = { ...draft[i], providerNodePool };
             }
@@ -671,11 +671,7 @@ export async function updateNodePoolScaling(
           if (!draft) return;
 
           for (let i = 0; i < draft.length; i++) {
-            if (
-              draft[i]!.nodePoolName ===
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-              providerNodePool!.metadata.name
-            ) {
+            if (draft[i]!.nodePoolName === providerNodePool!.metadata.name) {
               draft[i] = { ...draft[i], providerNodePool };
             }
           }
@@ -742,17 +738,23 @@ export function createDefaultProviderNodePool(
     azureOperatorVersion: string;
   }
 ) {
-  switch (provider) {
-    case Providers.AZURE:
+  switch (true) {
+    case provider === Providers.AZURE &&
+      compare(
+        config.releaseVersion,
+        Constants.AZURE_NON_EXP_MACHINE_POOLS_VERSION
+      ) < 0:
+      return createDefaultExpAzureMachinePool(config);
+    case provider === Providers.AZURE:
       return createDefaultAzureMachinePool(config);
-    case Providers.AWS:
+    case provider === Providers.AWS:
       return createDefaultAWSMachineDeployment(config);
     default:
       throw new Error('Unsupported provider.');
   }
 }
 
-export function createDefaultAzureMachinePool(config: {
+export function createDefaultExpAzureMachinePool(config: {
   namespace: string;
   name: string;
   clusterName: string;
@@ -762,7 +764,7 @@ export function createDefaultAzureMachinePool(config: {
   azureOperatorVersion: string;
 }): capzexpv1alpha3.IAzureMachinePool {
   return {
-    apiVersion: 'exp.infrastructure.cluster.x-k8s.io/v1alpha3',
+    apiVersion: capzexpv1alpha3.ApiVersion,
     kind: capzexpv1alpha3.AzureMachinePool,
     metadata: {
       namespace: config.namespace,
@@ -775,6 +777,47 @@ export function createDefaultAzureMachinePool(config: {
         [capiv1beta1.labelReleaseVersion]: config.releaseVersion,
         [capiexpv1alpha3.labelAzureOperatorVersion]:
           config.azureOperatorVersion,
+      },
+    },
+    spec: {
+      location: config.location,
+      template: {
+        sshPublicKey: '',
+        vmSize: Constants.AZURE_NODEPOOL_DEFAULT_VM_SIZE,
+        osDisk: {
+          diskSizeGB: 0,
+          managedDisk: {
+            storageAccountType: '',
+          },
+          osType: '',
+        },
+      },
+    },
+  };
+}
+
+export function createDefaultAzureMachinePool(config: {
+  namespace: string;
+  name: string;
+  clusterName: string;
+  organization: string;
+  location: string;
+  releaseVersion: string;
+  azureOperatorVersion: string;
+}): capzv1beta1.IAzureMachinePool {
+  return {
+    apiVersion: capzv1beta1.ApiVersion,
+    kind: capzv1beta1.AzureMachinePool,
+    metadata: {
+      namespace: config.namespace,
+      name: config.name,
+      labels: {
+        [capiv1beta1.labelMachinePool]: config.name,
+        [capiv1beta1.labelCluster]: config.clusterName,
+        [capiv1beta1.labelClusterName]: config.clusterName,
+        [capiv1beta1.labelOrganization]: config.organization,
+        [capiv1beta1.labelReleaseVersion]: config.releaseVersion,
+        [capiv1beta1.labelAzureOperatorVersion]: config.azureOperatorVersion,
       },
     },
     spec: {
@@ -844,29 +887,37 @@ export function createDefaultNodePool(config: {
   providerNodePool: ProviderNodePool;
   bootstrapConfig: BootstrapConfig;
 }) {
-  switch (config.providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool:
+  const kind = config.providerNodePool?.kind;
+  const apiVersion = config.providerNodePool?.apiVersion;
+
+  switch (true) {
+    // Azure
+    case kind === capzexpv1alpha3.AzureMachinePool &&
+      apiVersion === capzexpv1alpha3.ApiVersion:
+      return createDefaultExpMachinePool(config);
+
+    // Azure (non-exp MachinePools)
+    case kind === capzv1beta1.AzureMachinePool &&
+      apiVersion === capzv1beta1.ApiVersion:
       return createDefaultMachinePool(config);
-    case infrav1alpha3.AWSMachineDeployment:
+
+    // AWS
+    case kind === infrav1alpha3.AWSMachineDeployment:
       return createDefaultMachineDeployment(config);
     default:
       throw new Error('Unsupported provider.');
   }
 }
 
-function createDefaultMachinePool(config: {
+function createDefaultExpMachinePool(config: {
   providerNodePool: ProviderNodePool;
   bootstrapConfig: BootstrapConfig;
 }): capiexpv1alpha3.IMachinePool {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const namespace = config.providerNodePool!.metadata.namespace;
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const name = config.providerNodePool!.metadata.name;
   const organization =
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     config.providerNodePool!.metadata.labels![capiv1beta1.labelOrganization];
   const clusterName =
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     config.providerNodePool!.metadata.labels![capiv1beta1.labelClusterName];
   const releaseVersion =
     config.providerNodePool!.metadata.labels![capiv1beta1.labelReleaseVersion];
@@ -876,7 +927,7 @@ function createDefaultMachinePool(config: {
     ];
 
   return {
-    apiVersion: 'exp.cluster.x-k8s.io/v1alpha3',
+    apiVersion: capiexpv1alpha3.ApiVersion,
     kind: capiexpv1alpha3.MachinePool,
     metadata: {
       name,
@@ -911,7 +962,67 @@ function createDefaultMachinePool(config: {
               : undefined,
           },
           infrastructureRef: corev1.getObjectReference(
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+            config.providerNodePool!
+          ),
+        },
+      },
+    },
+  };
+}
+
+function createDefaultMachinePool(config: {
+  providerNodePool: ProviderNodePool;
+  bootstrapConfig: BootstrapConfig;
+}): capiv1beta1.IMachinePool {
+  const namespace = config.providerNodePool!.metadata.namespace;
+  const name = config.providerNodePool!.metadata.name;
+  const organization =
+    config.providerNodePool!.metadata.labels![capiv1beta1.labelOrganization];
+  const clusterName =
+    config.providerNodePool!.metadata.labels![capiv1beta1.labelClusterName];
+  const releaseVersion =
+    config.providerNodePool!.metadata.labels![capiv1beta1.labelReleaseVersion];
+  const azureOperatorVersion =
+    config.providerNodePool!.metadata.labels![
+      capiv1beta1.labelAzureOperatorVersion
+    ];
+
+  return {
+    apiVersion: capiv1beta1.ApiVersion,
+    kind: capiv1beta1.MachinePool,
+    metadata: {
+      name,
+      namespace,
+      labels: {
+        [capiv1beta1.labelMachinePool]: name,
+        [capiv1beta1.labelCluster]: clusterName,
+        [capiv1beta1.labelClusterName]: clusterName,
+        [capiv1beta1.labelOrganization]: organization,
+        [capiv1beta1.labelReleaseVersion]: releaseVersion,
+        [capiv1beta1.labelAzureOperatorVersion]: azureOperatorVersion,
+      },
+      annotations: {
+        [capiv1beta1.annotationMachinePoolDescription]:
+          Constants.DEFAULT_NODEPOOL_DESCRIPTION,
+        [capiv1beta1.annotationMachinePoolMinSize]:
+          Constants.NP_DEFAULT_MIN_SCALING.toString(),
+        [capiv1beta1.annotationMachinePoolMaxSize]:
+          Constants.NP_DEFAULT_MAX_SCALING.toString(),
+      },
+    },
+    spec: {
+      clusterName,
+      replicas: Constants.NP_DEFAULT_MIN_SCALING,
+      template: {
+        metadata: {} as metav1.IObjectMeta,
+        spec: {
+          clusterName,
+          bootstrap: {
+            configRef: config.bootstrapConfig
+              ? corev1.getObjectReference(config.bootstrapConfig)
+              : undefined,
+          },
+          infrastructureRef: corev1.getObjectReference(
             config.providerNodePool!
           ),
         },
@@ -924,19 +1035,15 @@ function createDefaultMachineDeployment(config: {
   providerNodePool: ProviderNodePool;
   bootstrapConfig: BootstrapConfig;
 }): capiv1beta1.IMachineDeployment {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const namespace = config.providerNodePool!.metadata.namespace;
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const name = config.providerNodePool!.metadata.name;
   const organization =
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     config.providerNodePool!.metadata.labels![capiv1beta1.labelOrganization];
   const clusterName =
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     config.providerNodePool!.metadata.labels![capiv1beta1.labelCluster];
 
   return {
-    apiVersion: 'cluster.x-k8s.io/v1beta1',
+    apiVersion: capiv1beta1.ApiVersion,
     kind: capiv1beta1.MachineDeployment,
     metadata: {
       name,
@@ -956,7 +1063,6 @@ function createDefaultMachineDeployment(config: {
           clusterName,
           bootstrap: {},
           infrastructureRef: corev1.getObjectReference(
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             config.providerNodePool!
           ),
         },
@@ -972,6 +1078,7 @@ function createDefaultMachineDeployment(config: {
   };
 }
 
+// eslint-disable-next-line complexity
 export async function createNodePool(
   httpClient: IHttpClient,
   auth: IOAuth2Provider,
@@ -993,8 +1100,13 @@ export async function createNodePool(
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let bootstrapConfig: BootstrapConfig;
 
-  switch (config.providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool: {
+  const kind = config.providerNodePool?.kind;
+  const apiVersion = config.providerNodePool?.apiVersion;
+
+  switch (true) {
+    // Azure
+    case kind === capzexpv1alpha3.AzureMachinePool &&
+      apiVersion === capzexpv1alpha3.ApiVersion: {
       if (config.bootstrapConfig && !isRetrying) {
         bootstrapConfig = await gscorev1alpha1.createSpark(
           httpClient,
@@ -1031,8 +1143,8 @@ export async function createNodePool(
         providerNodePool = await capzexpv1alpha3.getAzureMachinePool(
           httpClient,
           auth,
-          config.providerNodePool.metadata.namespace!,
-          config.providerNodePool.metadata.name
+          config.providerNodePool!.metadata.namespace!,
+          config.providerNodePool!.metadata.name
         );
       }
 
@@ -1091,7 +1203,107 @@ export async function createNodePool(
       return { nodePool, providerNodePool, bootstrapConfig };
     }
 
-    case infrav1alpha3.AWSMachineDeployment: {
+    // Azure (non-exp MachinePools)
+    case kind === capzv1beta1.AzureMachinePool &&
+      apiVersion === capzv1beta1.ApiVersion: {
+      if (config.bootstrapConfig && !isRetrying) {
+        bootstrapConfig = await gscorev1alpha1.createSpark(
+          httpClient,
+          auth,
+          config.bootstrapConfig
+        );
+      }
+
+      try {
+        providerNodePool = await capzv1beta1.createAzureMachinePool(
+          httpClient,
+          auth,
+          config.providerNodePool as capzv1beta1.IAzureMachinePool
+        );
+
+        mutate(
+          capzv1beta1.getAzureMachinePoolKey(
+            providerNodePool.metadata.namespace!,
+            providerNodePool.metadata.name
+          ),
+          providerNodePool,
+          false
+        );
+      } catch (err) {
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        providerNodePool = await capzv1beta1.getAzureMachinePool(
+          httpClient,
+          auth,
+          config.providerNodePool!.metadata.namespace!,
+          config.providerNodePool!.metadata.name
+        );
+      }
+
+      try {
+        nodePool = await capiv1beta1.createMachinePool(
+          httpClient,
+          auth,
+          config.nodePool as capiv1beta1.IMachinePool
+        );
+
+        mutate(
+          capiv1beta1.getMachinePoolKey(
+            nodePool.metadata.namespace!,
+            nodePool.metadata.name
+          ),
+          nodePool,
+          false
+        );
+        // Add the created node pool to the existing list.
+        mutate(
+          capiv1beta1.getMachinePoolListKey({
+            labelSelector: {
+              matchingLabels: {
+                [capiv1beta1.labelClusterName]:
+                  nodePool.metadata.labels![capiv1beta1.labelClusterName],
+              },
+            },
+            namespace: nodePool.metadata.namespace,
+          }),
+          produce((draft?: capiv1beta1.IMachinePoolList) => {
+            if (!draft) return;
+
+            draft.items.push(nodePool as capiv1beta1.IMachinePool);
+            draft.items = draft.items.sort(compareNodePools);
+          }),
+          false
+        );
+      } catch (err) {
+        if (
+          !isRetrying ||
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.AlreadyExists
+          )
+        ) {
+          return Promise.reject(err);
+        }
+        nodePool = await capiv1beta1.getMachinePool(
+          httpClient,
+          auth,
+          config.nodePool.metadata.namespace!,
+          config.nodePool.metadata.name
+        );
+      }
+
+      return { nodePool, providerNodePool, bootstrapConfig };
+    }
+
+    // AWS
+    case kind === infrav1alpha3.AWSMachineDeployment: {
       try {
         providerNodePool = await infrav1alpha3.createAWSMachineDeployment(
           httpClient,
@@ -1119,8 +1331,8 @@ export async function createNodePool(
         providerNodePool = await infrav1alpha3.getAWSMachineDeployment(
           httpClient,
           auth,
-          config.providerNodePool.metadata.namespace!,
-          config.providerNodePool.metadata.name
+          config.providerNodePool!.metadata.namespace!,
+          config.providerNodePool!.metadata.name
         );
       }
 
