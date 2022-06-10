@@ -28,9 +28,13 @@ export async function updateNodePoolDescription(
   nodePool: NodePool,
   newDescription: string
 ) {
-  switch (nodePool.kind) {
+  const kind = nodePool.kind;
+  const apiVersion = nodePool.apiVersion;
+
+  switch (true) {
     // Azure
-    case capiexpv1alpha3.MachinePool: {
+    case kind === capiexpv1alpha3.MachinePool &&
+      apiVersion === capiexpv1alpha3.ApiVersion: {
       const client = httpClientFactory();
 
       let machinePool = await capiexpv1alpha3.getMachinePool(
@@ -79,8 +83,58 @@ export async function updateNodePoolDescription(
       return machinePool;
     }
 
+    // Azure (non-exp MachinePools)
+    case kind === capiv1beta1.MachinePool &&
+      apiVersion === capiv1beta1.ApiVersion: {
+      const client = httpClientFactory();
+
+      let machinePool = await capiv1beta1.getMachinePool(
+        client,
+        auth,
+        nodePool.metadata.namespace!,
+        nodePool.metadata.name
+      );
+      const description = capiv1beta1.getMachinePoolDescription(machinePool);
+      if (description === newDescription) {
+        return machinePool;
+      }
+
+      machinePool.metadata.annotations ??= {};
+      machinePool.metadata.annotations[
+        capiv1beta1.annotationMachinePoolDescription
+      ] = newDescription;
+
+      machinePool = await capiv1beta1.updateMachinePool(
+        client,
+        auth,
+        machinePool
+      );
+
+      mutate(
+        capiv1beta1.getMachinePoolKey(
+          machinePool.metadata.namespace!,
+          machinePool.metadata.name
+        ),
+        machinePool
+      );
+
+      mutate(
+        capiv1beta1.getMachinePoolListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]:
+                machinePool.metadata.labels![capiv1beta1.labelClusterName],
+            },
+          },
+          namespace: nodePool.metadata.namespace,
+        })
+      );
+
+      return machinePool;
+    }
+
     // AWS
-    case capiv1beta1.MachineDeployment: {
+    case kind === capiv1beta1.MachineDeployment: {
       let providerNodePool = await fetchProviderNodePoolForNodePool(
         httpClientFactory,
         auth,
