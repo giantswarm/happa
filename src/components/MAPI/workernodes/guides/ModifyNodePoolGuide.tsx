@@ -15,11 +15,18 @@ interface IModifyNodePoolGuideProps
   clusterNamespace: string;
   provider: PropertiesOf<typeof Providers>;
   canUpdateNodePools?: boolean;
+  usesNonExpMachinePools: boolean;
 }
 
 const ModifyNodePoolGuide: React.FC<
   React.PropsWithChildren<IModifyNodePoolGuideProps>
-> = ({ clusterNamespace, provider, canUpdateNodePools, ...props }) => {
+> = ({
+  clusterNamespace,
+  provider,
+  canUpdateNodePools,
+  usesNonExpMachinePools,
+  ...props
+}) => {
   const context = getCurrentInstallationContextName();
 
   return (
@@ -63,7 +70,9 @@ const ModifyNodePoolGuide: React.FC<
             --patch '{"spec": {"nodePool": {"description": "General purpose nodes"}}}'`
               : `
           kubectl --context ${context} \\
-            patch machinepools.exp.cluster.x-k8s.io my-np \\
+            patch machinepools.${
+              usesNonExpMachinePools ? '' : 'exp.'
+            }cluster.x-k8s.io my-np \\
             --namespace ${clusterNamespace} \\
             --type merge \\
             --patch '{"metadata": {"annotations": {"machine-pool.giantswarm.io/name": "General purpose nodes"}}}'
@@ -88,7 +97,9 @@ const ModifyNodePoolGuide: React.FC<
           `
               : `
           kubectl --context ${context} \\
-            patch machinepools.exp.cluster.x-k8s.io my-np \\
+            patch machinepools.${
+              usesNonExpMachinePools ? '' : 'exp.'
+            }cluster.x-k8s.io my-np \\
             --namespace ${clusterNamespace} \\
             --type merge \\
             --patch '{"metadata": {"annotations": {"cluster.k8s.io/cluster-api-autoscaler-node-group-min-size": "3", "cluster.k8s.io/cluster-api-autoscaler-node-group-max-size": "10"}}}'
