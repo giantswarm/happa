@@ -246,7 +246,6 @@ export function createDefaultProviderCluster(
     name: string;
     organization: string;
     releaseVersion: string;
-    servicePriority: string;
   }
 ) {
   switch (provider) {
@@ -264,7 +263,6 @@ function createDefaultAzureCluster(config: {
   name: string;
   organization: string;
   releaseVersion: string;
-  servicePriority: string;
 }): capzv1beta1.IAzureCluster {
   return {
     apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
@@ -277,7 +275,6 @@ function createDefaultAzureCluster(config: {
         [capiv1beta1.labelClusterName]: config.name,
         [capiv1beta1.labelOrganization]: config.organization,
         [capiv1beta1.labelReleaseVersion]: config.releaseVersion,
-        [capiv1beta1.labelServicePriority]: config.servicePriority,
       },
     },
     spec: {
@@ -308,7 +305,6 @@ function createDefaultAWSCluster(config: {
   name: string;
   organization: string;
   releaseVersion: string;
-  servicePriority: string;
 }): infrav1alpha3.IAWSCluster {
   return {
     apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
@@ -321,7 +317,6 @@ function createDefaultAWSCluster(config: {
         [capiv1beta1.labelClusterName]: config.name,
         [infrav1alpha3.labelOrganization]: config.organization,
         [infrav1alpha3.labelReleaseVersion]: config.releaseVersion,
-        [capiv1beta1.labelServicePriority]: config.servicePriority,
       },
     },
     spec: {
@@ -386,8 +381,6 @@ function createDefaultV1Alpha3Cluster(config: {
     config.providerCluster!.metadata.labels![capiv1beta1.labelOrganization];
   const releaseVersion =
     config.providerCluster!.metadata.labels![capiv1beta1.labelReleaseVersion];
-  const servicePriority =
-    config.providerCluster!.metadata.labels![capiv1beta1.labelServicePriority];
 
   return {
     apiVersion: 'cluster.x-k8s.io/v1beta1',
@@ -400,7 +393,8 @@ function createDefaultV1Alpha3Cluster(config: {
         [capiv1beta1.labelClusterName]: name,
         [capiv1beta1.labelOrganization]: organization,
         [capiv1beta1.labelReleaseVersion]: releaseVersion,
-        [capiv1beta1.labelServicePriority]: servicePriority,
+        [capiv1beta1.labelServicePriority]:
+          Constants.DEFAULT_CLUSTER_SERVICE_PRIORITY,
       },
       annotations: {
         [capiv1beta1.annotationClusterDescription]:

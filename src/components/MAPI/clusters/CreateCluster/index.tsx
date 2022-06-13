@@ -118,7 +118,6 @@ function makeInitialState(
     ...config,
     name,
     releaseVersion: '',
-    servicePriority: 'highest',
   };
   const providerCluster = createDefaultProviderCluster(
     provider,
