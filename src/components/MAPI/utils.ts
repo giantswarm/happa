@@ -909,12 +909,6 @@ export function getClusterDescription(
   }
 }
 
-export function getClusterServicePriority(cluster: Cluster): string {
-  const labels = capiv1beta1.getClusterLabels(cluster);
-
-  return labels[capiv1beta1.labelServicePriority];
-}
-
 export function getProviderClusterLocation(
   providerCluster: ProviderCluster
 ): string | undefined {

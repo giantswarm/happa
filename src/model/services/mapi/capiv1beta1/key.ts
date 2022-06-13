@@ -62,6 +62,12 @@ export function getClusterLabels(cluster: ICluster): IClusterLabelMap {
   return cluster.metadata.labels;
 }
 
+export function getClusterServicePriority(cluster: ICluster): string {
+  const labels = getClusterLabels(cluster);
+
+  return labels[labelServicePriority];
+}
+
 export function getMachinePoolDescription(machinePool: IMachinePool): string {
   let name =
     machinePool.metadata.annotations?.[annotationMachinePoolDescription];

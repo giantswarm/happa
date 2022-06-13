@@ -1,5 +1,5 @@
 import { Box } from 'grommet';
-import { getClusterServicePriority } from 'MAPI/utils';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 import Select from 'UI/Inputs/Select';
@@ -32,7 +32,7 @@ const CreateClusterServicePriority: React.FC<
     });
   };
 
-  const value = getClusterServicePriority(cluster);
+  const value = capiv1beta1.getClusterServicePriority(cluster);
 
   return (
     <InputGroup
