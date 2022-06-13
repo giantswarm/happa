@@ -154,9 +154,13 @@ export async function deleteNodePool(
   auth: IOAuth2Provider,
   nodePool: NodePool
 ) {
-  switch (nodePool.kind) {
+  const apiVersion = nodePool.apiVersion;
+  const kind = nodePool.kind;
+
+  switch (true) {
     // Azure
-    case capiexpv1alpha3.MachinePool: {
+    case kind === capiexpv1alpha3.MachinePool &&
+      apiVersion === capiexpv1alpha3.ApiVersion: {
       const client = httpClientFactory();
 
       const machinePool = await capiexpv1alpha3.getMachinePool(
@@ -207,8 +211,61 @@ export async function deleteNodePool(
       return machinePool;
     }
 
+    // Azure (non-exp MachinePools)
+    case kind === capiv1beta1.MachinePool &&
+      apiVersion === capiv1beta1.ApiVersion: {
+      const client = httpClientFactory();
+
+      const machinePool = await capiv1beta1.getMachinePool(
+        client,
+        auth,
+        nodePool.metadata.namespace!,
+        nodePool.metadata.name
+      );
+
+      await capiv1beta1.deleteMachinePool(client, auth, machinePool);
+
+      machinePool.metadata.deletionTimestamp = new Date().toISOString();
+
+      mutate(
+        capiv1beta1.getMachinePoolKey(
+          machinePool.metadata.namespace!,
+          machinePool.metadata.name
+        ),
+        machinePool,
+        false
+      );
+
+      // Update the deleted machine pool in place.
+      mutate(
+        capiv1beta1.getMachinePoolListKey({
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]:
+                machinePool.metadata.labels![capiv1beta1.labelClusterName],
+            },
+          },
+          namespace: nodePool.metadata.namespace,
+        }),
+        produce((draft?: capiv1beta1.IMachinePoolList) => {
+          if (!draft) return;
+
+          for (let i = 0; i < draft.items.length; i++) {
+            if (draft.items[i].metadata.name === machinePool.metadata.name) {
+              draft.items[i] = machinePool;
+            }
+          }
+
+          draft.items = draft.items.sort(compareNodePools);
+        }),
+        false
+      );
+
+      return machinePool;
+    }
+
     // AWS
-    case capiv1beta1.MachineDeployment: {
+    case kind === capiv1beta1.MachineDeployment: {
       const client = httpClientFactory();
 
       const machineDeployment = await capiv1beta1.getMachineDeployment(
