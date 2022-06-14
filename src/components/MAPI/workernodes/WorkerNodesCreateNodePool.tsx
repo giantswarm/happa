@@ -24,7 +24,6 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
-import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { supportsNodePoolSpotInstances } from 'model/stores/nodepool/utils';
@@ -172,7 +171,7 @@ const reducer: React.Reducer<INodePoolState, NodePoolAction> = produce(
             draft.nodePool.metadata.labels![capiv1beta1.labelReleaseVersion],
           azureOperatorVersion:
             draft.nodePool.metadata.labels![
-              capiexpv1alpha3.labelAzureOperatorVersion
+              capiv1beta1.labelAzureOperatorVersion
             ],
         });
         draft.nodePool = newState.nodePool;
