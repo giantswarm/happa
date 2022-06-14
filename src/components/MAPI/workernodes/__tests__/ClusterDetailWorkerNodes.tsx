@@ -5,10 +5,12 @@ import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
+import Router from 'react-router';
 import { SWRConfig } from 'swr';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as mockCapiv1beta1 from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
+import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
 import * as securityv1alpha1Mocks from 'test/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
@@ -50,10 +52,7 @@ const defaultPermissions = {
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useParams: jest.fn().mockReturnValue({
-    orgId: 'org1',
-    clusterId: mockCapiv1beta1.randomCluster1.metadata.name,
-  }),
+  useParams: jest.fn(),
 }));
 
 jest.unmock('model/services/mapi/securityv1alpha1/getOrganization');
@@ -68,10 +67,110 @@ describe('ClusterDetailWorkerNodes', () => {
   (usePermissionsForClusters as jest.Mock).mockReturnValue(defaultPermissions);
 
   it('renders without crashing', () => {
+    const useParamsMockFn = jest.spyOn(Router, 'useParams');
+    useParamsMockFn.mockReturnValue({
+      orgId: 'org1',
+      clusterId: mockCapiv1beta1.randomCluster1.metadata.name,
+    });
+
     render(getComponent({}));
+
+    useParamsMockFn.mockRestore();
+  });
+
+  it('displays a list of node pools', async () => {
+    const useParamsMockFn = jest.spyOn(Router, 'useParams');
+    useParamsMockFn.mockReturnValue({
+      orgId: 'org1',
+      clusterId: mockCapiv1beta1.randomCluster1.metadata.name,
+    });
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1beta1.randomCluster1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, mockCapiv1beta1.randomCluster1);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${mockCapiv1beta1.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${mockCapiv1beta1.randomCluster1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiexpv1alpha3Mocks.randomCluster1MachinePoolList
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachinepools/${capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzexpv1alpha3Mocks.randomCluster1AzureMachinePoolList
+      );
+    render(getComponent({}));
+
+    expect(
+      await screen.findByLabelText(
+        `Name: ${capzexpv1alpha3Mocks.randomCluster1AzureMachinePoolList.items[0].metadata.name}`
+      )
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText(
+        `Name: ${capzexpv1alpha3Mocks.randomCluster1AzureMachinePoolList.items[1].metadata.name}`
+      )
+    ).toBeInTheDocument();
+
+    useParamsMockFn.mockRestore();
+  });
+
+  it('displays a list of node pools for Azure clusters using release v17.1.0 or newer', async () => {
+    const useParamsMockFn = jest.spyOn(Router, 'useParams');
+    useParamsMockFn.mockReturnValue({
+      orgId: 'org1',
+      clusterId: mockCapiv1beta1.randomCluster3.metadata.name,
+    });
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1beta1.randomCluster3.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, mockCapiv1beta1.randomCluster3);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${mockCapiv1beta1.randomCluster3.metadata.namespace}/machinepools/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${mockCapiv1beta1.randomCluster3.metadata.name}`
+      )
+      .reply(StatusCodes.Ok, mockCapiv1beta1.randomCluster3MachinePoolList);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinepools/${capzv1beta1Mocks.randomCluster3AzureMachinePool1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzv1beta1Mocks.randomCluster3AzureMachinePoolList
+      );
+    render(getComponent({}));
+
+    expect(
+      await screen.findByLabelText(
+        `Name: ${capzv1beta1Mocks.randomCluster3AzureMachinePoolList.items[0].metadata.name}`
+      )
+    ).toBeInTheDocument();
+
+    useParamsMockFn.mockRestore();
   });
 
   it('displays an error message if the list of node pools could not be fetched', async () => {
+    const useParamsMockFn = jest.spyOn(Router, 'useParams');
+    useParamsMockFn.mockReturnValue({
+      orgId: 'org1',
+      clusterId: mockCapiv1beta1.randomCluster1.metadata.name,
+    });
+
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
@@ -100,9 +199,17 @@ describe('ClusterDetailWorkerNodes', () => {
     expect(
       await screen.findByText('There was a problem loading node pools.')
     ).toBeInTheDocument();
+
+    useParamsMockFn.mockRestore();
   });
 
   it('displays a placeholder if there are no node pools', async () => {
+    const useParamsMockFn = jest.spyOn(Router, 'useParams');
+    useParamsMockFn.mockReturnValue({
+      orgId: 'org1',
+      clusterId: mockCapiv1beta1.randomCluster1.metadata.name,
+    });
+
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
       .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
@@ -131,9 +238,17 @@ describe('ClusterDetailWorkerNodes', () => {
         'Add at least one node pool to the cluster so you could run workloads'
       )
     ).toBeInTheDocument();
+
+    useParamsMockFn.mockRestore();
   });
 
   it('does not allow a read-only user to add node pools', async () => {
+    const useParamsMockFn = jest.spyOn(Router, 'useParams');
+    useParamsMockFn.mockReturnValue({
+      orgId: 'org1',
+      clusterId: mockCapiv1beta1.randomCluster1.metadata.name,
+    });
+
     (usePermissionsForNodePools as jest.Mock).mockReturnValue({
       ...defaultPermissions,
       canUpdate: false,
@@ -173,68 +288,78 @@ describe('ClusterDetailWorkerNodes', () => {
     expect(
       await screen.findByRole('button', { name: 'Add node pool' })
     ).toBeDisabled();
+
+    useParamsMockFn.mockRestore();
   });
-});
 
-it('displays a warning message for a node pool using cgroups version 1', async () => {
-  nock(window.config.mapiEndpoint)
-    .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
-    .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
-  nock(window.config.mapiEndpoint)
-    .get(
-      `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1beta1.randomCluster1.metadata.name}/`
-    )
-    .reply(StatusCodes.Ok, {
-      ...mockCapiv1beta1.randomCluster1,
-      metadata: mockCapiv1beta1.randomCluster1.metadata,
-    });
-  nock(window.config.mapiEndpoint)
-    .get(
-      `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${mockCapiv1beta1.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${mockCapiv1beta1.randomCluster1.metadata.name}`
-    )
-    .reply(StatusCodes.Ok, capiexpv1alpha3Mocks.randomCluster1MachinePoolList);
-  nock(window.config.mapiEndpoint)
-    .get(
-      `/apis/exp.infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachinepools/${capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1.metadata.name}/`
-    )
-    .reply(
-      StatusCodes.Ok,
-      capzexpv1alpha3Mocks.randomCluster1AzureMachinePoolList
-    );
-  nock(window.config.mapiEndpoint)
-    .get(
-      `/apis/release.giantswarm.io/v1alpha1/releases/v${
-        mockCapiv1beta1.randomCluster1.metadata.labels![
-          capiv1beta1.labelReleaseVersion
-        ]
-      }/`
-    )
-    .reply(StatusCodes.Ok, {
-      ...releasev1alpha1Mocks.v14_0_1,
-      name: `v${
-        mockCapiv1beta1.randomCluster1.metadata.labels![
-          capiv1beta1.labelReleaseVersion
-        ]
-      }`,
+  it('displays a warning message for a node pool using cgroups version 1', async () => {
+    const useParamsMockFn = jest.spyOn(Router, 'useParams');
+    useParamsMockFn.mockReturnValue({
+      orgId: 'org1',
+      clusterId: mockCapiv1beta1.randomCluster1.metadata.name,
     });
 
-  render(getComponent({}));
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1beta1.randomCluster1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, mockCapiv1beta1.randomCluster1);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${mockCapiv1beta1.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${mockCapiv1beta1.randomCluster1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiexpv1alpha3Mocks.randomCluster1MachinePoolList
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/exp.infrastructure.cluster.x-k8s.io/v1alpha3/namespaces/org-org1/azuremachinepools/${capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzexpv1alpha3Mocks.randomCluster1AzureMachinePoolList
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/release.giantswarm.io/v1alpha1/releases/v${
+          mockCapiv1beta1.randomCluster1.metadata.labels![
+            capiv1beta1.labelReleaseVersion
+          ]
+        }/`
+      )
+      .reply(StatusCodes.Ok, {
+        ...releasev1alpha1Mocks.v14_0_1,
+        name: `v${
+          mockCapiv1beta1.randomCluster1.metadata.labels![
+            capiv1beta1.labelReleaseVersion
+          ]
+        }`,
+      });
 
-  expect(
-    await screen.findByLabelText(
-      `Name: ${capzexpv1alpha3Mocks.randomCluster1AzureMachinePoolList.items[0].metadata.name}`
-    )
-  ).toBeInTheDocument();
+    render(getComponent({}));
 
-  const firstNodePoolCGroupsLabel = (
-    await screen.findAllByLabelText('Control groups version: v1')
-  )[0];
+    expect(
+      await screen.findByLabelText(
+        `Name: ${capzexpv1alpha3Mocks.randomCluster1AzureMachinePoolList.items[0].metadata.name}`
+      )
+    ).toBeInTheDocument();
 
-  expect(firstNodePoolCGroupsLabel).toBeInTheDocument();
+    const firstNodePoolCGroupsLabel = (
+      await screen.findAllByLabelText('Control groups version: v1')
+    )[0];
 
-  expect(
-    within(firstNodePoolCGroupsLabel).getByLabelText(
-      'Warning: This node pool uses the deprecated control groups version 1.'
-    )
-  ).toBeInTheDocument();
+    expect(firstNodePoolCGroupsLabel).toBeInTheDocument();
+
+    expect(
+      within(firstNodePoolCGroupsLabel).getByLabelText(
+        'Warning: This node pool uses the deprecated control groups version 1.'
+      )
+    ).toBeInTheDocument();
+
+    useParamsMockFn.mockRestore();
+  });
 });

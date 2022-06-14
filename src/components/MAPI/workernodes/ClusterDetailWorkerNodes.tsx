@@ -15,6 +15,7 @@ import {
   fetchProviderNodePoolsForNodePoolsKey,
   IProviderNodePoolForNodePoolName,
   isNodePoolMngmtReadOnly,
+  supportsNonExpMachinePools,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
@@ -442,6 +443,12 @@ const ClusterDetailWorkerNodes: React.FC<
 
     const isReadOnly = cluster && isNodePoolMngmtReadOnly(cluster);
 
+    const usesNonExpMachinePools = useMemo(() => {
+      if (!cluster) return false;
+
+      return supportsNonExpMachinePools(cluster);
+    }, [cluster]);
+
     return (
       <DocumentTitle title={`Worker Nodes | ${clusterId}`}>
         <Breadcrumb
@@ -652,6 +659,7 @@ const ClusterDetailWorkerNodes: React.FC<
                     clusterNamespace={cluster.metadata.namespace!}
                     provider={provider}
                     canUpdateNodePools={canUpdateNodePools}
+                    usesNonExpMachinePools={usesNonExpMachinePools}
                   />
                 )}
                 {!isReadOnly && (
@@ -659,6 +667,7 @@ const ClusterDetailWorkerNodes: React.FC<
                     clusterNamespace={cluster.metadata.namespace!}
                     provider={provider}
                     canDeleteNodePools={canDeleteNodePools}
+                    usesNonExpMachinePools={usesNonExpMachinePools}
                   />
                 )}
               </Box>

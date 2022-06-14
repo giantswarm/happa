@@ -15,11 +15,18 @@ interface IDeleteNodePoolGuideProps
   clusterNamespace: string;
   provider: PropertiesOf<typeof Providers>;
   canDeleteNodePools?: boolean;
+  usesNonExpMachinePools: boolean;
 }
 
 const DeleteNodePoolGuide: React.FC<
   React.PropsWithChildren<IDeleteNodePoolGuideProps>
-> = ({ clusterNamespace, provider, canDeleteNodePools, ...props }) => {
+> = ({
+  clusterNamespace,
+  provider,
+  canDeleteNodePools,
+  usesNonExpMachinePools,
+  ...props
+}) => {
   const context = getCurrentInstallationContextName();
 
   return (
@@ -53,7 +60,9 @@ const DeleteNodePoolGuide: React.FC<
             delete ${
               provider === Providers.AWS
                 ? 'machinedeployments.cluster.x-k8s.io,awsmachinedeployments.infrastructure.giantswarm.io'
-                : 'machinepools.exp.cluster.x-k8s.io'
+                : `machinepools.${
+                    usesNonExpMachinePools ? '' : 'exp.'
+                  }cluster.x-k8s.io`
             } my-np \\
             --namespace ${clusterNamespace}
           `}

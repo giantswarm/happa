@@ -6,6 +6,8 @@ import {
 import * as corev1 from '../../corev1';
 import * as metav1 from '../../metav1';
 
+export const ApiVersion = 'exp.cluster.x-k8s.io/v1alpha3';
+
 export interface IMachinePoolSpec {
   clusterName: string;
   template: IMachineDeploymentTemplate;
@@ -34,7 +36,7 @@ export interface IMachinePoolStatus {
 export const MachinePool = 'MachinePool';
 
 export interface IMachinePool {
-  apiVersion: 'exp.cluster.x-k8s.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof MachinePool;
   metadata: metav1.IObjectMeta;
   spec?: IMachinePoolSpec;
@@ -44,6 +46,6 @@ export interface IMachinePool {
 export const MachinePoolList = 'MachinePoolList';
 
 export interface IMachinePoolList extends metav1.IList<IMachinePool> {
-  apiVersion: 'exp.cluster.x-k8s.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof MachinePoolList;
 }
