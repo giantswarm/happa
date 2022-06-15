@@ -204,7 +204,7 @@
     "json-loader": "0.5.7",
     "lint-staged": "13.0.1",
     "mini-css-extract-plugin": "2.6.0",
-    "nock": "13.2.6",
+    "nock": "13.2.7",
     "node-sass": "7.0.1",
     "patch-package": "6.4.7",
     "postinstall-postinstall": "2.1.0",
