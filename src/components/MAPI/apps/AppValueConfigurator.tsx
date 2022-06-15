@@ -139,9 +139,9 @@ const AppValueConfigurator: React.FC<
   const handleFileUpload = async (values: string, cb: () => void) => {
     if (hasConfig) {
       await onReplaceConfig?.(values);
+    } else {
+      await onUploadConfig?.(values);
     }
-
-    await onUploadConfig?.(values);
 
     cb();
   };
