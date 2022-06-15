@@ -9,7 +9,9 @@ import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
+import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
+import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
@@ -271,6 +273,51 @@ describe('WorkerNodesNodePoolItem', () => {
     jest.clearAllTimers();
   });
 
+  it('can delete a node pool with non-experimental MachinePools and AzureMachinePools', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinepools/${capiv1beta1Mocks.randomCluster3MachinePool1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomCluster3MachinePool1);
+
+    nock(window.config.mapiEndpoint)
+      .delete(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinepools/${capiv1beta1Mocks.randomCluster3MachinePool1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'v1',
+        kind: 'Status',
+        message: 'Resource deleted.',
+        status: metav1.K8sStatuses.Success,
+        reason: '',
+        code: StatusCodes.Ok,
+      });
+
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomCluster3MachinePool1,
+        providerNodePool: capzv1beta1Mocks.randomCluster3AzureMachinePool1,
+        canDeleteNodePools: true,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+    fireEvent.click(await screen.findByText('Delete'));
+
+    expect(
+      await screen.findByText('Do you really want to delete node pool a8s10?')
+    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Delete a8s10' }));
+
+    expect(
+      await withMarkup(screen.findByText)(
+        'Node pool a8s10 deleted successfully'
+      )
+    ).toBeInTheDocument();
+
+    jest.clearAllTimers();
+  });
+
   it('does not allow deleting the node pool for a read-only user', async () => {
     render(
       getComponent({
@@ -429,6 +476,56 @@ describe('WorkerNodesNodePoolItem', () => {
     ).toBeInTheDocument();
 
     jest.clearAllTimers();
+  });
+
+  it('can change the scaling for a node pool with non-experimental MachinePools and AzureMachinePools', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinepools/${capiv1beta1Mocks.randomCluster3MachinePool1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomCluster3MachinePool1);
+
+    nock(window.config.mapiEndpoint)
+      .put(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinepools/${capiv1beta1Mocks.randomCluster3MachinePool1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomCluster3MachinePool1);
+
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomCluster3MachinePool1,
+        providerNodePool: capzv1beta1Mocks.randomCluster3AzureMachinePool1,
+        canUpdateNodePools: true,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Autoscaler minimum node count: 3')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler maximum node count: 10')
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+    fireEvent.click(await screen.findByText('Edit scaling limits'));
+
+    fireEvent.change(screen.getByLabelText('Maximum'), {
+      target: { value: '11' },
+    });
+
+    const submitButton = screen.getByRole('button', {
+      name: 'Apply',
+    });
+    expect(submitButton).toBeInTheDocument();
+    expect(submitButton).not.toBeDisabled();
+
+    fireEvent.click(submitButton);
+
+    expect(
+      await withMarkup(screen.findByText)(
+        'Node pool a8s10 updated successfully'
+      )
+    ).toBeInTheDocument();
   });
 
   it('does not allow editing the node pool scaling limits for a read-only user', async () => {

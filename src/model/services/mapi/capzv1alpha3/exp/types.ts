@@ -10,6 +10,8 @@ import {
 } from '../../capzv1beta1';
 import * as metav1 from '../../metav1';
 
+export const ApiVersion = 'exp.infrastructure.cluster.x-k8s.io/v1alpha3';
+
 export interface IAzureMachinePoolTemplate {
   vmSize: string;
   osDisk: IOSDisk;
@@ -64,7 +66,7 @@ export interface IAzureMachinePoolStatus {
 export const AzureMachinePool = 'AzureMachinePool';
 
 export interface IAzureMachinePool {
-  apiVersion: 'exp.infrastructure.cluster.x-k8s.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof AzureMachinePool;
   metadata: metav1.IObjectMeta;
   spec?: IAzureMachinePoolSpec;
@@ -74,6 +76,6 @@ export interface IAzureMachinePool {
 export const AzureMachinePoolList = 'AzureMachinePoolList';
 
 export interface IAzureMachinePoolList extends metav1.IList<IAzureMachinePool> {
-  apiVersion: 'exp.infrastructure.cluster.x-k8s.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof AzureMachinePoolList;
 }

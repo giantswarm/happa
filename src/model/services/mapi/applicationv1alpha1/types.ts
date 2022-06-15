@@ -101,6 +101,11 @@ export interface ICatalogSpecStorage {
   URL: string;
 }
 
+export interface ICatalogSpecRepository {
+  type: string;
+  URL: string;
+}
+
 export interface ICatalogSpecConfigSecret {
   name: string;
   namespace: string;
@@ -120,6 +125,7 @@ export interface ICatalogSpec {
   title: string;
   description: string;
   storage: ICatalogSpecStorage;
+  repositories: ICatalogSpecRepository[];
   logoURL?: string;
   config?: ICatalogSpecConfig;
 }

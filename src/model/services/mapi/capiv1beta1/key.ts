@@ -20,6 +20,10 @@ export const annotationUpdateScheduleTargetTime =
   'alpha.giantswarm.io/update-schedule-target-time';
 export const annotationMachinePoolDescription =
   'machine-pool.giantswarm.io/name';
+export const annotationMachinePoolMinSize =
+  'cluster.k8s.io/cluster-api-autoscaler-node-group-min-size';
+export const annotationMachinePoolMaxSize =
+  'cluster.k8s.io/cluster-api-autoscaler-node-group-max-size';
 export const annotationCGroupV1 = 'node.giantswarm.io/cgroupv1';
 
 export const conditionTypeReady = 'Ready';
@@ -74,6 +78,23 @@ export function getMachinePoolDescription(machinePool: IMachinePool): string {
   name ||= Constants.DEFAULT_NODEPOOL_DESCRIPTION;
 
   return name;
+}
+
+export function getMachinePoolScaling(
+  machinePool: IMachinePool
+): readonly [number, number] {
+  const annotations = machinePool.metadata.annotations;
+  if (!annotations) return [-1, -1];
+
+  const minScaling = annotations[annotationMachinePoolMinSize];
+  const maxScaling = annotations[annotationMachinePoolMaxSize];
+  if (!minScaling || !maxScaling) return [-1, -1];
+
+  try {
+    return [parseInt(minScaling, 10), parseInt(maxScaling, 10)];
+  } catch {
+    return [-1, -1];
+  }
 }
 
 interface IConditionGetter {
