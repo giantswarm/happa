@@ -1,4 +1,5 @@
 import { Box, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { NodePool, ProviderNodePool } from 'MAPI/types';
 import {
   getProviderNodePoolMachineTypes,
@@ -15,8 +16,8 @@ import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 const MixedInstanceType = styled(Code)`
-  background: ${({ theme }) => theme.global.colors['accent-strong'].dark};
-  color: ${({ theme }) => theme.global.colors.text.dark};
+  background: ${({ theme }) => normalizeColor('accent-strong', theme)};
+  color: ${({ theme }) => normalizeColor('text', theme)};
 `;
 
 function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {

@@ -5,6 +5,7 @@ import {
   ThemeContext,
   ThemeType,
 } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import * as React from 'react';
 import { css, useTheme } from 'styled-components';
 
@@ -19,7 +20,7 @@ const customTheme: ThemeType = {
       zIndex: '9999',
       // @ts-expect-error
       extend: css`
-        border: 1px solid ${({ theme }) => theme.global.colors.border.dark};
+        border: 1px solid ${({ theme }) => normalizeColor('border', theme)};
         font-size: ${({ theme }) => theme.text.small.size};
         font-weight: 400;
       `,

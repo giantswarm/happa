@@ -1,4 +1,5 @@
 import { Box } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
@@ -18,8 +19,8 @@ const FacetListItemLoadingPlaceholder: React.FC<
         speed={2}
         height={22}
         width='270'
-        backgroundColor={theme.global.colors['text-xweak'].dark}
-        foregroundColor={theme.global.colors['text-weak'].dark}
+        backgroundColor={normalizeColor('text-xweak', theme)}
+        foregroundColor={normalizeColor('text-weak', theme)}
       >
         <rect x='0' y='0' rx='4' ry='4' width='22' height='22' />
         <rect x='28' y='0' rx='4' ry='4' width='22' height='22' />

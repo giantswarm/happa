@@ -1,3 +1,4 @@
+import { normalizeColor } from 'grommet/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
@@ -58,7 +59,7 @@ export const DropdownTrigger = styled.button`
   }
 
   &:disabled {
-    color: ${({ theme }) => theme.global.colors['text-xweak'].dark};
+    color: ${({ theme }) => normalizeColor('text-xweak', theme)};
   }
 `;
 

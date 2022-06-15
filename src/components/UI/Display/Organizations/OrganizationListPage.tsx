@@ -1,4 +1,5 @@
 import { Box, Heading, Keyboard, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import * as docs from 'model/constants/docs';
 import React from 'react';
 import styled from 'styled-components';
@@ -14,7 +15,7 @@ import {
 const StyledTableRow = styled(TableRow)`
   :hover,
   :focus-visible {
-    background: ${({ theme }) => theme.global.colors.border.dark};
+    background: ${({ theme }) => normalizeColor('border', theme)};
   }
 `;
 

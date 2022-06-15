@@ -1,4 +1,5 @@
 import { Box } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as clusterActions from 'model/stores/cluster/actions';
 import { getLoggedInUser } from 'model/stores/main/selectors';
@@ -21,7 +22,7 @@ import ConfigureKubeCtlAlternative from './ConfigureKubectlAlternative';
 const StyledTab = styled(Tab)`
   &[aria-expanded='true'] > div {
     background-color: ${({ theme }) =>
-      theme.global.colors['background-front'].dark};
+      normalizeColor('background-front', theme)};
   }
 `;
 

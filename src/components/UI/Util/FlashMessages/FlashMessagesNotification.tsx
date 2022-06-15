@@ -1,4 +1,5 @@
 import { Box, Paragraph, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import React from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
@@ -25,20 +26,21 @@ const Content = styled(Box)`
   word-break: break-word;
 
   code {
-    background-color: ${({ theme }) => theme.global.colors['text-strong'].dark};
-    color: ${({ theme }) => theme.global.colors['text-xxweak'].dark};
+    background-color: ${({ theme }) =>
+      normalizeColor('background-light', theme)};
+    color: ${({ theme }) => normalizeColor('text-xxweak', theme)};
   }
 `;
 
 const CloseButton = styled(Button)`
   padding: 0 8px;
-  color: ${({ theme }) => theme.global.colors['text-xxweak'].dark};
+  color: ${({ theme }) => normalizeColor('text-xxweak', theme)};
   opacity: 0.4;
   transition: 0.1s ease-out;
 
   :hover {
     text-decoration: none;
-    color: ${({ theme }) => theme.global.colors['text-xxweak'].dark};
+    color: ${({ theme }) => normalizeColor('text-xxweak', theme)};
     opacity: 0.7;
   }
 `;

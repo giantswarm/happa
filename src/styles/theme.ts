@@ -1,5 +1,5 @@
 import { generate, ThemeType } from 'grommet';
-import { deepMerge } from 'grommet/utils';
+import { deepMerge, normalizeColor } from 'grommet/utils';
 import { CSSBreakpoints } from 'model/constants';
 import { css, DefaultTheme } from 'styled-components';
 
@@ -7,6 +7,37 @@ interface ICalendarDayProps {
   theme: DefaultTheme;
   isSelected: boolean;
 }
+
+const COLORS = {
+  // dark blue as defined in Giant Swarm's style guide
+  darkBlue: '#234a61',
+
+  // Darker shades of above darkBlue.
+  // The higher the number, the darker the tone.
+  darkBlueDarker1: '#204358',
+  darkBlueDarker2: '#1c3c4f',
+  darkBlueDarker3: '#193545',
+  darkBlueDarker4: '#162e3d',
+  darkBlueDarker5: '#132834',
+  darkBlueDarker6: '#10212c',
+  darkBlueDarker7: '#0d1b23',
+  darkBlueDarker8: '#0a141b',
+  darkBlueDarker9: '#060c0f',
+
+  // Lighter shades of above darkBlue.
+  // The higher the number, the brighter the tone.
+  darkBlueLighter1: '#375b70',
+  darkBlueLighter2: '#4c6c7e',
+  darkBlueLighter3: '#617d8d',
+  darkBlueLighter4: '#768e9d',
+  darkBlueLighter5: '#8ca0ac',
+  darkBlueLighter6: '#a2b3bc',
+  darkBlueLighter7: '#b9c5cd',
+  darkBlueLighter8: '#d0d8dd',
+  darkBlueLighter9: '#e7ebee',
+
+  gray2: '#cccccc',
+} as const;
 
 /* eslint-disable no-magic-numbers */
 
@@ -123,36 +154,44 @@ const theme = deepMerge(generate(16), {
         light: 'border',
       },
       background: {
-        dark: '#234a61',
-        light: '#234a61',
+        dark: COLORS.darkBlue,
+        light: COLORS.darkBlue,
       },
       'background-back': {
-        dark: '#204358',
-        light: '#204358',
+        dark: COLORS.darkBlueDarker1,
+        light: COLORS.darkBlueDarker1,
       },
       'background-front': {
-        dark: '#375b70',
-        light: '#375b70',
+        dark: COLORS.darkBlueLighter1,
+        light: COLORS.darkBlueLighter1,
       },
       'background-contrast': {
         dark: '#15253150',
         light: '#15253150',
       },
       'background-strong': {
-        dark: '#10212c',
-        light: '#10212c',
+        dark: COLORS.darkBlueDarker6,
+        light: COLORS.darkBlueDarker6,
+      },
+      'background-weak': {
+        dark: COLORS.darkBlueLighter2,
+        light: COLORS.darkBlueLighter2,
+      },
+      'background-light': {
+        dark: 'white',
+        light: 'white',
       },
       text: {
-        dark: '#EEEEEE',
-        light: '#EEEEEE',
+        dark: '#eeeeee',
+        light: '#eeeeee',
       },
       'text-strong': {
-        dark: '#FFFFFF',
-        light: '#FFFFFF',
+        dark: 'white',
+        light: 'white',
       },
       'text-weak': {
-        dark: '#CCCCCC',
-        light: '#CCCCCC',
+        dark: COLORS.gray2,
+        light: COLORS.gray2,
       },
       'text-xweak': {
         dark: '#798691',
@@ -189,7 +228,6 @@ const theme = deepMerge(generate(16), {
       'input-background': '#32526a',
       'input-highlight': '#41B5F2',
       'tooltip-background': '#000000E6',
-      'background-weak': '#4c6c7e',
 
       focus: {
         light: 'text-strong',
@@ -453,13 +491,13 @@ const theme = deepMerge(generate(16), {
       extend: () => css`
         border-radius: 100%;
         background-color: ${(props: ICalendarDayProps) =>
-          props.isSelected && props.theme.global.colors['text-xweak'].dark};
+          props.isSelected && normalizeColor('text-xweak', props.theme)};
       `,
     },
   },
   textArea: {
     extend: () => css`
-      background: ${(props) => props.theme.global.colors['input-background']};
+      background: ${(props) => normalizeColor('input-background', props.theme)};
       min-width: 100%;
       min-height: 40px;
     `,
@@ -478,8 +516,8 @@ const theme = deepMerge(generate(16), {
         height: '16px',
         transition: 'background 0.3s ease-out',
         background: props.checked
-          ? props.theme.global!.colors!['input-highlight']
-          : props.theme.global!.colors!['input-background'],
+          ? normalizeColor('input-highlight', props.theme)
+          : normalizeColor('input-background', props.theme),
       }),
       knob: {
         extend: () => css`
@@ -492,7 +530,7 @@ const theme = deepMerge(generate(16), {
       radius: '4px',
       thickness: '2px',
       extend: (props: { theme: ThemeType }) => ({
-        background: props.theme.global!.colors!['input-background'],
+        background: normalizeColor('input-background', props.theme),
       }),
     },
     border: {
@@ -559,12 +597,12 @@ const theme = deepMerge(generate(16), {
     check: {
       radius: '18px',
       extend: (props: { theme: ThemeType }) => ({
-        background: props.theme.global!.colors!['input-background'],
+        background: normalizeColor('input-background', props.theme),
       }),
     },
     icon: {
       extend: () => css`
-        fill: ${(props) => props.theme.global.colors['input-highlight']};
+        fill: ${(props) => normalizeColor('input-highlight', props.theme)};
       `,
     },
     border: {
@@ -919,7 +957,7 @@ const theme = deepMerge(generate(16), {
       extend: () => css`
         text-transform: uppercase;
         font-size: ${(props) => props.theme.text.xsmall.size};
-        color: ${(props) => props.theme.global.colors['text-weak'].dark};
+        color: ${(props) => normalizeColor('text-weak', props.theme)};
       `,
     },
     body: {
@@ -928,7 +966,7 @@ const theme = deepMerge(generate(16), {
     extend: () => css`
       caption {
         font-size: ${(props) => props.theme.text.large.size};
-        color: ${(props) => props.theme.global.colors.text.dark};
+        color: ${(props) => normalizeColor('text', props.theme)};
         font-weight: bold;
       }
     `,

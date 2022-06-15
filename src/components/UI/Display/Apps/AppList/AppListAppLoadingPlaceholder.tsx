@@ -1,4 +1,5 @@
 import { Box } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 import styled, { useTheme } from 'styled-components';
@@ -27,8 +28,8 @@ const AppListAppLoadingPlacholder: React.FC<
         speed={2}
         height={200}
         width='300'
-        backgroundColor={theme.global.colors['text-xweak'].dark}
-        foregroundColor={theme.global.colors['text-weak'].dark}
+        backgroundColor={normalizeColor('text-xweak', theme)}
+        foregroundColor={normalizeColor('text-weak', theme)}
       >
         <rect x='0' y='0' width='300' height='110' />
         <rect x='20' y='130' rx='4' ry='4' width='260' height='22' />

@@ -6,6 +6,7 @@ import {
   ThemeContext,
   ThemeType,
 } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import * as React from 'react';
 import { css, DefaultTheme } from 'styled-components';
 
@@ -25,7 +26,7 @@ const customTheme: ThemeType = {
       zIndex: '9999',
       // @ts-expect-error
       extend: css`
-        border: 1px solid ${({ theme }) => theme.global.colors.border.dark};
+        border: 1px solid ${({ theme }) => normalizeColor('border', theme)};
         padding: 16px;
       `,
     },
@@ -38,7 +39,7 @@ const customTheme: ThemeType = {
   maskedInput: {
     // @ts-expect-error
     extend: css`
-      background: ${({ theme }) => theme.global.colors['input-background']};
+      background: ${({ theme }) => normalizeColor('input-background', theme)};
       border-bottom-left-radius: ${(props: IMaskedInputProps) =>
         props.focus && 0};
       border-bottom-right-radius: ${(props: IMaskedInputProps) =>

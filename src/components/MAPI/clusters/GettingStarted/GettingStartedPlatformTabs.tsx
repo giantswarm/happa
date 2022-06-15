@@ -1,4 +1,5 @@
 import { Box } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { useGettingStartedContext } from 'MAPI/clusters/GettingStarted/GettingStartedProvider';
 import React from 'react';
 import styled from 'styled-components';
@@ -7,7 +8,7 @@ import { Tab, Tabs } from 'UI/Display/Tabs';
 const StyledTab = styled(Tab)`
   &[aria-expanded='true'] > div {
     background-color: ${({ theme }) =>
-      theme.global.colors['background-front'].dark};
+      normalizeColor('background-front', theme)};
   }
 `;
 

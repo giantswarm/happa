@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Constants } from 'model/constants';
@@ -36,7 +37,7 @@ const StyledFlashMessageComponent = styled(FlashMessageComponent)`
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.darkBlueLighter1};
+  background-color: ${({ theme }) => normalizeColor('background-front', theme)};
   border-radius: ${({ theme }) => theme.border_radius};
   padding: ${({ theme }) => theme.spacingPx * 5}px;
   height: 90px;

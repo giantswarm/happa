@@ -3,6 +3,7 @@ import { push } from 'connected-react-router';
 import differenceInHours from 'date-fns/fp/differenceInHours';
 import toDate from 'date-fns-tz/toDate';
 import { Box, Card, CardBody, ResponsiveContext, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
 import { NodePoolList, ProviderCluster } from 'MAPI/types';
 import {
@@ -61,8 +62,7 @@ const StyledLink = styled(Link)`
   :focus {
     text-decoration: none;
     outline: none;
-    box-shadow: ${(props) =>
-      `0 0 0 1px ${props.theme.global.colors.text.dark}`};
+    box-shadow: ${({ theme }) => `0 0 0 1px ${normalizeColor('text', theme)}`};
   }
 
   &[aria-disabled='true'] {

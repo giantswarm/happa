@@ -5,6 +5,7 @@ import {
   ThemeContext,
   ThemeType,
 } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import * as React from 'react';
 import { css } from 'styled-components';
 
@@ -31,16 +32,16 @@ const customTheme: ThemeType = {
     container: {
       // @ts-expect-error
       extend: css`
-        background: ${({ theme }) => theme.global.colors['input-background']};
+        background: ${({ theme }) => normalizeColor('input-background', theme)};
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
-        border: 1px solid ${({ theme }) => theme.global.colors.border.dark};
+        border: 1px solid ${({ theme }) => normalizeColor('border', theme)};
       `,
     },
     control: {
       // @ts-expect-error
       extend: css`
-        background: ${({ theme }) => theme.global.colors['input-background']};
+        background: ${({ theme }) => normalizeColor('input-background', theme)};
         border-radius: 4px;
       `,
       open: css`
