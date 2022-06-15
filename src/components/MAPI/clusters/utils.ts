@@ -393,6 +393,8 @@ function createDefaultV1Alpha3Cluster(config: {
         [capiv1beta1.labelClusterName]: name,
         [capiv1beta1.labelOrganization]: organization,
         [capiv1beta1.labelReleaseVersion]: releaseVersion,
+        [capiv1beta1.labelServicePriority]:
+          Constants.DEFAULT_CLUSTER_SERVICE_PRIORITY,
       },
       annotations: {
         [capiv1beta1.annotationClusterDescription]:
@@ -1045,7 +1047,7 @@ export function getClusterLabelsWithDisplayInfo(
 
 function getClusterLabelKeyDisplayInfo(key: string) {
   switch (key) {
-    case 'giantswarm.io/service-priority':
+    case capiv1beta1.labelServicePriority:
       return { displayKey: 'Service priority' };
 
     default:
@@ -1055,19 +1057,19 @@ function getClusterLabelKeyDisplayInfo(key: string) {
 
 function getClusterLabelValueDisplayInfo(key: string, value: string) {
   switch (`${key}:${value}`) {
-    case 'giantswarm.io/service-priority:highest':
+    case `${capiv1beta1.labelServicePriority}:highest`:
       return {
         displayValue: 'Highest',
         textColor: theme.colors.darkBlueDarker2,
         backgroundColor: theme.colors.brown1,
       };
-    case 'giantswarm.io/service-priority:medium':
+    case `${capiv1beta1.labelServicePriority}:medium`:
       return {
         displayValue: 'Medium',
         textColor: theme.colors.darkBlueDarker2,
         backgroundColor: theme.colors.yellow2,
       };
-    case 'giantswarm.io/service-priority:lowest':
+    case `${capiv1beta1.labelServicePriority}:lowest`:
       return {
         displayValue: 'Lowest',
         textColor: theme.colors.white4,
@@ -1081,7 +1083,7 @@ function getClusterLabelValueDisplayInfo(key: string, value: string) {
 
 function isSpecialPurposeLabel(key: string) {
   switch (key) {
-    case 'giantswarm.io/service-priority':
+    case capiv1beta1.labelServicePriority:
       return true;
     default:
       return false;
