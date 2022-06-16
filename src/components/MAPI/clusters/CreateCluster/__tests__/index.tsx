@@ -210,6 +210,53 @@ describe('ClusterCreate', () => {
     createClusterMockFn.mockRestore();
   });
 
+  it('can set the service priority', async () => {
+    const createClusterMockFn = jest.spyOn(CreateClusterUtils, 'createCluster');
+    createClusterMockFn.mockResolvedValue({
+      cluster: capiv1beta1Mocks.randomCluster1,
+      providerCluster: capzv1beta1Mocks.randomAzureCluster1,
+      controlPlaneNodes: [capzv1beta1Mocks.randomAzureMachine1],
+    });
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/release.giantswarm.io/v1alpha1/releases/')
+      .reply(StatusCodes.Ok, releasev1alpha1Mocks.releasesList);
+
+    render(getComponent({}));
+
+    fireEvent.click(screen.getByLabelText('Service priority'));
+    fireEvent.click(screen.getByRole('option', { name: 'Medium' }));
+
+    const createButton = screen.getByRole('button', { name: 'Create cluster' });
+
+    await waitFor(() => {
+      expect(createButton).not.toBeDisabled();
+    });
+
+    fireEvent.click(createButton);
+
+    expect(createClusterMockFn).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.any(Object),
+      expect.objectContaining({
+        cluster: expect.objectContaining({
+          metadata: expect.objectContaining({
+            labels: expect.objectContaining({
+              'giantswarm.io/service-priority': 'medium',
+            }),
+          }),
+        }),
+      }),
+      false
+    );
+
+    expect(
+      await withMarkup(screen.findByText)('Cluster j5y9m created successfully')
+    ).toBeInTheDocument();
+
+    createClusterMockFn.mockRestore();
+  });
+
   it('can configure the availability zone', async () => {
     const createClusterMockFn = jest.spyOn(CreateClusterUtils, 'createCluster');
     createClusterMockFn.mockResolvedValue({

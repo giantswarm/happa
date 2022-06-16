@@ -7,3 +7,12 @@ interface ILabelChange {
   value: string | null;
   replaceLabelWithKey?: string;
 }
+
+interface IClusterLabelWithDisplayInfo {
+  key: string;
+  value: string;
+  displayKey: string;
+  displayValue: string;
+  textColor?: string;
+  backgroundColor?: string;
+}

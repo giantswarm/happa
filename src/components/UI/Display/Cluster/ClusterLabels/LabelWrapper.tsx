@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const LabelWrapper = styled.div`
-  margin: 5px 5px 5px 0;
+  margin: 0 10px 10px 0;
   display: flex;
   align-items: center;
 `;

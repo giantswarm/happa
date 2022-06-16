@@ -31,6 +31,7 @@ export const updateClusterLabels = createAsynchronousAction<
       return {
         clusterId: payload.clusterId,
         labels: filterLabels(resp.labels) as V5ClusterLabelsProperty,
+        rawLabels: resp.labels,
       };
     }
 

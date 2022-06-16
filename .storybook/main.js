@@ -52,4 +52,7 @@ module.exports = {
       ],
     },
   },
+  reactOptions: {
+    fastRefresh: true,
+  },
 };

@@ -16,6 +16,7 @@ export interface ILabelChangeActionPayload extends ILabelChange {
 export interface ILabelChangeActionResponse {
   clusterId: string;
   labels: IClusterLabelMap;
+  rawLabels: IClusterLabelMap;
 }
 
 export interface ILabelChangeRequestAction {

@@ -224,6 +224,7 @@ const clusterReducer = produce(
           | undefined;
         if (cluster) {
           cluster.labels = action.response.labels;
+          cluster.rawLabels = action.response.rawLabels;
         }
 
         break;

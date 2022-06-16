@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const radius = '5px';
 
-const defaultThemeColor = 'shade5';
+const defaultThemeColor = 'darkBlue';
 
 const Wrapper = styled.div`
   display: inline-flex;
@@ -21,12 +21,17 @@ const CommonCSS = css`
   padding: 5px 8px;
 `;
 
-const LabelWrapper = styled.span<{ outline: boolean }>`
+export const KeyWrapper = styled.span<{ outline: boolean; rounded: boolean }>`
   ${CommonCSS};
   background-color: ${({ color, theme }) =>
     color ?? theme.colors[defaultThemeColor]};
-  border-top-left-radius: ${radius};
-  border-bottom-left-radius: ${radius};
+
+  ${({ rounded }) =>
+    rounded &&
+    css`
+      border-top-left-radius: ${radius};
+      border-bottom-left-radius: ${radius};
+    `}
 
   ${({ outline, color }) =>
     outline &&
@@ -37,12 +42,23 @@ const LabelWrapper = styled.span<{ outline: boolean }>`
     `}
 `;
 
-const ValueWrapper = styled.span<{ outline: boolean }>`
+export const ValueWrapper = styled.span<{
+  outline: boolean;
+  rounded: boolean;
+  textColor?: string;
+  backgroundColor?: string;
+}>`
   ${CommonCSS};
-  border-top-right-radius: ${radius};
-  border-bottom-right-radius: ${radius};
+  color: ${({ textColor }) => textColor ?? 'inherit'};
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor ?? 'transparent'};
 
-  color: #eee;
+  ${({ rounded }) =>
+    rounded &&
+    css`
+      border-top-right-radius: ${radius};
+      border-bottom-right-radius: ${radius};
+    `}
 
   ${({ outline, color }) =>
     outline &&
@@ -58,17 +74,42 @@ interface IValueLabelProps extends React.ComponentPropsWithRef<'div'> {
   value: ReactNode;
 
   color?: string;
+  valueBackgroundColor?: string;
+  valueTextColor?: string;
   outline?: boolean;
+  rounded?: boolean;
 }
 
 const ValueLabel = React.forwardRef(
-  ({ label, value, color, outline, ...props }: IValueLabelProps, _) => {
+  (
+    {
+      label,
+      value,
+      color,
+      valueBackgroundColor,
+      valueTextColor,
+      outline,
+      rounded = true,
+      ...props
+    }: IValueLabelProps,
+    _
+  ) => {
     return (
       <Wrapper {...props}>
-        <LabelWrapper color={color} outline={Boolean(outline)}>
+        <KeyWrapper
+          color={color}
+          outline={Boolean(outline)}
+          rounded={Boolean(rounded)}
+        >
           {label}
-        </LabelWrapper>
-        <ValueWrapper color={color} outline={Boolean(outline)}>
+        </KeyWrapper>
+        <ValueWrapper
+          color={color}
+          textColor={valueTextColor}
+          backgroundColor={valueBackgroundColor}
+          outline={Boolean(outline)}
+          rounded={Boolean(rounded)}
+        >
           {value}
         </ValueWrapper>
       </Wrapper>

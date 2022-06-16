@@ -13,7 +13,9 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { filterLabels } from 'model/stores/cluster/utils';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -27,10 +29,7 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
-import {
-  computeControlPlaneNodesStats,
-  getVisibleLabels,
-} from '../ClusterDetail/utils';
+import { computeControlPlaneNodesStats } from '../ClusterDetail/utils';
 import CreateClusterGuide from '../guides/CreateClusterGuide';
 import {
   createCluster,
@@ -44,6 +43,7 @@ import CreateClusterControlPlaneNodesCount from './CreateClusterControlPlaneNode
 import CreateClusterDescription from './CreateClusterDescription';
 import CreateClusterName from './CreateClusterName';
 import CreateClusterRelease from './CreateClusterRelease';
+import CreateClusterServicePriority from './CreateClusterServicePriority';
 import {
   ClusterPatch,
   IClusterPropertyValue,
@@ -54,6 +54,7 @@ enum ClusterPropertyField {
   Name,
   Description,
   Release,
+  ServicePriority,
   ControlPlaneNodeAZs,
   ControlPlaneNodesCount,
 }
@@ -114,7 +115,11 @@ function makeInitialState(
 ): IClusterState {
   const name = generateUID(5);
 
-  const resourceConfig = { ...config, name, releaseVersion: '' };
+  const resourceConfig = {
+    ...config,
+    name,
+    releaseVersion: '',
+  };
   const providerCluster = createDefaultProviderCluster(
     provider,
     resourceConfig
@@ -130,6 +135,7 @@ function makeInitialState(
     validationResults: {
       [ClusterPropertyField.Name]: true,
       [ClusterPropertyField.Description]: true,
+      [ClusterPropertyField.ServicePriority]: true,
       [ClusterPropertyField.Release]: true,
       [ClusterPropertyField.ControlPlaneNodeAZs]: true,
       [ClusterPropertyField.ControlPlaneNodesCount]: true,
@@ -322,7 +328,8 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
     return computeControlPlaneNodesStats(state.controlPlaneNodes)
       .availabilityZones;
   }, [state.controlPlaneNodes]);
-  const labels = getVisibleLabels(state.cluster);
+  const labels = filterLabels(capiv1beta1.getClusterLabels(state.cluster));
+  const servicePriority = capiv1beta1.getClusterServicePriority(state.cluster);
 
   return (
     <Breadcrumb data={{ title: 'CREATE CLUSTER', pathname: match.url }}>
@@ -365,7 +372,13 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
               onChange={handleChange(ClusterPropertyField.Release)}
               orgNamespace={state.orgNamespace}
             />
-
+            <CreateClusterServicePriority
+              id={`cluster-${ClusterPropertyField.ServicePriority}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNodes={state.controlPlaneNodes}
+              onChange={handleChange(ClusterPropertyField.ServicePriority)}
+            />
             {provider === Providers.AZURE && (
               <CreateClusterControlPlaneNodeAZs
                 id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
@@ -377,7 +390,6 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
                 )}
               />
             )}
-
             {provider === Providers.AWS && (
               <CreateClusterControlPlaneNodesCount
                 id={`cluster-${ClusterPropertyField.ControlPlaneNodesCount}`}
@@ -389,7 +401,6 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
                 )}
               />
             )}
-
             <Box margin={{ top: 'medium' }}>
               <Box direction='row' gap='small'>
                 <Button
@@ -430,6 +441,7 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
               releaseVersion={releaseVersion}
               description={description}
               labels={labels}
+              servicePriority={servicePriority}
               controlPlaneAZs={controlPlaneAZs}
             />
           </Box>

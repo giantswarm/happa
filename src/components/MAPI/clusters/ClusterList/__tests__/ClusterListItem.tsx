@@ -79,7 +79,7 @@ describe('ClusterListItem', () => {
     expect(
       screen.getByRole('link', { name: 'Loading cluster...' })
     ).toBeInTheDocument();
-    expect(screen.getAllByLabelText('Loading...')).toHaveLength(9);
+    expect(screen.getAllByLabelText('Loading...')).toHaveLength(8);
   });
 
   it('displays if a cluster was deleted', () => {
@@ -222,9 +222,6 @@ describe('ClusterListItem', () => {
     expect(
       screen.getByLabelText('Kubernetes version: 1.19')
     ).toBeInTheDocument();
-    expect(
-      withMarkup(screen.getByText)('Created about 1 hour ago')
-    ).toBeInTheDocument();
   });
 
   it('displays stats about worker nodes', async () => {
@@ -271,6 +268,34 @@ describe('ClusterListItem', () => {
     expect(await screen.findByText('10 worker nodes')).toBeInTheDocument();
     expect(await screen.findByText('80 CPU cores')).toBeInTheDocument();
     expect(await screen.findByText('171.8 GB RAM')).toBeInTheDocument();
+  });
+
+  it('displays cluster labels', () => {
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1beta1Mocks.randomCluster1,
+          metadata: {
+            ...capiv1beta1Mocks.randomCluster1.metadata,
+            labels: {
+              ...capiv1beta1Mocks.randomCluster1.metadata.labels!,
+              'giantswarm.io/service-priority': 'highest',
+            },
+          },
+        },
+      })
+    );
+
+    expect(screen.queryByText('Service priority')).toBeInTheDocument();
+    expect(
+      screen.queryByText('giantswarm.io/service-priority')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('azure-operator.giantswarm.io/version')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('cluster.x-k8s.io/cluster-name')
+    ).not.toBeInTheDocument();
   });
 
   it(`displays the cluster's current status`, async () => {

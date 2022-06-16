@@ -11,6 +11,7 @@ export const labelMachineControlPlane = 'cluster.x-k8s.io/control-plane';
 export const labelMachinePool = 'giantswarm.io/machine-pool';
 export const labelClusterOperator = 'cluster-operator.giantswarm.io/version';
 export const labelAzureOperatorVersion = 'azure-operator.giantswarm.io/version';
+export const labelServicePriority = 'giantswarm.io/service-priority';
 
 export const annotationClusterDescription = 'cluster.giantswarm.io/description';
 export const annotationUpdateScheduleTargetRelease =
@@ -59,10 +60,16 @@ export function getKubernetesAPIEndpointURL(
   return `https://${hostname}`;
 }
 
-export function getClusterLabels(cluster: ICluster): Record<string, string> {
+export function getClusterLabels(cluster: ICluster): IClusterLabelMap {
   if (!cluster.metadata.labels) return {};
 
   return cluster.metadata.labels;
+}
+
+export function getClusterServicePriority(cluster: ICluster): string {
+  const labels = getClusterLabels(cluster);
+
+  return labels[labelServicePriority];
 }
 
 export function getMachinePoolDescription(machinePool: IMachinePool): string {

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { StatusCodes } from 'model/constants';
 import nock from 'nock';
@@ -195,6 +195,177 @@ describe('ClusterDetailWidgetLabels', () => {
     expect(
       screen.getByText('For editing labels, you need additional permissions.')
     ).toBeInTheDocument();
+
+    fireEvent.click(label);
+
+    expect(screen.queryByLabelText('Label key')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Label value')).not.toBeInTheDocument();
+  });
+
+  it('displays interpreted values for priority label', () => {
+    const cluster = {
+      ...capiv1beta1Mocks.randomCluster1,
+      metadata: {
+        ...capiv1beta1Mocks.randomCluster1.metadata,
+        labels: {
+          ...capiv1beta1Mocks.randomCluster1.metadata.labels!,
+          'giantswarm.io/service-priority': 'highest',
+        },
+      },
+    };
+
+    render(getComponent({ cluster, canUpdateCluster: true }));
+
+    const label = screen.getByLabelText(
+      'Label giantswarm.io/service-priority with value highest'
+    );
+
+    expect(within(label).queryByText('Service priority')).toBeInTheDocument();
+    expect(within(label).queryByText('Highest')).toBeInTheDocument();
+    expect(
+      within(label).queryByText('giantswarm.io/service-priority')
+    ).not.toBeInTheDocument();
+    expect(within(label).queryByText('highest')).not.toBeInTheDocument();
+  });
+
+  it('displays raw values for priority label in raw mode', () => {
+    const cluster = {
+      ...capiv1beta1Mocks.randomCluster1,
+      metadata: {
+        ...capiv1beta1Mocks.randomCluster1.metadata,
+        labels: {
+          ...capiv1beta1Mocks.randomCluster1.metadata.labels!,
+          'giantswarm.io/service-priority': 'highest',
+        },
+      },
+    };
+
+    render(getComponent({ cluster, canUpdateCluster: true }));
+
+    const rawDisplayControl = screen.getByLabelText('Display raw labels');
+    fireEvent.click(rawDisplayControl);
+
+    const label = screen.getByLabelText(
+      'Label giantswarm.io/service-priority with value highest'
+    );
+
+    expect(
+      within(label).queryByText('Service priority')
+    ).not.toBeInTheDocument();
+    expect(within(label).queryByText('Highest')).not.toBeInTheDocument();
+    expect(
+      within(label).queryByText('giantswarm.io/service-priority')
+    ).toBeInTheDocument();
+    expect(within(label).queryByText('highest')).toBeInTheDocument();
+  });
+
+  it('cannot remove a service priority label', () => {
+    const cluster = {
+      ...capiv1beta1Mocks.randomCluster1,
+      metadata: {
+        ...capiv1beta1Mocks.randomCluster1.metadata,
+        labels: {
+          ...capiv1beta1Mocks.randomCluster1.metadata.labels!,
+          'giantswarm.io/service-priority': 'highest',
+        },
+      },
+    };
+
+    render(getComponent({ cluster, canUpdateCluster: true }));
+
+    expect(
+      screen.queryByRole('button', {
+        name: `Delete 'giantswarm.io/service-priority' label`,
+      })
+    ).not.toBeInTheDocument();
+  });
+
+  it('can edit a service priority label', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomCluster1);
+
+    nock(window.config.mapiEndpoint)
+      .put(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomCluster1);
+
+    const cluster = {
+      ...capiv1beta1Mocks.randomCluster1,
+      metadata: {
+        ...capiv1beta1Mocks.randomCluster1.metadata,
+        labels: {
+          ...capiv1beta1Mocks.randomCluster1.metadata.labels!,
+          'giantswarm.io/service-priority': 'highest',
+        },
+      },
+    };
+
+    render(getComponent({ cluster, canUpdateCluster: true }));
+
+    const label = screen.getByLabelText(
+      'Label giantswarm.io/service-priority with value highest'
+    );
+
+    fireEvent.click(label);
+
+    expect(screen.queryByLabelText('Label key')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Label key')).toHaveValue(
+      'giantswarm.io/service-priority'
+    );
+    expect(screen.queryByLabelText('Label key')).toBeDisabled();
+    expect(screen.queryByLabelText('Label value')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Label value')).toHaveValue('highest');
+    expect(screen.queryByLabelText('Label value')).not.toBeDisabled();
+
+    fireEvent.change(screen.getByLabelText('Label value'), {
+      target: { value: 'lowest' },
+    });
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'Save',
+      })
+    );
+
+    expect(
+      await screen.findByText(`Successfully updated the cluster's labels`)
+    ).toBeInTheDocument();
+  });
+
+  it('displays hidden labels as read-only in raw mode', () => {
+    const cluster = capiv1beta1Mocks.randomCluster1;
+    render(getComponent({ cluster, canUpdateCluster: true }));
+
+    expect(
+      screen.queryByText('giantswarm.io/organization')
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText('org1')).not.toBeInTheDocument();
+
+    const rawDisplayControl = screen.getByLabelText('Display raw labels');
+    fireEvent.click(rawDisplayControl);
+
+    expect(
+      screen.queryByText('giantswarm.io/organization')
+    ).toBeInTheDocument();
+    expect(screen.queryByText('org1')).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('button', {
+        name: `Delete 'giantswarm.io/organization' label`,
+      })
+    ).not.toBeInTheDocument();
+
+    const label = screen.getByLabelText(
+      'Label giantswarm.io/organization with value org1'
+    );
+
+    fireEvent.mouseOver(label);
+
+    expect(screen.getByText('This label cannot be edited')).toBeInTheDocument();
 
     fireEvent.click(label);
 

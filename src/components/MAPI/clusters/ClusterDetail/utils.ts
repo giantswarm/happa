@@ -16,10 +16,14 @@ import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import * as metav1 from 'model/services/mapi/metav1';
-import { filterLabels } from 'model/stores/cluster/utils';
 import { supportsHACPNodes } from 'model/stores/nodepool/utils';
 import { mutate } from 'swr';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import {
+  hasRestrictedSubstring,
+  isLabelKeyAllowed,
+  isLabelKeyRestricted,
+} from 'utils/labelUtils';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
 
@@ -255,14 +259,6 @@ export async function deleteClusterResources(
   return Promise.resolve();
 }
 
-export function getVisibleLabels(cluster?: capiv1beta1.ICluster) {
-  if (!cluster) return undefined;
-
-  const existingLabels = capiv1beta1.getClusterLabels(cluster);
-
-  return filterLabels(existingLabels);
-}
-
 export async function updateClusterLabels(
   httpClient: IHttpClient,
   auth: IOAuth2Provider,
@@ -487,4 +483,31 @@ export async function switchClusterToHACPNodes(
     updatedControlPlaneNodes,
     false
   );
+}
+
+export function canClusterLabelBeDeleted(key: string) {
+  if (isLabelKeyRestricted(key) || hasRestrictedSubstring(key)) {
+    return false;
+  }
+
+  return true;
+}
+
+export function canClusterLabelBeEdited(key: string) {
+  if (
+    isLabelKeyRestricted(key) ||
+    (!isLabelKeyAllowed(key) && hasRestrictedSubstring(key))
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+export function canClusterLabelKeyBeEdited(key: string) {
+  if (isLabelKeyRestricted(key) || hasRestrictedSubstring(key)) {
+    return false;
+  }
+
+  return true;
 }
