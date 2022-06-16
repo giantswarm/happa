@@ -37,6 +37,11 @@ const COLORS = {
   darkBlueLighter9: '#e7ebee',
 
   gray2: '#cccccc',
+
+  shade5: '#32526a',
+  shade6: '#3a5f7b',
+
+  orange1: '#ffaa15',
 } as const;
 
 /* eslint-disable no-magic-numbers */
@@ -204,16 +209,16 @@ const theme = deepMerge(generate(16), {
         light: COLORS.darkBlueDarker2,
       },
       border: {
-        dark: '#3a5f7b',
-        light: '#3a5f7b',
+        dark: COLORS.shade6,
+        light: COLORS.shade6,
       },
       control: {
         dark: 'border',
         light: 'border',
       },
       'accent-strong': {
-        dark: '#162e3d',
-        light: '#162e3d',
+        dark: COLORS.darkBlueDarker4,
+        light: COLORS.darkBlueDarker4,
       },
       'active-background': 'background-contrast',
       'active-text': 'text-strong',
@@ -221,13 +226,13 @@ const theme = deepMerge(generate(16), {
       'selected-text': 'text-strong',
       'status-critical': '#e49090',
       'status-danger': '#bd3e3a',
-      'status-warning': '#FFAA15',
+      'status-warning': COLORS.orange1,
       'status-ok': '#2a8b29',
-      'status-unknown': '#CCCCCC',
-      'status-disabled': '#3a5f7b',
+      'status-unknown': COLORS.gray2,
+      'status-disabled': COLORS.shade6,
       'graph-0': 'brand',
-      'graph-1': 'status-warning',
-      'input-background': '#32526a',
+      'graph-1': COLORS.orange1,
+      'input-background': COLORS.shade5,
       'input-highlight': '#41B5F2',
       'tooltip-background': '#000000E6',
       'service-priority-highest': '#c95353',
