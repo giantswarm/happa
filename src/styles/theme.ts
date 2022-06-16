@@ -89,7 +89,6 @@ const theme = deepMerge(generate(16), {
     white5: '#ccd',
 
     yellow1: '#ddb03a',
-    yellow2: '#c7b268',
     gold: '#ce990f',
     goldBackground: '#a97904',
     gray: '#ccc',
@@ -127,7 +126,6 @@ const theme = deepMerge(generate(16), {
     },
 
     darkGray: '#a4a4a4',
-    brown1: '#c95353',
   },
   border_radius: '4px',
   spacingPx: 4,
@@ -201,6 +199,10 @@ const theme = deepMerge(generate(16), {
         dark: '#313131',
         light: '#313131',
       },
+      'text-accent': {
+        dark: COLORS.darkBlueDarker2,
+        light: COLORS.darkBlueDarker2,
+      },
       border: {
         dark: '#3a5f7b',
         light: '#3a5f7b',
@@ -228,6 +230,9 @@ const theme = deepMerge(generate(16), {
       'input-background': '#32526a',
       'input-highlight': '#41B5F2',
       'tooltip-background': '#000000E6',
+      'service-priority-highest': '#c95353',
+      'service-priority-medium': '#c7b268',
+      'service-priority-lowest': COLORS.darkBlueLighter2,
 
       focus: {
         light: 'text-strong',
