@@ -321,9 +321,9 @@ const WorkerNodesCreateNodePool: React.FC<
       );
 
       ErrorReporter.getInstance().notify(err as Error);
-    }
 
-    setIsRetrying(true);
+      setIsRetrying(true);
+    }
   };
 
   const clusterReleaseVersion = getClusterReleaseVersion(cluster);
