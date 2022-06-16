@@ -36,6 +36,7 @@ const COLORS = {
   darkBlueLighter8: '#d0d8dd',
   darkBlueLighter9: '#e7ebee',
 
+  gray1: '#a4a4a4',
   gray2: '#cccccc',
 
   shade5: '#32526a',
@@ -44,6 +45,10 @@ const COLORS = {
   orange1: '#ffaa15',
 
   yellow1: '#ddb03a',
+
+  green1: '#24A524',
+
+  red1: '#e49090',
 } as const;
 
 /* eslint-disable no-magic-numbers */
@@ -131,8 +136,6 @@ const theme = deepMerge(generate(16), {
         text: '#8a6d3b',
       },
     },
-
-    darkGray: '#a4a4a4',
   },
   border_radius: '4px',
   spacingPx: 4,
@@ -210,9 +213,21 @@ const theme = deepMerge(generate(16), {
         dark: COLORS.darkBlueDarker2,
         light: COLORS.darkBlueDarker2,
       },
+      'text-dim': {
+        dark: COLORS.gray1,
+        light: COLORS.gray1,
+      },
       'text-warning': {
         dark: COLORS.yellow1,
         light: COLORS.yellow1,
+      },
+      'text-error': {
+        dark: COLORS.red1,
+        light: COLORS.red1,
+      },
+      'text-success': {
+        dark: COLORS.green1,
+        light: COLORS.green1,
       },
       border: {
         dark: COLORS.shade6,
@@ -230,7 +245,7 @@ const theme = deepMerge(generate(16), {
       'active-text': 'text-strong',
       'selected-background': 'brand',
       'selected-text': 'text-strong',
-      'status-critical': '#e49090',
+      'status-critical': COLORS.red1,
       'status-danger': '#bd3e3a',
       'status-warning': COLORS.orange1,
       'status-ok': '#2a8b29',

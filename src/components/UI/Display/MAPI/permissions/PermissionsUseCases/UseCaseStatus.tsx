@@ -1,7 +1,6 @@
 import { Box, Text } from 'grommet';
 import React from 'react';
 import styled from 'styled-components';
-import theme from 'styles/theme';
 
 const Icon = styled(Text)`
   font-size: 20px;
@@ -22,15 +21,15 @@ const UseCaseStatus: React.FC<IUseCaseStatusProps> = ({
   let icon = '';
   let text = '';
   if (typeof value === 'undefined') {
-    color = theme.colors.gray;
+    color = 'text-weak';
     icon = 'fa fa-mixed-circle';
     text = 'Partial';
   } else if (value) {
-    color = theme.colors.greenNew;
+    color = 'text-success';
     icon = 'fa fa-check-circle';
     text = 'Yes';
   } else {
-    color = theme.colors.error;
+    color = 'text-error';
     icon = 'fa fa-close-circle';
     text = 'No';
   }

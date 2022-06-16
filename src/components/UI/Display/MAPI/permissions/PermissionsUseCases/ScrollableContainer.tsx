@@ -1,3 +1,4 @@
+import { normalizeColor } from 'grommet/utils';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -20,7 +21,7 @@ const Container = styled.div`
     left: 0;
     background: linear-gradient(
       90deg,
-      ${({ theme }) => theme.colors.darkBlue},
+      ${({ theme }) => normalizeColor('background', theme)},
       transparent
     );
   }
@@ -30,7 +31,7 @@ const Container = styled.div`
     background: linear-gradient(
       90deg,
       transparent,
-      ${({ theme }) => theme.colors.darkBlue}
+      ${({ theme }) => normalizeColor('background', theme)}
     );
   }
 `;
