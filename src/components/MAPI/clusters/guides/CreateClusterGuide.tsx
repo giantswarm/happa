@@ -8,11 +8,24 @@ import {
 } from 'MAPI/guides/utils';
 import { Providers } from 'model/constants';
 import * as docs from 'model/constants/docs';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React from 'react';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
 import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalInfo';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
+
+function filterServicePriorityLabel(labels: IClusterLabelMap) {
+  return Object.keys(labels)
+    .filter((key) => key !== capiv1beta1.labelServicePriority)
+    .reduce(
+      (obj, key) =>
+        Object.assign(obj, {
+          [key]: labels[key],
+        }),
+      {}
+    );
+}
 
 interface ICreateClusterGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
@@ -21,7 +34,8 @@ interface ICreateClusterGuideProps
   organizationName: string;
   releaseVersion?: string;
   description?: string;
-  labels?: Record<string, string>;
+  labels?: IClusterLabelMap;
+  servicePriority?: string;
   controlPlaneAZs?: string[];
 }
 
@@ -34,10 +48,14 @@ const CreateClusterGuide: React.FC<
   releaseVersion,
   description,
   labels,
+  servicePriority,
   controlPlaneAZs,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
+
+  const visibleLabels =
+    labels && servicePriority ? filterServicePriorityLabel(labels) : labels;
 
   return (
     <CLIGuide
@@ -82,7 +100,8 @@ const CreateClusterGuide: React.FC<
               release: releaseVersion,
               description,
               controlPlaneAZs,
-              labels,
+              labels: visibleLabels,
+              servicePriority,
               output: `cluster-${clusterName}.yaml`,
             }),
             withFormatting()

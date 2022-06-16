@@ -179,6 +179,7 @@ export interface IKubectlGSTemplateClusterCommandConfig {
   name?: string;
   description?: string;
   labels?: Record<string, string>;
+  servicePriority?: string;
   controlPlaneAZs?: string[];
   output?: string;
 }
@@ -217,6 +218,10 @@ export function withTemplateCluster(
       for (const [key, value] of Object.entries(config.labels)) {
         newParts.push('--label', `"${key}=${value}"`);
       }
+    }
+
+    if (config.servicePriority) {
+      newParts.push('--service-priority', config.servicePriority);
     }
 
     if (config.controlPlaneAZs) {

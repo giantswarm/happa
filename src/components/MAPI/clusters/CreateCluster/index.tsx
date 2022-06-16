@@ -15,6 +15,7 @@ import { Providers } from 'model/constants';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { filterLabels } from 'model/stores/cluster/utils';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -327,7 +328,8 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
     return computeControlPlaneNodesStats(state.controlPlaneNodes)
       .availabilityZones;
   }, [state.controlPlaneNodes]);
-  const labels = capiv1beta1.getClusterLabels(state.cluster);
+  const labels = filterLabels(capiv1beta1.getClusterLabels(state.cluster));
+  const servicePriority = capiv1beta1.getClusterServicePriority(state.cluster);
 
   return (
     <Breadcrumb data={{ title: 'CREATE CLUSTER', pathname: match.url }}>
@@ -439,6 +441,7 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
               releaseVersion={releaseVersion}
               description={description}
               labels={labels}
+              servicePriority={servicePriority}
               controlPlaneAZs={controlPlaneAZs}
             />
           </Box>

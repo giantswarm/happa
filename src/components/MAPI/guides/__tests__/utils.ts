@@ -144,6 +144,16 @@ describe('utils', () => {
           'kubectl gs template cluster --provider some-provider --organization some-organization --label "label1=value1" --label "label2=value2"',
       },
       {
+        name: 'returns correct output with service priority',
+        modifierConfig: {
+          organization: 'some-organization',
+          provider: 'some-provider',
+          servicePriority: 'highest',
+        },
+        expectedOutput:
+          'kubectl gs template cluster --provider some-provider --organization some-organization --service-priority highest',
+      },
+      {
         name: 'returns correct output with control plane AZ',
         modifierConfig: {
           organization: 'some-organization',
