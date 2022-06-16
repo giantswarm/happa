@@ -1107,12 +1107,24 @@ export async function createNodePool(
     // Azure
     case kind === capzexpv1alpha3.AzureMachinePool &&
       apiVersion === capzexpv1alpha3.ApiVersion: {
-      if (config.bootstrapConfig && !isRetrying) {
-        bootstrapConfig = await gscorev1alpha1.createSpark(
-          httpClient,
-          auth,
-          config.bootstrapConfig
-        );
+      if (config.bootstrapConfig) {
+        try {
+          bootstrapConfig = await gscorev1alpha1.createSpark(
+            httpClient,
+            auth,
+            config.bootstrapConfig
+          );
+        } catch (err) {
+          if (
+            !isRetrying ||
+            !metav1.isStatusError(
+              (err as GenericResponse).data,
+              metav1.K8sStatusErrorReasons.AlreadyExists
+            )
+          ) {
+            return Promise.reject(err);
+          }
+        }
       }
 
       try {
@@ -1206,12 +1218,24 @@ export async function createNodePool(
     // Azure (non-exp MachinePools)
     case kind === capzv1beta1.AzureMachinePool &&
       apiVersion === capzv1beta1.ApiVersion: {
-      if (config.bootstrapConfig && !isRetrying) {
-        bootstrapConfig = await gscorev1alpha1.createSpark(
-          httpClient,
-          auth,
-          config.bootstrapConfig
-        );
+      if (config.bootstrapConfig) {
+        try {
+          bootstrapConfig = await gscorev1alpha1.createSpark(
+            httpClient,
+            auth,
+            config.bootstrapConfig
+          );
+        } catch (err) {
+          if (
+            !isRetrying ||
+            !metav1.isStatusError(
+              (err as GenericResponse).data,
+              metav1.K8sStatusErrorReasons.AlreadyExists
+            )
+          ) {
+            return Promise.reject(err);
+          }
+        }
       }
 
       try {
