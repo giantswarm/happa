@@ -1,6 +1,9 @@
-import React, { ComponentPropsWithoutRef, FC, useState } from 'react';
+import { Box } from 'grommet';
+import { getClusterLabelsWithDisplayInfo } from 'MAPI/clusters/utils';
+import React, { ComponentPropsWithoutRef, FC, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import LabelWrapper from 'UI/Display/Cluster/ClusterLabels/LabelWrapper';
+import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 
 import EditLabelTooltip from './EditLabelTooltip';
 
@@ -16,7 +19,8 @@ const LabelsWrapper = styled.div`
   grid-area: labels;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
+  margin-bottom: -10px;
 `;
 
 const LabelsTitle = styled.span`
@@ -32,6 +36,7 @@ const BottomAreaText = styled.span`
 const ErrorText = styled(BottomAreaText)`
   color: ${({ theme }) => theme.colors.error};
   font-weight: 400;
+  margin-top: 10px;
 `;
 
 const NoLabels = styled.div`
@@ -47,7 +52,7 @@ const NoLabelsEditLabelTooltip = styled(EditLabelTooltip)`
 interface IClusterLabelsProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
   onChange: (patch: ILabelChange) => void;
-  labels?: Record<string, string>;
+  labels?: IClusterLabelMap;
   isLoading?: boolean;
   errorMessage?: string;
   showTitle?: boolean;
@@ -64,56 +69,77 @@ const ClusterLabels: FC<React.PropsWithChildren<IClusterLabelsProps>> = ({
   ...props
 }) => {
   const [allowEditing, setAllowEditing] = useState(true);
+  const [displayRawLabels, setDisplayRawLabels] = useState(false);
 
-  const noLabels = !labels || Object.keys(labels).length === 0;
+  const visibleLabels = useMemo(() => {
+    if (typeof labels === 'undefined') {
+      return undefined;
+    }
+
+    return getClusterLabelsWithDisplayInfo(labels, !displayRawLabels);
+  }, [labels, displayRawLabels]);
+
+  function handleDisplayChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setDisplayRawLabels(e.target.checked);
+  }
+
+  const noLabels = !visibleLabels || visibleLabels.length === 0;
 
   return (
     <ClusterLabelsWrapper showTitle={showTitle} {...props}>
       {showTitle && <LabelsTitle>Labels:</LabelsTitle>}
-      {noLabels ? (
-        <NoLabels>
-          This cluster has no labels.
-          {!unauthorized && (
-            <NoLabelsEditLabelTooltip
-              allowInteraction={!isLoading && allowEditing}
-              label=''
-              onOpen={(isOpen) => setAllowEditing(isOpen)}
-              onSave={onChange}
-              value=''
-            />
-          )}
-        </NoLabels>
-      ) : (
-        <>
-          <LabelsWrapper>
-            {labels &&
-              Object.entries(labels).map(([label, value]) => (
-                <LabelWrapper key={label}>
-                  <EditLabelTooltip
-                    allowInteraction={!isLoading && allowEditing}
-                    label={label}
-                    onOpen={(isOpen) => setAllowEditing(isOpen)}
-                    onSave={onChange}
-                    value={value}
-                    unauthorized={unauthorized}
-                  />
-                </LabelWrapper>
-              ))}
+      <Box>
+        {noLabels ? (
+          <NoLabels>
+            This cluster has no labels.
             {!unauthorized && (
-              <EditLabelTooltip
+              <NoLabelsEditLabelTooltip
                 allowInteraction={!isLoading && allowEditing}
-                label=''
                 onOpen={(isOpen) => setAllowEditing(isOpen)}
                 onSave={onChange}
-                value=''
               />
             )}
-          </LabelsWrapper>
-          {errorMessage && (
-            <ErrorText>Could not save labels. Please try again.</ErrorText>
-          )}
-        </>
-      )}
+          </NoLabels>
+        ) : (
+          <>
+            <LabelsWrapper>
+              {visibleLabels &&
+                visibleLabels.map((label) => (
+                  <LabelWrapper key={label.key}>
+                    <EditLabelTooltip
+                      allowInteraction={!isLoading && allowEditing}
+                      label={label}
+                      onOpen={(isOpen) => setAllowEditing(isOpen)}
+                      onSave={onChange}
+                      unauthorized={unauthorized}
+                      displayRawLabels={displayRawLabels}
+                    />
+                  </LabelWrapper>
+                ))}
+              {!unauthorized && (
+                <EditLabelTooltip
+                  allowInteraction={!isLoading && allowEditing}
+                  onOpen={(isOpen) => setAllowEditing(isOpen)}
+                  onSave={onChange}
+                />
+              )}
+            </LabelsWrapper>
+            {errorMessage && (
+              <ErrorText>Could not save labels. Please try again.</ErrorText>
+            )}
+          </>
+        )}
+        <CheckBoxInput
+          toggle={true}
+          margin={{ top: 'medium' }}
+          label='Display raw labels'
+          contentProps={{
+            pad: 'none',
+          }}
+          defaultChecked={displayRawLabels}
+          onChange={handleDisplayChange}
+        />
+      </Box>
     </ClusterLabelsWrapper>
   );
 };

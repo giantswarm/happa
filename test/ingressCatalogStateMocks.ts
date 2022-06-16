@@ -11,7 +11,7 @@ export const catalogsState: Partial<IState> = {
     catalogs: {
       items: {
         [Constants.INSTALL_INGRESS_TAB_APP_CATALOG_NAME]: ingressCatalog,
-      },
+      } as IState['entities']['catalogs']['items'],
       isFetching: false,
       lastUpdated: 0,
       ui: {

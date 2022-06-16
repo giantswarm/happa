@@ -116,6 +116,15 @@ export function withClusterDescription(newDescription: string): ClusterPatch {
   };
 }
 
+export function withClusterServicePriority(
+  servicePriority: string
+): ClusterPatch {
+  return (cluster) => {
+    cluster.metadata.labels ??= {};
+    cluster.metadata.labels[capiv1beta1.labelServicePriority] = servicePriority;
+  };
+}
+
 export function withClusterControlPlaneNodeAZs(zones?: string[]): ClusterPatch {
   return (_, _p, controlPlaneNodes) => {
     for (const controlPlaneNode of controlPlaneNodes) {

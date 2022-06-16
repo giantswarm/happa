@@ -11,8 +11,21 @@ import Button from 'UI/Controls/Button';
 import StyledDeleteButton from 'UI/Display/Cluster/ClusterLabels/DeleteLabelButton';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
-const DeleteLabelButtonWrapper = styled.div`
+const DeleteLabelButtonWrapper = styled.div<{ backgroundColor?: string }>`
   display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 24px;
+  line-height: 24px;
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor ?? 'transparent'};
+
+  a {
+    line-height: 1;
+    position: absolute;
+    top: 5px;
+    font-size: 14px;
+  }
 `;
 
 const DeleteLabelTooltipInner = styled.div`
@@ -34,11 +47,12 @@ interface IDeleteLabelButtonProps
   onOpen(isOpen: boolean): void;
 
   allowInteraction?: boolean;
+  backgroundColor?: string;
 }
 
 const DeleteLabelButton: FC<
   React.PropsWithChildren<IDeleteLabelButtonProps>
-> = ({ onDelete, onOpen, allowInteraction, ...restProps }) => {
+> = ({ onDelete, onOpen, allowInteraction, backgroundColor, ...restProps }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const divElement = useRef<HTMLDivElement>(null);
@@ -74,20 +88,21 @@ const DeleteLabelButton: FC<
   }, [isOpen]);
 
   return (
-    <DeleteLabelButtonWrapper ref={divElement}>
+    <DeleteLabelButtonWrapper
+      ref={divElement}
+      backgroundColor={backgroundColor}
+    >
       <Keyboard onSpace={handleDelete} onEnter={handleDelete}>
-        <span>
-          <TooltipContainer
-            target={divElement}
-            content={<StyledTooltip>Delete this label</StyledTooltip>}
-          >
-            <StyledDeleteButton
-              tabIndex={allowInteraction ? 0 : -1}
-              onClick={handleDelete}
-              {...restProps}
-            />
-          </TooltipContainer>
-        </span>
+        <TooltipContainer
+          target={divElement}
+          content={<StyledTooltip>Delete this label</StyledTooltip>}
+        >
+          <StyledDeleteButton
+            tabIndex={allowInteraction ? 0 : -1}
+            onClick={handleDelete}
+            {...restProps}
+          />
+        </TooltipContainer>
       </Keyboard>
       {isOpen && (
         <Tooltip

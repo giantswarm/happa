@@ -629,7 +629,7 @@ export function fetchProviderClustersForClustersKey(clusters?: Cluster[]) {
 export function getNodePoolDescription(
   nodePool: NodePool,
   providerNodePool: ProviderNodePool | null,
-  defaultValue = Constants.DEFAULT_NODEPOOL_DESCRIPTION
+  defaultValue: string = Constants.DEFAULT_NODEPOOL_DESCRIPTION
 ): string {
   const kind = nodePool.kind;
   const apiVersion = nodePool.apiVersion;
@@ -904,7 +904,7 @@ export function getClusterReleaseVersion(cluster: Cluster) {
 export function getClusterDescription(
   cluster: Cluster,
   providerCluster: ProviderCluster | null,
-  defaultValue = Constants.DEFAULT_CLUSTER_DESCRIPTION
+  defaultValue: string = Constants.DEFAULT_CLUSTER_DESCRIPTION
 ): string {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
