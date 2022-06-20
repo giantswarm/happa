@@ -66,7 +66,7 @@
     "copy-to-clipboard": "3.3.1",
     "core-js": "3.23.1",
     "date-fns": "2.28.0",
-    "date-fns-tz": "1.3.4",
+    "date-fns-tz": "1.3.5",
     "deep-diff": "1.0.2",
     "dotenv": "16.0.1",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
