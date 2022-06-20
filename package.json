@@ -125,7 +125,7 @@
     "@storybook/react": "6.5.9",
     "@testing-library/jest-dom": "5.16.4",
     "@testing-library/react": "13.3.0",
-    "@testing-library/react-hooks": "8.0.0",
+    "@testing-library/react-hooks": "8.0.1",
     "@types/bootstrap": "4.5.1",
     "@types/classnames": "2.3.1",
     "@types/color-hash": "1.0.2",
