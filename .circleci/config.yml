@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@4.21.1
+  architect: giantswarm/architect@4.22.0
 
 defaults: &defaults
   working_directory: ~/happa
@@ -75,6 +75,7 @@ workflows:
           name: push-happa-to-control-plane-app-catalog
           app_catalog: "control-plane-catalog"
           app_catalog_test: "control-plane-test-catalog"
+          push_to_oci_registry: false
           chart: "happa"
           requires:
             - build-container
