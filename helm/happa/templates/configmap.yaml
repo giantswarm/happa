@@ -21,7 +21,7 @@ data:
     {{- if eq .Values.managementCluster.provider.kind "azure" }}
     azure-capabilities-json: '{{ .Values.azure.vm.vmSize.capabilities | toJson }}'
     {{- end }}
-    default-request-timeout-seconds: 10
+    default-request-timeout-seconds: {{ .Values.happa.defaultRequestTimeoutSeconds }}
     provider: {{ .Values.managementCluster.provider.kind }}
     mapi-auth-redirect-url: {{ .Values.happa.address }}
     mapi-auth-admin-group: {{ .Values.kubernetes.auth.controlPlaneAdminTargetGroup }}
