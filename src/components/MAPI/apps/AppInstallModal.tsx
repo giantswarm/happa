@@ -105,12 +105,22 @@ interface IAppInstallModalProps {
   chartName: string;
   catalogName: string;
   versions: IVersion[];
+  selectedVersion: string;
+  selectVersion: (v: string) => void;
   appsPermissions?: IAppsPermissions;
 }
 
 const AppInstallModal: React.FC<
   React.PropsWithChildren<IAppInstallModalProps>
-> = ({ appName, chartName, catalogName, versions, appsPermissions }) => {
+> = ({
+  appName,
+  chartName,
+  catalogName,
+  versions,
+  selectedVersion,
+  selectVersion,
+  appsPermissions,
+}) => {
   const [page, setPage] = useState(0);
   const [visible, setVisible] = useState(false);
 
@@ -130,8 +140,6 @@ const AppInstallModal: React.FC<
   const [query, setQuery] = useState('');
 
   const debouncedQuery = useDebounce(query, SEARCH_DEBOUNCE_RATE);
-
-  const [version, setVersion] = useState(versions[0]?.chartVersion ?? '');
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
@@ -376,7 +384,7 @@ const AppInstallModal: React.FC<
   };
 
   const updateVersion = (newVersion: string) => {
-    setVersion(newVersion);
+    selectVersion(newVersion);
   };
 
   const updateValuesYAML = (files: FileList | null) => {
@@ -456,7 +464,7 @@ const AppInstallModal: React.FC<
         name: name,
         catalogName: catalogName,
         chartName: chartName,
-        version: version,
+        version: selectedVersion,
         namespace: namespace,
         configMapContents: valuesYAML ?? '',
         secretContents: secretsYAML ?? '',
@@ -634,7 +642,7 @@ const AppInstallModal: React.FC<
                   nameError={nameError}
                   namespace={namespace}
                   namespaceError={namespaceError}
-                  version={version}
+                  version={selectedVersion}
                   availableVersions={versions}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
