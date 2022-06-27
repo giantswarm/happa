@@ -103,6 +103,8 @@ describe('AppInstallModal', () => {
         chartName: app.spec.name,
         catalogName: app.spec.catalog,
         versions: [],
+        selectedVersion: '',
+        selectVersion: () => {},
       })
     );
   });
@@ -137,6 +139,8 @@ describe('AppInstallModal', () => {
         chartName: app.spec.name,
         catalogName: app.spec.catalog,
         versions: [],
+        selectedVersion: '',
+        selectVersion: () => {},
         appsPermissions: defaultAppsPermissions,
       })
     );
@@ -234,7 +238,15 @@ describe('AppInstallModal', () => {
             includesVersion: '1.0.0',
             test: false,
           },
+          {
+            chartVersion: '2.0.0',
+            created: new Date().toISOString(),
+            includesVersion: '2.0.0',
+            test: false,
+          },
         ],
+        selectedVersion: '1.0.0',
+        selectVersion: () => {},
         appsPermissions: defaultAppsPermissions,
       })
     );
@@ -245,7 +257,13 @@ describe('AppInstallModal', () => {
       await screen.findByText(capiv1beta1Mocks.randomCluster1.metadata.name)
     );
 
-    fireEvent.click(await screen.findByRole('button', { name: 'Install app' }));
+    const installButton = await screen.findByRole('button', {
+      name: 'Install app',
+    });
+
+    fireEvent.click(installButton);
+
+    expect(screen.getByText('1.0.0')).toBeInTheDocument();
 
     expect(
       await withMarkup(screen.findByText)(
@@ -263,6 +281,8 @@ describe('AppInstallModal', () => {
         chartName: app.spec.name,
         catalogName: app.spec.catalog,
         versions: [],
+        selectedVersion: '',
+        selectVersion: () => {},
         appsPermissions: {
           ...defaultAppsPermissions,
           canCreate: false,
@@ -313,6 +333,8 @@ describe('AppInstallModal', () => {
           chartName: app.spec.name,
           catalogName: app.spec.catalog,
           versions: [],
+          selectedVersion: '',
+          selectVersion: () => {},
           appsPermissions: defaultAppsPermissions,
         },
         capiv1beta1Mocks.randomCluster1.metadata.name
@@ -360,6 +382,8 @@ describe('AppInstallModal', () => {
         chartName: app.spec.name,
         catalogName: app.spec.catalog,
         versions: [],
+        selectedVersion: '',
+        selectVersion: () => {},
         appsPermissions: defaultAppsPermissions,
       })
     );
