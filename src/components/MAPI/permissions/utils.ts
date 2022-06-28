@@ -516,6 +516,28 @@ export function hasAppAccess(
   );
 }
 
+export const appAccessUseCase: IPermissionsUseCase = {
+  name: 'Use web UI',
+  description: 'Has the minimum permissions required to access this web UI',
+  category: 'interfaces',
+  scope: { cluster: true },
+  permissions: [],
+};
+
+export function getStatusForAppAccessUseCase(
+  permissions: IPermissionMap
+): PermissionsUseCaseStatuses {
+  const orgNamespaces = Object.keys(permissions).filter(
+    (ns) => ns !== 'default' && ns !== 'giantswarm' && ns !== ''
+  );
+
+  return {
+    [appAccessUseCase.name]: {
+      '': orgNamespaces.some((ns) => hasAppAccesInNamespace(permissions, ns)),
+    },
+  };
+}
+
 export function hasAccessToInspectPermissions(
   permissions: IPermissionMap
 ): boolean {
