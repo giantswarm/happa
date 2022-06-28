@@ -91,31 +91,33 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
     return useCases.filter((useCase) => !isGlobalUseCase(useCase));
   }, [useCases]);
 
-  const shouldDisplayUseCases =
+  const shouldDisplayUseCaseStatuses =
     useCases !== null &&
     (subjectType === SubjectTypes.Myself || subjectName !== '');
 
-  return shouldDisplayUseCases ? (
+  return (
     <>
-      <Tabs activeIndex={activeTab} onActive={setActiveTab}>
-        <Tab title='Global'>
-          <PermissionsUseCases
-            useCases={globalUseCases}
-            useCasesStatuses={useCasesStatuses}
-            activeIndexes={globalActiveIndexes}
-            onActive={setGlobalActiveIndexes}
-          />
-        </Tab>
-        <Tab title='For organizations'>
-          <PermissionsUseCases
-            useCases={organizationsUseCases}
-            useCasesStatuses={useCasesStatuses}
-            organizations={sortedOrganizations}
-            activeIndexes={organizationsActiveIndexes}
-            onActive={setOrganizationsActiveIndexes}
-          />
-        </Tab>
-      </Tabs>
+      {shouldDisplayUseCaseStatuses ? (
+        <Tabs activeIndex={activeTab} onActive={setActiveTab}>
+          <Tab title='Global'>
+            <PermissionsUseCases
+              useCases={globalUseCases}
+              useCasesStatuses={useCasesStatuses}
+              activeIndexes={globalActiveIndexes}
+              onActive={setGlobalActiveIndexes}
+            />
+          </Tab>
+          <Tab title='For organizations'>
+            <PermissionsUseCases
+              useCases={organizationsUseCases}
+              useCasesStatuses={useCasesStatuses}
+              organizations={sortedOrganizations}
+              activeIndexes={organizationsActiveIndexes}
+              onActive={setOrganizationsActiveIndexes}
+            />
+          </Tab>
+        </Tabs>
+      ) : null}
       <InspectPermissionsGuide
         forOrganizations={activeTab === 1}
         subjectType={subjectType}
@@ -123,7 +125,7 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
         animation={{ type: 'fadeIn', duration: 300 }}
       />
     </>
-  ) : null;
+  );
 };
 
 export default PermissionsOverview;
