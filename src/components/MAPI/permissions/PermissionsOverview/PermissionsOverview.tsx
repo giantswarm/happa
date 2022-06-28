@@ -8,8 +8,10 @@ import InspectPermissionsGuide from '../guides/InspectPermissionsGuide';
 import { SubjectTypes } from '../types';
 import { useUseCasesPermissions } from '../useUseCasesPermissions';
 import {
+  appAccessUseCase,
   getPermissionsUseCases,
   getStatusesForUseCases,
+  getStatusForAppAccessUseCase,
   isGlobalUseCase,
 } from '../utils';
 
@@ -37,35 +39,63 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
     (a?.name || a.id).localeCompare(b?.name || b.id)
   );
 
+  const shouldDisplayAppAccessUseCase =
+    subjectType === SubjectTypes.User || subjectType === SubjectTypes.Group;
+
   const useCasesStatuses = useMemo(() => {
     if (typeof permissions === 'undefined' || !useCases) return undefined;
 
-    return getStatusesForUseCases(
+    let statuses = getStatusesForUseCases(
       permissions,
       useCases,
       provider,
       sortedOrganizations
     );
-  }, [permissions, useCases, provider, sortedOrganizations]);
+
+    if (shouldDisplayAppAccessUseCase) {
+      const appAccessStatus = getStatusForAppAccessUseCase(permissions);
+      statuses = { ...statuses, ...appAccessStatus };
+    }
+
+    return statuses;
+  }, [
+    permissions,
+    useCases,
+    provider,
+    sortedOrganizations,
+    shouldDisplayAppAccessUseCase,
+  ]);
 
   const [globalActiveIndexes, setGlobalActiveIndexes] = useState<number[]>([]);
   const [organizationsActiveIndexes, setOrganizationsActiveIndexes] = useState<
     number[]
   >([]);
 
-  if (
-    !useCases ||
-    (subjectType !== SubjectTypes.Myself && subjectName === '')
-  ) {
-    return null;
-  }
+  const globalUseCases = useMemo(() => {
+    if (!useCases) return [];
 
-  const globalUseCases = useCases.filter((useCase) => isGlobalUseCase(useCase));
-  const organizationsUseCases = useCases.filter(
-    (useCase) => !isGlobalUseCase(useCase)
-  );
+    const filteredUseCases = useCases.filter((useCase) =>
+      isGlobalUseCase(useCase)
+    );
 
-  return (
+    if (shouldDisplayAppAccessUseCase) {
+      filteredUseCases.push(appAccessUseCase);
+    }
+
+    return filteredUseCases;
+  }, [useCases, shouldDisplayAppAccessUseCase]);
+
+  const organizationsUseCases = useMemo(() => {
+    if (!useCases) return [];
+
+    return useCases.filter((useCase) => !isGlobalUseCase(useCase));
+  }, [useCases]);
+
+  const shouldDisplayUseCases =
+    useCases !== null &&
+    (subjectType === SubjectTypes.Myself || subjectName !== '');
+
+  return shouldDisplayUseCases ? (
     <>
       <Tabs activeIndex={activeTab} onActive={setActiveTab}>
         <Tab title='Global'>
@@ -93,7 +123,7 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
         animation={{ type: 'fadeIn', duration: 300 }}
       />
     </>
-  );
+  ) : null;
 };
 
 export default PermissionsOverview;
