@@ -525,10 +525,11 @@ export const appAccessUseCase: IPermissionsUseCase = {
 };
 
 export function getStatusForAppAccessUseCase(
-  permissions: IPermissionMap
+  permissions: IPermissionMap,
+  organizations: IOrganization[]
 ): PermissionsUseCaseStatuses {
-  const orgNamespaces = Object.keys(permissions).filter(
-    (ns) => ns !== 'default' && ns !== 'giantswarm' && ns !== ''
+  const orgNamespaces = organizations.map(
+    (o) => o.namespace ?? getNamespaceFromOrgName(o.id)
   );
 
   return {

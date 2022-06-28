@@ -53,7 +53,10 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
     );
 
     if (shouldDisplayAppAccessUseCase) {
-      const appAccessStatus = getStatusForAppAccessUseCase(permissions);
+      const appAccessStatus = getStatusForAppAccessUseCase(
+        permissions,
+        sortedOrganizations
+      );
       statuses = { ...statuses, ...appAccessStatus };
     }
 
