@@ -173,6 +173,14 @@ const theme = deepMerge(generate(16), {
         dark: COLORS.darkBlueLighter1,
         light: COLORS.darkBlueLighter1,
       },
+      'background-accent': {
+        dark: COLORS.darkBlueDarker2,
+        light: COLORS.darkBlueDarker2,
+      },
+      'background-weak': {
+        dark: COLORS.darkBlueLighter2,
+        light: COLORS.darkBlueLighter2,
+      },
       'background-contrast': {
         dark: '#15253150',
         light: '#15253150',
@@ -180,10 +188,6 @@ const theme = deepMerge(generate(16), {
       'background-strong': {
         dark: COLORS.darkBlueDarker6,
         light: COLORS.darkBlueDarker6,
-      },
-      'background-weak': {
-        dark: COLORS.darkBlueLighter2,
-        light: COLORS.darkBlueLighter2,
       },
       'background-light': {
         dark: 'white',
