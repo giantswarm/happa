@@ -8,7 +8,7 @@ const DEFAULT_CONFIG: mermaidAPI.Config = {
   securityLevel: 'strict',
   themeCSS:
     '.node rect { fill: #EFEFEF; } .cluster rect { fill: #FFFFFF; stroke: #000000}',
-  fontFamily: 'Roboto:300,300i,400,400i,700,700i',
+  fontFamily: 'Roboto:300,400,700',
   flowchart: {
     htmlLabels: false,
     useMaxWidth: true,
