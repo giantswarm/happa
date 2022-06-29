@@ -36,8 +36,13 @@ const COLORS = {
   darkBlueLighter8: '#d0d8dd',
   darkBlueLighter9: '#e7ebee',
 
+  brightBlue: '#41B5F2',
+
   gray1: '#a4a4a4',
   gray2: '#cccccc',
+  gray3: '#eeeeee',
+  gray4: '#313131',
+  gray5: '#798691',
 
   shade5: '#32526a',
   shade6: '#3a5f7b',
@@ -45,10 +50,15 @@ const COLORS = {
   orange1: '#ffaa15',
 
   yellow1: '#ddb03a',
+  yellow2: '#c7b268',
 
   green1: '#24A524',
+  green2: '#2a8b29',
+  green3: '#3F963E',
 
   red1: '#e49090',
+  red2: '#c95353',
+  red3: '#bd3e3a',
 } as const;
 
 /* eslint-disable no-magic-numbers */
@@ -194,8 +204,8 @@ const theme = deepMerge(generate(16), {
         light: 'white',
       },
       text: {
-        dark: '#eeeeee',
-        light: '#eeeeee',
+        dark: COLORS.gray3,
+        light: COLORS.gray3,
       },
       'text-strong': {
         dark: 'white',
@@ -206,12 +216,12 @@ const theme = deepMerge(generate(16), {
         light: COLORS.gray2,
       },
       'text-xweak': {
-        dark: '#798691',
-        light: '#798691',
+        dark: COLORS.gray5,
+        light: COLORS.gray5,
       },
       'text-xxweak': {
-        dark: '#313131',
-        light: '#313131',
+        dark: COLORS.gray4,
+        light: COLORS.gray4,
       },
       'text-accent': {
         dark: COLORS.darkBlueDarker2,
@@ -250,18 +260,18 @@ const theme = deepMerge(generate(16), {
       'selected-background': 'brand',
       'selected-text': 'text-strong',
       'status-critical': COLORS.red1,
-      'status-danger': '#bd3e3a',
+      'status-danger': COLORS.red3,
       'status-warning': COLORS.orange1,
-      'status-ok': '#2a8b29',
+      'status-ok': COLORS.green2,
       'status-unknown': COLORS.gray2,
       'status-disabled': COLORS.shade6,
       'graph-0': 'brand',
       'graph-1': COLORS.orange1,
       'input-background': COLORS.shade5,
-      'input-highlight': '#41B5F2',
+      'input-highlight': COLORS.brightBlue,
       'tooltip-background': '#000000E6',
-      'service-priority-highest': '#c95353',
-      'service-priority-medium': '#c7b268',
+      'service-priority-highest': COLORS.red2,
+      'service-priority-medium': COLORS.yellow2,
       'service-priority-lowest': COLORS.darkBlueLighter2,
 
       focus: {
@@ -465,7 +475,7 @@ const theme = deepMerge(generate(16), {
       },
       primary: {
         background: {
-          color: '#3F963E',
+          color: COLORS.green3,
           opacity: 1,
         },
       },
