@@ -42,6 +42,8 @@ const COLORS = {
   shade6: '#3a5f7b',
 
   orange1: '#ffaa15',
+
+  yellow1: '#ddb03a',
 } as const;
 
 /* eslint-disable no-magic-numbers */
@@ -207,6 +209,10 @@ const theme = deepMerge(generate(16), {
       'text-accent': {
         dark: COLORS.darkBlueDarker2,
         light: COLORS.darkBlueDarker2,
+      },
+      'text-warning': {
+        dark: COLORS.yellow1,
+        light: COLORS.yellow1,
       },
       border: {
         dark: COLORS.shade6,
