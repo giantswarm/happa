@@ -8,8 +8,10 @@ import InspectPermissionsGuide from '../guides/InspectPermissionsGuide';
 import { SubjectTypes } from '../types';
 import { useUseCasesPermissions } from '../useUseCasesPermissions';
 import {
+  appAccessUseCase,
   getPermissionsUseCases,
   getStatusesForUseCases,
+  getStatusForAppAccessUseCase,
   isGlobalUseCase,
 } from '../utils';
 
@@ -37,55 +39,88 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
     (a?.name || a.id).localeCompare(b?.name || b.id)
   );
 
+  const shouldDisplayAppAccessUseCase =
+    subjectType === SubjectTypes.User || subjectType === SubjectTypes.Group;
+
   const useCasesStatuses = useMemo(() => {
     if (typeof permissions === 'undefined' || !useCases) return undefined;
 
-    return getStatusesForUseCases(
+    let statuses = getStatusesForUseCases(
       permissions,
       useCases,
       provider,
       sortedOrganizations
     );
-  }, [permissions, useCases, provider, sortedOrganizations]);
+
+    if (shouldDisplayAppAccessUseCase) {
+      const appAccessStatus = getStatusForAppAccessUseCase(
+        permissions,
+        sortedOrganizations
+      );
+      statuses = { ...statuses, ...appAccessStatus };
+    }
+
+    return statuses;
+  }, [
+    permissions,
+    useCases,
+    provider,
+    sortedOrganizations,
+    shouldDisplayAppAccessUseCase,
+  ]);
 
   const [globalActiveIndexes, setGlobalActiveIndexes] = useState<number[]>([]);
   const [organizationsActiveIndexes, setOrganizationsActiveIndexes] = useState<
     number[]
   >([]);
 
-  if (
-    !useCases ||
-    (subjectType !== SubjectTypes.Myself && subjectName === '')
-  ) {
-    return null;
-  }
+  const globalUseCases = useMemo(() => {
+    if (!useCases) return [];
 
-  const globalUseCases = useCases.filter((useCase) => isGlobalUseCase(useCase));
-  const organizationsUseCases = useCases.filter(
-    (useCase) => !isGlobalUseCase(useCase)
-  );
+    const filteredUseCases = useCases.filter((useCase) =>
+      isGlobalUseCase(useCase)
+    );
+
+    if (shouldDisplayAppAccessUseCase) {
+      filteredUseCases.push(appAccessUseCase);
+    }
+
+    return filteredUseCases;
+  }, [useCases, shouldDisplayAppAccessUseCase]);
+
+  const organizationsUseCases = useMemo(() => {
+    if (!useCases) return [];
+
+    return useCases.filter((useCase) => !isGlobalUseCase(useCase));
+  }, [useCases]);
+
+  const shouldDisplayUseCaseStatuses =
+    useCases !== null &&
+    (subjectType === SubjectTypes.Myself || subjectName !== '');
 
   return (
     <>
-      <Tabs activeIndex={activeTab} onActive={setActiveTab}>
-        <Tab title='Global'>
-          <PermissionsUseCases
-            useCases={globalUseCases}
-            useCasesStatuses={useCasesStatuses}
-            activeIndexes={globalActiveIndexes}
-            onActive={setGlobalActiveIndexes}
-          />
-        </Tab>
-        <Tab title='For organizations'>
-          <PermissionsUseCases
-            useCases={organizationsUseCases}
-            useCasesStatuses={useCasesStatuses}
-            organizations={sortedOrganizations}
-            activeIndexes={organizationsActiveIndexes}
-            onActive={setOrganizationsActiveIndexes}
-          />
-        </Tab>
-      </Tabs>
+      {shouldDisplayUseCaseStatuses ? (
+        <Tabs activeIndex={activeTab} onActive={setActiveTab}>
+          <Tab title='Global'>
+            <PermissionsUseCases
+              useCases={globalUseCases}
+              useCasesStatuses={useCasesStatuses}
+              activeIndexes={globalActiveIndexes}
+              onActive={setGlobalActiveIndexes}
+            />
+          </Tab>
+          <Tab title='For organizations'>
+            <PermissionsUseCases
+              useCases={organizationsUseCases}
+              useCasesStatuses={useCasesStatuses}
+              organizations={sortedOrganizations}
+              activeIndexes={organizationsActiveIndexes}
+              onActive={setOrganizationsActiveIndexes}
+            />
+          </Tab>
+        </Tabs>
+      ) : null}
       <InspectPermissionsGuide
         forOrganizations={activeTab === 1}
         subjectType={subjectType}
