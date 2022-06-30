@@ -10,7 +10,7 @@ import { getAppCatalogEntryReadmeURL } from 'model/services/mapi/applicationv1al
 import { selectCluster } from 'model/stores/main/actions';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -136,6 +136,8 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     dispatch(selectCluster(null));
   };
 
+  const [selectedVersion, setSelectedVersion] = useState(version);
+
   const selectVersion = (v: string) => {
     if (v.length < 1) return;
 
@@ -146,6 +148,8 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     });
 
     dispatch(replace(path));
+
+    setSelectedVersion(v);
   };
 
   const otherEntries = useMemo(
@@ -315,6 +319,8 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
                   catalogName={catalog.metadata.name}
                   versions={otherEntries}
                   appsPermissions={appsPermissions}
+                  selectedVersion={selectedVersion}
+                  selectVersion={selectVersion}
                 />
               ) : undefined
             }

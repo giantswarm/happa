@@ -48,6 +48,7 @@ happa:
   featureFlags:
     mapiAuth: false
     mapiClusters: false
+  defaultRequestTimeoutSeconds: 10
 
 happaapi:
   address: ""

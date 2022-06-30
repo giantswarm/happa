@@ -9,22 +9,28 @@ data:
   config.yaml: |
     passage-endpoint: {{ .Values.passage.address }}
     api-endpoint: {{ .Values.api.address }}
-    mapi-endpoint: {{ .Values.happaapi.address }}
     audience: {{ .Values.api.address }}
     athena-endpoint: {{ .Values.athena.address }}
-    mapi-audience: {{ .Values.oidc.issuerAddress }}
     ingress-base-domain: {{ .Values.guestCluster.base }}
     installation-name: {{ .Values.managementCluster.name }}
+    default-request-timeout-seconds: {{ .Values.happa.defaultRequestTimeoutSeconds }}
+
+    # Provider-specific
+    provider: {{ .Values.managementCluster.provider.kind }}
     {{- if eq .Values.managementCluster.provider.kind "aws" }}
     aws-capabilities-json: '{{ .Values.aws.instance.capabilities | toJson }}'
     {{- end }}
     {{- if eq .Values.managementCluster.provider.kind "azure" }}
     azure-capabilities-json: '{{ .Values.azure.vm.vmSize.capabilities | toJson }}'
     {{- end }}
-    default-request-timeout-seconds: 10
-    provider: {{ .Values.managementCluster.provider.kind }}
+    
+    # Giant Swarm Management API
+    mapi-audience: {{ .Values.oidc.issuerAddress }}
+    mapi-endpoint: {{ .Values.happaapi.address }}
     mapi-auth-redirect-url: {{ .Values.happa.address }}
     mapi-auth-admin-group: {{ .Values.kubernetes.auth.controlPlaneAdminTargetGroup }}
+    
+    # Sentry configuration for exception tracking and performance stats
     sentry-dsn: https://e2d0c60518114bf1b920f3cac4ee3f26@o346224.ingest.sentry.io/5739870
     sentry-environment: {{ .Values.managementCluster.name }}
     sentry-release-version: {{ .Values.image.tag }}

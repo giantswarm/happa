@@ -545,6 +545,12 @@ describe('PermissionsOverview', () => {
         screen.getByLabelText('access control permission status')
       ).getByText('Partial')
     ).toBeInTheDocument();
+
+    // displays app (web UI) access use case
+    const interfacesCategory = await screen.findByText('interfaces');
+    fireEvent.click(interfacesCategory);
+
+    expect(await screen.findByText('Use web UI')).toBeInTheDocument();
   });
 
   it('allows inspecting permissions for groups', async () => {
@@ -648,6 +654,12 @@ describe('PermissionsOverview', () => {
         screen.getByLabelText('access control permission status')
       ).getByText('Yes')
     ).toBeInTheDocument();
+
+    // displays app (web UI) access use case
+    const interfacesCategory = await screen.findByText('interfaces');
+    fireEvent.click(interfacesCategory);
+
+    expect(await screen.findByText('Use web UI')).toBeInTheDocument();
   });
 
   it('allows inspecting permissions for service accounts', async () => {
@@ -752,5 +764,8 @@ describe('PermissionsOverview', () => {
         screen.getByLabelText('access control permission status')
       ).getByText('No')
     ).toBeInTheDocument();
+
+    // does not display category for app access use case
+    expect(screen.queryByLabelText('interfaces')).not.toBeInTheDocument();
   });
 });

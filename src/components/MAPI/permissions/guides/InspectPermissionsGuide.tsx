@@ -1,6 +1,7 @@
 import { Text } from 'grommet';
 import LoginGuideStep from 'MAPI/guides/LoginGuideStep';
 import { getCurrentInstallationContextName } from 'MAPI/guides/utils';
+import { Constants } from 'model/constants';
 import * as docs from 'model/constants/docs';
 import React from 'react';
 import CLIGuide from 'UI/Display/MAPI/CLIGuide';
@@ -17,6 +18,7 @@ interface IInspectPermissionsGuideProps
   subjectType?: SubjectTypes;
 }
 
+// eslint-disable-next-line complexity
 const InspectPermissionsGuide: React.FC<IInspectPermissionsGuideProps> = ({
   forOrganizations,
   subjectName,
@@ -24,6 +26,17 @@ const InspectPermissionsGuide: React.FC<IInspectPermissionsGuideProps> = ({
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
+
+  const subjectNamePlaceholder =
+    subjectType === SubjectTypes.User
+      ? 'USER'
+      : subjectType === SubjectTypes.Group
+      ? 'customer:GROUP'
+      : subjectType === SubjectTypes.ServiceAccount
+      ? `${Constants.SERVICE_ACCOUNTS_PREFIX}SERVICE_ACCOUNT`
+      : '';
+
+  const displayedSubjectName = subjectName || subjectNamePlaceholder;
 
   const currentSubjectType =
     subjectType === SubjectTypes.User
@@ -37,15 +50,15 @@ const InspectPermissionsGuide: React.FC<IInspectPermissionsGuideProps> = ({
   const currentSubjectPossessive =
     subjectType === SubjectTypes.User ? (
       <>
-        user <code>{subjectName}</code> has
+        user <code>{displayedSubjectName}</code> has
       </>
     ) : subjectType === SubjectTypes.Group ? (
       <>
-        a member of group <code>{subjectName}</code> has
+        a member of group <code>{displayedSubjectName}</code> has
       </>
     ) : subjectType === SubjectTypes.ServiceAccount ? (
       <>
-        service account <code>{subjectName}</code> has
+        service account <code>{displayedSubjectName}</code> has
       </>
     ) : (
       `you have`
@@ -54,9 +67,9 @@ const InspectPermissionsGuide: React.FC<IInspectPermissionsGuideProps> = ({
   const impersonationFlags =
     subjectType === SubjectTypes.User ||
     subjectType === SubjectTypes.ServiceAccount
-      ? ` \\\n  --as ${subjectName}`
+      ? ` \\\n  --as ${displayedSubjectName}`
       : subjectType === SubjectTypes.Group
-      ? ` \\\n  --as example@acme.org --as-group ${subjectName}`
+      ? ` \\\n  --as example@acme.org --as-group ${displayedSubjectName}`
       : '';
 
   return (

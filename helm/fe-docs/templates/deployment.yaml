@@ -29,11 +29,11 @@ spec:
               name: http
           resources:
             requests:
-              cpu: 100m
-              memory: 250Mi
+              cpu: 30m
+              memory: 50Mi
             limits:
-              cpu: 250m
-              memory: 250Mi
+              cpu: 100m
+              memory: 100Mi
           livenessProbe:
             httpGet:
               path: /

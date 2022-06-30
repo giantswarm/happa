@@ -66,6 +66,8 @@ interface IInstallAppModalApp {
 interface IInstallAppModalProps {
   app: IInstallAppModalApp;
   selectedClusterID: string | null;
+  selectedVersion: string;
+  selectVersion: (version: string) => void;
 }
 
 const InstallAppModal: React.FC<
@@ -91,8 +93,6 @@ const InstallAppModal: React.FC<
   const [query, setQuery] = useState('');
 
   const debouncedQuery = useDebounce(query, SEARCH_DEBOUNCE_RATE);
-
-  const [version, setVersion] = useState(props.app.versions[0].chartVersion);
 
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
@@ -187,7 +187,7 @@ const InstallAppModal: React.FC<
   };
 
   const updateVersion = (newVersion: string) => {
-    setVersion(newVersion);
+    props.selectVersion(newVersion);
   };
 
   const updateValuesYAML = (files: FileList | null) => {
@@ -258,7 +258,7 @@ const InstallAppModal: React.FC<
             name: name,
             catalog: props.app.catalog,
             chartName: props.app.name,
-            version: version,
+            version: props.selectedVersion,
             namespace: namespace,
             valuesYAML: valuesYAML ?? '',
             secretsYAML: secretsYAML ?? '',
@@ -356,7 +356,7 @@ const InstallAppModal: React.FC<
                   nameError={nameError}
                   namespace={namespace}
                   namespaceError={namespaceError}
-                  version={version}
+                  version={props.selectedVersion}
                   availableVersions={props.app.versions}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}

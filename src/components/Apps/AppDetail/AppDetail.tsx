@@ -5,7 +5,7 @@ import { loadAppReadme } from 'model/stores/appcatalog/actions';
 import { CLUSTER_LOAD_APP_README_ERROR } from 'model/stores/appcatalog/constants';
 import { selectApp, selectReadmeURL } from 'model/stores/appcatalog/selectors';
 import { IState } from 'model/stores/state';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -23,6 +23,8 @@ const AppDetail: React.FC<React.PropsWithChildren<unknown>> = () => {
     app: string;
     version: string;
   };
+
+  const [selectedVersion, setSelectedVersion] = useState(params.version);
 
   const [app, catalog, otherVersions] = useSelector(
     selectApp(params.catalogName, params.app, params.version)
@@ -62,6 +64,8 @@ const AppDetail: React.FC<React.PropsWithChildren<unknown>> = () => {
       });
 
       dispatch(push(path));
+
+      setSelectedVersion(v);
     }
   };
 
@@ -109,6 +113,8 @@ const AppDetail: React.FC<React.PropsWithChildren<unknown>> = () => {
                 versions,
               }}
               selectedClusterID={selectedClusterID}
+              selectedVersion={selectedVersion}
+              selectVersion={selectVersion}
             />
           }
         />
