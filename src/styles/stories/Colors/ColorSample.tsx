@@ -1,3 +1,4 @@
+import contrast from 'get-contrast';
 import { Box } from 'grommet';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
@@ -19,19 +20,23 @@ const StyledDiv = styled.div`
   font-family: Inconsolata, monospace;
 `;
 
+const MIN_CONTRAST_RATIO = 4.5;
+
 interface IColorSampleProps {
   children: ReactNode;
   color: string;
-  contrastingColor?: string;
   title?: string;
 }
 
 const ColorSample: React.FC<React.PropsWithChildren<IColorSampleProps>> = ({
   children,
   color,
-  contrastingColor,
   title,
 }) => {
+  const contrastRatio = contrast.ratio('white', color);
+  const contrastingColor =
+    contrastRatio > MIN_CONTRAST_RATIO ? 'white' : 'black';
+
   return (
     <Box direction='row' pad='small'>
       <StyledDiv style={{ color: contrastingColor, backgroundColor: color }}>
@@ -41,9 +46,7 @@ const ColorSample: React.FC<React.PropsWithChildren<IColorSampleProps>> = ({
         <div>
           <strong>{title}</strong>
         </div>
-        <div>
-          <p>{children}</p>
-        </div>
+        <div>{children}</div>
       </Box>
     </Box>
   );
@@ -51,7 +54,6 @@ const ColorSample: React.FC<React.PropsWithChildren<IColorSampleProps>> = ({
 
 ColorSample.defaultProps = {
   color: '#000000',
-  contrastingColor: '#ffffff',
   title: '',
 };
 
