@@ -11,7 +11,10 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { AppConstants, Constants } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import { isAppManagedByFlux } from 'model/services/mapi/applicationv1alpha1';
+import {
+  IApp,
+  isAppManagedByFlux,
+} from 'model/services/mapi/applicationv1alpha1';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
@@ -19,6 +22,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Cache, mutate } from 'swr';
 import ErrorReporter from 'utils/errors/ErrorReporter';
+import { DeepPartial } from 'utils/helpers';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
@@ -314,16 +318,24 @@ export async function ensureConfigMapForApp(
 
   if (!configMap) return null;
 
-  let app = await applicationv1alpha1.getApp(client, auth, namespace, appName);
-  app.spec.userConfig = {
-    ...app.spec.userConfig,
-    configMap: {
-      name: configMap.metadata.name,
-      namespace: configMap.metadata.namespace!,
+  const appPatch: DeepPartial<IApp> = {
+    spec: {
+      userConfig: {
+        configMap: {
+          name: configMap.metadata.name,
+          namespace: configMap.metadata.namespace!,
+        },
+      },
     },
   };
 
-  app = await applicationv1alpha1.updateApp(client, auth, app);
+  const app = await applicationv1alpha1.patchApp(
+    client,
+    auth,
+    namespace,
+    appName,
+    appPatch
+  );
 
   mutate(
     applicationv1alpha1.getAppKey(app.metadata.namespace!, app.metadata.name),
@@ -366,16 +378,24 @@ export async function ensureSecretForApp(
 
   if (!secret) return null;
 
-  let app = await applicationv1alpha1.getApp(client, auth, namespace, appName);
-  app.spec.userConfig = {
-    ...app.spec.userConfig,
-    secret: {
-      name: secret.metadata.name,
-      namespace: secret.metadata.namespace!,
+  const appPatch: DeepPartial<IApp> = {
+    spec: {
+      userConfig: {
+        secret: {
+          name: secret.metadata.name,
+          namespace: secret.metadata.namespace!,
+        },
+      },
     },
   };
 
-  app = await applicationv1alpha1.updateApp(client, auth, app);
+  const app = await applicationv1alpha1.patchApp(
+    client,
+    auth,
+    namespace,
+    appName,
+    appPatch
+  );
 
   mutate(
     applicationv1alpha1.getAppKey(app.metadata.namespace!, app.metadata.name),
@@ -396,96 +416,6 @@ export async function ensureSecretForApp(
     }),
     false
   );
-
-  return app;
-}
-
-export async function deleteConfigMapForApp(
-  client: IHttpClient,
-  auth: IOAuth2Provider,
-  namespace: string,
-  appName: string
-) {
-  const app = await applicationv1alpha1.getApp(
-    client,
-    auth,
-    namespace,
-    appName
-  );
-  app.spec.userConfig = {
-    ...app.spec.userConfig,
-    configMap: {
-      name: '',
-      namespace: '',
-    },
-  };
-
-  await applicationv1alpha1.updateApp(client, auth, app);
-
-  try {
-    const userConfigMapName = getUserConfigMapName(appName);
-    const configMap = await corev1.getConfigMap(
-      client,
-      auth,
-      userConfigMapName,
-      namespace
-    );
-    await corev1.deleteConfigMap(client, auth, configMap);
-  } catch (err) {
-    if (
-      !metav1.isStatusError(
-        (err as GenericResponse).data,
-        metav1.K8sStatusErrorReasons.NotFound
-      )
-    ) {
-      return Promise.reject(err);
-    }
-  }
-
-  return app;
-}
-
-export async function deleteSecretForApp(
-  client: IHttpClient,
-  auth: IOAuth2Provider,
-  namespace: string,
-  appName: string
-) {
-  const app = await applicationv1alpha1.getApp(
-    client,
-    auth,
-    namespace,
-    appName
-  );
-  app.spec.userConfig = {
-    ...app.spec.userConfig,
-    secret: {
-      name: '',
-      namespace: '',
-    },
-  };
-
-  await applicationv1alpha1.updateApp(client, auth, app);
-
-  try {
-    const userSecretName = getUserSecretName(appName);
-    const secret = await corev1.getSecret(
-      client,
-      auth,
-      userSecretName,
-      namespace
-    );
-    await corev1.deleteSecret(client, auth, secret);
-  } catch (err) {
-    if (
-      !metav1.isStatusError(
-        (err as GenericResponse).data,
-        metav1.K8sStatusErrorReasons.NotFound
-      )
-    ) {
-      return Promise.reject(err);
-    }
-  }
 
   return app;
 }

@@ -34,7 +34,7 @@ const ConfigureAppGuide: React.FC<
             },
             {
               label: 'App configuration',
-              href: 'docs.appConfigurationURL',
+              href: docs.appConfigurationURL,
               external: true,
             },
             {

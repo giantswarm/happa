@@ -438,3 +438,11 @@ export function cartesian<T extends unknown[][]>(
 type MapCartesian<T extends unknown[][]> = {
   [K in keyof T]: T[K] extends Array<infer U> ? U : never;
 };
+
+/**
+ * Utility type that returns a partial type with all nested objects
+ * as partial types as well
+ */
+export type DeepPartial<T> = T extends object
+  ? { [P in keyof T]?: DeepPartial<T[P]> }
+  : T;

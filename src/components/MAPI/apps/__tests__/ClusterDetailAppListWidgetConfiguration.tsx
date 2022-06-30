@@ -10,6 +10,7 @@ import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import { getComponentWithStore } from 'test/renderUtils';
+import { DeepPartial } from 'utils/helpers';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListWidgetConfiguration from '../ClusterDetailAppListWidgetConfiguration';
@@ -223,11 +224,16 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
       )
       .reply(StatusCodes.Created, configMap);
 
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`
-      )
-      .reply(StatusCodes.Ok, app);
+    const appPatch: DeepPartial<applicationv1alpha1.IApp> = {
+      spec: {
+        userConfig: {
+          configMap: {
+            name: `${app.metadata.name}-user-values`,
+            namespace: app.metadata.namespace!,
+          },
+        },
+      },
+    };
 
     app = {
       ...app,
@@ -244,9 +250,9 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
     };
 
     nock(window.config.mapiEndpoint)
-      .put(
+      .patch(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        app as unknown as nock.DataMatcherMap
+        appPatch
       )
       .reply(StatusCodes.Ok, app);
 
@@ -321,16 +327,21 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
       )
       .reply(StatusCodes.Ok, configMap);
 
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`
-      )
-      .reply(StatusCodes.Ok, app);
+    const appPatch: DeepPartial<applicationv1alpha1.IApp> = {
+      spec: {
+        userConfig: {
+          configMap: {
+            name: `${app.metadata.name}-user-values`,
+            namespace: app.metadata.namespace!,
+          },
+        },
+      },
+    };
 
     nock(window.config.mapiEndpoint)
-      .put(
+      .patch(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        app as unknown as nock.DataMatcherMap
+        appPatch
       )
       .reply(StatusCodes.Ok, app);
 
@@ -393,12 +404,6 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
       .post(`/api/v1/namespaces/${app.metadata.namespace}/secrets/`, secret)
       .reply(StatusCodes.Created, secret);
 
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`
-      )
-      .reply(StatusCodes.Ok, app);
-
     app = {
       ...app,
       spec: {
@@ -413,10 +418,21 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
       },
     };
 
+    const appPatch: DeepPartial<applicationv1alpha1.IApp> = {
+      spec: {
+        userConfig: {
+          secret: {
+            name: `${app.metadata.name}-user-secrets`,
+            namespace: app.metadata.namespace!,
+          },
+        },
+      },
+    };
+
     nock(window.config.mapiEndpoint)
-      .put(
+      .patch(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        app as unknown as nock.DataMatcherMap
+        appPatch
       )
       .reply(StatusCodes.Ok, app);
 
@@ -493,16 +509,21 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
       )
       .reply(StatusCodes.Ok, secret);
 
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`
-      )
-      .reply(StatusCodes.Ok, app);
+    const appPatch: DeepPartial<applicationv1alpha1.IApp> = {
+      spec: {
+        userConfig: {
+          secret: {
+            name: `${app.metadata.name}-user-secrets`,
+            namespace: app.metadata.namespace!,
+          },
+        },
+      },
+    };
 
     nock(window.config.mapiEndpoint)
-      .put(
+      .patch(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${app.metadata.namespace}/apps/${app.metadata.name}/`,
-        app as unknown as nock.DataMatcherMap
+        appPatch
       )
       .reply(StatusCodes.Ok, app);
 

@@ -1,7 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
-import AppDetailsModalMAPI from 'MAPI/apps/AppDetailsModal';
 import ListAppsGuide from 'MAPI/clusters/guides/ListAppsGuide';
 import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { extractErrorMessage } from 'MAPI/utils';
@@ -14,13 +13,7 @@ import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { supportsOptionalIngress } from 'model/stores/cluster/utils';
 import { selectCluster } from 'model/stores/main/actions';
 import { getKubernetesReleaseEOLStatus } from 'model/stores/releases/utils';
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
@@ -34,7 +27,6 @@ import FlashMessageComponent from 'UI/Display/FlashMessage';
 import NotAvailable from 'UI/Display/NotAvailable';
 import { getK8sVersionEOLDate } from 'utils/config';
 import ErrorReporter from 'utils/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import ClusterDetailAppList from './ClusterDetailAppList';
@@ -156,30 +148,6 @@ const ClusterDetailApps: React.FC<
     }
   }, [appListError]);
 
-  const [detailsModalIsVisible, setDetailsModalIsVisible] = useState(false);
-  const [detailsModalAppName, setDetailsModalAppName] = useState('');
-
-  const appToDisplay = useMemo(() => {
-    if (!appList) return undefined;
-
-    return appList.items.find(
-      (app) => app.metadata.name === detailsModalAppName
-    );
-  }, [appList, detailsModalAppName]);
-
-  useLayoutEffect(() => {
-    if (!detailsModalIsVisible || appToDisplay) return;
-
-    new FlashMessage(
-      'The app you were looking at was deleted from the cluster by someone else.',
-      messageType.ERROR,
-      messageTTL.LONG
-    );
-
-    setDetailsModalIsVisible(false);
-    setDetailsModalAppName('');
-  }, [detailsModalIsVisible, appToDisplay]);
-
   const releaseClient = useRef(clientFactory());
   const { canGet: canGetReleases } = usePermissionsForReleases(
     provider,
@@ -222,11 +190,6 @@ const ClusterDetailApps: React.FC<
   const openAppCatalog = () => {
     dispatch(selectCluster(clusterId));
     dispatch(push(AppsRoutes.Home));
-  };
-
-  const hideAppModal = () => {
-    setDetailsModalIsVisible(false);
-    setDetailsModalAppName('');
   };
 
   const hasOptionalIngress = supportsOptionalIngress(provider, releaseVersion);
@@ -376,15 +339,6 @@ const ClusterDetailApps: React.FC<
               </FlashMessageComponent>
             )}
           </div>
-
-          {appToDisplay && (
-            <AppDetailsModalMAPI
-              appName={appToDisplay.metadata.name}
-              clusterName={clusterId}
-              onClose={hideAppModal}
-              visible={detailsModalIsVisible}
-            />
-          )}
         </>
       </Breadcrumb>
     </DocumentTitle>
