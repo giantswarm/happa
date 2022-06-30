@@ -8,7 +8,7 @@ interface ICalendarDayProps {
   isSelected: boolean;
 }
 
-const COLORS = {
+export const COLORS = {
   // dark blue as defined in Giant Swarm's style guide
   darkBlue: '#234a61',
 
@@ -433,7 +433,7 @@ const theme = deepMerge(generate(16), {
       },
     },
     primary: {
-      background: 'status-ok',
+      background: COLORS.green2,
       color: 'text',
       font: {
         weight: 'normal',
