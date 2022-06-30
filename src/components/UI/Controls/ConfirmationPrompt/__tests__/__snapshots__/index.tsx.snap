@@ -2,7 +2,7 @@
 
 exports[`ConfirmationPrompt renders a component with a title 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -17,7 +17,7 @@ exports[`ConfirmationPrompt renders a component with a title 1`] = `
 
 exports[`ConfirmationPrompt renders a component with buttons 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -32,7 +32,7 @@ exports[`ConfirmationPrompt renders a component with buttons 1`] = `
 
 exports[`ConfirmationPrompt renders a simple component 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
