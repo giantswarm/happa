@@ -6,13 +6,13 @@ import {
   ThemeContext,
   ThemeType,
 } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import React from 'react';
 import styled, { css } from 'styled-components';
 
 const StyledAccordion = styled(Accordion)`
   code {
-    background-color: ${({ theme }) =>
-      theme.global.colors['accent-strong'].dark};
+    background-color: ${({ theme }) => normalizeColor('accent-strong', theme)};
     font-size: 1em;
 
     var {
@@ -33,8 +33,8 @@ const customTheme: ThemeType = {
   icon: {
     // @ts-expect-error
     extend: css`
-      fill: ${({ theme }) => theme.global.colors['text-weak'].dark};
-      stroke: ${({ theme }) => theme.global.colors['text-weak'].dark};
+      fill: ${({ theme }) => normalizeColor('text-weak', theme)};
+      stroke: ${({ theme }) => normalizeColor('text-weak', theme)};
     `,
   },
 };

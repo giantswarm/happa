@@ -7,6 +7,7 @@ import {
   Keyboard,
   Text,
 } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { useGettingStartedContext } from 'MAPI/clusters/GettingStarted/GettingStartedProvider';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -23,8 +24,7 @@ const StyledCard = styled(Card)`
 
   :hover,
   :focus {
-    box-shadow: ${(props) =>
-      `0 0 0 1px ${props.theme.global.colors.text.dark}`};
+    box-shadow: ${({ theme }) => `0 0 0 1px ${normalizeColor('text', theme)}`};
   }
 
   :active {

@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Heading, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import { NodePoolList, ProviderCluster } from 'MAPI/types';
 import { Cluster } from 'MAPI/types';
@@ -175,7 +176,7 @@ const NodesInfo = styled.div`
     content: '';
     text-align: center;
     border: 1px solid;
-    border-color: ${({ theme }) => theme.global.colors['text-weak'].dark};
+    border-color: ${({ theme }) => normalizeColor('text-weak', theme)};
     position: absolute;
     height: 10px;
     width: 95%;
@@ -188,7 +189,7 @@ const NodesInfo = styled.div`
 
   ::before {
     content: '';
-    background: ${({ theme }) => theme.global.colors.background.dark};
+    background: ${({ theme }) => normalizeColor('background', theme)};
     position: absolute;
     height: 5px;
     top: calc(50% - 1px + 5px);
@@ -202,7 +203,7 @@ const NodesInfo = styled.div`
 const NodesInfoText = styled(Text)`
   padding: 0 10px;
   text-transform: uppercase;
-  background: ${({ theme }) => theme.global.colors.background.dark};
+  background: ${({ theme }) => normalizeColor('background', theme)};
   z-index: 2;
 `;
 

@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Keyboard, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
 import ClusterStatusComponent from 'MAPI/clusters/ClusterStatus/ClusterStatus';
 import { useClusterStatus } from 'MAPI/clusters/hooks/useClusterStatus';
@@ -49,13 +50,19 @@ const StyledLink = styled.a`
 
     ${VersionLabel} {
       border-bottom: ${({ theme }) =>
-        `${theme.global.borderSize.xsmall} solid ${theme.global.colors['text-strong'].dark}`};
+        `${theme.global.borderSize.xsmall} solid ${normalizeColor(
+          'text-strong',
+          theme
+        )}`};
     }
   }
 
   ${VersionLabel} {
     border-bottom: ${({ theme }) =>
-      `${theme.global.borderSize.xsmall} solid ${theme.global.colors['text-xweak'].dark}`};
+      `${theme.global.borderSize.xsmall} solid ${normalizeColor(
+        'text-xweak',
+        theme
+      )}`};
   }
 `;
 

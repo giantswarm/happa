@@ -1,4 +1,5 @@
 import { Box, Form, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { CSSBreakpoints } from 'model/constants';
 import { Constants } from 'model/constants';
 import React, { useLayoutEffect, useRef, useState } from 'react';
@@ -70,7 +71,8 @@ interface StyledTextInputProps {
 
 const StyledTextInput = styled(TextInput)<StyledTextInputProps>`
   padding: 7px 9px;
-  color: ${({ dark, theme }) => (dark ? theme.colors.darkGray : 'inherit')};
+  color: ${({ dark, theme }) =>
+    dark ? normalizeColor('text-dim', theme) : 'inherit'};
 
   &:focus {
     color: inherit;

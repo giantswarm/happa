@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as docs from 'model/constants/docs';
 import * as legacyKeyPairs from 'model/services/mapi/legacy/keypairs';
@@ -18,7 +19,7 @@ import { usePermissionsForKeyPairs } from './permissions/usePermissionsForKeyPai
 import { isKeyPairActive } from './utils';
 
 const StyledLink = styled.a`
-  color: ${({ theme }) => theme.global.colors['input-highlight']};
+  color: ${({ theme }) => normalizeColor('input-highlight', theme)};
 `;
 
 interface IClusterDetailWidgetKeyPairsProps

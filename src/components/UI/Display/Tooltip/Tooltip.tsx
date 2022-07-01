@@ -1,4 +1,5 @@
 import { Box, BoxExtendedProps, Drop, DropExtendedProps, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
@@ -21,7 +22,7 @@ const TooltipCaret = styled(Box)<{
     display: block;
 
     ${({ placement, tooltipColor, theme }) => {
-      const toolTipBorder = `5px solid ${theme.global.colors[tooltipColor]}`;
+      const toolTipBorder = `5px solid ${normalizeColor(tooltipColor, theme)}`;
 
       if (placement === 'bottom') {
         return `

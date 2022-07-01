@@ -1,4 +1,5 @@
 import { Box } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
@@ -18,8 +19,8 @@ const ClusterDetailAppLoadingPlaceholder: React.FC<
         speed={2}
         height={64}
         width='300'
-        backgroundColor={theme.global.colors['text-xweak'].dark}
-        foregroundColor={theme.global.colors['text-weak'].dark}
+        backgroundColor={normalizeColor('text-xweak', theme)}
+        foregroundColor={normalizeColor('text-weak', theme)}
       >
         <rect x='12' y='13' rx='4' ry='4' width='38' height='38' />
         <rect x='64' y='16' rx='4' ry='4' width='224' height='12' />

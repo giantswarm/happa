@@ -1,6 +1,5 @@
 import { Box, Text } from 'grommet';
 import React from 'react';
-import { useTheme } from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import { formatDate } from 'utils/helpers';
 
@@ -24,16 +23,14 @@ const ClusterStatus: React.FC<React.PropsWithChildren<IClusterStatusProps>> = ({
   showFullMessage,
   ...props
 }) => {
-  const theme = useTheme();
-
-  let color = theme.colors.yellow1;
+  let color = 'text-warning';
   let iconClassName = '';
   let message = '';
   let fullMessage = '';
 
   switch (status) {
     case ClusterStatusType.CreationInProgress:
-      color = theme.colors.gray;
+      color = 'text-weak';
       iconClassName = 'fa fa-change-in-progress';
       message = 'Cluster creating…';
       fullMessage =
@@ -48,7 +45,7 @@ const ClusterStatus: React.FC<React.PropsWithChildren<IClusterStatusProps>> = ({
       break;
 
     case ClusterStatusType.UpgradeScheduled:
-      color = theme.colors.gray;
+      color = 'text-weak';
       iconClassName = 'fa fa-version-upgrade';
       message = 'Upgrade scheduled';
       fullMessage = clusterUpdateSchedule

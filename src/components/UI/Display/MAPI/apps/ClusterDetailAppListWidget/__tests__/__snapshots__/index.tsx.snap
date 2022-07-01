@@ -2,7 +2,7 @@
 
 exports[`ClusterDetailAppListWidget renders a simple widget 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -15,7 +15,7 @@ exports[`ClusterDetailAppListWidget renders a simple widget 1`] = `
         class="StyledBox-sc-13pk1d4-0 iNDmPr"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 fkMMbk ClusterDetailAppListWidget__Title-sc-1uv4dc5-0 cOsBqW"
+          class="StyledText-sc-1sadyjn-0 lfzAuU ClusterDetailAppListWidget__Title-sc-1uv4dc5-0 cOsBqW"
         >
           Some widget
         </span>

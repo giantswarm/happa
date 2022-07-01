@@ -1,10 +1,11 @@
+import { normalizeColor } from 'grommet/utils';
 import React, { ReactNode } from 'react';
 import { css } from 'styled-components';
 import styled from 'styled-components';
 
 const radius = '5px';
 
-const defaultThemeColor = 'darkBlue';
+const defaultThemeColor = 'background';
 
 const Wrapper = styled.div`
   display: inline-flex;
@@ -23,8 +24,8 @@ const CommonCSS = css`
 
 export const KeyWrapper = styled.span<{ outline: boolean; rounded: boolean }>`
   ${CommonCSS};
-  background-color: ${({ color, theme }) =>
-    color ?? theme.colors[defaultThemeColor]};
+  background-color: ${({ color = defaultThemeColor, theme }) =>
+    normalizeColor(color, theme)};
 
   ${({ rounded }) =>
     rounded &&
@@ -33,11 +34,10 @@ export const KeyWrapper = styled.span<{ outline: boolean; rounded: boolean }>`
       border-bottom-left-radius: ${radius};
     `}
 
-  ${({ outline, color }) =>
+  ${({ outline, color = defaultThemeColor, theme }) =>
     outline &&
     css`
-      border: 1px solid
-        ${({ theme }) => color ?? theme.colors[defaultThemeColor]};
+      border: 1px solid ${normalizeColor(color, theme)};
       border-right: none;
     `}
 `;
@@ -49,9 +49,10 @@ export const ValueWrapper = styled.span<{
   backgroundColor?: string;
 }>`
   ${CommonCSS};
-  color: ${({ textColor }) => textColor ?? 'inherit'};
-  background-color: ${({ backgroundColor }) =>
-    backgroundColor ?? 'transparent'};
+  color: ${({ textColor = 'inherit', theme }) =>
+    normalizeColor(textColor, theme)};
+  background-color: ${({ backgroundColor = 'transparent', theme }) =>
+    normalizeColor(backgroundColor, theme)};
 
   ${({ rounded }) =>
     rounded &&
@@ -60,11 +61,10 @@ export const ValueWrapper = styled.span<{
       border-bottom-right-radius: ${radius};
     `}
 
-  ${({ outline, color }) =>
+  ${({ outline, color = defaultThemeColor, theme }) =>
     outline &&
     css`
-      border: 1px solid
-        ${({ theme }) => color ?? theme.colors[defaultThemeColor]};
+      border: 1px solid ${normalizeColor(color, theme)};
       border-left: none;
     `}
 `;

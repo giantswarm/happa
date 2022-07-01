@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { NodePoolList } from 'MAPI/types';
 import {
   fetchNodePoolListForCluster,
@@ -45,7 +46,7 @@ function formatCPU(value?: number) {
 }
 
 const StyledLink = styled(Link)`
-  color: ${({ theme }) => theme.global.colors['input-highlight']};
+  color: ${({ theme }) => normalizeColor('input-highlight', theme)};
 `;
 
 interface IClusterDetailWidgetWorkerNodesProps

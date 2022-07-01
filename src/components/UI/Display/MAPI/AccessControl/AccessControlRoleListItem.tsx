@@ -1,4 +1,5 @@
 import { Box, Card, CardBody, CardHeader, Heading, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import * as React from 'react';
 import styled from 'styled-components';
 import RefreshableLabel from 'UI/Display/RefreshableLabel';
@@ -30,15 +31,14 @@ const StyledCard = styled(Card)`
   min-height: auto;
   box-shadow: ${(props) =>
     props['aria-selected']
-      ? `0 0 0 1px ${props.theme.global.colors.text.dark}`
+      ? `0 0 0 1px ${normalizeColor('text', props.theme)}`
       : 'none'};
   outline: ${(props) => props['aria-selected'] && 'none'};
   transition: opacity 0.1s ease-out, box-shadow 0.1s ease-in-out;
 
   :hover,
   :focus {
-    box-shadow: ${(props) =>
-      `0 0 0 1px ${props.theme.global.colors.text.dark}`};
+    box-shadow: ${({ theme }) => `0 0 0 1px ${normalizeColor('text', theme)}`};
   }
 
   :active {

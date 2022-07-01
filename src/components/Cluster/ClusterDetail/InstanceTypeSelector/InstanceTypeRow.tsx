@@ -1,4 +1,5 @@
 import { Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { FC } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
@@ -13,13 +14,12 @@ import {
 const StyledTableRow = styled(TableRow)`
   cursor: pointer;
   background: ${(props) =>
-    props['aria-checked'] &&
-    props.theme.global.colors['background-front'].dark};
+    props['aria-checked'] && normalizeColor('background-front', props.theme)};
 
   :hover {
     background: ${(props) =>
       !props['aria-checked'] &&
-      props.theme.global.colors['background-contrast'].dark};
+      normalizeColor('background-contrast', props.theme)};
   }
 
   .button-wrapper {

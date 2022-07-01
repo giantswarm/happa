@@ -2,7 +2,7 @@
 
 exports[`Tabs renders a basic tab layout 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -12,7 +12,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
       role="tablist"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 koVeoz"
+        class="StyledBox-sc-13pk1d4-0 bCIKb"
       >
         <div
           class="StyledBox-sc-13pk1d4-0 jGFgVw StyledTabs__StyledTabsHeader-sc-a4fwxl-0 gzVA-ds"
@@ -25,10 +25,10 @@ exports[`Tabs renders a basic tab layout 1`] = `
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 gRtfvM StyledTab-sc-1nnwnsb-0 kNewXU"
+              class="StyledBox-sc-13pk1d4-0 exysek StyledTab-sc-1nnwnsb-0 kNewXU"
             >
               <span
-                class="StyledText-sc-1sadyjn-0 dqUjid"
+                class="StyledText-sc-1sadyjn-0 eHXJeZ"
               >
                 first
               </span>
@@ -45,7 +45,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
               class="StyledBox-sc-13pk1d4-0 gyBONE StyledTab-sc-1nnwnsb-0 kNewXU"
             >
               <span
-                class="StyledText-sc-1sadyjn-0 kwKWtx"
+                class="StyledText-sc-1sadyjn-0 gxPAiZ"
               >
                 second
               </span>
@@ -62,7 +62,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
               class="StyledBox-sc-13pk1d4-0 gyBONE StyledTab-sc-1nnwnsb-0 kNewXU"
             >
               <span
-                class="StyledText-sc-1sadyjn-0 kwKWtx"
+                class="StyledText-sc-1sadyjn-0 gxPAiZ"
               >
                 third
               </span>

@@ -1,9 +1,10 @@
 import { Box, Heading, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import React from 'react';
 import styled from 'styled-components';
 
 const StyledLink = styled.a`
-  color: ${({ theme }) => theme.global.colors['input-highlight']};
+  color: ${({ theme }) => normalizeColor('input-highlight', theme)};
   display: inline-block;
   width: auto;
 `;

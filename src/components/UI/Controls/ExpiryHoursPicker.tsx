@@ -4,6 +4,7 @@ import format from 'date-fns/fp/format';
 import startOfDay from 'date-fns/fp/startOfDay';
 import toDate from 'date-fns-tz/toDate';
 import { Box, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { Constants } from 'model/constants';
 import React from 'react';
 import styled from 'styled-components';
@@ -24,13 +25,13 @@ const List = styled.ul`
   }
 
   .date-input-button {
-    background: ${({ theme }) => theme.global.colors['input-background']};
+    background: ${({ theme }) => normalizeColor('input-background', theme)};
     border-width: 0;
     padding: 9px;
 
     :hover {
       box-shadow: none;
-      background: ${({ theme }) => theme.global.colors.border.dark};
+      background: ${({ theme }) => normalizeColor('border', theme)};
     }
   }
 `;
