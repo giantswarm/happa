@@ -18,7 +18,9 @@ describe('Tabs', () => {
   };
 
   it('renders without crashing', () => {
-    renderComponent();
+    renderComponent({
+      children: [<Tab key='tab-1' />],
+    });
   });
 
   it('renders only the first tab', () => {
