@@ -511,3 +511,70 @@ export interface IMachinePoolList extends metav1.IList<IMachinePool> {
   apiVersion: typeof ApiVersion;
   kind: typeof MachinePoolList;
 }
+
+export interface IMachineStatus {
+  /**
+   * Addresses is a list of addresses assigned to the machine. This field is copied from the infrastructure provider reference.
+   */
+  addresses?: corev1.INodeAddress[];
+  /**
+   * BootstrapReady is the state of the bootstrap provider.
+   */
+  bootstrapReady?: boolean;
+  /**
+   * Conditions defines current service state of the Machine.
+   */
+  conditions?: ICondition[];
+  /**
+   * FailureMessage will be set in the event that there is a terminal problem reconciling the Machine and will contain a more verbose string suitable for logging and human consumption.
+   *  This field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the Machine's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.
+   *  Any transient errors that occur during the reconciliation of Machines can be added as events to the Machine object and/or logged in the controller's output.
+   */
+  failureMessage?: string;
+  /**
+   * FailureReason will be set in the event that there is a terminal problem reconciling the Machine and will contain a succinct value suitable for machine interpretation.
+   *  This field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the Machine's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.
+   *  Any transient errors that occur during the reconciliation of Machines can be added as events to the Machine object and/or logged in the controller's output.
+   */
+  failureReason?: string;
+  /**
+   * InfrastructureReady is the state of the infrastructure provider.
+   */
+  infrastructureReady?: boolean;
+  /**
+   * LastUpdated identifies when the phase of the Machine last transitioned.
+   */
+  lastUpdated?: string;
+  /**
+   * NodeInfo is a set of ids/uuids to uniquely identify the node. More info: https://kubernetes.io/docs/concepts/nodes/node/#info
+   */
+  nodeInfo?: corev1.INodeSystemInfo;
+  /**
+   * NodeRef will point to the corresponding Node if it exists.
+   */
+  nodeRef?: corev1.IObjectReference;
+  /**
+   * ObservedGeneration is the latest generation observed by the controller.
+   */
+  observedGeneration?: number;
+  /**
+   * Phase represents the current phase of machine actuation. E.g. Pending, Running, Terminating, Failed etc.
+   */
+  phase?: string;
+}
+
+export const Machine = 'Machine';
+export interface IMachine {
+  apiVersion: typeof ApiVersion;
+  kind: typeof Machine;
+  metadata?: metav1.IObjectMeta;
+  spec?: IMachineSpec;
+  status?: IMachineStatus;
+}
+
+export const MachineList = 'MachineList';
+
+export interface IMachineList extends metav1.IList<IMachine> {
+  apiVersion: typeof ApiVersion;
+  kind: typeof MachineList;
+}
