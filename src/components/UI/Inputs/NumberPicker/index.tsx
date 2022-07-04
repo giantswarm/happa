@@ -1,4 +1,5 @@
 import { ThemeContext, ThemeType } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import usePrevious from 'utils/hooks/usePrevious';
@@ -70,7 +71,7 @@ const IncrementDecrementButton = styled.div`
   position: relative;
   width: 35px;
   height: 100%;
-  background-color: ${({ theme }) => theme.global.colors.border.dark};
+  background-color: ${({ theme }) => normalizeColor('border', theme)};
   user-select: none;
 
   display: flex;
@@ -80,7 +81,7 @@ const IncrementDecrementButton = styled.div`
 
   &:hover {
     background-color: ${({ theme }) =>
-      theme.global.colors['background-front'].dark};
+      normalizeColor('background-front', theme)};
   }
 
   &:active {
@@ -90,7 +91,7 @@ const IncrementDecrementButton = styled.div`
   &.disabled,
   &.disabled:hover,
   &.disabled:active {
-    color: ${({ theme }) => theme.global.colors.text.dark};
+    color: ${({ theme }) => normalizeColor('text', theme)};
     cursor: default;
     opacity: 0.8;
 
@@ -102,7 +103,7 @@ const IncrementDecrementButton = styled.div`
       width: 100%;
       height: 100%;
       background-color: ${({ theme }) =>
-        theme.global.colors['status-disabled']};
+        normalizeColor('status-disabled', theme)};
       opacity: 0.3;
     }
   }

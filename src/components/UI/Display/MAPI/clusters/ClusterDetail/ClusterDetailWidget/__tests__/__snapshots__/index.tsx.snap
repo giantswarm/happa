@@ -2,20 +2,20 @@
 
 exports[`ClusterDetailWidget renders a inline widget 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
       aria-label="Some widget"
-      class="StyledBox-sc-13pk1d4-0 etoCUW"
+      class="StyledBox-sc-13pk1d4-0 kWfjcq"
     >
       <header
         class="StyledBox-sc-13pk1d4-0 jmJVZe"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 kwKWtx ClusterDetailWidget__Title-sc-15uj98x-0 ezALGf"
+          class="StyledText-sc-1sadyjn-0 gxPAiZ ClusterDetailWidget__Title-sc-15uj98x-0 ezALGf"
         >
           Some widget
         </span>
@@ -36,20 +36,20 @@ exports[`ClusterDetailWidget renders a inline widget 1`] = `
 
 exports[`ClusterDetailWidget renders a simple widget 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <div
       aria-label="Some widget"
-      class="StyledBox-sc-13pk1d4-0 etoCUW"
+      class="StyledBox-sc-13pk1d4-0 kWfjcq"
     >
       <header
         class="StyledBox-sc-13pk1d4-0 bXvHvk"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 kwKWtx ClusterDetailWidget__Title-sc-15uj98x-0 ezALGf"
+          class="StyledText-sc-1sadyjn-0 gxPAiZ ClusterDetailWidget__Title-sc-15uj98x-0 ezALGf"
         >
           Some widget
         </span>

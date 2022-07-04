@@ -2,7 +2,7 @@
 
 exports[`Select renders a disabled input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -11,13 +11,13 @@ exports[`Select renders a disabled input 1`] = `
       class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 fynxVA"
+        class="StyledText-sc-1sadyjn-0 imNpig"
         for="pet"
       >
         Which pet to get?
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 iCsUAn FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 fUFfaL FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-expanded="false"
@@ -55,7 +55,7 @@ exports[`Select renders a disabled input 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 fiFMMx"
+                class="StyledIcon-sc-ofa7kd-0 eKDmAN"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -76,7 +76,7 @@ exports[`Select renders a disabled input 1`] = `
 
 exports[`Select renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -122,7 +122,7 @@ exports[`Select renders a simple input 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 fiFMMx"
+                class="StyledIcon-sc-ofa7kd-0 eKDmAN"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -143,7 +143,7 @@ exports[`Select renders a simple input 1`] = `
 
 exports[`Select renders an input inside the dropdown, that can search through the options 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -152,7 +152,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
       class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 iCsUAn FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 fUFfaL FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-expanded="false"
@@ -189,7 +189,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 fiFMMx"
+                class="StyledIcon-sc-ofa7kd-0 eKDmAN"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -210,7 +210,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
 
 exports[`Select renders an input with a help message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -219,13 +219,13 @@ exports[`Select renders an input with a help message 1`] = `
       class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 fynxVA"
+        class="StyledText-sc-1sadyjn-0 imNpig"
         for="pet"
       >
         Which pet to get?
       </label>
       <span
-        class="StyledText-sc-1sadyjn-0 cEISQk"
+        class="StyledText-sc-1sadyjn-0 dXxgdw"
       >
         This is a very cool input
       </span>
@@ -267,7 +267,7 @@ exports[`Select renders an input with a help message 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 fiFMMx"
+                class="StyledIcon-sc-ofa7kd-0 eKDmAN"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -288,7 +288,7 @@ exports[`Select renders an input with a help message 1`] = `
 
 exports[`Select renders an input with a label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -297,7 +297,7 @@ exports[`Select renders an input with a label 1`] = `
       class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 fynxVA"
+        class="StyledText-sc-1sadyjn-0 imNpig"
         for="pet"
       >
         Which pet to get?
@@ -340,7 +340,7 @@ exports[`Select renders an input with a label 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 fiFMMx"
+                class="StyledIcon-sc-ofa7kd-0 eKDmAN"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -361,7 +361,7 @@ exports[`Select renders an input with a label 1`] = `
 
 exports[`Select renders an input with a validation error 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -370,7 +370,7 @@ exports[`Select renders an input with a validation error 1`] = `
       class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 fynxVA"
+        class="StyledText-sc-1sadyjn-0 imNpig"
         for="pet"
       >
         Which pet to get?
@@ -413,7 +413,7 @@ exports[`Select renders an input with a validation error 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 fiFMMx"
+                class="StyledIcon-sc-ofa7kd-0 eKDmAN"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -439,7 +439,7 @@ exports[`Select renders an input with a validation error 1`] = `
 
 exports[`Select renders an input with an info message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -448,7 +448,7 @@ exports[`Select renders an input with an info message 1`] = `
       class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 fynxVA"
+        class="StyledText-sc-1sadyjn-0 imNpig"
         for="pet"
       >
         Which pet to get?
@@ -491,7 +491,7 @@ exports[`Select renders an input with an info message 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 fiFMMx"
+                class="StyledIcon-sc-ofa7kd-0 eKDmAN"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -506,7 +506,7 @@ exports[`Select renders an input with an info message 1`] = `
         </button>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 kliOOn"
+        class="StyledText-sc-1sadyjn-0 gLxcNH"
       >
         You can set a cool value
       </span>

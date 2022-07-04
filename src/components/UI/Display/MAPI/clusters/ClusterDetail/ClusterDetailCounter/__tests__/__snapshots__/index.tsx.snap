@@ -2,7 +2,7 @@
 
 exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -25,7 +25,7 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 fkMMbk ClusterDetailCounter__Label-sc-qai318-0 fhVZxo"
+        class="StyledText-sc-1sadyjn-0 lfzAuU ClusterDetailCounter__Label-sc-qai318-0 fhVZxo"
       >
         dogs
       </span>
@@ -36,7 +36,7 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
 
 exports[`ClusterDetailCounter renders a simple counter 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -59,7 +59,7 @@ exports[`ClusterDetailCounter renders a simple counter 1`] = `
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 fkMMbk ClusterDetailCounter__Label-sc-qai318-0 fhVZxo"
+        class="StyledText-sc-1sadyjn-0 lfzAuU ClusterDetailCounter__Label-sc-qai318-0 fhVZxo"
       >
         dog
       </span>

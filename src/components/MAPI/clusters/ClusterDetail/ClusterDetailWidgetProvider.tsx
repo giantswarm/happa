@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { ProviderCluster } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -86,7 +87,7 @@ const GroupLabel = styled.div<IGroupLabelProps>`
 `;
 
 const StyledLink = styled.a`
-  color: ${({ theme }) => theme.global.colors['text-weak'].dark};
+  color: ${({ theme }) => normalizeColor('text-weak', theme)};
 `;
 
 interface IClusterDetailWidgetProviderProps

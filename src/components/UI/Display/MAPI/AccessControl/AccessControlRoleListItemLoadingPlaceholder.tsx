@@ -1,4 +1,5 @@
 import { Box } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
@@ -18,8 +19,8 @@ const AccessControlRoleListItemLoadingPlaceholder: React.FC<
         speed={2}
         height='65'
         width='100%'
-        backgroundColor={theme.global.colors['text-xweak'].dark}
-        foregroundColor={theme.global.colors['text-weak'].dark}
+        backgroundColor={normalizeColor('text-xweak', theme)}
+        foregroundColor={normalizeColor('text-weak', theme)}
       >
         <rect x='18' y='12' rx='4' ry='4' width='225' height='15' />
         <rect x='18' y='38' rx='4' ry='4' width='105' height='15' />

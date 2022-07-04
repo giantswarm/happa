@@ -2,7 +2,7 @@
 
 exports[`RadioInput renders a disabled input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -29,7 +29,7 @@ exports[`RadioInput renders a disabled input 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
+              class="StyledBox-sc-13pk1d4-0 eOIUqD StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
@@ -46,7 +46,7 @@ exports[`RadioInput renders a disabled input 1`] = `
 
 exports[`RadioInput renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -71,7 +71,7 @@ exports[`RadioInput renders a simple input 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
+              class="StyledBox-sc-13pk1d4-0 eOIUqD StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
@@ -88,7 +88,7 @@ exports[`RadioInput renders a simple input 1`] = `
 
 exports[`RadioInput renders an input with a form field label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -98,7 +98,7 @@ exports[`RadioInput renders an input with a form field label 1`] = `
       tabindex="0"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 fynxVA"
+        class="StyledText-sc-1sadyjn-0 imNpig"
         for="some-input"
       >
         A brilliant input
@@ -121,7 +121,7 @@ exports[`RadioInput renders an input with a form field label 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
+              class="StyledBox-sc-13pk1d4-0 eOIUqD StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
@@ -138,7 +138,7 @@ exports[`RadioInput renders an input with a form field label 1`] = `
 
 exports[`RadioInput renders an input with a help message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -148,7 +148,7 @@ exports[`RadioInput renders an input with a help message 1`] = `
       tabindex="0"
     >
       <span
-        class="StyledText-sc-1sadyjn-0 cEISQk"
+        class="StyledText-sc-1sadyjn-0 dXxgdw"
       >
         This is a very cool input
       </span>
@@ -168,7 +168,7 @@ exports[`RadioInput renders an input with a help message 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
+              class="StyledBox-sc-13pk1d4-0 eOIUqD StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
@@ -185,7 +185,7 @@ exports[`RadioInput renders an input with a help message 1`] = `
 
 exports[`RadioInput renders an input with a validation error 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -210,7 +210,7 @@ exports[`RadioInput renders an input with a validation error 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
+              class="StyledBox-sc-13pk1d4-0 eOIUqD StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
@@ -232,7 +232,7 @@ exports[`RadioInput renders an input with a validation error 1`] = `
 
 exports[`RadioInput renders an input with an info message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -257,7 +257,7 @@ exports[`RadioInput renders an input with an info message 1`] = `
               type="radio"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 zwhvj StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
+              class="StyledBox-sc-13pk1d4-0 eOIUqD StyledRadioButton__StyledRadioButtonBox-sc-g1f6ld-4 hZSOaX"
             />
           </div>
           <span
@@ -268,7 +268,7 @@ exports[`RadioInput renders an input with an info message 1`] = `
         </label>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 kliOOn"
+        class="StyledText-sc-1sadyjn-0 gLxcNH"
       >
         You can set a cool value
       </span>

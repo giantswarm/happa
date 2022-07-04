@@ -2,7 +2,7 @@
 
 exports[`DateInput renders a button that triggers the calendar 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -15,7 +15,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 cZSXku"
+          class="StyledButtonKind-sc-1vhfpnt-0 huiijy"
           id="dob"
           type="button"
         >
@@ -24,7 +24,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
           >
             <svg
               aria-label="Calendar"
-              class="StyledIcon-sc-ofa7kd-0 dgOiLR"
+              class="StyledIcon-sc-ofa7kd-0 cILIAh"
               viewBox="0 0 24 24"
             >
               <path
@@ -48,7 +48,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
 
 exports[`DateInput renders a disabled input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -57,13 +57,13 @@ exports[`DateInput renders a disabled input 1`] = `
       class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 fynxVA"
+        class="StyledText-sc-1sadyjn-0 imNpig"
         for="dob"
       >
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 iCsUAn FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 fUFfaL FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
           class="StyledBox-sc-13pk1d4-0 pdxNJ"
@@ -106,7 +106,7 @@ exports[`DateInput renders a disabled input 1`] = `
 
 exports[`DateInput renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -156,7 +156,7 @@ exports[`DateInput renders a simple input 1`] = `
 
 exports[`DateInput renders an input with a help message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -165,13 +165,13 @@ exports[`DateInput renders an input with a help message 1`] = `
       class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 fynxVA"
+        class="StyledText-sc-1sadyjn-0 imNpig"
         for="dob"
       >
         Date of birth
       </label>
       <span
-        class="StyledText-sc-1sadyjn-0 cEISQk"
+        class="StyledText-sc-1sadyjn-0 dXxgdw"
       >
         This is a very cool input
       </span>
@@ -218,7 +218,7 @@ exports[`DateInput renders an input with a help message 1`] = `
 
 exports[`DateInput renders an input with a label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -227,7 +227,7 @@ exports[`DateInput renders an input with a label 1`] = `
       class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 fynxVA"
+        class="StyledText-sc-1sadyjn-0 imNpig"
         for="dob"
       >
         Date of birth
@@ -275,7 +275,7 @@ exports[`DateInput renders an input with a label 1`] = `
 
 exports[`DateInput renders an input with a validation error 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -284,7 +284,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
       class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 fynxVA"
+        class="StyledText-sc-1sadyjn-0 imNpig"
         for="dob"
       >
         Date of birth
@@ -337,7 +337,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
 
 exports[`DateInput renders an input with an info message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
@@ -346,7 +346,7 @@ exports[`DateInput renders an input with an info message 1`] = `
       class="StyledBox-sc-13pk1d4-0 jOmtjA FormField__FormFieldBox-sc-m9hood-0 jTOPYT"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 fynxVA"
+        class="StyledText-sc-1sadyjn-0 imNpig"
         for="dob"
       >
         Date of birth
@@ -388,7 +388,7 @@ exports[`DateInput renders an input with an info message 1`] = `
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 kliOOn"
+        class="StyledText-sc-1sadyjn-0 gLxcNH"
       >
         You can set a cool value
       </span>

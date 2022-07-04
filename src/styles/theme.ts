@@ -1,5 +1,5 @@
 import { generate, ThemeType } from 'grommet';
-import { deepMerge } from 'grommet/utils';
+import { deepMerge, normalizeColor } from 'grommet/utils';
 import { CSSBreakpoints } from 'model/constants';
 import { css, DefaultTheme } from 'styled-components';
 
@@ -7,6 +7,59 @@ interface ICalendarDayProps {
   theme: DefaultTheme;
   isSelected: boolean;
 }
+
+export const COLORS = {
+  // dark blue as defined in Giant Swarm's style guide
+  darkBlue: '#234a61',
+
+  // Darker shades of above darkBlue.
+  // The higher the number, the darker the tone.
+  darkBlueDarker1: '#204358',
+  darkBlueDarker2: '#1c3c4f',
+  darkBlueDarker3: '#193545',
+  darkBlueDarker4: '#162e3d',
+  darkBlueDarker5: '#132834',
+  darkBlueDarker6: '#10212c',
+  darkBlueDarker7: '#0d1b23',
+  darkBlueDarker8: '#0a141b',
+  darkBlueDarker9: '#060c0f',
+
+  // Lighter shades of above darkBlue.
+  // The higher the number, the brighter the tone.
+  darkBlueLighter1: '#375b70',
+  darkBlueLighter2: '#4c6c7e',
+  darkBlueLighter3: '#617d8d',
+  darkBlueLighter4: '#768e9d',
+  darkBlueLighter5: '#8ca0ac',
+  darkBlueLighter6: '#a2b3bc',
+  darkBlueLighter7: '#b9c5cd',
+  darkBlueLighter8: '#d0d8dd',
+  darkBlueLighter9: '#e7ebee',
+
+  brightBlue: '#41B5F2',
+
+  gray1: '#a4a4a4',
+  gray2: '#cccccc',
+  gray3: '#eeeeee',
+  gray4: '#313131',
+  gray5: '#798691',
+
+  shade5: '#32526a',
+  shade6: '#3a5f7b',
+
+  orange1: '#ffaa15',
+
+  yellow1: '#ddb03a',
+  yellow2: '#c7b268',
+
+  green1: '#24A524',
+  green2: '#2a8b29',
+  green3: '#3F963E',
+
+  red1: '#e49090',
+  red2: '#c95353',
+  red3: '#bd3e3a',
+} as const;
 
 /* eslint-disable no-magic-numbers */
 
@@ -58,7 +111,6 @@ const theme = deepMerge(generate(16), {
     white5: '#ccd',
 
     yellow1: '#ddb03a',
-    yellow2: '#c7b268',
     gold: '#ce990f',
     goldBackground: '#a97904',
     gray: '#ccc',
@@ -94,9 +146,6 @@ const theme = deepMerge(generate(16), {
         text: '#8a6d3b',
       },
     },
-
-    darkGray: '#a4a4a4',
-    brown1: '#c95353',
   },
   border_radius: '4px',
   spacingPx: 4,
@@ -123,73 +172,107 @@ const theme = deepMerge(generate(16), {
         light: 'border',
       },
       background: {
-        dark: '#234a61',
-        light: '#234a61',
+        dark: COLORS.darkBlue,
+        light: COLORS.darkBlue,
       },
       'background-back': {
-        dark: '#204358',
-        light: '#204358',
+        dark: COLORS.darkBlueDarker1,
+        light: COLORS.darkBlueDarker1,
       },
       'background-front': {
-        dark: '#375b70',
-        light: '#375b70',
+        dark: COLORS.darkBlueLighter1,
+        light: COLORS.darkBlueLighter1,
+      },
+      'background-accent': {
+        dark: COLORS.darkBlueDarker2,
+        light: COLORS.darkBlueDarker2,
+      },
+      'background-weak': {
+        dark: COLORS.darkBlueLighter2,
+        light: COLORS.darkBlueLighter2,
       },
       'background-contrast': {
         dark: '#15253150',
         light: '#15253150',
       },
       'background-strong': {
-        dark: '#10212c',
-        light: '#10212c',
+        dark: COLORS.darkBlueDarker6,
+        light: COLORS.darkBlueDarker6,
+      },
+      'background-light': {
+        dark: 'white',
+        light: 'white',
       },
       text: {
-        dark: '#EEEEEE',
-        light: '#EEEEEE',
+        dark: COLORS.gray3,
+        light: COLORS.gray3,
       },
       'text-strong': {
-        dark: '#FFFFFF',
-        light: '#FFFFFF',
+        dark: 'white',
+        light: 'white',
       },
       'text-weak': {
-        dark: '#CCCCCC',
-        light: '#CCCCCC',
+        dark: COLORS.gray2,
+        light: COLORS.gray2,
       },
       'text-xweak': {
-        dark: '#798691',
-        light: '#798691',
+        dark: COLORS.gray5,
+        light: COLORS.gray5,
       },
       'text-xxweak': {
-        dark: '#313131',
-        light: '#313131',
+        dark: COLORS.gray4,
+        light: COLORS.gray4,
+      },
+      'text-accent': {
+        dark: COLORS.darkBlueDarker2,
+        light: COLORS.darkBlueDarker2,
+      },
+      'text-dim': {
+        dark: COLORS.gray1,
+        light: COLORS.gray1,
+      },
+      'text-warning': {
+        dark: COLORS.yellow1,
+        light: COLORS.yellow1,
+      },
+      'text-error': {
+        dark: COLORS.red1,
+        light: COLORS.red1,
+      },
+      'text-success': {
+        dark: COLORS.green1,
+        light: COLORS.green1,
       },
       border: {
-        dark: '#3a5f7b',
-        light: '#3a5f7b',
+        dark: COLORS.shade6,
+        light: COLORS.shade6,
       },
       control: {
         dark: 'border',
         light: 'border',
       },
       'accent-strong': {
-        dark: '#162e3d',
-        light: '#162e3d',
+        dark: COLORS.darkBlueDarker4,
+        light: COLORS.darkBlueDarker4,
       },
       'active-background': 'background-contrast',
       'active-text': 'text-strong',
       'selected-background': 'brand',
       'selected-text': 'text-strong',
-      'status-critical': '#e49090',
-      'status-danger': '#bd3e3a',
-      'status-warning': '#FFAA15',
-      'status-ok': '#2a8b29',
-      'status-unknown': '#CCCCCC',
-      'status-disabled': '#3a5f7b',
+      'status-critical': COLORS.red1,
+      'status-danger': COLORS.red3,
+      'status-warning': COLORS.orange1,
+      'status-ok': COLORS.green2,
+      'status-unknown': COLORS.gray2,
+      'status-disabled': COLORS.shade6,
       'graph-0': 'brand',
-      'graph-1': 'status-warning',
-      'input-background': '#32526a',
-      'input-highlight': '#41B5F2',
+      'graph-1': COLORS.orange1,
+      'input-background': COLORS.shade5,
+      'input-highlight': COLORS.brightBlue,
       'tooltip-background': '#000000E6',
-      'background-weak': '#4c6c7e',
+      'service-priority-highest': COLORS.red2,
+      'service-priority-medium': COLORS.yellow2,
+      'service-priority-lowest': COLORS.darkBlueLighter2,
 
       focus: {
         light: 'text-strong',
@@ -350,7 +433,7 @@ const theme = deepMerge(generate(16), {
       },
     },
     primary: {
-      background: 'status-ok',
+      background: COLORS.green2,
       color: 'text',
       font: {
         weight: 'normal',
@@ -392,7 +475,7 @@ const theme = deepMerge(generate(16), {
       },
       primary: {
         background: {
-          color: '#3F963E',
+          color: COLORS.green3,
           opacity: 1,
         },
       },
@@ -453,13 +536,13 @@ const theme = deepMerge(generate(16), {
       extend: () => css`
         border-radius: 100%;
         background-color: ${(props: ICalendarDayProps) =>
-          props.isSelected && props.theme.global.colors['text-xweak'].dark};
+          props.isSelected && normalizeColor('text-xweak', props.theme)};
       `,
     },
   },
   textArea: {
     extend: () => css`
-      background: ${(props) => props.theme.global.colors['input-background']};
+      background: ${(props) => normalizeColor('input-background', props.theme)};
       min-width: 100%;
       min-height: 40px;
     `,
@@ -478,8 +561,8 @@ const theme = deepMerge(generate(16), {
         height: '16px',
         transition: 'background 0.3s ease-out',
         background: props.checked
-          ? props.theme.global!.colors!['input-highlight']
-          : props.theme.global!.colors!['input-background'],
+          ? normalizeColor('input-highlight', props.theme)
+          : normalizeColor('input-background', props.theme),
       }),
       knob: {
         extend: () => css`
@@ -492,7 +575,7 @@ const theme = deepMerge(generate(16), {
       radius: '4px',
       thickness: '2px',
       extend: (props: { theme: ThemeType }) => ({
-        background: props.theme.global!.colors!['input-background'],
+        background: normalizeColor('input-background', props.theme),
       }),
     },
     border: {
@@ -559,12 +642,12 @@ const theme = deepMerge(generate(16), {
     check: {
       radius: '18px',
       extend: (props: { theme: ThemeType }) => ({
-        background: props.theme.global!.colors!['input-background'],
+        background: normalizeColor('input-background', props.theme),
       }),
     },
     icon: {
       extend: () => css`
-        fill: ${(props) => props.theme.global.colors['input-highlight']};
+        fill: ${(props) => normalizeColor('input-highlight', props.theme)};
       `,
     },
     border: {
@@ -919,7 +1002,7 @@ const theme = deepMerge(generate(16), {
       extend: () => css`
         text-transform: uppercase;
         font-size: ${(props) => props.theme.text.xsmall.size};
-        color: ${(props) => props.theme.global.colors['text-weak'].dark};
+        color: ${(props) => normalizeColor('text-weak', props.theme)};
       `,
     },
     body: {
@@ -928,7 +1011,7 @@ const theme = deepMerge(generate(16), {
     extend: () => css`
       caption {
         font-size: ${(props) => props.theme.text.large.size};
-        color: ${(props) => props.theme.global.colors.text.dark};
+        color: ${(props) => normalizeColor('text', props.theme)};
         font-weight: bold;
       }
     `,

@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -23,7 +24,7 @@ import {
 } from './utils';
 
 const StyledLink = styled(Link)`
-  color: ${({ theme }) => theme.global.colors['input-highlight']};
+  color: ${({ theme }) => normalizeColor('input-highlight', theme)};
 `;
 
 interface IClusterDetailWidgetAppsProps

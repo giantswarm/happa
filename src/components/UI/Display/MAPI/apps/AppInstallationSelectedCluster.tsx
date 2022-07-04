@@ -1,6 +1,5 @@
 import { Anchor, Box, BoxProps, Keyboard, Paragraph } from 'grommet';
 import React from 'react';
-import { useTheme } from 'styled-components';
 import styled from 'styled-components';
 import ClusterIDLabel, {
   ClusterIDLabelType,
@@ -33,8 +32,6 @@ interface IAppInstallationSelectedClusterProps extends BoxProps {
 const AppInstallationSelectedCluster: React.FC<
   React.PropsWithChildren<IAppInstallationSelectedClusterProps>
 > = ({ clusterName, onDeselectCluster, ...props }) => {
-  const theme = useTheme();
-
   return (
     <Box
       role='status'
@@ -45,7 +42,7 @@ const AppInstallationSelectedCluster: React.FC<
       min-height='xxsmall'
       pad='small'
       round='xsmall'
-      background={theme.colors.darkBlueDarker2}
+      background='background-accent'
       {...props}
     >
       <StyledParagraph fill margin='none'>

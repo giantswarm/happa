@@ -1,4 +1,5 @@
 import { Box } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -17,7 +18,7 @@ import RoutePath from 'utils/routePath';
 const StyledTab = styled(Tab)`
   &[aria-expanded='true'] > div {
     background-color: ${({ theme }) =>
-      theme.global.colors['background-front'].dark};
+      normalizeColor('background-front', theme)};
   }
 `;
 

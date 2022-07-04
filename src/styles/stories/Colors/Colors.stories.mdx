@@ -1,36 +1,74 @@
 import { Box } from 'grommet';
 import { Meta } from '@storybook/addon-docs/blocks';
 import ColorSample from 'styles/stories/Colors/ColorSample';
-import theme from 'styles/theme';
+import theme, { COLORS } from 'styles/theme';
 
 <Meta title='Display/Colors' />
 
 # Colors
 
 ## Our main colors
+These are all the colors that we currently support and use for new code.
+These colors should not be directly used via <code>COLORS</code> constant.
+The preferred way is by using semantic color names from a Grommet's theme entry.
+To reference a color in styled components, <code>normalizeColor</code> utility function from Grommet must be used,
+e.g <code>normalizeColor('background-front', theme)</code>.
 
 <Preview>
   <Story name="Main">
-    <ColorSample color={theme.colors.darkBlue} title='colors.darkBlue'>
-      <p>Our reference dark blue. We derive many other shades from this color value.</p>
+    <ColorSample color={COLORS.darkBlue} title='COLORS.darkBlue'>
+      Our reference dark blue. We derive many other shades from this color value.
     </ColorSample>
-    <ColorSample color={theme.colors.yellow1} title='colors.yellow1'>
-      <p>Some yellow tone</p>
+    <ColorSample color={COLORS.brightBlue} title='COLORS.brightBlue'>
+      Blue to highlight a selected radio button item and a checked toggle.
     </ColorSample>
-    <ColorSample color={theme.colors.gold} title='colors.gold'>
-      <p>A golden yellow, which we use for some information/warnings that should draw attention, e. g. "Upgrade available".</p>
+    <ColorSample color={COLORS.gray1} title='COLORS.gray1'>
+      Gray color that we use for <code>text-dim</code> semantic color.
     </ColorSample>
-    <ColorSample color={theme.colors.error} title='colors.error'>
-      <p>Text color for error messages displayed on a dark blue background.</p>
+    <ColorSample color={COLORS.gray2} title='COLORS.gray2'>
+      Gray color that we use for <code>text-weak</code> semantic color.
     </ColorSample>
-    <ColorSample color={theme.colors.greenNew} title='colors.greenNew'>
-      Green color used for a replacement version number in a <code>ReleaseComponentLabel</code>.
+    <ColorSample color={COLORS.gray3} title='COLORS.gray3'>
+      Gray color that we use for <code>text</code> semantic color.
     </ColorSample>
-    <ColorSample color={theme.colors.redOld} title='colors.redOld'>
-      Red color used for a replaced version number in a <code>ReleaseComponentLabel</code>.
+    <ColorSample color={COLORS.gray4} title='COLORS.gray4'>
+      Gray color that we use for <code>text-xxweak</code> semantic color.
     </ColorSample>
-    <ColorSample color={theme.global.colors['input-highlight']} title='theme.global.colors["input-highlight"]'>
-      Blue to highlight a selected radio button item
+    <ColorSample color={COLORS.gray5} title='COLORS.gray5'>
+      Gray color that we use for <code>text-xweak</code> semantic color.
+    </ColorSample>
+    <ColorSample color={COLORS.shade5} title='COLORS.shade5'>
+      Dark blue shade that we use for an input background.
+    </ColorSample>
+    <ColorSample color={COLORS.shade6} title='COLORS.shade6'>
+      Dark blue shade that we use for <code>status-disabled</code> semantic color.
+    </ColorSample>
+    <ColorSample color={COLORS.orange1} title='COLORS.orange1'>
+      Orange color that we use for <code>status-warning</code> semantic color.
+    </ColorSample>
+    <ColorSample color={COLORS.yellow1} title='COLORS.yellow1'>
+      Yellow color that we use for <code>text-warning</code> semantic color.
+    </ColorSample>
+    <ColorSample color={COLORS.yellow2} title='COLORS.yellow2'>
+      Yellow color that we use for a service priority medium value.
+    </ColorSample>
+    <ColorSample color={COLORS.green1} title='COLORS.green1'>
+      Green color that we use for <code>text-success</code> semantic color.
+    </ColorSample>
+    <ColorSample color={COLORS.green2} title='COLORS.green2'>
+      Green color that we use for a primary button background and for <code>status-ok</code> semantic color.
+    </ColorSample>
+    <ColorSample color={COLORS.green3} title='COLORS.green3'>
+      Green color that we use for a primary button background on hover.
+    </ColorSample>
+    <ColorSample color={COLORS.red1} title='COLORS.red1'>
+      Red color that we use for <code>text-error</code> and <code>status-critical</code> semantic colors.
+    </ColorSample>
+    <ColorSample color={COLORS.red2} title='COLORS.red2'>
+      Red color that we use for a service priority highest value.
+    </ColorSample>
+    <ColorSample color={COLORS.red3} title='COLORS.red3'>
+      Red color that we use for <code>status-danger</code> semantic color.
     </ColorSample>
   </Story>
 </Preview>
@@ -40,55 +78,92 @@ import theme from 'styles/theme';
 Based on our reference dark blue we have a pallette of derivatives.
 
 <Preview>
-  <Story name="DarkBlueShades">
-    <Box pad="medium">
-      <ColorSample color={theme.colors.darkBlueLighter9} title='colors.darkBlueLighter9' contrastingColor='black'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueLighter8} title='colors.darkBlueLighter8' contrastingColor='black'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueLighter7} title='colors.darkBlueLighter7' contrastingColor='black'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueLighter6} title='colors.darkBlueLighter6' contrastingColor='black'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueLighter5} title='colors.darkBlueLighter5'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueLighter4} title='colors.darkBlueLighter4'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueLighter3} title='colors.darkBlueLighter3'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueLighter2} title='colors.darkBlueLighter2'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueLighter1} title='colors.darkBlueLighter1'></ColorSample>
+  <Story name="Dark Blue Shades">
+    <ColorSample color={COLORS.darkBlueLighter9} title='COLORS.darkBlueLighter9' />
+    <ColorSample color={COLORS.darkBlueLighter8} title='COLORS.darkBlueLighter8' />
+    <ColorSample color={COLORS.darkBlueLighter7} title='COLORS.darkBlueLighter7' />
+    <ColorSample color={COLORS.darkBlueLighter6} title='COLORS.darkBlueLighter6' />
+    <ColorSample color={COLORS.darkBlueLighter5} title='COLORS.darkBlueLighter5' />
+    <ColorSample color={COLORS.darkBlueLighter4} title='COLORS.darkBlueLighter4' />
+    <ColorSample color={COLORS.darkBlueLighter3} title='COLORS.darkBlueLighter3' />
+    <ColorSample color={COLORS.darkBlueLighter2} title='COLORS.darkBlueLighter2' />
+    <ColorSample color={COLORS.darkBlueLighter1} title='COLORS.darkBlueLighter1' />
+    <Box pad={{vertical: 'medium'}}>
+      <ColorSample color={COLORS.darkBlue} title='COLORS.darkBlue' />
     </Box>
-    <Box pad="medium">
-      <ColorSample color={theme.colors.darkBlue} title='colors.darkBlue'></ColorSample>
-    </Box>
-    <Box pad="medium">
-      <ColorSample color={theme.colors.darkBlueDarker1} title='colors.darkBlueDarker1'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueDarker2} title='colors.darkBlueDarker2'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueDarker3} title='colors.darkBlueDarker3'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueDarker4} title='colors.darkBlueDarker4'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueDarker5} title='colors.darkBlueDarker5'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueDarker6} title='colors.darkBlueDarker6'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueDarker7} title='colors.darkBlueDarker7'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueDarker8} title='colors.darkBlueDarker8'></ColorSample>
-      <ColorSample color={theme.colors.darkBlueDarker9} title='colors.darkBlueDarker9'></ColorSample>
-    </Box>
+    <ColorSample color={COLORS.darkBlueDarker1} title='COLORS.darkBlueDarker1' />
+    <ColorSample color={COLORS.darkBlueDarker2} title='COLORS.darkBlueDarker2' />
+    <ColorSample color={COLORS.darkBlueDarker3} title='COLORS.darkBlueDarker3' />
+    <ColorSample color={COLORS.darkBlueDarker4} title='COLORS.darkBlueDarker4' />
+    <ColorSample color={COLORS.darkBlueDarker5} title='COLORS.darkBlueDarker5' />
+    <ColorSample color={COLORS.darkBlueDarker6} title='COLORS.darkBlueDarker6' />
+    <ColorSample color={COLORS.darkBlueDarker7} title='COLORS.darkBlueDarker7' />
+    <ColorSample color={COLORS.darkBlueDarker8} title='COLORS.darkBlueDarker8' />
+    <ColorSample color={COLORS.darkBlueDarker9} title='COLORS.darkBlueDarker9' />
   </Story>
 </Preview>
 
-## Shades of white and gray
+## Background colors
 
 <Preview>
-  <Story name="WhitesGrays">
-    <ColorSample color={theme.colors.white1} title='colors.white1' contrastingColor='black'></ColorSample>
-    <ColorSample color={theme.colors.white2} title='colors.white2' contrastingColor='black'></ColorSample>
-    <ColorSample color={theme.colors.white3} title='colors.white3' contrastingColor='black'></ColorSample>
-    <ColorSample color={theme.colors.white4} title='colors.white4' contrastingColor='black'></ColorSample>
-    <ColorSample color={theme.colors.white5} title='colors.white5' contrastingColor='black'></ColorSample>
-    <ColorSample color={theme.colors.gray} title='colors.gray' contrastingColor='black'></ColorSample>
+  <Story name="Background">
+    <ColorSample color='background' title='background' />
+    <ColorSample color='background-back' title='background-back' />
+    <ColorSample color='background-front' title='background-front' />
+    <ColorSample color='background-accent' title='background-accent' />
+    <ColorSample color='background-weak' title='background-weak' />
+    <ColorSample color='background-contrast' title='background-contrast' />
+    <ColorSample color='background-strong' title='background-strong' />
+    <ColorSample color='background-light' title='background-light' />
+  </Story>
+</Preview>
+
+## Text colors
+
+<Preview>
+  <Story name="Text">
+    <ColorSample color='text' title='text' />
+    <ColorSample color='text-strong' title='text-strong' />
+    <ColorSample color='text-weak' title='text-weak' />
+    <ColorSample color='text-xweak' title='text-xweak' />
+    <ColorSample color='text-xxweak' title='text-xxweak' />
+    <ColorSample color='text-accent' title='text-accent' />
+    <ColorSample color='text-dim' title='text-dim' />
+    <ColorSample color='text-warning' title='text-warning' />
+    <ColorSample color='text-error' title='text-error' />
+    <ColorSample color='text-success' title='text-success' />
+  </Story>
+</Preview>
+
+## Status colors
+
+<Preview>
+  <Story name="Status">
+    <ColorSample color='status-critical' title='status-critical' />
+    <ColorSample color='status-danger' title='status-danger' />
+    <ColorSample color='status-warning' title='status-warning' />
+    <ColorSample color='status-ok' title='status-ok' />
+    <ColorSample color='status-unknown' title='status-unknown' />
+    <ColorSample color='status-disabled' title='status-disabled' />
   </Story>
 </Preview>
 
 ## Deprecated colors
 
-These are colors we should no longer use and replace with others.
-(This means we should use a different theme entry to reference the color.)
+All the colors under <code>theme.colors</code> are deprecated and we should no longer use them.
 
 <Preview>
   <Story name="Deprecated">
+    <ColorSample color={theme.colors.gold} title='colors.gold' />
+    <ColorSample color={theme.colors.error} title='colors.error' />
+    <ColorSample color={theme.colors.greenNew} title='colors.greenNew' />
+    <ColorSample color={theme.colors.redOld} title='colors.redOld' />
+    <ColorSample color={theme.colors.white1} title='colors.white1'></ColorSample>
+    <ColorSample color={theme.colors.white2} title='colors.white2'></ColorSample>
+    <ColorSample color={theme.colors.white3} title='colors.white3'></ColorSample>
+    <ColorSample color={theme.colors.white4} title='colors.white4'></ColorSample>
+    <ColorSample color={theme.colors.white5} title='colors.white5'></ColorSample>
+    <ColorSample color={theme.colors.gray} title='colors.gray'></ColorSample>
     <ColorSample color={theme.colors.foreground} title='colors.foreground'></ColorSample>
     <ColorSample color={theme.colors.loadingForeground} title='colors.loadingForeground'></ColorSample>
     <ColorSample color={theme.colors.dropdownBackground} title='colors.dropdownBackground'></ColorSample>

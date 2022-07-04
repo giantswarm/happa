@@ -24,7 +24,6 @@ import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { filterLabels } from 'model/stores/cluster/utils';
-import theme from 'styles/theme';
 import { mutate } from 'swr';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { parseRFC822DateFormat } from 'utils/helpers';
@@ -1060,20 +1059,20 @@ function getClusterLabelValueDisplayInfo(key: string, value: string) {
     case `${capiv1beta1.labelServicePriority}:highest`:
       return {
         displayValue: 'Highest',
-        textColor: theme.colors.darkBlueDarker2,
-        backgroundColor: theme.colors.brown1,
+        textColor: 'text-accent',
+        backgroundColor: 'service-priority-highest',
       };
     case `${capiv1beta1.labelServicePriority}:medium`:
       return {
         displayValue: 'Medium',
-        textColor: theme.colors.darkBlueDarker2,
-        backgroundColor: theme.colors.yellow2,
+        textColor: 'text-accent',
+        backgroundColor: 'service-priority-medium',
       };
     case `${capiv1beta1.labelServicePriority}:lowest`:
       return {
         displayValue: 'Lowest',
-        textColor: theme.colors.white4,
-        backgroundColor: theme.colors.darkBlueLighter2,
+        textColor: 'text',
+        backgroundColor: 'service-priority-lowest',
       };
 
     default:

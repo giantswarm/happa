@@ -2,13 +2,13 @@
 
 exports[`DataTable renders a simple table 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 jvMhsq"
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
   >
     <table
-      class="StyledTable-sc-1m3u5g-6 dVXtio StyledDataTable-sc-xrlyjm-0 hmFzTO"
+      class="StyledTable-sc-1m3u5g-6 cavwtI StyledDataTable-sc-xrlyjm-0 hmFzTO"
     >
       <thead
         class="StyledTable__StyledTableHeader-sc-1m3u5g-4 StyledDataTable__StyledDataTableHeader-sc-xrlyjm-4"

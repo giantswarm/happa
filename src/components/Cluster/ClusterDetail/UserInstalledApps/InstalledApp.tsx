@@ -1,4 +1,5 @@
 import { Box, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import React from 'react';
 import styled from 'styled-components';
 import Date from 'UI/Display/Date';
@@ -6,14 +7,14 @@ import NotAvailable from 'UI/Display/NotAvailable';
 
 const Wrapper = styled(Box)`
   :hover {
-    box-shadow: ${({ theme }) => `0 0 0 1px ${theme.global.colors.text.dark}`};
+    box-shadow: ${({ theme }) => `0 0 0 1px ${normalizeColor('text', theme)}`};
   }
 
   &[aria-disabled='true'] {
     cursor: default;
 
     :hover {
-      box-shadow: ${({ theme }) => `0 0 0 0 ${theme.global.colors.text.dark}`};
+      box-shadow: ${({ theme }) => `0 0 0 0 ${normalizeColor('text', theme)}`};
     }
   }
 `;
