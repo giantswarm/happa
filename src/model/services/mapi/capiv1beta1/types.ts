@@ -65,7 +65,7 @@ export interface IFailureDomainSpec {
   /**
    * ControlPlane determines if this failure domain is suitable for use by control plane machines.
    */
-  controlPlane: boolean;
+  controlPlane?: boolean;
 }
 
 /**
