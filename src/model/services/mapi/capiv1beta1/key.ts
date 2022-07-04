@@ -3,15 +3,23 @@ import * as corev1 from 'model/services/mapi/corev1';
 
 import { ICluster, ICondition, IMachinePool } from './';
 
-export const labelOrganization = 'giantswarm.io/organization';
-export const labelCluster = 'giantswarm.io/cluster';
+// CAPI labels
 export const labelClusterName = 'cluster.x-k8s.io/cluster-name';
-export const labelReleaseVersion = 'release.giantswarm.io/version';
 export const labelMachineControlPlane = 'cluster.x-k8s.io/control-plane';
+export const labelRole = 'cluster.x-k8s.io/role';
+
+// Giant Swarm labels
+export const labelCluster = 'giantswarm.io/cluster';
 export const labelMachinePool = 'giantswarm.io/machine-pool';
-export const labelClusterOperator = 'cluster-operator.giantswarm.io/version';
-export const labelAzureOperatorVersion = 'azure-operator.giantswarm.io/version';
+export const labelOrganization = 'giantswarm.io/organization';
 export const labelServicePriority = 'giantswarm.io/service-priority';
+export const labelAzureOperatorVersion = 'azure-operator.giantswarm.io/version';
+export const labelClusterOperator = 'cluster-operator.giantswarm.io/version';
+export const labelReleaseVersion = 'release.giantswarm.io/version';
+
+// Cluster app labels
+export const labelApp = 'app';
+export const labelAppVersion = 'app.kubernetes.io/version';
 
 export const annotationClusterDescription = 'cluster.giantswarm.io/description';
 export const annotationUpdateScheduleTargetRelease =
