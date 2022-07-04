@@ -10904,7 +10904,7 @@ get-caller-file@^2.0.5:
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
   integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
 
-get-contrast@^3.0.0:
+get-contrast@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/get-contrast/-/get-contrast-3.0.0.tgz#d7a5f03512f8cf4c5cf51f17ccd87683afe2f6e7"
   integrity sha512-B3uK3WpKz/4bHMCMSmi4UfZ/Gk8qqVHQXMk6ayhx/x5cCjK3hl5kvX4POTauVQK5kdzWNfbyd5QjwOxERSwKlQ==

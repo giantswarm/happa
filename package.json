@@ -69,7 +69,7 @@
     "date-fns-tz": "1.3.5",
     "deep-diff": "1.0.2",
     "dotenv": "16.0.1",
-    "get-contrast": "^3.0.0",
+    "get-contrast": "3.0.0",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
     "grommet": "2.25.0",
     "history": "4.10.1",
