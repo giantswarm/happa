@@ -567,7 +567,7 @@ export const Machine = 'Machine';
 export interface IMachine {
   apiVersion: typeof ApiVersion;
   kind: typeof Machine;
-  metadata?: metav1.IObjectMeta;
+  metadata: metav1.IObjectMeta;
   spec?: IMachineSpec;
   status?: IMachineStatus;
 }

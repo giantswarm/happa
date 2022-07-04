@@ -146,9 +146,16 @@ export const GCPCluster = 'GCPCluster';
 export interface IGCPCluster {
   apiVersion: typeof ApiVersion;
   kind: typeof GCPCluster;
-  metadata?: metav1.IObjectMeta;
+  metadata: metav1.IObjectMeta;
   spec?: IGCPClusterSpec;
   status?: IGCPClusterStatus;
+}
+
+export const GCPClusterList = 'GCPClusterList';
+
+export interface IGCPClusterList extends metav1.IList<IGCPCluster> {
+  apiVersion: typeof ApiVersion;
+  kind: typeof GCPClusterList;
 }
 
 export interface IMetadataItem {
@@ -259,7 +266,7 @@ export const GCPMachineTemplate = 'GCPMachineTemplate';
 export interface IGCPMachineTemplate {
   apiVersion: typeof ApiVersion;
   kind: typeof GCPMachineTemplate;
-  metadata?: metav1.IObjectMeta;
+  metadata: metav1.IObjectMeta;
   spec?: IGCPMachineTemplateSpec;
 }
 
