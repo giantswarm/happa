@@ -7,7 +7,7 @@ import * as utils from '../getResource';
 
 const getResource = jest.spyOn(utils, 'getResource');
 
-describe.only('getListResource', () => {
+describe('getListResource', () => {
   jest.setTimeout(20000);
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let httpClient: IHttpClient;
