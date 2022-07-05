@@ -21,7 +21,7 @@ function tryGetListResource<T extends IList<{}>>(
     if (data.items === undefined) {
       ErrorReporter.getInstance().notify(
         `Invalid Response. Items are missing in the getListResource response.`,
-        { url, attempt }
+        { url, attempt, data }
       );
 
       if (attempt === MAX_ATTEMPT_COUNT) {
