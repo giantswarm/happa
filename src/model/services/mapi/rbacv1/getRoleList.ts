@@ -2,7 +2,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { getResource } from '../generic/getResource';
+import { getListResource } from '../generic/getListResource';
 import { IRoleList, Role } from './types';
 
 export interface IGetRoleListOptions {
@@ -32,7 +32,7 @@ export async function getRoleList(
     ...patchedOptions,
   });
 
-  const list = await getResource<IRoleList>(client, auth, url.toString());
+  const list = await getListResource<IRoleList>(client, auth, url.toString());
   for (const item of list.items) {
     item.kind = Role;
     item.apiVersion = 'rbac.authorization.k8s.io/v1';

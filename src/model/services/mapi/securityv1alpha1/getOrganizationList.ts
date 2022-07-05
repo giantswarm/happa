@@ -2,7 +2,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { getResource } from '../generic/getResource';
+import { getListResource } from '../generic/getListResource';
 import { IOrganizationList } from './types';
 
 export function getOrganizationList(
@@ -15,7 +15,7 @@ export function getOrganizationList(
     kind: 'organizations',
   });
 
-  return getResource<IOrganizationList>(client, auth, url.toString());
+  return getListResource<IOrganizationList>(client, auth, url.toString());
 }
 
 export function getOrganizationListKey() {
