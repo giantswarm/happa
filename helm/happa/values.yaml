@@ -30,7 +30,7 @@ azure:
 
 gcp:
   availabilityZones: []
-  machineTypes:
+  machinetypes:
     capabilities: {}
     allowed: []
     default: ""

@@ -24,7 +24,7 @@ data:
     azure-capabilities-json: '{{ .Values.azure.vm.vmSize.capabilities | toJson }}'
     {{- end }}
     {{- if eq .Values.managementCluster.provider.kind "gcp" }}
-    gcp-capabilities-json: '{{ .Values.gcp.machineTypes.capabilities | toJson }}'
+    gcp-capabilities-json: '{{ .Values.gcp.machinetypes.capabilities | toJson }}'
     {{- end }}
     
     # Giant Swarm Management API
