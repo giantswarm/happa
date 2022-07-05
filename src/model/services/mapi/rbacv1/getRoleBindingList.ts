@@ -2,7 +2,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { getResource } from '../generic/getResource';
+import { getListResource } from '../generic/getListResource';
 import { IRoleBindingList, RoleBinding } from './types';
 
 export async function getRoleBindingList(
@@ -17,7 +17,7 @@ export async function getRoleBindingList(
     namespace,
   });
 
-  const list = await getResource<IRoleBindingList>(
+  const list = await getListResource<IRoleBindingList>(
     client,
     auth,
     url.toString()
