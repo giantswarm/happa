@@ -2,7 +2,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { getResource } from '../generic/getResource';
+import { getListResource } from '../generic/getListResource';
 import { ClusterRoleBinding, IClusterRoleBindingList } from './types';
 
 export async function getClusterRoleBindingList(
@@ -15,7 +15,7 @@ export async function getClusterRoleBindingList(
     kind: 'clusterrolebindings',
   });
 
-  const list = await getResource<IClusterRoleBindingList>(
+  const list = await getListResource<IClusterRoleBindingList>(
     client,
     auth,
     url.toString()

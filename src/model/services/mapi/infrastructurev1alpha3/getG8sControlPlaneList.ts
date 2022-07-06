@@ -2,7 +2,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { getResource } from '../generic/getResource';
+import { getListResource } from '../generic/getListResource';
 import { IG8sControlPlaneList } from './';
 
 export interface IGetG8sControlPlaneListOptions {
@@ -22,7 +22,7 @@ export function getG8sControlPlaneList(
     ...options,
   });
 
-  return getResource<IG8sControlPlaneList>(client, auth, url.toString());
+  return getListResource<IG8sControlPlaneList>(client, auth, url.toString());
 }
 
 export function getG8sControlPlaneListKey(
