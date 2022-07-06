@@ -18,6 +18,7 @@ const YAMLFileUpload: React.FC<
 
   const handleUploadClick = () => {
     if (fileInput.current !== null) {
+      fileInput.current.value = '';
       fileInput.current.click();
     }
   };
