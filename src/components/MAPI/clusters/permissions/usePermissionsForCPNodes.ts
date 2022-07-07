@@ -1,3 +1,4 @@
+import { usePermissionsForClusterApps } from 'MAPI/apps/permissions/usePermissionsForClusterApps';
 import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasPermission } from 'MAPI/permissions/utils';
 import { Providers } from 'model/constants';
@@ -6,6 +7,12 @@ export function usePermissionsForCPNodes(
   provider: PropertiesOf<typeof Providers>,
   namespace: string
 ) {
+  const {
+    canCreate: canCreateClusterApps,
+    canDelete: canDeleteClusterApps,
+    canUpdate: canUpdateClusterApps,
+  } = usePermissionsForClusterApps(provider, namespace);
+
   const { data: permissions } = usePermissions();
 
   const computed = {
@@ -142,6 +149,45 @@ export function usePermissionsForCPNodes(
         'infrastructure.cluster.x-k8s.io',
         'azuremachines'
       );
+
+      break;
+
+    case Providers.GCP:
+      computed.canCreate = canCreateClusterApps;
+      computed.canDelete = canDeleteClusterApps;
+      computed.canUpdate = canUpdateClusterApps;
+
+      computed.canGet =
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'cluster.x-k8s.io',
+          'machines'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'infrastructure.cluster.x-k8s.io',
+          'gcpmachinetemplates'
+        );
+
+      computed.canList =
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'cluster.x-k8s.io',
+          'machines'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'infrastructure.cluster.x-k8s.io',
+          'gcpmachinetemplates'
+        );
 
       break;
   }

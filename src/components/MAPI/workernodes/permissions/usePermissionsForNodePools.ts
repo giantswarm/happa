@@ -1,3 +1,4 @@
+import { usePermissionsForClusterApps } from 'MAPI/apps/permissions/usePermissionsForClusterApps';
 import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasPermission } from 'MAPI/permissions/utils';
 import { Providers } from 'model/constants';
@@ -9,6 +10,11 @@ export function usePermissionsForNodePools(
   provider: PropertiesOf<typeof Providers>,
   namespace: string
 ) {
+  const { canUpdate: canUpdateClusterApps } = usePermissionsForClusterApps(
+    provider,
+    namespace
+  );
+
   const { canCreate: canCreateSparks } = usePermissionsForSparks(
     provider,
     namespace
@@ -225,6 +231,46 @@ export function usePermissionsForNodePools(
           'list',
           'exp.infrastructure.cluster.x-k8s.io',
           'azuremachinepools'
+        );
+
+      break;
+
+    case Providers.GCP:
+      // Node pools are mutated through the cluster app's ConfigMap
+      computed.canCreate = canUpdateClusterApps;
+      computed.canDelete = canUpdateClusterApps;
+      computed.canUpdate = canUpdateClusterApps;
+
+      computed.canGet =
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'cluster.x-k8s.io',
+          'machinedeployments'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'infrastructure.cluster.x-k8s.io',
+          'gcpmachinetemplates'
+        );
+
+      computed.canList =
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'cluster.x-k8s.io',
+          'machinedeployments'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'infrastructure.cluster.x-k8s.io',
+          'gcpmachinetemplates'
         );
 
       break;
