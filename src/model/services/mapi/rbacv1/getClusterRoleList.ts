@@ -2,7 +2,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { getResource } from '../generic/getResource';
+import { getListResource } from '../generic/getListResource';
 import { ClusterRole, IClusterRoleList } from './types';
 
 export interface IGetClusterRoleListOptions {
@@ -29,7 +29,7 @@ export async function getClusterRoleList(
     ...(options ?? defaultOptions),
   });
 
-  const list = await getResource<IClusterRoleList>(
+  const list = await getListResource<IClusterRoleList>(
     client,
     auth,
     url.toString()

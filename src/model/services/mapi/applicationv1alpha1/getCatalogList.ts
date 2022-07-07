@@ -2,7 +2,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { getResource } from '../generic/getResource';
+import { getListResource } from '../generic/getListResource';
 import { ICatalogList } from './types';
 
 export interface IGetCatalogListOptions {
@@ -22,7 +22,7 @@ export function getCatalogList(
     ...options,
   });
 
-  return getResource<ICatalogList>(client, auth, url.toString());
+  return getListResource<ICatalogList>(client, auth, url.toString());
 }
 
 export function getCatalogListKey(options?: IGetCatalogListOptions) {

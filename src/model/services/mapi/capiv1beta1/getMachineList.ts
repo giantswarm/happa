@@ -3,33 +3,33 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { getListResource } from '../generic/getListResource';
-import { IClusterList } from './';
+import { IMachineList } from './types';
 
-export interface IGetClusterListOptions {
+export interface IGetMachineListOptions {
   namespace?: string;
   labelSelector?: k8sUrl.IK8sLabelSelector;
 }
 
-export function getClusterList(
+export function getMachineList(
   client: IHttpClient,
   auth: IOAuth2Provider,
-  options?: IGetClusterListOptions
+  options?: IGetMachineListOptions
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'cluster.x-k8s.io/v1beta1',
-    kind: 'clusters',
+    kind: 'machines',
     ...options,
   });
 
-  return getListResource<IClusterList>(client, auth, url.toString());
+  return getListResource<IMachineList>(client, auth, url.toString());
 }
 
-export function getClusterListKey(options?: IGetClusterListOptions) {
+export function getMachineListKey(options?: IGetMachineListOptions) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'cluster.x-k8s.io/v1beta1',
-    kind: 'clusters',
+    kind: 'machines',
     ...options,
   });
 
