@@ -2,7 +2,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { getResource } from '../generic/getResource';
+import { getListResource } from '../generic/getListResource';
 import { IMachineList } from './types';
 
 export interface IGetMachineListOptions {
@@ -22,7 +22,7 @@ export function getMachineList(
     ...options,
   });
 
-  return getResource<IMachineList>(client, auth, url.toString());
+  return getListResource<IMachineList>(client, auth, url.toString());
 }
 
 export function getMachineListKey(options?: IGetMachineListOptions) {

@@ -2,7 +2,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { getResource } from '../generic/getResource';
+import { getListResource } from '../generic/getListResource';
 import { IGCPMachineTemplateList } from './types';
 
 export interface IGetGCPMachineTemplateListOptions {
@@ -22,7 +22,7 @@ export function getGCPMachineTemplateList(
     ...options,
   });
 
-  return getResource<IGCPMachineTemplateList>(client, auth, url.toString());
+  return getListResource<IGCPMachineTemplateList>(client, auth, url.toString());
 }
 
 export function getGCPMachineTemplateListKey(
