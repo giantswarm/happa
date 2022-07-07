@@ -56,6 +56,20 @@ export function getMachineTypes(): Record<string, IMachineType> {
     }
   }
 
+  if (window.config.gcpCapabilitiesJSON) {
+    const rawCapabilities: Record<string, IRawGCPInstanceType> = JSON.parse(
+      window.config.gcpCapabilitiesJSON
+    );
+
+    for (const [name, properties] of Object.entries(rawCapabilities)) {
+      machineTypes[name] = {
+        cpu: properties.guestCpus,
+        // eslint-disable-next-line no-magic-numbers
+        memory: properties.memoryMb / 1000,
+      };
+    }
+  }
+
   return machineTypes;
 }
 

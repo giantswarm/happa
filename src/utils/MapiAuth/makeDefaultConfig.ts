@@ -12,7 +12,10 @@ export function makeDefaultConfig(): IOAuth2Config {
    */
   let issuer = authority;
   if (issuer.includes('localhost')) {
-    issuer = window.config.audience.replace('api', 'dex');
+    issuer = window.config.audience.replace(
+      /(api-unsupported|gs-api|api)/,
+      'dex'
+    );
   }
 
   return {

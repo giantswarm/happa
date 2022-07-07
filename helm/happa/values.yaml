@@ -28,6 +28,13 @@ azure:
       allowed: []
       default: ""
 
+gcp:
+  availabilityZones: []
+  machinetypes:
+    capabilities: {}
+    allowed: []
+    default: ""
+
 ingress:
   tls:
     crtPemB64: ""

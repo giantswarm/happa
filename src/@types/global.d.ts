@@ -9,6 +9,7 @@ interface IGlobalConfig {
   audience: string;
   awsCapabilitiesJSON: string;
   azureCapabilitiesJSON: string;
+  gcpCapabilitiesJSON: string;
   mapiEndpoint: string;
   athenaEndpoint: string;
   mapiAudience: string;

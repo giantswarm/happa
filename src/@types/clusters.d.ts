@@ -39,6 +39,11 @@ interface IRawAzureInstanceType extends IRawInstanceType {
   memoryInMb: number;
 }
 
+interface IRawGCPInstanceType extends IRawInstanceType {
+  guestCpus: number;
+  memoryMb: number;
+}
+
 type Cluster = V4.ICluster | V5.ICluster;
 
 interface IClusterMap {

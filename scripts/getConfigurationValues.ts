@@ -15,6 +15,7 @@ export interface IConfigurationValues {
 
   awsCapabilitiesJSON: string;
   azureCapabilitiesJSON: string;
+  gcpCapabilitiesJSON: string;
 
   mapiAuthRedirectURL: string;
   mapiAuthAdminGroup: string;
@@ -92,6 +93,10 @@ export async function getConfigurationValues(
     'azure-capabilities-json',
     '{"Standard_A2_v2":{"additionalProperties":{},"description":"This is some description","maxDataDiskCount":4,"memoryInMb":4294.967296,"name":"Standard_A2_v2","numberOfCores":2,"osDiskSizeInMb":1047552,"resourceDiskSizeInMb":21474.83648},"Standard_A4_v2":{"additionalProperties":{},"description":"Here is a longer description that might be too long for the field","maxDataDiskCount":8,"memoryInMb":8589.934592,"name":"Standard_A4_v2","numberOfCores":4,"osDiskSizeInMb":1047552,"resourceDiskSizeInMb":42949.67296},"Standard_A8_v2":{"additionalProperties":{},"description":"Another VM size description text","maxDataDiskCount":16,"memoryInMb":17179.869184,"name":"Standard_A8_v2","numberOfCores":8,"osDiskSizeInMb":1047552,"resourceDiskSizeInMb":85899.34592}, "Standard_D2s_v3":{"additionalProperties":{},"description":"Dsv3-series, general purpose, 160-190 ACU, premium storage supported","maxDataDiskCount":4,"memoryInMb":8589.935,"name":"Standard_D2s_v3","numberOfCores":2,"osDiskSizeInMb":1047552,"resourceDiskSizeInMb":17179.87}}'
   );
+  config.setDefault(
+    'gcp-capabilities-json',
+    '{"c2-standard-16":{"description":"Compute Optimized: 16 vCPUs, 64 GB RAM","guestCpus":16,"memoryMb":65536},"c2-standard-30":{"description":"Compute Optimized: 30 vCPUs, 120 GB RAM","guestCpus":30,"memoryMb":122880},"c2-standard-4":{"description":"Compute Optimized: 4 vCPUs, 16 GB RAM","guestCpus":4,"memoryMb":16384},"c2-standard-60":{"description":"Compute Optimized: 60 vCPUs, 240 GB RAM","guestCpus":60,"memoryMb":245760},"c2-standard-8":{"description":"Compute Optimized: 8 vCPUs, 32 GB RAM","guestCpus":8,"memoryMb":32768},"e2-highcpu-16":{"description":"Efficient Instance, 16 vCPUs, 16 GB RAM","guestCpus":16,"memoryMb":16384},"e2-highcpu-32":{"description":"Efficient Instance, 32 vCPUs, 32 GB RAM","guestCpus":32,"memoryMb":32768},"e2-highcpu-4":{"description":"Efficient Instance, 4 vCPUs, 4 GB RAM","guestCpus":4,"memoryMb":4096}}'
+  );
 
   config.setDefault(
     'mapi-auth-admin-group',
@@ -130,6 +135,7 @@ export async function getConfigurationValues(
 
     awsCapabilitiesJSON: config.getString('aws-capabilities-json'),
     azureCapabilitiesJSON: config.getString('azure-capabilities-json'),
+    gcpCapabilitiesJSON: config.getString('gcp-capabilities-json'),
 
     mapiAuthRedirectURL: config.getString('mapi-auth-redirect-url'),
     mapiAuthAdminGroup: config.getString('mapi-auth-admin-group'),

@@ -23,6 +23,9 @@ data:
     {{- if eq .Values.managementCluster.provider.kind "azure" }}
     azure-capabilities-json: '{{ .Values.azure.vm.vmSize.capabilities | toJson }}'
     {{- end }}
+    {{- if eq .Values.managementCluster.provider.kind "gcp" }}
+    gcp-capabilities-json: '{{ .Values.gcp.machinetypes.capabilities | toJson }}'
+    {{- end }}
     
     # Giant Swarm Management API
     mapi-audience: {{ .Values.oidc.issuerAddress }}
