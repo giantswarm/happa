@@ -18,12 +18,13 @@ const YAMLFileUpload: React.FC<
 
   const handleUploadClick = () => {
     if (fileInput.current !== null) {
+      fileInput.current.value = '';
       fileInput.current.click();
     }
   };
 
   const fileInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length < 0) return;
+    if (!e.target.files || e.target.files.length === 0) return;
 
     setFileUploading(true);
 
