@@ -275,7 +275,7 @@ function serializeFieldSelector(fieldSelector: IK8sFieldSelector): string {
 
 function serializeKeyValuePairs(from: Record<string, string>): string {
   return Object.entries(from).reduce<string>((acc, [labelKey, labelValue]) => {
-    if (!labelKey || !labelValue) return acc;
+    if (!labelKey) return acc;
 
     let newAcc = acc;
     if (acc.length > 0) {
