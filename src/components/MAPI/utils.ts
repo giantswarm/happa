@@ -1,5 +1,6 @@
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { Constants, Providers } from 'model/constants';
+import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
@@ -133,6 +134,18 @@ export async function fetchNodePoolListForCluster(
   let list: NodePoolList;
 
   switch (infrastructureRef.kind) {
+    case capgv1beta1.GCPCluster:
+      list = await capiv1beta1.getMachinePoolList(httpClientFactory(), auth, {
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelClusterName]: cluster.metadata.name,
+          },
+        },
+        namespace,
+      });
+
+      break;
+
     case capzv1beta1.AzureCluster:
       if (supportsNonExpMachinePools(cluster)) {
         list = await capiv1beta1.getMachinePoolList(httpClientFactory(), auth, {
@@ -198,6 +211,16 @@ export function fetchNodePoolListForClusterKey(
   }
 
   switch (infrastructureRef.kind) {
+    case capgv1beta1.GCPCluster:
+      return capiv1beta1.getMachinePoolListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelClusterName]: cluster.metadata.name,
+          },
+        },
+        namespace,
+      });
+
     case capzv1beta1.AzureCluster:
       if (supportsNonExpMachinePools(cluster)) {
         return capiv1beta1.getMachinePoolListKey({
@@ -250,6 +273,14 @@ export async function fetchProviderNodePoolForNodePool(
   const kind = infrastructureRef.kind;
 
   switch (true) {
+    case kind === capgv1beta1.GCPCluster:
+      return capgv1beta1.getGCPMachineTemplate(
+        httpClientFactory(),
+        auth,
+        nodePool.metadata.namespace!,
+        infrastructureRef.name
+      );
+
     case kind === capzexpv1alpha3.AzureMachinePool &&
       apiVersion === 'exp.infrastructure.cluster.x-k8s.io/v1alpha3':
       return capzexpv1alpha3.getAzureMachinePool(
@@ -442,6 +473,24 @@ export async function fetchControlPlaneNodesForCluster(
   }
 
   switch (infrastructureRef.kind) {
+    case capgv1beta1.GCPCluster: {
+      const cpNodes = await capgv1beta1.getGCPMachineTemplateList(
+        httpClientFactory(),
+        auth,
+        {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capiv1beta1.labelRole]: 'control-plane',
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }
+      );
+
+      return cpNodes.items;
+    }
+
     case capzv1beta1.AzureCluster: {
       const cpNodes = await capzv1beta1.getAzureMachineList(
         httpClientFactory(),
@@ -509,6 +558,16 @@ export function fetchControlPlaneNodesForClusterKey(
   }
 
   switch (infrastructureRef.kind) {
+    case capgv1beta1.GCPCluster:
+      return capgv1beta1.getGCPMachineTemplateListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelCluster]: cluster.metadata.name,
+          },
+        },
+        namespace: cluster.metadata.namespace,
+      });
+
     case capzv1beta1.AzureCluster:
       return capzv1beta1.getAzureMachineListKey({
         labelSelector: {
@@ -547,6 +606,14 @@ export async function fetchProviderClusterForCluster(
   }
 
   switch (infrastructureRef.kind) {
+    case capgv1beta1.GCPCluster:
+      return capgv1beta1.getGCPCluster(
+        httpClientFactory(),
+        auth,
+        cluster.metadata.namespace!,
+        infrastructureRef.name
+      );
+
     case capzv1beta1.AzureCluster:
       return capzv1beta1.getAzureCluster(
         httpClientFactory(),
@@ -573,6 +640,12 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
   if (!infrastructureRef) return null;
 
   switch (infrastructureRef.kind) {
+    case capgv1beta1.GCPCluster:
+      return capgv1beta1.getGCPClusterKey(
+        cluster.metadata.namespace!,
+        infrastructureRef.name
+      );
+
     case capzv1beta1.AzureCluster:
       return capzv1beta1.getAzureClusterKey(
         cluster.metadata.namespace!,
