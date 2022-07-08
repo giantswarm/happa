@@ -454,10 +454,8 @@ export async function fetchControlPlaneNodesForCluster(
 
   switch (infrastructureRef.kind) {
     case capgv1beta1.GCPCluster: {
-      const cpNodes = await capgv1beta1.getGCPMachineTemplateList(
-        httpClientFactory(),
-        auth,
-        {
+      const [gcpCP, machineCP] = await Promise.allSettled([
+        capgv1beta1.getGCPMachineTemplateList(httpClientFactory(), auth, {
           labelSelector: {
             matchingLabels: {
               [capiv1beta1.labelClusterName]: cluster.metadata.name,
@@ -465,10 +463,34 @@ export async function fetchControlPlaneNodesForCluster(
             },
           },
           namespace: cluster.metadata.namespace,
-        }
-      );
+        }),
+        capiv1beta1.getMachineList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capiv1beta1.labelMachineControlPlane]: '',
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }),
+      ]);
 
-      return cpNodes.items;
+      if (gcpCP.status === 'rejected' && machineCP.status === 'rejected') {
+        return Promise.reject(gcpCP.reason);
+      }
+
+      let cpNodes: ControlPlaneNode[] = [];
+      if (gcpCP.status === 'fulfilled' && gcpCP.value.items.length > 0) {
+        cpNodes = [...cpNodes, ...gcpCP.value.items];
+      }
+      if (
+        machineCP.status === 'fulfilled' &&
+        machineCP.value.items.length > 0
+      ) {
+        cpNodes = [...cpNodes, ...machineCP.value.items];
+      }
+
+      return cpNodes;
     }
 
     case capzv1beta1.AzureCluster: {
@@ -543,6 +565,7 @@ export function fetchControlPlaneNodesForClusterKey(
         labelSelector: {
           matchingLabels: {
             [capiv1beta1.labelCluster]: cluster.metadata.name,
+            [capiv1beta1.labelRole]: 'control-plane',
           },
         },
         namespace: cluster.metadata.namespace,
