@@ -1035,6 +1035,7 @@ export function getClusterDescription(
   }
 
   switch (infrastructureRef.kind) {
+    case capgv1beta1.GCPCluster:
     case capzv1beta1.AzureCluster:
       return (
         cluster.metadata.annotations?.[
