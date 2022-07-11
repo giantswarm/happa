@@ -13,6 +13,7 @@ import {
 } from 'MAPI/workernodes/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
@@ -207,53 +208,41 @@ function appendProviderNodePoolsStats(
   summary: ui.IOrganizationDetailClustersSummary
 ) {
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
+    const readyReplicas = nodePool.status?.readyReplicas;
+    if (!readyReplicas) continue;
+
+    // eslint-disable-next-line @typescript-eslint/init-declarations
+    let instanceType: string | undefined;
+
     switch (providerNodePool?.kind) {
       case capzexpv1alpha3.AzureMachinePool:
-      case capzv1beta1.AzureMachinePool: {
-        const vmSize = providerNodePool.spec?.template.vmSize;
-        const readyReplicas = nodePool.status?.readyReplicas;
-
-        if (
-          typeof vmSize !== 'undefined' &&
-          typeof readyReplicas !== 'undefined'
-        ) {
-          const machineTypeProperties = machineTypes[vmSize];
-          if (!machineTypeProperties) {
-            throw new Error('Invalid machine type.');
-          }
-
-          summary.workerNodesCPU ??= 0;
-          summary.workerNodesCPU += machineTypeProperties.cpu * readyReplicas;
-
-          summary.workerNodesMemory ??= 0;
-          summary.workerNodesMemory +=
-            machineTypeProperties.memory * readyReplicas;
-        }
+      case capzv1beta1.AzureMachinePool:
+        instanceType = providerNodePool.spec?.template.vmSize;
 
         break;
-      }
 
-      case infrav1alpha3.AWSMachineDeployment: {
-        const instanceType = providerNodePool.spec.provider.worker.instanceType;
-        const readyReplicas = nodePool.status?.readyReplicas;
-
-        if (typeof readyReplicas !== 'undefined') {
-          const machineTypeProperties = machineTypes[instanceType];
-          if (!machineTypeProperties) {
-            throw new Error('Invalid machine type.');
-          }
-
-          summary.workerNodesCPU ??= 0;
-          summary.workerNodesCPU += machineTypeProperties.cpu * readyReplicas;
-
-          summary.workerNodesMemory ??= 0;
-          summary.workerNodesMemory +=
-            machineTypeProperties.memory * readyReplicas;
-        }
+      case infrav1alpha3.AWSMachineDeployment:
+        instanceType = providerNodePool.spec.provider.worker.instanceType;
 
         break;
-      }
+
+      case capgv1beta1.GCPMachineTemplate:
+        instanceType = providerNodePool.spec?.template.spec?.instanceType;
+
+        break;
     }
+    if (!instanceType) continue;
+
+    const machineTypeProperties = machineTypes[instanceType];
+    if (!machineTypeProperties) {
+      throw new Error('Invalid machine type.');
+    }
+
+    summary.workerNodesCPU ??= 0;
+    summary.workerNodesCPU += machineTypeProperties.cpu * readyReplicas;
+
+    summary.workerNodesMemory ??= 0;
+    summary.workerNodesMemory += machineTypeProperties.memory * readyReplicas;
   }
 }
 

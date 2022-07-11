@@ -16,6 +16,7 @@ import {
 import { IProviderNodePoolForNodePool } from 'MAPI/workernodes/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { Constants, Providers } from 'model/constants';
+import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
@@ -54,46 +55,39 @@ export function getWorkerNodesCPU(
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
+    const readyReplicas = nodePool.status?.readyReplicas;
+    if (!readyReplicas) continue;
+
+    // eslint-disable-next-line @typescript-eslint/init-declarations
+    let instanceType: string | undefined;
+
     switch (providerNodePool?.kind) {
       case capzexpv1alpha3.AzureMachinePool:
-      case capzv1beta1.AzureMachinePool:
-        {
-          const vmSize = providerNodePool.spec?.template.vmSize;
-          const readyReplicas = nodePool.status?.readyReplicas;
-
-          if (!vmSize) return -1;
-
-          if (typeof readyReplicas !== 'undefined') {
-            const machineTypeProperties = machineTypes[vmSize];
-            if (!machineTypeProperties) {
-              return -1;
-            }
-
-            count += machineTypeProperties.cpu * readyReplicas;
-          }
-        }
-
+      case capzv1beta1.AzureMachinePool: {
+        instanceType = providerNodePool.spec?.template.vmSize;
         break;
+      }
 
       case infrav1alpha3.AWSMachineDeployment: {
-        const instanceType = providerNodePool.spec.provider.worker.instanceType;
-        const readyReplicas = nodePool.status?.readyReplicas;
+        instanceType = providerNodePool.spec.provider.worker.instanceType;
+        break;
+      }
 
-        if (typeof readyReplicas !== 'undefined') {
-          const machineTypeProperties = machineTypes[instanceType];
-          if (!machineTypeProperties) {
-            return -1;
-          }
-
-          count += machineTypeProperties.cpu * readyReplicas;
-        }
-
+      case capgv1beta1.GCPMachineTemplate: {
+        instanceType = providerNodePool.spec?.template.spec?.instanceType;
         break;
       }
 
       default:
         return -1;
     }
+
+    if (!instanceType) return -1;
+
+    const machineTypeProperties = machineTypes[instanceType];
+    if (!machineTypeProperties) return -1;
+
+    count += machineTypeProperties.cpu * readyReplicas;
   }
 
   return count;
@@ -108,45 +102,39 @@ export function getWorkerNodesMemory(
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
+    const readyReplicas = nodePool.status?.readyReplicas;
+    if (!readyReplicas) continue;
+
+    // eslint-disable-next-line @typescript-eslint/init-declarations
+    let instanceType: string | undefined;
+
     switch (providerNodePool?.kind) {
       case capzexpv1alpha3.AzureMachinePool:
       case capzv1beta1.AzureMachinePool: {
-        const vmSize = providerNodePool.spec?.template.vmSize;
-        const readyReplicas = nodePool.status?.readyReplicas;
-
-        if (!vmSize) return -1;
-
-        if (typeof readyReplicas !== 'undefined') {
-          const machineTypeProperties = machineTypes[vmSize];
-          if (!machineTypeProperties) {
-            return -1;
-          }
-
-          count += machineTypeProperties.memory * readyReplicas;
-        }
-
+        instanceType = providerNodePool.spec?.template.vmSize;
         break;
       }
 
       case infrav1alpha3.AWSMachineDeployment: {
-        const instanceType = providerNodePool.spec.provider.worker.instanceType;
-        const readyReplicas = nodePool.status?.readyReplicas;
+        instanceType = providerNodePool.spec.provider.worker.instanceType;
+        break;
+      }
 
-        if (typeof readyReplicas !== 'undefined') {
-          const machineTypeProperties = machineTypes[instanceType];
-          if (!machineTypeProperties) {
-            return -1;
-          }
-
-          count += machineTypeProperties.memory * readyReplicas;
-        }
-
+      case capgv1beta1.GCPMachineTemplate: {
+        instanceType = providerNodePool.spec?.template.spec?.instanceType;
         break;
       }
 
       default:
         return -1;
     }
+
+    if (!instanceType) return -1;
+
+    const machineTypeProperties = machineTypes[instanceType];
+    if (!machineTypeProperties) return -1;
+
+    count += machineTypeProperties.memory * readyReplicas;
   }
 
   return count;
