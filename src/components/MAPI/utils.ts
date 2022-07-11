@@ -134,6 +134,23 @@ export async function fetchNodePoolListForCluster(
   let list: NodePoolList;
 
   switch (infrastructureRef.kind) {
+    case capgv1beta1.GCPCluster:
+      list = await capiv1beta1.getMachineDeploymentList(
+        httpClientFactory(),
+        auth,
+        {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [`${capiv1beta1.labelRole}!`]: 'bastion',
+            },
+          },
+          namespace,
+        }
+      );
+
+      break;
+
     case capzv1beta1.AzureCluster:
       if (supportsNonExpMachinePools(cluster)) {
         list = await capiv1beta1.getMachinePoolList(httpClientFactory(), auth, {
@@ -161,7 +178,6 @@ export async function fetchNodePoolListForCluster(
 
       break;
 
-    case capgv1beta1.GCPCluster:
     case infrav1alpha3.AWSCluster:
       list = await capiv1beta1.getMachineDeploymentList(
         httpClientFactory(),
@@ -200,6 +216,17 @@ export function fetchNodePoolListForClusterKey(
   }
 
   switch (infrastructureRef.kind) {
+    case capgv1beta1.GCPCluster:
+      return capiv1beta1.getMachineDeploymentListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelClusterName]: cluster.metadata.name,
+            [`${capiv1beta1.labelRole}!`]: 'bastion',
+          },
+        },
+        namespace,
+      });
+
     case capzv1beta1.AzureCluster:
       if (supportsNonExpMachinePools(cluster)) {
         return capiv1beta1.getMachinePoolListKey({
@@ -221,7 +248,6 @@ export function fetchNodePoolListForClusterKey(
         namespace,
       });
 
-    case capgv1beta1.GCPCluster:
     case infrav1alpha3.AWSCluster:
       return capiv1beta1.getMachineDeploymentListKey({
         labelSelector: {
