@@ -446,3 +446,29 @@ type MapCartesian<T extends unknown[][]> = {
 export type DeepPartial<T> = T extends object
   ? { [P in keyof T]?: DeepPartial<T[P]> }
   : T;
+
+/**
+ * Format memory size in GB to human readable format, to 1 decimal place if the value is between 1TB and 10TB. If mininum decimals is set,
+ * it will always return a string with at least that many decimals.
+ */
+export function getHumanReadableMemory(size: number, minDecimals: number = 0) {
+  const formattedSize = humanFileSize(
+    // eslint-disable-next-line no-magic-numbers
+    size * 1000 * 1000 * 1000,
+    true,
+    minDecimals + 1
+  );
+
+  const factor =
+    // eslint-disable-next-line no-magic-numbers
+    10 **
+    // eslint-disable-next-line no-magic-numbers
+    (formattedSize.unit === 'TB' && parseFloat(formattedSize.value) < 10
+      ? Math.max(1, minDecimals)
+      : minDecimals);
+
+  return {
+    value: Math.round(parseFloat(formattedSize.value) * factor) / factor,
+    unit: formattedSize.unit,
+  };
+}

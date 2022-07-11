@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Dot } from 'styles';
 import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import { getHumanReadableMemory } from 'utils/helpers';
 
 function pluralizeLabel(count: number, base: string) {
   if (count === 1) {
@@ -27,9 +28,9 @@ function formatWorkerNodesCount(value?: number) {
 
 function formatMemory(value?: number) {
   if (typeof value === 'undefined') return undefined;
+  const formattedMemory = getHumanReadableMemory(value, 1);
 
-  // eslint-disable-next-line no-magic-numbers
-  return Math.round(value * 10) / 10;
+  return `${formattedMemory.value} ${formattedMemory.unit} RAM`;
 }
 
 function formatCPU(value?: number) {
@@ -95,9 +96,7 @@ const ClusterListItemNodeInfo: React.FC<
       <StyledDot />
       <OptionalValue value={workerNodesMemory} replaceEmptyValue={false}>
         {(value) => (
-          <Text>
-            {value === -1 ? <NotAvailable /> : formatMemory(value)} GB RAM
-          </Text>
+          <Text>{value === -1 ? <NotAvailable /> : formatMemory(value)}</Text>
         )}
       </OptionalValue>
     </Box>

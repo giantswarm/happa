@@ -21,6 +21,7 @@ import Button from 'UI/Controls/Button';
 import ClusterDetailCounter from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailCounter';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import ErrorReporter from 'utils/errors/ErrorReporter';
+import { getHumanReadableMemory } from 'utils/helpers';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
@@ -31,13 +32,6 @@ import {
 } from '../clusters/utils';
 import { usePermissionsForNodePools } from './permissions/usePermissionsForNodePools';
 import { mapNodePoolsToProviderNodePools } from './utils';
-
-function formatMemory(value?: number) {
-  if (typeof value === 'undefined') return undefined;
-
-  // eslint-disable-next-line no-magic-numbers
-  return Math.round(value);
-}
 
 function formatCPU(value?: number) {
   if (typeof value === 'undefined') return undefined;
@@ -161,6 +155,12 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
     [clusterId, orgId]
   );
 
+  const formattedWorkerNodesMemory = useMemo(() => {
+    if (typeof workerNodesMemory === 'undefined') return undefined;
+
+    return getHumanReadableMemory(workerNodesMemory);
+  }, [workerNodesMemory]);
+
   return (
     <ClusterDetailWidget
       title='Worker nodes'
@@ -228,8 +228,12 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
             value={formatCPU(workerNodesCPU)}
           />
           <ClusterDetailCounter
-            label='GB RAM'
-            value={formatMemory(workerNodesMemory)}
+            label={
+              formattedWorkerNodesMemory
+                ? `${formattedWorkerNodesMemory.unit} RAM`
+                : 'GB RAM'
+            }
+            value={formattedWorkerNodesMemory?.value}
           />
         </>
       )}

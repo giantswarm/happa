@@ -2,6 +2,7 @@ import { Box, Text } from 'grommet';
 import OrganizationDetailDelete from 'MAPI/organizations/OrganizationDetailDelete';
 import React from 'react';
 import { getK8sVersionEOLDate } from 'utils/config';
+import { getHumanReadableMemory } from 'utils/helpers';
 
 import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
 import OrganizationDetailStatistic from './OrganizationDetailStatistic';
@@ -13,8 +14,9 @@ import {
 
 function formatMemory(value?: number): string | undefined {
   if (typeof value === 'undefined') return undefined;
+  const formattedMemory = getHumanReadableMemory(value);
 
-  return `${Math.round(value)} GB`;
+  return `${formattedMemory.value} ${formattedMemory.unit} RAM`;
 }
 
 function formatCPU(value?: number): number | undefined {
