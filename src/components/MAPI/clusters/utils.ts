@@ -62,21 +62,18 @@ export function getWorkerNodesCPU(
     let instanceType: string | undefined;
 
     switch (providerNodePool?.kind) {
-      case capzexpv1alpha3.AzureMachinePool:
-      case capzv1beta1.AzureMachinePool: {
-        instanceType = providerNodePool.spec?.template.vmSize;
-        break;
-      }
-
-      case infrav1alpha3.AWSMachineDeployment: {
-        instanceType = providerNodePool.spec.provider.worker.instanceType;
-        break;
-      }
-
-      case capgv1beta1.GCPMachineTemplate: {
+      case capgv1beta1.GCPMachineTemplate:
         instanceType = providerNodePool.spec?.template.spec?.instanceType;
         break;
-      }
+
+      case capzexpv1alpha3.AzureMachinePool:
+      case capzv1beta1.AzureMachinePool:
+        instanceType = providerNodePool.spec?.template.vmSize;
+        break;
+
+      case infrav1alpha3.AWSMachineDeployment:
+        instanceType = providerNodePool.spec.provider.worker.instanceType;
+        break;
 
       default:
         return -1;
