@@ -3,6 +3,7 @@ import {
   compareDates,
   dedent,
   formatDate,
+  getHumanReadableMemory,
   getTruncationParams,
   hasAppropriateLength,
   humanFileSize,
@@ -588,6 +589,108 @@ token: can't be blank`)
         '2999-12-18',
         randomDate,
       ]);
+    });
+  });
+
+  describe('getHumanReadableMemory', () => {
+    it('formats memory under 1000GB to the nearest integer', () => {
+      const attempts = [
+        {
+          size: 0.4,
+          result: { value: 400, unit: 'MB' },
+        },
+        {
+          size: 0.999,
+          result: { value: 999, unit: 'MB' },
+        },
+        {
+          size: 20,
+          result: { value: 20, unit: 'GB' },
+        },
+        {
+          size: 20.4,
+          result: { value: 20, unit: 'GB' },
+        },
+        {
+          size: 20.5,
+          result: { value: 21, unit: 'GB' },
+        },
+      ];
+
+      for (const attempt of attempts) {
+        expect(getHumanReadableMemory(attempt.size)).toStrictEqual(
+          attempt.result
+        );
+      }
+    });
+
+    it('formats memory between 1000GB and 10000GB to one decimal place if the decimal is significant', () => {
+      const attempts = [
+        {
+          size: 2001,
+          result: { value: 2, unit: 'TB' },
+        },
+        {
+          size: 2445,
+          result: { value: 2.4, unit: 'TB' },
+        },
+        {
+          size: 2545,
+          result: { value: 2.5, unit: 'TB' },
+        },
+      ];
+
+      for (const attempt of attempts) {
+        expect(getHumanReadableMemory(attempt.size)).toStrictEqual(
+          attempt.result
+        );
+      }
+    });
+
+    it('formats memory above 10000GB to the nearest integer', () => {
+      const attempts = [
+        {
+          size: 20152,
+          result: { value: 20, unit: 'TB' },
+        },
+        {
+          size: 12678,
+          result: { value: 13, unit: 'TB' },
+        },
+      ];
+
+      for (const attempt of attempts) {
+        expect(getHumanReadableMemory(attempt.size)).toStrictEqual(
+          attempt.result
+        );
+      }
+    });
+
+    it('formats memory to a specified number of decimal places regardless of size', () => {
+      const attempts = [
+        {
+          size: 0.999,
+          result: { value: 999.0, unit: 'MB' },
+        },
+        {
+          size: 20.4,
+          result: { value: 20.4, unit: 'GB' },
+        },
+        {
+          size: 2445,
+          result: { value: 2.4, unit: 'TB' },
+        },
+        {
+          size: 20152,
+          result: { value: 20.2, unit: 'TB' },
+        },
+      ];
+
+      for (const attempt of attempts) {
+        expect(getHumanReadableMemory(attempt.size, 1)).toStrictEqual(
+          attempt.result
+        );
+      }
     });
   });
 });
