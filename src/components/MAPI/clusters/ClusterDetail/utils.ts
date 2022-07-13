@@ -346,6 +346,7 @@ export function computeControlPlaneNodesStats(
 
   for (const node of nodes) {
     switch (node.kind) {
+      case capiv1beta1.Machine:
       case capzv1beta1.AzureMachine:
         stats.totalCount++;
 

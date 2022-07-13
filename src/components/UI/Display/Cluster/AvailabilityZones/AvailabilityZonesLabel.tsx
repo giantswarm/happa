@@ -1,6 +1,6 @@
 import { Keyboard } from 'grommet';
 import { RUMActions } from 'model/constants/realUserMonitoring';
-import React from 'react';
+import React, { KeyboardEvent } from 'react';
 import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 
@@ -14,7 +14,7 @@ const azColors = [
   '#e5c494',
 ];
 
-const getLetterIndexInAlphabet = (letter) => {
+const getLetterIndexInAlphabet = (letter: string) => {
   const firstAlphabetLetterCode = 97;
   const letterCode = letter.toLowerCase().charCodeAt(0);
   const letterIndex = letterCode - firstAlphabetLetterCode;
@@ -22,7 +22,7 @@ const getLetterIndexInAlphabet = (letter) => {
   return letterIndex;
 };
 
-const getColorIndex = (value) => {
+const getColorIndex = (value: string) => {
   let valueAsNumber = Number(value);
 
   if (isNaN(valueAsNumber)) {
@@ -41,7 +41,7 @@ const getColorIndex = (value) => {
  *
  * Each zone gets a unique color for visual distinction.
  */
-const Wrapper = styled.abbr`
+const Wrapper = styled.abbr<{ bgColor: string }>`
   border-radius: 2em;
   color: #333;
   padding: 2px;
@@ -80,7 +80,24 @@ const Wrapper = styled.abbr`
   }
 `;
 
-function AvailabilityZonesLabel({
+interface IAvailabilityZonesLabelProps {
+  label: string;
+  value: string;
+  title: string;
+  onToggleChecked?: (
+    isChecked: boolean,
+    payload: {
+      title: string;
+      value: string;
+      label: string;
+    }
+  ) => {};
+  isChecked: boolean;
+  isMaxReached?: boolean;
+  isRadioButtons?: boolean;
+}
+
+const AvailabilityZonesLabel: React.FC<IAvailabilityZonesLabelProps> = ({
   label,
   value,
   title,
@@ -88,7 +105,7 @@ function AvailabilityZonesLabel({
   isChecked,
   isMaxReached,
   isRadioButtons,
-}) {
+}) => {
   const notCheckedClass = onToggleChecked && !isChecked ? `not-checked` : '';
   /* If this has onToggleChecked prop it means that it is clickable and hence we don't want a "?" as cursor */
   const pointerClass =
@@ -115,7 +132,7 @@ function AvailabilityZonesLabel({
     }
   };
 
-  const handleSelectKeyDown = (e) => {
+  const handleSelectKeyDown = (e: KeyboardEvent) => {
     e.preventDefault();
 
     toggleChecked();
@@ -137,6 +154,6 @@ function AvailabilityZonesLabel({
       </Keyboard>
     </RUMActionTarget>
   );
-}
+};
 
 export default AvailabilityZonesLabel;
