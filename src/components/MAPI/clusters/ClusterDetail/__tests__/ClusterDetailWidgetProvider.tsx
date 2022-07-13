@@ -161,13 +161,12 @@ describe('ClusterDetailWidgetProvider on AWS when user can not list credentials'
 
   it('displays cluster region and account ID', async () => {
     await setupAWS();
-    const groups = screen.getAllByTestId('provider-group');
-    expect(groups.length).toEqual(2);
-    expect(within(groups[0]).getByText('AWS region')).toBeInTheDocument();
-    expect(within(groups[0]).getByText('eu-west-1')).toBeInTheDocument();
-    expect(within(groups[1]).getByText('Account ID')).toBeInTheDocument();
-    expect(within(groups[1]).getByText('n/a')).toBeInTheDocument();
-    expect(within(groups[1]).queryByRole('link')).not.toBeInTheDocument();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('AWS region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('eu-west-1')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('Account ID')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('n/a')).toBeInTheDocument();
+    expect(within(providerInfo).queryByRole('link')).not.toBeInTheDocument();
   });
 });
 
@@ -202,15 +201,14 @@ describe('ClusterDetailWidgetProvider on AWS when user can list credentials', ()
 
   it('displays cluster region and account ID', async () => {
     await setupAWS();
-    const groups = screen.getAllByTestId('provider-group');
-    expect(groups.length).toEqual(2);
-    expect(within(groups[0]).getByText('AWS region')).toBeInTheDocument();
-    expect(within(groups[0]).getByText('eu-west-1')).toBeInTheDocument();
-    expect(within(groups[1]).getByText('Account ID')).toBeInTheDocument();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('AWS region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('eu-west-1')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('Account ID')).toBeInTheDocument();
     expect(
-      within(groups[1]).getByText('credential-account-id')
+      within(providerInfo).getByText('credential-account-id')
     ).toBeInTheDocument();
-    expect(within(groups[1]).getByRole('link')).toHaveAttribute(
+    expect(within(providerInfo).getByRole('link')).toHaveAttribute(
       'href',
       'https://credential-account-id.signin.aws.amazon.com/console'
     );
@@ -240,17 +238,18 @@ describe('ClusterDetailWidgetProvider on Azure when user can not list credential
 
   it('displays cluster region, subscription ID and tenant ID', async () => {
     await setupAzure();
-    const groups = screen.getAllByTestId('provider-group');
-    expect(groups.length).toEqual(3);
-    expect(within(groups[0]).getByText('Azure region')).toBeInTheDocument();
-    expect(within(groups[0]).getByText('westeurope')).toBeInTheDocument();
-    expect(within(groups[1]).getByText('Subscription ID')).toBeInTheDocument();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('Azure region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('westeurope')).toBeInTheDocument();
     expect(
-      within(groups[1]).getByText('test-subscription')
+      within(providerInfo).getByText('Subscription ID')
     ).toBeInTheDocument();
-    expect(within(groups[1]).queryByRole('link')).not.toBeInTheDocument();
-    expect(within(groups[2]).getByText('Tenant ID')).toBeInTheDocument();
-    expect(within(groups[2]).getByText('n/a')).toBeInTheDocument();
+    expect(
+      within(providerInfo).getByText('test-subscription')
+    ).toBeInTheDocument();
+    expect(within(providerInfo).queryByRole('link')).not.toBeInTheDocument();
+    expect(within(providerInfo).getByText('Tenant ID')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('n/a')).toBeInTheDocument();
   });
 });
 
@@ -286,18 +285,19 @@ describe('ClusterDetailWidgetProvider on Azure when user can list credentials', 
 
   it('displays cluster region, subscription ID and tenant ID', async () => {
     await setupAzure();
-    const groups = screen.getAllByTestId('provider-group');
-    expect(groups.length).toEqual(3);
-    expect(within(groups[0]).getByText('Azure region')).toBeInTheDocument();
-    expect(within(groups[0]).getByText('westeurope')).toBeInTheDocument();
-    expect(within(groups[1]).getByText('Subscription ID')).toBeInTheDocument();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('Azure region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('westeurope')).toBeInTheDocument();
     expect(
-      within(groups[1]).getByText('credential-subscription-id')
+      within(providerInfo).getByText('Subscription ID')
     ).toBeInTheDocument();
-    expect(within(groups[1]).queryByRole('link')).not.toBeInTheDocument();
-    expect(within(groups[2]).getByText('Tenant ID')).toBeInTheDocument();
     expect(
-      within(groups[2]).getByText('credential-tenant-id')
+      within(providerInfo).getByText('credential-subscription-id')
+    ).toBeInTheDocument();
+    expect(within(providerInfo).queryByRole('link')).not.toBeInTheDocument();
+    expect(within(providerInfo).getByText('Tenant ID')).toBeInTheDocument();
+    expect(
+      within(providerInfo).getByText('credential-tenant-id')
     ).toBeInTheDocument();
   });
 });

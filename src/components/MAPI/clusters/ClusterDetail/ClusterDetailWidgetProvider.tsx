@@ -1,5 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { Box, Text } from 'grommet';
+import { Grid, Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
 import { ProviderCluster } from 'MAPI/types';
 import {
@@ -28,67 +28,83 @@ import { useHttpClient } from 'utils/hooks/useHttpClient';
 import { usePermissionsForOrgCredentials } from '../permissions/usePermissionsForOrgCredentials';
 import { getCredentialsAccountID, getCredentialsAzureTenantID } from './utils';
 
-export function getClusterRegionLabel(cluster?: capiv1beta1.ICluster) {
-  if (!cluster) return undefined;
-
-  switch (cluster.spec?.infrastructureRef?.kind) {
-    case capzv1beta1.AzureCluster:
-      return 'Azure region';
-
-    case infrav1alpha3.AWSCluster:
-      return 'AWS region';
-
-    default:
-      return '';
-  }
-}
-
-export function getClusterAccountIDLabel(cluster?: capiv1beta1.ICluster) {
-  if (!cluster) return undefined;
-
-  switch (cluster.spec?.infrastructureRef?.kind) {
-    case capzv1beta1.AzureCluster:
-      return 'Subscription ID';
-
-    case infrav1alpha3.AWSCluster:
-      return 'Account ID';
-
-    default:
-      return '';
-  }
-}
-
-export function getClusterAccountIDPath(
-  cluster?: capiv1beta1.ICluster,
-  accountID?: string
-) {
-  if (!cluster || !accountID) return undefined;
-
-  switch (cluster.spec?.infrastructureRef?.kind) {
-    case infrav1alpha3.AWSCluster:
-      return `https://${accountID}.signin.aws.amazon.com/console`;
-
-    default:
-      return '';
-  }
-}
-
-const GROUP_LABEL_SIZE = {
-  small: 90,
-  medium: 115,
-};
-
-interface IGroupLabelProps {
-  size: 'small' | 'medium';
-}
-
-const GroupLabel = styled.div<IGroupLabelProps>`
-  min-width: ${({ size }) => GROUP_LABEL_SIZE[size]}px;
-`;
-
 const StyledLink = styled.a`
   color: ${({ theme }) => normalizeColor('text-weak', theme)};
 `;
+
+function getProviderInfo(
+  cluster?: capiv1beta1.ICluster,
+  providerCluster?: ProviderCluster,
+  credentials?: legacyCredentials.ICredential[],
+  credentialListIsLoading?: boolean
+): {
+  label?: string;
+  value?: string;
+  link?: string;
+  loaderWidth?: number;
+}[] {
+  const infrastructureRef = cluster?.spec?.infrastructureRef;
+
+  switch (infrastructureRef?.kind) {
+    case capzv1beta1.AzureCluster: {
+      const subscriptionID = credentialListIsLoading
+        ? undefined
+        : credentials
+        ? getCredentialsAccountID(credentials)
+        : getProviderClusterAccountID(providerCluster);
+
+      const tenantID = credentials
+        ? getCredentialsAzureTenantID(credentials)
+        : providerCluster
+        ? ''
+        : undefined;
+
+      return [
+        {
+          label: 'Azure region',
+          value: getProviderClusterLocation(providerCluster),
+        },
+        {
+          label: 'Subscription ID',
+          value: subscriptionID,
+          loaderWidth: 250,
+        },
+        {
+          label: 'Tenant ID',
+          value: tenantID,
+          loaderWidth: 250,
+        },
+      ];
+    }
+
+    case infrav1alpha3.AWSCluster: {
+      const accountID = credentialListIsLoading
+        ? undefined
+        : credentials
+        ? getCredentialsAccountID(credentials)
+        : getProviderClusterAccountID(providerCluster);
+
+      return [
+        {
+          label: 'AWS region',
+          value: getProviderClusterLocation(providerCluster),
+        },
+        {
+          label: 'Account ID',
+          value: accountID,
+          link: `https://${accountID}.signin.aws.amazon.com/console`,
+        },
+      ];
+    }
+
+    default: {
+      const provider = window.config.info.general.provider;
+      const itemsCount = provider === Providers.AZURE ? 3 : 2;
+
+      return Array.from(Array(itemsCount)).map(() => ({}));
+    }
+  }
+}
 
 interface IClusterDetailWidgetProviderProps
   extends Omit<
@@ -120,17 +136,20 @@ const ClusterDetailWidgetProvider: React.FC<
   const credentialListKey =
     cluster && canList && selectedOrgID
       ? legacyCredentials.getCredentialListKey(selectedOrgID)
-      : null;
+      : undefined;
 
-  const { data: credentialList, error: credentialListError } = useSWR<
-    legacyCredentials.ICredentialList,
-    GenericResponseError
-  >(credentialListKey, () =>
-    legacyCredentials.getCredentialList(
-      credentialListClient,
-      auth,
-      selectedOrgID!
-    )
+  const {
+    data: credentialList,
+    isValidating: credentialListIsValidating,
+    error: credentialListError,
+  } = useSWR<legacyCredentials.ICredentialList, GenericResponseError>(
+    credentialListKey,
+    () =>
+      legacyCredentials.getCredentialList(
+        credentialListClient,
+        auth,
+        selectedOrgID!
+      )
   );
 
   useEffect(() => {
@@ -146,84 +165,51 @@ const ClusterDetailWidgetProvider: React.FC<
     }
   }, [credentialListError, orgId]);
 
-  const accountID = credentialListKey
-    ? getCredentialsAccountID(credentialList?.items)
-    : getProviderClusterAccountID(providerCluster);
-  const accountIDPath = getClusterAccountIDPath(cluster, accountID);
+  const credentialListIsLoading =
+    typeof credentialList === 'undefined' && credentialListIsValidating;
 
-  const azureTenantID = credentialListKey
-    ? getCredentialsAzureTenantID(credentialList?.items)
-    : providerCluster
-    ? ''
-    : undefined;
-
-  const region = getProviderClusterLocation(providerCluster);
+  const providerInfoItems = getProviderInfo(
+    cluster,
+    providerCluster,
+    credentialListIsLoading ? undefined : credentialList?.items,
+    credentialListIsLoading
+  );
 
   return (
     <ClusterDetailWidget title='Provider' inline={true} {...props}>
-      <Box direction='row' align='center' data-testid='provider-group'>
-        <GroupLabel size={provider === Providers.AWS ? 'small' : 'medium'}>
-          <OptionalValue
-            loaderWidth={85}
-            value={getClusterRegionLabel(cluster)}
-          >
-            {(value) => <Text>{value}</Text>}
-          </OptionalValue>
-        </GroupLabel>
-        <OptionalValue value={region}>
-          {(value) => (
-            <Text>
-              <code>{value}</code>
-            </Text>
-          )}
-        </OptionalValue>
-      </Box>
-      <Box direction='row' align='center' data-testid='provider-group'>
-        <GroupLabel size={provider === Providers.AWS ? 'small' : 'medium'}>
-          <OptionalValue
-            loaderWidth={85}
-            value={getClusterAccountIDLabel(cluster)}
-          >
-            {(value) => <Text>{value}</Text>}
-          </OptionalValue>
-        </GroupLabel>
-        <OptionalValue value={accountID} loaderWidth={200}>
-          {(value) =>
-            accountIDPath === '' ? (
-              <code>{value}</code>
-            ) : (
-              <StyledLink
-                color='text-weak'
-                href={accountIDPath}
-                rel='noopener noreferrer'
-                target='_blank'
-              >
-                <code>{value}</code>
-                <i
-                  className='fa fa-open-in-new'
-                  aria-hidden={true}
-                  role='presentation'
-                />
-              </StyledLink>
-            )
-          }
-        </OptionalValue>
-      </Box>
-      {provider === Providers.AZURE && (
-        <Box direction='row' align='center' data-testid='provider-group'>
-          <GroupLabel size='medium'>
-            <OptionalValue
-              loaderWidth={85}
-              value={azureTenantID !== undefined ? 'Tenant ID' : undefined}
-            >
+      <Grid
+        columns={['auto', 'flex']}
+        gap={{ column: 'small' }}
+        data-testid='provider-info'
+      >
+        {providerInfoItems.map((item, idx) => (
+          <React.Fragment key={idx}>
+            <OptionalValue value={item.label}>
               {(value) => <Text>{value}</Text>}
             </OptionalValue>
-          </GroupLabel>
-          <OptionalValue value={azureTenantID} loaderWidth={250}>
-            {(value) => <code>{value}</code>}
-          </OptionalValue>
-        </Box>
-      )}
+            <OptionalValue value={item.value} loaderWidth={item.loaderWidth}>
+              {(value) =>
+                typeof item.link === 'undefined' ? (
+                  <code>{value}</code>
+                ) : (
+                  <StyledLink
+                    href={item.link}
+                    rel='noopener noreferrer'
+                    target='_blank'
+                  >
+                    <code>{value}</code>
+                    <i
+                      className='fa fa-open-in-new'
+                      aria-hidden={true}
+                      role='presentation'
+                    />
+                  </StyledLink>
+                )
+              }
+            </OptionalValue>
+          </React.Fragment>
+        ))}
+      </Grid>
     </ClusterDetailWidget>
   );
 };
