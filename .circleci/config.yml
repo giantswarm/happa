@@ -157,6 +157,18 @@ workflows:
             tags:
               only: /^v.*/
 
+      - architect/push-to-app-collection:
+          name: push-to-cloud-director-app-collection
+          app_name: "happa"
+          app_collection_repo: "cloud-director-app-collection"
+          requires:
+            - push-happa-to-control-plane-app-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
       # FE Docs
 
       - build-fe-docs:
