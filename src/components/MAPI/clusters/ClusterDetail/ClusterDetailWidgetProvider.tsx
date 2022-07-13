@@ -9,6 +9,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
+import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
@@ -46,6 +47,23 @@ function getProviderInfo(
   const infrastructureRef = cluster?.spec?.infrastructureRef;
 
   switch (infrastructureRef?.kind) {
+    case capgv1beta1.GCPCluster: {
+      const projectID = getProviderClusterAccountID(providerCluster);
+
+      return [
+        {
+          label: 'GCP region',
+          value: getProviderClusterLocation(providerCluster),
+        },
+        {
+          label: 'Project ID',
+          value: projectID,
+          link: `https://console.cloud.google.com/home/dashboard?project=${projectID}`,
+          loaderWidth: 200,
+        },
+      ];
+    }
+
     case capzv1beta1.AzureCluster: {
       const subscriptionID = credentialListIsLoading
         ? undefined
