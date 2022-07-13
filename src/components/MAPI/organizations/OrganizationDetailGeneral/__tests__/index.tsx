@@ -18,6 +18,7 @@ import * as React from 'react';
 import { SWRConfig } from 'swr';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
 import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
+import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
@@ -782,6 +783,115 @@ describe('OrganizationDetailGeneral on AWS', () => {
     await waitFor(() =>
       expect(screen.getByLabelText('CPU in worker nodes')).toHaveTextContent(
         '36'
+      )
+    );
+  });
+});
+
+describe('OrganizationDetailGeneral on GCP', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.GCP;
+
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays various stats about the resources that belong to the organization', async () => {
+    // eslint-disable-next-line no-magic-numbers
+    jest.setTimeout(10000);
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterListGCP);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machines/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterListGCP.items[0].metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3D`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterGCP1MachineList);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/gcpmachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterListGCP.items[0].metadata.name}%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capgv1beta1Mocks.randomClusterGCP1GCPMachineTemplateListCP
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinedeployments/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterListGCP.items[0].metadata.name}%2Ccluster.x-k8s.io%2Frole%21%3Dbastion`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterGCP1MachineDeploymentList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/gcpmachinetemplates/${capiv1beta1Mocks.randomClusterGCP1MachineDeploymentList.items[0].spec?.template.spec.infrastructureRef.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capgv1beta1Mocks.randomClusterGCP1GCPMachineTemplate
+      );
+
+    render(
+      getComponent({
+        organizationName: 'org1',
+        organizationNamespace: 'org-org1',
+      })
+    );
+
+    // Clusters summary.
+    await waitFor(() =>
+      expect(screen.getByLabelText('Workload clusters')).toHaveTextContent('1')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Control plane nodes')).toHaveTextContent(
+        '3'
+      )
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Worker nodes')).toHaveTextContent('3')
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByLabelText('Memory in control plane nodes')
+      ).toHaveTextContent('49 GB')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
+        '49 GB'
+      )
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByLabelText('CPU in control plane nodes')
+      ).toHaveTextContent('12')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('CPU in worker nodes')).toHaveTextContent(
+        '12'
       )
     );
   });

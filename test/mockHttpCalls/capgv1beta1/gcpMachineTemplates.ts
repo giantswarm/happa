@@ -30,7 +30,7 @@ export const randomClusterGCP1GCPMachineTemplateListCP: capgv1beta1.IGCPMachineT
             'cluster.x-k8s.io/cluster-name': 'm317f',
             'cluster.x-k8s.io/role': 'control-plane',
             'giantswarm.io/cluster': 'm317f',
-            'giantswarm.io/organization': 'giantswarm',
+            'giantswarm.io/organization': 'org1',
             'helm.sh/chart': 'cluster-gcp-0.15.1',
           },
           name: 'm317f-control-plane-18a2c123',
@@ -76,4 +76,63 @@ export const randomClusterGCP1GCPMachineTemplateListCP: capgv1beta1.IGCPMachineT
         },
       },
     ],
+  };
+
+// GCPMachineTemplate for randomClusterGCP1's worker nodes
+export const randomClusterGCP1GCPMachineTemplate: capgv1beta1.IGCPMachineTemplate =
+  {
+    apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+    kind: 'GCPMachineTemplate',
+    metadata: {
+      annotations: {
+        'meta.helm.sh/release-name': 'm317f',
+        'meta.helm.sh/release-namespace': 'org-giantswarm',
+      },
+      creationTimestamp: '2022-07-13T14:19:55Z',
+      finalizers: [
+        'deletion-blocker-operator.finalizers.giantswarm.io.175659c9',
+      ],
+      generation: 3,
+      labels: {
+        app: 'cluster-gcp',
+        'app.kubernetes.io/managed-by': 'Helm',
+        'app.kubernetes.io/version': '0.15.1',
+        'application.giantswarm.io/team': 'phoenix',
+        'cluster.x-k8s.io/cluster-name': 'm317f',
+        'giantswarm.io/cluster': 'm317f',
+        'giantswarm.io/machine-deployment': 'm317f-worker0',
+        'giantswarm.io/organization': 'org1',
+        'helm.sh/chart': 'cluster-gcp-0.15.1',
+      },
+      name: 'm317f-worker0-9d33c4e6',
+      namespace: 'org-giantswarm',
+      ownerReferences: [
+        {
+          apiVersion: 'cluster.x-k8s.io/v1beta1',
+          kind: 'Cluster',
+          name: 'm317f',
+          uid: '1b8f3aba-ada9-4e9c-8e9a-9c530e5b8769',
+        },
+      ],
+      resourceVersion: '16034052',
+      uid: '28f9a076-8475-491f-8442-4398fa4944ca',
+    },
+    spec: {
+      template: {
+        spec: {
+          additionalDisks: [
+            {
+              deviceType: 'pd-ssd',
+            },
+            {
+              deviceType: 'pd-ssd',
+            },
+          ],
+          image:
+            'https://www.googleapis.com/compute/v1/projects/giantswarm-vm-images/global/images/cluster-api-ubuntu-2004-v1-22-10-gs',
+          instanceType: 'n2-standard-4',
+          rootDeviceSize: 100,
+        },
+      },
+    },
   };
