@@ -1,6 +1,6 @@
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 
-export const randomAWSCluster1: capiv1beta1.ICluster = {
+export const randomClusterAWS1: capiv1beta1.ICluster = {
   apiVersion: 'cluster.x-k8s.io/v1beta1',
   kind: capiv1beta1.Cluster,
   metadata: {
@@ -42,6 +42,148 @@ export const randomAWSCluster1: capiv1beta1.ICluster = {
   },
   status: {
     infrastructureReady: false,
+  },
+};
+
+export const randomClusterAWS2: capiv1beta1.ICluster = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: capiv1beta1.Cluster,
+  metadata: {
+    annotations: {
+      'cluster.giantswarm.io/description': 'Random Cluster',
+    },
+    creationTimestamp: '2022-03-29T06:38:39Z',
+    finalizers: [
+      'encryption-provider-operator.finalizers.giantswarm.io',
+      'operatorkit.giantswarm.io/cluster-operator-cluster-controller',
+      'operatorkit.giantswarm.io/prometheus-meta-operator-cluster-api-controller',
+    ],
+    generation: 1,
+    labels: {
+      'cluster-operator.giantswarm.io/version': '3.13.0',
+      'cluster.x-k8s.io/cluster-name': 'as81f',
+      'giantswarm.io/cluster': 'as81f',
+      'giantswarm.io/organization': 'org1',
+      'release.giantswarm.io/version': '17.0.3',
+    },
+    name: 'as81f',
+    namespace: 'org-org1',
+    resourceVersion: '540373278',
+    selfLink:
+      '/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/as81f',
+    uid: '7a2858d1-fbff-4337-b89f-e8b9dc41b113',
+  },
+  spec: {
+    controlPlaneEndpoint: {
+      host: '',
+      port: 0,
+    },
+    infrastructureRef: {
+      apiVersion: 'infrastructure.giantswarm.io/v1beta1',
+      kind: 'AWSCluster',
+      name: 'as81f',
+      namespace: 'org-org1',
+    },
+  },
+  status: {
+    infrastructureReady: false,
+  },
+};
+
+export const randomClusterGCP1: capiv1beta1.ICluster = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: 'Cluster',
+  metadata: {
+    annotations: {
+      'cluster.giantswarm.io/description': 'Random GCP Cluster',
+      'meta.helm.sh/release-name': 'm317f',
+      'meta.helm.sh/release-namespace': 'org-org1',
+    },
+    creationTimestamp: '2022-07-13T08:29:54Z',
+    finalizers: [
+      'cluster.cluster.x-k8s.io',
+      'operatorkit.giantswarm.io/prometheus-meta-operator-cluster-api-controller',
+      'encryption-provider-operator.finalizers.giantswarm.io',
+      'operatorkit.giantswarm.io/cluster-apps-operator-cluster-controller',
+    ],
+    generation: 2,
+    labels: {
+      app: 'cluster-gcp',
+      'app.kubernetes.io/managed-by': 'Helm',
+      'app.kubernetes.io/version': '0.15.1',
+      'application.giantswarm.io/team': 'phoenix',
+      'cluster-apps-operator.giantswarm.io/watching': '',
+      'cluster.x-k8s.io/cluster-name': 'm317f',
+      'giantswarm.io/cluster': 'm317f',
+      'giantswarm.io/organization': 'giantswarm',
+      'helm.sh/chart': 'cluster-gcp-0.15.1',
+    },
+    name: 'm317f',
+    namespace: 'org-org1',
+    resourceVersion: '14262849',
+    uid: '7a2858d1-fbff-4337-b89f-e8b9dc41b113',
+  },
+  spec: {
+    clusterNetwork: {
+      pods: {
+        cidrBlocks: ['192.168.0.0/16'],
+      },
+    },
+    controlPlaneEndpoint: {
+      host: 'test.k8s.gs.com',
+      port: 0,
+    },
+    controlPlaneRef: {
+      apiVersion: 'controlplane.cluster.x-k8s.io/v1beta1',
+      kind: 'KubeadmControlPlane',
+      name: 'm317f',
+      namespace: 'org-org1',
+    },
+    infrastructureRef: {
+      apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+      kind: 'GCPCluster',
+      name: 'm317f',
+      namespace: 'org-org1',
+    },
+  },
+  status: {
+    conditions: [
+      {
+        lastTransitionTime: '2022-07-12T06:28:55Z',
+        status: 'True',
+        type: 'Ready',
+      },
+      {
+        lastTransitionTime: '2022-07-12T06:25:00Z',
+        status: 'True',
+        type: 'ControlPlaneInitialized',
+      },
+      {
+        lastTransitionTime: '2022-07-12T06:28:55Z',
+        status: 'True',
+        type: 'ControlPlaneReady',
+      },
+      {
+        lastTransitionTime: '2022-07-12T06:21:25Z',
+        status: 'True',
+        type: 'InfrastructureReady',
+      },
+    ],
+    controlPlaneReady: true,
+    failureDomains: {
+      'europe-west3-a': {
+        controlPlane: true,
+      },
+      'europe-west3-b': {
+        controlPlane: true,
+      },
+      'europe-west3-c': {
+        controlPlane: true,
+      },
+    },
+    infrastructureReady: true,
+    observedGeneration: 2,
+    phase: 'Provisioned',
   },
 };
 
@@ -211,4 +353,24 @@ export const randomClusterList: capiv1beta1.IClusterList = {
     selfLink: '/apis/cluster.x-k8s.io/v1beta1/clusters/',
   },
   items: [randomCluster1, randomCluster2, randomCluster3],
+};
+
+export const randomClusterListAWS: capiv1beta1.IClusterList = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: 'ClusterList',
+  metadata: {
+    resourceVersion: '294659579',
+    selfLink: '/apis/cluster.x-k8s.io/v1beta1/clusters/',
+  },
+  items: [randomClusterAWS1, randomClusterAWS2],
+};
+
+export const randomClusterListGCP: capiv1beta1.IClusterList = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: 'ClusterList',
+  metadata: {
+    resourceVersion: '294659579',
+    selfLink: '/apis/cluster.x-k8s.io/v1beta1/clusters/',
+  },
+  items: [randomClusterGCP1],
 };
