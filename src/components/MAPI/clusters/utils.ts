@@ -932,6 +932,16 @@ export function getClusterConditions(
   }
 
   switch (infrastructureRef.kind) {
+    case capgv1beta1.GCPCluster:
+      statuses.isConditionUnknown =
+        typeof cluster.status === 'undefined' ||
+        typeof cluster.status.conditions === 'undefined';
+      statuses.isCreating = capiv1beta1.isConditionFalse(
+        cluster,
+        capiv1beta1.conditionTypeControlPlaneInitialized
+      );
+      break;
+
     case capzv1beta1.AzureCluster:
       statuses.isConditionUnknown =
         typeof cluster.status === 'undefined' ||

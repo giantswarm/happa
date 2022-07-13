@@ -37,6 +37,7 @@ export const annotationCGroupV1 = 'node.giantswarm.io/cgroupv1';
 export const conditionTypeReady = 'Ready';
 export const conditionTypeCreating = 'Creating';
 export const conditionTypeUpgrading = 'Upgrading';
+export const conditionTypeControlPlaneInitialized = 'ControlPlaneInitialized';
 
 export const conditionReasonCreationCompleted = 'CreationCompleted';
 export const conditionReasonExistingObject = 'ExistingObject';
