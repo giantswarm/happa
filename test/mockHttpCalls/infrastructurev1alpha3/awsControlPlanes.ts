@@ -41,7 +41,7 @@ export const randomClusterAWS1AWSControlPlaneList: infrav1alpha3.IAWSControlPlan
         },
         spec: {
           availabilityZones: ['eu-central-1a'],
-          instanceType: 'm5.xlarge',
+          instanceType: 'm4.xlarge',
         },
       },
     ],
@@ -93,7 +93,7 @@ export const randomClusterAWS2AWSControlPlaneList: infrav1alpha3.IAWSControlPlan
             'eu-central-1b',
             'eu-central-1c',
           ],
-          instanceType: 'm5.xlarge',
+          instanceType: 'm4.xlarge',
         },
       },
     ],

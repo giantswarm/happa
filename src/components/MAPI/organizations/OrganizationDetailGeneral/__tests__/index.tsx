@@ -11,7 +11,7 @@ import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissio
 import { usePermissionsForOrganizations } from 'MAPI/organizations/permissions/usePermissionsForOrganizations';
 import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
-import { StatusCodes } from 'model/constants';
+import { Providers, StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import * as React from 'react';
@@ -22,6 +22,7 @@ import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
+import * as infrav1alpha3Mocks from 'test/mockHttpCalls/infrastructurev1alpha3';
 import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
 import * as securityv1alpha1Mocks from 'test/mockHttpCalls/securityv1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
@@ -77,13 +78,21 @@ jest.mock('MAPI/releases/permissions/usePermissionsForReleases');
 jest.mock('MAPI/organizations/permissions/usePermissionsForOrganizations');
 
 describe('OrganizationDetailGeneral', () => {
-  (usePermissionsForClusters as jest.Mock).mockReturnValue(defaultPermissions);
-  (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
-  (usePermissionsForNodePools as jest.Mock).mockReturnValue(defaultPermissions);
-  (usePermissionsForReleases as jest.Mock).mockReturnValue(defaultPermissions);
-  (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
-    defaultPermissions
-  );
+  beforeAll(() => {
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
 
   it('renders without crashing', () => {
     render(
@@ -339,6 +348,33 @@ describe('OrganizationDetailGeneral', () => {
     const deleteButton = await screen.findByText('Delete organization');
     expect(deleteButton).toBeDisabled();
   });
+});
+
+describe('OrganizationDetailGeneral for Azure', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.AZURE;
+
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
 
   it('displays various stats about the resources that belong to the organization', async () => {
     // eslint-disable-next-line no-magic-numbers
@@ -519,7 +555,7 @@ describe('OrganizationDetailGeneral', () => {
     );
   });
 
-  it('displays various stats about the resources that belong to the organization', async () => {
+  it('displays displays if stats for the organization are not available', async () => {
     // eslint-disable-next-line no-magic-numbers
     jest.setTimeout(10000);
 
@@ -599,6 +635,154 @@ describe('OrganizationDetailGeneral', () => {
     );
     await waitFor(() =>
       expect(screen.getByLabelText('App deployments')).toHaveTextContent('0')
+    );
+  });
+});
+
+describe('OrganizationDetailGeneral on AWS', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.AWS;
+
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays various stats about the resources that belong to the organization', async () => {
+    // eslint-disable-next-line no-magic-numbers
+    jest.setTimeout(10000);
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterListAWS);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awscontrolplanes/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomClusterAWS1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS1AWSControlPlaneList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/g8scontrolplanes/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomClusterAWS1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS1G8sControlPlaneList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awscontrolplanes/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomClusterAWS2.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS2AWSControlPlaneList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/g8scontrolplanes/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomClusterAWS2.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS2G8sControlPlaneList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinedeployments/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomClusterAWS1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterAWS1MachineDeploymentList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awsmachinedeployments/${capiv1beta1Mocks.randomClusterAWS1MachineDeploymentList.items[0].metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinedeployments/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomClusterAWS2.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterAWS2MachineDeploymentList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awsmachinedeployments/${capiv1beta1Mocks.randomClusterAWS2MachineDeploymentList.items[0].metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS2AWSMachineDeployment
+      );
+
+    render(
+      getComponent({
+        organizationName: 'org1',
+        organizationNamespace: 'org-org1',
+      })
+    );
+
+    // Clusters summary.
+    await waitFor(() =>
+      expect(screen.getByLabelText('Workload clusters')).toHaveTextContent('2')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Control plane nodes')).toHaveTextContent(
+        '4'
+      )
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Worker nodes')).toHaveTextContent('12')
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByLabelText('Memory in control plane nodes')
+      ).toHaveTextContent('64 GB')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
+        '144 GB'
+      )
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByLabelText('CPU in control plane nodes')
+      ).toHaveTextContent('16')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('CPU in worker nodes')).toHaveTextContent(
+        '36'
+      )
     );
   });
 });
