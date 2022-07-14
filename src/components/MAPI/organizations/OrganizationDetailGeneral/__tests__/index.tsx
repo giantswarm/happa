@@ -351,7 +351,7 @@ describe('OrganizationDetailGeneral', () => {
   });
 });
 
-describe('OrganizationDetailGeneral for Azure', () => {
+describe('OrganizationDetailGeneral on Azure', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
 
@@ -556,7 +556,7 @@ describe('OrganizationDetailGeneral for Azure', () => {
     );
   });
 
-  it('displays displays if stats for the organization are not available', async () => {
+  it('displays if stats for resources are not available', async () => {
     // eslint-disable-next-line no-magic-numbers
     jest.setTimeout(10000);
 
