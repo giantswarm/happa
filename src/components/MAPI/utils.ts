@@ -507,7 +507,14 @@ export async function fetchControlPlaneNodesForCluster(
 
       let cpNodes: ControlPlaneNode[] = [];
       if (gcpCP.status === 'fulfilled' && gcpCP.value.items.length > 0) {
-        cpNodes = [...cpNodes, ...gcpCP.value.items];
+        cpNodes = [
+          ...cpNodes,
+          gcpCP.value.items.sort(
+            (a, b) =>
+              new Date(a.metadata.creationTimestamp ?? 0).getTime() -
+              new Date(b.metadata.creationTimestamp ?? 0).getTime()
+          )[0],
+        ];
       }
       if (
         machineCP.status === 'fulfilled' &&

@@ -110,7 +110,7 @@ function setup(
 
 async function setupAWS() {
   const utils = setup(
-    capiv1beta1Mocks.randomAWSCluster1,
+    capiv1beta1Mocks.randomClusterAWS1,
     infrav1alpha3Mocks.randomAWSCluster1
   );
 

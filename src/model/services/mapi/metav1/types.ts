@@ -10,6 +10,16 @@ export interface IObjectMeta {
   annotations?: Record<string, string>;
   deletionTimestamp?: string;
   labels?: Record<string, string>;
+  ownerReferences?: IOwnerReference[];
+}
+
+export interface IOwnerReference {
+  apiVersion: string;
+  kind: string;
+  name: string;
+  uid: string;
+  controller?: boolean;
+  blockOwnerDeletion?: boolean;
 }
 
 export interface ITypeMeta {

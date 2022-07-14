@@ -16,7 +16,7 @@ function formatMemory(value?: number): string | undefined {
   if (typeof value === 'undefined') return undefined;
   const formattedMemory = getHumanReadableMemory(value);
 
-  return `${formattedMemory.value} ${formattedMemory.unit} RAM`;
+  return `${formattedMemory.value} ${formattedMemory.unit}`;
 }
 
 function formatCPU(value?: number): number | undefined {
