@@ -1,6 +1,6 @@
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 
-export const randomClusterAWS1: infrav1alpha3.IAWSCluster = {
+export const randomAWSCluster1: infrav1alpha3.IAWSCluster = {
   apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
   kind: 'AWSCluster',
   metadata: {
