@@ -6,6 +6,7 @@ import {
   fetchControlPlaneNodesForClusterKey,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { Providers } from 'model/constants';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Dot } from 'styles';
@@ -47,13 +48,12 @@ function formatNodesCountLabel(readyCount?: number, totalCount?: number) {
 }
 
 function formatAvailabilityZonesLabel(
+  provider: PropertiesOf<typeof Providers>,
   availabilityZones: string[] = []
 ): string {
-  if (availabilityZones.length === 1) {
-    return 'Availability zone';
-  }
+  const label = provider === Providers.GCP ? 'Zone' : 'Availability zone';
 
-  return 'Availability zones';
+  return availabilityZones.length === 1 ? label : `${label}s`;
 }
 
 const StyledDot = styled(Dot)`
@@ -178,10 +178,10 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
       </OptionalValue>
       <StyledDot />
       <Text margin={{ right: 'xsmall' }}>
-        {formatAvailabilityZonesLabel(stats.availabilityZones)}
+        {formatAvailabilityZonesLabel(provider, stats.availabilityZones)}
       </Text>
       <OptionalValue
-        value={stats.availabilityZones}
+        value={stats.availabilityZones?.sort()}
         loaderWidth={100}
         loaderHeight={26}
       >

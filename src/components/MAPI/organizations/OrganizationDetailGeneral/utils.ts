@@ -140,43 +140,35 @@ function appendControlPlaneNodeStats(
 ) {
   summary.nodesCount = 0;
 
+  const instanceTypes: string[] = [];
+
   for (const cpNode of controlPlaneNodes) {
     switch (cpNode.kind) {
+      case capgv1beta1.GCPMachineTemplate:
+        if (cpNode.spec?.template?.spec.instanceType) {
+          instanceTypes.push(cpNode.spec.template.spec.instanceType);
+        }
+
+        break;
+
+      case capiv1beta1.Machine:
+        summary.nodesCount++;
+
+        break;
+
       case capzv1beta1.AzureMachine: {
         summary.nodesCount++;
 
-        const vmSize = cpNode.spec?.vmSize;
-
-        if (typeof vmSize !== 'undefined') {
-          const machineTypeProperties = machineTypes[vmSize];
-          if (!machineTypeProperties) {
-            throw new Error('Invalid machine type.');
-          }
-
-          summary.nodesCPU ??= 0;
-          summary.nodesCPU += machineTypeProperties.cpu;
-
-          summary.nodesMemory ??= 0;
-          summary.nodesMemory += machineTypeProperties.memory;
+        if (cpNode.spec?.vmSize) {
+          instanceTypes.push(cpNode.spec.vmSize);
         }
 
         break;
       }
 
       case infrav1alpha3.AWSControlPlane: {
-        const instanceType = cpNode.spec.instanceType;
-
-        if (typeof instanceType !== 'undefined') {
-          const machineTypeProperties = machineTypes[instanceType];
-          if (!machineTypeProperties) {
-            throw new Error('Invalid machine type.');
-          }
-
-          summary.nodesCPU ??= 0;
-          summary.nodesCPU += machineTypeProperties.cpu;
-
-          summary.nodesMemory ??= 0;
-          summary.nodesMemory += machineTypeProperties.memory;
+        if (cpNode.spec.instanceType) {
+          instanceTypes.push(cpNode.spec.instanceType);
         }
 
         break;
@@ -187,6 +179,21 @@ function appendControlPlaneNodeStats(
           summary.nodesCount += cpNode.spec.replicas;
         }
     }
+  }
+
+  for (let i = 0; i < summary.nodesCount; i++) {
+    const instanceType = instanceTypes[i] ?? instanceTypes[0];
+
+    const machineTypeProperties = machineTypes[instanceType];
+    if (!machineTypeProperties) {
+      throw new Error('Invalid machine type.');
+    }
+
+    summary.nodesCPU ??= 0;
+    summary.nodesCPU += machineTypeProperties.cpu;
+
+    summary.nodesMemory ??= 0;
+    summary.nodesMemory += machineTypeProperties.memory;
   }
 }
 
