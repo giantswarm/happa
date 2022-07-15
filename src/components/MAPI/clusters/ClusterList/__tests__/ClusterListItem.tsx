@@ -11,6 +11,7 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
+import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
@@ -514,5 +515,54 @@ describe('ClusterListItem on AWS', () => {
     expect(await screen.findByText('6 worker nodes')).toBeInTheDocument();
     expect(await screen.findByText('24 CPU cores')).toBeInTheDocument();
     expect(await screen.findByText('96 GB RAM')).toBeInTheDocument();
+  });
+});
+
+describe('ClusterListItem on GCP', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.GCP;
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays stats about worker nodes', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomClusterGCP1.metadata.namespace}/machinedeployments/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterGCP1.metadata.name}%2Ccluster.x-k8s.io%2Frole%21%3Dbastion`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterGCP1MachineDeploymentList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/gcpmachinetemplates/${capiv1beta1Mocks.randomClusterGCP1MachineDeploymentList.items[0].spec?.template.spec.infrastructureRef.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capgv1beta1Mocks.randomClusterGCP1GCPMachineTemplate
+      );
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterGCP1,
+      })
+    );
+
+    expect(await screen.findByText(/1 node pool/)).toBeInTheDocument();
+    expect(await screen.findByText('3 worker nodes')).toBeInTheDocument();
+    expect(await screen.findByText('12 CPU cores')).toBeInTheDocument();
+    expect(await screen.findByText('49.2 GB RAM')).toBeInTheDocument();
   });
 });
