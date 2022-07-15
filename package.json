@@ -57,8 +57,8 @@
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
-    "@sentry/react": "7.6.0",
-    "@sentry/tracing": "7.6.0",
+    "@sentry/react": "7.7.0",
+    "@sentry/tracing": "7.7.0",
     "bootstrap": "3.4.1",
     "bowser": "2.11.0",
     "color-hash": "2.0.1",
