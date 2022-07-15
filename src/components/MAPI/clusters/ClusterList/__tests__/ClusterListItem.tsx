@@ -6,7 +6,7 @@ import sub from 'date-fns/fp/sub';
 import { createMemoryHistory } from 'history';
 import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
 import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
-import { StatusCodes } from 'model/constants';
+import { Providers, StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
@@ -15,6 +15,7 @@ import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
+import * as infrav1alpha3Mocks from 'test/mockHttpCalls/infrastructurev1alpha3';
 import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -55,25 +56,20 @@ jest.mock('MAPI/workernodes/permissions/usePermissionsForNodePools');
 jest.mock('MAPI/keypairs/permissions/usePermissionsForKeyPairs');
 
 describe('ClusterListItem', () => {
-  it('renders without crashing', () => {
+  beforeAll(() => {
     (usePermissionsForNodePools as jest.Mock).mockReturnValue(
       defaultPermissions
     );
     (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
       defaultPermissions
     );
+  });
 
+  it('renders without crashing', () => {
     render(getComponent({}));
   });
 
   it('displays a loading animation if the cluster is not loaded yet', () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     render(getComponent({}));
 
     expect(
@@ -81,15 +77,26 @@ describe('ClusterListItem', () => {
     ).toBeInTheDocument();
     expect(screen.getAllByLabelText('Loading...')).toHaveLength(8);
   });
+});
 
-  it('displays if a cluster was deleted', () => {
+describe('ClusterListItem on Azure', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.AZURE;
     (usePermissionsForNodePools as jest.Mock).mockReturnValue(
       defaultPermissions
     );
     (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
       defaultPermissions
     );
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
 
+  it('displays if a cluster was deleted', () => {
     const deletionDate = sub({
       hours: 1,
     })(new Date());
@@ -113,13 +120,6 @@ describe('ClusterListItem', () => {
   });
 
   it('displays the getting started button if the cluster has been created recently', () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     let creationDate = sub({
       days: 20,
     })(new Date());
@@ -164,36 +164,7 @@ describe('ClusterListItem', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('does not displays the getting started button if the user does not have permissions create key pairs', () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue({
-      ...defaultPermissions,
-      canCreate: false,
-    });
-
-    render(
-      getComponent({
-        cluster: capiv1beta1Mocks.randomCluster1,
-        releases: releasev1alpha1Mocks.releasesList.items,
-        canCreateClusters: false,
-      })
-    );
-
-    expect(
-      screen.queryByRole('button', { name: 'Get Started' })
-    ).not.toBeInTheDocument();
-  });
-
   it('displays various information about the cluster', () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     const creationDate = sub({
       hours: 1,
     })(new Date());
@@ -225,13 +196,6 @@ describe('ClusterListItem', () => {
   });
 
   it('displays stats about worker nodes', async () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     nock(window.config.mapiEndpoint)
       .get(
         `/apis/exp.cluster.x-k8s.io/v1alpha3/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.namespace}/machinepools/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomCluster1.metadata.name}`
@@ -299,13 +263,6 @@ describe('ClusterListItem', () => {
   });
 
   it(`displays the cluster's current status`, async () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     const { rerender } = render(
       getComponent({
         cluster: {
@@ -390,13 +347,6 @@ describe('ClusterListItem', () => {
   });
 
   it('displays information if an upgrade has been scheduled', async () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     const targetTime = `${format('dd MMM yy HH:mm')(
       add({ days: 1 })(new Date())
     )} UTC`;
@@ -442,5 +392,127 @@ describe('ClusterListItem', () => {
       })
     );
     expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+  });
+});
+
+describe('ClusterListItem when user cannot create key pairs on Azure', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.AZURE;
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canCreate: false,
+    });
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('does not displays the getting started button', () => {
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomCluster1,
+        releases: releasev1alpha1Mocks.releasesList.items,
+        canCreateClusters: false,
+      })
+    );
+
+    expect(
+      screen.queryByRole('button', { name: 'Get Started' })
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('ClusterListItem on AWS', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.AWS;
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays various information about the cluster', () => {
+    const creationDate = sub({
+      hours: 1,
+    })(new Date());
+
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1beta1Mocks.randomClusterAWS1,
+          metadata: {
+            ...capiv1beta1Mocks.randomClusterAWS1.metadata,
+            creationTimestamp: creationDate.toISOString(),
+          },
+        },
+        providerCluster: infrav1alpha3Mocks.randomAWSCluster1,
+        releases: releasev1alpha1Mocks.releasesList.items,
+      })
+    );
+
+    expect(screen.getByLabelText('Name: c7hm5')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Description: Random Cluster')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Release version: 17.0.3')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Kubernetes version: no information available')
+    ).toBeInTheDocument();
+  });
+
+  it('displays stats about worker nodes', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomClusterAWS1.metadata.namespace}/machinedeployments/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomClusterAWS1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterAWS1MachineDeploymentList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awsmachinedeployments/${capiv1beta1Mocks.randomClusterAWS1MachineDeploymentList.items[0].metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awsmachinedeployments/${capiv1beta1Mocks.randomClusterAWS1MachineDeploymentList.items[1].metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment2
+      );
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterAWS1,
+      })
+    );
+
+    expect(await screen.findByText(/2 node pools/)).toBeInTheDocument();
+    expect(await screen.findByText('6 worker nodes')).toBeInTheDocument();
+    expect(await screen.findByText('24 CPU cores')).toBeInTheDocument();
+    expect(await screen.findByText('96 GB RAM')).toBeInTheDocument();
   });
 });
