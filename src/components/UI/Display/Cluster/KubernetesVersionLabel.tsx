@@ -24,7 +24,7 @@ interface IKubernetesVersionLabelProps {
 const KubernetesVersionLabel: React.FC<
   React.PropsWithChildren<IKubernetesVersionLabelProps>
 > = ({ version, hidePatchVersion, eolDate, hideIcon }) => {
-  let versionLabel = version || <NotAvailable />;
+  let versionLabel = version;
   if (version && hidePatchVersion) {
     const v = version.split('.');
     versionLabel = `${v[0]}.${v[1]}`;
@@ -54,7 +54,9 @@ const KubernetesVersionLabel: React.FC<
         onMouseLeave={tryToToggleTooltip(false)}
         onFocus={tryToToggleTooltip(true)}
         onBlur={tryToToggleTooltip(false)}
-        aria-label={`Kubernetes version: ${versionLabel}`}
+        aria-label={`Kubernetes version: ${
+          versionLabel || 'no information available'
+        }`}
       >
         {!hideIcon && (
           <>
@@ -67,7 +69,7 @@ const KubernetesVersionLabel: React.FC<
           </>
         )}
 
-        {versionLabel}
+        {versionLabel || <NotAvailable />}
 
         {isEol && (
           <EolLabel aria-label={Constants.K8s_VERSION_EOL_EXPLANATION}>

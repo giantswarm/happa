@@ -725,7 +725,7 @@ describe('OrganizationDetailGeneral on AWS', () => {
       )
       .reply(
         StatusCodes.Ok,
-        infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment
+        infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1
       );
 
     nock(window.config.mapiEndpoint)
