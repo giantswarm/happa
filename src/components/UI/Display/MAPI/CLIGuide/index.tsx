@@ -39,16 +39,28 @@ const customTheme: ThemeType = {
   },
 };
 
+function formatTitle(title: string, inList: boolean): string {
+  if (inList) {
+    return title.replace(/via the Management API/gi, '');
+  }
+
+  return title.endsWith('via the Management API')
+    ? title
+    : `${title} via the Management API`;
+}
+
 interface ICLIGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof Accordion>, 'title'> {
   title: React.ReactNode;
   footer?: React.ReactNode;
+  inList?: boolean;
 }
 
 const CLIGuide: React.FC<React.PropsWithChildren<ICLIGuideProps>> = ({
   children,
   title,
   footer,
+  inList = false,
   ...props
 }) => {
   return (
@@ -67,7 +79,9 @@ const CLIGuide: React.FC<React.PropsWithChildren<ICLIGuideProps>> = ({
                 role='presentation'
                 aria-hidden={true}
               />
-              <Text weight='bold'>{title}</Text>
+              <Text weight='bold'>
+                {typeof title === 'string' ? formatTitle(title, inList) : title}
+              </Text>
             </Box>
           }
         >
