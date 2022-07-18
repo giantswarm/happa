@@ -11,10 +11,12 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
+import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
+import * as infrav1alpha3Mocks from 'test/mockHttpCalls/infrastructurev1alpha3';
 import * as releasev1alpha1Mocks from 'test/mockHttpCalls/releasev1alpha1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -298,7 +300,7 @@ describe('ClusterListItem', () => {
     ).not.toBeInTheDocument();
   });
 
-  it(`displays the cluster's current status`, async () => {
+  it(`displays cluster status on Azure`, async () => {
     (usePermissionsForNodePools as jest.Mock).mockReturnValue(
       defaultPermissions
     );
@@ -321,7 +323,6 @@ describe('ClusterListItem', () => {
             ],
           },
         },
-        releases: releasev1alpha1Mocks.releasesList.items,
         providerCluster: capzv1beta1Mocks.randomAzureCluster1,
       })
     );
@@ -347,7 +348,6 @@ describe('ClusterListItem', () => {
             ],
           },
         },
-        releases: releasev1alpha1Mocks.releasesList.items,
         providerCluster: capzv1beta1Mocks.randomAzureCluster1,
       })
     );
@@ -356,8 +356,119 @@ describe('ClusterListItem', () => {
     expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
     expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
     expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+  });
+
+  it(`displays cluster status on AWS`, async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    const { rerender } = render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterAWS1,
+        providerCluster: {
+          ...infrav1alpha3Mocks.randomAWSCluster1,
+          status: {
+            ...infrav1alpha3Mocks.randomAWSCluster1.status,
+            cluster: {
+              ...infrav1alpha3Mocks.randomAWSCluster1.status?.cluster,
+              conditions: [
+                {
+                  condition: 'Creating',
+                  lastTransitionTime: '2020-04-01T12:00:00Z',
+                },
+              ],
+            },
+          },
+        },
+      })
+    );
+
+    expect(await screen.findByText('Cluster creating…')).toBeInTheDocument();
+    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
 
     rerender(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterAWS1,
+        providerCluster: {
+          ...infrav1alpha3Mocks.randomAWSCluster1,
+          status: {
+            ...infrav1alpha3Mocks.randomAWSCluster1.status,
+            cluster: {
+              ...infrav1alpha3Mocks.randomAWSCluster1.status?.cluster,
+              conditions: [
+                {
+                  condition: 'Updating',
+                  lastTransitionTime: '2020-04-01T12:02:00Z',
+                },
+                {
+                  condition: 'Created',
+                  lastTransitionTime: '2020-04-01T12:01:00Z',
+                },
+                {
+                  condition: 'Creating',
+                  lastTransitionTime: '2020-04-01T12:00:00Z',
+                },
+              ],
+            },
+          },
+        },
+      })
+    );
+
+    expect(await screen.findByText('Upgrade in progress…')).toBeInTheDocument();
+    expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+  });
+
+  it(`displays cluster status on GCP`, async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1beta1Mocks.randomClusterGCP1,
+          status: {
+            ...capiv1beta1Mocks.randomCluster1.status,
+            conditions: [
+              {
+                status: 'False',
+                type: 'ControlPlaneInitialized',
+                lastTransitionTime: '2020-04-01T12:00:00Z',
+              },
+            ],
+          },
+        },
+        providerCluster: capgv1beta1Mocks.randomGCPCluster1,
+      })
+    );
+
+    expect(await screen.findByText('Cluster creating…')).toBeInTheDocument();
+    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+  });
+
+  it('displays information if an upgrade is available', async () => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    render(
       getComponent({
         cluster: {
           ...capiv1beta1Mocks.randomCluster1,

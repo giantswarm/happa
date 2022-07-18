@@ -61,6 +61,10 @@ export const randomAWSCluster1: infrav1alpha3.IAWSCluster = {
     cluster: {
       conditions: [
         {
+          condition: 'Created',
+          lastTransitionTime: '2022-03-29T06:41:52Z',
+        },
+        {
           condition: 'Creating',
           lastTransitionTime: '2022-03-29T06:40:52Z',
         },
