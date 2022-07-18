@@ -99,7 +99,7 @@ export const randomClusterGCP1: capiv1beta1.ICluster = {
       'meta.helm.sh/release-name': 'm317f',
       'meta.helm.sh/release-namespace': 'org-org1',
     },
-    creationTimestamp: '2022-07-13T08:29:54Z',
+    creationTimestamp: '2022-07-12T06:20:25Z',
     finalizers: [
       'cluster.cluster.x-k8s.io',
       'operatorkit.giantswarm.io/prometheus-meta-operator-cluster-api-controller',
@@ -165,6 +165,103 @@ export const randomClusterGCP1: capiv1beta1.ICluster = {
       },
       {
         lastTransitionTime: '2022-07-12T06:21:25Z',
+        status: 'True',
+        type: 'InfrastructureReady',
+      },
+    ],
+    controlPlaneReady: true,
+    failureDomains: {
+      'europe-west3-a': {
+        controlPlane: true,
+      },
+      'europe-west3-b': {
+        controlPlane: true,
+      },
+      'europe-west3-c': {
+        controlPlane: true,
+      },
+    },
+    infrastructureReady: true,
+    observedGeneration: 2,
+    phase: 'Provisioned',
+  },
+};
+
+export const randomClusterGCP2: capiv1beta1.ICluster = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: 'Cluster',
+  metadata: {
+    annotations: {
+      'cluster.giantswarm.io/description': 'Random GCP Cluster',
+      'meta.helm.sh/release-name': 'g9h9j',
+      'meta.helm.sh/release-namespace': 'org-org1',
+    },
+    creationTimestamp: '2022-07-13T06:20:25Z',
+    finalizers: [
+      'cluster.cluster.x-k8s.io',
+      'operatorkit.giantswarm.io/prometheus-meta-operator-cluster-api-controller',
+      'encryption-provider-operator.finalizers.giantswarm.io',
+      'operatorkit.giantswarm.io/cluster-apps-operator-cluster-controller',
+    ],
+    generation: 2,
+    labels: {
+      app: 'cluster-gcp',
+      'app.kubernetes.io/managed-by': 'Helm',
+      'app.kubernetes.io/version': '0.15.1',
+      'application.giantswarm.io/team': 'phoenix',
+      'cluster-apps-operator.giantswarm.io/watching': '',
+      'cluster.x-k8s.io/cluster-name': 'g9h9j',
+      'giantswarm.io/cluster': 'g9h9j',
+      'giantswarm.io/organization': 'giantswarm',
+      'helm.sh/chart': 'cluster-gcp-0.15.1',
+    },
+    name: 'g9h9j',
+    namespace: 'org-org1',
+    resourceVersion: '14262849',
+    uid: '7a2858d1-fbff-4337-b89f-e8b9dc41b113',
+  },
+  spec: {
+    clusterNetwork: {
+      pods: {
+        cidrBlocks: ['192.168.0.0/16'],
+      },
+    },
+    controlPlaneEndpoint: {
+      host: 'test.k8s.gs.com',
+      port: 0,
+    },
+    controlPlaneRef: {
+      apiVersion: 'controlplane.cluster.x-k8s.io/v1beta1',
+      kind: 'KubeadmControlPlane',
+      name: 'g9h9j',
+      namespace: 'org-org1',
+    },
+    infrastructureRef: {
+      apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+      kind: 'GCPCluster',
+      name: 'g9h9j',
+      namespace: 'org-org1',
+    },
+  },
+  status: {
+    conditions: [
+      {
+        lastTransitionTime: '2022-07-13T06:28:55Z',
+        status: 'True',
+        type: 'Ready',
+      },
+      {
+        lastTransitionTime: '2022-07-13T06:25:00Z',
+        status: 'True',
+        type: 'ControlPlaneInitialized',
+      },
+      {
+        lastTransitionTime: '2022-07-13T06:28:55Z',
+        status: 'True',
+        type: 'ControlPlaneReady',
+      },
+      {
+        lastTransitionTime: '2022-07-13T06:21:25Z',
         status: 'True',
         type: 'InfrastructureReady',
       },
@@ -372,5 +469,5 @@ export const randomClusterListGCP: capiv1beta1.IClusterList = {
     resourceVersion: '294659579',
     selfLink: '/apis/cluster.x-k8s.io/v1beta1/clusters/',
   },
-  items: [randomClusterGCP1],
+  items: [randomClusterGCP1, randomClusterGCP2],
 };

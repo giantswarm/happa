@@ -864,7 +864,7 @@ describe('OrganizationDetailGeneral on GCP', () => {
 
     // Clusters summary.
     await waitFor(() =>
-      expect(screen.getByLabelText('Workload clusters')).toHaveTextContent('1')
+      expect(screen.getByLabelText('Workload clusters')).toHaveTextContent('2')
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Control plane nodes')).toHaveTextContent(

@@ -16,6 +16,7 @@ import { IState } from 'model/stores/state';
 import React from 'react';
 import { useParams } from 'react-router';
 import { SWRConfig } from 'swr';
+import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import * as infrav1alpha3Mocks from 'test/mockHttpCalls/infrastructurev1alpha3';
@@ -138,7 +139,22 @@ async function setupAzure() {
   };
 }
 
-describe('ClusterDetailWidgetProvider on AWS when user can not list credentials', () => {
+async function setupGCP() {
+  const utils = setup(
+    capiv1beta1Mocks.randomClusterGCP1,
+    capgv1beta1Mocks.randomGCPCluster1
+  );
+
+  if (screen.queryAllByText('Loading...').length > 0) {
+    await waitForElementToBeRemoved(() => screen.queryAllByText('Loading...'));
+  }
+
+  return {
+    ...utils,
+  };
+}
+
+describe('ClusterDetailWidgetProvider when user can not list credentials on AWS', () => {
   const provider: PropertiesOf<typeof providers> =
     window.config.info.general.provider;
 
@@ -161,17 +177,16 @@ describe('ClusterDetailWidgetProvider on AWS when user can not list credentials'
 
   it('displays cluster region and account ID', async () => {
     await setupAWS();
-    const groups = screen.getAllByTestId('provider-group');
-    expect(groups.length).toEqual(2);
-    expect(within(groups[0]).getByText('AWS region')).toBeInTheDocument();
-    expect(within(groups[0]).getByText('eu-west-1')).toBeInTheDocument();
-    expect(within(groups[1]).getByText('Account ID')).toBeInTheDocument();
-    expect(within(groups[1]).getByText('n/a')).toBeInTheDocument();
-    expect(within(groups[1]).queryByRole('link')).not.toBeInTheDocument();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('AWS region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('eu-west-1')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('Account ID')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('n/a')).toBeInTheDocument();
+    expect(within(providerInfo).queryByRole('link')).not.toBeInTheDocument();
   });
 });
 
-describe('ClusterDetailWidgetProvider on AWS when user can list credentials', () => {
+describe('ClusterDetailWidgetProvider when user can list credentials on AWS', () => {
   const provider: PropertiesOf<typeof providers> =
     window.config.info.general.provider;
 
@@ -202,22 +217,21 @@ describe('ClusterDetailWidgetProvider on AWS when user can list credentials', ()
 
   it('displays cluster region and account ID', async () => {
     await setupAWS();
-    const groups = screen.getAllByTestId('provider-group');
-    expect(groups.length).toEqual(2);
-    expect(within(groups[0]).getByText('AWS region')).toBeInTheDocument();
-    expect(within(groups[0]).getByText('eu-west-1')).toBeInTheDocument();
-    expect(within(groups[1]).getByText('Account ID')).toBeInTheDocument();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('AWS region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('eu-west-1')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('Account ID')).toBeInTheDocument();
     expect(
-      within(groups[1]).getByText('credential-account-id')
+      within(providerInfo).getByText('credential-account-id')
     ).toBeInTheDocument();
-    expect(within(groups[1]).getByRole('link')).toHaveAttribute(
+    expect(within(providerInfo).getByRole('link')).toHaveAttribute(
       'href',
       'https://credential-account-id.signin.aws.amazon.com/console'
     );
   });
 });
 
-describe('ClusterDetailWidgetProvider on Azure when user can not list credentials', () => {
+describe('ClusterDetailWidgetProvider when user can not list credentials on Azure', () => {
   const provider: PropertiesOf<typeof providers> =
     window.config.info.general.provider;
 
@@ -240,21 +254,22 @@ describe('ClusterDetailWidgetProvider on Azure when user can not list credential
 
   it('displays cluster region, subscription ID and tenant ID', async () => {
     await setupAzure();
-    const groups = screen.getAllByTestId('provider-group');
-    expect(groups.length).toEqual(3);
-    expect(within(groups[0]).getByText('Azure region')).toBeInTheDocument();
-    expect(within(groups[0]).getByText('westeurope')).toBeInTheDocument();
-    expect(within(groups[1]).getByText('Subscription ID')).toBeInTheDocument();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('Azure region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('westeurope')).toBeInTheDocument();
     expect(
-      within(groups[1]).getByText('test-subscription')
+      within(providerInfo).getByText('Subscription ID')
     ).toBeInTheDocument();
-    expect(within(groups[1]).queryByRole('link')).not.toBeInTheDocument();
-    expect(within(groups[2]).getByText('Tenant ID')).toBeInTheDocument();
-    expect(within(groups[2]).getByText('n/a')).toBeInTheDocument();
+    expect(
+      within(providerInfo).getByText('test-subscription')
+    ).toBeInTheDocument();
+    expect(within(providerInfo).queryByRole('link')).not.toBeInTheDocument();
+    expect(within(providerInfo).getByText('Tenant ID')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('n/a')).toBeInTheDocument();
   });
 });
 
-describe('ClusterDetailWidgetProvider on Azure when user can list credentials', () => {
+describe('ClusterDetailWidgetProvider when user can list credentials on Azure', () => {
   const provider: PropertiesOf<typeof providers> =
     window.config.info.general.provider;
 
@@ -286,18 +301,57 @@ describe('ClusterDetailWidgetProvider on Azure when user can list credentials', 
 
   it('displays cluster region, subscription ID and tenant ID', async () => {
     await setupAzure();
-    const groups = screen.getAllByTestId('provider-group');
-    expect(groups.length).toEqual(3);
-    expect(within(groups[0]).getByText('Azure region')).toBeInTheDocument();
-    expect(within(groups[0]).getByText('westeurope')).toBeInTheDocument();
-    expect(within(groups[1]).getByText('Subscription ID')).toBeInTheDocument();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('Azure region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('westeurope')).toBeInTheDocument();
     expect(
-      within(groups[1]).getByText('credential-subscription-id')
+      within(providerInfo).getByText('Subscription ID')
     ).toBeInTheDocument();
-    expect(within(groups[1]).queryByRole('link')).not.toBeInTheDocument();
-    expect(within(groups[2]).getByText('Tenant ID')).toBeInTheDocument();
     expect(
-      within(groups[2]).getByText('credential-tenant-id')
+      within(providerInfo).getByText('credential-subscription-id')
     ).toBeInTheDocument();
+    expect(within(providerInfo).queryByRole('link')).not.toBeInTheDocument();
+    expect(within(providerInfo).getByText('Tenant ID')).toBeInTheDocument();
+    expect(
+      within(providerInfo).getByText('credential-tenant-id')
+    ).toBeInTheDocument();
+  });
+});
+
+describe('ClusterDetailWidgetProvider on GCP', () => {
+  const provider: PropertiesOf<typeof providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = providers.GCP;
+
+    (usePermissionsForOrgCredentials as jest.Mock).mockReturnValue({
+      canList: false,
+    });
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays loading animations if the cluster is still loading', () => {
+    setup();
+    expect(screen.getAllByLabelText('Loading...').length).toEqual(4);
+  });
+
+  it('displays cluster region and account ID', async () => {
+    await setupGCP();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('GCP region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('europe-west3')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('Project ID')).toBeInTheDocument();
+    expect(
+      within(providerInfo).getByText('project-352614')
+    ).toBeInTheDocument();
+    expect(within(providerInfo).queryByRole('link')).toBeInTheDocument();
+    expect(within(providerInfo).getByRole('link')).toHaveAttribute(
+      'href',
+      'https://console.cloud.google.com/home/dashboard?project=project-352614'
+    );
   });
 });
