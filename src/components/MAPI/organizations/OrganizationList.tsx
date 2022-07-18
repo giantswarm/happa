@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR, { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
+import CLIGuidesList from 'UI/Display/MAPI/CLIGuide/CLIGuidesList';
 import OrganizationListPage from 'UI/Display/Organizations/OrganizationListPage';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
@@ -184,12 +185,12 @@ const OrganizationIndex: React.FC<React.PropsWithChildren<unknown>> = () => {
         )}
       </Box>
 
-      <Box margin={{ top: 'large' }} direction='column' gap='small'>
+      <CLIGuidesList margin={{ top: 'large' }}>
         <ListOrganizationsGuide />
         <CreateOrganizationGuide
           canCreateOrganizations={canCreateOrganizations}
         />
-      </Box>
+      </CLIGuidesList>
     </DocumentTitle>
   );
 };

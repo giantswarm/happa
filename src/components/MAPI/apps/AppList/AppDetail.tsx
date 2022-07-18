@@ -1,6 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push, replace } from 'connected-react-router';
-import { Box } from 'grommet';
 import AppInstallModal from 'MAPI/apps/AppInstallModal';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -20,6 +19,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 import AppInstallationSelectedCluster from 'UI/Display/MAPI/apps/AppInstallationSelectedCluster';
+import CLIGuidesList from 'UI/Display/MAPI/CLIGuide/CLIGuidesList';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
@@ -335,7 +335,7 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
             }
           />
           {selectedEntry && (
-            <Box margin={{ top: 'medium' }} direction='column' gap='small'>
+            <CLIGuidesList margin={{ top: 'medium' }}>
               <InspectAppGuide
                 appName={selectedEntry.spec.appName}
                 catalogName={selectedEntry.spec.catalog.name}
@@ -354,7 +354,7 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
                   appsPermissions.canCreate && appsPermissions.canConfigure
                 }
               />
-            </Box>
+            </CLIGuidesList>
           )}
         </>
       </Breadcrumb>
