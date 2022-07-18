@@ -1059,6 +1059,9 @@ export function getProviderClusterLocation(
   providerCluster: ProviderCluster
 ): string | undefined {
   switch (providerCluster?.kind) {
+    case capgv1beta1.GCPCluster:
+      return providerCluster.spec?.region ?? '';
+
     case capzv1beta1.AzureCluster:
       return providerCluster.spec?.location ?? '';
 
@@ -1078,6 +1081,9 @@ export function getProviderClusterAccountID(
   providerCluster: ProviderCluster
 ): string | undefined {
   switch (providerCluster?.kind) {
+    case capgv1beta1.GCPCluster:
+      return providerCluster.spec?.project ?? '';
+
     case capzv1beta1.AzureCluster: {
       const id = providerCluster.spec?.subscriptionID;
       if (typeof id === 'undefined') return '';
