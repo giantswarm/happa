@@ -4,7 +4,7 @@ export const randomGCPCluster1: capgv1beta1.IGCPCluster = {
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
   kind: 'GCPCluster',
   metadata: {
-    creationTimestamp: '2022-07-12T06:19:52Z',
+    creationTimestamp: '2022-07-12T06:20:25Z',
     finalizers: [
       'gcpcluster.infrastructure.cluster.x-k8s.io',
       'dns-operator-gcp.finalizers.giantswarm.io',
@@ -14,11 +14,11 @@ export const randomGCPCluster1: capgv1beta1.IGCPCluster = {
     labels: {
       app: 'cluster-gcp',
       'app.kubernetes.io/version': '0.15.1',
-      'cluster.x-k8s.io/cluster-name': 'uufda',
-      'giantswarm.io/cluster': 'uufda',
+      'cluster.x-k8s.io/cluster-name': 'm317f',
+      'giantswarm.io/cluster': 'm317f',
       'giantswarm.io/organization': 'org1',
     },
-    name: 'uufda',
+    name: 'm317f',
     namespace: 'org-org1',
     resourceVersion: '14261279',
     uid: 'da40369d-8bca-4ad0-a975-77702f5933f8',
@@ -52,11 +52,7 @@ export const randomGCPCluster2: capgv1beta1.IGCPCluster = {
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
   kind: 'GCPCluster',
   metadata: {
-    annotations: {
-      'meta.helm.sh/release-name': 'g9h9j',
-      'meta.helm.sh/release-namespace': 'org-giantswarm',
-    },
-    creationTimestamp: '2022-07-13T14:19:55Z',
+    creationTimestamp: '2022-07-13T06:20:25Z',
     finalizers: [
       'gcpcluster.infrastructure.cluster.x-k8s.io',
       'dns-operator-gcp.finalizers.giantswarm.io',
