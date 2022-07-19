@@ -16,6 +16,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import styled from 'styled-components';
 import useSWR from 'swr';
+import CLIGuideList from 'UI/Display/MAPI/CLIGuide/CLIGuidesList';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
@@ -132,11 +133,8 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
       <ClusterDetailWidgetCreated cluster={cluster} basis='100%' />
 
       {cluster && (
-        <Box
+        <CLIGuideList
           margin={{ top: 'large' }}
-          direction='column'
-          gap='small'
-          basis='100%'
           animation={{ type: 'fadeIn', duration: 300 }}
         >
           <InspectClusterGuide
@@ -168,7 +166,7 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
             provider={provider}
             canUpdateCluster={canUpdateCluster}
           />
-        </Box>
+        </CLIGuideList>
       )}
     </StyledBox>
   );

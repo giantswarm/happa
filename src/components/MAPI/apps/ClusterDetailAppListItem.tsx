@@ -14,6 +14,7 @@ import React, {
 import styled from 'styled-components';
 import useSWR, { useSWRConfig } from 'swr';
 import Date from 'UI/Display/Date';
+import CLIGuidesList from 'UI/Display/MAPI/CLIGuide/CLIGuidesList';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import Truncated from 'UI/Util/Truncated';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -271,11 +272,8 @@ const ClusterDetailAppListItem: React.FC<
           />
         </StyledBox>
         {app && catalogNamespace && (
-          <Box
-            margin={{ top: 'medium' }}
-            direction='column'
-            gap='small'
-            pad='xsmall'
+          <CLIGuidesList
+            margin={{ top: 'medium', horizontal: 'xsmall', bottom: 'xsmall' }}
           >
             <InspectInstalledAppGuide
               appName={app.metadata.name}
@@ -300,7 +298,7 @@ const ClusterDetailAppListItem: React.FC<
               namespace={app.metadata.namespace!}
               canUninstallApps={appsPermissions?.canDelete}
             />
-          </Box>
+          </CLIGuidesList>
         )}
       </Box>
     </AccordionPanel>

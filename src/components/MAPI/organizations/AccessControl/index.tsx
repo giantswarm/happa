@@ -10,6 +10,7 @@ import AccessControlRoleDescription from 'UI/Display/MAPI/AccessControl/AccessCo
 import AccessControlRoleDetail from 'UI/Display/MAPI/AccessControl/AccessControlRoleDetail';
 import AccessControlRoleList from 'UI/Display/MAPI/AccessControl/AccessControlRoleList';
 import * as ui from 'UI/Display/MAPI/AccessControl/types';
+import CLIGuidesList from 'UI/Display/MAPI/CLIGuide/CLIGuidesList';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
@@ -212,14 +213,14 @@ const AccessControl: React.FC<React.PropsWithChildren<IAccessControlProps>> = ({
             permissions={permissions}
           />
         </Box>
-        <Box margin={{ top: 'large' }} direction='column' gap='small'>
+        <CLIGuidesList margin={{ top: 'large' }}>
           <ListRolesGuide namespace={organizationNamespace} />
           <InspectRoleGuide namespace={organizationNamespace} />
           <BindRolesToSubjectsGuide
             namespace={organizationNamespace}
             canBindRoles={canBindRolesToSubjects(permissions)}
           />
-        </Box>
+        </CLIGuidesList>
       </Box>
     </DocumentTitle>
   );

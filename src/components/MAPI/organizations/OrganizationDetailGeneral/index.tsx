@@ -1,5 +1,4 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { Box } from 'grommet';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissionsForCPNodes';
 import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
@@ -21,6 +20,7 @@ import { IState } from 'model/stores/state';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useSWR from 'swr';
+import CLIGuidesList from 'UI/Display/MAPI/CLIGuide/CLIGuidesList';
 import OrganizationDetailPage from 'UI/Display/Organizations/OrganizationDetailPage';
 import * as ui from 'UI/Display/Organizations/types';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -226,13 +226,13 @@ const OrganizationDetailGeneral: React.FC<
           typeof appsSummary === 'undefined' && appsSummaryIsValidating
         }
       />
-      <Box margin={{ top: 'large' }} direction='column' gap='small'>
+      <CLIGuidesList margin={{ top: 'large' }}>
         <GetOrganizationDetailsGuide organizationName={organizationName} />
         <DeleteOrganizationGuide
           organizationName={organizationName}
           canDeleteOrganization={orgPermissions.canDelete}
         />
-      </Box>
+      </CLIGuidesList>
     </>
   );
 };

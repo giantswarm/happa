@@ -37,6 +37,7 @@ import { CODE_CHAR_WIDTH, CODE_PADDING } from 'styles';
 import BaseTransition from 'styles/transitions/BaseTransition';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
+import CLIGuidesList from 'UI/Display/MAPI/CLIGuide/CLIGuidesList';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolListPlaceholder from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolListPlaceholder';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -640,11 +641,8 @@ const ClusterDetailWorkerNodes: React.FC<
               )}
             </Box>
             {cluster && providerCluster && (
-              <Box
+              <CLIGuidesList
                 margin={{ top: 'large' }}
-                direction='column'
-                gap='small'
-                basis='100%'
                 animation={{ type: 'fadeIn', duration: 300 }}
               >
                 <ListNodePoolsGuide
@@ -671,7 +669,7 @@ const ClusterDetailWorkerNodes: React.FC<
                     usesNonExpMachinePools={usesNonExpMachinePools}
                   />
                 )}
-              </Box>
+              </CLIGuidesList>
             )}
           </Box>
         </Breadcrumb>
