@@ -263,7 +263,7 @@ describe('ClusterListItem on Azure', () => {
     ).not.toBeInTheDocument();
   });
 
-  it(`displays the cluster's current status`, async () => {
+  it('displays cluster status', async () => {
     const { rerender } = render(
       getComponent({
         cluster: {
@@ -279,7 +279,6 @@ describe('ClusterListItem on Azure', () => {
             ],
           },
         },
-        releases: releasev1alpha1Mocks.releasesList.items,
         providerCluster: capzv1beta1Mocks.randomAzureCluster1,
       })
     );
@@ -305,7 +304,6 @@ describe('ClusterListItem on Azure', () => {
             ],
           },
         },
-        releases: releasev1alpha1Mocks.releasesList.items,
         providerCluster: capzv1beta1Mocks.randomAzureCluster1,
       })
     );
@@ -314,8 +312,10 @@ describe('ClusterListItem on Azure', () => {
     expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
     expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
     expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+  });
 
-    rerender(
+  it('displays information if an upgrade is available', async () => {
+    render(
       getComponent({
         cluster: {
           ...capiv1beta1Mocks.randomCluster1,
@@ -516,6 +516,68 @@ describe('ClusterListItem on AWS', () => {
     expect(await screen.findByText('24 CPU cores')).toBeInTheDocument();
     expect(await screen.findByText('96 GB RAM')).toBeInTheDocument();
   });
+
+  it('displays cluster status on AWS', async () => {
+    const { rerender } = render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterAWS1,
+        providerCluster: {
+          ...infrav1alpha3Mocks.randomAWSCluster1,
+          status: {
+            ...infrav1alpha3Mocks.randomAWSCluster1.status,
+            cluster: {
+              ...infrav1alpha3Mocks.randomAWSCluster1.status?.cluster,
+              conditions: [
+                {
+                  condition: 'Creating',
+                  lastTransitionTime: '2020-04-01T12:00:00Z',
+                },
+              ],
+            },
+          },
+        },
+      })
+    );
+
+    expect(await screen.findByText('Cluster creating…')).toBeInTheDocument();
+    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+
+    rerender(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterAWS1,
+        providerCluster: {
+          ...infrav1alpha3Mocks.randomAWSCluster1,
+          status: {
+            ...infrav1alpha3Mocks.randomAWSCluster1.status,
+            cluster: {
+              ...infrav1alpha3Mocks.randomAWSCluster1.status?.cluster,
+              conditions: [
+                {
+                  condition: 'Updating',
+                  lastTransitionTime: '2020-04-01T12:02:00Z',
+                },
+                {
+                  condition: 'Created',
+                  lastTransitionTime: '2020-04-01T12:01:00Z',
+                },
+                {
+                  condition: 'Creating',
+                  lastTransitionTime: '2020-04-01T12:00:00Z',
+                },
+              ],
+            },
+          },
+        },
+      })
+    );
+
+    expect(await screen.findByText('Upgrade in progress…')).toBeInTheDocument();
+    expect(screen.queryByText('Cluster creating…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+  });
 });
 
 describe('ClusterListItem on GCP', () => {
@@ -564,5 +626,31 @@ describe('ClusterListItem on GCP', () => {
     expect(await screen.findByText('3 worker nodes')).toBeInTheDocument();
     expect(await screen.findByText('12 CPU cores')).toBeInTheDocument();
     expect(await screen.findByText('49.2 GB RAM')).toBeInTheDocument();
+  });
+
+  it('displays cluster status', async () => {
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1beta1Mocks.randomClusterGCP1,
+          status: {
+            ...capiv1beta1Mocks.randomCluster1.status,
+            conditions: [
+              {
+                status: 'False',
+                type: 'ControlPlaneInitialized',
+                lastTransitionTime: '2020-04-01T12:00:00Z',
+              },
+            ],
+          },
+        },
+        providerCluster: capgv1beta1Mocks.randomGCPCluster1,
+      })
+    );
+
+    expect(await screen.findByText('Cluster creating…')).toBeInTheDocument();
+    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
   });
 });
