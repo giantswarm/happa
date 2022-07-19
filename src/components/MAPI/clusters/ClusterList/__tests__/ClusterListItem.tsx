@@ -629,13 +629,6 @@ describe('ClusterListItem on GCP', () => {
   });
 
   it('displays cluster status', async () => {
-    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     render(
       getComponent({
         cluster: {
