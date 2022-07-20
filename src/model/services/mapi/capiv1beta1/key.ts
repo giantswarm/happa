@@ -56,6 +56,14 @@ export function getReleaseVersion(cluster: ICluster): string | undefined {
   return cluster.metadata.labels?.[labelReleaseVersion];
 }
 
+export function getClusterAppName(cluster: ICluster): string | undefined {
+  return cluster.metadata.labels?.[labelApp];
+}
+
+export function getClusterAppVersion(cluster: ICluster): string | undefined {
+  return cluster.metadata.labels?.[labelAppVersion];
+}
+
 export function getClusterOrganization(cluster: ICluster): string | undefined {
   return cluster.metadata.labels?.[labelOrganization];
 }

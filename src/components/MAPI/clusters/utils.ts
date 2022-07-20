@@ -1083,3 +1083,15 @@ function isSpecialPurposeLabel(key: string) {
       return false;
   }
 }
+
+/**
+ * Determines whether the cluster has an `app` label that starts with the `cluster-` prefix.
+ * @param cluster
+ */
+export function hasClusterAppLabel(cluster: capiv1beta1.ICluster): boolean {
+  return Boolean(
+    capiv1beta1
+      .getClusterAppName(cluster)
+      ?.startsWith(Constants.CLUSTER_APP_NAME_PREFIX)
+  );
+}
