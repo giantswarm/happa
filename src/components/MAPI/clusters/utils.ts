@@ -6,6 +6,7 @@ import {
   ProviderCluster,
 } from 'MAPI/types';
 import {
+  fetchControlPlaneNodesForCluster,
   fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForClusterKey,
   generateUID,
@@ -1094,4 +1095,46 @@ export function hasClusterAppLabel(cluster: capiv1beta1.ICluster): boolean {
       .getClusterAppName(cluster)
       ?.startsWith(Constants.CLUSTER_APP_NAME_PREFIX)
   );
+}
+
+/**
+ * Determine the Kubernetes versions specified on the Machines
+ * that make up the control plane.
+ * @param httpClientFactory
+ * @param auth
+ * @param cluster
+ */
+export async function fetchControlPlaneNodesKubernetesVersions(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cluster: capiv1beta1.ICluster
+): Promise<string[]> {
+  const versions: string[] = [];
+
+  try {
+    const cpNodes = await fetchControlPlaneNodesForCluster(
+      httpClientFactory,
+      auth,
+      cluster
+    );
+
+    for (const node of cpNodes) {
+      if (node.kind === capiv1beta1.Machine) {
+        const version = capiv1beta1.getMachineK8sVersion(node);
+        if (version) {
+          versions.push(version);
+        }
+      }
+    }
+  } catch (err) {
+    ErrorReporter.getInstance().notify(err as Error);
+  }
+
+  return versions;
+}
+
+export function fetchControlPlaneNodesKubernetesVersionsKey(
+  cluster: capiv1beta1.ICluster
+): string {
+  return `fetchControlPlaneNodesKubernetesVersions/${cluster.metadata.namespace}/${cluster.metadata.name}`;
 }
