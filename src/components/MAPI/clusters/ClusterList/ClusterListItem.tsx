@@ -1,32 +1,18 @@
-import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import differenceInHours from 'date-fns/fp/differenceInHours';
 import toDate from 'date-fns-tz/toDate';
 import { Box, Card, CardBody, ResponsiveContext, Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
 import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
-import { NodePoolList, ProviderCluster } from 'MAPI/types';
-import {
-  extractErrorMessage,
-  fetchNodePoolListForCluster,
-  fetchNodePoolListForClusterKey,
-  fetchProviderNodePoolsForNodePools,
-  fetchProviderNodePoolsForNodePoolsKey,
-  getClusterDescription,
-  getMachineTypes,
-  IProviderNodePoolForNodePoolName,
-} from 'MAPI/utils';
-import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
-import { mapNodePoolsToProviderNodePools } from 'MAPI/workernodes/utils';
-import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { ProviderCluster } from 'MAPI/types';
+import { getClusterDescription } from 'MAPI/utils';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel, {
   ClusterIDLabelType,
@@ -37,21 +23,14 @@ import {
   DotSeparatedListItem,
 } from 'UI/Display/DotSeparatedList/DotSeparatedList';
 import ClusterListItemLabels from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemLabels';
-import ClusterListItemMainInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemMainInfo';
-import ClusterListItemNodeInfo from 'UI/Display/MAPI/clusters/ClusterList/ClusterListItemNodeInfo';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
-import ErrorReporter from 'utils/errors/ErrorReporter';
-import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
 import ClusterStatus from '../ClusterStatus/ClusterStatus';
 import { useClusterStatus } from '../hooks/useClusterStatus';
-import {
-  getClusterLabelsWithDisplayInfo,
-  getWorkerNodesCount,
-  getWorkerNodesCPU,
-  getWorkerNodesMemory,
-} from '../utils';
+import { getClusterLabelsWithDisplayInfo } from '../utils';
+import ClusterListItemNodeInfo from './ClusterListItemNodeInfo';
+import ClusterListItemReleaseInfo from './ClusterListItemReleaseInfo';
 
 const StyledLink = styled(Link)`
   transition: box-shadow 0.1s ease-in-out;
@@ -111,10 +90,6 @@ const ClusterListItem: React.FC<
     releases
   );
 
-  const releaseVersion = cluster
-    ? capiv1beta1.getReleaseVersion(cluster)
-    : undefined;
-
   const organization = useMemo(() => {
     if (!organizations || !cluster) return undefined;
 
@@ -143,102 +118,9 @@ const ClusterListItem: React.FC<
     );
   }, [orgId, name]);
 
-  const release = useMemo(() => {
-    const formattedReleaseVersion = `v${releaseVersion}`;
-
-    if (!releases) return undefined;
-
-    return releases.find((r) => r.metadata.name === formattedReleaseVersion);
-  }, [releases, releaseVersion]);
-
-  const k8sVersion = useMemo(() => {
-    // if releases and permissions are loading, show loading placeholder
-    if (!releases && typeof canListReleases === 'undefined') return undefined;
-    if (typeof release === 'undefined') return '';
-
-    return releasev1alpha1.getK8sVersion(release) ?? '';
-  }, [canListReleases, release, releases]);
-
-  const isPreviewRelease = release?.spec.state === 'preview';
-
   const provider = window.config.info.general.provider;
 
-  const clientFactory = useHttpClientFactory();
-  const auth = useAuthProvider();
-
-  const { canList: canListNodePools, canGet: canGetNodePools } =
-    usePermissionsForNodePools(provider, cluster?.metadata.namespace ?? '');
-
-  const hasReadPermissionsForNodePools = canListNodePools && canGetNodePools;
-
-  const nodePoolListForClusterKey =
-    hasReadPermissionsForNodePools && cluster
-      ? fetchNodePoolListForClusterKey(cluster, cluster.metadata.namespace)
-      : null;
-
-  const { data: nodePoolList, error: nodePoolListError } = useSWR<
-    NodePoolList,
-    GenericResponseError
-  >(nodePoolListForClusterKey, () =>
-    fetchNodePoolListForCluster(
-      clientFactory,
-      auth,
-      cluster,
-      cluster!.metadata.namespace
-    )
-  );
-
-  useEffect(() => {
-    if (nodePoolListError) {
-      ErrorReporter.getInstance().notify(nodePoolListError);
-    }
-  }, [nodePoolListError]);
-
-  const { data: providerNodePools, error: providerNodePoolsError } = useSWR<
-    IProviderNodePoolForNodePoolName[],
-    GenericResponseError
-  >(fetchProviderNodePoolsForNodePoolsKey(nodePoolList?.items), () =>
-    fetchProviderNodePoolsForNodePools(clientFactory, auth, nodePoolList!.items)
-  );
-
-  useEffect(() => {
-    if (providerNodePoolsError) {
-      ErrorReporter.getInstance().notify(providerNodePoolsError);
-    }
-  }, [providerNodePoolsError]);
-
-  const machineTypes = useRef(getMachineTypes());
-
-  const nodePoolsWithProviderNodePools = useMemo(() => {
-    if (!nodePoolList?.items || !providerNodePools) return undefined;
-
-    return mapNodePoolsToProviderNodePools(
-      nodePoolList.items,
-      providerNodePools
-    );
-  }, [nodePoolList?.items, providerNodePools]);
-
-  const workerNodesCPU =
-    providerNodePoolsError || !hasReadPermissionsForNodePools
-      ? -1
-      : getWorkerNodesCPU(nodePoolsWithProviderNodePools, machineTypes.current);
-  const workerNodesMemory =
-    providerNodePoolsError || !hasReadPermissionsForNodePools
-      ? -1
-      : getWorkerNodesMemory(
-          nodePoolsWithProviderNodePools,
-          machineTypes.current
-        );
-
-  const workerNodePoolsCount = hasReadPermissionsForNodePools
-    ? nodePoolList?.items.length
-    : -1;
-  const workerNodesCount = hasReadPermissionsForNodePools
-    ? getWorkerNodesCount(nodePoolList?.items)
-    : -1;
-
   const isDeleting = Boolean(deletionDate);
-  const hasError = typeof nodePoolListError !== 'undefined';
   const isLoading = typeof cluster === 'undefined';
 
   const selectedOrg = organizations && orgId ? organizations[orgId] : undefined;
@@ -249,6 +131,8 @@ const ClusterListItem: React.FC<
   );
 
   const clusterInOrgNamespace = cluster?.metadata.namespace !== 'default';
+
+  const [isPreviewRelease, setIsPreviewRelease] = useState(false);
 
   const shouldDisplayGetStarted = useMemo(() => {
     if (
@@ -372,21 +256,16 @@ const ClusterListItem: React.FC<
               <>
                 <DotSeparatedList wrap={true}>
                   <DotSeparatedListItem>
-                    <ClusterListItemMainInfo
-                      creationDate={creationDate}
-                      releaseVersion={releaseVersion}
-                      isPreviewRelease={isPreviewRelease}
-                      k8sVersion={k8sVersion}
+                    <ClusterListItemReleaseInfo
+                      cluster={cluster}
+                      releases={releases}
+                      canListReleases={canListReleases}
+                      handleIsPreviewRelease={setIsPreviewRelease}
                     />
                   </DotSeparatedListItem>
-                  {!hasError && !isPreviewRelease && (
+                  {!isPreviewRelease && (
                     <DotSeparatedListItem>
-                      <ClusterListItemNodeInfo
-                        workerNodePoolsCount={workerNodePoolsCount}
-                        workerNodesCPU={workerNodesCPU}
-                        workerNodesCount={workerNodesCount}
-                        workerNodesMemory={workerNodesMemory}
-                      />
+                      <ClusterListItemNodeInfo cluster={cluster} />
                     </DotSeparatedListItem>
                   )}
                 </DotSeparatedList>
@@ -397,16 +276,6 @@ const ClusterListItem: React.FC<
                   />
                 )}
               </>
-            )}
-
-            {hasError && !isDeleting && (
-              <Text
-                color='status-critical'
-                aria-label='Cluster load error'
-                margin={{ top: 'small' }}
-              >
-                {extractErrorMessage(nodePoolListError)}
-              </Text>
             )}
           </Box>
 
