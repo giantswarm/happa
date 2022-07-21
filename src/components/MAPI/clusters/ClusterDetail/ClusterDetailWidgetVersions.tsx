@@ -107,7 +107,11 @@ const ClusterDetailWidgetVersions: React.FC<
         >
           {(value) => (
             <>
-              <Text>
+              <Text
+                aria-label={`Cluster app version: ${
+                  value || 'no information available'
+                } `}
+              >
                 <i
                   className='fa fa-version-tag'
                   role='presentation'
