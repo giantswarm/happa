@@ -1104,7 +1104,7 @@ export function hasClusterAppLabel(cluster: capiv1beta1.ICluster): boolean {
  * @param auth
  * @param cluster
  */
-export async function fetchControlPlaneNodesKubernetesVersions(
+export async function fetchControlPlaneNodesK8sVersions(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   cluster: capiv1beta1.ICluster
@@ -1133,8 +1133,8 @@ export async function fetchControlPlaneNodesKubernetesVersions(
   return versions;
 }
 
-export function fetchControlPlaneNodesKubernetesVersionsKey(
+export function fetchControlPlaneNodesK8sVersionsKey(
   cluster: capiv1beta1.ICluster
 ): string {
-  return `fetchControlPlaneNodesKubernetesVersions/${cluster.metadata.namespace}/${cluster.metadata.name}`;
+  return `fetchControlPlaneNodesK8sVersions/${cluster.metadata.namespace}/${cluster.metadata.name}`;
 }
