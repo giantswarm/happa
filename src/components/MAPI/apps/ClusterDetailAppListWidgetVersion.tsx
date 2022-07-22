@@ -92,6 +92,7 @@ const ClusterDetailAppListWidgetVersion: React.FC<
   return (
     <ClusterDetailAppListWidget
       title='Version'
+      titleColor='text'
       contentProps={{
         direction: 'row',
         gap: 'small',

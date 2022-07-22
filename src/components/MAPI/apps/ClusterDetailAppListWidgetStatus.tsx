@@ -20,7 +20,7 @@ const ClusterDetailAppListWidgetStatus: React.FC<
   if (app?.status?.release.status) status = app.status.release.status;
 
   return (
-    <ClusterDetailAppListWidget title='Status' {...props}>
+    <ClusterDetailAppListWidget title='Status' titleColor='text' {...props}>
       <OptionalValue value={status} loaderWidth={100}>
         {(value) => <Text aria-label={`App status: ${value}`}>{value}</Text>}
       </OptionalValue>

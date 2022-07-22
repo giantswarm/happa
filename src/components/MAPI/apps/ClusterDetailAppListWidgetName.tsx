@@ -4,7 +4,7 @@ import React from 'react';
 import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppListWidget';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
-interface IClusterDetailAppListWidgetNamespaceProps
+interface IClusterDetailAppListWidgetNameProps
   extends Omit<
     React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
     'title'
@@ -12,22 +12,16 @@ interface IClusterDetailAppListWidgetNamespaceProps
   app?: applicationv1alpha1.IApp;
 }
 
-const ClusterDetailAppListWidgetNamespace: React.FC<
-  React.PropsWithChildren<IClusterDetailAppListWidgetNamespaceProps>
+const ClusterDetailAppListWidgetName: React.FC<
+  React.PropsWithChildren<IClusterDetailAppListWidgetNameProps>
 > = ({ app, ...props }) => {
   return (
-    <ClusterDetailAppListWidget
-      title='Target namespace'
-      titleColor='text'
-      {...props}
-    >
-      <OptionalValue value={app?.spec.namespace} loaderWidth={100}>
-        {(value) => (
-          <Text aria-label={`App target namespace: ${value}`}>{value}</Text>
-        )}
+    <ClusterDetailAppListWidget title='App name' titleColor='text' {...props}>
+      <OptionalValue value={app?.spec.name} loaderWidth={100}>
+        {(value) => <Text aria-label={`App name: ${value}`}>{value}</Text>}
       </OptionalValue>
     </ClusterDetailAppListWidget>
   );
 };
 
-export default ClusterDetailAppListWidgetNamespace;
+export default ClusterDetailAppListWidgetName;

@@ -26,7 +26,8 @@ import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatal
 
 function generateApp(
   name: string = 'some-app',
-  version: string = '1.2.1'
+  version: string = '1.2.1',
+  installedAs: string = 'some-app-alias'
 ): applicationv1alpha1.IApp {
   const namespace = capiv1beta1Mocks.randomCluster1.metadata.name;
 
@@ -48,7 +49,7 @@ function generateApp(
         'giantswarm.io/organization': 'org1',
         'giantswarm.io/service-type': 'managed',
       },
-      name,
+      name: installedAs,
       namespace,
       resourceVersion: '294675096',
       selfLink: `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/${name}`,
@@ -149,6 +150,29 @@ describe('ClusterDetailAppListItem', () => {
       defaultPermissions
     );
     render(getComponent({}));
+  });
+
+  it('displays app name and alias', async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    render(
+      getComponent({
+        app: generateApp(),
+      })
+    );
+
+    const appNameWidget = await screen.findByLabelText('App name');
+    expect(within(appNameWidget).getByText('some-app')).toBeInTheDocument();
+
+    const appInstalledAsWidget = await screen.findByLabelText('Installed as');
+    expect(
+      within(appInstalledAsWidget).getByText('some-app-alias')
+    ).toBeInTheDocument();
   });
 
   it('displays various information about the supported app versions', async () => {
@@ -278,7 +302,7 @@ describe('ClusterDetailAppListItem', () => {
       defaultPermissions
     );
 
-    let app = generateApp('coredns', '1.2.0');
+    let app = generateApp('coredns', '1.2.0', 'coredns');
     const newVersion = '1.3.0';
 
     nock(window.config.mapiEndpoint)
@@ -350,7 +374,7 @@ describe('ClusterDetailAppListItem', () => {
       defaultPermissions
     );
 
-    let app = generateApp('coredns', '1.3.0');
+    let app = generateApp('coredns', '1.3.0', 'coredns');
     const newVersion = '1.2.0';
 
     nock(window.config.mapiEndpoint)
@@ -422,7 +446,7 @@ describe('ClusterDetailAppListItem', () => {
       defaultPermissions
     );
 
-    const app = generateApp('coredns', '1.2.0');
+    const app = generateApp('coredns', '1.2.0', 'coredns');
     const newVersion = '1.3.0';
 
     nock(window.config.mapiEndpoint)

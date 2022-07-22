@@ -90,7 +90,7 @@ const ClusterDetailAppListWidgetCatalog: React.FC<
   const isManaged = catalog ? isAppCatalogVisibleToUsers(catalog) : false;
 
   return (
-    <ClusterDetailAppListWidget title='Catalog' {...props}>
+    <ClusterDetailAppListWidget title='Catalog' titleColor='text' {...props}>
       <OptionalValue value={catalogTitle} loaderWidth={150}>
         {(value) => (
           <CatalogLabel
