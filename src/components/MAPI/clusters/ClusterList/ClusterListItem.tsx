@@ -28,9 +28,10 @@ import RoutePath from 'utils/routePath';
 
 import ClusterStatus from '../ClusterStatus/ClusterStatus';
 import { useClusterStatus } from '../hooks/useClusterStatus';
-import { getClusterLabelsWithDisplayInfo } from '../utils';
+import { getClusterLabelsWithDisplayInfo, hasClusterAppLabel } from '../utils';
 import ClusterListItemNodeInfo from './ClusterListItemNodeInfo';
 import ClusterListItemReleaseInfo from './ClusterListItemReleaseInfo';
+import ClusterListItemVersionsInfo from './ClusterListItemVersionsInfo';
 
 const StyledLink = styled(Link)`
   transition: box-shadow 0.1s ease-in-out;
@@ -62,6 +63,7 @@ interface IClusterListItemProps
   organizations?: Record<string, IOrganization>;
   canCreateClusters?: boolean;
   canListReleases?: boolean;
+  canListCPNodes?: boolean;
 }
 
 const ClusterListItem: React.FC<
@@ -74,6 +76,7 @@ const ClusterListItem: React.FC<
   organizations,
   canCreateClusters,
   canListReleases,
+  canListCPNodes,
   className,
   ...props
 }) => {
@@ -170,6 +173,8 @@ const ClusterListItem: React.FC<
     return getClusterLabelsWithDisplayInfo(existingLabels);
   }, [cluster]);
 
+  const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
+
   const dispatch = useDispatch();
 
   const handleGetStartedClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -256,12 +261,19 @@ const ClusterListItem: React.FC<
               <>
                 <DotSeparatedList wrap={true}>
                   <DotSeparatedListItem>
-                    <ClusterListItemReleaseInfo
-                      cluster={cluster}
-                      releases={releases}
-                      canListReleases={canListReleases}
-                      handleIsPreviewRelease={setIsPreviewRelease}
-                    />
+                    {isClusterApp ? (
+                      <ClusterListItemVersionsInfo
+                        cluster={cluster}
+                        canListCPNodes={canListCPNodes}
+                      />
+                    ) : (
+                      <ClusterListItemReleaseInfo
+                        cluster={cluster}
+                        releases={releases}
+                        canListReleases={canListReleases}
+                        handleIsPreviewRelease={setIsPreviewRelease}
+                      />
+                    )}
                   </DotSeparatedListItem>
                   {!isPreviewRelease && (
                     <DotSeparatedListItem>

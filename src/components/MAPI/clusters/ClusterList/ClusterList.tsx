@@ -136,6 +136,7 @@ interface IClusterListProps {
   organizations?: Record<string, IOrganization>;
   canCreateClusters: boolean;
   canListReleases: boolean;
+  canListCPNodes: boolean;
 }
 
 const ClusterList: React.FC<React.PropsWithChildren<IClusterListProps>> = (
@@ -151,6 +152,7 @@ const ClusterList: React.FC<React.PropsWithChildren<IClusterListProps>> = (
     organizations,
     canCreateClusters,
     canListReleases,
+    canListCPNodes,
   } = props;
   const itemsCount = clustersWithProviderClusters
     ? clustersWithProviderClusters.length
@@ -217,6 +219,7 @@ const ClusterList: React.FC<React.PropsWithChildren<IClusterListProps>> = (
                         organizations={organizations}
                         canCreateClusters={canCreateClusters}
                         canListReleases={canListReleases}
+                        canListCPNodes={canListCPNodes}
                         margin={{ bottom: 'medium' }}
                       />
                     </CSSTransition>
