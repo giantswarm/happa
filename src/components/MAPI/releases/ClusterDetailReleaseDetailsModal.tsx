@@ -61,7 +61,7 @@ const ClusterDetailReleaseDetailsModal: React.FC<
       aria-label={title}
       visible={visible}
     >
-      <Box direction='column' gap='medium'>
+      <Box flex={false} gap='medium'>
         <Box>
           <Text>
             Released <Date relative={true} value={creationDate} />
