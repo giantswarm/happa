@@ -11,6 +11,7 @@ import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import Truncated from 'UI/Util/Truncated';
 import { getK8sVersionEOLDate } from 'utils/config';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
@@ -128,7 +129,15 @@ const ClusterDetailWidgetVersions: React.FC<
                   target='_blank'
                   aria-label={`Cluster app version ${value} release notes`}
                 >
-                  <Text>{value || <NotAvailable />}</Text>
+                  <Text>
+                    {value ? (
+                      <Truncated numStart={8} numEnd={3}>
+                        {value}
+                      </Truncated>
+                    ) : (
+                      <NotAvailable />
+                    )}
+                  </Text>
                   <i
                     className='fa fa-open-in-new'
                     aria-hidden={true}

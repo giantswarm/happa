@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import Truncated from 'UI/Util/Truncated';
 import { getK8sVersionEOLDate } from 'utils/config';
 
 import ReleaseStateLabel from '../../releases/ReleaseStateLabel';
@@ -44,7 +45,9 @@ const ClusterListItemMainInfo: React.FC<
               role='presentation'
               aria-hidden='true'
             />{' '}
-            {value}
+            <Truncated numStart={8} numEnd={3}>
+              {value}
+            </Truncated>
             {isPreviewRelease && (
               <ReleaseStateLabel state='preview' margin={{ left: 'xsmall' }} />
             )}
