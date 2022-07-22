@@ -9,16 +9,30 @@ const Title = styled(Text)`
 interface IClusterDetailAppListWidgetProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   title: string;
+  titleWidth?: string;
+  titleColor?: string;
   contentProps?: React.ComponentPropsWithoutRef<typeof Box>;
 }
 
 const ClusterDetailAppListWidget: React.FC<
   React.PropsWithChildren<IClusterDetailAppListWidgetProps>
-> = ({ title, children, contentProps, ...props }) => {
+> = ({
+  title,
+  titleWidth,
+  titleColor = 'text-weak',
+  children,
+  contentProps,
+  ...props
+}) => {
   return (
-    <Box pad='xsmall' direction='column' aria-label={title} {...props}>
-      <Box>
-        <Title color='text-weak' size='small'>
+    <Box
+      pad={{ horizontal: 'xsmall' }}
+      direction='column'
+      aria-label={title}
+      {...props}
+    >
+      <Box width={{ min: titleWidth }} margin={{ right: 'medium' }}>
+        <Title color={titleColor} size='small'>
           {title}
         </Title>
       </Box>

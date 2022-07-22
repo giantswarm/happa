@@ -247,6 +247,10 @@ const theme = deepMerge(generate(16), {
         dark: COLORS.shade6,
         light: COLORS.shade6,
       },
+      'border-xweak': {
+        dark: COLORS.darkBlueLighter3,
+        light: COLORS.darkBlueLighter3,
+      },
       control: {
         dark: 'border',
         light: 'border',

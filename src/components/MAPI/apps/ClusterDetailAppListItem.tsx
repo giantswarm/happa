@@ -1,10 +1,11 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { AccordionPanel, Box, Text } from 'grommet';
+import { AccordionPanel, Box, ResponsiveContext, Text } from 'grommet';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { isAppManagedByFlux } from 'model/services/mapi/applicationv1alpha1';
 import React, {
+  useContext,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -24,6 +25,8 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import ClusterDetailAppListItemStatus from './ClusterDetailAppListItemStatus';
 import ClusterDetailAppListWidgetCatalog from './ClusterDetailAppListWidgetCatalog';
 import ClusterDetailAppListWidgetConfiguration from './ClusterDetailAppListWidgetConfiguration';
+import ClusterDetailAppListWidgetInstalledAs from './ClusterDetailAppListWidgetInstalledAs';
+import ClusterDetailAppListWidgetName from './ClusterDetailAppListWidgetName';
 import ClusterDetailAppListWidgetNamespace from './ClusterDetailAppListWidgetNamespace';
 import ClusterDetailAppListWidgetStatus from './ClusterDetailAppListWidgetStatus';
 import ClusterDetailAppListWidgetUninstall from './ClusterDetailAppListWidgetUninstall';
@@ -68,6 +71,7 @@ interface IClusterDetailAppListItemProps
 
 const ClusterDetailAppListItem: React.FC<
   React.PropsWithChildren<IClusterDetailAppListItemProps>
+  // eslint-disable-next-line complexity
 > = ({ app, appsPermissions, isActive, onAppUninstalled }) => {
   const currentVersion = useMemo(() => {
     if (!app) return undefined;
@@ -144,164 +148,215 @@ const ClusterDetailAppListItem: React.FC<
   const { canList: canListAppCatalogEntries } =
     usePermissionsForAppCatalogEntries(provider, catalogNamespace ?? '');
 
+  const screenSize = useContext(ResponsiveContext);
+
   return (
-    <AccordionPanel
-      ref={accordionRef}
-      header={
-        <Header
-          background={isDeleted ? 'background-back' : 'background-front'}
-          round={isActive ? { corner: 'top', size: 'xsmall' } : 'xsmall'}
-          pad={{ vertical: 'xsmall', horizontal: 'small' }}
-          direction='row'
-          align='center'
-          onClick={handleHeaderClick}
-          tabIndex={-1}
-          aria-disabled={isDisabled}
-        >
-          <Box margin={{ right: 'xsmall' }}>
-            <Icon
-              className='fa fa-chevron-down'
-              isActive={isActive}
-              role='presentation'
-              aria-hidden='true'
-              size='28px'
-              color={isDisabled ? 'text-xweak' : 'text'}
-            />
-          </Box>
-          <OptionalValue value={app?.metadata.name} loaderWidth={100}>
-            {(value) => (
-              <Text weight='bold' aria-label={`App name: ${value}`}>
-                {value}
-              </Text>
-            )}
-          </OptionalValue>
-
-          <Box
-            animation={{
-              type: isActive ? 'fadeOut' : 'fadeIn',
-              duration: 150,
-            }}
-            margin={{ left: 'small' }}
-          >
-            {isDeleted ? (
-              <Text size='small' color='text-weak'>
-                Deleted{' '}
-                <Date relative={true} value={app.metadata.deletionTimestamp} />
-              </Text>
-            ) : (
-              <Box direction='row' wrap={true} gap='xsmall' align='center'>
-                <OptionalValue value={currentVersion} loaderWidth={100}>
-                  {(value) => (
-                    <Truncated
-                      as={Text}
-                      aria-label={`App version: ${value}`}
-                      numStart={10}
-                      color='text-weak'
-                    >
-                      {value}
-                    </Truncated>
-                  )}
-                </OptionalValue>
-
-                {app && (
-                  <ClusterDetailAppListItemStatus
-                    app={app}
-                    catalogNamespace={catalogNamespace}
-                    canListAppCatalogEntries={canListAppCatalogEntries}
-                  />
-                )}
-              </Box>
-            )}
-          </Box>
-        </Header>
-      }
+    <Box
+      background={isDeleted ? 'background-back' : 'background-front'}
+      round='xsmall'
     >
-      <Box
-        round={{ corner: 'bottom', size: 'xsmall' }}
-        background='background-front'
-        fill='horizontal'
-        pad={{ horizontal: 'small', top: 'xsmall', bottom: 'small' }}
-      >
-        <StyledBox wrap={true} direction='row'>
-          <ClusterDetailAppListWidgetVersion
-            app={app}
-            catalogNamespace={catalogNamespace}
-            canListAppCatalogEntries={canListAppCatalogEntries}
-            basis='250px'
-            flex={{ grow: 1, shrink: 1 }}
-          />
-          <ClusterDetailAppListWidgetStatus
-            app={app}
-            basis='250px'
-            flex={{ grow: 1, shrink: 1 }}
-          />
-          <ClusterDetailAppListWidgetCatalog
-            app={app}
-            canReadCatalogs={canReadCatalogs}
-            basis='250px'
-            flex={{ grow: 1, shrink: 1 }}
-          />
-          <ClusterDetailAppListWidgetNamespace
-            app={app}
-            basis='250px'
-            flex={{ grow: 1, shrink: 1 }}
-          />
-          <ClusterDetailAppListWidgetVersionInspector
-            app={app}
-            appsPermissions={appsPermissions}
-            currentVersion={currentVersion}
-            currentSelectedVersion={currentSelectedVersion}
-            onSelectVersion={setCurrentSelectedVersion}
-            catalogNamespace={catalogNamespace}
-            canListAppCatalogEntries={canListAppCatalogEntries}
-            basis='100%'
-            margin={{ top: 'small' }}
-          />
-          <ClusterDetailAppListWidgetConfiguration
-            app={app}
-            appsPermissions={appsPermissions}
-            basis='100%'
-            margin={{ top: 'small' }}
-          />
-          <ClusterDetailAppListWidgetUninstall
-            app={app}
-            appsPermissions={appsPermissions}
-            onAppUninstalled={onAppUninstalled}
-            basis='100%'
-            margin={{ top: 'small' }}
-          />
-        </StyledBox>
-        {app && catalogNamespace && (
-          <CLIGuidesList
-            margin={{ top: 'medium', horizontal: 'xsmall', bottom: 'xsmall' }}
+      <AccordionPanel
+        ref={accordionRef}
+        header={
+          <Header
+            pad={{ vertical: 'xsmall', horizontal: 'small' }}
+            direction='row'
+            align='center'
+            onClick={handleHeaderClick}
+            tabIndex={-1}
+            aria-disabled={isDisabled}
           >
-            <InspectInstalledAppGuide
-              appName={app.metadata.name}
-              namespace={app.metadata.namespace!}
+            <Box margin={{ right: 'xsmall' }}>
+              <Icon
+                className='fa fa-chevron-down'
+                isActive={isActive}
+                role='presentation'
+                aria-hidden='true'
+                size='28px'
+                color={isDisabled ? 'text-xweak' : 'text'}
+              />
+            </Box>
+            <OptionalValue value={app?.spec.name} loaderWidth={100}>
+              {(value) => (
+                <Text weight='bold' aria-label={`App name: ${value}`}>
+                  {value}
+                </Text>
+              )}
+            </OptionalValue>
+
+            <Box
+              animation={{
+                type: isActive ? 'fadeOut' : 'fadeIn',
+                duration: 150,
+              }}
+              margin={{ left: 'small' }}
+            >
+              {isDeleted ? (
+                <Text size='small' color='text-weak'>
+                  Deleted{' '}
+                  <Date
+                    relative={true}
+                    value={app.metadata.deletionTimestamp}
+                  />
+                </Text>
+              ) : (
+                <Box direction='row' wrap={true} gap='small' align='center'>
+                  <OptionalValue value={currentVersion} loaderWidth={100}>
+                    {(value) => (
+                      <Truncated
+                        as={Text}
+                        aria-label={`App version: ${value}`}
+                        numStart={10}
+                        color='text-weak'
+                      >
+                        {value}
+                      </Truncated>
+                    )}
+                  </OptionalValue>
+
+                  {app?.spec.name !== app?.metadata.name && (
+                    <OptionalValue value={app?.metadata.name} loaderWidth={100}>
+                      {(value) => (
+                        <Text aria-label={`App installed as: ${value}`}>
+                          {value}
+                        </Text>
+                      )}
+                    </OptionalValue>
+                  )}
+
+                  {app && (
+                    <ClusterDetailAppListItemStatus
+                      app={app}
+                      catalogNamespace={catalogNamespace}
+                      canListAppCatalogEntries={canListAppCatalogEntries}
+                    />
+                  )}
+                </Box>
+              )}
+            </Box>
+          </Header>
+        }
+      >
+        <Box fill='horizontal' pad={{ horizontal: 'small', bottom: 'small' }}>
+          <StyledBox
+            wrap={true}
+            direction='row'
+            pad={{ vertical: 'medium' }}
+            border={{ side: 'top', color: 'border-xweak' }}
+          >
+            <ClusterDetailAppListWidgetCatalog
+              app={app}
+              canReadCatalogs={canReadCatalogs}
+              basis='300px'
+              flex={{ grow: 1, shrink: 1 }}
+              direction='row'
+              align='center'
+              titleWidth={screenSize === 'large' ? '65px' : 'auto'}
             />
-            <UpdateAppGuide
-              appName={app.metadata.name}
-              namespace={app.metadata.namespace!}
-              newVersion={currentSelectedVersion ?? currentVersion!}
-              appCatalogEntryName={app.spec.name}
-              catalogName={app.spec.catalog}
+            <ClusterDetailAppListWidgetVersion
+              app={app}
               catalogNamespace={catalogNamespace}
-              canUpdateApps={appsPermissions?.canUpdate}
+              canListAppCatalogEntries={canListAppCatalogEntries}
+              basis='300px'
+              flex={{ grow: 1, shrink: 1 }}
+              direction='row'
+              align='center'
+              titleWidth={screenSize === 'large' ? '54px' : 'auto'}
             />
-            <ConfigureAppGuide
-              appName={app.metadata.name}
-              namespace={app.metadata.namespace!}
-              canConfigureApps={appsPermissions?.canConfigure}
+            <ClusterDetailAppListWidgetInstalledAs
+              app={app}
+              basis='300px'
+              flex={{ grow: 1, shrink: 1 }}
+              direction='row'
+              align='center'
+              titleWidth={screenSize === 'large' ? '127px' : 'auto'}
             />
-            <UninstallAppGuide
-              appName={app.metadata.name}
-              namespace={app.metadata.namespace!}
-              canUninstallApps={appsPermissions?.canDelete}
+            <ClusterDetailAppListWidgetName
+              app={app}
+              basis='300px'
+              flex={{ grow: 1, shrink: 1 }}
+              direction='row'
+              align='center'
+              titleWidth={screenSize === 'large' ? '65px' : 'auto'}
             />
-          </CLIGuidesList>
-        )}
-      </Box>
-    </AccordionPanel>
+            <ClusterDetailAppListWidgetStatus
+              app={app}
+              basis='300px'
+              flex={{ grow: 1, shrink: 1 }}
+              direction='row'
+              align='center'
+              titleWidth={screenSize === 'large' ? '54px' : 'auto'}
+            />
+            <ClusterDetailAppListWidgetNamespace
+              app={app}
+              basis='300px'
+              flex={{ grow: 1, shrink: 1 }}
+              direction='row'
+              align='center'
+              titleWidth={screenSize === 'large' ? '127px' : 'auto'}
+            />
+          </StyledBox>
+          <Box
+            pad={{ vertical: 'medium' }}
+            border={{ side: 'top', color: 'border-xweak' }}
+          >
+            <ClusterDetailAppListWidgetVersionInspector
+              app={app}
+              appsPermissions={appsPermissions}
+              currentVersion={currentVersion}
+              currentSelectedVersion={currentSelectedVersion}
+              onSelectVersion={setCurrentSelectedVersion}
+              catalogNamespace={catalogNamespace}
+              canListAppCatalogEntries={canListAppCatalogEntries}
+              basis='100%'
+              margin={{ top: 'xsmall' }}
+            />
+            <ClusterDetailAppListWidgetConfiguration
+              app={app}
+              appsPermissions={appsPermissions}
+              basis='100%'
+              margin={{ top: 'medium' }}
+            />
+            <ClusterDetailAppListWidgetUninstall
+              app={app}
+              appsPermissions={appsPermissions}
+              onAppUninstalled={onAppUninstalled}
+              basis='100%'
+              margin={{ top: 'medium' }}
+            />
+          </Box>
+          {app && catalogNamespace && (
+            <CLIGuidesList
+              margin={{ top: 'medium', horizontal: 'xsmall', bottom: 'xsmall' }}
+            >
+              <InspectInstalledAppGuide
+                appName={app.metadata.name}
+                namespace={app.metadata.namespace!}
+              />
+              <UpdateAppGuide
+                appName={app.metadata.name}
+                namespace={app.metadata.namespace!}
+                newVersion={currentSelectedVersion ?? currentVersion!}
+                appCatalogEntryName={app.spec.name}
+                catalogName={app.spec.catalog}
+                catalogNamespace={catalogNamespace}
+                canUpdateApps={appsPermissions?.canUpdate}
+              />
+              <ConfigureAppGuide
+                appName={app.metadata.name}
+                namespace={app.metadata.namespace!}
+                canConfigureApps={appsPermissions?.canConfigure}
+              />
+              <UninstallAppGuide
+                appName={app.metadata.name}
+                namespace={app.metadata.namespace!}
+                canUninstallApps={appsPermissions?.canDelete}
+              />
+            </CLIGuidesList>
+          )}
+        </Box>
+      </AccordionPanel>
+    </Box>
   );
 };
 
