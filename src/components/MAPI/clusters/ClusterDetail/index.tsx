@@ -14,6 +14,7 @@ import {
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
   getClusterDescription,
+  supportsReleases,
 } from 'MAPI/utils';
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -238,10 +239,12 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     provider,
     'default'
   );
+  const isReleasesSupportedByProvider = supportsReleases(provider);
 
-  const releaseListKey = canListReleases
-    ? releasev1alpha1.getReleaseListKey()
-    : null;
+  const releaseListKey =
+    canListReleases && isReleasesSupportedByProvider
+      ? releasev1alpha1.getReleaseListKey()
+      : null;
 
   const { data: releaseList, error: releaseListError } = useSWR<
     releasev1alpha1.IReleaseList,
