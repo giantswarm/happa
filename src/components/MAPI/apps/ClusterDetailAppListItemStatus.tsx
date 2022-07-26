@@ -6,6 +6,7 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { isAppManagedByFlux } from 'model/services/mapi/applicationv1alpha1';
 import React, { useEffect, useMemo } from 'react';
 import useSWR from 'swr';
+import ClusterDetailAppStatus from 'UI/Display/MAPI/apps/ClusterDetailAppStatus';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
@@ -81,8 +82,10 @@ const ClusterDetailAppListItemStatus: React.FC<
     return hasNewerVersionForApp(appCatalogEntryList.items, app);
   }, [app, appCatalogEntryList, isChangingVersion]);
 
+  const status = applicationv1alpha1.getAppStatus(app);
+
   return (
-    <Box {...props}>
+    <Box direction='row' align='baseline' gap='small' {...props}>
       {isChangingVersion && (
         <Text color='status-warning' size='small'>
           <i
@@ -102,6 +105,10 @@ const ClusterDetailAppListItemStatus: React.FC<
           <i className='fa fa-warning' role='presentation' aria-hidden='true' />{' '}
           Upgrade available
         </Text>
+      )}
+
+      {status !== '' && status !== applicationv1alpha1.statusDeployed && (
+        <ClusterDetailAppStatus status={status} />
       )}
     </Box>
   );

@@ -11,6 +11,16 @@ export const labelCatalogVisibility =
   'application.giantswarm.io/catalog-visibility';
 export const labelCatalogType = 'application.giantswarm.io/catalog-type';
 
+export const statusUnknown = 'unknown';
+export const statusDeployed = 'deployed';
+export const statusUninstalled = 'uninstalled';
+export const statusSuperseded = 'superseded';
+export const statusFailed = 'failed';
+export const statusUninstalling = 'uninstalling';
+export const statusPendingInstall = 'pending-install';
+export const statusPendingUpgrade = 'pending-upgrade';
+export const statusPendingRollback = 'pending-rollback';
+
 export const annotationReadme = 'application.giantswarm.io/readme';
 
 export function isAppCatalogPublic(catalog: ICatalog): boolean {
@@ -35,6 +45,10 @@ export function getAppCurrentVersion(app: IApp): string {
   if (!app.status || !app.status.version) return app.spec.version;
 
   return app.status.version;
+}
+
+export function getAppStatus(app: IApp): string {
+  return app.status?.release?.status || '';
 }
 
 export function isAppManagedByFlux(app: IApp): boolean {

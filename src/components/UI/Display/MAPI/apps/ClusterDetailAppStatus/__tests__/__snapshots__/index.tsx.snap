@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ClusterDetailAppStatus renders an app status 1`] = `
+<div
+  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
+>
+  <div
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
+  >
+    <div
+      class="StyledBox-sc-13pk1d4-0 fglwhL"
+    >
+      <span
+        aria-label="App status: some status"
+        class="StyledText-sc-1sadyjn-0 hjhGBx ClusterDetailAppStatus__Title-sc-kfzx37-0 khYVvy"
+      >
+        some status
+      </span>
+    </div>
+  </div>
+</div>
+`;
