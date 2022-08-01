@@ -1291,6 +1291,24 @@ export function supportsClientCertificates(cluster: Cluster): boolean {
 }
 
 /**
+ * Returns whether the current provider supports the Release CR. These should
+ * be the vintage providers.
+ * @param provider
+ */
+export function supportsReleases(
+  provider: PropertiesOf<typeof Providers>
+): boolean {
+  switch (provider) {
+    case Providers.AZURE:
+    case Providers.AWS:
+    case Providers.KVM:
+      return true;
+    default:
+      return false;
+  }
+}
+
+/**
  * Compute an organization namespace from the given organization name.
  * This also makes the org name follow the [DNS label standard](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names).
  * @param name

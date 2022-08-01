@@ -2,13 +2,15 @@ import { Card, CardBody, CardHeader, Text } from 'grommet';
 import React from 'react';
 import styled from 'styled-components';
 
-const Title = styled(Text)`
-  text-transform: uppercase;
+const StyledCardHeader = styled(CardHeader)`
+  > * {
+    text-transform: uppercase;
+  }
 `;
 
 interface IClusterDetailWidgetProps
-  extends React.ComponentPropsWithoutRef<typeof Card> {
-  title: string;
+  extends Omit<React.ComponentPropsWithoutRef<typeof Card>, 'title'> {
+  title: React.ReactNode;
   inline?: boolean;
   contentProps?: React.ComponentPropsWithoutRef<typeof CardBody>;
 }
@@ -25,16 +27,20 @@ const ClusterDetailWidget: React.FC<
       round='xsmall'
       pad='xsmall'
       wrap={true}
-      aria-label={title}
+      aria-label={title?.toString()}
       {...props}
     >
-      <CardHeader
+      <StyledCardHeader
         basis={inline ? '200px' : '100%'}
         flex={{ grow: 0, shrink: 1 }}
         margin='small'
       >
-        <Title color='text-weak'>{title}</Title>
-      </CardHeader>
+        {typeof title === 'string' ? (
+          <Text color='text-weak'>{title}</Text>
+        ) : (
+          title
+        )}
+      </StyledCardHeader>
       <CardBody
         basis='200px'
         flex={{ grow: 1, shrink: 0 }}

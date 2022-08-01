@@ -12,7 +12,7 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -27,11 +27,14 @@ import InspectClusterReleaseGuide from '../guides/InspectClusterReleaseGuide';
 import SetClusterLabelsGuide from '../guides/SetClusterLabelsGuide';
 import UpgradeClusterGuide from '../guides/UpgradeClusterGuide';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
+import { hasClusterAppLabel } from '../utils';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
 import ClusterDetailWidgetLabels from './ClusterDetailWidgetLabels';
 import ClusterDetailWidgetProvider from './ClusterDetailWidgetProvider';
+import ClusterDetailWidgetVersions from './ClusterDetailWidgetVersions';
+import ClusterDetailWidgetVersionsLoader from './ClusterDetailWidgetVersionsLoader';
 
 const StyledBox = styled(Box)`
   gap: ${({ theme }) => theme.global.edgeSize.small};
@@ -89,9 +92,15 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
     }
   }, [providerClusterError]);
 
-  const releaseVersion = cluster
-    ? capiv1beta1.getReleaseVersion(cluster)
-    : undefined;
+  const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
+
+  const clusterVersion = useMemo(() => {
+    if (!cluster) return undefined;
+
+    return isClusterApp
+      ? capiv1beta1.getClusterAppVersion(cluster)
+      : capiv1beta1.getReleaseVersion(cluster);
+  }, [cluster, isClusterApp]);
 
   const [targetReleaseVersion, setTargetReleaseVersion] = useState('');
 
@@ -107,13 +116,19 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
         basis='200px'
         flex={{ grow: 1, shrink: 1 }}
       />
-      <ClusterDetailWidgetRelease
-        cluster={cluster}
-        providerCluster={providerCluster}
-        canUpdateCluster={canUpdateCluster}
-        onTargetReleaseVersionChange={setTargetReleaseVersion}
-        basis='100%'
-      />
+      {typeof isClusterApp === 'undefined' ? (
+        <ClusterDetailWidgetVersionsLoader basis='100%' />
+      ) : isClusterApp ? (
+        <ClusterDetailWidgetVersions cluster={cluster} basis='100%' />
+      ) : (
+        <ClusterDetailWidgetRelease
+          cluster={cluster}
+          providerCluster={providerCluster}
+          canUpdateCluster={canUpdateCluster}
+          onTargetReleaseVersionChange={setTargetReleaseVersion}
+          basis='100%'
+        />
+      )}
       <ClusterDetailWidgetLabels
         cluster={cluster}
         canUpdateCluster={canUpdateCluster}
@@ -142,6 +157,13 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
             clusterName={cluster.metadata.name}
             clusterNamespace={cluster.metadata.namespace!}
           />
+          {!isClusterApp && clusterVersion && (
+            <InspectClusterReleaseGuide
+              clusterName={cluster.metadata.name}
+              clusterNamespace={cluster.metadata.namespace!}
+              releaseVersion={clusterVersion}
+            />
+          )}
           {targetReleaseVersion && (
             <UpgradeClusterGuide
               provider={provider}
@@ -151,15 +173,6 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
               canUpdateCluster={canUpdateCluster}
             />
           )}
-
-          {releaseVersion && (
-            <InspectClusterReleaseGuide
-              clusterName={cluster.metadata.name}
-              clusterNamespace={cluster.metadata.namespace!}
-              releaseVersion={releaseVersion}
-            />
-          )}
-
           <SetClusterLabelsGuide
             clusterName={cluster.metadata.name}
             clusterNamespace={cluster.metadata.namespace!}

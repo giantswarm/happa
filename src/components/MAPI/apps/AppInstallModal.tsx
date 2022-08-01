@@ -24,6 +24,7 @@ import {
   fetchProviderClustersForClustersKey,
   getClusterDescription,
   IProviderClusterForClusterName,
+  supportsReleases,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
@@ -271,9 +272,11 @@ const AppInstallModal: React.FC<
   const releaseListClient = useRef(clientFactory());
 
   const releasesPermissions = usePermissionsForReleases(provider, 'default');
-  const releaseListKey = releasesPermissions.canList
-    ? releasev1alpha1.getReleaseListKey()
-    : null;
+  const isReleasesSupportedByProvider = supportsReleases(provider);
+  const releaseListKey =
+    releasesPermissions.canList && isReleasesSupportedByProvider
+      ? releasev1alpha1.getReleaseListKey()
+      : null;
 
   const { data: releaseList, error: releaseListError } = useSWR<
     releasev1alpha1.IReleaseList,

@@ -597,6 +597,43 @@ describe('ClusterListItem on GCP', () => {
     window.config.info.general.provider = provider;
   });
 
+  it('displays various information about the cluster', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machines/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterGCP1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3D`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterGCP1MachineList);
+
+    const creationDate = sub({
+      hours: 1,
+    })(new Date());
+
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1beta1Mocks.randomClusterGCP1,
+          metadata: {
+            ...capiv1beta1Mocks.randomClusterGCP1.metadata,
+            creationTimestamp: creationDate.toISOString(),
+          },
+        },
+        providerCluster: capgv1beta1Mocks.randomGCPCluster1,
+        canListCPNodes: true,
+      })
+    );
+
+    expect(screen.getByLabelText('Name: m317f')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Description: Random GCP Cluster')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Cluster app version: 0.15.1')
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText('Kubernetes version: 1.22')
+    ).toBeInTheDocument();
+  });
+
   it('displays stats about worker nodes', async () => {
     nock(window.config.mapiEndpoint)
       .get(
