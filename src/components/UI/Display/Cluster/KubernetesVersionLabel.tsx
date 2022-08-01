@@ -19,11 +19,12 @@ interface IKubernetesVersionLabelProps {
   hidePatchVersion?: boolean;
   eolDate?: string;
   hideIcon?: boolean;
+  hideLabel?: boolean;
 }
 
 const KubernetesVersionLabel: React.FC<
   React.PropsWithChildren<IKubernetesVersionLabelProps>
-> = ({ version, hidePatchVersion, eolDate, hideIcon }) => {
+> = ({ version, hidePatchVersion, eolDate, hideIcon, hideLabel }) => {
   let versionLabel = version;
   if (version && hidePatchVersion) {
     const v = version.split('.');
@@ -69,6 +70,8 @@ const KubernetesVersionLabel: React.FC<
           </>
         )}
 
+        {!hideLabel && <span>Kubernetes </span>}
+
         {versionLabel || <NotAvailable />}
 
         {isEol && (
@@ -91,6 +94,7 @@ KubernetesVersionLabel.defaultProps = {
   hidePatchVersion: true,
   eolDate: '',
   hideIcon: false,
+  hideLabel: true,
 };
 
 export default KubernetesVersionLabel;

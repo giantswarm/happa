@@ -8,6 +8,7 @@ import {
   fetchProviderClustersForClusters,
   fetchProviderClustersForClustersKey,
   IProviderClusterForClusterName,
+  supportsReleases,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
@@ -30,6 +31,7 @@ import RoutePath from 'utils/routePath';
 import ClusterList from './ClusterList/ClusterList';
 import ListClustersGuide from './guides/ListClustersGuide';
 import { usePermissionsForClusters } from './permissions/usePermissionsForClusters';
+import { usePermissionsForCPNodes } from './permissions/usePermissionsForCPNodes';
 import {
   compareClusters,
   IProviderClusterForCluster,
@@ -154,10 +156,12 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
     provider,
     'default'
   );
+  const isReleasesSupportedByProvider = supportsReleases(provider);
 
-  const releaseListKey = canListReleases
-    ? releasev1alpha1.getReleaseListKey()
-    : null;
+  const releaseListKey =
+    canListReleases && isReleasesSupportedByProvider
+      ? releasev1alpha1.getReleaseListKey()
+      : null;
 
   const { data: releaseList, error: releaseListError } = useSWR<
     releasev1alpha1.IReleaseList,
@@ -171,6 +175,11 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
       ErrorReporter.getInstance().notify(releaseListError);
     }
   }, [releaseListError]);
+
+  const { canList: canListCPNodes } = usePermissionsForCPNodes(
+    provider,
+    namespace ?? ''
+  );
 
   return (
     <DocumentTitle title={title}>
@@ -237,6 +246,7 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
               organizations={organizations}
               canCreateClusters={canCreateClusters}
               canListReleases={canListReleases}
+              canListCPNodes={canListCPNodes}
             />
           )}
         </Box>

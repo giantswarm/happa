@@ -1,7 +1,7 @@
 import { Constants } from 'model/constants';
 import * as corev1 from 'model/services/mapi/corev1';
 
-import { ICluster, ICondition, IMachinePool } from './';
+import { ICluster, ICondition, IMachine, IMachinePool } from './';
 
 // CAPI labels
 export const labelClusterName = 'cluster.x-k8s.io/cluster-name';
@@ -56,6 +56,14 @@ export function getReleaseVersion(cluster: ICluster): string | undefined {
   return cluster.metadata.labels?.[labelReleaseVersion];
 }
 
+export function getClusterAppName(cluster: ICluster): string | undefined {
+  return cluster.metadata.labels?.[labelApp];
+}
+
+export function getClusterAppVersion(cluster: ICluster): string | undefined {
+  return cluster.metadata.labels?.[labelAppVersion];
+}
+
 export function getClusterOrganization(cluster: ICluster): string | undefined {
   return cluster.metadata.labels?.[labelOrganization];
 }
@@ -104,6 +112,10 @@ export function getMachinePoolScaling(
   } catch {
     return [-1, -1];
   }
+}
+
+export function getMachineK8sVersion(machine: IMachine): string | undefined {
+  return machine.spec?.version;
 }
 
 interface IConditionGetter {
