@@ -12,7 +12,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
       role="tablist"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 bCIKb"
+        class="StyledBox-sc-13pk1d4-0 jMVPxm"
       >
         <div
           class="StyledBox-sc-13pk1d4-0 jGFgVw StyledTabs__StyledTabsHeader-sc-a4fwxl-0 gzVA-ds"
