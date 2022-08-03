@@ -4,13 +4,18 @@ import { normalizeColor } from 'grommet/utils';
 import * as clusterDetailUtils from 'MAPI/clusters/ClusterDetail/utils';
 import ClusterStatusComponent from 'MAPI/clusters/ClusterStatus/ClusterStatus';
 import { useClusterStatus } from 'MAPI/clusters/hooks/useClusterStatus';
+import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissionsForCPNodes';
 import { ClusterStatus, getClusterConditions } from 'MAPI/clusters/utils';
 import {
   getSupportedUpgradeVersions,
   reduceReleaseToComponents,
 } from 'MAPI/releases/utils';
-import { ProviderCluster } from 'MAPI/types';
-import { extractErrorMessage } from 'MAPI/utils';
+import { ControlPlaneNode, ProviderCluster } from 'MAPI/types';
+import {
+  extractErrorMessage,
+  fetchControlPlaneNodesForCluster,
+  fetchControlPlaneNodesForClusterKey,
+} from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -79,6 +84,7 @@ interface IClusterDetailWidgetReleaseProps
 
 const ClusterDetailWidgetRelease: React.FC<
   React.PropsWithChildren<IClusterDetailWidgetReleaseProps>
+  // eslint-disable-next-line complexity
 > = ({
   cluster,
   providerCluster,
@@ -214,6 +220,57 @@ const ClusterDetailWidgetRelease: React.FC<
   );
 
   const [upgradeModalVisible, setUpgradeModalVisible] = useState(false);
+
+  const { canList: canListControlPlaneNodes } = usePermissionsForCPNodes(
+    provider,
+    cluster?.metadata.namespace ?? ''
+  );
+
+  const controlPlaneNodesKey =
+    cluster && canListControlPlaneNodes
+      ? fetchControlPlaneNodesForClusterKey(cluster)
+      : null;
+
+  const {
+    data: controlPlaneNodes,
+    error: controlPlaneNodesError,
+    isValidating: controlPlaneNodesIsValidating,
+  } = useSWR<ControlPlaneNode[], GenericResponseError>(
+    controlPlaneNodesKey,
+    () => fetchControlPlaneNodesForCluster(clientFactory, auth, cluster!)
+  );
+
+  const controlPlaneNodesIsLoading =
+    typeof cluster === 'undefined' ||
+    (typeof controlPlaneNodes === 'undefined' &&
+      typeof controlPlaneNodesError === 'undefined' &&
+      controlPlaneNodesIsValidating);
+
+  useEffect(() => {
+    if (controlPlaneNodesError) {
+      ErrorReporter.getInstance().notify(controlPlaneNodesError);
+    }
+  }, [controlPlaneNodesError]);
+
+  const controlPlaneNodesStats = useMemo(() => {
+    if (controlPlaneNodesIsLoading) {
+      return {
+        totalCount: undefined,
+        readyCount: undefined,
+        availabilityZones: undefined,
+      };
+    }
+
+    if (typeof controlPlaneNodes === 'undefined' || !canListControlPlaneNodes) {
+      return {
+        totalCount: -1,
+        readyCount: -1,
+        availabilityZones: [],
+      };
+    }
+
+    return clusterDetailUtils.computeControlPlaneNodesStats(controlPlaneNodes);
+  }, [canListControlPlaneNodes, controlPlaneNodes, controlPlaneNodesIsLoading]);
 
   const handleUpgradeModalClose = () => {
     setUpgradeModalVisible(false);
@@ -391,12 +448,13 @@ const ClusterDetailWidgetRelease: React.FC<
         />
       )}
 
-      {currentRelease && targetRelease && (
+      {currentRelease && targetRelease && controlPlaneNodesStats.totalCount && (
         <ClusterDetailUpgradeModal
           visible={upgradeModalVisible}
           onClose={handleUpgradeModalClose}
           fromRelease={currentRelease}
           toRelease={targetRelease}
+          controlPlaneNodesCount={controlPlaneNodesStats.totalCount}
           onUpgrade={upgradeCluster}
         />
       )}

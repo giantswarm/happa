@@ -2,11 +2,13 @@ import { Box, Paragraph, Text } from 'grommet';
 import * as docs from 'model/constants/docs';
 import React from 'react';
 
-interface IClusterDetailUpgradeModalDisclaimerProps {}
+interface IClusterDetailUpgradeModalDisclaimerProps {
+  controlPlaneNodesCount: number;
+}
 
 const ClusterDetailUpgradeModalDisclaimer: React.FC<
   React.PropsWithChildren<IClusterDetailUpgradeModalDisclaimerProps>
-> = () => {
+> = ({ controlPlaneNodesCount }) => {
   return (
     <Box direction='column'>
       <Paragraph fill={true}>
@@ -26,13 +28,15 @@ const ClusterDetailUpgradeModalDisclaimer: React.FC<
         to ensure the cluster and workloads are{' '}
         <Text weight='bold'>prepared for an upgrade</Text>.
       </Paragraph>
-      <Paragraph fill={true}>
-        As this cluster has one master node, the{' '}
-        <Text weight='bold'>
-          Kubernetes API will be unavailable for a few minutes
-        </Text>{' '}
-        during the upgrade.
-      </Paragraph>
+      {controlPlaneNodesCount === 1 && (
+        <Paragraph fill={true}>
+          As this cluster has one master node, the{' '}
+          <Text weight='bold'>
+            Kubernetes API will be unavailable for a few minutes
+          </Text>{' '}
+          during the upgrade.
+        </Paragraph>
+      )}
     </Box>
   );
 };
