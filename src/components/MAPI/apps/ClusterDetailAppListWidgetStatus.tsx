@@ -1,7 +1,7 @@
-import { Text } from 'grommet';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React from 'react';
 import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppListWidget';
+import ClusterDetailAppStatus from 'UI/Display/MAPI/apps/ClusterDetailAppStatus';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
 interface IClusterDetailAppListWidgetStatusProps
@@ -15,14 +15,12 @@ interface IClusterDetailAppListWidgetStatusProps
 const ClusterDetailAppListWidgetStatus: React.FC<
   React.PropsWithChildren<IClusterDetailAppListWidgetStatusProps>
 > = ({ app, ...props }) => {
-  let status: string | undefined = '';
-  if (!app) status = undefined;
-  if (app?.status?.release.status) status = app.status.release.status;
+  const status = app ? applicationv1alpha1.getAppStatus(app) : undefined;
 
   return (
     <ClusterDetailAppListWidget title='Status' titleColor='text' {...props}>
       <OptionalValue value={status} loaderWidth={100}>
-        {(value) => <Text aria-label={`App status: ${value}`}>{value}</Text>}
+        {(value) => <ClusterDetailAppStatus status={value} />}
       </OptionalValue>
     </ClusterDetailAppListWidget>
   );
