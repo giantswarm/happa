@@ -49,11 +49,16 @@ function formatPrimaryButtonText(pane: ClusterDetailUpgradeModalPane) {
 function formatVisiblePane(
   pane: ClusterDetailUpgradeModalPane,
   fromRelease: releasev1alpha1.IRelease,
-  toRelease: releasev1alpha1.IRelease
+  toRelease: releasev1alpha1.IRelease,
+  controlPlaneNodesCount: number
 ) {
   switch (pane) {
     case ClusterDetailUpgradeModalPane.Disclaimer:
-      return <ClusterDetailUpgradeModalDisclaimer />;
+      return (
+        <ClusterDetailUpgradeModalDisclaimer
+          controlPlaneNodesCount={controlPlaneNodesCount}
+        />
+      );
 
     case ClusterDetailUpgradeModalPane.Changelog:
       return (
@@ -71,6 +76,7 @@ function formatVisiblePane(
 interface IClusterDetailUpgradeModalProps {
   fromRelease: releasev1alpha1.IRelease;
   toRelease: releasev1alpha1.IRelease;
+  controlPlaneNodesCount: number;
   onClose: () => void;
   onUpgrade: () => Promise<void>;
   visible?: boolean;
@@ -78,7 +84,14 @@ interface IClusterDetailUpgradeModalProps {
 
 const ClusterDetailUpgradeModal: React.FC<
   React.PropsWithChildren<IClusterDetailUpgradeModalProps>
-> = ({ fromRelease, toRelease, onUpgrade, visible, onClose }) => {
+> = ({
+  fromRelease,
+  toRelease,
+  controlPlaneNodesCount,
+  onUpgrade,
+  visible,
+  onClose,
+}) => {
   const [currentPane, setCurrentPane] = useState(
     ClusterDetailUpgradeModalPane.Disclaimer
   );
@@ -89,7 +102,13 @@ const ClusterDetailUpgradeModal: React.FC<
   );
   const primaryButtonText = formatPrimaryButtonText(currentPane);
   const visiblePane = useMemo(
-    () => formatVisiblePane(currentPane, fromRelease, toRelease),
+    () =>
+      formatVisiblePane(
+        currentPane,
+        fromRelease,
+        toRelease,
+        controlPlaneNodesCount
+      ),
     [currentPane, fromRelease, toRelease]
   );
 
