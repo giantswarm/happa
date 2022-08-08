@@ -1,6 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissionsForCPNodes';
+import { hasClusterAppLabel } from 'MAPI/clusters/utils';
 import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { ClusterList } from 'MAPI/types';
 import {
@@ -18,7 +19,7 @@ import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
 import { organizationsLoadMAPI } from 'model/stores/organization/actions';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useSWR from 'swr';
 import CLIGuidesList from 'UI/Display/MAPI/CLIGuide/CLIGuidesList';
@@ -38,6 +39,8 @@ import {
   fetchClustersSummaryKey,
   fetchReleasesSummary,
   fetchReleasesSummaryKey,
+  fetchVersionsSummary,
+  fetchVersionsSummaryKey,
 } from './utils';
 
 interface IOrganizationDetailGeneralProps {
@@ -188,6 +191,31 @@ const OrganizationDetailGeneral: React.FC<
     }
   }, [releasesSummaryError]);
 
+  const hasClusterApp = useMemo(() => {
+    if (!clusterList) return undefined;
+
+    return clusterList.items.some((cluster) => hasClusterAppLabel(cluster));
+  }, [clusterList]);
+
+  const versionsSummaryKey = hasClusterApp
+    ? () => fetchVersionsSummaryKey(clusterList?.items)
+    : null;
+
+  const {
+    data: versionsSummary,
+    isValidating: versionsSummaryIsValidating,
+    error: versionsSummaryError,
+  } = useSWR<ui.IOrganizationDetailVersionsSummary, GenericResponseError>(
+    versionsSummaryKey,
+    () => fetchVersionsSummary(clientFactory, auth, clusterList!.items)
+  );
+
+  useEffect(() => {
+    if (versionsSummaryError) {
+      ErrorReporter.getInstance().notify(versionsSummaryError);
+    }
+  }, [versionsSummaryError]);
+
   const {
     data: appsSummary,
     isValidating: appsSummaryIsValidating,
@@ -225,6 +253,11 @@ const OrganizationDetailGeneral: React.FC<
           typeof releasesSummary === 'undefined' && releasesSummaryIsValidating
         }
         isReleasesSupported={isReleasesSupportedByProvider}
+        versionsSummary={versionsSummary}
+        versionsSummaryLoading={
+          typeof versionsSummary === 'undefined' && versionsSummaryIsValidating
+        }
+        hasClusterApp={hasClusterApp}
         appsSummary={appsSummary}
         appsSummaryLoading={
           typeof appsSummary === 'undefined' && appsSummaryIsValidating
