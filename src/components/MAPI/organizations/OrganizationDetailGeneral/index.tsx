@@ -7,6 +7,7 @@ import {
   extractErrorMessage,
   fetchClusterList,
   fetchClusterListKey,
+  supportsReleases,
 } from 'MAPI/utils';
 import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -165,10 +166,12 @@ const OrganizationDetailGeneral: React.FC<
   }, [clustersSummaryError]);
 
   const releasesPermissions = usePermissionsForReleases(provider, 'default');
+  const isReleasesSupportedByProvider = supportsReleases(provider);
 
-  const releasesSummaryKey = releasesPermissions.canGet
-    ? () => fetchReleasesSummaryKey(clusterList?.items)
-    : null;
+  const releasesSummaryKey =
+    releasesPermissions.canGet && isReleasesSupportedByProvider
+      ? () => fetchReleasesSummaryKey(clusterList?.items)
+      : null;
 
   const {
     data: releasesSummary,
@@ -221,6 +224,7 @@ const OrganizationDetailGeneral: React.FC<
         releasesSummaryLoading={
           typeof releasesSummary === 'undefined' && releasesSummaryIsValidating
         }
+        isReleasesSupported={isReleasesSupportedByProvider}
         appsSummary={appsSummary}
         appsSummaryLoading={
           typeof appsSummary === 'undefined' && appsSummaryIsValidating

@@ -36,6 +36,7 @@ interface IOrganizationDetailPageProps {
   clustersSummaryLoading?: boolean;
   releasesSummary?: IOrganizationDetailReleasesSummary;
   releasesSummaryLoading?: boolean;
+  isReleasesSupported?: boolean;
   appsSummary?: IOrganizationDetailAppsSummary;
   appsSummaryLoading?: boolean;
 }
@@ -53,6 +54,7 @@ const OrganizationDetailPage: React.FC<
   clustersSummaryLoading,
   releasesSummary,
   releasesSummaryLoading,
+  isReleasesSupported,
   appsSummary,
   appsSummaryLoading,
 }) => {
@@ -129,64 +131,66 @@ const OrganizationDetailPage: React.FC<
           </Box>
         </Box>
       </Box>
-      <Box direction='row' gap='large'>
-        <Box width='small'>
-          <Text weight='bold' size='large' margin='none'>
-            Releases
-          </Text>
-        </Box>
-        <Box direction='row' gap='small'>
-          <Box width='medium' direction='column' gap='xsmall'>
-            <Text>Oldest release</Text>
-            <Text>Newest release</Text>
-            <Text>Releases in use</Text>
+      {isReleasesSupported && (
+        <Box direction='row' gap='large'>
+          <Box width='small'>
+            <Text weight='bold' size='large' margin='none'>
+              Releases
+            </Text>
           </Box>
-          <Box direction='column' gap='xsmall'>
-            <Box direction='row' gap='small'>
+          <Box direction='row' gap='small'>
+            <Box width='medium' direction='column' gap='xsmall'>
+              <Text>Oldest release</Text>
+              <Text>Newest release</Text>
+              <Text>Releases in use</Text>
+            </Box>
+            <Box direction='column' gap='xsmall'>
+              <Box direction='row' gap='small'>
+                <OrganizationDetailStatistic
+                  isLoading={releasesSummaryLoading}
+                  aria-label='Oldest release'
+                >
+                  {releasesSummary?.oldestReleaseVersion}
+                </OrganizationDetailStatistic>
+                <OrganizationDetailStatistic
+                  isLoading={releasesSummaryLoading}
+                  aria-label='Oldest release Kubernetes version'
+                >
+                  <KubernetesVersionLabel
+                    version={oldestReleaseK8sVersion}
+                    eolDate={oldestReleaseK8sVersionEOLDate}
+                    hidePatchVersion={true}
+                  />
+                </OrganizationDetailStatistic>
+              </Box>
+              <Box direction='row' gap='small'>
+                <OrganizationDetailStatistic
+                  isLoading={releasesSummaryLoading}
+                  aria-label='Newest release'
+                >
+                  {releasesSummary?.newestReleaseVersion}
+                </OrganizationDetailStatistic>
+                <OrganizationDetailStatistic
+                  isLoading={releasesSummaryLoading}
+                  aria-label='Newest release Kubernetes version'
+                >
+                  <KubernetesVersionLabel
+                    version={newestReleaseK8sVersion}
+                    eolDate={newestReleaseK8sVersionEOLDate}
+                    hidePatchVersion={true}
+                  />
+                </OrganizationDetailStatistic>
+              </Box>
               <OrganizationDetailStatistic
                 isLoading={releasesSummaryLoading}
-                aria-label='Oldest release'
+                aria-label='Releases in use'
               >
-                {releasesSummary?.oldestReleaseVersion}
-              </OrganizationDetailStatistic>
-              <OrganizationDetailStatistic
-                isLoading={releasesSummaryLoading}
-                aria-label='Oldest release Kubernetes version'
-              >
-                <KubernetesVersionLabel
-                  version={oldestReleaseK8sVersion}
-                  eolDate={oldestReleaseK8sVersionEOLDate}
-                  hidePatchVersion={true}
-                />
+                {releasesSummary?.releasesInUseCount}
               </OrganizationDetailStatistic>
             </Box>
-            <Box direction='row' gap='small'>
-              <OrganizationDetailStatistic
-                isLoading={releasesSummaryLoading}
-                aria-label='Newest release'
-              >
-                {releasesSummary?.newestReleaseVersion}
-              </OrganizationDetailStatistic>
-              <OrganizationDetailStatistic
-                isLoading={releasesSummaryLoading}
-                aria-label='Newest release Kubernetes version'
-              >
-                <KubernetesVersionLabel
-                  version={newestReleaseK8sVersion}
-                  eolDate={newestReleaseK8sVersionEOLDate}
-                  hidePatchVersion={true}
-                />
-              </OrganizationDetailStatistic>
-            </Box>
-            <OrganizationDetailStatistic
-              isLoading={releasesSummaryLoading}
-              aria-label='Releases in use'
-            >
-              {releasesSummary?.releasesInUseCount}
-            </OrganizationDetailStatistic>
           </Box>
         </Box>
-      </Box>
+      )}
       <Box direction='row' gap='large'>
         <Box width='small'>
           <Text weight='bold' size='large' margin='none'>
