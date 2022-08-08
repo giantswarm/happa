@@ -19,3 +19,12 @@ export interface IOrganizationDetailAppsSummary {
   appsInUseCount?: number;
   appDeploymentsCount?: number;
 }
+
+export interface IOrganizationDetailVersionsSummary {
+  oldestClusterAppVersion?: string;
+  newestClusterAppVersion?: string;
+  clusterAppVersionsInUseCount?: number;
+  oldestK8sVersion?: string;
+  newestK8sVersion?: string;
+  k8sVersionsInUseCount?: number;
+}
