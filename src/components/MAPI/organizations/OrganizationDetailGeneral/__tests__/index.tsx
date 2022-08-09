@@ -830,6 +830,12 @@ describe('OrganizationDetailGeneral on GCP', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machines/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterListGCP.items[0].metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3D`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterGCP1MachineList);
+
+    nock(window.config.mapiEndpoint)
+      .get(
         `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/gcpmachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterListGCP.items[0].metadata.name}%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
       )
       .reply(
@@ -892,6 +898,24 @@ describe('OrganizationDetailGeneral on GCP', () => {
     await waitFor(() =>
       expect(screen.getByLabelText('CPU in worker nodes')).toHaveTextContent(
         '12'
+      )
+    );
+
+    // Releases.
+    expect(screen.queryByText('Releases')).not.toBeInTheDocument();
+
+    // Versions.
+    await waitFor(() =>
+      expect(screen.getByText('Versions')).toBeInTheDocument()
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Cluster app version')).toHaveTextContent(
+        '0.15.1, 0.15.2'
+      )
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Kubernetes version')).toHaveTextContent(
+        '1.22'
       )
     );
   });
