@@ -768,7 +768,7 @@ export function compareApps(
     return -1;
   }
 
-  return a.metadata.name.localeCompare(b.metadata.name);
+  return a.spec.name.localeCompare(b.spec.name);
 }
 
 export function formatYAMLError(err: unknown): string {
