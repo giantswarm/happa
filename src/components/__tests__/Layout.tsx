@@ -90,7 +90,6 @@ describe('Layout', () => {
         kind: 'SelfSubjectAccessReview',
         spec: {
           resourceAttributes: {
-            namespace: 'default',
             verb: 'list',
             group: 'security.giantswarm.io',
             resource: 'organizations',

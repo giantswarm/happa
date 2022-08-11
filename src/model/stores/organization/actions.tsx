@@ -106,7 +106,6 @@ export function organizationsLoadMAPI(
       let canList = false;
       const request: authorizationv1.ISelfSubjectAccessReviewSpec = {
         resourceAttributes: {
-          namespace: 'default',
           verb: 'list',
           group: 'security.giantswarm.io',
           resource: 'organizations',
