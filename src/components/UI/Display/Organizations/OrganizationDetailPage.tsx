@@ -1,6 +1,7 @@
 import { Box, Text } from 'grommet';
 import OrganizationDetailDelete from 'MAPI/organizations/OrganizationDetailDelete';
 import React from 'react';
+import Truncated from 'UI/Util/Truncated';
 import { getK8sVersionEOLDate } from 'utils/config';
 import { getHumanReadableMemory } from 'utils/helpers';
 
@@ -10,6 +11,7 @@ import {
   IOrganizationDetailAppsSummary,
   IOrganizationDetailClustersSummary,
   IOrganizationDetailReleasesSummary,
+  IOrganizationDetailVersionsSummary,
 } from './types';
 
 function formatMemory(value?: number): string | undefined {
@@ -25,6 +27,131 @@ function formatCPU(value?: number): number | undefined {
   return Math.round(value);
 }
 
+function formatClusterAppVersionsInfo(
+  versionsSummary: IOrganizationDetailVersionsSummary
+): React.ReactNode {
+  const {
+    oldestClusterAppVersion,
+    newestClusterAppVersion,
+    clusterAppVersionsInUseCount,
+  } = versionsSummary;
+
+  if (
+    typeof oldestClusterAppVersion === 'undefined' ||
+    typeof newestClusterAppVersion === 'undefined' ||
+    typeof clusterAppVersionsInUseCount === 'undefined'
+  ) {
+    return undefined;
+  }
+
+  switch (clusterAppVersionsInUseCount) {
+    case 0:
+      return undefined;
+    case 1:
+      return (
+        <Truncated numStart={8} numEnd={3}>
+          {newestClusterAppVersion}
+        </Truncated>
+      );
+    case 2:
+      return (
+        <>
+          <Truncated numStart={8} numEnd={3}>
+            {oldestClusterAppVersion}
+          </Truncated>
+          ,{' '}
+          <Truncated numStart={8} numEnd={3}>
+            {newestClusterAppVersion}
+          </Truncated>
+        </>
+      );
+    default:
+      return (
+        <>
+          {clusterAppVersionsInUseCount} versions in use, oldest{' '}
+          <Truncated numStart={8} numEnd={3}>
+            {oldestClusterAppVersion}
+          </Truncated>
+          , newest{' '}
+          <Truncated numStart={8} numEnd={3}>
+            {newestClusterAppVersion}
+          </Truncated>
+        </>
+      );
+  }
+}
+
+function formatK8sVersionsInfo(
+  versionsSummary: IOrganizationDetailVersionsSummary
+): React.ReactNode {
+  const { oldestK8sVersion, newestK8sVersion, k8sVersionsInUseCount } =
+    versionsSummary;
+
+  if (
+    typeof oldestK8sVersion === 'undefined' ||
+    typeof newestK8sVersion === 'undefined' ||
+    typeof k8sVersionsInUseCount === 'undefined'
+  ) {
+    return undefined;
+  }
+
+  const oldestReleaseK8sVersionEOLDate =
+    getK8sVersionEOLDate(oldestK8sVersion) ?? undefined;
+  const newestReleaseK8sVersionEOLDate =
+    getK8sVersionEOLDate(newestK8sVersion) ?? undefined;
+
+  switch (k8sVersionsInUseCount) {
+    case 0:
+      return undefined;
+    case 1:
+      return (
+        <KubernetesVersionLabel
+          version={newestK8sVersion}
+          eolDate={newestReleaseK8sVersionEOLDate}
+          hidePatchVersion={true}
+          hideIcon={true}
+        />
+      );
+    case 2:
+      return (
+        <>
+          <KubernetesVersionLabel
+            version={oldestK8sVersion}
+            eolDate={oldestReleaseK8sVersionEOLDate}
+            hidePatchVersion={true}
+            hideIcon={true}
+          />
+          ,{' '}
+          <KubernetesVersionLabel
+            version={newestK8sVersion}
+            eolDate={newestReleaseK8sVersionEOLDate}
+            hidePatchVersion={true}
+            hideIcon={true}
+          />
+        </>
+      );
+    default:
+      return (
+        <>
+          {k8sVersionsInUseCount} versions in use, oldest{' '}
+          <KubernetesVersionLabel
+            version={oldestK8sVersion}
+            eolDate={oldestReleaseK8sVersionEOLDate}
+            hidePatchVersion={true}
+            hideIcon={true}
+          />
+          , newest{' '}
+          <KubernetesVersionLabel
+            version={newestK8sVersion}
+            eolDate={newestReleaseK8sVersionEOLDate}
+            hidePatchVersion={true}
+            hideIcon={true}
+          />
+        </>
+      );
+  }
+}
+
 interface IOrganizationDetailPageProps {
   organizationName: string;
   organizationNamespace: string;
@@ -36,6 +163,10 @@ interface IOrganizationDetailPageProps {
   clustersSummaryLoading?: boolean;
   releasesSummary?: IOrganizationDetailReleasesSummary;
   releasesSummaryLoading?: boolean;
+  isReleasesSupported?: boolean;
+  versionsSummary?: IOrganizationDetailVersionsSummary;
+  versionsSummaryLoading?: boolean;
+  hasClusterApp?: boolean;
   appsSummary?: IOrganizationDetailAppsSummary;
   appsSummaryLoading?: boolean;
 }
@@ -53,6 +184,10 @@ const OrganizationDetailPage: React.FC<
   clustersSummaryLoading,
   releasesSummary,
   releasesSummaryLoading,
+  isReleasesSupported,
+  versionsSummary,
+  versionsSummaryLoading,
+  hasClusterApp,
   appsSummary,
   appsSummaryLoading,
 }) => {
@@ -129,64 +264,99 @@ const OrganizationDetailPage: React.FC<
           </Box>
         </Box>
       </Box>
-      <Box direction='row' gap='large'>
-        <Box width='small'>
-          <Text weight='bold' size='large' margin='none'>
-            Releases
-          </Text>
-        </Box>
-        <Box direction='row' gap='small'>
-          <Box width='medium' direction='column' gap='xsmall'>
-            <Text>Oldest release</Text>
-            <Text>Newest release</Text>
-            <Text>Releases in use</Text>
+      {hasClusterApp && (
+        <Box direction='row' gap='large'>
+          <Box width='small'>
+            <Text weight='bold' size='large' margin='none'>
+              Versions
+            </Text>
           </Box>
-          <Box direction='column' gap='xsmall'>
-            <Box direction='row' gap='small'>
+          <Box direction='row' gap='small'>
+            <Box width='medium' direction='column' gap='xsmall'>
+              <Text>Cluster app</Text>
+              <Text>Kubernetes</Text>
+            </Box>
+            <Box direction='column' gap='xsmall'>
               <OrganizationDetailStatistic
-                isLoading={releasesSummaryLoading}
-                aria-label='Oldest release'
+                isLoading={versionsSummaryLoading}
+                aria-label='Cluster app version'
               >
-                {releasesSummary?.oldestReleaseVersion}
+                {versionsSummary
+                  ? formatClusterAppVersionsInfo(versionsSummary)
+                  : undefined}
               </OrganizationDetailStatistic>
               <OrganizationDetailStatistic
-                isLoading={releasesSummaryLoading}
-                aria-label='Oldest release Kubernetes version'
+                isLoading={versionsSummaryLoading}
+                aria-label='Kubernetes version'
               >
-                <KubernetesVersionLabel
-                  version={oldestReleaseK8sVersion}
-                  eolDate={oldestReleaseK8sVersionEOLDate}
-                  hidePatchVersion={true}
-                />
+                {versionsSummary
+                  ? formatK8sVersionsInfo(versionsSummary)
+                  : undefined}
               </OrganizationDetailStatistic>
             </Box>
-            <Box direction='row' gap='small'>
-              <OrganizationDetailStatistic
-                isLoading={releasesSummaryLoading}
-                aria-label='Newest release'
-              >
-                {releasesSummary?.newestReleaseVersion}
-              </OrganizationDetailStatistic>
-              <OrganizationDetailStatistic
-                isLoading={releasesSummaryLoading}
-                aria-label='Newest release Kubernetes version'
-              >
-                <KubernetesVersionLabel
-                  version={newestReleaseK8sVersion}
-                  eolDate={newestReleaseK8sVersionEOLDate}
-                  hidePatchVersion={true}
-                />
-              </OrganizationDetailStatistic>
-            </Box>
-            <OrganizationDetailStatistic
-              isLoading={releasesSummaryLoading}
-              aria-label='Releases in use'
-            >
-              {releasesSummary?.releasesInUseCount}
-            </OrganizationDetailStatistic>
           </Box>
         </Box>
-      </Box>
+      )}
+      {isReleasesSupported && (
+        <Box direction='row' gap='large'>
+          <Box width='small'>
+            <Text weight='bold' size='large' margin='none'>
+              Releases
+            </Text>
+          </Box>
+          <Box direction='row' gap='small'>
+            <Box width='medium' direction='column' gap='xsmall'>
+              <Text>Oldest release</Text>
+              <Text>Newest release</Text>
+              <Text>Releases in use</Text>
+            </Box>
+            <Box direction='column' gap='xsmall'>
+              <Box direction='row' gap='small'>
+                <OrganizationDetailStatistic
+                  isLoading={releasesSummaryLoading}
+                  aria-label='Oldest release'
+                >
+                  {releasesSummary?.oldestReleaseVersion}
+                </OrganizationDetailStatistic>
+                <OrganizationDetailStatistic
+                  isLoading={releasesSummaryLoading}
+                  aria-label='Oldest release Kubernetes version'
+                >
+                  <KubernetesVersionLabel
+                    version={oldestReleaseK8sVersion}
+                    eolDate={oldestReleaseK8sVersionEOLDate}
+                    hidePatchVersion={true}
+                  />
+                </OrganizationDetailStatistic>
+              </Box>
+              <Box direction='row' gap='small'>
+                <OrganizationDetailStatistic
+                  isLoading={releasesSummaryLoading}
+                  aria-label='Newest release'
+                >
+                  {releasesSummary?.newestReleaseVersion}
+                </OrganizationDetailStatistic>
+                <OrganizationDetailStatistic
+                  isLoading={releasesSummaryLoading}
+                  aria-label='Newest release Kubernetes version'
+                >
+                  <KubernetesVersionLabel
+                    version={newestReleaseK8sVersion}
+                    eolDate={newestReleaseK8sVersionEOLDate}
+                    hidePatchVersion={true}
+                  />
+                </OrganizationDetailStatistic>
+              </Box>
+              <OrganizationDetailStatistic
+                isLoading={releasesSummaryLoading}
+                aria-label='Releases in use'
+              >
+                {releasesSummary?.releasesInUseCount}
+              </OrganizationDetailStatistic>
+            </Box>
+          </Box>
+        </Box>
+      )}
       <Box direction='row' gap='large'>
         <Box width='small'>
           <Text weight='bold' size='large' margin='none'>

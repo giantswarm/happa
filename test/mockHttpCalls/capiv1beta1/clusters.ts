@@ -207,7 +207,7 @@ export const randomClusterGCP2: capiv1beta1.ICluster = {
     labels: {
       app: 'cluster-gcp',
       'app.kubernetes.io/managed-by': 'Helm',
-      'app.kubernetes.io/version': '0.15.1',
+      'app.kubernetes.io/version': '0.15.2',
       'application.giantswarm.io/team': 'phoenix',
       'cluster-apps-operator.giantswarm.io/watching': '',
       'cluster.x-k8s.io/cluster-name': 'g9h9j',

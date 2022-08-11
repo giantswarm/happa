@@ -1,3 +1,7 @@
+import {
+  fetchControlPlaneNodesK8sVersions,
+  hasClusterAppLabel,
+} from 'MAPI/clusters/utils';
 import { IPermissions } from 'MAPI/permissions/types';
 import { ControlPlaneNode, NodePool } from 'MAPI/types';
 import {
@@ -441,4 +445,94 @@ export function fetchAppsSummaryKey(
   );
 
   return `fetchAppsSummary/${clusterKeys.join()}`;
+}
+
+/**
+ * Get statistics about the cluster app and Kubernetes versions of the given clusters.
+ * @param httpClientFactory
+ * @param auth
+ * @param clusters
+ */
+export async function fetchVersionsSummary(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  clusters: capiv1beta1.ICluster[]
+): Promise<ui.IOrganizationDetailVersionsSummary> {
+  const summary: ui.IOrganizationDetailVersionsSummary = {};
+
+  // cluster app versions
+  let clusterAppVersions: string[] = [];
+  for (const cluster of clusters) {
+    if (!hasClusterAppLabel(cluster)) continue;
+    const version = capiv1beta1.getClusterAppVersion(cluster);
+    if (!version) continue;
+
+    clusterAppVersions.push(version);
+  }
+  clusterAppVersions = clusterAppVersions.sort(compare);
+
+  summary.clusterAppVersionsInUseCount = new Set(clusterAppVersions).size;
+
+  if (summary.clusterAppVersionsInUseCount < 1) return Promise.resolve(summary);
+
+  summary.oldestClusterAppVersion = clusterAppVersions[0];
+  summary.newestClusterAppVersion =
+    clusterAppVersions[clusterAppVersions.length - 1];
+
+  // Get all Kubernetes versions of the clusters
+  let k8sVersions: string[] = [];
+  const responses = await Promise.allSettled(
+    clusters.map((cluster) => {
+      return fetchControlPlaneNodesK8sVersions(
+        httpClientFactory,
+        auth,
+        cluster
+      );
+    })
+  );
+
+  for (const response of responses) {
+    if (
+      response.status === 'rejected' &&
+      !metav1.isStatusError(
+        (response.reason as GenericResponse).data,
+        metav1.K8sStatusErrorReasons.Forbidden
+      )
+    ) {
+      ErrorReporter.getInstance().notify(response.reason as Error);
+    }
+
+    if (response.status === 'fulfilled' && response.value.length > 0) {
+      for (const version of response.value) {
+        k8sVersions.push(version.slice(1));
+      }
+    }
+  }
+
+  k8sVersions = k8sVersions.sort(compare);
+
+  summary.k8sVersionsInUseCount = new Set(k8sVersions).size;
+
+  if (summary.clusterAppVersionsInUseCount < 1) return Promise.resolve(summary);
+
+  summary.oldestK8sVersion = k8sVersions[0];
+  summary.newestK8sVersion = k8sVersions[k8sVersions.length - 1];
+
+  return summary;
+}
+
+/**
+ * The key used for caching the versions summary.
+ * @param clusters
+ */
+export function fetchVersionsSummaryKey(
+  clusters?: capiv1beta1.ICluster[]
+): string | null {
+  if (!clusters) return null;
+
+  const clusterKeys = clusters.map(
+    (c) => `${c.metadata.namespace}/${c.metadata.name}`
+  );
+
+  return `fetchVersionsSummary/${clusterKeys.join()}`;
 }
