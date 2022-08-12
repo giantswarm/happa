@@ -910,44 +910,31 @@ export function getNodePoolScaling(
   const nodePoolReleaseVersion =
     nodePool.metadata.labels?.[capiv1beta1.labelReleaseVersion];
 
+  const status: INodesStatus = {
+    min: -1,
+    max: -1,
+    desired: nodePool.status?.replicas ?? -1,
+    current: nodePool.status?.readyReplicas ?? -1,
+  };
+
   switch (true) {
     // CAPZ alpha
     case nodePoolReleaseVersion &&
       compare(nodePoolReleaseVersion, Constants.AZURE_CAPZ_VERSION) >= 0: {
-      const status: INodesStatus = {
-        min: -1,
-        max: -1,
-        desired: -1,
-        current: -1,
-      };
-
       if (providerNodePool) {
         [status.min, status.max] = capzv1beta1.getAzureMachinePoolScaling(
           providerNodePool as capzv1beta1.IAzureMachinePool
         );
       }
 
-      status.desired = nodePool.status?.replicas ?? -1;
-      status.current = nodePool.status?.readyReplicas ?? -1;
-
       return status;
     }
 
     // Azure
     case kind === capiv1beta1.MachinePool: {
-      const status: INodesStatus = {
-        min: -1,
-        max: -1,
-        desired: -1,
-        current: -1,
-      };
-
       [status.min, status.max] = capiv1beta1.getMachinePoolScaling(
         nodePool as capiv1beta1.IMachinePool
       );
-
-      status.desired = nodePool.status?.replicas ?? -1;
-      status.current = nodePool.status?.readyReplicas ?? -1;
 
       return status;
     }
@@ -955,20 +942,22 @@ export function getNodePoolScaling(
     // AWS
     case kind === capiv1beta1.MachineDeployment &&
       providerNodePoolKind === infrav1alpha3.AWSMachineDeployment: {
-      return {
-        min:
-          (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec
-            .nodePool.scaling.min ?? -1,
-        max:
-          (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec
-            .nodePool.scaling.max ?? -1,
-        desired: nodePool.status?.replicas ?? -1,
-        current: nodePool.status?.readyReplicas ?? -1,
-      };
+      status.min =
+        (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec.nodePool
+          .scaling.min ?? -1;
+      status.max =
+        (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec.nodePool
+          .scaling.max ?? -1;
+
+      return status;
     }
 
+    // GCP
+    case kind === capiv1beta1.MachineDeployment:
+      return status;
+
     default:
-      return { min: -1, max: -1, desired: -1, current: -1 };
+      return status;
   }
 }
 
