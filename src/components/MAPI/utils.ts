@@ -805,7 +805,10 @@ export function getProviderNodePoolMachineTypes(
   providerNodePool: ProviderNodePool
 ): NodePoolMachineTypes | undefined {
   switch (providerNodePool?.kind) {
-    case capzexpv1alpha3.AzureMachinePool:
+    case capgv1beta1.GCPMachineTemplate:
+      return {
+        primary: providerNodePool.spec?.template.spec.instanceType ?? '',
+      };
     case capzv1beta1.AzureMachinePool:
       return { primary: providerNodePool.spec?.template.vmSize ?? '' };
     case infrav1alpha3.AWSMachineDeployment:

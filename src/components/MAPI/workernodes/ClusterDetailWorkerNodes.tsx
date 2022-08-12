@@ -105,6 +105,7 @@ function formatMachineTypeColumnTitle(
 ) {
   switch (provider) {
     case Providers.AWS:
+    case Providers.GCP:
       return 'Instance type';
     case Providers.AZURE:
       return 'VM Size';

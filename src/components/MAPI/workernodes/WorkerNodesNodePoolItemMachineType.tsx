@@ -5,6 +5,7 @@ import {
   getProviderNodePoolMachineTypes,
   INodePoolMachineTypesAWS,
 } from 'MAPI/utils';
+import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
@@ -29,6 +30,7 @@ function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
       return `VM size: ${machineTypes?.primary ?? 'n/a'}`;
 
     case infrav1alpha3.AWSMachineDeployment:
+    case capgv1beta1.GCPMachineTemplate:
       return `Instance type: ${machineTypes?.primary ?? 'n/a'}`;
 
     default:
