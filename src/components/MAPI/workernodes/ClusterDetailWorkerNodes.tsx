@@ -113,6 +113,10 @@ function formatMachineTypeColumnTitle(
   }
 }
 
+function formatAZsColumnTitle(provider: PropertiesOf<typeof Providers>) {
+  return provider === Providers.GCP ? 'Zones' : 'Availability zones';
+}
+
 function getProviderNodePoolResourceName(
   provider: PropertiesOf<typeof Providers>
 ) {
@@ -507,7 +511,7 @@ const ClusterDetailWorkerNodes: React.FC<
                   </Box>
                   <Box align='center'>
                     <Text textAlign='center' size='xsmall'>
-                      Availability zones
+                      {formatAZsColumnTitle(provider)}
                     </Text>
                   </Box>
                   <Box align='center'>

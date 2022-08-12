@@ -980,6 +980,10 @@ export function getNodePoolAvailabilityZones(
   const providerNodePoolKind = providerNodePool?.kind;
 
   switch (true) {
+    // Azure
+    case kind === capiv1beta1.MachinePool:
+      return (nodePool as capiv1beta1.IMachinePool).spec?.failureDomains ?? [];
+
     // AWS
     case kind === capiv1beta1.MachineDeployment &&
       providerNodePoolKind === infrav1alpha3.AWSMachineDeployment: {
@@ -989,9 +993,12 @@ export function getNodePoolAvailabilityZones(
       );
     }
 
-    // Azure
-    case kind === capiv1beta1.MachinePool:
-      return (nodePool as capiv1beta1.IMachinePool).spec?.failureDomains ?? [];
+    // GCP
+    case kind === capiv1beta1.MachineDeployment: {
+      const zone = nodePool.spec?.template.spec?.failureDomain;
+
+      return zone ? [zone] : [];
+    }
 
     default:
       return [];

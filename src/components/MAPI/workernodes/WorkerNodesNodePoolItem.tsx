@@ -7,10 +7,12 @@ import {
   getNodePoolDescription,
   getNodePoolScaling,
 } from 'MAPI/utils';
+import { Providers } from 'model/constants';
 import React, { useMemo, useRef, useState } from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
 import { Code } from 'styles';
+import { AvailabilityZonesLabelVariant } from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabel';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import Date from 'UI/Display/Date';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
@@ -36,12 +38,18 @@ import WorkerNodesNodePoolItemDelete from './WorkerNodesNodePoolItemDelete';
 import WorkerNodesNodePoolItemMachineType from './WorkerNodesNodePoolItemMachineType';
 import WorkerNodesNodePoolItemScale from './WorkerNodesNodePoolItemScale';
 
-function formatAvailabilityZonesLabel(zones: string[]) {
+function formatAvailabilityZonesLabel(
+  zones: string[],
+  provider: PropertiesOf<typeof Providers>
+) {
+  const availabilityZonesLabel =
+    provider === Providers.GCP ? 'Zones' : 'Availability zones';
+
   if (zones.length < 1) {
-    return 'Availability zones: not available';
+    return `${availabilityZonesLabel}: not available`;
   }
 
-  return `Availability zones: ${zones.join(', ')}`;
+  return `${availabilityZonesLabel}: ${zones.join(', ')}`;
 }
 
 const Row = styled(Box)<{
@@ -220,6 +228,8 @@ const WorkerNodesNodePoolItem: React.FC<
     setIsScaleConfirmOpen(false);
   };
 
+  const provider = window.config.info.general.provider;
+
   return (
     <Box {...props}>
       <Row
@@ -288,9 +298,17 @@ const WorkerNodesNodePoolItem: React.FC<
                 {(value) => (
                   <Box
                     direction='row'
-                    aria-label={formatAvailabilityZonesLabel(value)}
+                    aria-label={formatAvailabilityZonesLabel(value, provider)}
                   >
-                    <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
+                    <AvailabilityZonesLabels
+                      zones={value}
+                      labelsChecked={[]}
+                      variant={
+                        provider === Providers.GCP
+                          ? AvailabilityZonesLabelVariant.Zone
+                          : AvailabilityZonesLabelVariant.AvailabilityZone
+                      }
+                    />
                   </Box>
                 )}
               </OptionalValue>
