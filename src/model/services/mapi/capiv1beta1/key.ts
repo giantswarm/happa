@@ -28,6 +28,8 @@ export const annotationUpdateScheduleTargetTime =
   'alpha.giantswarm.io/update-schedule-target-time';
 export const annotationMachinePoolDescription =
   'machine-pool.giantswarm.io/name';
+export const annotationMachineDeploymentDescription =
+  'machine-deployment.giantswarm.io/name';
 export const annotationMachinePoolMinSize =
   'cluster.k8s.io/cluster-api-autoscaler-node-group-min-size';
 export const annotationMachinePoolMaxSize =

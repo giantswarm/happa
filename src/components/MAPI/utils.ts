@@ -758,6 +758,14 @@ export function getNodePoolDescription(
   const providerNodePoolKind = providerNodePool?.kind;
 
   switch (true) {
+    // Azure
+    case kind === capiv1beta1.MachinePool:
+      return (
+        nodePool.metadata.annotations?.[
+          capiv1beta1.annotationMachinePoolDescription
+        ] || defaultValue
+      );
+
     // AWS
     case kind === capiv1beta1.MachineDeployment &&
       providerNodePoolKind === infrav1alpha3.AWSMachineDeployment:
@@ -766,11 +774,11 @@ export function getNodePoolDescription(
           .description || defaultValue
       );
 
-    // Azure
-    case kind === capiv1beta1.MachinePool:
+    // GCP
+    case kind === capiv1beta1.MachineDeployment:
       return (
         nodePool.metadata.annotations?.[
-          capiv1beta1.annotationMachinePoolDescription
+          capiv1beta1.annotationMachineDeploymentDescription
         ] || defaultValue
       );
 
