@@ -118,19 +118,6 @@ function formatAZsColumnTitle(provider: PropertiesOf<typeof Providers>) {
   return provider === Providers.GCP ? 'Zones' : 'Availability zones';
 }
 
-function getProviderNodePoolResourceName(
-  provider: PropertiesOf<typeof Providers>
-) {
-  switch (provider) {
-    case Providers.AWS:
-      return 'MachineDeployment';
-    case Providers.AZURE:
-      return 'MachinePool';
-    default:
-      return 'MachinePool';
-  }
-}
-
 function getFlatcarContainerLinuxVersion(
   release: releasev1alpha1.IRelease
 ): string | undefined {
@@ -653,9 +640,7 @@ const ClusterDetailWorkerNodes: React.FC<
                 <ListNodePoolsGuide
                   clusterName={cluster.metadata.name}
                   clusterNamespace={cluster.metadata.namespace!}
-                  providerNodePoolResourceName={getProviderNodePoolResourceName(
-                    provider
-                  )}
+                  provider={provider}
                 />
 
                 {!isReadOnly && (
