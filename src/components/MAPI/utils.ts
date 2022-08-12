@@ -755,33 +755,25 @@ export function getNodePoolDescription(
   defaultValue: string = Constants.DEFAULT_NODEPOOL_DESCRIPTION
 ): string {
   const kind = nodePool.kind;
-  const apiVersion = nodePool.apiVersion;
+  const providerNodePoolKind = providerNodePool?.kind;
 
   switch (true) {
-    // Azure
-    case kind === capiexpv1alpha3.MachinePool &&
-      apiVersion === capiexpv1alpha3.ApiVersion:
+    // AWS
+    case kind === capiv1beta1.MachineDeployment &&
+      providerNodePoolKind === infrav1alpha3.AWSMachineDeployment:
       return (
-        nodePool.metadata.annotations?.[
-          capiexpv1alpha3.annotationMachinePoolDescription
-        ] || defaultValue
+        (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec.nodePool
+          .description || defaultValue
       );
 
-    // CAPZ alpha
-    case kind === capiv1beta1.MachinePool &&
-      apiVersion === capiv1beta1.ApiVersion:
+    // Azure
+    case kind === capiv1beta1.MachinePool:
       return (
         nodePool.metadata.annotations?.[
           capiv1beta1.annotationMachinePoolDescription
         ] || defaultValue
       );
 
-    // AWS
-    case kind === capiv1beta1.MachineDeployment:
-      return (
-        (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec.nodePool
-          .description || defaultValue
-      );
     default:
       return defaultValue;
   }
@@ -905,7 +897,7 @@ export function getNodePoolScaling(
   providerNodePool: ProviderNodePool | null
 ): INodesStatus {
   const kind = nodePool.kind;
-  const apiVersion = nodePool.apiVersion;
+  const providerNodePoolKind = providerNodePool?.kind;
 
   const nodePoolReleaseVersion =
     nodePool.metadata.labels?.[capiv1beta1.labelReleaseVersion];
@@ -934,28 +926,7 @@ export function getNodePoolScaling(
     }
 
     // Azure
-    case kind === capiexpv1alpha3.MachinePool &&
-      apiVersion === capiexpv1alpha3.ApiVersion: {
-      const status: INodesStatus = {
-        min: -1,
-        max: -1,
-        desired: -1,
-        current: -1,
-      };
-
-      [status.min, status.max] = capiexpv1alpha3.getMachinePoolScaling(
-        nodePool as capiexpv1alpha3.IMachinePool
-      );
-
-      status.desired = nodePool.status?.replicas ?? -1;
-      status.current = nodePool.status?.readyReplicas ?? -1;
-
-      return status;
-    }
-
-    // Azure (non-exp MachinePools)
-    case kind === capiv1beta1.MachinePool &&
-      apiVersion === capiv1beta1.ApiVersion: {
+    case kind === capiv1beta1.MachinePool: {
       const status: INodesStatus = {
         min: -1,
         max: -1,
@@ -974,7 +945,8 @@ export function getNodePoolScaling(
     }
 
     // AWS
-    case kind === capiv1beta1.MachineDeployment: {
+    case kind === capiv1beta1.MachineDeployment &&
+      providerNodePoolKind === infrav1alpha3.AWSMachineDeployment: {
       return {
         min:
           (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec
@@ -996,19 +968,22 @@ export function getNodePoolAvailabilityZones(
   nodePool: NodePool,
   providerNodePool: ProviderNodePool
 ): string[] {
-  switch (nodePool.kind) {
-    // Azure, CAPZ alpha
-    case capiexpv1alpha3.MachinePool:
-    case capiv1beta1.MachinePool:
-      return nodePool.spec?.failureDomains ?? [];
+  const kind = nodePool.kind;
+  const providerNodePoolKind = providerNodePool?.kind;
 
+  switch (true) {
     // AWS
-    case capiv1beta1.MachineDeployment: {
+    case kind === capiv1beta1.MachineDeployment &&
+      providerNodePoolKind === infrav1alpha3.AWSMachineDeployment: {
       return (
         (providerNodePool as infrav1alpha3.IAWSMachineDeployment)?.spec.provider
           .availabilityZones ?? []
       );
     }
+
+    // Azure
+    case kind === capiv1beta1.MachinePool:
+      return (nodePool as capiv1beta1.IMachinePool).spec?.failureDomains ?? [];
 
     default:
       return [];
