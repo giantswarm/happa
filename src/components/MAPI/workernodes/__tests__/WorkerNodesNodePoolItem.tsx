@@ -8,6 +8,7 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
+import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
@@ -826,5 +827,50 @@ describe('WorkerNodesNodePoolItem on AWS', () => {
     ).toBeInTheDocument();
 
     jest.clearAllTimers();
+  });
+});
+
+describe('WorkerNodesNodePoolItem on GCP', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.GCP;
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays various information about the node pool', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterGCP1MachineDeployment1,
+        providerNodePool: capgv1beta1Mocks.randomClusterGCP1GCPMachineTemplate,
+      })
+    );
+
+    expect(screen.getByLabelText('Name: m317f-worker0')).toBeInTheDocument();
+    expect(screen.getByLabelText('Description: workload')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Instance type: n2-standard-4')
+    ).toBeInTheDocument();
+
+    expect(screen.getByLabelText('Zones: europe-west3-a')).toBeInTheDocument();
+  });
+
+  it('displays the autoscaler configuration', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterGCP1MachineDeployment1,
+        providerNodePool: capgv1beta1Mocks.randomClusterGCP1GCPMachineTemplate,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Autoscaler target node count: 3')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler current node count: 3')
+    ).toBeInTheDocument();
   });
 });
