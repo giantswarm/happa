@@ -17,6 +17,7 @@ import {
   IProviderNodePoolForNodePoolName,
   isNodePoolMngmtReadOnly,
   supportsNonExpMachinePools,
+  supportsReleases,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
@@ -374,9 +375,11 @@ const ClusterDetailWorkerNodes: React.FC<
       );
     }, [nodePoolList?.items, providerNodePools]);
 
-    const clusterReleaseVersion = cluster
-      ? capiv1beta1.getReleaseVersion(cluster)
-      : undefined;
+    const isReleasesSupportedByProvider = supportsReleases(provider);
+    const clusterReleaseVersion =
+      cluster && isReleasesSupportedByProvider
+        ? capiv1beta1.getReleaseVersion(cluster)
+        : undefined;
 
     const releaseListKey =
       !hasNoNodePools && clusterReleaseVersion
