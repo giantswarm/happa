@@ -126,6 +126,18 @@ export const randomClusterAWS1AWSMachineDeployment2: infrav1alpha3.IAWSMachineDe
     },
   };
 
+// AWSMachineDeploymentList for randomClusterAWS1
+export const randomClusterAWS1AWSMachineDeploymentList: infrav1alpha3.IAWSMachineDeploymentList =
+  {
+    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    kind: 'AWSMachineDeploymentList',
+    metadata: {},
+    items: [
+      randomClusterAWS1AWSMachineDeployment1,
+      randomClusterAWS1AWSMachineDeployment2,
+    ],
+  };
+
 // AWSMachineDeployment for randomClusterAWS2's MachineDeploymentList item
 export const randomClusterAWS2AWSMachineDeployment: infrav1alpha3.IAWSMachineDeployment =
   {
