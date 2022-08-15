@@ -7,6 +7,7 @@ import nock from 'nock';
 import React from 'react';
 import Router from 'react-router';
 import { SWRConfig } from 'swr';
+import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as mockCapiv1beta1 from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
@@ -423,6 +424,66 @@ describe('ClusterDetailWorkerNodes on AWS', () => {
     expect(
       await screen.findByLabelText(
         `Name: ${mockCapiv1beta1.randomClusterAWS1MachineDeploymentList.items[1].metadata.name}`
+      )
+    ).toBeInTheDocument();
+  });
+});
+
+describe('ClusterDetailWorkerNodes on GCP', () => {
+  beforeAll(() => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+
+  beforeEach(() => {
+    useParamsMockFn.mockReturnValue({
+      orgId: 'org1',
+      clusterId: mockCapiv1beta1.randomClusterGCP1.metadata.name,
+    });
+  });
+
+  afterEach(() => {
+    useParamsMockFn.mockRestore();
+  });
+
+  it('displays a list of node pools', async () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1beta1.randomClusterGCP1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, mockCapiv1beta1.randomClusterGCP1);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinedeployments/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${mockCapiv1beta1.randomClusterGCP1.metadata.name}%2Ccluster.x-k8s.io%2Frole%21%3Dbastion`
+      )
+      .reply(
+        StatusCodes.Ok,
+        mockCapiv1beta1.randomClusterGCP1MachineDeploymentList
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/gcpmachinetemplates/${
+          mockCapiv1beta1.randomClusterGCP1MachineDeployment1.spec!.template
+            .spec.infrastructureRef.name
+        }/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capgv1beta1Mocks.randomClusterGCP1GCPMachineTemplate
+      );
+
+    render(getComponent({}));
+
+    expect(
+      await screen.findByLabelText(
+        `Name: ${mockCapiv1beta1.randomClusterGCP1MachineDeploymentList.items[0].metadata.name}`
       )
     ).toBeInTheDocument();
   });
