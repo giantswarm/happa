@@ -447,21 +447,6 @@ export function reconcileClustersAwaitingUpgrade(
   return awaitingUpgrade;
 }
 
-export function supportsOptionalIngress(
-  provider: PropertiesOf<typeof Providers>,
-  releaseVersion: string
-): boolean {
-  switch (true) {
-    case provider === Providers.AWS && compare(releaseVersion, '10.1.0') >= 0:
-    case provider === Providers.AZURE && compare(releaseVersion, '12.0.0') >= 0:
-    case provider === Providers.KVM && compare(releaseVersion, '12.2.0') >= 0:
-      return true;
-
-    default:
-      return false;
-  }
-}
-
 export function filterUserInstalledApps(
   apps: IInstalledApp[],
   hasOptionalIngress: boolean

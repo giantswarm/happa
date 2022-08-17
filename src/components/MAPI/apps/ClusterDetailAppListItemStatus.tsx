@@ -22,11 +22,18 @@ interface IClusterDetailAppListItemStatusProps
   app: applicationv1alpha1.IApp;
   catalogNamespace?: string | null;
   canListAppCatalogEntries?: boolean;
+  displayUpgradableStatus?: boolean;
 }
 
 const ClusterDetailAppListItemStatus: React.FC<
   React.PropsWithChildren<IClusterDetailAppListItemStatusProps>
-> = ({ app, catalogNamespace, canListAppCatalogEntries, ...props }) => {
+> = ({
+  app,
+  catalogNamespace,
+  canListAppCatalogEntries,
+  displayUpgradableStatus = true,
+  ...props
+}) => {
   const auth = useAuthProvider();
   const appCatalogEntryListClient = useHttpClient();
 
@@ -43,11 +50,12 @@ const ClusterDetailAppListItemStatus: React.FC<
       };
     }, [app.spec.catalog, app.spec.name, catalogNamespace]);
 
-  const getAppCatalogEntryListKey = canListAppCatalogEntries
-    ? applicationv1alpha1.getAppCatalogEntryListKey(
-        appCatalogEntryListGetOptions
-      )
-    : null;
+  const getAppCatalogEntryListKey =
+    canListAppCatalogEntries && displayUpgradableStatus
+      ? applicationv1alpha1.getAppCatalogEntryListKey(
+          appCatalogEntryListGetOptions
+        )
+      : null;
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,

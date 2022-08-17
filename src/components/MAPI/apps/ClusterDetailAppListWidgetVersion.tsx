@@ -22,11 +22,18 @@ interface IClusterDetailAppListWidgetVersionProps
   app?: applicationv1alpha1.IApp;
   catalogNamespace?: string | null;
   canListAppCatalogEntries?: boolean;
+  displayUpgradableStatus?: boolean;
 }
 
 const ClusterDetailAppListWidgetVersion: React.FC<
   React.PropsWithChildren<IClusterDetailAppListWidgetVersionProps>
-> = ({ app, catalogNamespace, canListAppCatalogEntries, ...props }) => {
+> = ({
+  app,
+  catalogNamespace,
+  canListAppCatalogEntries,
+  displayUpgradableStatus = true,
+  ...props
+}) => {
   const auth = useAuthProvider();
   const appCatalogEntryListClient = useHttpClient();
 
@@ -45,12 +52,18 @@ const ClusterDetailAppListWidgetVersion: React.FC<
       };
     }, [app, catalogNamespace]);
   const appCatalogEntryListKey = useMemo(() => {
-    if (!app || !canListAppCatalogEntries) return null;
+    if (!app || !canListAppCatalogEntries || !displayUpgradableStatus)
+      return null;
 
     return applicationv1alpha1.getAppCatalogEntryListKey(
       appCatalogEntryListGetOptions
     );
-  }, [app, appCatalogEntryListGetOptions, canListAppCatalogEntries]);
+  }, [
+    app,
+    appCatalogEntryListGetOptions,
+    canListAppCatalogEntries,
+    displayUpgradableStatus,
+  ]);
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,

@@ -42,6 +42,7 @@ import { usePermissionsForCatalogs } from './permissions/usePermissionsForCatalo
 import {
   getCatalogNamespace,
   getCatalogNamespaceKey,
+  isUserInstalledApp,
   normalizeAppVersion,
 } from './utils';
 
@@ -73,6 +74,8 @@ const ClusterDetailAppListItem: React.FC<
   React.PropsWithChildren<IClusterDetailAppListItemProps>
   // eslint-disable-next-line complexity
 > = ({ app, appsPermissions, isActive, onAppUninstalled }) => {
+  const canBeModified = app ? isUserInstalledApp(app) : false;
+
   const currentVersion = useMemo(() => {
     if (!app) return undefined;
     const appVersion = applicationv1alpha1.getAppCurrentVersion(app);
@@ -229,6 +232,7 @@ const ClusterDetailAppListItem: React.FC<
                       app={app}
                       catalogNamespace={catalogNamespace}
                       canListAppCatalogEntries={canListAppCatalogEntries}
+                      displayUpgradableStatus={canBeModified}
                     />
                   )}
                 </Box>
@@ -237,7 +241,7 @@ const ClusterDetailAppListItem: React.FC<
           </Header>
         }
       >
-        <Box fill='horizontal' pad={{ horizontal: 'small', bottom: 'small' }}>
+        <Box fill='horizontal' pad={{ horizontal: 'small' }}>
           <StyledBox
             wrap={true}
             direction='row'
@@ -262,6 +266,7 @@ const ClusterDetailAppListItem: React.FC<
               direction='row'
               align='center'
               titleWidth={screenSize === 'large' ? '54px' : 'auto'}
+              displayUpgradableStatus={canBeModified}
             />
             <ClusterDetailAppListWidgetInstalledAs
               app={app}
@@ -296,36 +301,38 @@ const ClusterDetailAppListItem: React.FC<
               titleWidth={screenSize === 'large' ? '127px' : 'auto'}
             />
           </StyledBox>
-          <Box
-            pad={{ vertical: 'medium' }}
-            border={{ side: 'top', color: 'border-xweak' }}
-          >
-            <ClusterDetailAppListWidgetVersionInspector
-              app={app}
-              appsPermissions={appsPermissions}
-              currentVersion={currentVersion}
-              currentSelectedVersion={currentSelectedVersion}
-              onSelectVersion={setCurrentSelectedVersion}
-              catalogNamespace={catalogNamespace}
-              canListAppCatalogEntries={canListAppCatalogEntries}
-              basis='100%'
-              margin={{ top: 'xsmall' }}
-            />
-            <ClusterDetailAppListWidgetConfiguration
-              app={app}
-              appsPermissions={appsPermissions}
-              basis='100%'
-              margin={{ top: 'medium' }}
-            />
-            <ClusterDetailAppListWidgetUninstall
-              app={app}
-              appsPermissions={appsPermissions}
-              onAppUninstalled={onAppUninstalled}
-              basis='100%'
-              margin={{ top: 'medium' }}
-            />
-          </Box>
-          {app && catalogNamespace && (
+          {canBeModified && (
+            <Box
+              pad={{ vertical: 'medium' }}
+              border={{ side: 'top', color: 'border-xweak' }}
+            >
+              <ClusterDetailAppListWidgetVersionInspector
+                app={app}
+                appsPermissions={appsPermissions}
+                currentVersion={currentVersion}
+                currentSelectedVersion={currentSelectedVersion}
+                onSelectVersion={setCurrentSelectedVersion}
+                catalogNamespace={catalogNamespace}
+                canListAppCatalogEntries={canListAppCatalogEntries}
+                basis='100%'
+                margin={{ top: 'xsmall' }}
+              />
+              <ClusterDetailAppListWidgetConfiguration
+                app={app}
+                appsPermissions={appsPermissions}
+                basis='100%'
+                margin={{ top: 'medium' }}
+              />
+              <ClusterDetailAppListWidgetUninstall
+                app={app}
+                appsPermissions={appsPermissions}
+                onAppUninstalled={onAppUninstalled}
+                basis='100%'
+                margin={{ top: 'medium' }}
+              />
+            </Box>
+          )}
+          {canBeModified && app && catalogNamespace && (
             <CLIGuidesList
               margin={{ top: 'medium', horizontal: 'xsmall', bottom: 'xsmall' }}
             >

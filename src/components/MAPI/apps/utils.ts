@@ -506,60 +506,38 @@ export async function updateAppVersion(
   return app;
 }
 
-export function mapDefaultApps(release?: releasev1alpha1.IRelease) {
-  const apps: Record<string, Record<string, AppConstants.IAppMetaApp>> = {
-    essentials: {},
-    management: {},
-    ingress: {},
-  };
+export function mapDefaultApps(
+  release: releasev1alpha1.IRelease,
+  apps: IApp[]
+) {
+  const defaultApps: IApp[] = [];
 
-  const releaseComponents = release
-    ? releasesUtils.reduceReleaseToComponents(release)
-    : {};
+  const releaseComponents = releasesUtils.reduceReleaseToComponents(release);
 
-  for (const { name, version } of Object.values(releaseComponents)) {
-    if (!AppConstants.appMetas.hasOwnProperty(name)) continue;
+  for (const { name } of Object.values(releaseComponents)) {
+    const app = apps.find((item) => {
+      return item.spec.name === name || item.metadata.name === name;
+    });
 
-    let appMeta = AppConstants.appMetas[name];
-    if (typeof appMeta === 'function') {
-      appMeta = appMeta(version);
+    if (app) {
+      defaultApps.push(app);
     }
-
-    // Add the app to the list of apps we'll show in the interface, in the
-    // correct category.
-    apps[appMeta.category][appMeta.name] = {
-      ...appMeta,
-      version,
-    };
   }
 
-  for (const appMeta of Object.values(AppConstants.defaultAppMetas)) {
-    // Make sure that the app is not already in the list
-    if (apps[appMeta.category].hasOwnProperty(appMeta.name)) continue;
+  return defaultApps;
+}
 
-    apps[appMeta.category][appMeta.name] = appMeta;
-  }
+export function isUserInstalledApp(app: IApp) {
+  const managedBy = app.metadata.labels?.[applicationv1alpha1.labelManagedBy];
 
-  return apps;
+  return managedBy !== 'cluster-operator';
 }
 
 export function filterUserInstalledApps(
-  apps: applicationv1alpha1.IApp[],
-  supportsOptionalIngress: boolean
+  apps: applicationv1alpha1.IApp[]
 ): applicationv1alpha1.IApp[] {
   const userApps = apps.filter((app) => {
-    switch (true) {
-      case supportsOptionalIngress &&
-        app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
-        return true;
-
-      case app.metadata.labels?.[applicationv1alpha1.labelManagedBy] ===
-        'cluster-operator':
-        return false;
-
-      default:
-        return true;
-    }
+    return isUserInstalledApp(app);
   });
 
   return userApps.sort(compareApps);
