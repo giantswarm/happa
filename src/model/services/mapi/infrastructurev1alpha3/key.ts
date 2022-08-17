@@ -27,12 +27,6 @@ export function getAWSClusterDescription(awsCluster: IAWSCluster): string {
   return name;
 }
 
-export function getAWSClusterOrganization(
-  awsCluster: IAWSCluster
-): string | undefined {
-  return awsCluster.metadata.labels?.[labelOrganization];
-}
-
 export function getAWSClusterLabels(
   awsCluster: IAWSCluster
 ): Record<string, string> {
