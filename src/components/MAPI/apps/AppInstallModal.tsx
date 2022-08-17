@@ -70,7 +70,7 @@ function getOrganizationForCluster(
   cluster: Cluster,
   organizations: Record<string, IOrganization>
 ): IOrganization | undefined {
-  const organization = capiv1beta1.getClusterOrganization(cluster);
+  const organization = capiv1beta1.getClusterOrganizationLabel(cluster);
   if (!organization) return undefined;
 
   return Object.values(organizations).find((o) => o.name === organization);

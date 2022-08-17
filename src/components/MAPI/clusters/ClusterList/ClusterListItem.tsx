@@ -96,7 +96,7 @@ const ClusterListItem: React.FC<
   const organization = useMemo(() => {
     if (!organizations || !cluster) return undefined;
 
-    const org = capiv1beta1.getClusterOrganization(cluster);
+    const org = capiv1beta1.getClusterOrganizationLabel(cluster);
     if (!org) return undefined;
 
     return Object.values(organizations).find(

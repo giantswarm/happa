@@ -290,7 +290,7 @@ export function filterClusters(
         .toLowerCase()
         .includes(normalizedQuery):
       case capiv1beta1
-        .getClusterOrganization(cluster)
+        .getClusterOrganizationLabel(cluster)
         ?.toLowerCase()
         .includes(normalizedQuery):
         return true;

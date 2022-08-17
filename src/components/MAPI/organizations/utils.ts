@@ -63,7 +63,7 @@ export function validateOrganizationName(orgName: string): {
 
 export function computeClusterCountersForOrganizations(clusters?: Cluster[]) {
   return clusters?.reduce((acc: Record<string, number>, cluster: Cluster) => {
-    const clusterOrg = capiv1beta1.getClusterOrganization(cluster);
+    const clusterOrg = capiv1beta1.getClusterOrganizationLabel(cluster);
     if (!clusterOrg) return acc;
 
     acc[clusterOrg] ??= 0;
