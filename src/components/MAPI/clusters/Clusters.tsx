@@ -65,14 +65,14 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
   const hasReadPermissionsForClusters = canListClusters && canGetClusters;
 
   const clusterListKey = hasReadPermissionsForClusters
-    ? fetchClusterListKey(provider, namespace, selectedOrgID)
+    ? fetchClusterListKey(provider, namespace, selectedOrg)
     : null;
 
   const { data: clusterList, error: clusterListError } = useSWR<
     ClusterListType,
     GenericResponseError
   >(clusterListKey, () =>
-    fetchClusterList(clientFactory, auth, provider, namespace, selectedOrgID)
+    fetchClusterList(clientFactory, auth, provider, namespace, selectedOrg)
   );
 
   useEffect(() => {

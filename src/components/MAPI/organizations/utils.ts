@@ -109,12 +109,12 @@ export async function fetchClusterListForOrganizations(
     items: [],
   };
 
-  const requests = Object.entries(organizations).map(
-    async ([organizationName, organizationEntry]) => {
+  const requests = Object.values(organizations).map(
+    async (organizationEntry) => {
       const clusterListKey = fetchClusterListKey(
         provider,
         organizationEntry.namespace,
-        organizationName
+        organizationEntry
       );
       const cachedClusterList: capiv1beta1.IClusterList | undefined =
         cache.get(clusterListKey);
@@ -128,7 +128,7 @@ export async function fetchClusterListForOrganizations(
           auth,
           provider,
           organizationEntry.namespace,
-          organizationName
+          organizationEntry
         );
 
         cache.set(clusterListKey, clusters);

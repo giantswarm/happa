@@ -53,7 +53,6 @@ const OrganizationDetailGeneral: React.FC<
 > = ({ organizationName, organizationNamespace }) => {
   const organizations = useSelector(selectOrganizations());
   const selectedOrg = organizations[organizationName];
-  const selectedOrgID = selectedOrg?.name ?? selectedOrg?.id;
 
   const auth = useAuthProvider();
   const clientFactory = useHttpClientFactory();
@@ -68,7 +67,7 @@ const OrganizationDetailGeneral: React.FC<
   );
 
   const clusterListKey = clustersPermissions.canList
-    ? () => fetchClusterListKey(provider, organizationNamespace, selectedOrgID)
+    ? () => fetchClusterListKey(provider, organizationNamespace, selectedOrg)
     : null;
 
   const {
@@ -81,7 +80,7 @@ const OrganizationDetailGeneral: React.FC<
       auth,
       provider,
       organizationNamespace,
-      selectedOrgID
+      selectedOrg
     )
   );
 
