@@ -218,7 +218,6 @@ export const randomClusterGCP1MachineDeploymentList: capiv1beta1.IMachineDeploym
             'cluster.x-k8s.io/cluster-name': 'm317f',
             'giantswarm.io/cluster': 'm317f',
             'giantswarm.io/machine-deployment': 'm317f-worker0',
-            'giantswarm.io/organization': 'org1',
             'helm.sh/chart': 'cluster-gcp-0.15.1',
           },
           name: 'm317f-worker0',
@@ -258,7 +257,6 @@ export const randomClusterGCP1MachineDeploymentList: capiv1beta1.IMachineDeploym
                 'cluster.x-k8s.io/cluster-name': 'm317f',
                 'cluster.x-k8s.io/deployment-name': 'm317f-worker0',
                 'giantswarm.io/cluster': 'm317f',
-                'giantswarm.io/organization': 'org1',
               },
             },
             spec: {
