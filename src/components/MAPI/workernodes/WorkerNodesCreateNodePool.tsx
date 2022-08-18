@@ -1,6 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Collapsible, Heading, Keyboard } from 'grommet';
 import produce from 'immer';
+import { getClusterOrganization } from 'MAPI/clusters/utils';
 import {
   BootstrapConfig,
   Cluster,
@@ -27,7 +28,9 @@ import { Providers } from 'model/constants';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { supportsNodePoolSpotInstances } from 'model/stores/nodepool/utils';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -238,12 +241,14 @@ const WorkerNodesCreateNodePool: React.FC<
     return release;
   }, [releaseList?.items, releaseVersion]);
 
+  const organizations = useSelector(selectOrganizations());
+
   const [state, dispatch] = useReducer(
     reducer,
     makeInitialState(provider, {
       clusterName: cluster.metadata.name,
       namespace: cluster.metadata.namespace!,
-      organization: cluster.metadata.labels![capiv1beta1.labelOrganization],
+      organization: getClusterOrganization(cluster, organizations)!.id,
       location: getProviderClusterLocation(providerCluster)!,
       releaseVersion: releaseVersion,
       azureOperatorVersion: getAzureOperatorVersion(currentRelease),
