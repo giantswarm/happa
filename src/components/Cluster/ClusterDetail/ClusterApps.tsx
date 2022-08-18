@@ -87,7 +87,6 @@ const PreinstalledApps = styled.div`
 
 interface IClusterAppsProps {
   clusterId: string;
-  hasOptionalIngress?: boolean;
   showInstalledAppsBlock?: boolean;
   release?: IRelease;
   installedApps?: IInstalledApp[];
@@ -95,7 +94,6 @@ interface IClusterAppsProps {
 
 const ClusterApps: React.FC<React.PropsWithChildren<IClusterAppsProps>> = ({
   clusterId,
-  hasOptionalIngress,
   showInstalledAppsBlock,
   release,
   installedApps,
@@ -185,8 +183,8 @@ const ClusterApps: React.FC<React.PropsWithChildren<IClusterAppsProps>> = ({
       return [];
     }
 
-    return filterUserInstalledApps(installedApps, hasOptionalIngress ?? false);
-  }, [installedApps, hasOptionalIngress]);
+    return filterUserInstalledApps(installedApps);
+  }, [installedApps]);
 
   const cluster = useSelector((state: IState) =>
     selectClusterById(state, clusterId)
@@ -271,25 +269,23 @@ const ClusterApps: React.FC<React.PropsWithChildren<IClusterAppsProps>> = ({
 
             <div key='ingress'>
               <SmallHeading>ingress</SmallHeading>
-              {hasOptionalIngress && (
-                <div>
-                  <Disclaimer>
-                    The ingress controller is optional on this cluster.
-                    <br />
-                    You can install one using our app catalog.
-                    <br />
-                    <br />
-                    Read more in our{' '}
-                    <a
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      href={ingressControllerInstallationURL}
-                    >
-                      installing an ingress controller guide.
-                    </a>
-                  </Disclaimer>
-                </div>
-              )}
+              <div>
+                <Disclaimer>
+                  The ingress controller is optional on this cluster.
+                  <br />
+                  You can install one using our app catalog.
+                  <br />
+                  <br />
+                  Read more in our{' '}
+                  <a
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    href={ingressControllerInstallationURL}
+                  >
+                    installing an ingress controller guide.
+                  </a>
+                </Disclaimer>
+              </div>
               {Object.values(preInstalledApps.ingress).map((app) => (
                 <ClusterDetailPreinstalledApp
                   logoUrl={app.logoUrl}

@@ -39,7 +39,6 @@ describe('AddNodePool', () => {
 
       it('does not render the spot instances section if the feature is unsupported', () => {
         const capabilities: IClusterCapabilities = {
-          hasOptionalIngress: false,
           supportsAlikeInstances: false,
           supportsHAMasters: false,
           supportsNodePoolAutoscaling: false,
@@ -59,7 +58,6 @@ describe('AddNodePool', () => {
 
       it('when spot instances are turned on, the default behaviour is using on-demand max pricing', () => {
         const capabilities: IClusterCapabilities = {
-          hasOptionalIngress: false,
           supportsAlikeInstances: false,
           supportsHAMasters: false,
           supportsNodePoolAutoscaling: false,
@@ -113,7 +111,6 @@ describe('AddNodePool', () => {
 
       it('can set a maximum price when on-demand max pricing is turned off', () => {
         const capabilities: IClusterCapabilities = {
-          hasOptionalIngress: false,
           supportsAlikeInstances: false,
           supportsHAMasters: false,
           supportsNodePoolAutoscaling: false,

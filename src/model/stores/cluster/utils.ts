@@ -275,7 +275,6 @@ export const computeCapabilities =
         releaseVersion
       ),
       supportsAlikeInstances: supportsAlikeInstances(provider, releaseVersion),
-      hasOptionalIngress: supportsOptionalIngress(provider, releaseVersion),
     };
   };
 
@@ -448,19 +447,10 @@ export function reconcileClustersAwaitingUpgrade(
 }
 
 export function filterUserInstalledApps(
-  apps: IInstalledApp[],
-  hasOptionalIngress: boolean
+  apps: IInstalledApp[]
 ): IInstalledApp[] {
-  return apps.filter((app) => {
-    switch (true) {
-      case hasOptionalIngress &&
-        app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
-        return true;
-      case app.metadata.labels?.['giantswarm.io/managed-by'] ===
-        'cluster-operator':
-        return false;
-      default:
-        return true;
-    }
-  });
+  return apps.filter(
+    (app) =>
+      app.metadata.labels?.['giantswarm.io/managed-by'] !== 'cluster-operator'
+  );
 }
