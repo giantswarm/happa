@@ -126,6 +126,22 @@ describe('ClusterDetailAppListWidgetVersion', () => {
     expect(screen.getByLabelText('App version: 1.2.3')).toBeInTheDocument();
   });
 
+  it('displays the upstream version', () => {
+    const app = generateApp('some-app', '1.2.3');
+
+    render(
+      getComponent({
+        app,
+        canListAppCatalogEntries: true,
+        displayUpstreamVersion: true,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('App upstream version: 0.4.1')
+    ).toBeInTheDocument();
+  });
+
   it('displays if the app is switching versions', () => {
     const app = generateApp('some-app', '1.2.3');
     app.spec.version = '1.3.0';
@@ -134,15 +150,6 @@ describe('ClusterDetailAppListWidgetVersion', () => {
 
     expect(screen.getByLabelText('App version: 1.2.3')).toBeInTheDocument();
     expect(screen.getByText('Switching to 1.3.0')).toBeInTheDocument();
-  });
-
-  it('displays the spec version if there is no status', () => {
-    const app = generateApp('some-app', '1.2.3');
-    delete app.status;
-
-    render(getComponent({ app, canListAppCatalogEntries: true }));
-
-    expect(screen.getByLabelText('App version: 1.2.3')).toBeInTheDocument();
   });
 
   it('displays the spec version if there is no status', () => {
