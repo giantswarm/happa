@@ -28,6 +28,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -102,23 +103,20 @@ const APP_FORM_PAGE = 1;
 const pages: ReadonlyArray<number> = [CLUSTER_PICKER_PAGE, APP_FORM_PAGE];
 
 interface IAppInstallModalProps {
-  appName: string;
-  chartName: string;
+  selectedAppCatalogEntry: applicationv1alpha1.IAppCatalogEntry;
   catalogName: string;
   versions: IVersion[];
-  selectedVersion: string;
   selectVersion: (v: string) => void;
   appsPermissions?: IAppsPermissions;
 }
 
 const AppInstallModal: React.FC<
   React.PropsWithChildren<IAppInstallModalProps>
+  // eslint-disable-next-line complexity
 > = ({
-  appName,
-  chartName,
+  selectedAppCatalogEntry,
   catalogName,
   versions,
-  selectedVersion,
   selectVersion,
   appsPermissions,
 }) => {
@@ -163,6 +161,8 @@ const AppInstallModal: React.FC<
   const selectedClusterID = useSelector(
     (state: IState) => state.main.selectedClusterID
   );
+
+  const appName = selectedAppCatalogEntry.spec.appName;
 
   const openModal = () => {
     if (selectedClusterID) {
@@ -466,8 +466,8 @@ const AppInstallModal: React.FC<
       await createApp(clientFactory, auth, selectedClusterID, {
         name: name,
         catalogName: catalogName,
-        chartName: chartName,
-        version: selectedVersion,
+        chartName: appName,
+        version: selectedAppCatalogEntry.spec.version,
         namespace: namespace,
         configMapContents: valuesYAML ?? '',
         secretContents: secretsYAML ?? '',
@@ -592,7 +592,7 @@ const AppInstallModal: React.FC<
                   </Button>
                 }
                 onClose={onClose}
-                title={`Install ${chartName}: Pick a cluster`}
+                title={`Install ${appName}: Pick a cluster`}
                 visible={visible}
               >
                 <ClusterPicker
@@ -630,7 +630,7 @@ const AppInstallModal: React.FC<
                 onClose={onClose}
                 title={
                   <>
-                    {`Install ${chartName} on`}{' '}
+                    {`Install ${appName} on`}{' '}
                     <ClusterIDLabel
                       clusterID={selectedClusterID!}
                       variant={ClusterIDLabelType.Name}
@@ -640,12 +640,12 @@ const AppInstallModal: React.FC<
                 visible={visible}
               >
                 <InstallAppForm
-                  appName={chartName}
+                  appName={appName}
                   name={name}
                   nameError={nameError}
                   namespace={namespace}
                   namespaceError={namespaceError}
-                  version={selectedVersion}
+                  version={selectedAppCatalogEntry.spec.version}
                   availableVersions={versions}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
