@@ -1,3 +1,4 @@
+import { getClusterOrganization } from 'MAPI/clusters/utils';
 import { Cluster, ClusterList } from 'MAPI/types';
 import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -61,13 +62,16 @@ export function validateOrganizationName(orgName: string): {
   }
 }
 
-export function computeClusterCountersForOrganizations(clusters?: Cluster[]) {
+export function computeClusterCountersForOrganizations(
+  clusters: Cluster[],
+  organizations: Record<string, IOrganization>
+) {
   return clusters?.reduce((acc: Record<string, number>, cluster: Cluster) => {
-    const clusterOrg = capiv1beta1.getClusterOrganizationLabel(cluster);
+    const clusterOrg = getClusterOrganization(cluster, organizations);
     if (!clusterOrg) return acc;
 
-    acc[clusterOrg] ??= 0;
-    acc[clusterOrg]++;
+    acc[clusterOrg.id] ??= 0;
+    acc[clusterOrg.id]++;
 
     return acc;
   }, {});

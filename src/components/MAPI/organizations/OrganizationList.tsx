@@ -84,7 +84,8 @@ const OrganizationIndex: React.FC<React.PropsWithChildren<unknown>> = () => {
     let clusterCounters: Record<string, number> | undefined;
     if (supportsClustersViaMapi) {
       clusterCounters = computeClusterCountersForOrganizations(
-        clusterList?.items
+        clusterList?.items ?? [],
+        organizations
       );
     } else {
       clusterCounters = clustersCountGroupedByOwner(Object.values(clusters));
@@ -100,7 +101,8 @@ const OrganizationIndex: React.FC<React.PropsWithChildren<unknown>> = () => {
       if (clusterListError) {
         clusterCount = -1;
       } else if (clusterCounters) {
-        clusterCount = clusterCounters[org.name!] ?? 0;
+        clusterCount =
+          clusterCounters[org.name!] ?? clusterCounters[org.id] ?? 0;
       }
 
       return {
