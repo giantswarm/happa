@@ -9,7 +9,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
-import { AppConstants, Constants } from 'model/constants';
+import { Constants } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import {
   IApp,
