@@ -577,7 +577,7 @@ const AppInstallModal: React.FC<
               icon={
                 <i
                   className={`fa ${
-                    isAppInstalledInSelectedCluster && !isAppEntrySingleton
+                    isAppInstalledInSelectedCluster
                       ? 'fa fa-done'
                       : 'fa-add-circle'
                   }`}
@@ -594,9 +594,7 @@ const AppInstallModal: React.FC<
             >
               {selectedClusterID
                 ? `Install${
-                    isAppInstalledInSelectedCluster && !isAppEntrySingleton
-                      ? 'ed'
-                      : ''
+                    isAppInstalledInSelectedCluster ? 'ed' : ''
                   } in this cluster`
                 : 'Install in cluster'}
             </Button>
