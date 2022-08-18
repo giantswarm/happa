@@ -80,7 +80,8 @@ function getOrganizationForCluster(
 function mapClusterToClusterPickerInput(
   entry: IProviderClusterForCluster,
   organizations: Record<string, IOrganization>,
-  clustersWithAppInstalled: string[]
+  clustersWithAppInstalled: string[],
+  isAppEntrySingleton: boolean
 ): React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters'][0] {
   const { cluster, providerCluster } = entry;
   const organization = getOrganizationForCluster(cluster, organizations);
@@ -92,7 +93,7 @@ function mapClusterToClusterPickerInput(
     id: cluster.metadata.name,
     name: getClusterDescription(cluster, providerCluster),
     owner: organization?.id ?? '',
-    isAvailable: !isInstalledInCluster,
+    isAvailable: !isAppEntrySingleton || !isInstalledInCluster,
   };
 }
 
@@ -348,13 +349,21 @@ const AppInstallModal: React.FC<
     );
   }, [selectedCluster, clustersWithAppInstalled]);
 
+  const isAppEntrySingleton =
+    selectedAppCatalogEntry.spec.restrictions?.clusterSingleton ?? false;
+
   useEffect(() => {
     const clusterCollection = filterClusters(
       clustersWithProviderClusters,
       previewReleaseVersions,
       debouncedQuery
     ).map((c) =>
-      mapClusterToClusterPickerInput(c, organizations, clustersWithAppInstalled)
+      mapClusterToClusterPickerInput(
+        c,
+        organizations,
+        clustersWithAppInstalled,
+        isAppEntrySingleton
+      )
     );
 
     setFilteredClusters(clusterCollection);
@@ -366,6 +375,7 @@ const AppInstallModal: React.FC<
     releaseList?.items,
     previewReleaseVersions,
     clustersWithAppInstalled,
+    isAppEntrySingleton,
   ]);
 
   const updateNamespace = useCallback(
@@ -544,7 +554,7 @@ const AppInstallModal: React.FC<
 
   return (
     <>
-      {isAppInstalledInSelectedCluster ? (
+      {isAppInstalledInSelectedCluster && isAppEntrySingleton ? (
         <Text color='text-strong'>
           <i className='fa fa-done' aria-hidden='true' role='presentation' />{' '}
           Installed in this cluster
@@ -564,7 +574,15 @@ const AppInstallModal: React.FC<
             <Button
               primary={true}
               onClick={openModal}
-              icon={<i className='fa fa-add-circle' />}
+              icon={
+                <i
+                  className={`fa ${
+                    isAppInstalledInSelectedCluster && !isAppEntrySingleton
+                      ? 'fa fa-done'
+                      : 'fa-add-circle'
+                  }`}
+                />
+              }
               disabled={
                 clusterList &&
                 providerClusterList &&
@@ -575,7 +593,11 @@ const AppInstallModal: React.FC<
               }
             >
               {selectedClusterID
-                ? 'Install in this cluster'
+                ? `Install${
+                    isAppInstalledInSelectedCluster && !isAppEntrySingleton
+                      ? 'ed'
+                      : ''
+                  } in this cluster`
                 : 'Install in cluster'}
             </Button>
           </Box>
