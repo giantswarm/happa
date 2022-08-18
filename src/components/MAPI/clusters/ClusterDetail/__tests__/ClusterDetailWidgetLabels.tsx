@@ -337,30 +337,43 @@ describe('ClusterDetailWidgetLabels', () => {
   });
 
   it('displays hidden labels as read-only in raw mode', () => {
-    const cluster = capiv1beta1Mocks.randomCluster1;
+    const cluster = {
+      ...capiv1beta1Mocks.randomCluster1,
+      metadata: {
+        ...capiv1beta1Mocks.randomCluster1.metadata,
+        labels: {
+          ...capiv1beta1Mocks.randomCluster1.metadata.labels,
+          'giantswarm.io/some-restricted-label': 'some-restricted-label-value',
+        },
+      },
+    };
     render(getComponent({ cluster, canUpdateCluster: true }));
 
     expect(
-      screen.queryByText('giantswarm.io/organization')
+      screen.queryByText('giantswarm.io/some-restricted-label')
     ).not.toBeInTheDocument();
-    expect(screen.queryByText('org1')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('some-restricted-label-value')
+    ).not.toBeInTheDocument();
 
     const rawDisplayControl = screen.getByLabelText('Display raw labels');
     fireEvent.click(rawDisplayControl);
 
     expect(
-      screen.queryByText('giantswarm.io/organization')
+      screen.queryByText('giantswarm.io/some-restricted-label')
     ).toBeInTheDocument();
-    expect(screen.queryByText('org1')).toBeInTheDocument();
+    expect(
+      screen.queryByText('some-restricted-label-value')
+    ).toBeInTheDocument();
 
     expect(
       screen.queryByRole('button', {
-        name: `Delete 'giantswarm.io/organization' label`,
+        name: `Delete 'giantswarm.io/some-restricted-label' label`,
       })
     ).not.toBeInTheDocument();
 
     const label = screen.getByLabelText(
-      'Label giantswarm.io/organization with value org1'
+      'Label giantswarm.io/some-restricted-label with value some-restricted-label-value'
     );
 
     fireEvent.mouseOver(label);

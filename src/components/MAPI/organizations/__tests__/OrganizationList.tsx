@@ -22,7 +22,6 @@ import OrganizationIndex from '../OrganizationIndex';
 import { usePermissionsForOrganizations } from '../permissions/usePermissionsForOrganizations';
 
 const generateCluster = (
-  orgName: string = 'org1',
   namespace: string = 'org-org1'
 ): capiv1beta1.ICluster => {
   return {
@@ -42,7 +41,6 @@ const generateCluster = (
         'cluster-operator.giantswarm.io/version': '0.23.22',
         'cluster.x-k8s.io/cluster-name': '0fa12',
         'giantswarm.io/cluster': '0fa12',
-        'giantswarm.io/organization': orgName,
         'release.giantswarm.io/version': '13.1.0',
       },
       name: '0fa12',
@@ -169,7 +167,7 @@ describe('OrganizationIndex', () => {
     const randomClusterList = generateClusterList([
       generateCluster(),
       generateCluster(),
-      generateCluster('org2', 'org-org2'),
+      generateCluster('org-org2'),
     ]);
 
     nock(window.config.mapiEndpoint)
@@ -214,7 +212,7 @@ describe('OrganizationIndex', () => {
     ]);
 
     const randomClusterList2 = generateClusterList([
-      generateCluster('org2', 'org-org2'),
+      generateCluster('org-org2'),
     ]);
 
     nock(window.config.mapiEndpoint)
