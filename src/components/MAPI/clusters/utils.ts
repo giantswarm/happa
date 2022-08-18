@@ -1085,6 +1085,28 @@ function isSpecialPurposeLabel(key: string) {
   }
 }
 
+export function getClusterOrganization(
+  cluster: capiv1beta1.ICluster,
+  organizations: Record<string, IOrganization>
+): IOrganization | undefined {
+  const clusterOrganizationLabel =
+    capiv1beta1.getClusterOrganizationLabel(cluster);
+
+  const clusterNamespace = cluster.metadata.namespace;
+
+  // old AWS clusters are in the default namespace
+  if (clusterNamespace === 'default') {
+    return Object.values(organizations).find(
+      (o) =>
+        o.name === clusterOrganizationLabel || o.id === clusterOrganizationLabel
+    );
+  }
+
+  return Object.values(organizations).find(
+    (o) => o.namespace === clusterNamespace
+  );
+}
+
 /**
  * Determines whether the cluster has an `app` label that starts with the `cluster-` prefix.
  * @param cluster
