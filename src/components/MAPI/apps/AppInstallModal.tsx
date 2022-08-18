@@ -9,6 +9,7 @@ import { Box, Text } from 'grommet';
 import yaml from 'js-yaml';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import {
+  getClusterOrganization,
   IProviderClusterForCluster,
   mapClustersToProviderClusters,
 } from 'MAPI/clusters/utils';
@@ -18,7 +19,7 @@ import {
 } from 'MAPI/organizations/utils';
 import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { getPreviewReleaseVersions } from 'MAPI/releases/utils';
-import { Cluster, ClusterList } from 'MAPI/types';
+import { ClusterList } from 'MAPI/types';
 import {
   fetchProviderClustersForClusters,
   fetchProviderClustersForClustersKey,
@@ -28,7 +29,6 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
-import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
@@ -66,23 +66,13 @@ import {
   formatYAMLError,
 } from './utils';
 
-function getOrganizationForCluster(
-  cluster: Cluster,
-  organizations: Record<string, IOrganization>
-): IOrganization | undefined {
-  const organization = capiv1beta1.getClusterOrganizationLabel(cluster);
-  if (!organization) return undefined;
-
-  return Object.values(organizations).find((o) => o.name === organization);
-}
-
 function mapClusterToClusterPickerInput(
   entry: IProviderClusterForCluster,
   organizations: Record<string, IOrganization>,
   clustersWithAppInstalled: string[]
 ): React.ComponentPropsWithoutRef<typeof ClusterPicker>['clusters'][0] {
   const { cluster, providerCluster } = entry;
-  const organization = getOrganizationForCluster(cluster, organizations);
+  const organization = getClusterOrganization(cluster, organizations);
   const isInstalledInCluster = clustersWithAppInstalled.includes(
     `${cluster.metadata.namespace}/${cluster.metadata.name}`
   );
@@ -158,6 +148,7 @@ const AppInstallModal: React.FC<
 
   const onClose = () => {
     setVisible(false);
+    setQuery('');
   };
 
   const selectedClusterID = useSelector(
@@ -351,6 +342,7 @@ const AppInstallModal: React.FC<
   useEffect(() => {
     const clusterCollection = filterClusters(
       clustersWithProviderClusters,
+      organizations,
       previewReleaseVersions,
       debouncedQuery
     ).map((c) =>
@@ -457,7 +449,7 @@ const AppInstallModal: React.FC<
     );
     if (!cluster) return;
 
-    const organization = getOrganizationForCluster(cluster, organizations);
+    const organization = getClusterOrganization(cluster, organizations);
     if (!organization) return;
 
     try {
