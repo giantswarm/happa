@@ -47,6 +47,12 @@ export function getAppCurrentVersion(app: IApp): string {
   return app.status.version;
 }
 
+export function getAppUpstreamVersion(app: IApp) {
+  if (!app.status || !app.status.appVersion) return '';
+
+  return app.status.appVersion;
+}
+
 export function getAppStatus(app: IApp): string {
   return app.status?.release?.status || '';
 }

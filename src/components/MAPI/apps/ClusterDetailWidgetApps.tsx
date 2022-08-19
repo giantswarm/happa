@@ -71,9 +71,11 @@ const ClusterDetailWidgetApps: React.FC<
   }, [appListError]);
 
   const userInstalledApps = useMemo(() => {
-    if (!appList) return [];
+    if (typeof appList === 'undefined') {
+      return [];
+    }
 
-    return filterUserInstalledApps(appList.items, true);
+    return filterUserInstalledApps(appList.items);
   }, [appList]);
 
   const insufficientPermissionsForApps = canListApps === false;

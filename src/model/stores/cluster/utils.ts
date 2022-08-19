@@ -275,7 +275,6 @@ export const computeCapabilities =
         releaseVersion
       ),
       supportsAlikeInstances: supportsAlikeInstances(provider, releaseVersion),
-      hasOptionalIngress: supportsOptionalIngress(provider, releaseVersion),
     };
   };
 
@@ -447,35 +446,11 @@ export function reconcileClustersAwaitingUpgrade(
   return awaitingUpgrade;
 }
 
-export function supportsOptionalIngress(
-  provider: PropertiesOf<typeof Providers>,
-  releaseVersion: string
-): boolean {
-  switch (true) {
-    case provider === Providers.AWS && compare(releaseVersion, '10.1.0') >= 0:
-    case provider === Providers.AZURE && compare(releaseVersion, '12.0.0') >= 0:
-    case provider === Providers.KVM && compare(releaseVersion, '12.2.0') >= 0:
-      return true;
-
-    default:
-      return false;
-  }
-}
-
 export function filterUserInstalledApps(
-  apps: IInstalledApp[],
-  hasOptionalIngress: boolean
+  apps: IInstalledApp[]
 ): IInstalledApp[] {
-  return apps.filter((app) => {
-    switch (true) {
-      case hasOptionalIngress &&
-        app.spec.name === Constants.INSTALL_INGRESS_TAB_APP_NAME:
-        return true;
-      case app.metadata.labels?.['giantswarm.io/managed-by'] ===
-        'cluster-operator':
-        return false;
-      default:
-        return true;
-    }
-  });
+  return apps.filter(
+    (app) =>
+      app.metadata.labels?.['giantswarm.io/managed-by'] !== 'cluster-operator'
+  );
 }

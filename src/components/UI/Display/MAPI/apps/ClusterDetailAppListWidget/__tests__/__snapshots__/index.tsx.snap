@@ -12,10 +12,10 @@ exports[`ClusterDetailAppListWidget renders a simple widget 1`] = `
       class="StyledBox-sc-13pk1d4-0 bCeIlK"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 iHJggX"
+        class="StyledBox-sc-13pk1d4-0 iHJggX ClusterDetailAppListWidget__TitleWrapper-sc-1uv4dc5-0"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 lfzAuU ClusterDetailAppListWidget__Title-sc-1uv4dc5-0 cOsBqW"
+          class="StyledText-sc-1sadyjn-0 lfzAuU ClusterDetailAppListWidget__Title-sc-1uv4dc5-1 kGykoj"
         >
           Some widget
         </span>

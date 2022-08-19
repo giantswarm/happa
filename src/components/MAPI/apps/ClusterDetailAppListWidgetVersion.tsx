@@ -12,7 +12,11 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
-import { hasNewerVersionForApp, isAppChangingVersion } from './utils';
+import {
+  hasNewerVersionForApp,
+  isAppChangingVersion,
+  normalizeAppVersion,
+} from './utils';
 
 interface IClusterDetailAppListWidgetVersionProps
   extends Omit<
@@ -22,11 +26,20 @@ interface IClusterDetailAppListWidgetVersionProps
   app?: applicationv1alpha1.IApp;
   catalogNamespace?: string | null;
   canListAppCatalogEntries?: boolean;
+  displayUpgradableStatus?: boolean;
+  displayUpstreamVersion?: boolean;
 }
 
 const ClusterDetailAppListWidgetVersion: React.FC<
   React.PropsWithChildren<IClusterDetailAppListWidgetVersionProps>
-> = ({ app, catalogNamespace, canListAppCatalogEntries, ...props }) => {
+> = ({
+  app,
+  catalogNamespace,
+  canListAppCatalogEntries,
+  displayUpgradableStatus = true,
+  displayUpstreamVersion = false,
+  ...props
+}) => {
   const auth = useAuthProvider();
   const appCatalogEntryListClient = useHttpClient();
 
@@ -45,12 +58,18 @@ const ClusterDetailAppListWidgetVersion: React.FC<
       };
     }, [app, catalogNamespace]);
   const appCatalogEntryListKey = useMemo(() => {
-    if (!app || !canListAppCatalogEntries) return null;
+    if (!app || !canListAppCatalogEntries || !displayUpgradableStatus)
+      return null;
 
     return applicationv1alpha1.getAppCatalogEntryListKey(
       appCatalogEntryListGetOptions
     );
-  }, [app, appCatalogEntryListGetOptions, canListAppCatalogEntries]);
+  }, [
+    app,
+    appCatalogEntryListGetOptions,
+    canListAppCatalogEntries,
+    displayUpgradableStatus,
+  ]);
 
   const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
     applicationv1alpha1.IAppCatalogEntryList,
@@ -79,7 +98,11 @@ const ClusterDetailAppListWidgetVersion: React.FC<
   }, [appCatalogEntryListError]);
 
   const currentVersion = app
-    ? applicationv1alpha1.getAppCurrentVersion(app)
+    ? normalizeAppVersion(
+        displayUpstreamVersion
+          ? applicationv1alpha1.getAppUpstreamVersion(app)
+          : applicationv1alpha1.getAppCurrentVersion(app)
+      )
     : undefined;
 
   const isChangingVersion = app ? isAppChangingVersion(app) : false;
@@ -91,7 +114,7 @@ const ClusterDetailAppListWidgetVersion: React.FC<
 
   return (
     <ClusterDetailAppListWidget
-      title='Version'
+      title={displayUpstreamVersion ? 'Upstream version' : 'Version'}
       titleColor='text'
       contentProps={{
         direction: 'row',
@@ -105,7 +128,11 @@ const ClusterDetailAppListWidgetVersion: React.FC<
         {(value) => (
           <Truncated
             as={Text}
-            aria-label={`App version: ${value}`}
+            aria-label={
+              displayUpstreamVersion
+                ? `App upstream version: ${value}`
+                : `App version: ${value}`
+            }
             numStart={10}
           >
             {value}
@@ -113,7 +140,7 @@ const ClusterDetailAppListWidgetVersion: React.FC<
         )}
       </OptionalValue>
 
-      {isChangingVersion && (
+      {isChangingVersion && !displayUpstreamVersion && (
         <Text color='status-warning'>
           <i
             className='fa fa-version-upgrade'
@@ -124,7 +151,7 @@ const ClusterDetailAppListWidgetVersion: React.FC<
         </Text>
       )}
 
-      {hasNewVersion && (
+      {hasNewVersion && !displayUpstreamVersion && (
         <Text color='status-warning'>
           <i className='fa fa-warning' role='presentation' aria-hidden='true' />{' '}
           Upgrade available

@@ -175,7 +175,7 @@ const ClusterDetailActions: React.FC<
   const userInstalledApps = useMemo(() => {
     if (!appList) return undefined;
 
-    return filterUserInstalledApps(appList.items, true);
+    return filterUserInstalledApps(appList.items);
   }, [appList]);
 
   const hasError =
