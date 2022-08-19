@@ -158,8 +158,11 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   );
 
   const selectedEntry = useMemo(
-    () => appCatalogEntryList?.items.find((a) => a.spec.version === version),
-    [appCatalogEntryList?.items, version]
+    () =>
+      appCatalogEntryList?.items.find(
+        (a) => a.spec.version === selectedVersion
+      ),
+    [appCatalogEntryList?.items, selectedVersion]
   );
 
   useEffect(() => {
@@ -314,12 +317,10 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
             installAppModal={
               selectedEntry && otherEntries && catalog ? (
                 <AppInstallModal
-                  appName={appName!}
-                  chartName={appName!}
                   catalogName={catalog.metadata.name}
+                  selectedAppCatalogEntry={selectedEntry}
                   versions={otherEntries}
                   appsPermissions={appsPermissions}
-                  selectedVersion={selectedVersion}
                   selectVersion={selectVersion}
                 />
               ) : undefined

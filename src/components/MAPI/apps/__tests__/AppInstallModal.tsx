@@ -96,78 +96,17 @@ describe('AppInstallModal', () => {
 
   it('renders without crashing', () => {
     const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
+    const appCatalogEntry =
+      applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1;
 
     render(
       getComponent({
-        appName: app.metadata.name,
-        chartName: app.spec.name,
+        selectedAppCatalogEntry: appCatalogEntry,
         catalogName: app.spec.catalog,
         versions: [],
-        selectedVersion: '',
         selectVersion: () => {},
       })
     );
-  });
-
-  it('can pick a cluster if one is not already selected', async () => {
-    const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
-
-    nock(window.config.mapiEndpoint)
-      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
-        apiVersion: 'authorization.k8s.io/v1',
-        kind: 'SelfSubjectAccessReview',
-        spec: {
-          resourceAttributes: {
-            namespace: '',
-            verb: 'list',
-            group: 'cluster.x-k8s.io',
-            resource: 'clusters',
-          },
-        },
-      })
-      .reply(
-        StatusCodes.Ok,
-        authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
-      );
-    nock(window.config.mapiEndpoint)
-      .get('/apis/cluster.x-k8s.io/v1beta1/clusters/')
-      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterList);
-
-    render(
-      getComponent({
-        appName: app.metadata.name,
-        chartName: app.spec.name,
-        catalogName: app.spec.catalog,
-        versions: [],
-        selectedVersion: '',
-        selectVersion: () => {},
-        appsPermissions: defaultAppsPermissions,
-      })
-    );
-
-    fireEvent.click(screen.getByRole('button', { name: 'Install in cluster' }));
-
-    fireEvent.click(
-      await screen.findByText(capiv1beta1Mocks.randomCluster1.metadata.name)
-    );
-
-    expect(
-      await withMarkup(screen.findByText)(
-        `Install ${app.spec.name} on ${capiv1beta1Mocks.randomCluster1.metadata.name}`
-      )
-    ).toBeInTheDocument();
-
-    fireEvent.click(screen.getByText('Pick a different cluster'));
-
-    fireEvent.click(
-      await screen.findByText(capiv1beta1Mocks.randomCluster2.metadata.name)
-    );
-
-    expect(
-      await withMarkup(screen.findByText)(
-        `Install ${app.spec.name} on ${capiv1beta1Mocks.randomCluster2.metadata.name}`
-      )
-    ).toBeInTheDocument();
   });
 
   it('can install an app using the default values', async () => {
@@ -228,8 +167,8 @@ describe('AppInstallModal', () => {
 
     render(
       getComponent({
-        appName: app.metadata.name,
-        chartName: app.spec.name,
+        selectedAppCatalogEntry:
+          applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1,
         catalogName: app.spec.catalog,
         versions: [
           {
@@ -245,7 +184,6 @@ describe('AppInstallModal', () => {
             test: false,
           },
         ],
-        selectedVersion: '1.0.0',
         selectVersion: () => {},
         appsPermissions: defaultAppsPermissions,
       })
@@ -257,17 +195,80 @@ describe('AppInstallModal', () => {
       await screen.findByText(capiv1beta1Mocks.randomCluster1.metadata.name)
     );
 
-    const installButton = await screen.findByRole('button', {
-      name: 'Install app',
+    const input = screen.getByRole('textbox', { name: /application name/gi });
+    fireEvent.change(input, {
+      target: { value: app.metadata.name },
     });
 
-    fireEvent.click(installButton);
-
-    expect(screen.getByText('1.0.0')).toBeInTheDocument();
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'Install app',
+      })
+    );
 
     expect(
       await withMarkup(screen.findByText)(
         `Your app ${app.metadata.name} is being installed on ${capiv1beta1Mocks.randomCluster1.metadata.name}`
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('can pick a cluster if one is not already selected', async () => {
+    const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'cluster.x-k8s.io',
+            resource: 'clusters',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1beta1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterList);
+
+    render(
+      getComponent({
+        selectedAppCatalogEntry:
+          applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1,
+        catalogName: app.spec.catalog,
+        versions: [],
+        selectVersion: () => {},
+        appsPermissions: defaultAppsPermissions,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Install in cluster' }));
+
+    fireEvent.click(
+      await screen.findByText(capiv1beta1Mocks.randomCluster1.metadata.name)
+    );
+
+    expect(
+      await withMarkup(screen.findByText)(
+        `Install ${app.spec.name} on ${capiv1beta1Mocks.randomCluster1.metadata.name}`
+      )
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Pick a different cluster'));
+
+    fireEvent.click(
+      await screen.findByText(capiv1beta1Mocks.randomCluster2.metadata.name)
+    );
+
+    expect(
+      await withMarkup(screen.findByText)(
+        `Install ${app.spec.name} on ${capiv1beta1Mocks.randomCluster2.metadata.name}`
       )
     ).toBeInTheDocument();
   });
@@ -277,11 +278,10 @@ describe('AppInstallModal', () => {
 
     render(
       getComponent({
-        appName: app.metadata.name,
-        chartName: app.spec.name,
+        selectedAppCatalogEntry:
+          applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1,
         catalogName: app.spec.catalog,
         versions: [],
-        selectedVersion: '',
         selectVersion: () => {},
         appsPermissions: {
           ...defaultAppsPermissions,
@@ -296,7 +296,71 @@ describe('AppInstallModal', () => {
     ).toBeDisabled();
   });
 
-  it('displays an appropriate message if the app is already installed in the selected cluster', async () => {
+  it('allows an app to be selected again for installation on the selected cluster, if the app catalog entry does not have the clusterSingleton restriction', async () => {
+    const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'cluster.x-k8s.io',
+            resource: 'clusters',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1beta1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterList);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/apps/`
+      )
+      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.randomCluster1AppsList);
+
+    render(
+      getComponent({
+        selectedAppCatalogEntry:
+          applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1,
+        catalogName: app.spec.catalog,
+        versions: [],
+        selectVersion: () => {},
+        appsPermissions: defaultAppsPermissions,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Install in cluster' }));
+
+    const selectedClusterItem = await screen.findByText(
+      capiv1beta1Mocks.randomCluster1.metadata.name
+    );
+
+    expect(selectedClusterItem).not.toHaveClass('disabled');
+
+    fireEvent.click(selectedClusterItem);
+
+    expect(
+      await withMarkup(screen.findByText)(
+        `Install ${app.spec.name} on ${capiv1beta1Mocks.randomCluster1.metadata.name}`
+      )
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(
+      await screen.findByRole('button', { name: 'Installed in this cluster' })
+    ).not.toBeDisabled();
+  });
+
+  it('displays an appropriate message if the app is already installed in the selected cluster, and the app catalog entry has the clusterSingleton restriction', async () => {
     const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
 
     nock(window.config.mapiEndpoint)
@@ -329,24 +393,27 @@ describe('AppInstallModal', () => {
     render(
       getComponent(
         {
-          appName: app.spec.name,
-          chartName: app.spec.name,
+          selectedAppCatalogEntry: {
+            ...applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1,
+            spec: {
+              ...applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1.spec,
+              restrictions: { clusterSingleton: true },
+            },
+          },
           catalogName: app.spec.catalog,
           versions: [],
-          selectedVersion: '',
           selectVersion: () => {},
           appsPermissions: defaultAppsPermissions,
         },
         capiv1beta1Mocks.randomCluster1.metadata.name
       )
     );
-
     expect(
       await screen.findByText('Installed in this cluster')
     ).toBeInTheDocument();
   });
 
-  it('cannot select a cluster for app installation if the app is already installed on that cluster', async () => {
+  it('cannot select a cluster for app installation if the app is already installed on that cluster, and the app catalog entry has the clusterSingleton restriction', async () => {
     const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
 
     nock(window.config.mapiEndpoint)
@@ -378,11 +445,15 @@ describe('AppInstallModal', () => {
 
     render(
       getComponent({
-        appName: app.spec.name,
-        chartName: app.spec.name,
+        selectedAppCatalogEntry: {
+          ...applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1,
+          spec: {
+            ...applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1.spec,
+            restrictions: { clusterSingleton: true },
+          },
+        },
         catalogName: app.spec.catalog,
         versions: [],
-        selectedVersion: '',
         selectVersion: () => {},
         appsPermissions: defaultAppsPermissions,
       })
