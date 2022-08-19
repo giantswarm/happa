@@ -437,7 +437,12 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
               path={OrganizationsRoutes.Clusters.Detail.Apps}
               render={() =>
                 cluster && (
-                  <ClusterDetailApps releaseVersion={clusterReleaseVersion!} />
+                  <ClusterDetailApps
+                    releaseVersion={clusterReleaseVersion!}
+                    isClusterCreating={
+                      clusterStatus === ClusterStatus.CreationInProgress
+                    }
+                  />
                 )
               }
             />

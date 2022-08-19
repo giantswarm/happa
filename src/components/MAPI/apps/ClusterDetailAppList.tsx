@@ -12,6 +12,7 @@ interface IClusterDetailAppListProps
   apps: applicationv1alpha1.IApp[];
   appsPermissions?: IAppsPermissions;
   isLoading?: boolean;
+  isClusterCreating?: boolean;
   errorMessage?: string;
 }
 
@@ -21,6 +22,7 @@ const ClusterDetailAppList: React.FC<
   apps,
   appsPermissions,
   isLoading,
+  isClusterCreating = false,
   children,
   errorMessage,
   ...props
@@ -57,9 +59,15 @@ const ClusterDetailAppList: React.FC<
             direction='column'
             gap='small'
           >
-            <Text weight='bold'>No apps installed on this cluster</Text>
+            <Text weight='bold'>
+              {isClusterCreating
+                ? 'The cluster is currently being created'
+                : 'No apps installed on this cluster'}
+            </Text>
             <Text color='text-weak'>
-              Browse the Apps page to find any apps to install.
+              {isClusterCreating
+                ? 'Apps will be displayed here once the cluster is ready.'
+                : 'Browse the Apps page to find any apps to install.'}
             </Text>
           </Box>
         )}

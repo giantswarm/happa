@@ -374,7 +374,10 @@ class ClusterDetailView extends React.Component {
               </Tab>
               <Tab path={tabsPaths.Apps} title='Apps'>
                 {supporsAppsViaMapi ? (
-                  <ClusterDetailApps releaseVersion={release_version} />
+                  <ClusterDetailApps
+                    releaseVersion={release_version}
+                    isClusterCreating={clusterIsCreating}
+                  />
                 ) : (
                   <ClusterApps
                     clusterId={id}
@@ -384,7 +387,6 @@ class ClusterDetailView extends React.Component {
                     showInstalledAppsBlock={
                       Object.keys(this.props.catalogs.items).length > 0
                     }
-                    hasOptionalIngress={cluster.capabilities.hasOptionalIngress}
                   />
                 )}
               </Tab>
