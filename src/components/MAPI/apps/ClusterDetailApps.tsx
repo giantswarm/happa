@@ -144,8 +144,8 @@ const ClusterDetailApps: React.FC<
 
           <h3>Preinstalled Apps</h3>
           <Disclaimer margin={{ bottom: 'medium' }} fill={true}>
-            These apps and services are preinstalled on your cluster and managed
-            by Giant Swarm.
+            These apps are preinstalled on your cluster and managed by Giant
+            Swarm.
           </Disclaimer>
 
           <ClusterDetailReleaseApps
