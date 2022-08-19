@@ -55,7 +55,10 @@ it('lets me get there from the dashboard and go through the pages', async () => 
   const startButton = await findByText('Start');
   fireEvent.click(startButton);
 
-  const continueButton = await findByText('Continue');
+  let continueButton = await findByText('Continue');
+  fireEvent.click(continueButton);
+
+  continueButton = await findByText('Continue');
   fireEvent.click(continueButton);
 
   const finishButton = await findByText('Finish');
