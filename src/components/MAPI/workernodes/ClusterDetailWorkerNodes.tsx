@@ -15,6 +15,7 @@ import {
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
   IProviderNodePoolForNodePoolName,
+  isCAPIProvider,
   isNodePoolMngmtReadOnly,
   supportsNonExpMachinePools,
   supportsReleases,
@@ -160,8 +161,9 @@ const ColumnInfo = styled(Box)<{
   }
 `;
 
-const NodesInfo = styled.div`
-  grid-column: 6 / span 4;
+const NodesInfo = styled.div<{ displayCGroupsColumn: boolean }>`
+  grid-column: ${({ displayCGroupsColumn }) =>
+    `${displayCGroupsColumn ? 6 : 5} / span 4`};
   position: relative;
   display: flex;
   justify-content: center;
@@ -446,6 +448,8 @@ const ClusterDetailWorkerNodes: React.FC<
       return supportsNonExpMachinePools(cluster);
     }, [cluster]);
 
+    const displayCGroupsColumn = !isCAPIProvider(provider);
+
     return (
       <DocumentTitle title={`Worker Nodes | ${clusterId}`}>
         <Breadcrumb
@@ -467,11 +471,13 @@ const ClusterDetailWorkerNodes: React.FC<
             {!hasNoNodePools && (
               <Box>
                 <ColumnInfo
-                  additionalColumnsCount={additionalColumns.length}
+                  additionalColumnsCount={
+                    additionalColumns.length + Number(displayCGroupsColumn)
+                  }
                   nameColumnWidth={nameColumnWidth}
                   margin={{ top: 'xsmall' }}
                 >
-                  <NodesInfo>
+                  <NodesInfo displayCGroupsColumn={displayCGroupsColumn}>
                     <NodesInfoText
                       color='text-weak'
                       textAlign='center'
@@ -482,7 +488,9 @@ const ClusterDetailWorkerNodes: React.FC<
                   </NodesInfo>
                 </ColumnInfo>
                 <Header
-                  additionalColumnsCount={additionalColumns.length}
+                  additionalColumnsCount={
+                    additionalColumns.length + Number(displayCGroupsColumn)
+                  }
                   nameColumnWidth={nameColumnWidth}
                   height='xxsmall'
                 >
@@ -505,9 +513,11 @@ const ClusterDetailWorkerNodes: React.FC<
                       {formatAZsColumnTitle(provider)}
                     </Text>
                   </Box>
-                  <Box align='center'>
-                    <Text size='xsmall'>CGroups</Text>
-                  </Box>
+                  {displayCGroupsColumn && (
+                    <Box align='center'>
+                      <Text size='xsmall'>CGroups</Text>
+                    </Box>
+                  )}
                   <Box align='center'>
                     <Text size='xsmall'>Min</Text>
                   </Box>
@@ -540,6 +550,7 @@ const ClusterDetailWorkerNodes: React.FC<
                         nameColumnWidth={nameColumnWidth}
                         margin={{ bottom: 'small' }}
                         readOnly={isReadOnly}
+                        displayCGroupsVersion={displayCGroupsColumn}
                       />
                     ))}
 
@@ -561,6 +572,7 @@ const ClusterDetailWorkerNodes: React.FC<
                                 nodePool={nodePool}
                                 providerNodePool={providerNodePool}
                                 additionalColumns={additionalColumns}
+                                displayCGroupsVersion={displayCGroupsColumn}
                                 nameColumnWidth={nameColumnWidth}
                                 margin={{ bottom: 'small' }}
                                 readOnly={isReadOnly}

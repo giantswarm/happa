@@ -89,6 +89,7 @@ interface IWorkerNodesNodePoolItemProps
   canUpdateNodePools?: boolean;
   canDeleteNodePools?: boolean;
   nameColumnWidth?: number;
+  displayCGroupsVersion?: boolean;
   flatcarContainerLinuxVersion?: string;
 }
 
@@ -102,6 +103,7 @@ const WorkerNodesNodePoolItem: React.FC<
   canUpdateNodePools,
   canDeleteNodePools,
   nameColumnWidth,
+  displayCGroupsVersion = true,
   flatcarContainerLinuxVersion,
   ...props
 }) => {
@@ -235,7 +237,9 @@ const WorkerNodesNodePoolItem: React.FC<
       <Row
         background={isDeleting ? 'background-back' : 'background-front'}
         round='xsmall'
-        additionalColumnsCount={additionalColumns?.length}
+        additionalColumnsCount={
+          (additionalColumns?.length ?? 0) + Number(displayCGroupsVersion)
+        }
         nameColumnWidth={nameColumnWidth}
       >
         <Box align='flex-start'>
@@ -313,35 +317,37 @@ const WorkerNodesNodePoolItem: React.FC<
                 )}
               </OptionalValue>
             </Box>
-            <Box align='center'>
-              <OptionalValue value={cgroupsVersion} loaderWidth={30}>
-                {(value) => (
-                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
-                    <Text aria-label={`Control groups version: ${value}`}>
-                      {value}
-                      {value === 'v1' && (
-                        <>
-                          {' '}
-                          <TooltipContainer
-                            content={
-                              <Tooltip>
-                                This node pool uses the deprecated control
-                                groups version 1.
-                              </Tooltip>
-                            }
-                          >
-                            <i
-                              className='fa fa-warning'
-                              aria-label='Warning: This node pool uses the deprecated control groups version 1.'
-                            />
-                          </TooltipContainer>
-                        </>
-                      )}
-                    </Text>
-                  </Box>
-                )}
-              </OptionalValue>
-            </Box>
+            {displayCGroupsVersion && (
+              <Box align='center'>
+                <OptionalValue value={cgroupsVersion} loaderWidth={30}>
+                  {(value) => (
+                    <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                      <Text aria-label={`Control groups version: ${value}`}>
+                        {value}
+                        {value === 'v1' && (
+                          <>
+                            {' '}
+                            <TooltipContainer
+                              content={
+                                <Tooltip>
+                                  This node pool uses the deprecated control
+                                  groups version 1.
+                                </Tooltip>
+                              }
+                            >
+                              <i
+                                className='fa fa-warning'
+                                aria-label='Warning: This node pool uses the deprecated control groups version 1.'
+                              />
+                            </TooltipContainer>
+                          </>
+                        )}
+                      </Text>
+                    </Box>
+                  )}
+                </OptionalValue>
+              </Box>
+            )}
             <Box align='center'>
               <OptionalValue value={scaling?.min} loaderWidth={30}>
                 {(value) => (

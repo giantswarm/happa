@@ -1329,3 +1329,14 @@ export function getNamespaceFromOrgName(name: string): string {
 
   return `org-${nameChars.join('')}`;
 }
+
+export function isCAPIProvider(provider: string): boolean {
+  switch (provider) {
+    case Providers.AZURE:
+    case Providers.AWS:
+    case Providers.KVM:
+      return false;
+    default:
+      return true;
+  }
+}
