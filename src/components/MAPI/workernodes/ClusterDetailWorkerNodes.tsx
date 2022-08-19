@@ -15,6 +15,7 @@ import {
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
   IProviderNodePoolForNodePoolName,
+  isCAPGCluster,
   isCAPIProvider,
   isNodePoolMngmtReadOnly,
   supportsNonExpMachinePools,
@@ -161,9 +162,14 @@ const ColumnInfo = styled(Box)<{
   }
 `;
 
-const NodesInfo = styled.div<{ displayCGroupsColumn: boolean }>`
-  grid-column: ${({ displayCGroupsColumn }) =>
-    `${displayCGroupsColumn ? 6 : 5} / span 4`};
+const NodesInfo = styled.div<{
+  displayCGroupsColumn: boolean;
+  hideNodePoolAutoscalingColumns?: boolean;
+}>`
+  grid-column: ${({ displayCGroupsColumn, hideNodePoolAutoscalingColumns }) =>
+    `${displayCGroupsColumn ? 6 : 5} / span ${
+      hideNodePoolAutoscalingColumns ? 2 : 4
+    }`};
   position: relative;
   display: flex;
   justify-content: center;
@@ -449,6 +455,7 @@ const ClusterDetailWorkerNodes: React.FC<
     }, [cluster]);
 
     const displayCGroupsColumn = !isCAPIProvider(provider);
+    const hideNodePoolAutoscalingColumns = cluster && isCAPGCluster(cluster);
 
     return (
       <DocumentTitle title={`Worker Nodes | ${clusterId}`}>
@@ -472,12 +479,19 @@ const ClusterDetailWorkerNodes: React.FC<
               <Box>
                 <ColumnInfo
                   additionalColumnsCount={
-                    additionalColumns.length + Number(displayCGroupsColumn)
+                    additionalColumns.length +
+                    Number(displayCGroupsColumn) +
+                    (hideNodePoolAutoscalingColumns ? 0 : 2)
                   }
                   nameColumnWidth={nameColumnWidth}
                   margin={{ top: 'xsmall' }}
                 >
-                  <NodesInfo displayCGroupsColumn={displayCGroupsColumn}>
+                  <NodesInfo
+                    displayCGroupsColumn={displayCGroupsColumn}
+                    hideNodePoolAutoscalingColumns={
+                      hideNodePoolAutoscalingColumns
+                    }
+                  >
                     <NodesInfoText
                       color='text-weak'
                       textAlign='center'
@@ -489,7 +503,9 @@ const ClusterDetailWorkerNodes: React.FC<
                 </ColumnInfo>
                 <Header
                   additionalColumnsCount={
-                    additionalColumns.length + Number(displayCGroupsColumn)
+                    additionalColumns.length +
+                    Number(displayCGroupsColumn) +
+                    (hideNodePoolAutoscalingColumns ? 0 : 2)
                   }
                   nameColumnWidth={nameColumnWidth}
                   height='xxsmall'
@@ -518,12 +534,16 @@ const ClusterDetailWorkerNodes: React.FC<
                       <Text size='xsmall'>CGroups</Text>
                     </Box>
                   )}
-                  <Box align='center'>
-                    <Text size='xsmall'>Min</Text>
-                  </Box>
-                  <Box align='center'>
-                    <Text size='xsmall'>Max</Text>
-                  </Box>
+                  {!hideNodePoolAutoscalingColumns && (
+                    <>
+                      <Box align='center'>
+                        <Text size='xsmall'>Min</Text>
+                      </Box>
+                      <Box align='center'>
+                        <Text size='xsmall'>Max</Text>
+                      </Box>
+                    </>
+                  )}
                   <Box align='center'>
                     <Text size='xsmall'>Desired</Text>
                   </Box>
@@ -551,6 +571,7 @@ const ClusterDetailWorkerNodes: React.FC<
                         margin={{ bottom: 'small' }}
                         readOnly={isReadOnly}
                         displayCGroupsVersion={displayCGroupsColumn}
+                        hideNodePoolAutoscaling={hideNodePoolAutoscalingColumns}
                       />
                     ))}
 
@@ -580,6 +601,9 @@ const ClusterDetailWorkerNodes: React.FC<
                                 canDeleteNodePools={canDeleteNodePools}
                                 flatcarContainerLinuxVersion={
                                   flatcarContainerLinuxVersion
+                                }
+                                hideNodePoolAutoscaling={
+                                  hideNodePoolAutoscalingColumns
                                 }
                               />
                             </BaseTransition>

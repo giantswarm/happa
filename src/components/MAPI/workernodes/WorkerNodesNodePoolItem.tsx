@@ -91,6 +91,7 @@ interface IWorkerNodesNodePoolItemProps
   nameColumnWidth?: number;
   displayCGroupsVersion?: boolean;
   flatcarContainerLinuxVersion?: string;
+  hideNodePoolAutoscaling?: boolean;
 }
 
 const WorkerNodesNodePoolItem: React.FC<
@@ -105,6 +106,7 @@ const WorkerNodesNodePoolItem: React.FC<
   nameColumnWidth,
   displayCGroupsVersion = true,
   flatcarContainerLinuxVersion,
+  hideNodePoolAutoscaling = false,
   ...props
 }) => {
   const clientFactory = useHttpClientFactory();
@@ -238,7 +240,9 @@ const WorkerNodesNodePoolItem: React.FC<
         background={isDeleting ? 'background-back' : 'background-front'}
         round='xsmall'
         additionalColumnsCount={
-          (additionalColumns?.length ?? 0) + Number(displayCGroupsVersion)
+          (additionalColumns?.length ?? 0) +
+          Number(displayCGroupsVersion) +
+          (hideNodePoolAutoscaling ? 0 : 2)
         }
         nameColumnWidth={nameColumnWidth}
       >
@@ -348,32 +352,36 @@ const WorkerNodesNodePoolItem: React.FC<
                 </OptionalValue>
               </Box>
             )}
-            <Box align='center'>
-              <OptionalValue value={scaling?.min} loaderWidth={30}>
-                {(value) => (
-                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
-                    <Text
-                      aria-label={`Autoscaler minimum node count: ${value}`}
-                    >
-                      {value}
-                    </Text>
-                  </Box>
-                )}
-              </OptionalValue>
-            </Box>
-            <Box align='center'>
-              <OptionalValue value={scaling?.max} loaderWidth={30}>
-                {(value) => (
-                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
-                    <Text
-                      aria-label={`Autoscaler maximum node count: ${value}`}
-                    >
-                      {value}
-                    </Text>
-                  </Box>
-                )}
-              </OptionalValue>
-            </Box>
+            {!hideNodePoolAutoscaling && (
+              <>
+                <Box align='center'>
+                  <OptionalValue value={scaling?.min} loaderWidth={30}>
+                    {(value) => (
+                      <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                        <Text
+                          aria-label={`Autoscaler minimum node count: ${value}`}
+                        >
+                          {value}
+                        </Text>
+                      </Box>
+                    )}
+                  </OptionalValue>
+                </Box>
+                <Box align='center'>
+                  <OptionalValue value={scaling?.max} loaderWidth={30}>
+                    {(value) => (
+                      <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                        <Text
+                          aria-label={`Autoscaler maximum node count: ${value}`}
+                        >
+                          {value}
+                        </Text>
+                      </Box>
+                    )}
+                  </OptionalValue>
+                </Box>
+              </>
+            )}
             <Box align='center'>
               <OptionalValue value={scaling?.desired} loaderWidth={30}>
                 {(value) => (
