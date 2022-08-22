@@ -35,11 +35,7 @@ const ClusterActions: React.FC<
   );
   const workerNodesCount = getNumberOfNodePoolsNodes(nodePools);
 
-  const hasOptionalIngress = cluster.capabilities?.hasOptionalIngress;
-  const userInstalledApps = filterUserInstalledApps(
-    cluster.apps ?? [],
-    hasOptionalIngress ?? false
-  );
+  const userInstalledApps = filterUserInstalledApps(cluster.apps ?? []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const dispatch: Dispatch<any> = useDispatch();

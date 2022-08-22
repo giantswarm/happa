@@ -2,6 +2,8 @@ import { Box, Text } from 'grommet';
 import React from 'react';
 import styled from 'styled-components';
 
+export const TitleWrapper = styled(Box)``;
+
 const Title = styled(Text)`
   text-transform: uppercase;
 `;
@@ -9,21 +11,13 @@ const Title = styled(Text)`
 interface IClusterDetailAppListWidgetProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   title: string;
-  titleWidth?: string;
   titleColor?: string;
   contentProps?: React.ComponentPropsWithoutRef<typeof Box>;
 }
 
 const ClusterDetailAppListWidget: React.FC<
   React.PropsWithChildren<IClusterDetailAppListWidgetProps>
-> = ({
-  title,
-  titleWidth,
-  titleColor = 'text-weak',
-  children,
-  contentProps,
-  ...props
-}) => {
+> = ({ title, titleColor = 'text-weak', children, contentProps, ...props }) => {
   return (
     <Box
       pad={{ horizontal: 'xsmall' }}
@@ -31,11 +25,11 @@ const ClusterDetailAppListWidget: React.FC<
       aria-label={title}
       {...props}
     >
-      <Box width={{ min: titleWidth }} margin={{ right: 'medium' }}>
+      <TitleWrapper margin={{ right: 'medium' }}>
         <Title color={titleColor} size='small'>
           {title}
         </Title>
-      </Box>
+      </TitleWrapper>
       <Box {...contentProps}>{children}</Box>
     </Box>
   );
