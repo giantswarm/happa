@@ -7,10 +7,12 @@ import {
   getNodePoolDescription,
   getNodePoolScaling,
 } from 'MAPI/utils';
+import { Providers } from 'model/constants';
 import React, { useMemo, useRef, useState } from 'react';
 import Copyable from 'shared/Copyable';
 import styled from 'styled-components';
 import { Code } from 'styles';
+import { AvailabilityZonesLabelVariant } from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabel';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import Date from 'UI/Display/Date';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
@@ -36,12 +38,18 @@ import WorkerNodesNodePoolItemDelete from './WorkerNodesNodePoolItemDelete';
 import WorkerNodesNodePoolItemMachineType from './WorkerNodesNodePoolItemMachineType';
 import WorkerNodesNodePoolItemScale from './WorkerNodesNodePoolItemScale';
 
-function formatAvailabilityZonesLabel(zones: string[]) {
+function formatAvailabilityZonesLabel(
+  zones: string[],
+  provider: PropertiesOf<typeof Providers>
+) {
+  const availabilityZonesLabel =
+    provider === Providers.GCP ? 'Zones' : 'Availability zones';
+
   if (zones.length < 1) {
-    return 'Availability zones: not available';
+    return `${availabilityZonesLabel}: not available`;
   }
 
-  return `Availability zones: ${zones.join(', ')}`;
+  return `${availabilityZonesLabel}: ${zones.join(', ')}`;
 }
 
 const Row = styled(Box)<{
@@ -81,7 +89,9 @@ interface IWorkerNodesNodePoolItemProps
   canUpdateNodePools?: boolean;
   canDeleteNodePools?: boolean;
   nameColumnWidth?: number;
+  displayCGroupsVersion?: boolean;
   flatcarContainerLinuxVersion?: string;
+  hideNodePoolAutoscaling?: boolean;
 }
 
 const WorkerNodesNodePoolItem: React.FC<
@@ -94,7 +104,9 @@ const WorkerNodesNodePoolItem: React.FC<
   canUpdateNodePools,
   canDeleteNodePools,
   nameColumnWidth,
+  displayCGroupsVersion = true,
   flatcarContainerLinuxVersion,
+  hideNodePoolAutoscaling = false,
   ...props
 }) => {
   const clientFactory = useHttpClientFactory();
@@ -220,12 +232,18 @@ const WorkerNodesNodePoolItem: React.FC<
     setIsScaleConfirmOpen(false);
   };
 
+  const provider = window.config.info.general.provider;
+
   return (
     <Box {...props}>
       <Row
         background={isDeleting ? 'background-back' : 'background-front'}
         round='xsmall'
-        additionalColumnsCount={additionalColumns?.length}
+        additionalColumnsCount={
+          (additionalColumns?.length ?? 0) +
+          Number(displayCGroupsVersion) +
+          (hideNodePoolAutoscaling ? 0 : 2)
+        }
         nameColumnWidth={nameColumnWidth}
       >
         <Box align='flex-start'>
@@ -288,68 +306,82 @@ const WorkerNodesNodePoolItem: React.FC<
                 {(value) => (
                   <Box
                     direction='row'
-                    aria-label={formatAvailabilityZonesLabel(value)}
+                    aria-label={formatAvailabilityZonesLabel(value, provider)}
                   >
-                    <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
+                    <AvailabilityZonesLabels
+                      zones={value}
+                      labelsChecked={[]}
+                      variant={
+                        provider === Providers.GCP
+                          ? AvailabilityZonesLabelVariant.Zone
+                          : AvailabilityZonesLabelVariant.AvailabilityZone
+                      }
+                    />
                   </Box>
                 )}
               </OptionalValue>
             </Box>
-            <Box align='center'>
-              <OptionalValue value={cgroupsVersion} loaderWidth={30}>
-                {(value) => (
-                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
-                    <Text aria-label={`Control groups version: ${value}`}>
-                      {value}
-                      {value === 'v1' && (
-                        <>
-                          {' '}
-                          <TooltipContainer
-                            content={
-                              <Tooltip>
-                                This node pool uses the deprecated control
-                                groups version 1.
-                              </Tooltip>
-                            }
-                          >
-                            <i
-                              className='fa fa-warning'
-                              aria-label='Warning: This node pool uses the deprecated control groups version 1.'
-                            />
-                          </TooltipContainer>
-                        </>
-                      )}
-                    </Text>
-                  </Box>
-                )}
-              </OptionalValue>
-            </Box>
-            <Box align='center'>
-              <OptionalValue value={scaling?.min} loaderWidth={30}>
-                {(value) => (
-                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
-                    <Text
-                      aria-label={`Autoscaler minimum node count: ${value}`}
-                    >
-                      {value}
-                    </Text>
-                  </Box>
-                )}
-              </OptionalValue>
-            </Box>
-            <Box align='center'>
-              <OptionalValue value={scaling?.max} loaderWidth={30}>
-                {(value) => (
-                  <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
-                    <Text
-                      aria-label={`Autoscaler maximum node count: ${value}`}
-                    >
-                      {value}
-                    </Text>
-                  </Box>
-                )}
-              </OptionalValue>
-            </Box>
+            {displayCGroupsVersion && (
+              <Box align='center'>
+                <OptionalValue value={cgroupsVersion} loaderWidth={30}>
+                  {(value) => (
+                    <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                      <Text aria-label={`Control groups version: ${value}`}>
+                        {value}
+                        {value === 'v1' && (
+                          <>
+                            {' '}
+                            <TooltipContainer
+                              content={
+                                <Tooltip>
+                                  This node pool uses the deprecated control
+                                  groups version 1.
+                                </Tooltip>
+                              }
+                            >
+                              <i
+                                className='fa fa-warning'
+                                aria-label='Warning: This node pool uses the deprecated control groups version 1.'
+                              />
+                            </TooltipContainer>
+                          </>
+                        )}
+                      </Text>
+                    </Box>
+                  )}
+                </OptionalValue>
+              </Box>
+            )}
+            {!hideNodePoolAutoscaling && (
+              <>
+                <Box align='center'>
+                  <OptionalValue value={scaling?.min} loaderWidth={30}>
+                    {(value) => (
+                      <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                        <Text
+                          aria-label={`Autoscaler minimum node count: ${value}`}
+                        >
+                          {value}
+                        </Text>
+                      </Box>
+                    )}
+                  </OptionalValue>
+                </Box>
+                <Box align='center'>
+                  <OptionalValue value={scaling?.max} loaderWidth={30}>
+                    {(value) => (
+                      <Box pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}>
+                        <Text
+                          aria-label={`Autoscaler maximum node count: ${value}`}
+                        >
+                          {value}
+                        </Text>
+                      </Box>
+                    )}
+                  </OptionalValue>
+                </Box>
+              </>
+            )}
             <Box align='center'>
               <OptionalValue value={scaling?.desired} loaderWidth={30}>
                 {(value) => (

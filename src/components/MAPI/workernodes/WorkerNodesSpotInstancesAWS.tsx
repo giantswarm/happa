@@ -54,7 +54,9 @@ const WorkerNodesSpotInstancesAWS: React.FC<
             </Tooltip>
           }
         >
-          <Text aria-label='Number of nodes using spot instances'>
+          <Text
+            aria-label={`Number of nodes using spot instances: ${nodeCount}`}
+          >
             {nodeCount >= 0 ? nodeCount : <NotAvailable />}
           </Text>
         </TooltipContainer>

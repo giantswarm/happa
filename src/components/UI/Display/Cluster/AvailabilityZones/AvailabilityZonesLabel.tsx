@@ -48,7 +48,6 @@ const Wrapper = styled.abbr<{ bgColor: string }>`
   display: inline-block;
   width: 1.6em;
   text-align: center;
-  margin-right: 8px;
   line-height: 1.4em;
   text-decoration: none;
   font-weight: 400;
@@ -80,6 +79,11 @@ const Wrapper = styled.abbr<{ bgColor: string }>`
   }
 `;
 
+export enum AvailabilityZonesLabelVariant {
+  Zone = 'Zone',
+  AvailabilityZone = 'Availability zone',
+}
+
 interface IAvailabilityZonesLabelProps {
   label: string;
   value: string;
@@ -95,6 +99,7 @@ interface IAvailabilityZonesLabelProps {
   isChecked: boolean;
   isMaxReached?: boolean;
   isRadioButtons?: boolean;
+  variant?: AvailabilityZonesLabelVariant;
 }
 
 const AvailabilityZonesLabel: React.FC<IAvailabilityZonesLabelProps> = ({
@@ -105,6 +110,7 @@ const AvailabilityZonesLabel: React.FC<IAvailabilityZonesLabelProps> = ({
   isChecked,
   isMaxReached,
   isRadioButtons,
+  variant,
 }) => {
   const notCheckedClass = onToggleChecked && !isChecked ? `not-checked` : '';
   /* If this has onToggleChecked prop it means that it is clickable and hence we don't want a "?" as cursor */
@@ -147,13 +153,17 @@ const AvailabilityZonesLabel: React.FC<IAvailabilityZonesLabelProps> = ({
           bgColor={color}
           onClick={toggleChecked}
           tabIndex={0}
-          aria-label={`Availability zone ${value}`}
+          aria-label={`${variant} ${value}`}
         >
           {label}
         </Wrapper>
       </Keyboard>
     </RUMActionTarget>
   );
+};
+
+AvailabilityZonesLabel.defaultProps = {
+  variant: AvailabilityZonesLabelVariant.AvailabilityZone,
 };
 
 export default AvailabilityZonesLabel;
