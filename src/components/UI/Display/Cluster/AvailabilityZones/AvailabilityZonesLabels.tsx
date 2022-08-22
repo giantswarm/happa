@@ -1,5 +1,8 @@
+import { Box } from 'grommet';
 import React from 'react';
-import AvailabilityZonesLabel from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabel';
+import AvailabilityZonesLabel, {
+  AvailabilityZonesLabelVariant,
+} from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabel';
 import NotAvailable from 'UI/Display/NotAvailable';
 
 interface IAvailabilityZonesLabelsProps {
@@ -7,12 +10,14 @@ interface IAvailabilityZonesLabelsProps {
   zones?: string[];
   isMaxReached?: boolean;
   isRadioButtons?: boolean;
+  variant?: AvailabilityZonesLabelVariant;
 }
 
 // Returns an array of AvailabilityZonesLabel components
 const AvailabilityZonesLabels: React.FC<IAvailabilityZonesLabelsProps> = ({
   zones,
   labelsChecked,
+  variant,
   ...props
 }) => {
   if (!zones || zones.length === 0) {
@@ -20,7 +25,7 @@ const AvailabilityZonesLabels: React.FC<IAvailabilityZonesLabelsProps> = ({
   }
 
   return (
-    <>
+    <Box gap='xsmall' direction='row'>
       {zones.map((az, i) => {
         const value = az.slice(-1);
         const label = value.toUpperCase();
@@ -33,11 +38,12 @@ const AvailabilityZonesLabels: React.FC<IAvailabilityZonesLabelsProps> = ({
             value={value}
             title={az}
             isChecked={isChecked}
+            variant={variant}
             {...props}
           />
         );
       })}
-    </>
+    </Box>
   );
 };
 
@@ -46,6 +52,7 @@ AvailabilityZonesLabels.defaultProps = {
   labelsChecked: [],
   isMaxReached: false,
   isRadioButtons: false,
+  variant: AvailabilityZonesLabelVariant.AvailabilityZone,
 };
 
 export default AvailabilityZonesLabels;

@@ -31,56 +31,61 @@ const CLIGuidesList: React.FC<React.PropsWithChildren<ICLIGuidesListProps>> = ({
   ...props
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const filteredChildren = React.Children.toArray(children).filter(Boolean);
 
   return (
     <ThemeContext.Extend value={customTheme}>
-      <Accordion
-        onActive={(indices: number[]) => setIsExpanded(indices.length > 0)}
-        basis='100%'
-        round='xsmall'
-        background={isExpanded ? 'accent-strong' : 'background-strong'}
-        {...props}
-      >
-        <AccordionPanel
-          label={
-            <Box
-              direction='row'
-              align='center'
-              pad='small'
-              gap='xsmall'
-              round='xsmall'
-              background={isExpanded ? 'accent-strong' : 'background-strong'}
-            >
-              <Text
-                className='fa fa-shell'
-                role='presentation'
-                aria-hidden={true}
-                color='text-weak'
-              />
-              <Text weight='bold' color='text-weak'>
-                {title}
-              </Text>
-            </Box>
-          }
+      {filteredChildren.length > 1 ? (
+        <Accordion
+          onActive={(indices: number[]) => setIsExpanded(indices.length > 0)}
+          basis='100%'
+          round='xsmall'
+          background={isExpanded ? 'accent-strong' : 'background-strong'}
+          {...props}
         >
-          <Box
-            basis='100%'
-            margin={{ bottom: 'xsmall' }}
-            pad='12px'
-            gap='small'
+          <AccordionPanel
+            label={
+              <Box
+                direction='row'
+                align='center'
+                pad='small'
+                gap='xsmall'
+                round='xsmall'
+                background={isExpanded ? 'accent-strong' : 'background-strong'}
+              >
+                <Text
+                  className='fa fa-shell'
+                  role='presentation'
+                  aria-hidden={true}
+                  color='text-weak'
+                />
+                <Text weight='bold' color='text-weak'>
+                  {title}
+                </Text>
+              </Box>
+            }
           >
-            {children &&
-              React.Children.map(
-                children,
-                (child) =>
-                  child &&
-                  React.cloneElement(child as React.ReactElement, {
-                    inList: true,
-                  })
-              )}
-          </Box>
-        </AccordionPanel>
-      </Accordion>
+            <Box
+              basis='100%'
+              margin={{ bottom: 'xsmall' }}
+              pad='12px'
+              gap='small'
+            >
+              {children &&
+                React.Children.map(
+                  children,
+                  (child) =>
+                    child &&
+                    React.cloneElement(child as React.ReactElement, {
+                      inList: true,
+                    })
+                )}
+            </Box>
+          </AccordionPanel>
+        </Accordion>
+      ) : (
+        <Box {...props}>{children}</Box>
+      )}
     </ThemeContext.Extend>
   );
 };

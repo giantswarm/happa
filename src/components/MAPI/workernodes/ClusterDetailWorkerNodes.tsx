@@ -15,8 +15,11 @@ import {
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
   IProviderNodePoolForNodePoolName,
+  isCAPGCluster,
+  isCAPIProvider,
   isNodePoolMngmtReadOnly,
   supportsNonExpMachinePools,
+  supportsReleases,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
@@ -105,6 +108,7 @@ function formatMachineTypeColumnTitle(
 ) {
   switch (provider) {
     case Providers.AWS:
+    case Providers.GCP:
       return 'Instance type';
     case Providers.AZURE:
       return 'VM Size';
@@ -113,17 +117,8 @@ function formatMachineTypeColumnTitle(
   }
 }
 
-function getProviderNodePoolResourceName(
-  provider: PropertiesOf<typeof Providers>
-) {
-  switch (provider) {
-    case Providers.AWS:
-      return 'MachineDeployment';
-    case Providers.AZURE:
-      return 'MachinePool';
-    default:
-      return 'MachinePool';
-  }
+function formatAZsColumnTitle(provider: PropertiesOf<typeof Providers>) {
+  return provider === Providers.GCP ? 'Zones' : 'Availability zones';
 }
 
 function getFlatcarContainerLinuxVersion(
@@ -167,8 +162,14 @@ const ColumnInfo = styled(Box)<{
   }
 `;
 
-const NodesInfo = styled.div`
-  grid-column: 6 / span 4;
+const NodesInfo = styled.div<{
+  displayCGroupsColumn: boolean;
+  hideNodePoolAutoscalingColumns?: boolean;
+}>`
+  grid-column: ${({ displayCGroupsColumn, hideNodePoolAutoscalingColumns }) =>
+    `${displayCGroupsColumn ? 6 : 5} / span ${
+      hideNodePoolAutoscalingColumns ? 2 : 4
+    }`};
   position: relative;
   display: flex;
   justify-content: center;
@@ -382,9 +383,11 @@ const ClusterDetailWorkerNodes: React.FC<
       );
     }, [nodePoolList?.items, providerNodePools]);
 
-    const clusterReleaseVersion = cluster
-      ? capiv1beta1.getReleaseVersion(cluster)
-      : undefined;
+    const isReleasesSupportedByProvider = supportsReleases(provider);
+    const clusterReleaseVersion =
+      cluster && isReleasesSupportedByProvider
+        ? capiv1beta1.getReleaseVersion(cluster)
+        : undefined;
 
     const releaseListKey =
       !hasNoNodePools && clusterReleaseVersion
@@ -451,6 +454,9 @@ const ClusterDetailWorkerNodes: React.FC<
       return supportsNonExpMachinePools(cluster);
     }, [cluster]);
 
+    const displayCGroupsColumn = !isCAPIProvider(provider);
+    const hideNodePoolAutoscalingColumns = cluster && isCAPGCluster(cluster);
+
     return (
       <DocumentTitle title={`Worker Nodes | ${clusterId}`}>
         <Breadcrumb
@@ -472,11 +478,20 @@ const ClusterDetailWorkerNodes: React.FC<
             {!hasNoNodePools && (
               <Box>
                 <ColumnInfo
-                  additionalColumnsCount={additionalColumns.length}
+                  additionalColumnsCount={
+                    additionalColumns.length +
+                    Number(displayCGroupsColumn) +
+                    (hideNodePoolAutoscalingColumns ? 0 : 2)
+                  }
                   nameColumnWidth={nameColumnWidth}
                   margin={{ top: 'xsmall' }}
                 >
-                  <NodesInfo>
+                  <NodesInfo
+                    displayCGroupsColumn={displayCGroupsColumn}
+                    hideNodePoolAutoscalingColumns={
+                      hideNodePoolAutoscalingColumns
+                    }
+                  >
                     <NodesInfoText
                       color='text-weak'
                       textAlign='center'
@@ -487,7 +502,11 @@ const ClusterDetailWorkerNodes: React.FC<
                   </NodesInfo>
                 </ColumnInfo>
                 <Header
-                  additionalColumnsCount={additionalColumns.length}
+                  additionalColumnsCount={
+                    additionalColumns.length +
+                    Number(displayCGroupsColumn) +
+                    (hideNodePoolAutoscalingColumns ? 0 : 2)
+                  }
                   nameColumnWidth={nameColumnWidth}
                   height='xxsmall'
                 >
@@ -507,18 +526,24 @@ const ClusterDetailWorkerNodes: React.FC<
                   </Box>
                   <Box align='center'>
                     <Text textAlign='center' size='xsmall'>
-                      Availability zones
+                      {formatAZsColumnTitle(provider)}
                     </Text>
                   </Box>
-                  <Box align='center'>
-                    <Text size='xsmall'>CGroups</Text>
-                  </Box>
-                  <Box align='center'>
-                    <Text size='xsmall'>Min</Text>
-                  </Box>
-                  <Box align='center'>
-                    <Text size='xsmall'>Max</Text>
-                  </Box>
+                  {displayCGroupsColumn && (
+                    <Box align='center'>
+                      <Text size='xsmall'>CGroups</Text>
+                    </Box>
+                  )}
+                  {!hideNodePoolAutoscalingColumns && (
+                    <>
+                      <Box align='center'>
+                        <Text size='xsmall'>Min</Text>
+                      </Box>
+                      <Box align='center'>
+                        <Text size='xsmall'>Max</Text>
+                      </Box>
+                    </>
+                  )}
                   <Box align='center'>
                     <Text size='xsmall'>Desired</Text>
                   </Box>
@@ -545,6 +570,8 @@ const ClusterDetailWorkerNodes: React.FC<
                         nameColumnWidth={nameColumnWidth}
                         margin={{ bottom: 'small' }}
                         readOnly={isReadOnly}
+                        displayCGroupsVersion={displayCGroupsColumn}
+                        hideNodePoolAutoscaling={hideNodePoolAutoscalingColumns}
                       />
                     ))}
 
@@ -566,6 +593,7 @@ const ClusterDetailWorkerNodes: React.FC<
                                 nodePool={nodePool}
                                 providerNodePool={providerNodePool}
                                 additionalColumns={additionalColumns}
+                                displayCGroupsVersion={displayCGroupsColumn}
                                 nameColumnWidth={nameColumnWidth}
                                 margin={{ bottom: 'small' }}
                                 readOnly={isReadOnly}
@@ -573,6 +601,9 @@ const ClusterDetailWorkerNodes: React.FC<
                                 canDeleteNodePools={canDeleteNodePools}
                                 flatcarContainerLinuxVersion={
                                   flatcarContainerLinuxVersion
+                                }
+                                hideNodePoolAutoscaling={
+                                  hideNodePoolAutoscalingColumns
                                 }
                               />
                             </BaseTransition>
@@ -648,9 +679,7 @@ const ClusterDetailWorkerNodes: React.FC<
                 <ListNodePoolsGuide
                   clusterName={cluster.metadata.name}
                   clusterNamespace={cluster.metadata.namespace!}
-                  providerNodePoolResourceName={getProviderNodePoolResourceName(
-                    provider
-                  )}
+                  provider={provider}
                 />
 
                 {!isReadOnly && (

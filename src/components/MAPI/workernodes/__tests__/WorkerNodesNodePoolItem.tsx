@@ -8,10 +8,12 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
+import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
+import * as infrav1alpha3Mocks from 'test/mockHttpCalls/infrastructurev1alpha3';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
@@ -41,14 +43,6 @@ function getComponent(
 }
 
 describe('WorkerNodesNodePoolItem', () => {
-  beforeAll(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
-  });
-
   it('renders without crashing', () => {
     render(getComponent({}));
   });
@@ -57,6 +51,16 @@ describe('WorkerNodesNodePoolItem', () => {
     render(getComponent({}));
 
     expect(screen.getAllByLabelText('Loading...').length).toEqual(9);
+  });
+});
+
+describe('WorkerNodesNodePoolItem on Azure', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('displays if a node pool has been deleted', () => {
@@ -318,23 +322,6 @@ describe('WorkerNodesNodePoolItem', () => {
     jest.clearAllTimers();
   });
 
-  it('does not allow deleting the node pool for a read-only user', async () => {
-    render(
-      getComponent({
-        nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
-        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
-        canDeleteNodePools: false,
-      })
-    );
-
-    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
-    fireEvent.click(await screen.findByText('Delete'));
-
-    expect(
-      screen.queryByText('Do you really want to delete node pool t6yo9?')
-    ).not.toBeInTheDocument();
-  });
-
   it('can edit the node pool description by clicking on the description', async () => {
     nock(window.config.mapiEndpoint)
       .get(
@@ -367,22 +354,6 @@ describe('WorkerNodesNodePoolItem', () => {
         `Successfully updated the node pool's description`
       )
     ).toBeInTheDocument();
-  });
-
-  it('does not allow editing the node pool description for a read-only user', () => {
-    render(
-      getComponent({
-        nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
-        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
-        canUpdateNodePools: false,
-      })
-    );
-
-    fireEvent.click(screen.getByText('Some node pool'));
-
-    expect(
-      screen.queryByRole('button', { name: 'OK' })
-    ).not.toBeInTheDocument();
   });
 
   it('can change the node pool scaling', async () => {
@@ -527,6 +498,24 @@ describe('WorkerNodesNodePoolItem', () => {
       )
     ).toBeInTheDocument();
   });
+});
+
+describe('WorkerNodesNodePoolItem on Azure for user with read-only permissions', () => {
+  it('does not allow editing the node pool description for a read-only user', () => {
+    render(
+      getComponent({
+        nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
+        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        canUpdateNodePools: false,
+      })
+    );
+
+    fireEvent.click(screen.getByText('Some node pool'));
+
+    expect(
+      screen.queryByRole('button', { name: 'OK' })
+    ).not.toBeInTheDocument();
+  });
 
   it('does not allow editing the node pool scaling limits for a read-only user', async () => {
     render(
@@ -543,5 +532,345 @@ describe('WorkerNodesNodePoolItem', () => {
     // Controls for editing the node pool scaling limits
     expect(screen.queryByLabelText('Minimum')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('Maximum')).not.toBeInTheDocument();
+  });
+
+  it('does not allow deleting the node pool for a read-only user', async () => {
+    render(
+      getComponent({
+        nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
+        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+        canDeleteNodePools: false,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+    fireEvent.click(await screen.findByText('Delete'));
+
+    expect(
+      screen.queryByText('Do you really want to delete node pool t6yo9?')
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('WorkerNodesNodePoolItem on AWS', () => {
+  it('displays various information about the node pool', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterAWS1MachineDeployment1,
+        providerNodePool:
+          infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1,
+        flatcarContainerLinuxVersion: '3000.0',
+      })
+    );
+
+    expect(screen.getByLabelText('Name: 4snbn')).toBeInTheDocument();
+    expect(screen.getByLabelText('Description: workload')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Instance type: m4.xlarge')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Control groups version: v1')
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByLabelText('Availability zones: eu-central-1b, eu-central-1a')
+    ).toBeInTheDocument();
+  });
+
+  it('displays the autoscaler configuration', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterAWS1MachineDeployment1,
+        providerNodePool:
+          infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Autoscaler minimum node count: 1')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler maximum node count: 40')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler target node count: 3')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler current node count: 3')
+    ).toBeInTheDocument();
+  });
+
+  it('displays if spot instances are used', () => {
+    const { rerender } = render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterAWS1MachineDeployment1,
+        providerNodePool:
+          infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1,
+        additionalColumns: getAdditionalColumns(Providers.AWS),
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Number of nodes using spot instances: 0')
+    ).toBeInTheDocument();
+
+    rerender(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterAWS1MachineDeployment1,
+        providerNodePool: {
+          ...infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1,
+          status: {
+            ...infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1.status,
+            provider: {
+              worker: {
+                spotInstances: 2,
+              },
+            },
+          },
+        },
+        additionalColumns: getAdditionalColumns(Providers.AWS),
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Number of nodes using spot instances: 2')
+    ).toBeInTheDocument();
+  });
+
+  it('can delete a node pool', async () => {
+    // eslint-disable-next-line no-magic-numbers
+    jest.setTimeout(10000);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinedeployments/${capiv1beta1Mocks.randomClusterAWS1MachineDeployment1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterAWS1MachineDeployment1
+      );
+    nock(window.config.mapiEndpoint)
+      .delete(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinedeployments/${capiv1beta1Mocks.randomClusterAWS1MachineDeployment1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'v1',
+        kind: 'Status',
+        message: 'Resource deleted.',
+        status: metav1.K8sStatuses.Success,
+        reason: '',
+        code: StatusCodes.Ok,
+      });
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awsmachinedeployments/${infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awsmachinedeployments/${infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1
+      );
+    nock(window.config.mapiEndpoint)
+      .delete(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awsmachinedeployments/${infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'v1',
+        kind: 'Status',
+        message: 'Resource deleted.',
+        status: metav1.K8sStatuses.Success,
+        reason: '',
+        code: StatusCodes.Ok,
+      });
+
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterAWS1MachineDeployment1,
+        providerNodePool:
+          infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1,
+        canDeleteNodePools: true,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+    fireEvent.click(await screen.findByText('Delete'));
+
+    expect(
+      await screen.findByText('Do you really want to delete node pool 4snbn?')
+    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Delete 4snbn' }));
+
+    expect(
+      await withMarkup(screen.findByText)(
+        'Node pool 4snbn deleted successfully'
+      )
+    ).toBeInTheDocument();
+
+    jest.clearAllTimers();
+  });
+
+  it('can edit the node pool description by clicking on the description', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awsmachinedeployments/${infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1
+      );
+    nock(window.config.mapiEndpoint)
+      .put(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awsmachinedeployments/${infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomClusterAWS1.metadata.namespace}/machinedeployments/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomClusterAWS1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterAWS1MachineDeploymentList
+      );
+
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterAWS1MachineDeployment1,
+        providerNodePool:
+          infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1,
+        canUpdateNodePools: true,
+      })
+    );
+
+    fireEvent.click(screen.getByText('workload'));
+    fireEvent.change(screen.getByDisplayValue('workload'), {
+      target: { value: 'A random node pool' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'OK' }));
+
+    expect(
+      await screen.findByText(
+        `Successfully updated the node pool's description`
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('can change the node pool scaling', async () => {
+    // eslint-disable-next-line no-magic-numbers
+    jest.setTimeout(10000);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awsmachinedeployments/${infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1
+      );
+    nock(window.config.mapiEndpoint)
+      .put(
+        `/apis/infrastructure.giantswarm.io/v1alpha3/namespaces/org-org1/awsmachinedeployments/${infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1.metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${capiv1beta1Mocks.randomClusterAWS1.metadata.namespace}/machinedeployments/?labelSelector=giantswarm.io%2Fcluster%3D${capiv1beta1Mocks.randomClusterAWS1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterAWS1MachineDeploymentList
+      );
+
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterAWS1MachineDeployment1,
+        providerNodePool:
+          infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1,
+        canUpdateNodePools: true,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+    fireEvent.click(await screen.findByText('Edit scaling limits'));
+
+    fireEvent.change(await screen.findByLabelText('Minimum'), {
+      target: { value: '3' },
+    });
+    fireEvent.change(screen.getByLabelText('Maximum'), {
+      target: { value: '20' },
+    });
+
+    const submitButton = screen.getByRole('button', {
+      name: 'Apply',
+    });
+    expect(submitButton).toBeInTheDocument();
+    expect(submitButton).not.toBeDisabled();
+
+    fireEvent.click(submitButton);
+
+    expect(
+      await withMarkup(screen.findByText)(
+        'Node pool 4snbn updated successfully'
+      )
+    ).toBeInTheDocument();
+
+    jest.clearAllTimers();
+  });
+});
+
+describe('WorkerNodesNodePoolItem on GCP', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.GCP;
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays various information about the node pool', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterGCP1MachineDeployment1,
+        providerNodePool: capgv1beta1Mocks.randomClusterGCP1GCPMachineTemplate,
+      })
+    );
+
+    expect(screen.getByLabelText('Name: m317f-worker0')).toBeInTheDocument();
+    expect(screen.getByLabelText('Description: workload')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Instance type: n2-standard-4')
+    ).toBeInTheDocument();
+
+    expect(screen.getByLabelText('Zones: europe-west3-a')).toBeInTheDocument();
+  });
+
+  it('displays the autoscaler configuration', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterGCP1MachineDeployment1,
+        providerNodePool: capgv1beta1Mocks.randomClusterGCP1GCPMachineTemplate,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Autoscaler target node count: 3')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler current node count: 3')
+    ).toBeInTheDocument();
   });
 });
