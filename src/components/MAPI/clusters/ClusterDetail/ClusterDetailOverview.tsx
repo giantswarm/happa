@@ -1,6 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
 import ClusterDetailWidgetApps from 'MAPI/apps/ClusterDetailWidgetApps';
+import ClusterDetailWidgetAppsLoader from 'MAPI/apps/ClusterDetailWidgetAppsLoader';
 import ClusterDetailWidgetRelease from 'MAPI/releases/ClusterDetailWidgetRelease';
 import { Cluster, ProviderCluster } from 'MAPI/types';
 import {
@@ -111,7 +112,15 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
         basis='425px'
         flex={{ grow: 1, shrink: 1 }}
       />
-      <ClusterDetailWidgetApps basis='425px' flex={{ grow: 1, shrink: 1 }} />
+      {typeof isClusterApp === 'undefined' ? (
+        <ClusterDetailWidgetAppsLoader />
+      ) : (
+        <ClusterDetailWidgetApps
+          basis='425px'
+          flex={{ grow: 1, shrink: 1 }}
+          isClusterApp={isClusterApp}
+        />
+      )}
       <ClusterDetailWidgetKeyPairs
         basis='200px'
         flex={{ grow: 1, shrink: 1 }}

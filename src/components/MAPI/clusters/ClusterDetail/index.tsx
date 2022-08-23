@@ -49,7 +49,7 @@ import RoutePath from 'utils/routePath';
 import ClusterStatusComponent from '../ClusterStatus/ClusterStatus';
 import { useClusterStatus } from '../hooks/useClusterStatus';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
-import { ClusterStatus } from '../utils';
+import { ClusterStatus, hasClusterAppLabel } from '../utils';
 import ClusterDetailActions from './ClusterDetailActions';
 import ClusterDetailOverview from './ClusterDetailOverview';
 import { updateClusterDescription } from './utils';
@@ -318,9 +318,15 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
 
     return getClusterDescription(cluster, providerCluster, '');
   }, [cluster, providerCluster, providerClusterIsLoading]);
-  const clusterReleaseVersion = cluster
-    ? capiv1beta1.getReleaseVersion(cluster)
-    : undefined;
+  const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
+  const clusterVersion = useMemo(() => {
+    if (!cluster) return undefined;
+
+    return isClusterApp
+      ? capiv1beta1.getClusterAppVersion(cluster)
+      : capiv1beta1.getReleaseVersion(cluster);
+  }, [cluster, isClusterApp]);
+
   const clusterK8sApiURL = cluster
     ? capiv1beta1.getKubernetesAPIEndpointURL(cluster)
     : undefined;
@@ -438,7 +444,8 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
               render={() =>
                 cluster && (
                   <ClusterDetailApps
-                    releaseVersion={clusterReleaseVersion!}
+                    clusterVersion={clusterVersion}
+                    isClusterApp={isClusterApp}
                     isClusterCreating={
                       clusterStatus === ClusterStatus.CreationInProgress
                     }

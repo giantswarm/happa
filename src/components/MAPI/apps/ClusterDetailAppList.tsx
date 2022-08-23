@@ -1,6 +1,11 @@
 import { Accordion, Box, Text } from 'grommet';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useState } from 'react';
+import {
+  TREE_VIEW_ITEM_HEIGHT,
+  TreeViewItem,
+  TreeViewSubtree,
+} from 'UI/Display/MAPI/apps/ClusterDetailAppListTreeView';
 
 import ClusterDetailAppListItem from './ClusterDetailAppListItem';
 import { IAppsPermissions } from './permissions/types';
@@ -10,21 +15,27 @@ const LOADING_COMPONENTS = new Array(3).fill(0);
 interface IClusterDetailAppListProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   apps: applicationv1alpha1.IApp[];
+  appList?: applicationv1alpha1.IAppList;
   appsPermissions?: IAppsPermissions;
   isLoading?: boolean;
   isClusterCreating?: boolean;
   errorMessage?: string;
+  isChildApps?: boolean;
+  canBeModified?: boolean;
 }
 
 const ClusterDetailAppList: React.FC<
   React.PropsWithChildren<IClusterDetailAppListProps>
 > = ({
   apps,
+  appList,
   appsPermissions,
   isLoading,
   isClusterCreating = false,
   children,
   errorMessage,
+  isChildApps = false,
+  canBeModified = false,
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -79,15 +90,46 @@ const ClusterDetailAppList: React.FC<
           ))}
 
         {!errorMessage &&
-          apps.map((app, idx) => (
-            <ClusterDetailAppListItem
-              key={app.metadata.name}
-              app={app}
-              appsPermissions={appsPermissions}
-              isActive={activeIndex === idx}
-              onAppUninstalled={resetActiveIndex}
-            />
-          ))}
+          apps.map((app, idx) => {
+            const isLastItem = idx === apps.length - 1;
+            const childApps = appList?.items.filter(
+              (item) =>
+                item.metadata?.labels?.[applicationv1alpha1.labelManagedBy] ===
+                app.metadata.name
+            );
+
+            return (
+              <React.Fragment key={app.metadata.name}>
+                <TreeViewItem
+                  isRootItem={isChildApps === false}
+                  isLastItem={isLastItem}
+                >
+                  <ClusterDetailAppListItem
+                    app={app}
+                    appsPermissions={appsPermissions}
+                    isActive={activeIndex === idx}
+                    canBeModified={canBeModified}
+                    onAppUninstalled={resetActiveIndex}
+                    minHeight={TREE_VIEW_ITEM_HEIGHT}
+                  />
+                </TreeViewItem>
+                {childApps && childApps.length > 0 && (
+                  <TreeViewSubtree
+                    isRootItemSubtree={isChildApps === false}
+                    isLastSubtree={isLastItem}
+                  >
+                    <ClusterDetailAppList
+                      apps={childApps}
+                      appList={appList}
+                      appsPermissions={appsPermissions}
+                      isLoading={false}
+                      isChildApps={true}
+                    />
+                  </TreeViewSubtree>
+                )}
+              </React.Fragment>
+            );
+          })}
       </Accordion>
       {children}
     </Box>

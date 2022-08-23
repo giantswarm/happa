@@ -4,7 +4,9 @@ import { normalizeColor } from 'grommet/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR, { useSWRConfig } from 'swr';
@@ -21,6 +23,7 @@ import {
   filterUserInstalledApps,
   getUpgradableApps,
   getUpgradableAppsKey,
+  removeChildApps,
 } from './utils';
 
 const StyledLink = styled(Link)`
@@ -31,14 +34,20 @@ interface IClusterDetailWidgetAppsProps
   extends Omit<
     React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
     'title'
-  > {}
+  > {
+  isClusterApp: boolean;
+}
 
 const ClusterDetailWidgetApps: React.FC<
   React.PropsWithChildren<IClusterDetailWidgetAppsProps>
-> = (props) => {
-  const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
+> = ({ isClusterApp, ...props }) => {
+  const { clusterId, orgId } = useParams<{
+    clusterId: string;
+    orgId: string;
+  }>();
 
   const provider = window.config.info.general.provider;
+  const organizations = useSelector(selectOrganizations());
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -48,7 +57,26 @@ const ClusterDetailWidgetApps: React.FC<
   const { canList: canListApps, canCreate: canCreateApps } =
     usePermissionsForApps(provider, clusterId);
 
-  const appListGetOptions = { namespace: clusterId };
+  const appsNamespace =
+    typeof isClusterApp === 'undefined'
+      ? undefined
+      : isClusterApp
+      ? organizations[orgId].namespace
+      : clusterId;
+
+  const appListGetOptions =
+    typeof isClusterApp === 'undefined'
+      ? undefined
+      : isClusterApp
+      ? {
+          namespace: appsNamespace,
+          labelSelector: {
+            matchingLabels: {
+              [applicationv1alpha1.labelCluster]: clusterId,
+            },
+          },
+        }
+      : { namespace: appsNamespace };
   const appListKey = canListApps
     ? applicationv1alpha1.getAppListKey(appListGetOptions)
     : null;
@@ -71,12 +99,12 @@ const ClusterDetailWidgetApps: React.FC<
   }, [appListError]);
 
   const userInstalledApps = useMemo(() => {
-    if (typeof appList === 'undefined') {
+    if (typeof appList === 'undefined' || typeof isClusterApp === 'undefined') {
       return [];
     }
 
-    return filterUserInstalledApps(appList.items);
-  }, [appList]);
+    return filterUserInstalledApps(appList.items, isClusterApp, provider);
+  }, [appList, isClusterApp, provider]);
 
   const insufficientPermissionsForApps = canListApps === false;
 
@@ -126,7 +154,12 @@ const ClusterDetailWidgetApps: React.FC<
     string[],
     GenericResponseError
   >(upgradableAppsKey, () =>
-    getUpgradableApps(clientFactory, auth, cache, userInstalledApps)
+    getUpgradableApps(
+      clientFactory,
+      auth,
+      cache,
+      removeChildApps(userInstalledApps)
+    )
   );
 
   useEffect(() => {

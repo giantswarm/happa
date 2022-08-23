@@ -13,7 +13,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import ClusterDetailAppList from './ClusterDetailAppList';
 import { IAppsPermissions } from './permissions/types';
-import { mapDefaultApps } from './utils';
+import { mapReleaseToApps } from './utils';
 
 interface IClusterDetailReleaseAppsProps {
   appList?: applicationv1alpha1.IAppList;
@@ -78,13 +78,14 @@ const ClusterDetailReleaseApps: React.FC<
       return [];
     }
 
-    return mapDefaultApps(release, appList.items);
+    return mapReleaseToApps(release, appList.items);
   }, [release, appList]);
 
   return (
     <>
       <ClusterDetailAppList
         apps={preInstalledApps}
+        appList={appList}
         appsPermissions={appsPermissions}
         isLoading={isLoading || releaseIsLoading}
         isClusterCreating={isClusterCreating}

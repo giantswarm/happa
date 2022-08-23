@@ -7,9 +7,10 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { selectCluster } from 'model/stores/main/actions';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
@@ -19,9 +20,15 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import ClusterDetailAppList from './ClusterDetailAppList';
+import ClusterDetailDefaultApps from './ClusterDetailDefaultApps';
 import ClusterDetailReleaseApps from './ClusterDetailReleaseApps';
 import { usePermissionsForApps } from './permissions/usePermissionsForApps';
-import { filterUserInstalledApps, isAppChangingVersion } from './utils';
+import {
+  compareApps,
+  filterUserInstalledApps,
+  isAppChangingVersion,
+  removeChildApps,
+} from './utils';
 
 // eslint-disable-next-line no-magic-numbers
 const APP_LIST_REFRESH_INTERVAL = 60 * 1000; // 1 minute
@@ -33,28 +40,53 @@ const Disclaimer = styled(Paragraph)`
 `;
 
 interface IClusterDetailApps {
-  releaseVersion: string;
+  clusterVersion?: string;
+  isClusterApp?: boolean;
   isClusterCreating?: boolean;
 }
 
 const ClusterDetailApps: React.FC<
   React.PropsWithChildren<IClusterDetailApps>
-> = ({ releaseVersion, isClusterCreating = false }) => {
+> = ({ clusterVersion, isClusterApp, isClusterCreating = false }) => {
   const { pathname } = useLocation();
-  const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
-
+  const { clusterId, orgId } = useParams<{
+    clusterId: string;
+    orgId: string;
+  }>();
   const provider = window.config.info.general.provider;
+  const providerName = 'Google Cloud Platform';
+  const organizations = useSelector(selectOrganizations());
+
+  const appsNamespace =
+    typeof isClusterApp === 'undefined'
+      ? undefined
+      : isClusterApp
+      ? organizations[orgId].namespace
+      : clusterId;
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   const appListClient = useRef(clientFactory());
   const appsPermissions = usePermissionsForApps(provider, clusterId);
-  const appListGetOptions = { namespace: clusterId };
+  const appListGetOptions =
+    typeof isClusterApp === 'undefined'
+      ? undefined
+      : isClusterApp
+      ? {
+          namespace: appsNamespace,
+          labelSelector: {
+            matchingLabels: {
+              [applicationv1alpha1.labelCluster]: clusterId,
+            },
+          },
+        }
+      : { namespace: appsNamespace };
 
-  const appListKey = appsPermissions.canList
-    ? applicationv1alpha1.getAppListKey(appListGetOptions)
-    : null;
+  const appListKey =
+    appsPermissions.canList && typeof appListGetOptions !== 'undefined'
+      ? applicationv1alpha1.getAppListKey(appListGetOptions)
+      : null;
 
   const {
     data: appList,
@@ -91,6 +123,8 @@ const ClusterDetailApps: React.FC<
     }
   }, [appListError]);
 
+  const isLoading = appListIsLoading || typeof appsNamespace === 'undefined';
+
   const dispatch = useDispatch();
 
   const openAppCatalog = () => {
@@ -99,12 +133,14 @@ const ClusterDetailApps: React.FC<
   };
 
   const userInstalledApps = useMemo(() => {
-    if (typeof appList === 'undefined') {
+    if (typeof appList === 'undefined' || typeof isClusterApp === 'undefined') {
       return [];
     }
 
-    return filterUserInstalledApps(appList.items);
-  }, [appList]);
+    const apps = filterUserInstalledApps(appList.items, isClusterApp, provider);
+
+    return removeChildApps(apps).sort(compareApps);
+  }, [appList, isClusterApp, provider]);
 
   return (
     <DocumentTitle title={`Apps | ${clusterId}`}>
@@ -118,8 +154,10 @@ const ClusterDetailApps: React.FC<
           <h3>Installed Apps</h3>
           <ClusterDetailAppList
             apps={userInstalledApps}
+            appList={appList}
+            canBeModified={true}
             appsPermissions={appsPermissions}
-            isLoading={appListIsLoading}
+            isLoading={isLoading}
             margin={{ bottom: 'large' }}
             errorMessage={extractErrorMessage(appListError)}
           >
@@ -127,7 +165,7 @@ const ClusterDetailApps: React.FC<
               {appsPermissions.canCreate && (
                 <Button
                   onClick={openAppCatalog}
-                  disabled={appListIsLoading}
+                  disabled={isLoading}
                   icon={
                     <i
                       className='fa fa-add-circle'
@@ -142,24 +180,43 @@ const ClusterDetailApps: React.FC<
             </Box>
           </ClusterDetailAppList>
 
-          <h3>Preinstalled Apps</h3>
-          <Disclaimer margin={{ bottom: 'medium' }} fill={true}>
-            These apps are preinstalled on your cluster and managed by Giant
-            Swarm.
-          </Disclaimer>
+          {typeof isClusterApp !== 'undefined' &&
+            typeof clusterVersion !== 'undefined' && (
+              <>
+                <h3>{isClusterApp ? 'Default Apps' : 'Preinstalled Apps'}</h3>
+                <Disclaimer margin={{ bottom: 'medium' }} fill={true}>
+                  {isClusterApp
+                    ? `These are installed in every Giant Swarm workload cluster on ${providerName}, to provide essential functionality.`
+                    : 'These apps are preinstalled on your cluster and managed by Giant Swarm.'}
+                </Disclaimer>
 
-          <ClusterDetailReleaseApps
-            appList={appList}
-            isLoading={appListIsLoading}
-            isClusterCreating={isClusterCreating}
-            errorMessage={extractErrorMessage(appListError)}
-            appsPermissions={appsPermissions}
-            releaseVersion={releaseVersion}
-          />
+                {isClusterApp ? (
+                  <ClusterDetailDefaultApps
+                    appList={appList}
+                    namespace={appsNamespace}
+                    isLoading={isLoading}
+                    isClusterCreating={isClusterCreating}
+                    errorMessage={extractErrorMessage(appListError)}
+                    appsPermissions={appsPermissions}
+                  />
+                ) : (
+                  <ClusterDetailReleaseApps
+                    appList={appList}
+                    isLoading={isLoading}
+                    isClusterCreating={isClusterCreating}
+                    errorMessage={extractErrorMessage(appListError)}
+                    appsPermissions={appsPermissions}
+                    releaseVersion={clusterVersion}
+                  />
+                )}
+              </>
+            )}
 
-          <Box margin={{ top: 'medium' }} direction='column' gap='small'>
-            <ListAppsGuide namespace={clusterId} />
-          </Box>
+          {appsNamespace && (
+            <Box margin={{ top: 'medium' }} direction='column' gap='small'>
+              <ListAppsGuide namespace={appsNamespace} />
+            </Box>
+          )}
         </>
       </Breadcrumb>
     </DocumentTitle>

@@ -160,7 +160,7 @@ describe('ClusterDetailWidgetApps', () => {
       defaultPermissions
     );
 
-    render(getComponent({}));
+    render(getComponent({ isClusterApp: false }));
 
     expect(screen.getAllByLabelText('Loading...').length).toEqual(4);
   });
@@ -191,7 +191,7 @@ describe('ClusterDetailWidgetApps', () => {
         },
       });
 
-    render(getComponent({}));
+    render(getComponent({ isClusterApp: false }));
 
     expect(await screen.findByText('No apps installed')).toBeInTheDocument();
     expect(
@@ -230,7 +230,7 @@ describe('ClusterDetailWidgetApps', () => {
         },
       });
 
-    render(getComponent({}));
+    render(getComponent({ isClusterApp: false }));
 
     expect(await screen.findByText('No apps installed')).toBeInTheDocument();
     expect(
@@ -270,7 +270,7 @@ describe('ClusterDetailWidgetApps', () => {
         ],
       });
 
-    render(getComponent({}));
+    render(getComponent({ isClusterApp: false }));
 
     expect(await screen.findByLabelText('6 apps')).toBeInTheDocument();
     expect(await screen.findByLabelText('2 unique apps')).toBeInTheDocument();
@@ -318,7 +318,7 @@ describe('ClusterDetailWidgetApps', () => {
         applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
       );
 
-    render(getComponent({}));
+    render(getComponent({ isClusterApp: false }));
 
     expect(await screen.findByLabelText('1 upgradable')).toBeInTheDocument();
   });
@@ -348,7 +348,7 @@ describe('ClusterDetailWidgetApps', () => {
         ],
       });
 
-    render(getComponent({}));
+    render(getComponent({ isClusterApp: false }));
 
     expect(
       await screen.findByLabelText('upgradable not available')
