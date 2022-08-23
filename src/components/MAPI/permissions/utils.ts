@@ -1,4 +1,4 @@
-import { getNamespaceFromOrgName } from 'MAPI/utils';
+import { getNamespaceFromOrgName, supportsReleases } from 'MAPI/utils';
 import { Constants } from 'model/constants';
 import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
@@ -644,7 +644,9 @@ export function fetchAccessForResourceKey(
   )}/${group}/${resource}`;
 }
 
-export function getPermissionsUseCases(): IPermissionsUseCase[] | null {
+export function getPermissionsUseCases(
+  provider: PropertiesOf<typeof Providers>
+): IPermissionsUseCase[] | null {
   if (!window.config.permissionsUseCasesJSON) {
     return null;
   }
@@ -652,6 +654,24 @@ export function getPermissionsUseCases(): IPermissionsUseCase[] | null {
   const useCases: IPermissionsUseCase[] = JSON.parse(
     window.config.permissionsUseCasesJSON
   );
+
+  return filterPermissionsUseCases(useCases, provider);
+}
+
+function filterPermissionsUseCases(
+  useCases: IPermissionsUseCase[],
+  provider: PropertiesOf<typeof Providers>
+): IPermissionsUseCase[] {
+  if (!supportsReleases(provider)) {
+    return useCases.filter(
+      (useCase) =>
+        !useCase.permissions.some(
+          (permission) =>
+            permission.resources.includes('releases') &&
+            permission.apiGroups.includes('release.giantswarm.io')
+        )
+    );
+  }
 
   return useCases;
 }

@@ -26,14 +26,14 @@ const PermissionsOverview: React.FC<IPermissionsOverviewProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState(0);
 
-  const useCases = getPermissionsUseCases();
+  const provider = window.config.info.general.provider;
+
+  const useCases = useMemo(() => getPermissionsUseCases(provider), [provider]);
   const { data: permissions } = useUseCasesPermissions(
-    useCases,
     subjectName,
     subjectType
   );
 
-  const provider = window.config.info.general.provider;
   const organizations = useSelector(selectOrganizations());
   const sortedOrganizations = Object.values(organizations).sort((a, b) =>
     (a?.name || a.id).localeCompare(b?.name || b.id)
