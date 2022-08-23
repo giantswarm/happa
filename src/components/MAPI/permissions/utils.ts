@@ -695,22 +695,15 @@ export function isClusterScopeUseCase(useCase: IPermissionsUseCase): boolean {
 function getResourcesToIgnore(
   provider: PropertiesOf<typeof Providers>
 ): string[] {
-  const providerSpecificResources = [
-    {
-      provider: Providers.AWS,
-      resources: ['awsclusters', 'g8scontrolplanes', 'awscontrolplanes'],
-    },
-    {
-      provider: Providers.AZURE,
-      resources: ['azureclusters', 'azuremachines'],
-    },
-  ];
+  const providerSpecificResources: Record<string, string[]> = {
+    [Providers.AWS]: ['awsclusters', 'g8scontrolplanes', 'awscontrolplanes'],
+    [Providers.AZURE]: ['azureclusters', 'azuremachines'],
+    [Providers.GCP]: ['gcpclusters'],
+  };
 
-  return providerSpecificResources.reduce<string[]>((prev, curr) => {
-    if (curr.provider === provider) return prev;
+  delete providerSpecificResources[provider];
 
-    return prev.concat(...curr.resources);
-  }, []);
+  return Object.values(providerSpecificResources).flat();
 }
 
 /**
