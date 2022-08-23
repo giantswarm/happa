@@ -1,3 +1,4 @@
+import { getClusterOrganization } from 'MAPI/clusters/utils';
 import { Cluster, ClusterList } from 'MAPI/types';
 import { fetchClusterList, fetchClusterListKey } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -61,13 +62,16 @@ export function validateOrganizationName(orgName: string): {
   }
 }
 
-export function computeClusterCountersForOrganizations(clusters?: Cluster[]) {
+export function computeClusterCountersForOrganizations(
+  clusters: Cluster[],
+  organizations: Record<string, IOrganization>
+) {
   return clusters?.reduce((acc: Record<string, number>, cluster: Cluster) => {
-    const clusterOrg = capiv1beta1.getClusterOrganization(cluster);
+    const clusterOrg = getClusterOrganization(cluster, organizations);
     if (!clusterOrg) return acc;
 
-    acc[clusterOrg] ??= 0;
-    acc[clusterOrg]++;
+    acc[clusterOrg.id] ??= 0;
+    acc[clusterOrg.id]++;
 
     return acc;
   }, {});
@@ -109,12 +113,12 @@ export async function fetchClusterListForOrganizations(
     items: [],
   };
 
-  const requests = Object.entries(organizations).map(
-    async ([organizationName, organizationEntry]) => {
+  const requests = Object.values(organizations).map(
+    async (organizationEntry) => {
       const clusterListKey = fetchClusterListKey(
         provider,
         organizationEntry.namespace,
-        organizationName
+        organizationEntry
       );
       const cachedClusterList: capiv1beta1.IClusterList | undefined =
         cache.get(clusterListKey);
@@ -128,7 +132,7 @@ export async function fetchClusterListForOrganizations(
           auth,
           provider,
           organizationEntry.namespace,
-          organizationName
+          organizationEntry
         );
 
         cache.set(clusterListKey, clusters);

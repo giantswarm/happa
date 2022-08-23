@@ -8,6 +8,8 @@ import {
 import { createMemoryHistory } from 'history';
 import * as MAPIUtils from 'MAPI/utils';
 import { Providers, StatusCodes } from 'model/constants';
+import { IOrganizationState } from 'model/stores/organization/types';
+import { IState } from 'model/stores/state';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
@@ -17,6 +19,7 @@ import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzexpv1alpha3Mocks from 'test/mockHttpCalls/capzv1alpha3/exp';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import * as gscorev1alpha1Mocks from 'test/mockHttpCalls/gscorev1alpha1';
+import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
@@ -35,10 +38,31 @@ function getComponent(
     </SWRConfig>
   );
 
+  const defaultState: IState = {
+    ...preloginState,
+    entities: {
+      organizations: {
+        ...preloginState.entities.organizations,
+        items: {
+          org1: {
+            id: 'org1',
+            name: 'org1',
+            namespace: 'org-org1',
+          },
+          org2: {
+            id: 'org2',
+            name: 'org2',
+            namespace: 'org-org2',
+          },
+        },
+      } as IOrganizationState,
+    } as IState['entities'],
+  } as IState;
+
   return getComponentWithStore(
     Component,
     props,
-    undefined,
+    defaultState,
     undefined,
     history,
     auth

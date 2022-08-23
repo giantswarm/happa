@@ -404,26 +404,39 @@ export async function fetchClusterList(
   auth: IOAuth2Provider,
   provider: PropertiesOf<typeof Providers>,
   namespace?: string,
-  organization?: string
+  organization?: IOrganization
 ): Promise<ClusterList> {
   if (namespace && organization && provider === Providers.AWS) {
-    const [namespacedClusters, nonNamespacedClusters] =
-      await Promise.allSettled([
-        capiv1beta1.getClusterList(httpClientFactory(), auth, { namespace }),
+    const requests = [
+      capiv1beta1.getClusterList(httpClientFactory(), auth, { namespace }),
+    ];
+
+    if (organization?.name) {
+      requests.push(
         capiv1beta1.getClusterList(httpClientFactory(), auth, {
           namespace: 'default',
           labelSelector: {
-            matchingLabels: { [capiv1beta1.labelOrganization]: organization },
+            matchingLabels: {
+              [capiv1beta1.labelOrganization]: organization.name,
+            },
           },
-        }),
-      ]);
-
-    if (
-      namespacedClusters.status === 'rejected' &&
-      nonNamespacedClusters.status === 'rejected'
-    ) {
-      return Promise.reject(nonNamespacedClusters.reason);
+        })
+      );
     }
+    if (organization?.id) {
+      requests.push(
+        capiv1beta1.getClusterList(httpClientFactory(), auth, {
+          namespace: 'default',
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelOrganization]: organization.id,
+            },
+          },
+        })
+      );
+    }
+
+    const responses = await Promise.allSettled(requests);
 
     const clusterList: capiv1beta1.IClusterList = {
       apiVersion: 'cluster.x-k8s.io/v1beta1',
@@ -432,12 +445,19 @@ export async function fetchClusterList(
       items: [],
     };
 
-    if (namespacedClusters.status === 'fulfilled') {
-      clusterList.items.push(...namespacedClusters.value.items);
+    const rejectedResponses: PromiseRejectedResult[] = [];
+
+    for (const response of responses) {
+      if (response.status === 'rejected') {
+        rejectedResponses.push(response);
+
+        continue;
+      }
+      clusterList.items.push(...response.value.items);
     }
 
-    if (nonNamespacedClusters.status === 'fulfilled') {
-      clusterList.items.push(...nonNamespacedClusters.value.items);
+    if (rejectedResponses.length === responses.length) {
+      return Promise.reject(rejectedResponses[0].reason);
     }
 
     return clusterList;
@@ -451,7 +471,7 @@ export async function fetchClusterList(
 export function fetchClusterListKey(
   provider: PropertiesOf<typeof Providers>,
   namespace?: string,
-  organization?: string
+  organization?: IOrganization
 ): string | null {
   if (typeof namespace === 'undefined') return null;
 
@@ -459,7 +479,7 @@ export function fetchClusterListKey(
 
   if (organization && provider === Providers.AWS) {
     getOptions.labelSelector = {
-      matchingLabels: { [capiv1beta1.labelOrganization]: organization },
+      matchingLabels: { [capiv1beta1.labelOrganization]: organization.id },
     };
   }
 

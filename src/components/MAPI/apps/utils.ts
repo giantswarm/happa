@@ -1,6 +1,9 @@
 import produce from 'immer';
 import { YAMLException } from 'js-yaml';
-import { IProviderClusterForCluster } from 'MAPI/clusters/utils';
+import {
+  getClusterOrganization,
+  IProviderClusterForCluster,
+} from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
 import {
   getClusterDescription,
@@ -267,6 +270,7 @@ export async function createApp(
  */
 export function filterClusters(
   clustersWithProviderClusters: IProviderClusterForCluster[],
+  organizations: Record<string, IOrganization>,
   previewReleaseVersions: string[],
   searchQuery: string
 ): IProviderClusterForCluster[] {
@@ -277,6 +281,8 @@ export function filterClusters(
 
   return clustersWithProviderClusters.filter((entry) => {
     const { cluster, providerCluster } = entry;
+
+    const clusterOrganization = getClusterOrganization(cluster, organizations);
 
     switch (true) {
       case typeof cluster.metadata.deletionTimestamp !== 'undefined':
@@ -289,10 +295,8 @@ export function filterClusters(
       case getClusterDescription(cluster, providerCluster)
         .toLowerCase()
         .includes(normalizedQuery):
-      case capiv1beta1
-        .getClusterOrganization(cluster)
-        ?.toLowerCase()
-        .includes(normalizedQuery):
+      case clusterOrganization?.name?.includes(normalizedQuery):
+      case clusterOrganization?.id?.includes(normalizedQuery):
         return true;
       default:
         return false;

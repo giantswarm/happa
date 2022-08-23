@@ -28,7 +28,11 @@ import RoutePath from 'utils/routePath';
 
 import ClusterStatus from '../ClusterStatus/ClusterStatus';
 import { useClusterStatus } from '../hooks/useClusterStatus';
-import { getClusterLabelsWithDisplayInfo, hasClusterAppLabel } from '../utils';
+import {
+  getClusterLabelsWithDisplayInfo,
+  getClusterOrganization,
+  hasClusterAppLabel,
+} from '../utils';
 import ClusterListItemNodeInfo from './ClusterListItemNodeInfo';
 import ClusterListItemReleaseInfo from './ClusterListItemReleaseInfo';
 import ClusterListItemVersionsInfo from './ClusterListItemVersionsInfo';
@@ -96,12 +100,7 @@ const ClusterListItem: React.FC<
   const organization = useMemo(() => {
     if (!organizations || !cluster) return undefined;
 
-    const org = capiv1beta1.getClusterOrganization(cluster);
-    if (!org) return undefined;
-
-    return Object.values(organizations).find(
-      (o) => o.name === org || o.id === org
-    );
+    return getClusterOrganization(cluster, organizations);
   }, [cluster, organizations]);
 
   const orgId = organization?.id;

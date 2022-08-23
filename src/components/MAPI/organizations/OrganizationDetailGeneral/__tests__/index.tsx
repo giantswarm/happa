@@ -240,7 +240,6 @@ describe('OrganizationDetailGeneral', () => {
                 'cluster-operator.giantswarm.io/version': '0.23.22',
                 'cluster.x-k8s.io/cluster-name': 'ed30d',
                 'giantswarm.io/cluster': 'ed30d',
-                'giantswarm.io/organization': 'org1',
                 'release.giantswarm.io/version': '14.1.4',
               },
               spec: {
