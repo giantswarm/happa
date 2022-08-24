@@ -4,15 +4,15 @@
 
 ### What is the effect of this change to users?
 
-### Any background context you can provide?
-
-### What are the relevant issues?
-
-### What is needed from the reviewers?
-
 ### How does it look like?
 
 (Please add screenshots or screen recordings demonstrating the change.)
+
+### Any background context you can provide?
+
+(Please link public issues or summarize if not public.)
+
+### What is needed from the reviewers?
 
 ### Do the docs need to be updated?
 
