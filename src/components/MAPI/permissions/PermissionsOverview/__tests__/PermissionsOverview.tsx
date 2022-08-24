@@ -78,6 +78,37 @@ function createDefaultPermissions() {
   };
 }
 
+function createMockClustersUseCases() {
+  const mockUseCases: IPermissionsUseCase[] = [
+    {
+      name: 'Some clusters use case',
+      category: 'clusters category',
+      scope: {
+        namespaces: ['default'],
+      },
+      permissions: [
+        {
+          apiGroups: ['cluster.x-k8s.io'],
+          resources: ['clusters'],
+          verbs: ['*'],
+        },
+        {
+          apiGroups: ['infrastructure.cluster.x-k8s.io'],
+          resources: ['gcpclusters', 'azureclusters'],
+          verbs: ['*'],
+        },
+        {
+          apiGroups: ['infrastructure.giantswarm.io'],
+          resources: ['awsclusters'],
+          verbs: ['*'],
+        },
+      ],
+    },
+  ];
+
+  return JSON.stringify(mockUseCases);
+}
+
 jest.unmock(
   'model/services/mapi/authorizationv1/createSelfSubjectAccessReview'
 );
@@ -762,6 +793,7 @@ describe('PermissionsOverview', () => {
 describe('PermissionsOverview on Azure', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const useCases = window.config.permissionsUseCasesJSON;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.AZURE;
@@ -770,16 +802,27 @@ describe('PermissionsOverview on Azure', () => {
     window.config.info.general.provider = provider;
   });
 
+  beforeEach(() => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: createDefaultPermissions(),
+    });
+  });
+  afterEach(() => {
+    window.config.permissionsUseCasesJSON = useCases;
+  });
+
   it('does not check permissions for resources not relevant to the current provider', async () => {
     (usePermissions as jest.Mock).mockReturnValue({
       data: {
-        'org-org1': {
+        default: {
           'cluster.x-k8s.io:clusters:*': ['*'],
           'infrastructure.cluster.x-k8s.io:azureclusters:*': ['*'],
           'infrastructure.cluster.x-k8s.io:azuremachines:*': ['*'],
         },
       },
     });
+
+    window.config.permissionsUseCasesJSON = createMockClustersUseCases();
 
     nock(window.config.mapiEndpoint)
       .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
@@ -800,19 +843,16 @@ describe('PermissionsOverview on Azure', () => {
 
     render(getComponent({}));
 
-    expect(await screen.findByText('access control')).toBeInTheDocument();
-
-    // Toggle 'For organizations' tab
-    fireEvent.click(screen.getByRole('tab', { name: 'For organizations' }));
+    expect(await screen.findByText('clusters category')).toBeInTheDocument();
 
     // Toggle clusters category
-    fireEvent.click(screen.getByLabelText('workload clusters'));
-    expect(await screen.findByText('Inspect clusters')).toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText('clusters category'));
+    expect(
+      await screen.findByText('Some clusters use case')
+    ).toBeInTheDocument();
     expect(
       within(
-        screen.getByLabelText(
-          'Inspect clusters for org1 organization permission status'
-        )
+        screen.getByLabelText('Some clusters use case permission status')
       ).getByText('Yes')
     ).toBeInTheDocument();
   });
@@ -821,6 +861,7 @@ describe('PermissionsOverview on Azure', () => {
 describe('PermissionsOverview on AWS', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const useCases = window.config.permissionsUseCasesJSON;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.AWS;
@@ -832,10 +873,19 @@ describe('PermissionsOverview on AWS', () => {
     window.config.info.general.provider = provider;
   });
 
+  beforeEach(() => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: createDefaultPermissions(),
+    });
+  });
+  afterEach(() => {
+    window.config.permissionsUseCasesJSON = useCases;
+  });
+
   it('does not check permissions for resources not relevant to the current provider', async () => {
     (usePermissions as jest.Mock).mockReturnValue({
       data: {
-        'org-org1': {
+        default: {
           'cluster.x-k8s.io:clusters:*': ['*'],
           'infrastructure.giantswarm.io:awsclusters:*': ['*'],
           'infrastructure.giantswarm.io:awscontrolplanes:*': ['*'],
@@ -843,6 +893,8 @@ describe('PermissionsOverview on AWS', () => {
         },
       },
     });
+
+    window.config.permissionsUseCasesJSON = createMockClustersUseCases();
 
     nock(window.config.mapiEndpoint)
       .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
@@ -863,19 +915,16 @@ describe('PermissionsOverview on AWS', () => {
 
     render(getComponent({}));
 
-    expect(await screen.findByText('access control')).toBeInTheDocument();
-
-    // Toggle 'For organizations' tab
-    fireEvent.click(screen.getByRole('tab', { name: 'For organizations' }));
+    expect(await screen.findByText('clusters category')).toBeInTheDocument();
 
     // Toggle clusters category
-    fireEvent.click(screen.getByLabelText('workload clusters'));
-    expect(await screen.findByText('Inspect clusters')).toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText('clusters category'));
+    expect(
+      await screen.findByText('Some clusters use case')
+    ).toBeInTheDocument();
     expect(
       within(
-        screen.getByLabelText(
-          'Inspect clusters for org1 organization permission status'
-        )
+        screen.getByLabelText('Some clusters use case permission status')
       ).getByText('Yes')
     ).toBeInTheDocument();
   });
@@ -905,12 +954,14 @@ describe('PermissionsOverview on GCP', () => {
   it('does not check permissions for resources not relevant to the current provider', async () => {
     (usePermissions as jest.Mock).mockReturnValue({
       data: {
-        'org-org1': {
+        default: {
           'cluster.x-k8s.io:clusters:*': ['*'],
-          'infrastrucutre.cluster.x-k8s.io:gcpclusters:*': ['*'],
+          'infrastructure.cluster.x-k8s.io:gcpclusters:*': ['*'],
         },
       },
     });
+
+    window.config.permissionsUseCasesJSON = createMockClustersUseCases();
 
     nock(window.config.mapiEndpoint)
       .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
@@ -931,19 +982,16 @@ describe('PermissionsOverview on GCP', () => {
 
     render(getComponent({}));
 
-    expect(await screen.findByText('access control')).toBeInTheDocument();
-
-    // Toggle 'For organizations' tab
-    fireEvent.click(screen.getByRole('tab', { name: 'For organizations' }));
+    expect(await screen.findByText('clusters category')).toBeInTheDocument();
 
     // Toggle clusters category
-    fireEvent.click(screen.getByLabelText('workload clusters'));
-    expect(await screen.findByText('Inspect clusters')).toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText('clusters category'));
+    expect(
+      await screen.findByText('Some clusters use case')
+    ).toBeInTheDocument();
     expect(
       within(
-        screen.getByLabelText(
-          'Inspect clusters for org1 organization permission status'
-        )
+        screen.getByLabelText('Some clusters use case permission status')
       ).getByText('Yes')
     ).toBeInTheDocument();
   });
