@@ -1,10 +1,21 @@
-Please set a PR title that is informative for end users, as it will end up in the generated release notes.
+### What does this PR do?
 
-PR labels define how this PR is categorized in the release notes:
+(Please set a descriptive PR title. Use this space for additional explanations.)
 
-- **New features**: `kind/feature`
-- **Changes**: `kind/change`, `kind/bug`, `kind/removal`, `kind/ux-enhancement`, `kind/security`
+### What is the effect of this change to users?
 
-Using any of these labels will **exclude** this PR from the release notes: `dependencies`, `kind/dev-change`, `kind/refactor`
+### How does it look like?
 
-Please replace this info with a description of your changes for reviewers and for people seeking for explanation of changes after the fact.
+(Please add screenshots or screen recordings demonstrating the change.)
+
+### Any background context you can provide?
+
+(Please link public issues or summarize if not public.)
+
+### What is needed from the reviewers?
+
+### Do the docs need to be updated?
+
+### Should this change be mentioned in the release notes?
+
+If yes, please apply one of the following labels: `kind/feature`, `kind/change`, `kind/bug`, `kind/removal`, `kind/ux-enhancement`, `kind/security`
