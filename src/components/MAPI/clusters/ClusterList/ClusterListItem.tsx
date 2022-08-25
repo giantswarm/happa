@@ -65,7 +65,6 @@ interface IClusterListItemProps
   providerCluster?: ProviderCluster | null;
   releases?: releasev1alpha1.IRelease[];
   organizations?: Record<string, IOrganization>;
-  canCreateClusters?: boolean;
   canListReleases?: boolean;
   canListCPNodes?: boolean;
 }
@@ -78,7 +77,6 @@ const ClusterListItem: React.FC<
   providerCluster,
   releases,
   organizations,
-  canCreateClusters,
   canListReleases,
   canListCPNodes,
   className,
