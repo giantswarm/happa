@@ -8,6 +8,7 @@ import {
   fetchProviderClustersForClusters,
   fetchProviderClustersForClustersKey,
   IProviderClusterForClusterName,
+  isCAPIProvider,
   supportsReleases,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -181,10 +182,12 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
     namespace ?? ''
   );
 
+  const isReadOnly = isCAPIProvider(provider);
+
   return (
     <DocumentTitle title={title}>
       <Box direction='column' gap='medium'>
-        {selectedOrgName && (
+        {!isReadOnly && selectedOrgName && (
           <Box
             pad='medium'
             background='background-front'
@@ -244,7 +247,7 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
               clustersWithProviderClusters={sortedClustersWithProviderClusters}
               releases={releaseList?.items}
               organizations={organizations}
-              canCreateClusters={canCreateClusters}
+              canCreateClusters={canCreateClusters && !isReadOnly}
               canListReleases={canListReleases}
               canListCPNodes={canListCPNodes}
             />
