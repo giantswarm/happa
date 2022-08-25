@@ -128,7 +128,7 @@ const ClusterDetailWidgetApps: React.FC<
 
   const userInstalledApps = useMemo(() => {
     if (typeof appList === 'undefined') {
-      return [];
+      return undefined;
     }
 
     const apps = filterUserInstalledApps(appList.items, isClusterApp, provider);
@@ -182,9 +182,10 @@ const ClusterDetailWidgetApps: React.FC<
 
   const canReadCatalogResources = canListCatalogs && canListAppCatalogEntries;
 
-  const upgradableAppsKey = canReadCatalogResources
-    ? getUpgradableAppsKey(userInstalledApps)
-    : null;
+  const upgradableAppsKey =
+    canReadCatalogResources && userInstalledApps
+      ? getUpgradableAppsKey(userInstalledApps)
+      : null;
 
   const { cache } = useSWRConfig();
 
@@ -192,7 +193,7 @@ const ClusterDetailWidgetApps: React.FC<
     string[],
     GenericResponseError
   >(upgradableAppsKey, () =>
-    getUpgradableApps(clientFactory, auth, cache, userInstalledApps)
+    getUpgradableApps(clientFactory, auth, cache, userInstalledApps!)
   );
 
   useEffect(() => {
@@ -209,7 +210,9 @@ const ClusterDetailWidgetApps: React.FC<
     )
       return -1;
 
-    if (!upgradableApps) return 0;
+    if (userInstalledApps && userInstalledApps.length === 0) return 0;
+
+    if (!upgradableApps) return undefined;
 
     return upgradableApps.length;
   }, [
@@ -217,6 +220,7 @@ const ClusterDetailWidgetApps: React.FC<
     canReadCatalogResources,
     insufficientPermissionsForApps,
     upgradableApps,
+    userInstalledApps,
   ]);
 
   return (
@@ -253,9 +257,11 @@ const ClusterDetailWidgetApps: React.FC<
             label='not deployed'
             value={appCounters.notDeployed}
             color={
-              appCounters.notDeployed && appCounters.notDeployed > 0
-                ? 'text-warning'
-                : 'text-success'
+              appCounters.notDeployed === -1
+                ? 'text'
+                : appCounters.notDeployed === 0
+                ? 'text-success'
+                : 'text-warning'
             }
           />
           <ClusterDetailCounter
@@ -266,9 +272,11 @@ const ClusterDetailWidgetApps: React.FC<
             }
             value={upgradableAppsCount}
             color={
-              upgradableAppsCount && upgradableAppsCount > 0
-                ? 'text-warning'
-                : 'text-success'
+              upgradableAppsCount === -1
+                ? 'text'
+                : upgradableAppsCount === 0
+                ? 'text-success'
+                : 'text-warning'
             }
           />
         </>

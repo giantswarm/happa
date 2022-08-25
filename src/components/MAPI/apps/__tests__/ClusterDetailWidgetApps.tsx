@@ -162,7 +162,7 @@ describe('ClusterDetailWidgetApps', () => {
 
     render(getComponent({ isClusterApp: false }));
 
-    expect(screen.getAllByLabelText('Loading...').length).toEqual(2);
+    expect(screen.getAllByLabelText('Loading...').length).toEqual(3);
   });
 
   it('displays a placeholder if there are no apps', async () => {
