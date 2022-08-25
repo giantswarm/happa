@@ -38,16 +38,32 @@ const ClusterDetailAppList: React.FC<
   canBeModified = false,
   ...props
 }) => {
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const [activeApps, setActiveApps] = useState<string[]>([]);
+  const activeIndexes = activeApps.map((activeApp) =>
+    apps.findIndex((app) => app.metadata.name === activeApp)
+  );
 
-  const resetActiveIndex = () => setActiveIndex(-1);
+  const setActiveIndexes = (indexes: number[]) => {
+    setActiveApps(indexes.map((idx) => apps[idx].metadata.name));
+  };
+
+  const resetActiveApp = (activeApp: string) => {
+    const index = activeApps.indexOf(activeApp);
+    if (index > -1) {
+      setActiveApps([
+        ...activeApps.slice(0, index),
+        ...activeApps.slice(index + 1),
+      ]);
+    }
+  };
 
   return (
     <Box {...props}>
       <Accordion
         gap='small'
-        activeIndex={activeIndex}
-        onActive={(indexes) => !isLoading && setActiveIndex(indexes[0])}
+        multiple={true}
+        activeIndex={activeIndexes}
+        onActive={(indexes) => !isLoading && setActiveIndexes(indexes)}
       >
         {errorMessage && (
           <Box
@@ -107,9 +123,9 @@ const ClusterDetailAppList: React.FC<
                   <ClusterDetailAppListItem
                     app={app}
                     appsPermissions={appsPermissions}
-                    isActive={activeIndex === idx}
+                    isActive={activeApps.indexOf(app.metadata.name) !== -1}
                     canBeModified={canBeModified}
-                    onAppUninstalled={resetActiveIndex}
+                    onAppUninstalled={() => resetActiveApp(app.metadata.name)}
                     minHeight={TREE_VIEW_ITEM_HEIGHT}
                   />
                 </TreeViewItem>
