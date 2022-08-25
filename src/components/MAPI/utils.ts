@@ -1360,3 +1360,14 @@ export function isCAPIProvider(provider: string): boolean {
       return true;
   }
 }
+
+export function getProviderName(
+  provider: PropertiesOf<typeof import('model/constants').Providers>
+): string {
+  switch (provider) {
+    case Providers.GCP:
+      return 'Google Cloud Platform';
+    default:
+      return provider;
+  }
+}
