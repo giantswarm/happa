@@ -1,8 +1,8 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import { SubjectTypes } from 'MAPI/permissions/types';
+import { IPermissionsUseCase, SubjectTypes } from 'MAPI/permissions/types';
 import { usePermissions } from 'MAPI/permissions/usePermissions';
-import { StatusCodes } from 'model/constants';
+import { Providers, StatusCodes } from 'model/constants';
 import { mapOAuth2UserToUser } from 'model/stores/main/utils';
 import { IOrganizationState } from 'model/stores/organization/types';
 import { IState } from 'model/stores/state';
@@ -78,6 +78,37 @@ function createDefaultPermissions() {
   };
 }
 
+function createMockClustersUseCases() {
+  const mockUseCases: IPermissionsUseCase[] = [
+    {
+      name: 'Some clusters use case',
+      category: 'clusters category',
+      scope: {
+        namespaces: ['default'],
+      },
+      permissions: [
+        {
+          apiGroups: ['cluster.x-k8s.io'],
+          resources: ['clusters'],
+          verbs: ['*'],
+        },
+        {
+          apiGroups: ['infrastructure.cluster.x-k8s.io'],
+          resources: ['gcpclusters', 'azureclusters'],
+          verbs: ['*'],
+        },
+        {
+          apiGroups: ['infrastructure.giantswarm.io'],
+          resources: ['awsclusters'],
+          verbs: ['*'],
+        },
+      ],
+    },
+  ];
+
+  return JSON.stringify(mockUseCases);
+}
+
 jest.unmock(
   'model/services/mapi/authorizationv1/createSelfSubjectAccessReview'
 );
@@ -87,16 +118,17 @@ jest.unmock(
 jest.mock('MAPI/permissions/usePermissions');
 
 describe('PermissionsOverview', () => {
+  beforeEach(() => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: createDefaultPermissions(),
+    });
+  });
+
   it('renders without crashing', () => {
-    (usePermissions as jest.Mock).mockReturnValue({});
     render(getComponent({}));
   });
 
   it('displays permissions for global use cases', async () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      data: createDefaultPermissions(),
-    });
-
     nock(window.config.mapiEndpoint)
       .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
         apiVersion: 'authorization.k8s.io/v1',
@@ -190,10 +222,6 @@ describe('PermissionsOverview', () => {
   });
 
   it('displays an error message if we cannot get permissions at the cluster scope', async () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      data: createDefaultPermissions(),
-    });
-
     nock(window.config.mapiEndpoint)
       .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
         apiVersion: 'authorization.k8s.io/v1',
@@ -302,10 +330,6 @@ describe('PermissionsOverview', () => {
   });
 
   it('displays organization permissions for categories', async () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      data: createDefaultPermissions(),
-    });
-
     nock(window.config.mapiEndpoint)
       .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
         apiVersion: 'authorization.k8s.io/v1',
@@ -363,10 +387,6 @@ describe('PermissionsOverview', () => {
   });
 
   it('displays organization permissions for use cases', async () => {
-    (usePermissions as jest.Mock).mockReturnValue({
-      data: createDefaultPermissions(),
-    });
-
     nock(window.config.mapiEndpoint)
       .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
         apiVersion: 'authorization.k8s.io/v1',
@@ -767,5 +787,269 @@ describe('PermissionsOverview', () => {
 
     // does not display category for app access use case
     expect(screen.queryByLabelText('interfaces')).not.toBeInTheDocument();
+  });
+});
+
+describe('PermissionsOverview on Azure', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const useCases = window.config.permissionsUseCasesJSON;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.AZURE;
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  beforeEach(() => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: createDefaultPermissions(),
+    });
+  });
+  afterEach(() => {
+    window.config.permissionsUseCasesJSON = useCases;
+  });
+
+  it('does not check permissions for resources not relevant to the current provider', async () => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: {
+        default: {
+          'cluster.x-k8s.io:clusters:*': ['*'],
+          'infrastructure.cluster.x-k8s.io:azureclusters:*': ['*'],
+          'infrastructure.cluster.x-k8s.io:azuremachines:*': ['*'],
+        },
+      },
+    });
+
+    window.config.permissionsUseCasesJSON = createMockClustersUseCases();
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Created,
+        authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
+      );
+
+    render(getComponent({}));
+
+    expect(await screen.findByText('clusters category')).toBeInTheDocument();
+
+    // Toggle clusters category
+    fireEvent.click(screen.getByLabelText('clusters category'));
+    expect(
+      await screen.findByText('Some clusters use case')
+    ).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('Some clusters use case permission status')
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+  });
+});
+
+describe('PermissionsOverview on AWS', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const useCases = window.config.permissionsUseCasesJSON;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.AWS;
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: createDefaultPermissions(),
+    });
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  beforeEach(() => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: createDefaultPermissions(),
+    });
+  });
+  afterEach(() => {
+    window.config.permissionsUseCasesJSON = useCases;
+  });
+
+  it('does not check permissions for resources not relevant to the current provider', async () => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: {
+        default: {
+          'cluster.x-k8s.io:clusters:*': ['*'],
+          'infrastructure.giantswarm.io:awsclusters:*': ['*'],
+          'infrastructure.giantswarm.io:awscontrolplanes:*': ['*'],
+          'infrastructure.giantswarm.io:g8scontrolplanes:*': ['*'],
+        },
+      },
+    });
+
+    window.config.permissionsUseCasesJSON = createMockClustersUseCases();
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Created,
+        authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
+      );
+
+    render(getComponent({}));
+
+    expect(await screen.findByText('clusters category')).toBeInTheDocument();
+
+    // Toggle clusters category
+    fireEvent.click(screen.getByLabelText('clusters category'));
+    expect(
+      await screen.findByText('Some clusters use case')
+    ).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('Some clusters use case permission status')
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+  });
+});
+
+describe('PermissionsOverview on GCP', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const useCases = window.config.permissionsUseCasesJSON;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.GCP;
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  beforeEach(() => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: createDefaultPermissions(),
+    });
+  });
+  afterEach(() => {
+    window.config.permissionsUseCasesJSON = useCases;
+  });
+
+  it('does not check permissions for resources not relevant to the current provider', async () => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: {
+        default: {
+          'cluster.x-k8s.io:clusters:*': ['*'],
+          'infrastructure.cluster.x-k8s.io:gcpclusters:*': ['*'],
+        },
+      },
+    });
+
+    window.config.permissionsUseCasesJSON = createMockClustersUseCases();
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Created,
+        authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
+      );
+
+    render(getComponent({}));
+
+    expect(await screen.findByText('clusters category')).toBeInTheDocument();
+
+    // Toggle clusters category
+    fireEvent.click(screen.getByLabelText('clusters category'));
+    expect(
+      await screen.findByText('Some clusters use case')
+    ).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText('Some clusters use case permission status')
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+  });
+
+  it('does not display permission use cases that contain permission rules for releases if the provider does not support releases', async () => {
+    const mockUseCases: IPermissionsUseCase[] = [
+      {
+        name: 'Some use case without releases',
+        category: 'another category',
+        scope: {
+          cluster: true,
+        },
+        permissions: [
+          {
+            resources: ['someresource'],
+            apiGroups: ['giantswarm.io'],
+            verbs: ['*'],
+          },
+        ],
+      },
+      {
+        name: 'Some use case with releases',
+        category: 'releases category',
+        scope: {
+          cluster: true,
+        },
+        permissions: [
+          {
+            resources: ['releases'],
+            apiGroups: ['release.giantswarm.io'],
+            verbs: ['*'],
+          },
+        ],
+      },
+    ];
+
+    window.config.permissionsUseCasesJSON = JSON.stringify(mockUseCases);
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Created,
+        authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
+      );
+
+    render(getComponent({}));
+
+    expect(await screen.findByText('another category')).toBeInTheDocument();
+    expect(screen.queryByText('releases category')).not.toBeInTheDocument();
   });
 });

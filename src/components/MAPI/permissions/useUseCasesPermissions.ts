@@ -11,12 +11,13 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { IPermissionsSubject, SubjectTypes } from './types';
-import { IPermissionMap, IPermissionsUseCase } from './types';
+import { IPermissionMap } from './types';
 import { usePermissions } from './usePermissions';
 import { useSubjectPermissions } from './useSubjectPermissions';
 import {
   fetchPermissionsAtClusterScope,
   fetchPermissionsAtClusterScopeKey,
+  getPermissionsUseCases,
   isClusterScopeUseCase,
   optimizeNamespacePermissions,
 } from './utils';
@@ -36,7 +37,6 @@ function getCombinedPermissions(
 }
 
 export function useUseCasesPermissions(
-  useCases: IPermissionsUseCase[] | null,
   subjectName: string = '',
   subjectType: SubjectTypes = SubjectTypes.Myself
 ): {
@@ -84,6 +84,9 @@ export function useUseCasesPermissions(
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
+
+  const provider = window.config.info.general.provider;
+  const useCases = useMemo(() => getPermissionsUseCases(provider), [provider]);
 
   const clusterScopeUseCases = useCases?.filter((useCase) =>
     isClusterScopeUseCase(useCase)

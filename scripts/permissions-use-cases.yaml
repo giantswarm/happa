@@ -278,6 +278,7 @@ useCases:
         resources:
           - azureclusters
           - azuremachines
+          - gcpclusters
         verbs:
           - get
           - list
@@ -313,6 +314,7 @@ useCases:
         resources:
           - azureclusters
           - azuremachines
+          - gcpclusters
         verbs:
           - create
           - delete

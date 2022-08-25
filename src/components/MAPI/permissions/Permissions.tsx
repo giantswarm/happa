@@ -10,7 +10,7 @@ import PermissionsPreloader from './PermissionsPreloader';
 import SubjectForm from './SubjectForm';
 import { SubjectTypes } from './types';
 import { useUseCasesPermissions } from './useUseCasesPermissions';
-import { getPermissionsUseCases, hasAccessToInspectPermissions } from './utils';
+import { hasAccessToInspectPermissions } from './utils';
 
 const IntroText = styled(Text)`
   abbr {
@@ -21,8 +21,7 @@ const IntroText = styled(Text)`
 interface IPermissionsProps {}
 
 const Permissions: React.FC<IPermissionsProps> = () => {
-  const useCases = getPermissionsUseCases();
-  const { data: ownPermissions } = useUseCasesPermissions(useCases);
+  const { data: ownPermissions } = useUseCasesPermissions();
 
   const canInspectPermissions = ownPermissions
     ? hasAccessToInspectPermissions(ownPermissions)
