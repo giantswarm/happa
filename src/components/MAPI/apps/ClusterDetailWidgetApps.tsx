@@ -58,7 +58,7 @@ const ClusterDetailWidgetApps: React.FC<
     usePermissionsForApps(provider, clusterId);
 
   const appsNamespace = isClusterApp
-    ? organizations[orgId].namespace
+    ? organizations[orgId]?.namespace
     : clusterId;
 
   const appListGetOptions = isClusterApp
@@ -218,7 +218,6 @@ const ClusterDetailWidgetApps: React.FC<
     insufficientPermissionsForApps,
     upgradableApps,
   ]);
-  console.log('upgradableAppsCount', upgradableAppsCount, upgradableApps);
 
   return (
     <ClusterDetailWidget

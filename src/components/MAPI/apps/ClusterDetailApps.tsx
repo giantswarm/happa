@@ -60,7 +60,7 @@ const ClusterDetailApps: React.FC<
     typeof isClusterApp === 'undefined'
       ? undefined
       : isClusterApp
-      ? organizations[orgId].namespace
+      ? organizations[orgId]?.namespace
       : clusterId;
 
   const clientFactory = useHttpClientFactory();
