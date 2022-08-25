@@ -131,7 +131,9 @@ const ClusterDetailWidgetApps: React.FC<
       return [];
     }
 
-    return filterUserInstalledApps(appList.items, isClusterApp, provider);
+    const apps = filterUserInstalledApps(appList.items, isClusterApp, provider);
+
+    return removeChildApps(apps);
   }, [appList, isClusterApp, provider]);
 
   const insufficientPermissionsForApps = canListApps === false;
@@ -190,12 +192,7 @@ const ClusterDetailWidgetApps: React.FC<
     string[],
     GenericResponseError
   >(upgradableAppsKey, () =>
-    getUpgradableApps(
-      clientFactory,
-      auth,
-      cache,
-      removeChildApps(userInstalledApps)
-    )
+    getUpgradableApps(clientFactory, auth, cache, userInstalledApps)
   );
 
   useEffect(() => {
@@ -212,7 +209,7 @@ const ClusterDetailWidgetApps: React.FC<
     )
       return -1;
 
-    if (!upgradableApps) return undefined;
+    if (!upgradableApps) return 0;
 
     return upgradableApps.length;
   }, [
@@ -221,6 +218,7 @@ const ClusterDetailWidgetApps: React.FC<
     insufficientPermissionsForApps,
     upgradableApps,
   ]);
+  console.log('upgradableAppsCount', upgradableAppsCount, upgradableApps);
 
   return (
     <ClusterDetailWidget
