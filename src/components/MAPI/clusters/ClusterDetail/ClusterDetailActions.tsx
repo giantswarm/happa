@@ -142,7 +142,7 @@ const ClusterDetailActions: React.FC<
     typeof isClusterApp === 'undefined'
       ? undefined
       : isClusterApp
-      ? org?.status?.namespace
+      ? namespace
       : clusterId;
 
   const appListGetOptions =
