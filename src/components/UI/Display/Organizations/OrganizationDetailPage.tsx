@@ -8,7 +8,6 @@ import { getHumanReadableMemory } from 'utils/helpers';
 import KubernetesVersionLabel from '../Cluster/KubernetesVersionLabel';
 import OrganizationDetailStatistic from './OrganizationDetailStatistic';
 import {
-  IOrganizationDetailAppsSummary,
   IOrganizationDetailClustersSummary,
   IOrganizationDetailReleasesSummary,
   IOrganizationDetailVersionsSummary,
@@ -167,8 +166,6 @@ interface IOrganizationDetailPageProps {
   versionsSummary?: IOrganizationDetailVersionsSummary;
   versionsSummaryLoading?: boolean;
   hasClusterApp?: boolean;
-  appsSummary?: IOrganizationDetailAppsSummary;
-  appsSummaryLoading?: boolean;
 }
 
 const OrganizationDetailPage: React.FC<
@@ -188,8 +185,6 @@ const OrganizationDetailPage: React.FC<
   versionsSummary,
   versionsSummaryLoading,
   hasClusterApp,
-  appsSummary,
-  appsSummaryLoading,
 }) => {
   const { oldestReleaseK8sVersion, newestReleaseK8sVersion } =
     releasesSummary ?? {};
@@ -357,33 +352,6 @@ const OrganizationDetailPage: React.FC<
           </Box>
         </Box>
       )}
-      <Box direction='row' gap='large'>
-        <Box width='small'>
-          <Text weight='bold' size='large' margin='none'>
-            Apps summary
-          </Text>
-        </Box>
-        <Box direction='row' gap='small'>
-          <Box width='medium' direction='column' gap='xsmall'>
-            <Text>Apps in use</Text>
-            <Text>App deployments</Text>
-          </Box>
-          <Box direction='column' gap='xsmall'>
-            <OrganizationDetailStatistic
-              isLoading={appsSummaryLoading}
-              aria-label='Apps in use'
-            >
-              {appsSummary?.appsInUseCount}
-            </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic
-              isLoading={appsSummaryLoading}
-              aria-label='App deployments'
-            >
-              {appsSummary?.appDeploymentsCount}
-            </OrganizationDetailStatistic>
-          </Box>
-        </Box>
-      </Box>
 
       {!clusterCountLoading && (
         <OrganizationDetailDelete

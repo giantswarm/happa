@@ -31,7 +31,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import DeleteClusterGuide from '../guides/DeleteClusterGuide';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
-import { getWorkerNodesCount } from '../utils';
+import { getWorkerNodesCount, hasClusterAppLabel } from '../utils';
 import { deleteClusterResources } from './utils';
 
 interface IClusterDetailActionsProps
@@ -79,6 +79,7 @@ const ClusterDetailActions: React.FC<
   >(clusterKey, () =>
     fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
   );
+  const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
 
   const providerClusterKey = cluster
     ? fetchProviderClusterForClusterKey(cluster)
@@ -137,7 +138,27 @@ const ClusterDetailActions: React.FC<
 
   const { canList: canListApps } = usePermissionsForApps(provider, clusterId);
 
-  const appListGetOptions = { namespace: clusterId };
+  const appsNamespace =
+    typeof isClusterApp === 'undefined'
+      ? undefined
+      : isClusterApp
+      ? namespace
+      : clusterId;
+
+  const appListGetOptions =
+    typeof isClusterApp === 'undefined'
+      ? undefined
+      : isClusterApp
+      ? {
+          namespace: appsNamespace,
+          labelSelector: {
+            matchingLabels: {
+              [applicationv1alpha1.labelCluster]: clusterId,
+            },
+          },
+        }
+      : { namespace: appsNamespace };
+
   const appListKey = canListApps
     ? applicationv1alpha1.getAppListKey(appListGetOptions)
     : null;
@@ -173,10 +194,12 @@ const ClusterDetailActions: React.FC<
   }, [appListError, clusterId]);
 
   const userInstalledApps = useMemo(() => {
-    if (!appList) return undefined;
+    if (typeof appList === 'undefined' || typeof isClusterApp === 'undefined') {
+      return undefined;
+    }
 
-    return filterUserInstalledApps(appList.items);
-  }, [appList]);
+    return filterUserInstalledApps(appList.items, isClusterApp, provider);
+  }, [appList, isClusterApp, provider]);
 
   const hasError =
     typeof orgError !== 'undefined' ||

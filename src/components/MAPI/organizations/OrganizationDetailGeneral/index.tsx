@@ -33,8 +33,6 @@ import DeleteOrganizationGuide from '../guides/DeleteOrganizationGuide';
 import GetOrganizationDetailsGuide from '../guides/GetOrganizationDetailsGuide';
 import { usePermissionsForOrganizations } from '../permissions/usePermissionsForOrganizations';
 import {
-  fetchAppsSummary,
-  fetchAppsSummaryKey,
   fetchClustersSummary,
   fetchClustersSummaryKey,
   fetchReleasesSummary,
@@ -215,21 +213,6 @@ const OrganizationDetailGeneral: React.FC<
     }
   }, [versionsSummaryError]);
 
-  const {
-    data: appsSummary,
-    isValidating: appsSummaryIsValidating,
-    error: appsSummaryError,
-  } = useSWR<ui.IOrganizationDetailAppsSummary, GenericResponseError>(
-    () => fetchAppsSummaryKey(clusterList?.items),
-    () => fetchAppsSummary(clientFactory, auth, clusterList!.items)
-  );
-
-  useEffect(() => {
-    if (appsSummaryError) {
-      ErrorReporter.getInstance().notify(appsSummaryError);
-    }
-  }, [appsSummaryError]);
-
   return (
     <>
       <OrganizationDetailPage
@@ -257,10 +240,6 @@ const OrganizationDetailGeneral: React.FC<
           typeof versionsSummary === 'undefined' && versionsSummaryIsValidating
         }
         hasClusterApp={hasClusterApp}
-        appsSummary={appsSummary}
-        appsSummaryLoading={
-          typeof appsSummary === 'undefined' && appsSummaryIsValidating
-        }
       />
       <CLIGuidesList margin={{ top: 'large' }}>
         <GetOrganizationDetailsGuide organizationName={organizationName} />
