@@ -57,26 +57,21 @@ const ClusterDetailWidgetApps: React.FC<
   const { canList: canListApps, canCreate: canCreateApps } =
     usePermissionsForApps(provider, clusterId);
 
-  const appsNamespace =
-    typeof isClusterApp === 'undefined'
-      ? undefined
-      : isClusterApp
-      ? organizations[orgId].namespace
-      : clusterId;
+  const appsNamespace = isClusterApp
+    ? organizations[orgId].namespace
+    : clusterId;
 
-  const appListGetOptions =
-    typeof isClusterApp === 'undefined'
-      ? undefined
-      : isClusterApp
-      ? {
-          namespace: appsNamespace,
-          labelSelector: {
-            matchingLabels: {
-              [applicationv1alpha1.labelCluster]: clusterId,
-            },
+  const appListGetOptions = isClusterApp
+    ? {
+        namespace: appsNamespace,
+        labelSelector: {
+          matchingLabels: {
+            [applicationv1alpha1.labelCluster]: clusterId,
           },
-        }
-      : { namespace: appsNamespace };
+        },
+      }
+    : { namespace: appsNamespace };
+
   const appListKey = canListApps
     ? applicationv1alpha1.getAppListKey(appListGetOptions)
     : null;
@@ -98,8 +93,41 @@ const ClusterDetailWidgetApps: React.FC<
     }
   }, [appListError]);
 
+  const appClient = useRef(clientFactory());
+
+  const defaultAppName = useMemo(() => {
+    if (typeof appList === 'undefined') {
+      return undefined;
+    }
+
+    return applicationv1alpha1.getDefaultAppName(appList.items, provider);
+  }, [appList, provider]);
+
+  const defaultAppKey =
+    canListApps && defaultAppName && appsNamespace
+      ? applicationv1alpha1.getAppKey(appsNamespace, defaultAppName)
+      : null;
+
+  const { data: defaultApp, error: defaultAppError } = useSWR<
+    applicationv1alpha1.IApp,
+    GenericResponseError
+  >(defaultAppKey, () =>
+    applicationv1alpha1.getApp(
+      appClient.current,
+      auth,
+      appsNamespace!,
+      defaultAppName!
+    )
+  );
+
+  useEffect(() => {
+    if (defaultAppError) {
+      ErrorReporter.getInstance().notify(defaultAppError);
+    }
+  }, [defaultAppError]);
+
   const userInstalledApps = useMemo(() => {
-    if (typeof appList === 'undefined' || typeof isClusterApp === 'undefined') {
+    if (typeof appList === 'undefined') {
       return [];
     }
 
@@ -112,24 +140,32 @@ const ClusterDetailWidgetApps: React.FC<
     if (appListError || insufficientPermissionsForApps) {
       return {
         apps: -1,
-        uniqueApps: -1,
-        deployed: -1,
+        notDeployed: -1,
       };
     }
-    if (!appList) {
+    if (typeof appList === 'undefined') {
       return {
         apps: undefined,
-        uniqueApps: undefined,
-        deployed: undefined,
+        notDeployed: undefined,
       };
     }
 
-    return computeAppsCategorizedCounters(userInstalledApps);
+    if (isClusterApp && typeof defaultApp === 'undefined') {
+      return {
+        apps: undefined,
+        notDeployed: undefined,
+      };
+    }
+
+    const apps = isClusterApp ? [...appList.items, defaultApp!] : appList.items;
+
+    return computeAppsCategorizedCounters(apps);
   }, [
     appList,
     appListError,
     insufficientPermissionsForApps,
-    userInstalledApps,
+    isClusterApp,
+    defaultApp,
   ]);
 
   const hasNoApps =
@@ -212,19 +248,31 @@ const ClusterDetailWidgetApps: React.FC<
       {!hasNoApps && (
         <>
           <ClusterDetailCounter
-            label='app'
+            label='app resource'
             pluralize={true}
             value={appCounters.apps}
           />
           <ClusterDetailCounter
-            label='unique app'
-            pluralize={true}
-            value={appCounters.uniqueApps}
+            label='not deployed'
+            value={appCounters.notDeployed}
+            color={
+              appCounters.notDeployed && appCounters.notDeployed > 0
+                ? 'text-warning'
+                : 'text-success'
+            }
           />
-          <ClusterDetailCounter label='deployed' value={appCounters.deployed} />
           <ClusterDetailCounter
-            label='upgradable'
+            label={
+              upgradableAppsCount === 1
+                ? 'upgrade available'
+                : 'upgrades available'
+            }
             value={upgradableAppsCount}
+            color={
+              upgradableAppsCount && upgradableAppsCount > 0
+                ? 'text-warning'
+                : 'text-success'
+            }
           />
         </>
       )}

@@ -80,6 +80,11 @@ export function getDefaultAppName(
   provider: PropertiesOf<typeof Providers>
 ) {
   const providerDefaultAppName = getDefaultAppNameForProvider(provider);
+
+  if (typeof providerDefaultAppName === 'undefined') {
+    return undefined;
+  }
+
   const anyPreinstalledApp = apps.find(
     (item) => item.metadata?.labels?.[labelAppName] === providerDefaultAppName
   );

@@ -666,8 +666,7 @@ export function computeAppsCategorizedCounters(
   appCollection: applicationv1alpha1.IApp[]
 ): {
   apps: number;
-  uniqueApps: number;
-  deployed: number;
+  notDeployed: number;
 } {
   const apps: Record<string, boolean> = {};
 
@@ -688,8 +687,7 @@ export function computeAppsCategorizedCounters(
 
   return {
     apps: totalAppCount,
-    uniqueApps: Object.values(apps).length,
-    deployed: deployedAppCount,
+    notDeployed: totalAppCount - deployedAppCount,
   };
 }
 
