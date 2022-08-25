@@ -15,11 +15,6 @@ export interface IOrganizationDetailReleasesSummary {
   releasesInUseCount?: number;
 }
 
-export interface IOrganizationDetailAppsSummary {
-  appsInUseCount?: number;
-  appDeploymentsCount?: number;
-}
-
 export interface IOrganizationDetailVersionsSummary {
   oldestClusterAppVersion?: string;
   newestClusterAppVersion?: string;

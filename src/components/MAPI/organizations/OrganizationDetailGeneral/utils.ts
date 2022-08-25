@@ -16,7 +16,6 @@ import {
   mapNodePoolsToProviderNodePools,
 } from 'MAPI/workernodes/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
-import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
@@ -377,74 +376,6 @@ export function fetchReleasesSummaryKey(
   );
 
   return `fetchReleasesSummary/${clusterKeys.join()}`;
-}
-
-/**
- * Get various statistics about the apps installed in the given clusters.
- * @param httpClientFactory
- * @param auth
- * @param clusters
- */
-export async function fetchAppsSummary(
-  httpClientFactory: HttpClientFactory,
-  auth: IOAuth2Provider,
-  clusters: capiv1beta1.ICluster[]
-): Promise<ui.IOrganizationDetailAppsSummary> {
-  const summary: ui.IOrganizationDetailAppsSummary = {};
-
-  // The key is the app name, and the value is the number of deployments.
-  const apps: Record<string, number> = {};
-
-  // Get all apps that belong to all clusters.
-  const responses = await Promise.allSettled(
-    clusters.map((cluster) => {
-      return applicationv1alpha1.getAppList(httpClientFactory(), auth, {
-        namespace: cluster.metadata.name,
-      });
-    })
-  );
-
-  for (const response of responses) {
-    if (
-      response.status === 'rejected' &&
-      !metav1.isStatusError(
-        (response.reason as GenericResponse).data,
-        metav1.K8sStatusErrorReasons.Forbidden
-      )
-    ) {
-      ErrorReporter.getInstance().notify(response.reason as Error);
-    }
-
-    if (response.status === 'fulfilled')
-      for (const app of response.value.items) {
-        apps[app.spec.name] ??= 0;
-        apps[app.spec.name] += 1;
-      }
-  }
-
-  summary.appsInUseCount = Object.keys(apps).length;
-  summary.appDeploymentsCount = Object.values(apps).reduce(
-    (acc, curr) => acc + curr,
-    0
-  );
-
-  return summary;
-}
-
-/**
- * The key used for caching the releases summary.
- * @param clusters
- */
-export function fetchAppsSummaryKey(
-  clusters?: capiv1beta1.ICluster[]
-): string | null {
-  if (!clusters) return null;
-
-  const clusterKeys = clusters.map(
-    (c) => `${c.metadata.namespace}/${c.metadata.name}`
-  );
-
-  return `fetchAppsSummary/${clusterKeys.join()}`;
 }
 
 /**

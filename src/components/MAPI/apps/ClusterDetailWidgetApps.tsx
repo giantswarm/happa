@@ -4,7 +4,9 @@ import { normalizeColor } from 'grommet/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR, { useSWRConfig } from 'swr';
@@ -21,6 +23,7 @@ import {
   filterUserInstalledApps,
   getUpgradableApps,
   getUpgradableAppsKey,
+  removeChildApps,
 } from './utils';
 
 const StyledLink = styled(Link)`
@@ -31,14 +34,20 @@ interface IClusterDetailWidgetAppsProps
   extends Omit<
     React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
     'title'
-  > {}
+  > {
+  isClusterApp: boolean;
+}
 
 const ClusterDetailWidgetApps: React.FC<
   React.PropsWithChildren<IClusterDetailWidgetAppsProps>
-> = (props) => {
-  const { clusterId } = useParams<{ clusterId: string; orgId: string }>();
+> = ({ isClusterApp, ...props }) => {
+  const { clusterId, orgId } = useParams<{
+    clusterId: string;
+    orgId: string;
+  }>();
 
   const provider = window.config.info.general.provider;
+  const organizations = useSelector(selectOrganizations());
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -48,7 +57,21 @@ const ClusterDetailWidgetApps: React.FC<
   const { canList: canListApps, canCreate: canCreateApps } =
     usePermissionsForApps(provider, clusterId);
 
-  const appListGetOptions = { namespace: clusterId };
+  const appsNamespace = isClusterApp
+    ? organizations[orgId]?.namespace
+    : clusterId;
+
+  const appListGetOptions = isClusterApp
+    ? {
+        namespace: appsNamespace,
+        labelSelector: {
+          matchingLabels: {
+            [applicationv1alpha1.labelCluster]: clusterId,
+          },
+        },
+      }
+    : { namespace: appsNamespace };
+
   const appListKey = canListApps
     ? applicationv1alpha1.getAppListKey(appListGetOptions)
     : null;
@@ -70,13 +93,48 @@ const ClusterDetailWidgetApps: React.FC<
     }
   }, [appListError]);
 
-  const userInstalledApps = useMemo(() => {
+  const appClient = useRef(clientFactory());
+
+  const defaultAppName = useMemo(() => {
     if (typeof appList === 'undefined') {
-      return [];
+      return undefined;
     }
 
-    return filterUserInstalledApps(appList.items);
-  }, [appList]);
+    return applicationv1alpha1.getDefaultAppName(appList.items, provider);
+  }, [appList, provider]);
+
+  const defaultAppKey =
+    canListApps && defaultAppName && appsNamespace
+      ? applicationv1alpha1.getAppKey(appsNamespace, defaultAppName)
+      : null;
+
+  const { data: defaultApp, error: defaultAppError } = useSWR<
+    applicationv1alpha1.IApp,
+    GenericResponseError
+  >(defaultAppKey, () =>
+    applicationv1alpha1.getApp(
+      appClient.current,
+      auth,
+      appsNamespace!,
+      defaultAppName!
+    )
+  );
+
+  useEffect(() => {
+    if (defaultAppError) {
+      ErrorReporter.getInstance().notify(defaultAppError);
+    }
+  }, [defaultAppError]);
+
+  const userInstalledApps = useMemo(() => {
+    if (typeof appList === 'undefined') {
+      return undefined;
+    }
+
+    const apps = filterUserInstalledApps(appList.items, isClusterApp, provider);
+
+    return removeChildApps(apps);
+  }, [appList, isClusterApp, provider]);
 
   const insufficientPermissionsForApps = canListApps === false;
 
@@ -84,24 +142,32 @@ const ClusterDetailWidgetApps: React.FC<
     if (appListError || insufficientPermissionsForApps) {
       return {
         apps: -1,
-        uniqueApps: -1,
-        deployed: -1,
+        notDeployed: -1,
       };
     }
-    if (!appList) {
+    if (typeof appList === 'undefined') {
       return {
         apps: undefined,
-        uniqueApps: undefined,
-        deployed: undefined,
+        notDeployed: undefined,
       };
     }
 
-    return computeAppsCategorizedCounters(userInstalledApps);
+    if (isClusterApp && typeof defaultApp === 'undefined') {
+      return {
+        apps: undefined,
+        notDeployed: undefined,
+      };
+    }
+
+    const apps = isClusterApp ? [...appList.items, defaultApp!] : appList.items;
+
+    return computeAppsCategorizedCounters(apps);
   }, [
     appList,
     appListError,
     insufficientPermissionsForApps,
-    userInstalledApps,
+    isClusterApp,
+    defaultApp,
   ]);
 
   const hasNoApps =
@@ -116,9 +182,10 @@ const ClusterDetailWidgetApps: React.FC<
 
   const canReadCatalogResources = canListCatalogs && canListAppCatalogEntries;
 
-  const upgradableAppsKey = canReadCatalogResources
-    ? getUpgradableAppsKey(userInstalledApps)
-    : null;
+  const upgradableAppsKey =
+    canReadCatalogResources && userInstalledApps
+      ? getUpgradableAppsKey(userInstalledApps)
+      : null;
 
   const { cache } = useSWRConfig();
 
@@ -126,7 +193,7 @@ const ClusterDetailWidgetApps: React.FC<
     string[],
     GenericResponseError
   >(upgradableAppsKey, () =>
-    getUpgradableApps(clientFactory, auth, cache, userInstalledApps)
+    getUpgradableApps(clientFactory, auth, cache, userInstalledApps!)
   );
 
   useEffect(() => {
@@ -143,6 +210,8 @@ const ClusterDetailWidgetApps: React.FC<
     )
       return -1;
 
+    if (userInstalledApps && userInstalledApps.length === 0) return 0;
+
     if (!upgradableApps) return undefined;
 
     return upgradableApps.length;
@@ -151,6 +220,7 @@ const ClusterDetailWidgetApps: React.FC<
     canReadCatalogResources,
     insufficientPermissionsForApps,
     upgradableApps,
+    userInstalledApps,
   ]);
 
   return (
@@ -179,19 +249,35 @@ const ClusterDetailWidgetApps: React.FC<
       {!hasNoApps && (
         <>
           <ClusterDetailCounter
-            label='app'
+            label='app resource'
             pluralize={true}
             value={appCounters.apps}
           />
           <ClusterDetailCounter
-            label='unique app'
-            pluralize={true}
-            value={appCounters.uniqueApps}
+            label='not deployed'
+            value={appCounters.notDeployed}
+            color={
+              appCounters.notDeployed === -1
+                ? 'text'
+                : appCounters.notDeployed === 0
+                ? 'text-success'
+                : 'text-warning'
+            }
           />
-          <ClusterDetailCounter label='deployed' value={appCounters.deployed} />
           <ClusterDetailCounter
-            label='upgradable'
+            label={
+              upgradableAppsCount === 1
+                ? 'upgrade available'
+                : 'upgrades available'
+            }
             value={upgradableAppsCount}
+            color={
+              upgradableAppsCount === -1
+                ? 'text'
+                : upgradableAppsCount === 0
+                ? 'text-success'
+                : 'text-warning'
+            }
           />
         </>
       )}

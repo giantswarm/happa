@@ -42,14 +42,12 @@ import { usePermissionsForCatalogs } from './permissions/usePermissionsForCatalo
 import {
   getCatalogNamespace,
   getCatalogNamespaceKey,
-  isUserInstalledApp,
   normalizeAppVersion,
 } from './utils';
 
 const Icon = styled(Text)<{ isActive?: boolean }>`
-  transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
+  transform: rotate(${({ isActive }) => (isActive ? '180deg' : '0deg')});
   transform-origin: center center;
-  transition: 0.15s ease-out;
 `;
 
 const Header = styled(Box)`
@@ -63,15 +61,22 @@ interface IClusterDetailAppListItemProps
   app?: applicationv1alpha1.IApp;
   appsPermissions?: IAppsPermissions;
   isActive?: boolean;
+  canBeModified?: boolean;
+  minHeight?: number;
   onAppUninstalled?: () => void;
 }
 
 const ClusterDetailAppListItem: React.FC<
   React.PropsWithChildren<IClusterDetailAppListItemProps>
   // eslint-disable-next-line complexity
-> = ({ app, appsPermissions, isActive, onAppUninstalled }) => {
-  const canBeModified = app ? isUserInstalledApp(app) : false;
-
+> = ({
+  app,
+  appsPermissions,
+  isActive,
+  canBeModified = true,
+  minHeight,
+  onAppUninstalled,
+}) => {
   const currentVersion = useMemo(() => {
     if (!app) return undefined;
     const appVersion = applicationv1alpha1.getAppCurrentVersion(app);
@@ -156,23 +161,14 @@ const ClusterDetailAppListItem: React.FC<
         ref={accordionRef}
         header={
           <Header
-            pad={{ vertical: 'xsmall', horizontal: 'small' }}
+            height={{ min: `${minHeight}px` }}
+            pad={{ vertical: 'xsmall', horizontal: 'medium' }}
             direction='row'
             align='center'
             onClick={handleHeaderClick}
             tabIndex={-1}
             aria-disabled={isDisabled}
           >
-            <Box margin={{ right: 'xsmall' }}>
-              <Icon
-                className='fa fa-chevron-down'
-                isActive={isActive}
-                role='presentation'
-                aria-hidden='true'
-                size='28px'
-                color={isDisabled ? 'text-xweak' : 'text'}
-              />
-            </Box>
             <OptionalValue value={app?.spec.name} loaderWidth={100}>
               {(value) => (
                 <Text weight='bold' aria-label={`App name: ${value}`}>
@@ -187,6 +183,7 @@ const ClusterDetailAppListItem: React.FC<
                 duration: 150,
               }}
               margin={{ left: 'small' }}
+              flex='grow'
             >
               {isDeleted ? (
                 <Text size='small' color='text-weak'>
@@ -232,6 +229,14 @@ const ClusterDetailAppListItem: React.FC<
                 </Box>
               )}
             </Box>
+            <Icon
+              className='fa fa-chevron-down'
+              isActive={isActive}
+              role='presentation'
+              aria-hidden='true'
+              size='28px'
+              color={isDisabled ? 'text-xweak' : 'text'}
+            />
           </Header>
         }
       >
@@ -333,7 +338,7 @@ const ClusterDetailAppListItem: React.FC<
           )}
           {canBeModified && app && catalogNamespace && (
             <CLIGuidesList
-              margin={{ top: 'medium', horizontal: 'xsmall', bottom: 'xsmall' }}
+              margin={{ vertical: 'medium', horizontal: 'xsmall' }}
             >
               <InspectInstalledAppGuide
                 appName={app.metadata.name}

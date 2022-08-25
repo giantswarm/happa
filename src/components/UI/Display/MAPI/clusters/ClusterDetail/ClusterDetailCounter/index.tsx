@@ -21,11 +21,12 @@ interface IClusterDetailCounterProps
   label: string;
   value?: number;
   pluralize?: boolean;
+  color?: string;
 }
 
 const ClusterDetailCounter: React.FC<
   React.PropsWithChildren<IClusterDetailCounterProps>
-> = ({ label, value, pluralize, ...props }) => {
+> = ({ label, value, pluralize, color, ...props }) => {
   const formattedLabel = pluralize ? pluralizeLabel(value, label) : label;
 
   let a11yLabel = `Loading ${formattedLabel}...`;
@@ -45,7 +46,7 @@ const ClusterDetailCounter: React.FC<
           loaderWidth={30}
         >
           {(counterValue) => (
-            <Text size='xxlarge' aria-label={a11yLabel}>
+            <Text size='xxlarge' color={color} aria-label={a11yLabel}>
               {counterValue === -1 ? <NotAvailable /> : counterValue}
             </Text>
           )}

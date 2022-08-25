@@ -16,7 +16,6 @@ import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import * as React from 'react';
 import { SWRConfig } from 'swr';
-import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
 import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
@@ -462,24 +461,6 @@ describe('OrganizationDetailGeneral on Azure', () => {
       )
       .reply(StatusCodes.Ok, capzv1beta1Mocks.randomCluster3AzureMachinePool1);
 
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster1.metadata.name}/apps/`
-      )
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.randomCluster1AppsList);
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster2.metadata.name}/apps/`
-      )
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.randomCluster2AppsList);
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${capiv1beta1Mocks.randomCluster3.metadata.name}/apps/`
-      )
-      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.randomCluster3AppsList);
-
     render(
       getComponent({
         organizationName: 'org1',
@@ -544,14 +525,6 @@ describe('OrganizationDetailGeneral on Azure', () => {
 
     await waitFor(() =>
       expect(screen.getByLabelText('Releases in use')).toHaveTextContent('3')
-    );
-
-    // Apps summary.
-    await waitFor(() =>
-      expect(screen.getByLabelText('Apps in use')).toHaveTextContent('12')
-    );
-    await waitFor(() =>
-      expect(screen.getByLabelText('App deployments')).toHaveTextContent('14')
     );
   });
 
@@ -627,14 +600,6 @@ describe('OrganizationDetailGeneral on Azure', () => {
 
     await waitFor(() =>
       expect(screen.getByLabelText('Releases in use')).toHaveTextContent('3')
-    );
-
-    // Apps summary.
-    await waitFor(() =>
-      expect(screen.getByLabelText('Apps in use')).toHaveTextContent('0')
-    );
-    await waitFor(() =>
-      expect(screen.getByLabelText('App deployments')).toHaveTextContent('0')
     );
   });
 });

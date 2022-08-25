@@ -1,3 +1,5 @@
+import { Providers } from 'model/constants';
+
 import { ICatalog } from './';
 import { IApp, IAppCatalogEntry } from './types';
 
@@ -10,6 +12,7 @@ export const labelLatest = 'latest';
 export const labelCatalogVisibility =
   'application.giantswarm.io/catalog-visibility';
 export const labelCatalogType = 'application.giantswarm.io/catalog-type';
+export const labelCluster = 'giantswarm.io/cluster';
 
 export const statusUnknown = 'unknown';
 export const statusDeployed = 'deployed';
@@ -59,4 +62,32 @@ export function getAppStatus(app: IApp): string {
 
 export function isAppManagedByFlux(app: IApp): boolean {
   return app.metadata.labels?.[labelManagedBy] === 'flux';
+}
+
+export function getDefaultAppNameForProvider(
+  provider: PropertiesOf<typeof Providers>
+) {
+  switch (provider) {
+    case Providers.GCP:
+      return 'default-apps-gcp';
+    default:
+      return undefined;
+  }
+}
+
+export function getDefaultAppName(
+  apps: IApp[],
+  provider: PropertiesOf<typeof Providers>
+) {
+  const providerDefaultAppName = getDefaultAppNameForProvider(provider);
+
+  if (typeof providerDefaultAppName === 'undefined') {
+    return undefined;
+  }
+
+  const anyPreinstalledApp = apps.find(
+    (item) => item.metadata?.labels?.[labelAppName] === providerDefaultAppName
+  );
+
+  return anyPreinstalledApp?.metadata.labels?.[labelManagedBy];
 }

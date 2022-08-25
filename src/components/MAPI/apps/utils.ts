@@ -12,9 +12,10 @@ import {
 } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
-import { Constants } from 'model/constants';
+import { Constants, Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import {
+  getDefaultAppName,
   IApp,
   isAppManagedByFlux,
 } from 'model/services/mapi/applicationv1alpha1';
@@ -510,11 +511,11 @@ export async function updateAppVersion(
   return app;
 }
 
-export function mapDefaultApps(
+export function mapReleaseToApps(
   release: releasev1alpha1.IRelease,
   apps: IApp[]
 ) {
-  const defaultApps: IApp[] = [];
+  const resultApps: IApp[] = [];
 
   const releaseComponents = releasesUtils.reduceReleaseToComponents(release);
 
@@ -524,27 +525,62 @@ export function mapDefaultApps(
     });
 
     if (app) {
-      defaultApps.push(app);
+      resultApps.push(app);
     }
   }
 
-  return defaultApps;
+  return resultApps;
 }
 
-export function isUserInstalledApp(app: IApp) {
+export function isUserInstalledApp(
+  app: IApp,
+  apps: IApp[],
+  isClusterApp: boolean,
+  provider: PropertiesOf<typeof Providers>
+) {
   const managedBy = app.metadata.labels?.[applicationv1alpha1.labelManagedBy];
+
+  if (isClusterApp) {
+    const defaultAppName = getDefaultAppName(apps, provider);
+
+    return (
+      managedBy !== 'cluster-apps-operator' && managedBy !== defaultAppName
+    );
+  }
 
   return managedBy !== 'cluster-operator';
 }
 
 export function filterUserInstalledApps(
-  apps: applicationv1alpha1.IApp[]
+  apps: applicationv1alpha1.IApp[],
+  isClusterApp: boolean,
+  provider: PropertiesOf<typeof Providers>
 ): applicationv1alpha1.IApp[] {
-  const userApps = apps.filter((app) => {
-    return isUserInstalledApp(app);
+  return apps.filter((app) => {
+    return isUserInstalledApp(app, apps, isClusterApp, provider);
   });
+}
 
-  return userApps.sort(compareApps);
+export function filterDefaultApps(
+  apps: applicationv1alpha1.IApp[],
+  isClusterApp: boolean,
+  provider: PropertiesOf<typeof Providers>
+): applicationv1alpha1.IApp[] {
+  return apps.filter((app) => {
+    return !isUserInstalledApp(app, apps, isClusterApp, provider);
+  });
+}
+
+export function removeChildApps(apps: applicationv1alpha1.IApp[]) {
+  const appNames = apps.map((app) => app.metadata.name);
+
+  return apps.filter((app) => {
+    const managedBy = app.metadata.labels?.[applicationv1alpha1.labelManagedBy];
+
+    return (
+      typeof managedBy === 'undefined' || appNames.indexOf(managedBy) === -1
+    );
+  });
 }
 
 export function findIngressApp(
@@ -630,8 +666,7 @@ export function computeAppsCategorizedCounters(
   appCollection: applicationv1alpha1.IApp[]
 ): {
   apps: number;
-  uniqueApps: number;
-  deployed: number;
+  notDeployed: number;
 } {
   const apps: Record<string, boolean> = {};
 
@@ -652,8 +687,7 @@ export function computeAppsCategorizedCounters(
 
   return {
     apps: totalAppCount,
-    uniqueApps: Object.values(apps).length,
-    deployed: deployedAppCount,
+    notDeployed: totalAppCount - deployedAppCount,
   };
 }
 

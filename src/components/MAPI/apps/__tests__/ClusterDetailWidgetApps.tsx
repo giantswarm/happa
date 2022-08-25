@@ -160,9 +160,9 @@ describe('ClusterDetailWidgetApps', () => {
       defaultPermissions
     );
 
-    render(getComponent({}));
+    render(getComponent({ isClusterApp: false }));
 
-    expect(screen.getAllByLabelText('Loading...').length).toEqual(4);
+    expect(screen.getAllByLabelText('Loading...').length).toEqual(3);
   });
 
   it('displays a placeholder if there are no apps', async () => {
@@ -191,8 +191,7 @@ describe('ClusterDetailWidgetApps', () => {
         },
       });
 
-    render(getComponent({}));
-
+    render(getComponent({ isClusterApp: false }));
     expect(await screen.findByText('No apps installed')).toBeInTheDocument();
     expect(
       screen.getByText((_, node) => {
@@ -230,7 +229,7 @@ describe('ClusterDetailWidgetApps', () => {
         },
       });
 
-    render(getComponent({}));
+    render(getComponent({ isClusterApp: false }));
 
     expect(await screen.findByText('No apps installed')).toBeInTheDocument();
     expect(
@@ -270,11 +269,16 @@ describe('ClusterDetailWidgetApps', () => {
         ],
       });
 
-    render(getComponent({}));
+    render(getComponent({ isClusterApp: false }));
 
-    expect(await screen.findByLabelText('6 apps')).toBeInTheDocument();
-    expect(await screen.findByLabelText('2 unique apps')).toBeInTheDocument();
-    expect(await screen.findByLabelText('5 deployed')).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText(
+        `${
+          applicationv1alpha1Mocks.randomCluster1AppsList.items.length + 6
+        } app resources`
+      )
+    ).toBeInTheDocument();
+    expect(await screen.findByLabelText('1 not deployed')).toBeInTheDocument();
   });
 
   it('displays the number of upgradable apps', async () => {
@@ -318,9 +322,11 @@ describe('ClusterDetailWidgetApps', () => {
         applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList
       );
 
-    render(getComponent({}));
+    render(getComponent({ isClusterApp: false }));
 
-    expect(await screen.findByLabelText('1 upgradable')).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText('1 upgrade available')
+    ).toBeInTheDocument();
   });
 
   it('does not display the number of upgradable apps if the user does not have permissions to get catalog resources', async () => {
@@ -348,10 +354,10 @@ describe('ClusterDetailWidgetApps', () => {
         ],
       });
 
-    render(getComponent({}));
+    render(getComponent({ isClusterApp: false }));
 
     expect(
-      await screen.findByLabelText('upgradable not available')
+      await screen.findByLabelText('upgrades available not available')
     ).toBeInTheDocument();
   });
 });

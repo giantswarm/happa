@@ -43,6 +43,7 @@ export const COLORS = {
   gray3: '#eeeeee',
   gray4: '#313131',
   gray5: '#798691',
+  gray6: '#dddddd',
 
   shade5: '#32526a',
   shade6: '#3a5f7b',
@@ -246,6 +247,10 @@ const theme = deepMerge(generate(16), {
       border: {
         dark: COLORS.shade6,
         light: COLORS.shade6,
+      },
+      'border-weak': {
+        dark: COLORS.gray6,
+        light: COLORS.gray6,
       },
       'border-xweak': {
         dark: COLORS.darkBlueLighter3,
