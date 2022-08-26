@@ -23,7 +23,6 @@ export function createProxy(
 
   proxy.options(
     '*',
-    // @ts-expect-error
     cors({
       credentials: false,
       origin: '*',
