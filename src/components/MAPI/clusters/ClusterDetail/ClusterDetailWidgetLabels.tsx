@@ -10,6 +10,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
+import { hasClusterAppLabel } from '../utils';
 import { updateClusterLabels } from './utils';
 
 interface IClusterDetailWidgetLabelsProps
@@ -89,6 +90,8 @@ const ClusterDetailWidgetLabels: React.FC<
     }
   };
 
+  const isReadOnly = cluster && hasClusterAppLabel(cluster);
+
   return (
     <ClusterDetailWidget title='Labels' inline={true} {...props}>
       <OptionalValue
@@ -105,6 +108,7 @@ const ClusterDetailWidgetLabels: React.FC<
             isLoading={labelsIsLoading}
             showTitle={false}
             unauthorized={!canUpdateCluster}
+            readOnly={isReadOnly}
           />
         )}
       </OptionalValue>
