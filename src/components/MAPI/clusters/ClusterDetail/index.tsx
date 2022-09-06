@@ -371,7 +371,11 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     }
   };
 
-  const isReadOnly = cluster && hasClusterAppLabel(cluster);
+  const isReadOnly = useMemo(() => {
+    if (!cluster) return true;
+
+    return hasClusterAppLabel(cluster);
+  }, [cluster]);
 
   return (
     <DocumentTitle title={`Cluster Details | ${clusterId}`}>
@@ -435,7 +439,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
             <Tab path={paths.ClientCertificates} title='Client certificates' />
             <Tab path={paths.Apps} title='Apps' />
             <Tab path={paths.Ingress} title='Ingress' />
-            <Tab path={paths.Actions} title='Actions' />
+            {!isReadOnly && <Tab path={paths.Actions} title='Actions' />}
           </Tabs>
           <Switch>
             <Route
@@ -472,10 +476,12 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
                 )
               }
             />
-            <Route
-              path={OrganizationsRoutes.Clusters.Detail.Actions}
-              component={ClusterDetailActions}
-            />
+            {!isReadOnly && (
+              <Route
+                path={OrganizationsRoutes.Clusters.Detail.Actions}
+                component={ClusterDetailActions}
+              />
+            )}
             <Route
               path={OrganizationsRoutes.Clusters.Detail.Home}
               component={ClusterDetailOverview}
