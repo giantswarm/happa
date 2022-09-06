@@ -371,6 +371,8 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     }
   };
 
+  const isReadOnly = cluster && hasClusterAppLabel(cluster);
+
   return (
     <DocumentTitle title={`Cluster Details | ${clusterId}`}>
       <Breadcrumb
@@ -407,6 +409,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
                     onSave={updateDescription}
                     aria-label={value}
                     variant={ViewAndEditNameVariant.Description}
+                    readOnly={isReadOnly}
                     unauthorized={!canUpdateCluster}
                   />
                 )}
