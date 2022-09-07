@@ -83,15 +83,18 @@ const ClusterLabels: FC<React.PropsWithChildren<IClusterLabelsProps>> = ({
     setDisplayRawLabels(e.target.checked);
   }
 
-  const noLabels = !visibleLabels || visibleLabels.length === 0;
+  const noVisibleLabels = !visibleLabels || visibleLabels.length === 0;
+  const noLabels = !labels || Object.keys(labels).length === 0;
 
   return (
     <ClusterLabelsWrapper showTitle={showTitle} {...props}>
       {showTitle && <LabelsTitle>Labels:</LabelsTitle>}
       <Box>
-        {noLabels ? (
+        {noVisibleLabels ? (
           <NoLabels>
-            This cluster has no labels.
+            {noLabels
+              ? `This cluster has no labels.`
+              : `This cluster has no editable labels.`}
             {!unauthorized && (
               <NoLabelsEditLabelTooltip
                 allowInteraction={!isLoading && allowEditing}

@@ -50,7 +50,10 @@ describe('ClusterDetailWidgetLabels', () => {
   it('displays the label editor', () => {
     render(
       getComponent({
-        cluster: capiv1beta1Mocks.randomCluster1,
+        cluster: {
+          ...capiv1beta1Mocks.randomCluster1,
+          metadata: { ...capiv1beta1Mocks.randomCluster1.metadata, labels: {} },
+        },
         canUpdateCluster: true,
       })
     );
