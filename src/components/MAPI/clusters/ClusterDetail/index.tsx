@@ -316,7 +316,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   const clusterDescription = useMemo(() => {
     if (!cluster || providerClusterIsLoading) return undefined;
 
-    return getClusterDescription(cluster, providerCluster, '');
+    return getClusterDescription(cluster, providerCluster);
   }, [cluster, providerCluster, providerClusterIsLoading]);
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
   const clusterVersion = useMemo(() => {
