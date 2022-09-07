@@ -135,7 +135,6 @@ describe('ClusterListItem on Azure', () => {
           },
         },
         releases: releasev1alpha1Mocks.releasesList.items,
-        canCreateClusters: true,
       })
     );
 
@@ -419,7 +418,6 @@ describe('ClusterListItem when user cannot create key pairs on Azure', () => {
       getComponent({
         cluster: capiv1beta1Mocks.randomCluster1,
         releases: releasev1alpha1Mocks.releasesList.items,
-        canCreateClusters: false,
       })
     );
 

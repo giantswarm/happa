@@ -316,7 +316,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   const clusterDescription = useMemo(() => {
     if (!cluster || providerClusterIsLoading) return undefined;
 
-    return getClusterDescription(cluster, providerCluster, '');
+    return getClusterDescription(cluster, providerCluster);
   }, [cluster, providerCluster, providerClusterIsLoading]);
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
   const clusterVersion = useMemo(() => {
@@ -371,6 +371,12 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     }
   };
 
+  const isReadOnly = useMemo(() => {
+    if (!cluster) return true;
+
+    return hasClusterAppLabel(cluster);
+  }, [cluster]);
+
   return (
     <DocumentTitle title={`Cluster Details | ${clusterId}`}>
       <Breadcrumb
@@ -407,6 +413,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
                     onSave={updateDescription}
                     aria-label={value}
                     variant={ViewAndEditNameVariant.Description}
+                    readOnly={isReadOnly}
                     unauthorized={!canUpdateCluster}
                   />
                 )}
@@ -432,7 +439,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
             <Tab path={paths.ClientCertificates} title='Client certificates' />
             <Tab path={paths.Apps} title='Apps' />
             <Tab path={paths.Ingress} title='Ingress' />
-            <Tab path={paths.Actions} title='Actions' />
+            {!isReadOnly && <Tab path={paths.Actions} title='Actions' />}
           </Tabs>
           <Switch>
             <Route
@@ -469,10 +476,12 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
                 )
               }
             />
-            <Route
-              path={OrganizationsRoutes.Clusters.Detail.Actions}
-              component={ClusterDetailActions}
-            />
+            {!isReadOnly && (
+              <Route
+                path={OrganizationsRoutes.Clusters.Detail.Actions}
+                component={ClusterDetailActions}
+              />
+            )}
             <Route
               path={OrganizationsRoutes.Clusters.Detail.Home}
               component={ClusterDetailOverview}

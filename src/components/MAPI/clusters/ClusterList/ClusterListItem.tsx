@@ -85,11 +85,6 @@ const ClusterListItem: React.FC<
   ...props
 }) => {
   const name = cluster?.metadata.name;
-  const description = useMemo(() => {
-    if (!cluster || typeof providerCluster === 'undefined') return undefined;
-
-    return getClusterDescription(cluster, providerCluster, '');
-  }, [cluster, providerCluster]);
 
   const { status: clusterStatus, clusterUpdateSchedule } = useClusterStatus(
     cluster,
@@ -124,6 +119,16 @@ const ClusterListItem: React.FC<
 
   const isDeleting = Boolean(deletionDate);
   const isLoading = typeof cluster === 'undefined';
+
+  const description = useMemo(() => {
+    if (!cluster || typeof providerCluster === 'undefined') return undefined;
+
+    return getClusterDescription(
+      cluster,
+      providerCluster,
+      isDeleting ? '' : undefined
+    );
+  }, [cluster, providerCluster, isDeleting]);
 
   const selectedOrg = organizations && orgId ? organizations[orgId] : undefined;
   const namespace = selectedOrg?.namespace;

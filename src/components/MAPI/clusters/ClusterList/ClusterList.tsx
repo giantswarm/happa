@@ -217,7 +217,6 @@ const ClusterList: React.FC<React.PropsWithChildren<IClusterListProps>> = (
                         providerCluster={providerCluster}
                         releases={releases}
                         organizations={organizations}
-                        canCreateClusters={canCreateClusters}
                         canListReleases={canListReleases}
                         canListCPNodes={canListCPNodes}
                         margin={{ bottom: 'medium' }}
