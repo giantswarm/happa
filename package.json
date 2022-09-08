@@ -206,7 +206,7 @@
     "lint-staged": "13.0.3",
     "mini-css-extract-plugin": "2.6.1",
     "nock": "13.2.9",
-    "node-sass": "7.0.2",
+    "node-sass": "7.0.3",
     "postinstall-postinstall": "2.1.0",
     "prettier": "2.7.1",
     "raw-loader": "4.0.2",
