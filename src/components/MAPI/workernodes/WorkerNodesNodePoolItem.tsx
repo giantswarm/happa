@@ -55,9 +55,10 @@ function formatAvailabilityZonesLabel(
 const Row = styled(Box)<{
   additionalColumnsCount?: number;
   nameColumnWidth?: number;
+  displayMenuColumn?: boolean;
 }>`
-  ${({ additionalColumnsCount, nameColumnWidth }) =>
-    NodePoolGridRow(additionalColumnsCount, nameColumnWidth)}
+  ${({ additionalColumnsCount, nameColumnWidth, displayMenuColumn }) =>
+    NodePoolGridRow(additionalColumnsCount, nameColumnWidth, displayMenuColumn)}
 `;
 
 const StyledViewAndEditName = styled(ViewAndEditName)`
@@ -245,6 +246,7 @@ const WorkerNodesNodePoolItem: React.FC<
           (hideNodePoolAutoscaling ? 0 : 2)
         }
         nameColumnWidth={nameColumnWidth}
+        displayMenuColumn={!readOnly}
       >
         <Box align='flex-start'>
           <OptionalValue
@@ -420,15 +422,17 @@ const WorkerNodesNodePoolItem: React.FC<
               </Box>
             ))}
 
-            <Box align='center'>
-              <WorkerNodesNodePoolActions
-                onDeleteClick={onDelete}
-                onScaleClick={onScale}
-                disabled={readOnly}
-                canUpdateNodePools={canUpdateNodePools}
-                canDeleteNodePools={canDeleteNodePools}
-              />
-            </Box>
+            {!readOnly && (
+              <Box align='center'>
+                <WorkerNodesNodePoolActions
+                  onDeleteClick={onDelete}
+                  onScaleClick={onScale}
+                  disabled={readOnly}
+                  canUpdateNodePools={canUpdateNodePools}
+                  canDeleteNodePools={canDeleteNodePools}
+                />
+              </Box>
+            )}
           </>
         )}
       </Row>

@@ -9,6 +9,7 @@ import {
   fetchProviderNodePoolsForNodePoolsKey,
   getMachineTypes,
   IProviderNodePoolForNodePoolName,
+  isNodePoolMngmtReadOnly,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
@@ -146,6 +147,8 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
   const hasNoNodePools =
     typeof workerNodePoolsCount === 'number' && workerNodePoolsCount === 0;
 
+  const isReadOnly = cluster && isNodePoolMngmtReadOnly(cluster);
+
   const workerNodesPath = useMemo(
     () =>
       RoutePath.createUsablePath(
@@ -182,11 +185,11 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
         >
           <Box>
             <Text margin={{ bottom: 'small' }}>No node pools</Text>
-            {canCreate && (
+            {canCreate && !isReadOnly && (
               <Text size='small'>Create node pools to run workloads.</Text>
             )}
           </Box>
-          {canCreate && (
+          {canCreate && !isReadOnly && (
             <StyledLink
               to={{
                 pathname: workerNodesPath,
