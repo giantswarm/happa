@@ -563,7 +563,7 @@ scales node pools correctly`, async () => {
     );
     fireEvent.click(await findByRole('button', { name: 'Delete' }));
 
-    await findByText(/This cluster has no labels./);
+    await findByText(/This cluster has no editable labels./);
   });
 
   it('disallows to add invalid cluster labels', async () => {

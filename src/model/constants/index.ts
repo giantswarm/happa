@@ -78,10 +78,13 @@ export const Constants = {
   RESTRICTED_CLUSTER_LABEL_KEY_SUBSTRINGS: [
     'giantswarm.io',
     'kustomize.toolkit.fluxcd.io',
+    'app.kubernetes.io',
+    'helm.sh',
   ],
   RESTRICTED_CLUSTER_LABEL_KEYS: [
     'cluster.x-k8s.io/cluster-name',
     'cluster.x-k8s.io/watch-filter',
+    'app',
   ],
   ALLOWED_CLUSTER_LABEL_KEYS: [capiv1beta1.labelServicePriority],
 
