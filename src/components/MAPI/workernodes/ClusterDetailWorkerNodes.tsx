@@ -15,9 +15,9 @@ import {
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
   IProviderNodePoolForNodePoolName,
-  isCAPGCluster,
   isCAPIProvider,
   isNodePoolMngmtReadOnly,
+  supportsNodePoolAutoscaling,
   supportsNonExpMachinePools,
   supportsReleases,
 } from 'MAPI/utils';
@@ -455,7 +455,8 @@ const ClusterDetailWorkerNodes: React.FC<
     }, [cluster]);
 
     const displayCGroupsColumn = !isCAPIProvider(provider);
-    const hideNodePoolAutoscalingColumns = cluster && isCAPGCluster(cluster);
+    const hideNodePoolAutoscalingColumns =
+      cluster && !supportsNodePoolAutoscaling(cluster);
 
     return (
       <DocumentTitle title={`Worker Nodes | ${clusterId}`}>

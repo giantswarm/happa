@@ -1249,13 +1249,17 @@ export function isCAPZCluster(cluster: Cluster): boolean {
   return compare(releaseVersion, Constants.AZURE_CAPZ_VERSION) >= 0;
 }
 
-export function isCAPGCluster(cluster: Cluster): boolean {
+function isCAPGCluster(cluster: Cluster): boolean {
   return cluster.spec?.infrastructureRef?.kind === capgv1beta1.GCPCluster;
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
   // TODO: remove isCAPGCluster check once node pool mgmt for GCP is supported
   return isCAPZCluster(cluster) || isCAPGCluster(cluster);
+}
+
+export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {
+  return !isCAPGCluster(cluster);
 }
 
 export function supportsNonExpMachinePools(cluster: Cluster): boolean {
