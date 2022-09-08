@@ -12,6 +12,7 @@ import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
 
+import { hasClusterAppLabel } from './clusters/utils';
 import {
   Cluster,
   ClusterList,
@@ -1254,8 +1255,7 @@ function isCAPGCluster(cluster: Cluster): boolean {
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
-  // TODO: remove isCAPGCluster check once node pool mgmt for GCP is supported
-  return isCAPZCluster(cluster) || isCAPGCluster(cluster);
+  return isCAPZCluster(cluster) || hasClusterAppLabel(cluster);
 }
 
 export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {

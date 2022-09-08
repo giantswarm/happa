@@ -630,6 +630,7 @@ const ClusterDetailWorkerNodes: React.FC<
               {!hasNoNodePools &&
                 cluster &&
                 providerCluster &&
+                !isReadOnly &&
                 !isCreateFormOpen && (
                   <Box
                     animation={{ type: 'fadeIn', duration: 300 }}
@@ -640,10 +641,7 @@ const ClusterDetailWorkerNodes: React.FC<
                     <Button
                       onClick={handleOpenCreateForm}
                       disabled={
-                        !cluster ||
-                        !providerCluster ||
-                        isReadOnly ||
-                        !canCreateNodePools
+                        !cluster || !providerCluster || !canCreateNodePools
                       }
                       unauthorized={!canCreateNodePools}
                     >
@@ -667,7 +665,7 @@ const ClusterDetailWorkerNodes: React.FC<
                 <WorkerNodesNodePoolListPlaceholder
                   animation={{ type: 'fadeIn', duration: 300 }}
                   onCreateButtonClick={handleOpenCreateForm}
-                  disabled={isReadOnly}
+                  readOnly={isReadOnly}
                   canCreateNodePools={canCreateNodePools}
                 />
               )}
