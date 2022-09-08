@@ -24,6 +24,7 @@ interface IEditLabelTooltip {
   allowInteraction?: boolean;
   className?: string;
   unauthorized?: boolean;
+  readOnly?: boolean;
   displayRawLabels?: boolean;
 }
 
@@ -35,14 +36,17 @@ const StyledValueLabel = styled(ValueLabel)<{
   allowInteraction?: boolean;
   unauthorized?: boolean;
   canBeEdited?: boolean;
+  readOnly?: boolean;
 }>`
   margin-bottom: 0;
   line-height: 24px;
   height: 24px;
   font-size: 13px;
 
-  cursor: ${({ allowInteraction, unauthorized, canBeEdited }) => {
+  cursor: ${({ allowInteraction, unauthorized, canBeEdited, readOnly }) => {
     switch (true) {
+      case readOnly:
+        return 'default';
       case unauthorized:
       case !canBeEdited:
         return 'not-allowed';
@@ -55,8 +59,8 @@ const StyledValueLabel = styled(ValueLabel)<{
 
   :hover {
     ${KeyWrapper}, ${ValueWrapper} {
-      text-decoration: ${({ allowInteraction, canBeEdited }) =>
-        allowInteraction && canBeEdited ? 'underline' : 'none'};
+      text-decoration: ${({ allowInteraction, canBeEdited, readOnly }) =>
+        allowInteraction && canBeEdited && !readOnly ? 'underline' : 'none'};
       text-decoration-style: dotted;
     }
   }
@@ -119,6 +123,7 @@ const LabelWrapper = styled(Box)<{
   }
 `;
 
+// eslint-disable-next-line complexity
 const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
   label,
   onOpen,
@@ -126,6 +131,7 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
   allowInteraction,
   className,
   unauthorized,
+  readOnly,
   displayRawLabels,
 }) => {
   const [currentlyEditing, setCurrentlyEditing] = useState(false);
@@ -227,9 +233,10 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
                     : 'This label cannot be edited'}
                 </StyledTooltip>
               }
+              show={!readOnly}
             >
               <StyledValueLabel
-                onClick={open}
+                onClick={readOnly ? undefined : open}
                 label={
                   <Editable allowInteraction={allowInteraction}>
                     {displayRawLabels ? label.key : label.displayKey}
@@ -242,19 +249,20 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
                 }
                 valueBackgroundColor={label.backgroundColor}
                 valueTextColor={label.textColor}
-                tabIndex={allowInteraction ? 0 : -1}
+                tabIndex={allowInteraction && !readOnly ? 0 : -1}
                 role='button'
                 aria-label={`Label ${label.key} with value ${label.value}`}
                 aria-disabled={!allowInteraction || currentlyEditing}
                 allowInteraction={allowInteraction}
                 unauthorized={unauthorized}
                 canBeEdited={canClusterLabelBeEdited(label.key)}
+                readOnly={readOnly}
                 outline={false}
                 rounded={false}
               />
             </TooltipContainer>
           </Keyboard>
-          {!unauthorized && canClusterLabelBeDeleted(label.key) && (
+          {!unauthorized && !readOnly && canClusterLabelBeDeleted(label.key) && (
             <DeleteLabelButton
               allowInteraction={allowInteraction}
               onOpen={onOpen}

@@ -57,6 +57,7 @@ interface IClusterLabelsProps
   errorMessage?: string;
   showTitle?: boolean;
   unauthorized?: boolean;
+  readOnly?: boolean;
 }
 
 const ClusterLabels: FC<React.PropsWithChildren<IClusterLabelsProps>> = ({
@@ -66,6 +67,7 @@ const ClusterLabels: FC<React.PropsWithChildren<IClusterLabelsProps>> = ({
   errorMessage,
   showTitle,
   unauthorized,
+  readOnly,
   ...props
 }) => {
   const [allowEditing, setAllowEditing] = useState(true);
@@ -95,7 +97,7 @@ const ClusterLabels: FC<React.PropsWithChildren<IClusterLabelsProps>> = ({
             {noLabels
               ? `This cluster has no labels.`
               : `This cluster has no editable labels.`}
-            {!unauthorized && (
+            {!unauthorized && !readOnly && (
               <NoLabelsEditLabelTooltip
                 allowInteraction={!isLoading && allowEditing}
                 onOpen={(isOpen) => setAllowEditing(isOpen)}
@@ -115,11 +117,12 @@ const ClusterLabels: FC<React.PropsWithChildren<IClusterLabelsProps>> = ({
                       onOpen={(isOpen) => setAllowEditing(isOpen)}
                       onSave={onChange}
                       unauthorized={unauthorized}
+                      readOnly={readOnly}
                       displayRawLabels={displayRawLabels}
                     />
                   </LabelWrapper>
                 ))}
-              {!unauthorized && (
+              {!unauthorized && !readOnly && (
                 <EditLabelTooltip
                   allowInteraction={!isLoading && allowEditing}
                   onOpen={(isOpen) => setAllowEditing(isOpen)}

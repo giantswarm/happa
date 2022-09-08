@@ -6,7 +6,7 @@ import Button from 'UI/Controls/Button';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import { hasAppropriateLength } from 'utils/helpers';
 
-import TextInput from './TextInput';
+import TextInput from '../TextInput';
 
 export enum ViewAndEditNameVariant {
   Name = 'name',
@@ -250,33 +250,33 @@ class ViewAndEditName extends Component<
     }
 
     // View mode
-    return (
+    return readOnly ? (
+      this.state.value
+    ) : (
       <Keyboard
         onSpace={this.handleFocusKeyDown}
         onEnter={this.handleFocusKeyDown}
       >
         <span tabIndex={unauthorized ? -1 : 0} {...rest}>
-          {!readOnly && !unauthorized ? (
+          {unauthorized ? (
             <TooltipContainer
               content={
-                <Tooltip>{`Click to edit ${typeLabel} ${variant}`}</Tooltip>
+                <Tooltip>
+                  Editing the description requires additional permissions
+                </Tooltip>
               }
             >
-              <NameLabel onClick={this.activateEditMode}>
+              <NameLabel unauthorized={unauthorized}>
                 {this.state.value}
               </NameLabel>
             </TooltipContainer>
           ) : (
             <TooltipContainer
               content={
-                <Tooltip>
-                  {unauthorized
-                    ? 'Editing the description requires additional permissions'
-                    : 'Editing the description is currently not supported'}
-                </Tooltip>
+                <Tooltip>{`Click to edit ${typeLabel} ${variant}`}</Tooltip>
               }
             >
-              <NameLabel unauthorized={unauthorized}>
+              <NameLabel onClick={this.activateEditMode}>
                 {this.state.value}
               </NameLabel>
             </TooltipContainer>
