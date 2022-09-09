@@ -2,6 +2,8 @@ import add from 'date-fns/fp/add';
 import compareAsc from 'date-fns/fp/compareAsc';
 import differenceInHours from 'date-fns/fp/differenceInHours';
 import toDate from 'date-fns-tz/toDate';
+import { isCAPIProvider } from 'MAPI/utils';
+import { Providers } from 'model/constants';
 import * as keypairs from 'model/services/mapi/legacy/keypairs';
 
 export function getKeyPairExpirationDate(keyPair: keypairs.IKeyPair) {
@@ -26,4 +28,10 @@ export function isKeyPairExpiringSoon(keyPair: keypairs.IKeyPair) {
 
   // eslint-disable-next-line no-magic-numbers
   return differenceInHours(now)(expirationDate) < 24;
+}
+
+export function supportsLegacyKeyPairs(
+  provider: PropertiesOf<typeof Providers>
+): boolean {
+  return !isCAPIProvider(provider);
 }

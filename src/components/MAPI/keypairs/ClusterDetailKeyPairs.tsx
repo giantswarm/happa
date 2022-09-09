@@ -38,7 +38,11 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import CreateKeyPairGuide from '../clusters/guides/CreateKeyPairGuide';
 import ClusterDetailKeyPairDetailsModal from './ClusterDetailKeyPairDetailsModal';
 import { usePermissionsForKeyPairs } from './permissions/usePermissionsForKeyPairs';
-import { getKeyPairExpirationDate, isKeyPairExpiringSoon } from './utils';
+import {
+  getKeyPairExpirationDate,
+  isKeyPairExpiringSoon,
+  supportsLegacyKeyPairs,
+} from './utils';
 
 const LOADING_COMPONENTS = new Array(4).fill(0);
 
@@ -100,9 +104,12 @@ const ClusterDetailKeyPairs: React.FC<
   const { canGet: canGetKeyPairs, canCreate: canCreateKeyPairs } =
     usePermissionsForKeyPairs(provider, namespace ?? '');
 
-  const keyPairListKey = canGetKeyPairs
-    ? legacyKeyPairs.getKeyPairListKey(clusterId)
-    : null;
+  const isLegacyKeyPairsSupported = supportsLegacyKeyPairs(provider);
+
+  const keyPairListKey =
+    isLegacyKeyPairsSupported && canGetKeyPairs
+      ? legacyKeyPairs.getKeyPairListKey(clusterId)
+      : null;
 
   const {
     data: keyPairList,
@@ -134,7 +141,8 @@ const ClusterDetailKeyPairs: React.FC<
 
   const displayKeyPairsPlaceholder =
     !canGetKeyPairs ||
-    (!keyPairListIsLoading && keyPairList?.items.length === 0);
+    (!keyPairListIsLoading && keyPairList?.items.length === 0) ||
+    !isLegacyKeyPairsSupported;
 
   const [selectedKeyPairSerial, setSelectedKeyPairSerial] = useState('');
 

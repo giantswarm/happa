@@ -16,7 +16,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import { usePermissionsForKeyPairs } from './permissions/usePermissionsForKeyPairs';
-import { isKeyPairActive } from './utils';
+import { isKeyPairActive, supportsLegacyKeyPairs } from './utils';
 
 const StyledLink = styled.a`
   color: ${({ theme }) => normalizeColor('input-highlight', theme)};
@@ -50,9 +50,12 @@ const ClusterDetailWidgetKeyPairs: React.FC<
     namespace ?? ''
   );
 
-  const keyPairListKey = canGet
-    ? legacyKeyPairs.getKeyPairListKey(clusterId)
-    : null;
+  const isLegacyKeyPairsSupported = supportsLegacyKeyPairs(provider);
+
+  const keyPairListKey =
+    isLegacyKeyPairsSupported && canGet
+      ? legacyKeyPairs.getKeyPairListKey(clusterId)
+      : null;
 
   const { data: keyPairList, error: keyPairListError } = useSWR<
     legacyKeyPairs.IKeyPairList,
@@ -76,7 +79,8 @@ const ClusterDetailWidgetKeyPairs: React.FC<
 
   const hasNoKeyPairs =
     !canGet ||
-    (typeof activeKeyPairsCount === 'number' && activeKeyPairsCount === 0);
+    (typeof activeKeyPairsCount === 'number' && activeKeyPairsCount === 0) ||
+    !isLegacyKeyPairsSupported;
 
   return (
     <ClusterDetailWidget

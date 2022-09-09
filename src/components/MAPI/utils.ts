@@ -1297,7 +1297,7 @@ export function supportsClientCertificates(cluster: Cluster): boolean {
     }
 
     default:
-      return false;
+      return true;
   }
 }
 
