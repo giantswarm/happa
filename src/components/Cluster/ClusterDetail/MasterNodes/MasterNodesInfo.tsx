@@ -13,22 +13,19 @@ const Group = styled.span`
   }
 `;
 
-const AZGroup = styled(Group)`
-  flex-shrink: 0;
-
-  * + & {
-    margin-left: 0.4rem;
-  }
-`;
-
 const ConvertButton = styled(Button)`
   padding-top: 4px;
   padding-bottom: 4px;
   margin-left: 12px;
 `;
 
-const AZLabel = styled.span`
-  margin-right: 0.8rem;
+const AZLabel = styled(Group)`
+  margin-right: 0.4rem;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 interface IMasterNodesInfoProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -68,7 +65,7 @@ const MasterNodesInfo: React.FC<
   };
 
   return (
-    <div {...rest}>
+    <Wrapper {...rest}>
       {supportsReadyNodes && (
         <>
           <Group>{readinessLabel}</Group>
@@ -76,10 +73,10 @@ const MasterNodesInfo: React.FC<
         </>
       )}
 
-      <AZGroup>
-        <AZLabel>{azLabel}</AZLabel>
+      <AZLabel>{azLabel}</AZLabel>
+      <Group>
         <AvailabilityZonesLabels zones={availabilityZones} labelsChecked={[]} />
-      </AZGroup>
+      </Group>
 
       {canBeConverted && (
         <Group>
@@ -88,7 +85,7 @@ const MasterNodesInfo: React.FC<
           </ConvertButton>
         </Group>
       )}
-    </div>
+    </Wrapper>
   );
 };
 

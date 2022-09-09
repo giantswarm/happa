@@ -8,6 +8,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 
 const Wrapper = styled.div`
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
 `;
 
