@@ -15,9 +15,9 @@ import {
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
   IProviderNodePoolForNodePoolName,
-  isCAPGCluster,
   isCAPIProvider,
   isNodePoolMngmtReadOnly,
+  supportsNodePoolAutoscaling,
   supportsNonExpMachinePools,
   supportsReleases,
 } from 'MAPI/utils';
@@ -138,9 +138,10 @@ function getNameColumnWidth(nameLength: number) {
 const Header = styled(Box)<{
   additionalColumnsCount?: number;
   nameColumnWidth?: number;
+  displayMenuColumn?: boolean;
 }>`
-  ${({ additionalColumnsCount, nameColumnWidth }) =>
-    NodePoolGridRow(additionalColumnsCount, nameColumnWidth)}
+  ${({ additionalColumnsCount, nameColumnWidth, displayMenuColumn }) =>
+    NodePoolGridRow(additionalColumnsCount, nameColumnWidth, displayMenuColumn)}
 
   text-transform: uppercase;
   color: #ccc;
@@ -149,9 +150,10 @@ const Header = styled(Box)<{
 const ColumnInfo = styled(Box)<{
   additionalColumnsCount?: number;
   nameColumnWidth?: number;
+  displayMenuColumn?: boolean;
 }>`
-  ${({ additionalColumnsCount, nameColumnWidth }) =>
-    NodePoolGridRow(additionalColumnsCount, nameColumnWidth)}
+  ${({ additionalColumnsCount, nameColumnWidth, displayMenuColumn }) =>
+    NodePoolGridRow(additionalColumnsCount, nameColumnWidth, displayMenuColumn)}
 
   padding-bottom: 0;
   margin-bottom: -5px;
@@ -455,7 +457,8 @@ const ClusterDetailWorkerNodes: React.FC<
     }, [cluster]);
 
     const displayCGroupsColumn = !isCAPIProvider(provider);
-    const hideNodePoolAutoscalingColumns = cluster && isCAPGCluster(cluster);
+    const hideNodePoolAutoscalingColumns =
+      cluster && !supportsNodePoolAutoscaling(cluster);
 
     return (
       <DocumentTitle title={`Worker Nodes | ${clusterId}`}>
@@ -475,7 +478,7 @@ const ClusterDetailWorkerNodes: React.FC<
               </Text>
             </Box>
 
-            {!hasNoNodePools && (
+            {!hasNoNodePools && cluster && (
               <Box>
                 <ColumnInfo
                   additionalColumnsCount={
@@ -484,6 +487,7 @@ const ClusterDetailWorkerNodes: React.FC<
                     (hideNodePoolAutoscalingColumns ? 0 : 2)
                   }
                   nameColumnWidth={nameColumnWidth}
+                  displayMenuColumn={!isReadOnly}
                   margin={{ top: 'xsmall' }}
                 >
                   <NodesInfo
@@ -508,6 +512,7 @@ const ClusterDetailWorkerNodes: React.FC<
                     (hideNodePoolAutoscalingColumns ? 0 : 2)
                   }
                   nameColumnWidth={nameColumnWidth}
+                  displayMenuColumn={!isReadOnly}
                   height='xxsmall'
                 >
                   <Box
@@ -629,6 +634,7 @@ const ClusterDetailWorkerNodes: React.FC<
               {!hasNoNodePools &&
                 cluster &&
                 providerCluster &&
+                !isReadOnly &&
                 !isCreateFormOpen && (
                   <Box
                     animation={{ type: 'fadeIn', duration: 300 }}
@@ -639,10 +645,7 @@ const ClusterDetailWorkerNodes: React.FC<
                     <Button
                       onClick={handleOpenCreateForm}
                       disabled={
-                        !cluster ||
-                        !providerCluster ||
-                        isReadOnly ||
-                        !canCreateNodePools
+                        !cluster || !providerCluster || !canCreateNodePools
                       }
                       unauthorized={!canCreateNodePools}
                     >
@@ -666,7 +669,7 @@ const ClusterDetailWorkerNodes: React.FC<
                 <WorkerNodesNodePoolListPlaceholder
                   animation={{ type: 'fadeIn', duration: 300 }}
                   onCreateButtonClick={handleOpenCreateForm}
-                  disabled={isReadOnly}
+                  readOnly={isReadOnly}
                   canCreateNodePools={canCreateNodePools}
                 />
               )}
