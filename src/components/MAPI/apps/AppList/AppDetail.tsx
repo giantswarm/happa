@@ -39,6 +39,7 @@ import {
 import {
   fetchAppCatalogEntryReadme,
   fetchAppCatalogEntryReadmeKey,
+  getAppCatalogEntryLogoURL,
 } from './utils';
 
 function mapAppCatalogEntriesToReleasePickerItems(
@@ -259,7 +260,7 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   const catalogIcon = catalog ? catalog.spec.logoURL ?? '' : undefined;
 
   const appIconURL = selectedEntry
-    ? selectedEntry.spec.chart.icon ?? ''
+    ? getAppCatalogEntryLogoURL(selectedEntry)
     : undefined;
   const chartDescription = selectedEntry
     ? selectedEntry.spec.chart.description ?? ''

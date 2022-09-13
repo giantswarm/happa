@@ -25,6 +25,7 @@ export const statusPendingUpgrade = 'pending-upgrade';
 export const statusPendingRollback = 'pending-rollback';
 
 export const annotationReadme = 'application.giantswarm.io/readme';
+export const annotationLogo = 'ui.giantswarm.io/logo';
 
 export function isAppCatalogPublic(catalog: ICatalog): boolean {
   const visibility = catalog.metadata.labels?.[labelCatalogVisibility];
