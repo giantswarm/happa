@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react';
+import { Providers } from 'model/constants';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import { renderWithStore } from 'test/renderUtils';
 
@@ -16,31 +17,41 @@ const defaultPermissions = {
 jest.mock('MAPI/keypairs/permissions/usePermissionsForKeyPairs');
 
 describe('ClusterDetailWidgetKubernetesAPI', () => {
-  it('renders without crashing', () => {
+  beforeAll(() => {
     (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
       defaultPermissions
     );
+  });
 
+  it('renders without crashing', () => {
     renderWithStore(ClusterDetailWidgetKubernetesAPI, {});
   });
 
   it('displays loading animations if the cluster is still loading', () => {
-    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     renderWithStore(ClusterDetailWidgetKubernetesAPI, {
       cluster: undefined,
     });
 
     expect(screen.getByLabelText('Loading...')).toBeInTheDocument();
   });
+});
 
-  it('displays the kubernetes API endpoint URL for the cluster', () => {
+describe('ClusterDetailWidgetKubernetesAPI on Azure', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.AZURE;
+
     (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
       defaultPermissions
     );
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
 
+  it('displays the kubernetes API endpoint URL for the cluster', () => {
     renderWithStore(ClusterDetailWidgetKubernetesAPI, {
       cluster: capiv1beta1Mocks.randomCluster1,
     });
@@ -49,10 +60,6 @@ describe('ClusterDetailWidgetKubernetesAPI', () => {
   });
 
   it('displays the getting started button', () => {
-    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     renderWithStore(ClusterDetailWidgetKubernetesAPI, {
       cluster: capiv1beta1Mocks.randomCluster1,
     });
@@ -79,5 +86,36 @@ describe('ClusterDetailWidgetKubernetesAPI', () => {
         name: 'Get started',
       })
     ).not.toBeInTheDocument();
+  });
+});
+
+describe('ClusterDetailWidgetKubernetesAPI on GCP', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const audience = window.config.audience;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.GCP;
+    window.config.audience = 'https://api.test.gigantic.io';
+
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+    window.config.audience = audience;
+  });
+
+  it('displays the kubernetes API endpoint URL for the cluster', () => {
+    renderWithStore(ClusterDetailWidgetKubernetesAPI, {
+      cluster: capiv1beta1Mocks.randomClusterGCP1,
+    });
+
+    expect(
+      screen.getByText(
+        `https://api.${capiv1beta1Mocks.randomClusterGCP1.metadata.name}.gigantic.io`
+      )
+    ).toBeInTheDocument();
   });
 });

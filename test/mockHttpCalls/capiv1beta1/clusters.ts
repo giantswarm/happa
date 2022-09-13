@@ -127,7 +127,7 @@ export const randomClusterGCP1: capiv1beta1.ICluster = {
       },
     },
     controlPlaneEndpoint: {
-      host: 'test.k8s.gs.com',
+      host: '192.168.0.0',
       port: 0,
     },
     controlPlaneRef: {
