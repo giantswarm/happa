@@ -11,7 +11,8 @@ interface ILoginGuideStepProps
 const LoginGuideStep: React.FC<
   React.PropsWithChildren<ILoginGuideStepProps>
 > = (props) => {
-  const k8sAPIUrl = useRef(getK8sAPIUrl());
+  const provider = window.config.info.general.provider;
+  const k8sAPIUrl = useRef(getK8sAPIUrl(provider));
 
   return (
     <CLIGuideStep
