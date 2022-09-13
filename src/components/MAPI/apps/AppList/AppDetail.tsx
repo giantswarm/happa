@@ -5,10 +5,7 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import {
-  getAppCatalogEntryLogoURL,
-  getAppCatalogEntryReadmeURL,
-} from 'model/services/mapi/applicationv1alpha1';
+import { getAppCatalogEntryReadmeURL } from 'model/services/mapi/applicationv1alpha1';
 import { selectCluster } from 'model/stores/main/actions';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
@@ -42,6 +39,7 @@ import {
 import {
   fetchAppCatalogEntryReadme,
   fetchAppCatalogEntryReadmeKey,
+  getAppCatalogEntryLogoURL,
 } from './utils';
 
 function mapAppCatalogEntriesToReleasePickerItems(
@@ -262,9 +260,7 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   const catalogIcon = catalog ? catalog.spec.logoURL ?? '' : undefined;
 
   const appIconURL = selectedEntry
-    ? getAppCatalogEntryLogoURL(selectedEntry) ??
-      selectedEntry.spec.chart.icon ??
-      ''
+    ? getAppCatalogEntryLogoURL(selectedEntry)
     : undefined;
   const chartDescription = selectedEntry
     ? selectedEntry.spec.chart.description ?? ''

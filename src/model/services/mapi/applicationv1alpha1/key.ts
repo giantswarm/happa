@@ -45,12 +45,6 @@ export function getAppCatalogEntryReadmeURL(
   return appCatalogEntry.metadata.annotations?.[annotationReadme];
 }
 
-export function getAppCatalogEntryLogoURL(
-  appCatalogEntry: IAppCatalogEntry
-): string | undefined {
-  return appCatalogEntry.metadata.annotations?.[annotationLogo];
-}
-
 export function getAppCurrentVersion(app: IApp): string {
   if (!app.status || !app.status.version) return app.spec.version;
 

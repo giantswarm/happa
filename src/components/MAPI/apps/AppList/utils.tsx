@@ -1,7 +1,7 @@
 import { IHttpClient } from 'model/clients/HttpClient';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import { getAppCatalogEntryLogoURL } from 'model/services/mapi/applicationv1alpha1';
+import { annotationLogo } from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import { fixTestAppReadmeURLs } from 'model/stores/appcatalog/utils';
 import React from 'react';
@@ -239,9 +239,7 @@ export function mapAppCatalogEntriesToAppPageApps(
       catalogTitle: catalog ? computeAppCatalogUITitle(catalog) : '',
       catalogIconUrl: catalog?.spec.logoURL ?? '',
       catalogIsManaged: catalog ? isAppCatalogVisibleToUsers(catalog) : false,
-      appIconURL:
-        getAppCatalogEntryLogoURL(appCatalogEntry) ??
-        appCatalogEntry.spec.chart.icon,
+      appIconURL: getAppCatalogEntryLogoURL(appCatalogEntry),
       name: appName,
       to: makeAppPath(
         appName,
@@ -251,4 +249,14 @@ export function mapAppCatalogEntriesToAppPageApps(
       isInstalledInSelectedCluster,
     };
   });
+}
+
+export function getAppCatalogEntryLogoURL(
+  appCatalogEntry: applicationv1alpha1.IAppCatalogEntry
+): string {
+  return (
+    appCatalogEntry.metadata.annotations?.[annotationLogo] ??
+    appCatalogEntry.spec.chart.icon ??
+    ''
+  );
 }
