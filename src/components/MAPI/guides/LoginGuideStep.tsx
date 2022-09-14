@@ -1,5 +1,10 @@
 import { getK8sAPIUrl } from 'MAPI/utils';
+import {
+  getIsImpersonatingNonAdmin,
+  getUserIsAdmin,
+} from 'model/stores/main/selectors';
 import React, { useRef } from 'react';
+import { useSelector } from 'react-redux';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 
 interface ILoginGuideStepProps
@@ -11,7 +16,13 @@ interface ILoginGuideStepProps
 const LoginGuideStep: React.FC<
   React.PropsWithChildren<ILoginGuideStepProps>
 > = (props) => {
-  const k8sAPIUrl = useRef(getK8sAPIUrl());
+  const provider = window.config.info.general.provider;
+  const k8sAPIUrl = useRef(getK8sAPIUrl(provider));
+
+  const isAdmin = useSelector(getUserIsAdmin);
+  const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
+
+  const displayClusterAdminFlag = isAdmin && !isImpersonatingNonAdmin;
 
   return (
     <CLIGuideStep
@@ -19,7 +30,9 @@ const LoginGuideStep: React.FC<
       title={`
           1. Make sure you are logged in and have the right context selected for
           this installation's Management API.`}
-      command={`kubectl gs login ${k8sAPIUrl.current}`}
+      command={`kubectl gs login ${k8sAPIUrl.current}${
+        displayClusterAdminFlag ? ' --cluster-admin' : ''
+      }`}
     />
   );
 };

@@ -5,6 +5,7 @@ import parseISO from 'date-fns/fp/parseISO';
 import parse from 'date-fns/parse';
 import toDate from 'date-fns-tz/toDate';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
+import ipRegex from 'ip-regex';
 import { getOrganizationByID } from 'model/stores/organization/utils';
 import validate from 'validate.js';
 /**
@@ -471,4 +472,8 @@ export function getHumanReadableMemory(size: number, minDecimals: number = 0) {
     value: Math.round(parseFloat(formattedSize.value) * factor) / factor,
     unit: formattedSize.unit,
   };
+}
+
+export function isIPAddress(s: string): boolean {
+  return ipRegex().test(s);
 }

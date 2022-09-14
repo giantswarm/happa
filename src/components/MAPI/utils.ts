@@ -1229,14 +1229,24 @@ export function extractErrorMessage(
   return message;
 }
 
-export function getK8sAPIUrl(): string {
+export function getK8sAPIUrl(provider: PropertiesOf<typeof Providers>): string {
+  return getClusterBaseURL(provider).toString();
+}
+
+export function getClusterBaseURL(
+  provider: PropertiesOf<typeof Providers>
+): URL {
   const audienceURL = new URL(window.config.audience);
   // Remove all characters until the first `.`.
   audienceURL.host = audienceURL.host.substring(
     audienceURL.host.indexOf('.') + 1
   );
 
-  return audienceURL.toString();
+  if (isCAPIProvider(provider)) {
+    audienceURL.host = `api.${audienceURL.host}`;
+  }
+
+  return audienceURL;
 }
 
 export function isCAPZCluster(cluster: Cluster): boolean {

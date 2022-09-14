@@ -15,6 +15,7 @@ const esModules = [
   'trough',
   'unified',
   'unist-util',
+  'ip-regex',
 ].join('|');
 
 const config: Config.InitialOptions = {
