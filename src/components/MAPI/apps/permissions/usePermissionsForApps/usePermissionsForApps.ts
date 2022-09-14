@@ -11,7 +11,7 @@ import useSWR from 'swr';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
-import { IAppsPermissions } from './types';
+import { IAppsPermissions } from '../types';
 import { usePermissionsForAppConfigs } from './usePermissionsForAppConfigs';
 
 export function usePermissionsForApps(
