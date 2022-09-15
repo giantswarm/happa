@@ -25,8 +25,8 @@ const ListOrganizationsGuide: React.FC<
               external: true,
             },
             {
-              label: 'kubectl gs login command',
-              href: docs.kubectlGSLoginURL,
+              label: 'kubectl gs get organizations command',
+              href: docs.kubectlGSGetOrganizationsURL,
               external: true,
             },
             {
@@ -48,7 +48,7 @@ const ListOrganizationsGuide: React.FC<
         <LoginGuideStep />
         <CLIGuideStep
           title='2. List organizations'
-          command='kubectl get organizations'
+          command='kubectl gs get organizations'
         >
           <Text>
             As a result, you will get a list of all organizations to which you

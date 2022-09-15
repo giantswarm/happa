@@ -69,6 +69,9 @@ export const gsctlCreateKubeconfigURL =
 export const kubectlGSInstallationURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/installation/';
 
+export const kubectlGSGetOrganizationsURL =
+  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-organizations/';
+
 export const kubectlGSLoginURL =
   'https://docs.giantswarm.io/ui-api/kubectl-gs/login/';
 
