@@ -7,8 +7,10 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
+import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
@@ -41,6 +43,7 @@ interface IClusterDetailIngressProps
   kvmTCPHTTPPort?: number;
   kvmTCPHTTPSPort?: number;
   mutateCluster?: KeyedMutator<capiv1beta1.ICluster>;
+  isClusterApp?: boolean;
 }
 
 const ClusterDetailIngress: React.FC<
@@ -51,17 +54,27 @@ const ClusterDetailIngress: React.FC<
   kvmTCPHTTPPort,
   kvmTCPHTTPSPort,
   mutateCluster,
+  isClusterApp,
   ...rest
 }) => {
   const { pathname } = useLocation();
-  const { clusterId } = useParams<{ clusterId: string }>();
+  const { clusterId, orgId } = useParams<{
+    clusterId: string;
+    orgId: string;
+  }>();
+
+  const organizations = useSelector(selectOrganizations());
+  const appsNamespace = isClusterApp
+    ? organizations[orgId]?.namespace
+    : clusterId;
 
   const auth = useAuthProvider();
 
   const appListClient = useHttpClient();
   const appsPermissions = usePermissionsForApps(
     provider ?? window.config.info.general.provider,
-    clusterId
+    appsNamespace ?? '',
+    isClusterApp
   );
   const appListGetOptions = { namespace: clusterId };
 

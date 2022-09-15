@@ -40,6 +40,7 @@ interface IClusterDetailWidgetAppsProps
 
 const ClusterDetailWidgetApps: React.FC<
   React.PropsWithChildren<IClusterDetailWidgetAppsProps>
+  // eslint-disable-next-line complexity
 > = ({ isClusterApp, ...props }) => {
   const { clusterId, orgId } = useParams<{
     clusterId: string;
@@ -54,12 +55,12 @@ const ClusterDetailWidgetApps: React.FC<
 
   const appListClient = useRef(clientFactory());
 
-  const { canList: canListApps, canCreate: canCreateApps } =
-    usePermissionsForApps(provider, clusterId);
-
   const appsNamespace = isClusterApp
     ? organizations[orgId]?.namespace
     : clusterId;
+
+  const { canList: canListApps, canCreate: canCreateApps } =
+    usePermissionsForApps(provider, appsNamespace ?? '', isClusterApp);
 
   const appListGetOptions = isClusterApp
     ? {
