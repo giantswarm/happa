@@ -21,16 +21,23 @@ interface IClusterDetailAppListWidgetConfigurationProps
   > {
   app?: applicationv1alpha1.IApp;
   appsPermissions?: IAppsPermissions;
+  isClusterApp?: boolean;
 }
 
 const ClusterDetailAppListWidgetConfiguration: React.FC<
   React.PropsWithChildren<IClusterDetailAppListWidgetConfigurationProps>
-> = ({ app, appsPermissions, ...props }) => {
+> = ({ app, appsPermissions, isClusterApp, ...props }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   async function ensureAppConfig(values: string) {
-    if (!app || !appsPermissions?.canConfigure) return;
+    if (
+      !app ||
+      !appsPermissions?.canConfigure ||
+      typeof isClusterApp === 'undefined'
+    ) {
+      return;
+    }
 
     try {
       const contents = yaml.dump(values);
@@ -39,6 +46,7 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
         auth,
         app.metadata.namespace!,
         app.metadata.name,
+        isClusterApp,
         contents
       );
 
@@ -93,7 +101,13 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
   }
 
   async function ensureAppSecret(values: string) {
-    if (!app || !appsPermissions?.canConfigure) return;
+    if (
+      !app ||
+      !appsPermissions?.canConfigure ||
+      typeof isClusterApp === 'undefined'
+    ) {
+      return;
+    }
 
     try {
       const contents = yaml.dump(values);
@@ -102,6 +116,7 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
         auth,
         app.metadata.namespace!,
         app.metadata.name,
+        isClusterApp,
         contents
       );
 

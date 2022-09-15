@@ -24,6 +24,7 @@ interface IClusterDetailAppListWidgetUninstallProps
   > {
   app?: applicationv1alpha1.IApp;
   appsPermissions?: IAppsPermissions;
+  isClusterApp?: boolean;
   onAppUninstalled?: () => void;
 }
 
@@ -52,7 +53,7 @@ function getAppUninstallConfirmationInfo(
 
 const ClusterDetailAppListWidgetUninstall: React.FC<
   React.PropsWithChildren<IClusterDetailAppListWidgetUninstallProps>
-> = ({ app, appsPermissions, onAppUninstalled, ...props }) => {
+> = ({ app, appsPermissions, isClusterApp, onAppUninstalled, ...props }) => {
   const auth = useAuthProvider();
   const appClient = useHttpClient();
 
@@ -60,14 +61,16 @@ const ClusterDetailAppListWidgetUninstall: React.FC<
     appsPermissions?.canGet && appsPermissions?.canDelete;
 
   const uninstallApp = async () => {
-    if (!app || !canUninstallApps) return;
+    if (!app || !canUninstallApps || typeof isClusterApp === 'undefined')
+      return;
 
     try {
       await deleteAppWithName(
         appClient,
         auth,
         app.metadata.namespace!,
-        app.metadata.name
+        app.metadata.name,
+        isClusterApp
       );
 
       if (onAppUninstalled) onAppUninstalled();
@@ -129,7 +132,10 @@ const ClusterDetailAppListWidgetUninstall: React.FC<
                 Are you sure you want to uninstall{' '}
                 <code>{app.metadata.name}</code> from cluster{' '}
                 <ClusterIDLabel
-                  clusterID={app.metadata.namespace!}
+                  clusterID={
+                    app.metadata.labels?.[applicationv1alpha1.labelCluster] ??
+                    app.metadata.namespace!
+                  }
                   variant={ClusterIDLabelType.Name}
                 />
                 ?

@@ -318,6 +318,7 @@ describe('ClusterDetailAppListItem', () => {
       getComponent({
         app,
         appsPermissions: defaultPermissions,
+        isClusterApp: false,
       })
     );
 
@@ -390,6 +391,7 @@ describe('ClusterDetailAppListItem', () => {
       getComponent({
         app,
         appsPermissions: defaultPermissions,
+        isClusterApp: false,
       })
     );
 
@@ -462,6 +464,7 @@ describe('ClusterDetailAppListItem', () => {
       getComponent({
         app,
         appsPermissions: { ...defaultPermissions, canUpdate: false },
+        isClusterApp: false,
       })
     );
 

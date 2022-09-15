@@ -40,8 +40,12 @@ function getUserSecretName(appName: string): string {
   return `${appName}-user-secrets`;
 }
 
-function getClusterConfigMapName(clusterID: string, appName: string): string {
-  if (appName === 'nginx-ingress-controller-app') {
+function getClusterConfigMapName(
+  clusterID: string,
+  appName: string,
+  isClusterApp: boolean
+): string {
+  if (appName === 'nginx-ingress-controller-app' && !isClusterApp) {
     return 'ingress-controller-values';
   }
 
@@ -183,11 +187,14 @@ export async function createApp(
   clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   clusterID: string,
+  appsNamespace: string,
+  isClusterApp: boolean,
   appConfig: IAppConfig
 ): Promise<applicationv1alpha1.IApp> {
   const clusterConfigMapName = getClusterConfigMapName(
     clusterID,
-    appConfig.chartName
+    appConfig.chartName,
+    isClusterApp
   );
 
   const kubeConfigSecretName = getKubeConfigSecretName(clusterID);
@@ -197,9 +204,10 @@ export async function createApp(
     kind: 'App',
     metadata: {
       name: appConfig.name,
-      namespace: clusterID,
+      namespace: appsNamespace,
       labels: {
         [applicationv1alpha1.labelAppOperator]: '1.0.0',
+        [applicationv1alpha1.labelCluster]: clusterID,
       },
     },
     spec: {
@@ -210,7 +218,7 @@ export async function createApp(
       config: {
         configMap: {
           name: clusterConfigMapName,
-          namespace: clusterID,
+          namespace: appsNamespace,
         },
       },
       kubeConfig: {
@@ -220,7 +228,7 @@ export async function createApp(
         inCluster: false,
         secret: {
           name: kubeConfigSecretName,
-          namespace: clusterID,
+          namespace: appsNamespace,
         },
       },
       userConfig: {},
@@ -234,14 +242,14 @@ export async function createApp(
     ensureAppUserConfigMap(
       clientFactory(),
       auth,
-      clusterID,
+      appsNamespace,
       userConfigMapName,
       appConfig.configMapContents
     ),
     ensureAppUserSecret(
       clientFactory(),
       auth,
-      clusterID,
+      appsNamespace,
       userSecretName,
       appConfig.secretContents
     ),
@@ -310,6 +318,7 @@ export async function ensureConfigMapForApp(
   auth: IOAuth2Provider,
   namespace: string,
   appName: string,
+  isClusterApp: boolean,
   contents: string
 ) {
   const userConfigMapName = getUserConfigMapName(appName);
@@ -348,8 +357,20 @@ export async function ensureConfigMapForApp(
     false
   );
 
+  const clusterID = app.metadata.labels?.[applicationv1alpha1.labelCluster];
+  const appListGetOptions = isClusterApp
+    ? {
+        namespace: app.metadata.namespace,
+        labelSelector: {
+          matchingLabels: {
+            [applicationv1alpha1.labelCluster]: clusterID!,
+          },
+        },
+      }
+    : { namespace: app.metadata.namespace };
+
   mutate(
-    applicationv1alpha1.getAppListKey({ namespace: app.metadata.namespace }),
+    applicationv1alpha1.getAppListKey(appListGetOptions),
     produce((draft?: applicationv1alpha1.IAppList) => {
       if (!draft) return;
 
@@ -370,6 +391,7 @@ export async function ensureSecretForApp(
   auth: IOAuth2Provider,
   namespace: string,
   appName: string,
+  isClusterApp: boolean,
   contents: string
 ) {
   const userSecretName = getUserSecretName(appName);
@@ -408,8 +430,20 @@ export async function ensureSecretForApp(
     false
   );
 
+  const clusterID = app.metadata.labels?.[applicationv1alpha1.labelCluster];
+  const appListGetOptions = isClusterApp
+    ? {
+        namespace: app.metadata.namespace,
+        labelSelector: {
+          matchingLabels: {
+            [applicationv1alpha1.labelCluster]: clusterID!,
+          },
+        },
+      }
+    : { namespace: app.metadata.namespace };
+
   mutate(
-    applicationv1alpha1.getAppListKey({ namespace: app.metadata.namespace }),
+    applicationv1alpha1.getAppListKey(appListGetOptions),
     produce((draft?: applicationv1alpha1.IAppList) => {
       if (!draft) return;
 
@@ -429,7 +463,8 @@ export async function deleteAppWithName(
   client: IHttpClient,
   auth: IOAuth2Provider,
   namespace: string,
-  appName: string
+  appName: string,
+  isClusterApp: boolean
 ) {
   try {
     const app = await applicationv1alpha1.getApp(
@@ -448,10 +483,20 @@ export async function deleteAppWithName(
       false
     );
 
+    const clusterID = app.metadata.labels?.[applicationv1alpha1.labelCluster];
+    const appListGetOptions = isClusterApp
+      ? {
+          namespace: app.metadata.namespace,
+          labelSelector: {
+            matchingLabels: {
+              [applicationv1alpha1.labelCluster]: clusterID!,
+            },
+          },
+        }
+      : { namespace: app.metadata.namespace };
+
     mutate(
-      applicationv1alpha1.getAppListKey({
-        namespace: app.metadata.namespace,
-      }),
+      applicationv1alpha1.getAppListKey(appListGetOptions),
       produce((draft?: applicationv1alpha1.IAppList) => {
         if (!draft) return;
 
@@ -481,7 +526,8 @@ export async function updateAppVersion(
   auth: IOAuth2Provider,
   namespace: string,
   appName: string,
-  version: string
+  version: string,
+  isClusterApp: boolean
 ) {
   let app = await applicationv1alpha1.getApp(client, auth, namespace, appName);
   app.spec.version = version;
@@ -494,8 +540,20 @@ export async function updateAppVersion(
     false
   );
 
+  const clusterID = app.metadata.labels?.[applicationv1alpha1.labelCluster];
+  const appListGetOptions = isClusterApp
+    ? {
+        namespace: app.metadata.namespace,
+        labelSelector: {
+          matchingLabels: {
+            [applicationv1alpha1.labelCluster]: clusterID!,
+          },
+        },
+      }
+    : { namespace: app.metadata.namespace };
+
   mutate(
-    applicationv1alpha1.getAppListKey({ namespace: app.metadata.namespace }),
+    applicationv1alpha1.getAppListKey(appListGetOptions),
     produce((draft?: applicationv1alpha1.IAppList) => {
       if (!draft) return;
 
@@ -637,17 +695,26 @@ export function createIngressApp(
   clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   clusterID: string,
+  appsNamespace: string,
+  isClusterApp: boolean,
   ingressAppCatalogEntry: applicationv1alpha1.IAppCatalogEntry
 ) {
-  return createApp(clientFactory, auth, clusterID, {
-    name: ingressAppCatalogEntry.spec.appName,
-    catalogName: ingressAppCatalogEntry.spec.catalog.name,
-    chartName: ingressAppCatalogEntry.spec.appName,
-    version: ingressAppCatalogEntry.spec.version,
-    namespace: 'kube-system',
-    configMapContents: '',
-    secretContents: '',
-  });
+  return createApp(
+    clientFactory,
+    auth,
+    clusterID,
+    appsNamespace,
+    isClusterApp,
+    {
+      name: ingressAppCatalogEntry.spec.appName,
+      catalogName: ingressAppCatalogEntry.spec.catalog.name,
+      chartName: ingressAppCatalogEntry.spec.appName,
+      version: ingressAppCatalogEntry.spec.version,
+      namespace: 'kube-system',
+      configMapContents: '',
+      secretContents: '',
+    }
+  );
 }
 
 export function isTestRelease(releaseVersion: string): boolean {

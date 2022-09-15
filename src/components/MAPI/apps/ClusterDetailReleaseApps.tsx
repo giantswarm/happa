@@ -91,6 +91,7 @@ const ClusterDetailReleaseApps: React.FC<
         isClusterCreating={isClusterCreating}
         margin={{ bottom: 'medium' }}
         errorMessage={errorMessage}
+        isClusterApp={false}
       />
       {typeof releaseError !== 'undefined' && !releaseIsLoading && (
         <FlashMessageComponent type={FlashMessageType.Danger}>

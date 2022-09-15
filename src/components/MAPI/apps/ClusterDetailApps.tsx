@@ -159,6 +159,7 @@ const ClusterDetailApps: React.FC<
             isLoading={isLoading}
             margin={{ bottom: 'large' }}
             errorMessage={extractErrorMessage(appListError)}
+            isClusterApp={isClusterApp}
           >
             <Box margin={{ top: 'medium' }}>
               {appsPermissions.canCreate && (

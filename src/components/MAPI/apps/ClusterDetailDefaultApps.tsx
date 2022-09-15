@@ -99,6 +99,7 @@ const ClusterDetailDefaultApps: React.FC<
         isClusterCreating={isClusterCreating}
         margin={{ bottom: 'medium' }}
         errorMessage={errorMessage}
+        isClusterApp={true}
       />
       {typeof defaultAppError !== 'undefined' && !defaultAppIsLoading && (
         <FlashMessageComponent type={FlashMessageType.Danger}>

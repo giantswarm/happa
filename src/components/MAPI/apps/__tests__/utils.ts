@@ -27,7 +27,10 @@ describe('utils', () => {
       metadata: {
         name: 'cool-app',
         namespace: 'some-cluster',
-        labels: { 'app-operator.giantswarm.io/version': '1.0.0' },
+        labels: {
+          'app-operator.giantswarm.io/version': '1.0.0',
+          'giantswarm.io/cluster': 'some-cluster',
+        },
       },
       spec: {
         name: 'cool-app-chart',
@@ -122,15 +125,22 @@ describe('utils', () => {
         )
         .reply(StatusCodes.Created, app);
 
-      await createApp(clientFactory, authProvider, 'some-cluster', {
-        name: 'cool-app',
-        namespace: 'cool-app-ns',
-        version: '1.2.3',
-        chartName: 'cool-app-chart',
-        catalogName: 'cool-apps-123',
-        configMapContents: 'some-yaml',
-        secretContents: 'some-yaml',
-      });
+      await createApp(
+        clientFactory,
+        authProvider,
+        'some-cluster',
+        'some-cluster',
+        false,
+        {
+          name: 'cool-app',
+          namespace: 'cool-app-ns',
+          version: '1.2.3',
+          chartName: 'cool-app-chart',
+          catalogName: 'cool-apps-123',
+          configMapContents: 'some-yaml',
+          secretContents: 'some-yaml',
+        }
+      );
     });
 
     it('updates existing configmaps and secrets if they exist', async () => {
@@ -184,15 +194,22 @@ describe('utils', () => {
         )
         .reply(StatusCodes.Created, app);
 
-      await createApp(clientFactory, authProvider, 'some-cluster', {
-        name: 'cool-app',
-        namespace: 'cool-app-ns',
-        version: '1.2.3',
-        chartName: 'cool-app-chart',
-        catalogName: 'cool-apps-123',
-        configMapContents: '',
-        secretContents: '',
-      });
+      await createApp(
+        clientFactory,
+        authProvider,
+        'some-cluster',
+        'some-cluster',
+        false,
+        {
+          name: 'cool-app',
+          namespace: 'cool-app-ns',
+          version: '1.2.3',
+          chartName: 'cool-app-chart',
+          catalogName: 'cool-apps-123',
+          configMapContents: '',
+          secretContents: '',
+        }
+      );
     });
 
     it('does not create configmaps or secrets if it is not necessary', async () => {
@@ -230,15 +247,22 @@ describe('utils', () => {
         )
         .reply(StatusCodes.Created, app);
 
-      await createApp(clientFactory, authProvider, 'some-cluster', {
-        name: 'cool-app',
-        namespace: 'cool-app-ns',
-        version: '1.2.3',
-        chartName: 'cool-app-chart',
-        catalogName: 'cool-apps-123',
-        configMapContents: '',
-        secretContents: '',
-      });
+      await createApp(
+        clientFactory,
+        authProvider,
+        'some-cluster',
+        'some-cluster',
+        false,
+        {
+          name: 'cool-app',
+          namespace: 'cool-app-ns',
+          version: '1.2.3',
+          chartName: 'cool-app-chart',
+          catalogName: 'cool-apps-123',
+          configMapContents: '',
+          secretContents: '',
+        }
+      );
     });
   });
 });

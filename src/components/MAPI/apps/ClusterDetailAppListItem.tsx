@@ -63,6 +63,7 @@ interface IClusterDetailAppListItemProps
   isActive?: boolean;
   canBeModified?: boolean;
   minHeight?: number;
+  isClusterApp?: boolean;
   onAppUninstalled?: () => void;
 }
 
@@ -75,6 +76,7 @@ const ClusterDetailAppListItem: React.FC<
   isActive,
   canBeModified = true,
   minHeight,
+  isClusterApp,
   onAppUninstalled,
 }) => {
   const currentVersion = useMemo(() => {
@@ -318,18 +320,21 @@ const ClusterDetailAppListItem: React.FC<
                 onSelectVersion={setCurrentSelectedVersion}
                 catalogNamespace={catalogNamespace}
                 canListAppCatalogEntries={canListAppCatalogEntries}
+                isClusterApp={isClusterApp}
                 basis='100%'
                 margin={{ top: 'xsmall' }}
               />
               <ClusterDetailAppListWidgetConfiguration
                 app={app}
                 appsPermissions={appsPermissions}
+                isClusterApp={isClusterApp}
                 basis='100%'
                 margin={{ top: 'medium' }}
               />
               <ClusterDetailAppListWidgetUninstall
                 app={app}
                 appsPermissions={appsPermissions}
+                isClusterApp={isClusterApp}
                 onAppUninstalled={onAppUninstalled}
                 basis='100%'
                 margin={{ top: 'medium' }}

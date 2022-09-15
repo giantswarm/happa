@@ -18,6 +18,10 @@ const InstallIngressButtonWrapper = styled.div`
 `;
 
 const InstallIngress = (props) => {
+  console.log('AAAAAAAA');
+  console.log('AAAAAAAA');
+  console.log('AAAAAAAA');
+  console.log('AAAAAAAA');
   const pathParams = {
     orgId: props.match.params.orgId,
     clusterId: props.match.params.clusterId,
@@ -73,7 +77,11 @@ const InstallIngress = (props) => {
 
         <InstallIngressButtonWrapper>
           {supportsMapiApps(user, provider) ? (
-            <InstallIngressButtonMAPI clusterID={props.cluster.id} />
+            <InstallIngressButtonMAPI
+              clusterID={props.cluster.id}
+              appsNamespace={props.cluster.id}
+              isClusterApp={false}
+            />
           ) : (
             <InstallIngressButton cluster={props.cluster} />
           )}

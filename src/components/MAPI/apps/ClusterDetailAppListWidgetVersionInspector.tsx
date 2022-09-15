@@ -39,6 +39,7 @@ interface IClusterDetailAppListWidgetVersionInspectorProps
   onSelectVersion: (newVersion: string) => void;
   catalogNamespace?: string | null;
   canListAppCatalogEntries?: boolean;
+  isClusterApp?: boolean;
 }
 
 const TRUNCATE_START_CHARS = 10;
@@ -55,6 +56,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
   onSelectVersion,
   catalogNamespace,
   canListAppCatalogEntries,
+  isClusterApp,
   ...props
 }) => {
   const clientFactory = useHttpClientFactory();
@@ -196,7 +198,14 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
   const canUpdateApps = appsPermissions?.canGet && appsPermissions?.canUpdate;
 
   const handleSwitchVersions = async () => {
-    if (!app || !currentSelectedVersion || !canUpdateApps) return;
+    if (
+      !app ||
+      !currentSelectedVersion ||
+      !canUpdateApps ||
+      typeof isClusterApp === 'undefined'
+    ) {
+      return;
+    }
 
     try {
       setAppUpdateIsLoading(true);
@@ -206,7 +215,8 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
         auth,
         app.metadata.namespace!,
         app.metadata.name,
-        currentSelectedVersion
+        currentSelectedVersion,
+        isClusterApp
       );
 
       setAppUpdateIsLoading(false);
