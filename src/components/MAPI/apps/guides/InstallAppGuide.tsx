@@ -63,8 +63,8 @@ const InstallAppGuide: React.FC<
             --catalog ${catalogName} \\
             --name ${appName} \\
             --version ${selectedVersion} \\
-            --cluster abc12 \\
-            --namespace my-org \\
+            --cluster-name abc12 \\
+            --target-namespace my-org \\
             > app.yaml
           `}
         >
