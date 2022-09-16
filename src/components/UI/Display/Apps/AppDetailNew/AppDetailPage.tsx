@@ -124,10 +124,12 @@ const Detail = styled.div`
 
 const Keyword = styled.span`
   margin-right: 10px;
+  margin-bottom: 10px;
   font-family: Inconsolata, monospace;
   background-color: ${({ theme }) => theme.colors.darkBlueDarker2};
   padding: 5px 8px;
   border-radius: 5px;
+  display: inline-block;
 `;
 
 const VersionPickerRow = styled.div`
@@ -379,9 +381,11 @@ const AppDetail: React.FC<React.PropsWithChildren<IAppDetailPageProps>> = (
           {props.keywords!.length > 0 && (
             <Detail>
               <small>KEYWORDS</small>
-              {props.keywords!.map((k) => (
-                <Keyword key={k}>{k}</Keyword>
-              ))}
+              <span>
+                {props.keywords!.map((k) => (
+                  <Keyword key={k}>{k}</Keyword>
+                ))}
+              </span>
             </Detail>
           )}
         </Details>
