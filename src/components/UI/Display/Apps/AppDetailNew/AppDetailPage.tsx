@@ -81,7 +81,7 @@ const Readme = styled.div`
   margin-right: 25px;
   flex-shrink: 0;
   padding: 20px;
-  overflow-x: scroll;
+  overflow-x: auto;
 
   .markdown pre {
     background-color: ${(props) => props.theme.colors.darkBlueDarker6};
