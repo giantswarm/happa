@@ -1385,3 +1385,19 @@ export function getProviderName(
       return provider;
   }
 }
+
+/**
+ * Returns whether or not a cluster is a management cluster, by
+ * the criteria that the cluster:
+ * - is in the `org-giantswarm` namespace
+ * - has a name equal to the installation name
+ * - is a cluster app (has the `app: cluster-...` label)
+ * @param cluster
+ */
+export function isManagementCluster(cluster: Cluster): boolean {
+  return (
+    cluster.metadata.namespace === Constants.MANAGEMENT_CLUSTER_NAMESPACE &&
+    cluster.metadata.name === window.config.info.general.installationName &&
+    hasClusterAppLabel(cluster)
+  );
+}
