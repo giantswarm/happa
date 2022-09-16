@@ -466,7 +466,17 @@ export async function fetchClusterList(
 
   const getOptions: capiv1beta1.IGetClusterListOptions = { namespace };
 
-  return capiv1beta1.getClusterList(httpClientFactory(), auth, getOptions);
+  const clusterList = await capiv1beta1.getClusterList(
+    httpClientFactory(),
+    auth,
+    getOptions
+  );
+
+  clusterList.items = clusterList.items.filter(
+    (cluster) => !isManagementCluster(cluster)
+  );
+
+  return clusterList;
 }
 
 export function fetchClusterListKey(
