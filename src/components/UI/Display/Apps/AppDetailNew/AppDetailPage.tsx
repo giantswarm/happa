@@ -81,7 +81,7 @@ const Readme = styled.div`
   margin-right: 25px;
   flex-shrink: 0;
   padding: 20px;
-  overflow-x: scroll;
+  overflow-x: auto;
 
   .markdown pre {
     background-color: ${(props) => props.theme.colors.darkBlueDarker6};
@@ -124,10 +124,12 @@ const Detail = styled.div`
 
 const Keyword = styled.span`
   margin-right: 10px;
+  margin-bottom: 10px;
   font-family: Inconsolata, monospace;
   background-color: ${({ theme }) => theme.colors.darkBlueDarker2};
   padding: 5px 8px;
   border-radius: 5px;
+  display: inline-block;
 `;
 
 const VersionPickerRow = styled.div`
@@ -379,9 +381,11 @@ const AppDetail: React.FC<React.PropsWithChildren<IAppDetailPageProps>> = (
           {props.keywords!.length > 0 && (
             <Detail>
               <small>KEYWORDS</small>
-              {props.keywords!.map((k) => (
-                <Keyword key={k}>{k}</Keyword>
-              ))}
+              <span>
+                {props.keywords!.map((k) => (
+                  <Keyword key={k}>{k}</Keyword>
+                ))}
+              </span>
             </Detail>
           )}
         </Details>
