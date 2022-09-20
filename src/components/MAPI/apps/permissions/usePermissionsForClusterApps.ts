@@ -2,11 +2,17 @@ import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasPermission } from 'MAPI/permissions/utils';
 import { Providers } from 'model/constants';
 
+import { usePermissionsForAppsInOrgNamespace } from './usePermissionsForApps/usePermissionsForAppsInOrgNamespace';
+
 export function usePermissionsForClusterApps(
-  _provider: PropertiesOf<typeof Providers>,
+  provider: PropertiesOf<typeof Providers>,
   namespace: string
 ) {
   const { data: permissions } = usePermissions();
+  const appPermissions = usePermissionsForAppsInOrgNamespace(
+    provider,
+    namespace
+  );
 
   const computed = {
     canGet: false,
@@ -19,49 +25,24 @@ export function usePermissionsForClusterApps(
   if (!permissions) return computed;
 
   computed.canCreate =
-    hasPermission(
-      permissions,
-      namespace,
-      'create',
-      'application.giantswarm.io',
-      'apps'
-    ) && hasPermission(permissions, namespace, 'create', '', 'configmaps');
+    Boolean(appPermissions.canCreate) &&
+    hasPermission(permissions, namespace, 'create', '', 'configmaps');
 
   computed.canDelete =
-    hasPermission(
-      permissions,
-      namespace,
-      'delete',
-      'application.giantswarm.io',
-      'apps'
-    ) && hasPermission(permissions, namespace, 'delete', '', 'configmaps');
+    Boolean(appPermissions.canDelete) &&
+    hasPermission(permissions, namespace, 'delete', '', 'configmaps');
 
   computed.canUpdate =
-    hasPermission(
-      permissions,
-      namespace,
-      'update',
-      'application.giantswarm.io',
-      'apps'
-    ) && hasPermission(permissions, namespace, 'update', '', 'configmaps');
+    Boolean(appPermissions.canUpdate) &&
+    hasPermission(permissions, namespace, 'update', '', 'configmaps');
 
   computed.canGet =
-    hasPermission(
-      permissions,
-      namespace,
-      'get',
-      'application.giantswarm.io',
-      'apps'
-    ) && hasPermission(permissions, namespace, 'get', '', 'configmaps');
+    Boolean(appPermissions.canGet) &&
+    hasPermission(permissions, namespace, 'get', '', 'configmaps');
 
   computed.canList =
-    hasPermission(
-      permissions,
-      namespace,
-      'list',
-      'application.giantswarm.io',
-      'apps'
-    ) && hasPermission(permissions, namespace, 'list', '', 'configmaps');
+    Boolean(appPermissions.canList) &&
+    hasPermission(permissions, namespace, 'list', '', 'configmaps');
 
   return computed;
 }

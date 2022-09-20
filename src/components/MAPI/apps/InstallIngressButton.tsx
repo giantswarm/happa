@@ -50,13 +50,15 @@ const StyledLink = styled(Link)`
 interface IInstallIngressButtonProps
   extends React.ComponentPropsWithoutRef<'div'> {
   clusterID: string;
+  appsNamespace?: string;
+  isClusterApp?: boolean;
   mutateCluster?: KeyedMutator<capiv1beta1.ICluster>;
 }
 
 const InstallIngressButton: React.FC<
   React.PropsWithChildren<IInstallIngressButtonProps>
   // eslint-disable-next-line complexity
-> = ({ clusterID, mutateCluster }) => {
+> = ({ clusterID, appsNamespace, isClusterApp, mutateCluster }) => {
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
@@ -65,7 +67,11 @@ const InstallIngressButton: React.FC<
   const appListClient = useRef(clientFactory());
   const appListGetOptions = { namespace: clusterID };
 
-  const appsPermissions = usePermissionsForApps(provider, clusterID);
+  const appsPermissions = usePermissionsForApps(
+    provider,
+    appsNamespace ?? '',
+    isClusterApp
+  );
 
   const appListKey = appsPermissions?.canList
     ? applicationv1alpha1.getAppListKey(appListGetOptions)

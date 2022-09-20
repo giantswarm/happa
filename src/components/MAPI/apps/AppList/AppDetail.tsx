@@ -286,7 +286,7 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
 
   const appsPermissions = usePermissionsForApps(
     provider,
-    selectedClusterID ?? selectedOrg?.namespace ?? ''
+    selectedOrg?.namespace ?? ''
   );
 
   return (

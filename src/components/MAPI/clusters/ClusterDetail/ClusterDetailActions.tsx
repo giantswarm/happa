@@ -136,14 +136,18 @@ const ClusterDetailActions: React.FC<
 
   const appListClient = useRef(clientFactory());
 
-  const { canList: canListApps } = usePermissionsForApps(provider, clusterId);
-
   const appsNamespace =
     typeof isClusterApp === 'undefined'
       ? undefined
       : isClusterApp
       ? namespace
       : clusterId;
+
+  const { canList: canListApps } = usePermissionsForApps(
+    provider,
+    appsNamespace ?? '',
+    isClusterApp
+  );
 
   const appListGetOptions =
     typeof isClusterApp === 'undefined'
