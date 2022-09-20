@@ -11,7 +11,7 @@ import useSWR from 'swr';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
-export function usePermissionsForAppConfigs(
+export function usePermissionsForAppConfigsInClusterNamespace(
   _provider: PropertiesOf<typeof Providers>,
   namespace: string
 ) {

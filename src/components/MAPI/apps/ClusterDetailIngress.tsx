@@ -76,7 +76,11 @@ const ClusterDetailIngress: React.FC<
   const auth = useAuthProvider();
 
   const appListClient = useRef(clientFactory());
-  const appsPermissions = usePermissionsForApps(provider, clusterId);
+  const appsPermissions = usePermissionsForApps(
+    provider,
+    appsNamespace ?? '',
+    isClusterApp
+  );
   const appListGetOptions =
     typeof isClusterApp === 'undefined'
       ? undefined

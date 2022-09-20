@@ -11,10 +11,10 @@ import useSWR from 'swr';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
-import { IAppsPermissions } from './types';
-import { usePermissionsForAppConfigs } from './usePermissionsForAppConfigs';
+import { IAppsPermissions } from '../types';
+import { usePermissionsForAppConfigsInClusterNamespace } from './usePermissionsForAppConfigsInClusterNamespace';
 
-export function usePermissionsForApps(
+export function usePermissionsForAppsInClusterNamespace(
   provider: PropertiesOf<typeof Providers>,
   namespace: string
 ): IAppsPermissions {
@@ -67,7 +67,7 @@ export function usePermissionsForApps(
     }
   }, [error]);
 
-  const appConfigsPermissions = usePermissionsForAppConfigs(
+  const appConfigsPermissions = usePermissionsForAppConfigsInClusterNamespace(
     provider,
     namespace
   );

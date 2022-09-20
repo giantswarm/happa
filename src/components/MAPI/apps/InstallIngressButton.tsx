@@ -76,7 +76,11 @@ const InstallIngressButton: React.FC<
       }
     : { namespace: appsNamespace };
 
-  const appsPermissions = usePermissionsForApps(provider, clusterID);
+  const appsPermissions = usePermissionsForApps(
+    provider,
+    appsNamespace ?? '',
+    isClusterApp
+  );
 
   const appListKey = appsPermissions?.canList
     ? applicationv1alpha1.getAppListKey(appListGetOptions)
