@@ -8,7 +8,7 @@ import { Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import { selectOrganizations } from 'model/stores/organization/selectors';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
@@ -19,7 +19,7 @@ import useSWR, { KeyedMutator } from 'swr';
 import FlashMessage from 'UI/Display/FlashMessage';
 import LoadingIndicator from 'UI/Display/Loading/LoadingIndicator';
 import ErrorReporter from 'utils/errors/ErrorReporter';
-import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import { usePermissionsForApps } from './permissions/usePermissionsForApps';
 import { findIngressApp } from './utils';
@@ -72,10 +72,9 @@ const ClusterDetailIngress: React.FC<
       ? organizations[orgId]?.namespace
       : clusterId;
 
-  const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
-  const appListClient = useRef(clientFactory());
+  const appListClient = useHttpClient();
   const appsPermissions = usePermissionsForApps(
     provider,
     appsNamespace ?? '',
@@ -105,12 +104,7 @@ const ClusterDetailIngress: React.FC<
     isValidating: appListIsValidating,
   } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
     appListKey,
-    () =>
-      applicationv1alpha1.getAppList(
-        appListClient.current,
-        auth,
-        appListGetOptions
-      )
+    () => applicationv1alpha1.getAppList(appListClient, auth, appListGetOptions)
   );
 
   const appListIsLoading =
