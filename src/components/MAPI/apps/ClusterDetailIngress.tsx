@@ -64,9 +64,12 @@ const ClusterDetailIngress: React.FC<
   }>();
 
   const organizations = useSelector(selectOrganizations());
-  const appsNamespace = isClusterApp
-    ? organizations[orgId]?.namespace
-    : clusterId;
+  const appsNamespace =
+    typeof isClusterApp === 'undefined'
+      ? undefined
+      : isClusterApp
+      ? organizations[orgId]?.namespace
+      : clusterId;
 
   const auth = useAuthProvider();
 
@@ -152,6 +155,8 @@ const ClusterDetailIngress: React.FC<
           {!hasIngress && !appListIsLoading && !appListError && (
             <InstallIngressButton
               clusterID={clusterId}
+              appsNamespace={appsNamespace}
+              isClusterApp={isClusterApp}
               mutateCluster={mutateCluster}
             />
           )}
