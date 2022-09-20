@@ -153,7 +153,13 @@ describe('ClusterDetailAppWidgetUninstall', () => {
   it('uninstalls an app', async () => {
     const app = generateApp();
 
-    render(getComponent({ app, appsPermissions: defaultPermissions }));
+    render(
+      getComponent({
+        app,
+        appsPermissions: defaultPermissions,
+        isClusterApp: false,
+      })
+    );
 
     const uninstallButton = screen.getByRole('button', {
       name: /Uninstall/,

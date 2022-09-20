@@ -1,6 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box } from 'grommet';
+import GettingStartedInstallIngress from 'MAPI/clusters/GettingStarted/GettingStartedInstallIngress';
 import { Cluster } from 'MAPI/types';
 import { extractErrorMessage, fetchCluster, fetchClusterKey } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -15,7 +16,6 @@ import Route from 'Route';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import GettingStartedGetAccess from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedGetAccess';
-import GettingStartedInstallIngress from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedInstallIngress';
 import GettingStartedNavigation from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedNavigation';
 import GettingStartedNextSteps from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedNextSteps';
 import GettingStartedOverview from 'UI/Display/MAPI/clusters/GettingStarted/GettingStartedOverview';

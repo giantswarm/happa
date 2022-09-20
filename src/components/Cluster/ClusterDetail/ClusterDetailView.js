@@ -394,6 +394,7 @@ class ClusterDetailView extends React.Component {
                 {supporsAppsViaMapi ? (
                   <ClusterDetailIngress
                     provider={provider}
+                    isClusterApp={false}
                     k8sEndpoint={cluster.api_endpoint}
                     kvmTCPHTTPPort={kvmTCPHTTPPort}
                     kvmTCPHTTPSPort={kvmTCPHTTPSPort}

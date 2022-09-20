@@ -73,7 +73,11 @@ const InstallIngress = (props) => {
 
         <InstallIngressButtonWrapper>
           {supportsMapiApps(user, provider) ? (
-            <InstallIngressButtonMAPI clusterID={props.cluster.id} />
+            <InstallIngressButtonMAPI
+              clusterID={props.cluster.id}
+              appsNamespace={props.cluster.id}
+              isClusterApp={false}
+            />
           ) : (
             <InstallIngressButton cluster={props.cluster} />
           )}

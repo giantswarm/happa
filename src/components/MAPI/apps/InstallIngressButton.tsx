@@ -50,8 +50,8 @@ const StyledLink = styled(Link)`
 interface IInstallIngressButtonProps
   extends React.ComponentPropsWithoutRef<'div'> {
   clusterID: string;
-  appsNamespace?: string;
-  isClusterApp?: boolean;
+  appsNamespace: string;
+  isClusterApp: boolean;
   mutateCluster?: KeyedMutator<capiv1beta1.ICluster>;
 }
 
@@ -65,7 +65,16 @@ const InstallIngressButton: React.FC<
   const provider = window.config.info.general.provider;
 
   const appListClient = useRef(clientFactory());
-  const appListGetOptions = { namespace: clusterID };
+  const appListGetOptions = isClusterApp
+    ? {
+        namespace: appsNamespace,
+        labelSelector: {
+          matchingLabels: {
+            [applicationv1alpha1.labelCluster]: clusterID,
+          },
+        },
+      }
+    : { namespace: appsNamespace };
 
   const appsPermissions = usePermissionsForApps(
     provider,
@@ -176,6 +185,8 @@ const InstallIngressButton: React.FC<
         clientFactory,
         auth,
         clusterID,
+        appsNamespace,
+        isClusterApp,
         ingressAppToInstall
       );
 
@@ -254,7 +265,7 @@ const InstallIngressButton: React.FC<
         <StyledFlashMessageComponent type={FlashMessageType.Danger}>
           <Box>
             <Text weight='bold'>
-              There was a problem fetching apps in the cluster&apos;s namespace.
+              There was a problem fetching apps installed on this cluster.
             </Text>
             <Text>{errorMessage}</Text>
           </Box>

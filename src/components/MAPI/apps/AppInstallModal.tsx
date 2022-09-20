@@ -10,6 +10,7 @@ import yaml from 'js-yaml';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import {
   getClusterOrganization,
+  hasClusterAppLabel,
   IProviderClusterForCluster,
   mapClustersToProviderClusters,
 } from 'MAPI/clusters/utils';
@@ -460,20 +461,32 @@ const AppInstallModal: React.FC<
     if (!cluster) return;
 
     const organization = getClusterOrganization(cluster, organizations);
-    if (!organization) return;
+    if (!organization || !organization.namespace) return;
+
+    const isClusterApp = hasClusterAppLabel(cluster);
+    const selectedClusterNamespace = isClusterApp
+      ? organization.namespace
+      : selectedClusterID;
 
     try {
       setLoading(true);
 
-      await createApp(clientFactory, auth, selectedClusterID, {
-        name: name,
-        catalogName: catalogName,
-        chartName: appName,
-        version: selectedAppCatalogEntry.spec.version,
-        namespace: namespace,
-        configMapContents: valuesYAML ?? '',
-        secretContents: secretsYAML ?? '',
-      });
+      await createApp(
+        clientFactory,
+        auth,
+        selectedClusterID,
+        selectedClusterNamespace,
+        isClusterApp,
+        {
+          name: name,
+          catalogName: catalogName,
+          chartName: appName,
+          version: selectedAppCatalogEntry.spec.version,
+          namespace: namespace,
+          configMapContents: valuesYAML ?? '',
+          secretContents: secretsYAML ?? '',
+        }
+      );
 
       setLoading(false);
       onClose();

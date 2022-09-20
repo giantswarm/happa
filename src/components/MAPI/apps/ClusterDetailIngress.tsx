@@ -39,22 +39,22 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
 interface IClusterDetailIngressProps
   extends React.ComponentPropsWithoutRef<'div'> {
   provider?: PropertiesOf<typeof Providers>;
+  isClusterApp?: boolean;
   k8sEndpoint?: string;
   kvmTCPHTTPPort?: number;
   kvmTCPHTTPSPort?: number;
   mutateCluster?: KeyedMutator<capiv1beta1.ICluster>;
-  isClusterApp?: boolean;
 }
 
 const ClusterDetailIngress: React.FC<
   React.PropsWithChildren<IClusterDetailIngressProps>
+  // eslint-disable-next-line complexity
 > = ({
-  provider,
+  isClusterApp,
   k8sEndpoint,
   kvmTCPHTTPPort,
   kvmTCPHTTPSPort,
   mutateCluster,
-  isClusterApp,
   ...rest
 }) => {
   const { pathname } = useLocation();
@@ -62,8 +62,9 @@ const ClusterDetailIngress: React.FC<
     clusterId: string;
     orgId: string;
   }>();
-
+  const provider = rest.provider ?? window.config.info.general.provider;
   const organizations = useSelector(selectOrganizations());
+
   const appsNamespace =
     typeof isClusterApp === 'undefined'
       ? undefined
@@ -75,11 +76,23 @@ const ClusterDetailIngress: React.FC<
 
   const appListClient = useHttpClient();
   const appsPermissions = usePermissionsForApps(
-    provider ?? window.config.info.general.provider,
+    provider,
     appsNamespace ?? '',
     isClusterApp
   );
-  const appListGetOptions = { namespace: clusterId };
+  const appListGetOptions =
+    typeof isClusterApp === 'undefined'
+      ? undefined
+      : isClusterApp
+      ? {
+          namespace: appsNamespace,
+          labelSelector: {
+            matchingLabels: {
+              [applicationv1alpha1.labelCluster]: clusterId,
+            },
+          },
+        }
+      : { namespace: appsNamespace };
 
   const appListKey = appsPermissions.canList
     ? applicationv1alpha1.getAppListKey(appListGetOptions)
@@ -93,6 +106,7 @@ const ClusterDetailIngress: React.FC<
     appListKey,
     () => applicationv1alpha1.getAppList(appListClient, auth, appListGetOptions)
   );
+
   const appListIsLoading =
     typeof appsPermissions.canList === 'undefined' ||
     (typeof appList === 'undefined' && appListIsValidating && !appListError);
@@ -155,8 +169,8 @@ const ClusterDetailIngress: React.FC<
           {!hasIngress && !appListIsLoading && !appListError && (
             <InstallIngressButton
               clusterID={clusterId}
-              appsNamespace={appsNamespace}
-              isClusterApp={isClusterApp}
+              appsNamespace={appsNamespace!}
+              isClusterApp={isClusterApp!}
               mutateCluster={mutateCluster}
             />
           )}
@@ -165,8 +179,7 @@ const ClusterDetailIngress: React.FC<
             <FlashMessage type={FlashMessageType.Danger}>
               <Box>
                 <Text weight='bold'>
-                  There was a problem fetching apps in the cluster&apos;s
-                  namespace.
+                  There was a problem fetching apps installed on this cluster.
                 </Text>
                 <Text>{extractErrorMessage(appListError)}</Text>
               </Box>

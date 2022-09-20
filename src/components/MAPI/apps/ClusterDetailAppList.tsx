@@ -21,6 +21,7 @@ interface IClusterDetailAppListProps
   isClusterCreating?: boolean;
   errorMessage?: string;
   isChildApps?: boolean;
+  isClusterApp?: boolean;
   canBeModified?: boolean;
 }
 
@@ -35,6 +36,7 @@ const ClusterDetailAppList: React.FC<
   children,
   errorMessage,
   isChildApps = false,
+  isClusterApp,
   canBeModified = false,
   ...props
 }) => {
@@ -125,6 +127,7 @@ const ClusterDetailAppList: React.FC<
                     appsPermissions={appsPermissions}
                     isActive={activeApps.indexOf(app.metadata.name) !== -1}
                     canBeModified={canBeModified}
+                    isClusterApp={isClusterApp}
                     onAppUninstalled={() => resetActiveApp(app.metadata.name)}
                     minHeight={TREE_VIEW_ITEM_HEIGHT}
                   />
@@ -140,6 +143,7 @@ const ClusterDetailAppList: React.FC<
                       appsPermissions={appsPermissions}
                       isLoading={false}
                       isChildApps={true}
+                      isClusterApp={isClusterApp}
                     />
                   </TreeViewSubtree>
                 )}

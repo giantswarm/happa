@@ -189,6 +189,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
       getComponent({
         app,
         appsPermissions: defaultAppsPermissions,
+        isClusterApp: false,
       })
     );
 
@@ -292,6 +293,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
       getComponent({
         app,
         appsPermissions: defaultAppsPermissions,
+        isClusterApp: false,
       })
     );
 
@@ -372,6 +374,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
       getComponent({
         app,
         appsPermissions: defaultAppsPermissions,
+        isClusterApp: false,
       })
     );
 
@@ -474,6 +477,7 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
       getComponent({
         app,
         appsPermissions: defaultAppsPermissions,
+        isClusterApp: false,
       })
     );
 
