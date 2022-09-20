@@ -470,6 +470,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
                 cluster && (
                   <ClusterDetailIngress
                     provider={provider}
+                    isClusterApp={isClusterApp}
                     k8sEndpoint={clusterK8sApiURL}
                     mutateCluster={mutateCluster}
                   />
