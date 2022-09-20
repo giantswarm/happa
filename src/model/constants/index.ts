@@ -117,4 +117,7 @@ export const Constants = {
 
   // Common prefix used for cluster app names
   CLUSTER_APP_NAME_PREFIX: 'cluster-',
+
+  // Namespace we expect the management cluster to be in.
+  MANAGEMENT_CLUSTER_NAMESPACE: 'org-giantswarm',
 } as const;
