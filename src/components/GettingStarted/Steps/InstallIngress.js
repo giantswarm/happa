@@ -18,10 +18,6 @@ const InstallIngressButtonWrapper = styled.div`
 `;
 
 const InstallIngress = (props) => {
-  console.log('AAAAAAAA');
-  console.log('AAAAAAAA');
-  console.log('AAAAAAAA');
-  console.log('AAAAAAAA');
   const pathParams = {
     orgId: props.match.params.orgId,
     clusterId: props.match.params.clusterId,
