@@ -17,10 +17,12 @@ import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 interface IListAppsGuideProps
   extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
   namespace: string;
+  cluster?: string;
 }
 
 const ListAppsGuide: React.FC<React.PropsWithChildren<IListAppsGuideProps>> = ({
   namespace,
+  cluster,
   ...props
 }) => {
   const context = getCurrentInstallationContextName();
@@ -55,13 +57,20 @@ const ListAppsGuide: React.FC<React.PropsWithChildren<IListAppsGuideProps>> = ({
         <LoginGuideStep />
         <CLIGuideStep
           title='2. List installed apps'
-          command={makeKubectlGSCommand(
-            withContext(context),
-            withGetApps({
-              namespace: namespace,
-            }),
-            withFormatting()
-          )}
+          command={
+            cluster
+              ? `
+              kubectl get apps --context ${context} \\
+                --selector giantswarm.io/cluster=${cluster} \\
+                --namespace ${namespace}`
+              : makeKubectlGSCommand(
+                  withContext(context),
+                  withGetApps({
+                    namespace: namespace,
+                  }),
+                  withFormatting()
+                )
+          }
         >
           <Text>
             As a result, you will get a list of all <code>App</code> resources
