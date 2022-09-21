@@ -220,7 +220,10 @@ const ClusterDetailApps: React.FC<
 
           {appsNamespace && (
             <Box margin={{ top: 'medium' }} direction='column' gap='small'>
-              <ListAppsGuide namespace={appsNamespace} />
+              <ListAppsGuide
+                namespace={appsNamespace}
+                cluster={isClusterApp ? clusterId : undefined}
+              />
             </Box>
           )}
         </>
