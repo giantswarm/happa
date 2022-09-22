@@ -4,6 +4,11 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { isAppManagedByFlux } from 'model/services/mapi/applicationv1alpha1';
+import {
+  getIsImpersonatingNonAdmin,
+  getUserIsAdmin,
+} from 'model/stores/main/selectors';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, {
   useEffect,
   useLayoutEffect,
@@ -11,6 +16,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import useSWR, { useSWRConfig } from 'swr';
 import Date from 'UI/Display/Date';
@@ -40,8 +46,8 @@ import { IAppsPermissions } from './permissions/types';
 import { usePermissionsForAppCatalogEntries } from './permissions/usePermissionsForAppCatalogEntries';
 import { usePermissionsForCatalogs } from './permissions/usePermissionsForCatalogs';
 import {
-  getCatalogNamespace,
-  getCatalogNamespaceKey,
+  fetchCatalogListForOrganizations,
+  fetchCatalogListForOrganizationsKey,
   normalizeAppVersion,
 } from './utils';
 
@@ -126,19 +132,42 @@ const ClusterDetailAppListItem: React.FC<
   const canReadCatalogs =
     catalogPermissions.canList && catalogPermissions.canGet;
 
-  const catalogNamespaceKey =
-    canReadCatalogs && app ? getCatalogNamespaceKey(app) : null;
+  const isAdmin = useSelector(getUserIsAdmin);
+  const organizations = useSelector(selectOrganizations());
+  const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
 
-  const { data: catalogNamespace, error: catalogNamespaceError } = useSWR<
-    string | null,
+  const catalogListForOrganizationsKey = canReadCatalogs
+    ? fetchCatalogListForOrganizationsKey(
+        organizations,
+        isAdmin && !isImpersonatingNonAdmin
+      )
+    : null;
+
+  const { data: catalogList, error: catalogListError } = useSWR<
+    applicationv1alpha1.ICatalogList,
     GenericResponseError
-  >(catalogNamespaceKey, () =>
-    getCatalogNamespace(clientFactory, auth, cache, app!)
+  >(catalogListForOrganizationsKey, () =>
+    fetchCatalogListForOrganizations(
+      clientFactory,
+      auth,
+      cache,
+      organizations,
+      isAdmin && !isImpersonatingNonAdmin
+    )
   );
 
+  const catalog = useMemo(() => {
+    if (!catalogList || !app) return undefined;
+
+    return catalogList?.items.find((c) => c.metadata.name === app.spec.catalog);
+  }, [app, catalogList]);
+
+  const catalogNamespace =
+    app?.spec.catalogNamespace || catalog?.metadata.namespace;
+
   useEffect(() => {
-    if (catalogNamespaceError) {
-      const errorMessage = extractErrorMessage(catalogNamespaceError);
+    if (catalogListError) {
+      const errorMessage = extractErrorMessage(catalogListError);
 
       new FlashMessage(
         `There was a problem loading the app's catalog.`,
@@ -147,9 +176,9 @@ const ClusterDetailAppListItem: React.FC<
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(catalogNamespaceError);
+      ErrorReporter.getInstance().notify(catalogListError);
     }
-  }, [catalogNamespaceError]);
+  }, [catalogListError]);
 
   const { canList: canListAppCatalogEntries } =
     usePermissionsForAppCatalogEntries(provider, catalogNamespace ?? '');
