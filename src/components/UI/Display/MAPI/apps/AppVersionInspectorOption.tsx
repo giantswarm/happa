@@ -57,21 +57,25 @@ const AppVersionInspectorOption: React.FC<
       <StyledText weight={textWeight}>
         <StyledDot />
       </StyledText>
-      <OptionalValue
-        value={creationDate}
-        loaderWidth={100}
-        flashOnValueChange={false}
-      >
-        {(value) => (
-          <StyledText weight={textWeight}>
-            released <Date value={value} relative={true} />
-          </StyledText>
-        )}
-      </OptionalValue>
 
-      <StyledText weight={textWeight}>
-        <StyledDot />
-      </StyledText>
+      {creationDate && (
+        <>
+          <OptionalValue
+            value={creationDate}
+            loaderWidth={100}
+            flashOnValueChange={false}
+          >
+            {(value) => (
+              <StyledText weight={textWeight}>
+                released <Date value={value} relative={true} />
+              </StyledText>
+            )}
+          </OptionalValue>
+          <StyledText weight={textWeight} margin={{ left: 'xsmall' }}>
+            <StyledDot />
+          </StyledText>
+        </>
+      )}
 
       <OptionalValue
         value={upstreamVersion}
