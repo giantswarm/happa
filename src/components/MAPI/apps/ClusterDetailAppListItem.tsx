@@ -287,7 +287,7 @@ const ClusterDetailAppListItem: React.FC<
             />
             <ClusterDetailAppListWidgetCatalog
               app={app}
-              canReadCatalogs={canReadCatalogs}
+              catalog={catalog}
               flex={{ grow: 1, shrink: 1 }}
               pad='xsmall'
               direction='row'
