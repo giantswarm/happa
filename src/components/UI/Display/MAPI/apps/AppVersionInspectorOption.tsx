@@ -17,7 +17,7 @@ const StyledDot = styled(Dot)`
 interface IAppVersionInspectorOptionProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   version?: string;
-  creationDate?: string;
+  creationDate?: string | null;
   upstreamVersion?: string;
   isSelected?: boolean;
   isCurrent?: boolean;
@@ -58,7 +58,7 @@ const AppVersionInspectorOption: React.FC<
         <StyledDot />
       </StyledText>
 
-      {creationDate && (
+      {creationDate !== null && (
         <>
           <OptionalValue
             value={creationDate}

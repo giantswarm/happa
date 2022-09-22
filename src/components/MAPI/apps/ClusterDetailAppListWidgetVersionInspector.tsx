@@ -298,7 +298,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
                 return (
                   <AppVersionInspectorOption
                     version={option.spec.version}
-                    creationDate={option.spec.dateCreated!}
+                    creationDate={option.spec.dateCreated}
                     upstreamVersion={option.spec.appVersion}
                     isSelected={option.spec.version === currentSelectedVersion}
                     isCurrent={option.spec.version === app?.spec.version}
@@ -315,19 +315,38 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
             >
               <AppVersionInspectorOption
                 version={currentSelectedVersion}
+                creationDate={null}
                 upstreamVersion={app?.status?.appVersion}
               />
             </Box>
           )}
         </Box>
-        <Link to={appPath}>
-          <Button tabIndex={-1} disabled={isLoading}>
-            Details
-          </Button>
-        </Link>
+        {canListAppCatalogEntries ? (
+          <Link to={appPath}>
+            <Button tabIndex={-1} disabled={isLoading}>
+              Details
+            </Button>
+          </Link>
+        ) : (
+          <TooltipContainer
+            content={
+              <Tooltip width={{ max: '230px' }}>
+                For viewing details of this app, you need additional
+                permissions.
+              </Tooltip>
+            }
+            show={!canListAppCatalogEntries}
+          >
+            <Box>
+              <Button tabIndex={-1} unauthorized={!canListAppCatalogEntries}>
+                Details
+              </Button>
+            </Box>
+          </TooltipContainer>
+        )}
         <TooltipContainer
           content={
-            <Tooltip>
+            <Tooltip width={{ max: '230px' }}>
               For updating this app, you need additional permissions.
             </Tooltip>
           }
