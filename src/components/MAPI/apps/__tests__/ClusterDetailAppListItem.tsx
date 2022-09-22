@@ -447,6 +447,30 @@ describe('ClusterDetailAppListItem', () => {
     ).toBeInTheDocument();
   });
 
+  it(`does not allow navigating to an app's details if a user does not have permissions to get the app's catalog entry`, () => {
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canList: false,
+    });
+
+    render(
+      getComponent({
+        app: generateApp('coredns', '1.2.0', 'coredns'),
+      })
+    );
+
+    const detailsButton = screen.getByRole('button', { name: /Details/ });
+    expect(detailsButton).toBeDisabled();
+
+    fireEvent.mouseEnter(detailsButton);
+
+    expect(
+      screen.getByText(
+        'For viewing details of this app, you need additional permissions.'
+      )
+    ).toBeInTheDocument();
+  });
+
   it('displays the current app catalog', async () => {
     nock(window.config.mapiEndpoint)
       .get(`/apis/application.giantswarm.io/v1alpha1/catalogs/`)
