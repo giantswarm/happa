@@ -115,6 +115,10 @@ export const kubectlCreateClusterRoleBindingURL =
 export const labellingWorkloadClustersURL =
   'https://docs.giantswarm.io/advanced/labelling-workload-clusters/';
 
+// GitOps restrictions in the web UI
+export const gitopsRestrictions =
+  'https://docs.giantswarm.io/advanced/gitops/#web-ui-restrictions';
+
 // CRD names we expect to find a docs schema page for,
 // grouped by publisher domain.
 export const crds = {

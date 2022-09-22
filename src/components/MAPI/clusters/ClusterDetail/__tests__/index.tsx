@@ -528,4 +528,79 @@ describe('ClusterDetail', () => {
 
     expect(screen.queryByTestId('cluster-status')).not.toBeInTheDocument();
   });
+
+  it('does not display a "GitOps managed" note', async () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomCluster1);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${
+          capiv1beta1Mocks.randomCluster1.metadata.namespace
+        }/azureclusters/${
+          capiv1beta1Mocks.randomCluster1.spec!.infrastructureRef!.name
+        }/`
+      )
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureCluster1);
+
+    render(getComponent({}));
+
+    if (screen.queryAllByText('Loading...').length > 0) {
+      await waitForElementToBeRemoved(() =>
+        screen.queryAllByText('Loading...')
+      );
+    }
+
+    expect(
+      screen.queryByText('Managed through GitOps -')
+    ).not.toBeInTheDocument();
+  });
+
+  it('displays a note when cluster is managed through GitOps', async () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, {
+        ...capiv1beta1Mocks.randomCluster1,
+        metadata: {
+          ...capiv1beta1Mocks.randomCluster1.metadata,
+          labels: {
+            ...capiv1beta1Mocks.randomCluster1.metadata.labels,
+            'kustomize.toolkit.fluxcd.io/namespace': 'default',
+          },
+        },
+      });
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${
+          capiv1beta1Mocks.randomCluster1.metadata.namespace
+        }/azureclusters/${
+          capiv1beta1Mocks.randomCluster1.spec!.infrastructureRef!.name
+        }/`
+      )
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureCluster1);
+
+    render(getComponent({}));
+
+    if (screen.queryAllByText('Loading...').length > 0) {
+      await waitForElementToBeRemoved(() =>
+        screen.queryAllByText('Loading...')
+      );
+    }
+
+    expect(screen.getByText('Managed through GitOps -')).toBeInTheDocument();
+  });
 });

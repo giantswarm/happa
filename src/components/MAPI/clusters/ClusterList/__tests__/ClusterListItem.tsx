@@ -195,6 +195,39 @@ describe('ClusterListItem on Azure', () => {
     ).toBeInTheDocument();
   });
 
+  it('displays a note when cluster is managed through GitOps', () => {
+    const { rerender } = render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomCluster1,
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
+      })
+    );
+
+    expect(
+      screen.queryByLabelText('Managed through GitOps. Click to learn more.')
+    ).not.toBeInTheDocument();
+
+    rerender(
+      getComponent({
+        cluster: {
+          ...capiv1beta1Mocks.randomCluster1,
+          metadata: {
+            ...capiv1beta1Mocks.randomCluster1.metadata,
+            labels: {
+              ...capiv1beta1Mocks.randomCluster1.metadata.labels,
+              'kustomize.toolkit.fluxcd.io/namespace': 'default',
+            },
+          },
+        },
+        providerCluster: capzv1beta1Mocks.randomAzureCluster1,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Managed through GitOps. Click to learn more.')
+    ).toBeInTheDocument();
+  });
+
   it('displays stats about worker nodes', async () => {
     nock(window.config.mapiEndpoint)
       .get(

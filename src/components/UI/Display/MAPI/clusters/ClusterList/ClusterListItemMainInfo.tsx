@@ -7,6 +7,7 @@ import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import Truncated from 'UI/Util/Truncated';
 import { getK8sVersionEOLDate } from 'utils/config';
 
+import GitOpsManagedNote from '../../GitOpsManaged/GitOpsManagedNote';
 import ReleaseStateLabel from '../../releases/ReleaseStateLabel';
 
 const StyledDot = styled(Dot)`
@@ -24,11 +25,19 @@ interface IClusterListItemMainInfoProps
   releaseVersion?: string;
   isPreviewRelease?: boolean;
   k8sVersion?: string;
+  isGitOpsManaged?: boolean;
 }
 
 const ClusterListItemMainInfo: React.FC<
   React.PropsWithChildren<IClusterListItemMainInfoProps>
-> = ({ variant, releaseVersion, isPreviewRelease, k8sVersion, ...props }) => {
+> = ({
+  variant,
+  releaseVersion,
+  isPreviewRelease,
+  k8sVersion,
+  isGitOpsManaged,
+  ...props
+}) => {
   return (
     <Box direction='row' align='center' gap='xsmall' {...props}>
       <OptionalValue value={releaseVersion} replaceEmptyValue={false}>
@@ -63,6 +72,12 @@ const ClusterListItemMainInfo: React.FC<
           />
         )}
       </OptionalValue>
+      {isGitOpsManaged === true && (
+        <Box direction='row' align='center' gap='xsmall'>
+          <StyledDot />
+          <GitOpsManagedNote displayNote={false} />
+        </Box>
+      )}
     </Box>
   );
 };

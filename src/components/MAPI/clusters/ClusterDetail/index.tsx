@@ -14,6 +14,7 @@ import {
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
   getClusterDescription,
+  isGitOpsManaged,
   supportsReleases,
 } from 'MAPI/utils';
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
@@ -36,6 +37,7 @@ import ClusterIDLabel, {
   ClusterIDLabelType,
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
+import GitOpsManagedNote from 'UI/Display/MAPI/GitOpsManaged/GitOpsManagedNote';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 import ViewAndEditName, {
@@ -386,15 +388,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
         }}
       >
         <Box>
-          <Heading
-            level={1}
-            margin={{
-              bottom:
-                clusterStatus === ClusterStatus.CreationInProgress
-                  ? 'medium'
-                  : 'large',
-            }}
-          >
+          <Heading level={1} margin={{ bottom: 'medium' }}>
             <Box direction='row' align='center'>
               <ClusterIDLabel
                 clusterID={clusterId}
@@ -420,6 +414,9 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
               </OptionalValue>
             </Box>
           </Heading>
+          {cluster && isGitOpsManaged(cluster) && (
+            <GitOpsManagedNote margin={{ bottom: 'medium' }} />
+          )}
           {clusterStatus === ClusterStatus.CreationInProgress && (
             <StyledFlashMessage
               type={FlashMessageType.Info}
@@ -433,7 +430,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
               />
             </StyledFlashMessage>
           )}
-          <Tabs useRoutes={true}>
+          <Tabs useRoutes={true} margin={{ top: 'medium' }}>
             <Tab path={paths.Home} title='Overview' />
             <Tab path={paths.WorkerNodes} title='Worker nodes' />
             <Tab path={paths.ClientCertificates} title='Client certificates' />

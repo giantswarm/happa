@@ -1,3 +1,4 @@
+import { isGitOpsManaged } from 'MAPI/utils';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useEffect, useMemo } from 'react';
@@ -49,6 +50,7 @@ const ClusterListItemReleaseInfo: React.FC<
       isPreviewRelease={isPreviewRelease}
       k8sVersion={k8sVersion}
       variant={ClusterListItemMainInfoVariant.Release}
+      isGitOpsManaged={cluster && isGitOpsManaged(cluster)}
     />
   );
 };

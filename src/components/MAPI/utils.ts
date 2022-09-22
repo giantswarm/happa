@@ -1411,3 +1411,13 @@ export function isManagementCluster(cluster: Cluster): boolean {
     hasClusterAppLabel(cluster)
   );
 }
+
+/**
+ * Determines whether a resource is managed by GitOps.
+ * @param resource
+ */
+export function isGitOpsManaged(resource: capiv1beta1.ICluster) {
+  const labels = Object.keys(resource.metadata.labels ?? {});
+
+  return labels.some((label) => label.startsWith(Constants.FLUX_LABELS_PREFIX));
+}
