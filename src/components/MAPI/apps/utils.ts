@@ -2,6 +2,7 @@ import produce from 'immer';
 import { YAMLException } from 'js-yaml';
 import {
   getClusterOrganization,
+  hasClusterAppLabel,
   IProviderClusterForCluster,
 } from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
@@ -1303,9 +1304,22 @@ export async function fetchAppsForClusters(
 
   const responses = await Promise.allSettled(
     clusters.map((cluster) => {
-      return applicationv1alpha1.getAppList(httpClientFactory(), auth, {
-        namespace: cluster.metadata.name,
-      });
+      const appListGetOptions = hasClusterAppLabel(cluster)
+        ? {
+            namespace: cluster.metadata.namespace,
+            labelSelector: {
+              matchingLabels: {
+                [applicationv1alpha1.labelCluster]: cluster.metadata.name,
+              },
+            },
+          }
+        : { namespace: cluster.metadata.name };
+
+      return applicationv1alpha1.getAppList(
+        httpClientFactory(),
+        auth,
+        appListGetOptions
+      );
     })
   );
 
