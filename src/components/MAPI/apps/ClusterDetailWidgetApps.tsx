@@ -4,6 +4,10 @@ import { normalizeColor } from 'grommet/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import {
+  getIsImpersonatingNonAdmin,
+  getUserIsAdmin,
+} from 'model/stores/main/selectors';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -190,11 +194,21 @@ const ClusterDetailWidgetApps: React.FC<
 
   const { cache } = useSWRConfig();
 
+  const isAdmin = useSelector(getUserIsAdmin);
+  const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
+
   const { data: upgradableApps, error: upgradableAppsError } = useSWR<
     string[],
     GenericResponseError
   >(upgradableAppsKey, () =>
-    getUpgradableApps(clientFactory, auth, cache, userInstalledApps!)
+    getUpgradableApps(
+      clientFactory,
+      auth,
+      cache,
+      userInstalledApps!,
+      organizations,
+      isAdmin && !isImpersonatingNonAdmin
+    )
   );
 
   useEffect(() => {
