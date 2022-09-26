@@ -7,6 +7,7 @@ import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
+import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
@@ -1416,8 +1417,12 @@ export function isManagementCluster(cluster: Cluster): boolean {
  * Determines whether a resource is managed by GitOps.
  * @param resource
  */
-export function isGitOpsManaged(resource: capiv1beta1.ICluster) {
+export function isGitOpsManaged(
+  resource: capiv1beta1.ICluster | securityv1alpha1.IOrganization
+) {
   const labels = Object.keys(resource.metadata.labels ?? {});
 
-  return labels.some((label) => label.startsWith(Constants.FLUX_LABELS_PREFIX));
+  return labels.some((label) =>
+    label.startsWith(Constants.FLUX_LABELS_PREFIX as string)
+  );
 }

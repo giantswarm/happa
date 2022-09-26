@@ -2,7 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading } from 'grommet';
 import AccessControlPage from 'MAPI/organizations/AccessControl';
-import { extractErrorMessage } from 'MAPI/utils';
+import { extractErrorMessage, isGitOpsManaged } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
+import GitOpsManagedNote from 'UI/Display/MAPI/GitOpsManaged/GitOpsManagedNote';
 import OrganizationDetailLoadingPlaceholder from 'UI/Display/Organizations/OrganizationDetailLoadingPlaceholder';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -108,10 +109,15 @@ const OrganizationDetail: React.FC<
           <OrganizationDetailLoadingPlaceholder />
         ) : (
           <>
-            <Heading level={1} margin={{ bottom: 'large' }}>
+            <Heading level={1} margin={{ bottom: 'medium' }}>
               Organization: {data.metadata.name}
             </Heading>
-            <Tabs useRoutes={true}>
+
+            {isGitOpsManaged(data) && (
+              <GitOpsManagedNote margin={{ bottom: 'medium' }} />
+            )}
+
+            <Tabs useRoutes={true} margin={{ top: 'medium' }}>
               <Tab path={paths.Detail} title='General'>
                 <OrganizationDetailGeneral
                   organizationName={data.metadata.name}
