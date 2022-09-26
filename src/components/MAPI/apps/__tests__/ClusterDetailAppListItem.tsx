@@ -294,6 +294,40 @@ describe('ClusterDetailAppListItem', () => {
     expect(screen.getByText('(current version)')).toBeInTheDocument();
   });
 
+  it('displays a note when app is managed through GitOps', () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+
+    const app = generateApp();
+
+    const { rerender } = render(getComponent({ app }));
+
+    expect(
+      screen.queryByText('Managed through GitOps -')
+    ).not.toBeInTheDocument();
+
+    rerender(
+      getComponent({
+        app: {
+          ...app,
+          metadata: {
+            ...app.metadata,
+            labels: {
+              ...app.metadata.labels,
+              'kustomize.toolkit.fluxcd.io/namespace': 'default',
+            },
+          },
+        },
+      })
+    );
+
+    expect(screen.getByText('Managed through GitOps -')).toBeInTheDocument();
+  });
+
   it('can upgrade to a newer version', async () => {
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
       defaultPermissions

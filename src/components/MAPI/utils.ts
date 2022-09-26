@@ -1,5 +1,6 @@
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { Constants, Providers } from 'model/constants';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
@@ -1418,7 +1419,10 @@ export function isManagementCluster(cluster: Cluster): boolean {
  * @param resource
  */
 export function isGitOpsManaged(
-  resource: capiv1beta1.ICluster | securityv1alpha1.IOrganization
+  resource:
+    | capiv1beta1.ICluster
+    | securityv1alpha1.IOrganization
+    | applicationv1alpha1.IApp
 ) {
   const labels = Object.keys(resource.metadata.labels ?? {});
 
