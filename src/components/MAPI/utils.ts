@@ -1423,6 +1423,7 @@ export function isGitOpsManaged(
     | capiv1beta1.ICluster
     | securityv1alpha1.IOrganization
     | applicationv1alpha1.IApp
+    | NodePool
 ) {
   const labels = Object.keys(resource.metadata.labels ?? {});
 

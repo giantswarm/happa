@@ -52,6 +52,40 @@ describe('WorkerNodesNodePoolItem', () => {
 
     expect(screen.getAllByLabelText('Loading...').length).toEqual(9);
   });
+
+  it('displays a note when node pool is managed through GitOps', () => {
+    const { rerender } = render(
+      getComponent({
+        nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
+        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+      })
+    );
+
+    expect(
+      screen.queryByLabelText('Managed through GitOps. Click to learn more.')
+    ).not.toBeInTheDocument();
+
+    rerender(
+      getComponent({
+        nodePool: {
+          ...capiexpv1alpha3Mocks.randomCluster1MachinePool1,
+          metadata: {
+            ...capiexpv1alpha3Mocks.randomCluster1MachinePool1.metadata,
+            labels: {
+              ...capiexpv1alpha3Mocks.randomCluster1MachinePool1.metadata
+                .labels,
+              'kustomize.toolkit.fluxcd.io/namespace': 'default',
+            },
+          },
+        },
+        providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Managed through GitOps. Click to learn more.')
+    ).toBeInTheDocument();
+  });
 });
 
 describe('WorkerNodesNodePoolItem on Azure', () => {
