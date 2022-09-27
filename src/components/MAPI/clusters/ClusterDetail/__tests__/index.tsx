@@ -223,6 +223,53 @@ describe('ClusterDetail', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('does not allow editing or deleting the cluster if it is managed by GitOps', async () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${capiv1beta1Mocks.randomCluster1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, {
+        ...capiv1beta1Mocks.randomCluster1,
+        metadata: {
+          ...capiv1beta1Mocks.randomCluster1.metadata,
+          labels: {
+            ...capiv1beta1Mocks.randomCluster1.metadata.labels,
+            'kustomize.toolkit.fluxcd.io/namespace': 'default',
+          },
+        },
+      });
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${
+          capiv1beta1Mocks.randomCluster1.metadata.namespace
+        }/azureclusters/${
+          capiv1beta1Mocks.randomCluster1.spec!.infrastructureRef!.name
+        }/`
+      )
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureCluster1);
+
+    render(getComponent({}));
+
+    if (screen.queryAllByText('Loading...').length > 0) {
+      await waitForElementToBeRemoved(() =>
+        screen.queryAllByText('Loading...')
+      );
+    }
+
+    expect(screen.queryByText('Actions')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Random Cluster'));
+
+    expect(
+      screen.queryByLabelText(`cluster description`)
+    ).not.toBeInTheDocument();
+  });
+
   it('displays a warning when cluster creation is in progress on Azure', async () => {
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
