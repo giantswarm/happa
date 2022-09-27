@@ -1418,7 +1418,7 @@ export function isManagementCluster(cluster: Cluster): boolean {
  * Determines whether a resource is managed by GitOps.
  * @param resource
  */
-export function isGitOpsManaged(
+export function isResourceManagedByGitOps(
   resource:
     | capiv1beta1.ICluster
     | securityv1alpha1.IOrganization

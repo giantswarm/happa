@@ -2,7 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading } from 'grommet';
 import AccessControlPage from 'MAPI/organizations/AccessControl';
-import { extractErrorMessage, isGitOpsManaged } from 'MAPI/utils';
+import { extractErrorMessage, isResourceManagedByGitOps } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -102,7 +102,7 @@ const OrganizationDetail: React.FC<
     }
   }, [error, orgId, dispatch, data]);
 
-  const isManagedByGitOps = data ? isGitOpsManaged(data) : false;
+  const isManagedByGitOps = data ? isResourceManagedByGitOps(data) : false;
 
   return (
     <DocumentTitle title={`Organization Details | ${orgId}`}>

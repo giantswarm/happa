@@ -6,7 +6,7 @@ import {
   getNodePoolAvailabilityZones,
   getNodePoolDescription,
   getNodePoolScaling,
-  isGitOpsManaged,
+  isResourceManagedByGitOps,
 } from 'MAPI/utils';
 import { Providers } from 'model/constants';
 import React, { useMemo, useRef, useState } from 'react';
@@ -238,7 +238,9 @@ const WorkerNodesNodePoolItem: React.FC<
 
   const provider = window.config.info.general.provider;
 
-  const isManagedByGitOps = nodePool ? isGitOpsManaged(nodePool) : false;
+  const isManagedByGitOps = nodePool
+    ? isResourceManagedByGitOps(nodePool)
+    : false;
 
   return (
     <Box {...props}>

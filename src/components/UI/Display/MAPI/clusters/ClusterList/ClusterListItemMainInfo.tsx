@@ -25,7 +25,7 @@ interface IClusterListItemMainInfoProps
   releaseVersion?: string;
   isPreviewRelease?: boolean;
   k8sVersion?: string;
-  isGitOpsManaged?: boolean;
+  isManagedByGitOps?: boolean;
 }
 
 const ClusterListItemMainInfo: React.FC<
@@ -35,7 +35,7 @@ const ClusterListItemMainInfo: React.FC<
   releaseVersion,
   isPreviewRelease,
   k8sVersion,
-  isGitOpsManaged,
+  isManagedByGitOps,
   ...props
 }) => {
   return (
@@ -72,7 +72,7 @@ const ClusterListItemMainInfo: React.FC<
           />
         )}
       </OptionalValue>
-      {isGitOpsManaged === true && (
+      {isManagedByGitOps && (
         <Box direction='row' align='center' gap='xsmall'>
           <StyledDot />
           <GitOpsManagedNote displayNote={false} />

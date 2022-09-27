@@ -9,7 +9,7 @@ import {
   fetchClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
-  isGitOpsManaged,
+  isResourceManagedByGitOps,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
@@ -183,7 +183,7 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
               canUpdateCluster={canUpdateCluster}
             />
           )}
-          {!isGitOpsManaged(cluster) && (
+          {!isResourceManagedByGitOps(cluster) && (
             <SetClusterLabelsGuide
               clusterName={cluster.metadata.name}
               clusterNamespace={cluster.metadata.namespace!}

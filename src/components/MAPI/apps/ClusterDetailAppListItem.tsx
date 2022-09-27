@@ -1,6 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { AccordionPanel, Box, Text } from 'grommet';
-import { extractErrorMessage, isGitOpsManaged } from 'MAPI/utils';
+import { extractErrorMessage, isResourceManagedByGitOps } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { isAppManagedByFlux } from 'model/services/mapi/applicationv1alpha1';
@@ -155,7 +155,7 @@ const ClusterDetailAppListItem: React.FC<
   const { canList: canListAppCatalogEntries } =
     usePermissionsForAppCatalogEntries(provider, catalogNamespace ?? '');
 
-  const isManagedByGitOps = app ? isGitOpsManaged(app) : false;
+  const isManagedByGitOps = app ? isResourceManagedByGitOps(app) : false;
 
   return (
     <Box

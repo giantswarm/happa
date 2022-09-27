@@ -14,7 +14,7 @@ import {
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
   getClusterDescription,
-  isGitOpsManaged,
+  isResourceManagedByGitOps,
   supportsReleases,
 } from 'MAPI/utils';
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
@@ -376,7 +376,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   const isReadOnly = useMemo(() => {
     if (!cluster) return true;
 
-    return hasClusterAppLabel(cluster) || isGitOpsManaged(cluster);
+    return hasClusterAppLabel(cluster) || isResourceManagedByGitOps(cluster);
   }, [cluster]);
 
   return (
@@ -414,7 +414,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
               </OptionalValue>
             </Box>
           </Heading>
-          {cluster && isGitOpsManaged(cluster) && (
+          {cluster && isResourceManagedByGitOps(cluster) && (
             <GitOpsManagedNote margin={{ bottom: 'medium' }} />
           )}
           {clusterStatus === ClusterStatus.CreationInProgress && (
