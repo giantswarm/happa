@@ -376,7 +376,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   const isReadOnly = useMemo(() => {
     if (!cluster) return true;
 
-    return hasClusterAppLabel(cluster);
+    return hasClusterAppLabel(cluster) || isGitOpsManaged(cluster);
   }, [cluster]);
 
   return (
