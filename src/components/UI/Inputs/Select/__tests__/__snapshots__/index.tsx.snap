@@ -23,7 +23,7 @@ exports[`Select renders a disabled input 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something...; Selected: A dog"
-          class="StyledButtonKind-sc-1vhfpnt-0 eFQlUD Select__StyledSelectDropButton-sc-17idtfo-2 lbfewi"
+          class="StyledButtonKind-sc-1vhfpnt-0 eFQlUD StyledSelect__StyledSelectDropButton-sc-znp66n-5 gaYPWy"
           disabled=""
           id="pet"
           type="button"
@@ -39,7 +39,7 @@ exports[`Select renders a disabled input 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb Select__SelectTextInput-sc-17idtfo-0 fDnYDX"
+                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb StyledSelect__SelectTextInput-sc-znp66n-4 dqSJFc"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -91,7 +91,7 @@ exports[`Select renders a simple input 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK Select__StyledSelectDropButton-sc-17idtfo-2 lbfewi"
+          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK StyledSelect__StyledSelectDropButton-sc-znp66n-5 gaYPWy"
           id="pet"
           type="button"
         >
@@ -106,7 +106,7 @@ exports[`Select renders a simple input 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb Select__SelectTextInput-sc-17idtfo-0 bQAqdj"
+                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb StyledSelect__SelectTextInput-sc-znp66n-4 lbPTGE"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -158,7 +158,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 eFQlUD Select__StyledSelectDropButton-sc-17idtfo-2 lbfewi"
+          class="StyledButtonKind-sc-1vhfpnt-0 eFQlUD StyledSelect__StyledSelectDropButton-sc-znp66n-5 gaYPWy"
           disabled=""
           id="pet"
           type="button"
@@ -174,7 +174,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb Select__SelectTextInput-sc-17idtfo-0 fDnYDX"
+                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb StyledSelect__SelectTextInput-sc-znp66n-4 dqSJFc"
                   id="pet__input"
                   readonly=""
                   tabindex="-1"
@@ -236,7 +236,7 @@ exports[`Select renders an input with a help message 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK Select__StyledSelectDropButton-sc-17idtfo-2 lbfewi"
+          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK StyledSelect__StyledSelectDropButton-sc-znp66n-5 gaYPWy"
           id="pet"
           type="button"
         >
@@ -251,7 +251,7 @@ exports[`Select renders an input with a help message 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb Select__SelectTextInput-sc-17idtfo-0 bQAqdj"
+                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb StyledSelect__SelectTextInput-sc-znp66n-4 lbPTGE"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -309,7 +309,7 @@ exports[`Select renders an input with a label 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK Select__StyledSelectDropButton-sc-17idtfo-2 lbfewi"
+          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK StyledSelect__StyledSelectDropButton-sc-znp66n-5 gaYPWy"
           id="pet"
           type="button"
         >
@@ -324,7 +324,7 @@ exports[`Select renders an input with a label 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb Select__SelectTextInput-sc-17idtfo-0 bQAqdj"
+                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb StyledSelect__SelectTextInput-sc-znp66n-4 lbPTGE"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -382,7 +382,7 @@ exports[`Select renders an input with a validation error 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK Select__StyledSelectDropButton-sc-17idtfo-2 lbfewi"
+          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK StyledSelect__StyledSelectDropButton-sc-znp66n-5 gaYPWy"
           id="pet"
           type="button"
         >
@@ -397,7 +397,7 @@ exports[`Select renders an input with a validation error 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb Select__SelectTextInput-sc-17idtfo-0 bQAqdj"
+                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb StyledSelect__SelectTextInput-sc-znp66n-4 lbPTGE"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -460,7 +460,7 @@ exports[`Select renders an input with an info message 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK Select__StyledSelectDropButton-sc-17idtfo-2 lbfewi"
+          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK StyledSelect__StyledSelectDropButton-sc-znp66n-5 gaYPWy"
           id="pet"
           type="button"
         >
@@ -475,7 +475,7 @@ exports[`Select renders an input with an info message 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb Select__SelectTextInput-sc-17idtfo-0 bQAqdj"
+                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb StyledSelect__SelectTextInput-sc-znp66n-4 lbPTGE"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
