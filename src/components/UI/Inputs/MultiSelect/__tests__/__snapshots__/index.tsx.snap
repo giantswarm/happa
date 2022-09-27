@@ -23,7 +23,7 @@ exports[`MultiSelect renders a simple input 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK Select__StyledSelectDropButton-sc-17idtfo-2 lbfewi"
+          class="StyledButtonKind-sc-1vhfpnt-0 dDnRiK StyledSelect__StyledSelectDropButton-sc-znp66n-5 gaYPWy"
           id="pet"
           type="button"
         >
@@ -38,7 +38,7 @@ exports[`MultiSelect renders a simple input 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb Select__SelectTextInput-sc-17idtfo-0 bQAqdj"
+                  class="StyledTextInput-sc-1x30a0s-0 dKvHYb StyledSelect__SelectTextInput-sc-znp66n-4 lbPTGE"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
