@@ -102,6 +102,8 @@ const OrganizationDetail: React.FC<
     }
   }, [error, orgId, dispatch, data]);
 
+  const isManagedByGitOps = data ? isGitOpsManaged(data) : false;
+
   return (
     <DocumentTitle title={`Organization Details | ${orgId}`}>
       <Box>
@@ -113,7 +115,7 @@ const OrganizationDetail: React.FC<
               Organization: {data.metadata.name}
             </Heading>
 
-            {isGitOpsManaged(data) && (
+            {isManagedByGitOps && (
               <GitOpsManagedNote margin={{ bottom: 'medium' }} />
             )}
 
@@ -122,6 +124,7 @@ const OrganizationDetail: React.FC<
                 <OrganizationDetailGeneral
                   organizationName={data.metadata.name}
                   organizationNamespace={orgNamespace}
+                  isManagedByGitOps={isManagedByGitOps}
                 />
               </Tab>
               <Tab path={paths.AccessControl} title='Access control'>

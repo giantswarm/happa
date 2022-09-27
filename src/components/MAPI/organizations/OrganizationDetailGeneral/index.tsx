@@ -44,11 +44,12 @@ import {
 interface IOrganizationDetailGeneralProps {
   organizationName: string;
   organizationNamespace: string;
+  isManagedByGitOps?: boolean;
 }
 
 const OrganizationDetailGeneral: React.FC<
   React.PropsWithChildren<IOrganizationDetailGeneralProps>
-> = ({ organizationName, organizationNamespace }) => {
+> = ({ organizationName, organizationNamespace, isManagedByGitOps }) => {
   const organizations = useSelector(selectOrganizations());
   const selectedOrg = organizations[organizationName];
 
@@ -220,6 +221,7 @@ const OrganizationDetailGeneral: React.FC<
         organizationNamespace={organizationNamespace}
         onDelete={handleDelete}
         canDeleteOrganizations={orgPermissions.canDelete}
+        readOnly={isManagedByGitOps}
         clusterCount={clusterList?.items.length}
         clusterCountLoading={
           typeof clusterList === 'undefined' &&
@@ -243,10 +245,12 @@ const OrganizationDetailGeneral: React.FC<
       />
       <CLIGuidesList margin={{ top: 'large' }}>
         <GetOrganizationDetailsGuide organizationName={organizationName} />
-        <DeleteOrganizationGuide
-          organizationName={organizationName}
-          canDeleteOrganization={orgPermissions.canDelete}
-        />
+        {!isManagedByGitOps && (
+          <DeleteOrganizationGuide
+            organizationName={organizationName}
+            canDeleteOrganization={orgPermissions.canDelete}
+          />
+        )}
       </CLIGuidesList>
     </>
   );

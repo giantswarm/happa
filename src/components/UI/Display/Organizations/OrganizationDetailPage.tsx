@@ -156,6 +156,7 @@ interface IOrganizationDetailPageProps {
   organizationNamespace: string;
   onDelete: () => Promise<void>;
   canDeleteOrganizations?: boolean;
+  readOnly?: boolean;
   clusterCount?: number;
   clusterCountLoading?: boolean;
   clustersSummary?: IOrganizationDetailClustersSummary;
@@ -175,6 +176,7 @@ const OrganizationDetailPage: React.FC<
   organizationNamespace,
   onDelete,
   canDeleteOrganizations,
+  readOnly,
   clusterCount,
   clusterCountLoading,
   clustersSummary,
@@ -353,7 +355,7 @@ const OrganizationDetailPage: React.FC<
         </Box>
       )}
 
-      {!clusterCountLoading && (
+      {!readOnly && !clusterCountLoading && (
         <OrganizationDetailDelete
           organizationName={organizationName}
           organizationNamespace={organizationNamespace}
