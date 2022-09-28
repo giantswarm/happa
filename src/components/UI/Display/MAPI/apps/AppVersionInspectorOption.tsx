@@ -17,7 +17,7 @@ const StyledDot = styled(Dot)`
 interface IAppVersionInspectorOptionProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   version?: string;
-  creationDate?: string;
+  creationDate?: string | null;
   upstreamVersion?: string;
   isSelected?: boolean;
   isCurrent?: boolean;
@@ -57,21 +57,25 @@ const AppVersionInspectorOption: React.FC<
       <StyledText weight={textWeight}>
         <StyledDot />
       </StyledText>
-      <OptionalValue
-        value={creationDate}
-        loaderWidth={100}
-        flashOnValueChange={false}
-      >
-        {(value) => (
-          <StyledText weight={textWeight}>
-            released <Date value={value} relative={true} />
-          </StyledText>
-        )}
-      </OptionalValue>
 
-      <StyledText weight={textWeight}>
-        <StyledDot />
-      </StyledText>
+      {creationDate !== null && (
+        <>
+          <OptionalValue
+            value={creationDate}
+            loaderWidth={100}
+            flashOnValueChange={false}
+          >
+            {(value) => (
+              <StyledText weight={textWeight}>
+                released <Date value={value} relative={true} />
+              </StyledText>
+            )}
+          </OptionalValue>
+          <StyledText weight={textWeight} margin={{ left: 'xsmall' }}>
+            <StyledDot />
+          </StyledText>
+        </>
+      )}
 
       <OptionalValue
         value={upstreamVersion}

@@ -1,8 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import { StatusCodes } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
@@ -11,6 +9,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListWidgetCatalog from '../ClusterDetailAppListWidgetCatalog';
+import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
 
 function generateApp(
   name: string = 'some-app',
@@ -113,37 +112,32 @@ function getComponent(
   );
 }
 
+const defaultPermissions = {
+  canGet: true,
+  canList: true,
+  canUpdate: true,
+  canCreate: true,
+  canDelete: true,
+};
+
+jest.mock('MAPI/apps/permissions/usePermissionsForCatalogs');
+
 describe('ClusterDetailAppListWidgetCatalog', () => {
+  beforeAll(() => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+
   it('renders without crashing', () => {
     render(getComponent({}));
   });
 
   it('displays the current app catalog', async () => {
     const catalog = applicationv1alpha1Mocks.defaultAppCatalog;
-    const defaultCatalog = applicationv1alpha1Mocks.defaultCatalogList;
-    const giantswarmCatalog = applicationv1alpha1Mocks.giantswarmCatalogList;
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/default/catalogs/`
-      )
-      .reply(StatusCodes.Ok, defaultCatalog);
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/giantswarm/catalogs/`
-      )
-      .reply(StatusCodes.Ok, giantswarmCatalog);
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${catalog.metadata.namespace}/catalogs/${catalog.metadata.name}/`
-      )
-      .reply(StatusCodes.Ok, catalog);
-
     const app = generateApp('some-app', '1.2.3');
 
-    render(getComponent({ app, canReadCatalogs: true }));
+    render(getComponent({ app, catalog }));
 
     expect(
       await screen.findByLabelText('App catalog: Default Catalog')
@@ -152,36 +146,31 @@ describe('ClusterDetailAppListWidgetCatalog', () => {
 
   it('displays if the catalog is managed or not', async () => {
     const catalog = applicationv1alpha1Mocks.giantswarmAppCatalog;
-    const defaultCatalog = applicationv1alpha1Mocks.defaultCatalogList;
-    const giantswarmCatalog = applicationv1alpha1Mocks.giantswarmCatalogList;
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/default/catalogs/`
-      )
-      .reply(StatusCodes.Ok, defaultCatalog);
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/giantswarm/catalogs/`
-      )
-      .reply(StatusCodes.Ok, giantswarmCatalog);
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${catalog.metadata.namespace}/catalogs/${catalog.metadata.name}/`
-      )
-      .reply(StatusCodes.Ok, catalog);
-
     const app = generateApp('some-app', '1.2.3');
     app.spec.catalog = 'giantswarm';
 
-    render(getComponent({ app, canReadCatalogs: true }));
+    render(getComponent({ app, catalog }));
 
     expect(
       await screen.findByLabelText('App catalog: Giant Swarm Catalog')
     ).toBeInTheDocument();
 
     expect(screen.getByText(/managed/i)).toBeInTheDocument();
+  });
+
+  it(`displays the app catalog name for users who do not have permissions to get the app's catalog`, async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canList: false,
+    });
+
+    const app = generateApp();
+    app.spec.catalog = 'random-test-catalog';
+
+    render(getComponent({ app }));
+
+    expect(
+      await screen.findByLabelText('App catalog: Random Test Catalog')
+    ).toBeInTheDocument();
   });
 });
