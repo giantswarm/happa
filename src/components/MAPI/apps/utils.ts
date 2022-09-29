@@ -2,6 +2,7 @@ import produce from 'immer';
 import { YAMLException } from 'js-yaml';
 import {
   getClusterOrganization,
+  hasClusterAppLabel,
   IProviderClusterForCluster,
 } from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
@@ -894,14 +895,19 @@ export async function hasNewerVersion(
   clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   cache: Cache,
-  app: applicationv1alpha1.IApp
+  app: applicationv1alpha1.IApp,
+  catalogList: applicationv1alpha1.ICatalogList
 ): Promise<{ name: string; hasNewerVersion: boolean }> {
-  const catalogNamespace = await getCatalogNamespace(
-    clientFactory,
-    auth,
-    cache,
-    app
-  );
+  const catalogNamespace =
+    app.spec.catalogNamespace ||
+    catalogList?.items.find((c) => c.metadata.name === app.spec.catalog)
+      ?.metadata.namespace;
+
+  if (!catalogNamespace)
+    return {
+      name: app.spec.name,
+      hasNewerVersion: false,
+    };
 
   const appCatalogEntryListItems: applicationv1alpha1.IAppCatalogEntry[] = [];
 
@@ -913,7 +919,7 @@ export async function hasNewerVersion(
           [applicationv1alpha1.labelAppCatalog]: app.spec.catalog,
         },
       },
-      namespace: catalogNamespace ?? undefined,
+      namespace: catalogNamespace,
     };
 
   const appCatalogEntryListKey = applicationv1alpha1.getAppCatalogEntryListKey(
@@ -962,19 +968,34 @@ export async function hasNewerVersion(
 
 /**
  * Get names of apps that can be upgraded (i.e. has newer versions)
+ * by checking in the catalogs the user has access to.
  * @param clientFactory
  * @param auth
  * @param cache
  * @param apps
+ * @param organization
+ * @param isAdmin
  */
 export async function getUpgradableApps(
   clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   cache: Cache,
-  apps: applicationv1alpha1.IApp[]
+  apps: applicationv1alpha1.IApp[],
+  organizations: Record<string, IOrganization>,
+  isAdmin: boolean
 ) {
+  const catalogs = await fetchCatalogListForOrganizations(
+    clientFactory,
+    auth,
+    cache,
+    organizations,
+    isAdmin
+  );
+
   const response = await Promise.all(
-    apps.map((app) => hasNewerVersion(clientFactory, auth, cache, app))
+    apps.map((app) =>
+      hasNewerVersion(clientFactory, auth, cache, app, catalogs)
+    )
   );
 
   const upgradableApps = [];
@@ -997,72 +1018,6 @@ export function getUpgradableAppsKey(apps: applicationv1alpha1.IApp[]) {
     (key, app) => `${key}/${app.spec.catalog}/${app.spec.name}`,
     ''
   )}`;
-}
-
-/**
- * Get the namespace for an app's catalog
- * @param clientFactory
- * @param auth
- * @param cache
- * @param app
- */
-export async function getCatalogNamespace(
-  clientFactory: HttpClientFactory,
-  auth: IOAuth2Provider,
-  cache: Cache,
-  app: applicationv1alpha1.IApp
-): Promise<string | null> {
-  if (!app) return null;
-
-  if (!app.spec.catalogNamespace) {
-    const catalogs: applicationv1alpha1.ICatalog[] = [];
-
-    // Look in 'default' and 'giantswarm' namespaces to find the catalog by name
-    const namespaces = ['default', 'giantswarm'];
-
-    for (const namespace of namespaces) {
-      const getCatalogListOptions = { namespace };
-      const catalogListKey = applicationv1alpha1.getCatalogListKey(
-        getCatalogListOptions
-      );
-      const cachedCatalogList: applicationv1alpha1.ICatalogList | undefined =
-        cache.get(catalogListKey);
-
-      if (cachedCatalogList) {
-        catalogs.push(...cachedCatalogList.items);
-      } else {
-        try {
-          const catalogList = await applicationv1alpha1.getCatalogList(
-            clientFactory(),
-            auth,
-            getCatalogListOptions
-          );
-          cache.set(catalogListKey, catalogList);
-          catalogs.push(...catalogList.items);
-        } catch {
-          continue;
-        }
-      }
-    }
-
-    const catalogOfApp = catalogs.find(
-      (catalog) => catalog.metadata.name === app.spec.catalog
-    );
-
-    if (!catalogOfApp) return null;
-
-    return catalogOfApp.metadata.namespace!;
-  }
-
-  return app.spec.catalogNamespace;
-}
-
-/**
- * Key used for getting the namespace for an app's catalog
- * @param app
- */
-export function getCatalogNamespaceKey(app: applicationv1alpha1.IApp): string {
-  return `getCatalogNamespace/${app.spec.catalog}/${app.metadata.name}`;
 }
 
 export async function fetchCatalogListForOrganizations(
@@ -1120,11 +1075,13 @@ export async function fetchCatalogListForOrganizations(
     items: [],
   };
 
-  const namespaces = Object.entries(organizations).map(
-    ([_, orgEntry]) =>
-      orgEntry.namespace ?? getNamespaceFromOrgName(orgEntry.id)
-  );
-  namespaces.push('default');
+  const namespaces = [
+    'default',
+    ...Object.entries(organizations).map(
+      ([_, orgEntry]) =>
+        orgEntry.namespace ?? getNamespaceFromOrgName(orgEntry.id)
+    ),
+  ];
 
   const requests = namespaces.map(async (namespace) => {
     catalogListGetOptions.namespace = namespace;
@@ -1303,9 +1260,22 @@ export async function fetchAppsForClusters(
 
   const responses = await Promise.allSettled(
     clusters.map((cluster) => {
-      return applicationv1alpha1.getAppList(httpClientFactory(), auth, {
-        namespace: cluster.metadata.name,
-      });
+      const appListGetOptions = hasClusterAppLabel(cluster)
+        ? {
+            namespace: cluster.metadata.namespace,
+            labelSelector: {
+              matchingLabels: {
+                [applicationv1alpha1.labelCluster]: cluster.metadata.name,
+              },
+            },
+          }
+        : { namespace: cluster.metadata.name };
+
+      return applicationv1alpha1.getAppList(
+        httpClientFactory(),
+        auth,
+        appListGetOptions
+      );
     })
   );
 

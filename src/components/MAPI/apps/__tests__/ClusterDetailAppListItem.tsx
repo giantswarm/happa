@@ -141,25 +141,20 @@ function getComponent(
 describe('ClusterDetailAppListItem', () => {
   // eslint-disable-next-line no-magic-numbers
   jest.setTimeout(40000);
-
-  it('renders without crashing', () => {
+  beforeAll(() => {
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
       defaultPermissions
     );
     (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
       defaultPermissions
     );
+  });
+
+  it('renders without crashing', () => {
     render(getComponent({}));
   });
 
   it('displays app name and alias', async () => {
-    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     render(
       getComponent({
         app: generateApp(),
@@ -176,13 +171,6 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('displays various information about the supported app versions', async () => {
-    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     const entryList = Object.assign(
       {},
       applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryList,
@@ -256,13 +244,6 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('displays current version even if it is not in the list of supported versions', async () => {
-    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     nock(window.config.mapiEndpoint)
       .get(
         '/apis/application.giantswarm.io/v1alpha1/appcatalogentries/?labelSelector=app.kubernetes.io%2Fname%3Dcoredns%2Capplication.giantswarm.io%2Fcatalog%3Ddefault'
@@ -329,13 +310,6 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('can upgrade to a newer version', async () => {
-    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     let app = generateApp('coredns', '1.2.0', 'coredns');
     const newVersion = '1.3.0';
 
@@ -402,13 +376,6 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('can downgrade to an older version', async () => {
-    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     let app = generateApp('coredns', '1.3.0', 'coredns');
     const newVersion = '1.2.0';
 
@@ -475,13 +442,6 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it(`does not allow updating an app for a 'read-only' user`, async () => {
-    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-
     const app = generateApp('coredns', '1.2.0', 'coredns');
     const newVersion = '1.3.0';
 
@@ -518,6 +478,44 @@ describe('ClusterDetailAppListItem', () => {
       screen.getByText(
         'For updating this app, you need additional permissions.'
       )
+    ).toBeInTheDocument();
+  });
+
+  it(`does not allow navigating to an app's details if a user does not have permissions to get the app's catalog entry`, () => {
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canList: false,
+    });
+
+    render(
+      getComponent({
+        app: generateApp('coredns', '1.2.0', 'coredns'),
+      })
+    );
+
+    const detailsButton = screen.getByRole('button', { name: /Details/ });
+    expect(detailsButton).toBeDisabled();
+
+    fireEvent.mouseEnter(detailsButton);
+
+    expect(
+      screen.getByText(
+        'For viewing details of this app, you need additional permissions.'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('displays the current app catalog', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(`/apis/application.giantswarm.io/v1alpha1/catalogs/`)
+      .reply(StatusCodes.Ok, applicationv1alpha1Mocks.defaultCatalogList);
+
+    const app = generateApp('some-app', '1.2.3');
+
+    render(getComponent({ app }));
+
+    expect(
+      await screen.findByLabelText('App catalog: Default Catalog')
     ).toBeInTheDocument();
   });
 });

@@ -274,47 +274,79 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
         align='center'
       >
         <Box flex={{ grow: 1, shrink: 0 }}>
-          <Select
-            value={
+          {canListAppCatalogEntries ? (
+            <Select
+              value={
+                <AppVersionInspectorOption
+                  version={currentSelectedVersion}
+                  creationDate={currentCreationDate}
+                  upstreamVersion={currentUpstreamVersion}
+                  isCurrent={isCurrentVersionSelected}
+                />
+              }
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              onChange={(e) => onSelectVersion(e.option.spec.version)}
+              options={options}
+              disabled={isLoading || isSwitchingVersion}
+              margin='none'
+              aria-label='Select app version'
+              contentProps={{
+                border: { color: 'input-background' },
+              }}
+            >
+              {(option: applicationv1alpha1.IAppCatalogEntry) => {
+                return (
+                  <AppVersionInspectorOption
+                    version={option.spec.version}
+                    creationDate={option.spec.dateCreated}
+                    upstreamVersion={option.spec.appVersion}
+                    isSelected={option.spec.version === currentSelectedVersion}
+                    isCurrent={option.spec.version === app?.spec.version}
+                    aria-label={option.spec.version}
+                  />
+                );
+              }}
+            </Select>
+          ) : (
+            <Box
+              round='xsmall'
+              background='input-background'
+              border={{ size: 'xsmall', color: 'input-background' }}
+            >
               <AppVersionInspectorOption
                 version={currentSelectedVersion}
-                creationDate={currentCreationDate}
-                upstreamVersion={currentUpstreamVersion}
-                isCurrent={isCurrentVersionSelected}
+                creationDate={null}
+                upstreamVersion={app?.status?.appVersion}
               />
-            }
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            onChange={(e) => onSelectVersion(e.option.spec.version)}
-            options={options}
-            disabled={isLoading || isSwitchingVersion}
-            margin='none'
-            aria-label='Select app version'
-            contentProps={{
-              border: { color: 'input-background' },
-            }}
-          >
-            {(option: applicationv1alpha1.IAppCatalogEntry) => {
-              return (
-                <AppVersionInspectorOption
-                  version={option.spec.version}
-                  creationDate={option.spec.dateCreated!}
-                  upstreamVersion={option.spec.appVersion}
-                  isSelected={option.spec.version === currentSelectedVersion}
-                  isCurrent={option.spec.version === app?.spec.version}
-                  aria-label={option.spec.version}
-                />
-              );
-            }}
-          </Select>
+            </Box>
+          )}
         </Box>
-        <Link to={appPath}>
-          <Button tabIndex={-1} disabled={isLoading}>
-            Details
-          </Button>
-        </Link>
+        {canListAppCatalogEntries ? (
+          <Link to={appPath}>
+            <Button tabIndex={-1} disabled={isLoading}>
+              Details
+            </Button>
+          </Link>
+        ) : (
+          <TooltipContainer
+            content={
+              <Tooltip width={{ max: '230px' }}>
+                For viewing details of this app, you need additional
+                permissions.
+              </Tooltip>
+            }
+            show={!canListAppCatalogEntries}
+          >
+            <Box>
+              <Button tabIndex={-1} unauthorized={!canListAppCatalogEntries}>
+                Details
+              </Button>
+            </Box>
+          </TooltipContainer>
+        )}
         <TooltipContainer
           content={
-            <Tooltip>
+            <Tooltip width={{ max: '230px' }}>
               For updating this app, you need additional permissions.
             </Tooltip>
           }
