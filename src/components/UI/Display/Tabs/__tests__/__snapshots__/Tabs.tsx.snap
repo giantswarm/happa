@@ -2,33 +2,33 @@
 
 exports[`Tabs renders a basic tab layout 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
+  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 iNDmPr StyledTabs-sc-a4fwxl-2 eCNyif"
+      class="StyledBox-sc-13pk1d4-0 hUSFEE StyledTabs-sc-a4fwxl-2 uzbFk"
       role="tablist"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 jMVPxm"
+        class="StyledBox-sc-13pk1d4-0 lijetV"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 jGFgVw StyledTabs__StyledTabsHeader-sc-a4fwxl-0 gzVA-ds"
+          class="StyledBox-sc-13pk1d4-0 bqzrgz StyledTabs__StyledTabsHeader-sc-a4fwxl-0 cUuna-D"
         >
           <button
             aria-expanded="true"
             aria-selected="true"
-            class="StyledButtonKind-sc-1vhfpnt-0 bICtWz"
+            class="StyledButtonKind-sc-1vhfpnt-0 fCDdYY"
             role="tab"
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 exysek StyledTab-sc-1nnwnsb-0 kNewXU"
+              class="StyledBox-sc-13pk1d4-0 cIUtEX StyledTab-sc-1nnwnsb-0 hHUtFL"
             >
               <span
-                class="StyledText-sc-1sadyjn-0 eHXJeZ"
+                class="StyledText-sc-1sadyjn-0 ertqbC"
               >
                 first
               </span>
@@ -37,15 +37,15 @@ exports[`Tabs renders a basic tab layout 1`] = `
           <button
             aria-expanded="false"
             aria-selected="false"
-            class="StyledButtonKind-sc-1vhfpnt-0 bICtWz"
+            class="StyledButtonKind-sc-1vhfpnt-0 fCDdYY"
             role="tab"
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 gyBONE StyledTab-sc-1nnwnsb-0 kNewXU"
+              class="StyledBox-sc-13pk1d4-0 hUkuJT StyledTab-sc-1nnwnsb-0 hHUtFL"
             >
               <span
-                class="StyledText-sc-1sadyjn-0 gxPAiZ"
+                class="StyledText-sc-1sadyjn-0 yzFQy"
               >
                 second
               </span>
@@ -54,15 +54,15 @@ exports[`Tabs renders a basic tab layout 1`] = `
           <button
             aria-expanded="false"
             aria-selected="false"
-            class="StyledButtonKind-sc-1vhfpnt-0 bICtWz"
+            class="StyledButtonKind-sc-1vhfpnt-0 fCDdYY"
             role="tab"
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 gyBONE StyledTab-sc-1nnwnsb-0 kNewXU"
+              class="StyledBox-sc-13pk1d4-0 hUkuJT StyledTab-sc-1nnwnsb-0 hHUtFL"
             >
               <span
-                class="StyledText-sc-1sadyjn-0 gxPAiZ"
+                class="StyledText-sc-1sadyjn-0 yzFQy"
               >
                 third
               </span>
@@ -72,7 +72,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
       </div>
       <div
         aria-label="first Tab Contents"
-        class="StyledTabs__StyledTabPanel-sc-a4fwxl-1 cdFSIT"
+        class="StyledTabs__StyledTabPanel-sc-a4fwxl-1 igKfZk"
         role="tabpanel"
       >
         <h1>
