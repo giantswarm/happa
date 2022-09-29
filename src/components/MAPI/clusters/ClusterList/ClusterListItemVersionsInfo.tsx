@@ -1,4 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { isResourceManagedByGitOps } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React, { useMemo } from 'react';
@@ -49,11 +50,16 @@ const ClusterListItemVersionsInfo: React.FC<
     return k8sVersions[0].slice(1);
   }, [k8sVersions, k8sVersionsError, canListCPNodes]);
 
+  const isManagedByGitOps = cluster
+    ? isResourceManagedByGitOps(cluster)
+    : false;
+
   return (
     <ClusterListItemMainInfo
       releaseVersion={clusterAppVersion}
       k8sVersion={k8sVersion}
       variant={ClusterListItemMainInfoVariant.ClusterApp}
+      isManagedByGitOps={isManagedByGitOps}
     />
   );
 };

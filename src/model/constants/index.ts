@@ -120,4 +120,6 @@ export const Constants = {
 
   // Namespace we expect the management cluster to be in.
   MANAGEMENT_CLUSTER_NAMESPACE: 'org-giantswarm',
+
+  FLUX_LABELS_PREFIX: 'kustomize.toolkit.fluxcd.io',
 } as const;

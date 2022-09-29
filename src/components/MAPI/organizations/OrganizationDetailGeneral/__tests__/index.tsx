@@ -149,6 +149,24 @@ describe('OrganizationDetailGeneral', () => {
     ).toBeInTheDocument();
   });
 
+  it('is not possible to delete an organization if it is managed by GitOps', async () => {
+    render(
+      getComponent({
+        organizationName: 'org1',
+        organizationNamespace: 'org-org1',
+        isManagedByGitOps: true,
+      })
+    );
+
+    if (screen.queryAllByText('Loading...').length > 0) {
+      await waitForElementToBeRemoved(() =>
+        screen.queryAllByText('Loading...')
+      );
+    }
+
+    expect(screen.queryByText('Delete organization')).not.toBeInTheDocument();
+  });
+
   it('displays an error if deleting an organization fails', async () => {
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')

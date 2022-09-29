@@ -6,6 +6,7 @@ import {
   getNodePoolAvailabilityZones,
   getNodePoolDescription,
   getNodePoolScaling,
+  isResourceManagedByGitOps,
 } from 'MAPI/utils';
 import { Providers } from 'model/constants';
 import React, { useMemo, useRef, useState } from 'react';
@@ -15,6 +16,7 @@ import { Code } from 'styles';
 import { AvailabilityZonesLabelVariant } from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabel';
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import Date from 'UI/Display/Date';
+import GitOpsManagedNote from 'UI/Display/MAPI/GitOpsManaged/GitOpsManagedNote';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolActions from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolActions';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
@@ -97,6 +99,7 @@ interface IWorkerNodesNodePoolItemProps
 
 const WorkerNodesNodePoolItem: React.FC<
   React.PropsWithChildren<IWorkerNodesNodePoolItemProps>
+  // eslint-disable-next-line complexity
 > = ({
   nodePool,
   providerNodePool,
@@ -234,6 +237,10 @@ const WorkerNodesNodePoolItem: React.FC<
   };
 
   const provider = window.config.info.general.provider;
+
+  const isManagedByGitOps = nodePool
+    ? isResourceManagedByGitOps(nodePool)
+    : false;
 
   return (
     <Box {...props}>
@@ -422,7 +429,7 @@ const WorkerNodesNodePoolItem: React.FC<
               </Box>
             ))}
 
-            {!readOnly && (
+            {!readOnly && !isManagedByGitOps && (
               <Box align='center'>
                 <WorkerNodesNodePoolActions
                   onDeleteClick={onDelete}
@@ -431,6 +438,12 @@ const WorkerNodesNodePoolItem: React.FC<
                   canUpdateNodePools={canUpdateNodePools}
                   canDeleteNodePools={canDeleteNodePools}
                 />
+              </Box>
+            )}
+
+            {isManagedByGitOps && (
+              <Box align='center'>
+                <GitOpsManagedNote displayNote={false} />
               </Box>
             )}
           </>

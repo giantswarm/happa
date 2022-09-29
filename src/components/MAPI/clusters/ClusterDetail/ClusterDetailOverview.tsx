@@ -9,6 +9,7 @@ import {
   fetchClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
+  isResourceManagedByGitOps,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
@@ -182,12 +183,14 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
               canUpdateCluster={canUpdateCluster}
             />
           )}
-          <SetClusterLabelsGuide
-            clusterName={cluster.metadata.name}
-            clusterNamespace={cluster.metadata.namespace!}
-            provider={provider}
-            canUpdateCluster={canUpdateCluster}
-          />
+          {!isResourceManagedByGitOps(cluster) && (
+            <SetClusterLabelsGuide
+              clusterName={cluster.metadata.name}
+              clusterNamespace={cluster.metadata.namespace!}
+              provider={provider}
+              canUpdateCluster={canUpdateCluster}
+            />
+          )}
         </CLIGuideList>
       )}
     </StyledBox>

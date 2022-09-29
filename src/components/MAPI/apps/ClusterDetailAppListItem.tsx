@@ -1,6 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { AccordionPanel, Box, Text } from 'grommet';
-import { extractErrorMessage } from 'MAPI/utils';
+import { extractErrorMessage, isResourceManagedByGitOps } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { isAppManagedByFlux } from 'model/services/mapi/applicationv1alpha1';
@@ -22,6 +22,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import Date from 'UI/Display/Date';
 import ClusterDetailAppListItemSummary from 'UI/Display/MAPI/apps/ClusterDetailAppListItemSummary';
 import CLIGuidesList from 'UI/Display/MAPI/CLIGuide/CLIGuidesList';
+import GitOpsManagedNote from 'UI/Display/MAPI/GitOpsManaged/GitOpsManagedNote';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import Truncated from 'UI/Util/Truncated';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -183,6 +184,8 @@ const ClusterDetailAppListItem: React.FC<
   const { canList: canListAppCatalogEntries } =
     usePermissionsForAppCatalogEntries(provider, catalogNamespace ?? '');
 
+  const isManagedByGitOps = app ? isResourceManagedByGitOps(app) : false;
+
   return (
     <Box
       background={isDeleted ? 'background-back' : 'background-front'}
@@ -336,7 +339,7 @@ const ClusterDetailAppListItem: React.FC<
               align='center'
             />
           </ClusterDetailAppListItemSummary>
-          {canBeModified && (
+          {canBeModified && !isManagedByGitOps && (
             <Box
               pad={{ vertical: 'medium' }}
               border={{ side: 'top', color: 'border-xweak' }}
@@ -370,7 +373,7 @@ const ClusterDetailAppListItem: React.FC<
               />
             </Box>
           )}
-          {canBeModified && app && catalogNamespace && (
+          {canBeModified && !isManagedByGitOps && app && catalogNamespace && (
             <CLIGuidesList
               margin={{ vertical: 'medium', horizontal: 'xsmall' }}
             >
@@ -398,6 +401,14 @@ const ClusterDetailAppListItem: React.FC<
                 canUninstallApps={appsPermissions?.canDelete}
               />
             </CLIGuidesList>
+          )}
+          {isManagedByGitOps && (
+            <Box
+              pad={{ vertical: 'medium', horizontal: 'small' }}
+              border={{ side: 'top', color: 'border-xweak' }}
+            >
+              <GitOpsManagedNote />
+            </Box>
           )}
         </Box>
       </AccordionPanel>
