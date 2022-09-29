@@ -2,51 +2,51 @@
 
 exports[`CLIGuide renders the contents when open 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
+  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 bPoCLd CLIGuide__StyledAccordion-sc-1q6mc5x-0 czGaBT"
+      class="StyledBox-sc-13pk1d4-0 bANFZy CLIGuide__StyledAccordion-sc-1q6mc5x-0 VozNo"
       role="tablist"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 hFkNOm"
+        class="StyledBox-sc-13pk1d4-0 jKAhip"
       >
         <button
           aria-expanded="true"
           aria-selected="true"
-          class="StyledButtonKind-sc-1vhfpnt-0 bICtWz"
+          class="StyledButtonKind-sc-1vhfpnt-0 fCDdYY"
           role="tab"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 dsfsDz"
+            class="StyledBox-sc-13pk1d4-0 hMXKog"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 kKfTPQ"
+              class="StyledBox-sc-13pk1d4-0 hIPiEv"
             >
               <span
                 aria-hidden="true"
-                class="StyledText-sc-1sadyjn-0 gNWhMe fa fa-shell"
+                class="StyledText-sc-1sadyjn-0 iPFcFJ fa fa-shell"
                 role="presentation"
               />
               <div
-                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 bnQbNj"
+                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 dBHSGM"
               />
               <span
-                class="StyledText-sc-1sadyjn-0 hLeSgE"
+                class="StyledText-sc-1sadyjn-0 fWxpFz"
               >
                 Get something from somewhere via the Management API
               </span>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 xKDIh"
+              class="StyledBox-sc-13pk1d4-0 qKBCC"
             >
               <svg
                 aria-label="FormUp"
-                class="StyledIcon-sc-ofa7kd-0 bwOwIm"
+                class="StyledIcon-sc-ofa7kd-0 beBVfJ"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -60,17 +60,17 @@ exports[`CLIGuide renders the contents when open 1`] = `
           </div>
         </button>
         <div
-          class="StyledBox-sc-13pk1d4-0 iNDmPr"
+          class="StyledBox-sc-13pk1d4-0 hUSFEE"
           style=""
         >
           <div
             aria-hidden="false"
-            class="StyledBox-sc-13pk1d4-0 iNDmPr Collapsible__AnimatedBox-sc-15kniua-0 fBjAck"
+            class="StyledBox-sc-13pk1d4-0 hUSFEE Collapsible__AnimatedBox-sc-15kniua-0 kCNXHn"
             open=""
             style="max-height: 0;"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 cgWQwu"
+              class="StyledBox-sc-13pk1d4-0 czFezB"
             >
               Just some content
             </div>
@@ -84,51 +84,51 @@ exports[`CLIGuide renders the contents when open 1`] = `
 
 exports[`CLIGuide renders without crashing 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
+  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 bPoCLd CLIGuide__StyledAccordion-sc-1q6mc5x-0 czGaBT"
+      class="StyledBox-sc-13pk1d4-0 bANFZy CLIGuide__StyledAccordion-sc-1q6mc5x-0 VozNo"
       role="tablist"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 hFkNOm"
+        class="StyledBox-sc-13pk1d4-0 jKAhip"
       >
         <button
           aria-expanded="false"
           aria-selected="false"
-          class="StyledButtonKind-sc-1vhfpnt-0 bICtWz"
+          class="StyledButtonKind-sc-1vhfpnt-0 fCDdYY"
           role="tab"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 dsfsDz"
+            class="StyledBox-sc-13pk1d4-0 hMXKog"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 kKfTPQ"
+              class="StyledBox-sc-13pk1d4-0 hIPiEv"
             >
               <span
                 aria-hidden="true"
-                class="StyledText-sc-1sadyjn-0 gNWhMe fa fa-shell"
+                class="StyledText-sc-1sadyjn-0 iPFcFJ fa fa-shell"
                 role="presentation"
               />
               <div
-                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 bnQbNj"
+                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 dBHSGM"
               />
               <span
-                class="StyledText-sc-1sadyjn-0 hLeSgE"
+                class="StyledText-sc-1sadyjn-0 fWxpFz"
               >
                 Get something from somewhere via the Management API
               </span>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 xKDIh"
+              class="StyledBox-sc-13pk1d4-0 qKBCC"
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 bwOwIm"
+                class="StyledIcon-sc-ofa7kd-0 beBVfJ"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -142,11 +142,11 @@ exports[`CLIGuide renders without crashing 1`] = `
           </div>
         </button>
         <div
-          class="StyledBox-sc-13pk1d4-0 iNDmPr"
+          class="StyledBox-sc-13pk1d4-0 hUSFEE"
         >
           <div
             aria-hidden="true"
-            class="StyledBox-sc-13pk1d4-0 iNDmPr Collapsible__AnimatedBox-sc-15kniua-0 cxsREl"
+            class="StyledBox-sc-13pk1d4-0 hUSFEE Collapsible__AnimatedBox-sc-15kniua-0 dTvbxu"
           />
         </div>
       </div>
@@ -157,54 +157,54 @@ exports[`CLIGuide renders without crashing 1`] = `
 
 exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
+  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 iNDmPr"
+      class="StyledBox-sc-13pk1d4-0 hUSFEE"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 bPoCLd CLIGuide__StyledAccordion-sc-1q6mc5x-0 czGaBT"
+        class="StyledBox-sc-13pk1d4-0 bANFZy CLIGuide__StyledAccordion-sc-1q6mc5x-0 VozNo"
         role="tablist"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 hFkNOm"
+          class="StyledBox-sc-13pk1d4-0 jKAhip"
         >
           <button
             aria-expanded="false"
             aria-selected="false"
-            class="StyledButtonKind-sc-1vhfpnt-0 bICtWz"
+            class="StyledButtonKind-sc-1vhfpnt-0 fCDdYY"
             role="tab"
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 dsfsDz"
+              class="StyledBox-sc-13pk1d4-0 hMXKog"
             >
               <div
-                class="StyledBox-sc-13pk1d4-0 kKfTPQ"
+                class="StyledBox-sc-13pk1d4-0 hIPiEv"
               >
                 <span
                   aria-hidden="true"
-                  class="StyledText-sc-1sadyjn-0 gNWhMe fa fa-shell"
+                  class="StyledText-sc-1sadyjn-0 iPFcFJ fa fa-shell"
                   role="presentation"
                 />
                 <div
-                  class="StyledBox__StyledBoxGap-sc-13pk1d4-1 bnQbNj"
+                  class="StyledBox__StyledBoxGap-sc-13pk1d4-1 dBHSGM"
                 />
                 <span
-                  class="StyledText-sc-1sadyjn-0 hLeSgE"
+                  class="StyledText-sc-1sadyjn-0 fWxpFz"
                 >
                   Get something from somewhere via the Management API
                 </span>
               </div>
               <div
-                class="StyledBox-sc-13pk1d4-0 xKDIh"
+                class="StyledBox-sc-13pk1d4-0 qKBCC"
               >
                 <svg
                   aria-label="FormDown"
-                  class="StyledIcon-sc-ofa7kd-0 bwOwIm"
+                  class="StyledIcon-sc-ofa7kd-0 beBVfJ"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -218,11 +218,11 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
             </div>
           </button>
           <div
-            class="StyledBox-sc-13pk1d4-0 iNDmPr"
+            class="StyledBox-sc-13pk1d4-0 hUSFEE"
           >
             <div
               aria-hidden="true"
-              class="StyledBox-sc-13pk1d4-0 iNDmPr Collapsible__AnimatedBox-sc-15kniua-0 cxsREl"
+              class="StyledBox-sc-13pk1d4-0 hUSFEE Collapsible__AnimatedBox-sc-15kniua-0 dTvbxu"
             />
           </div>
         </div>
@@ -234,51 +234,51 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
 
 exports[`CLIGuidesList renders the contents when open 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
+  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 kflmHi"
+      class="StyledBox-sc-13pk1d4-0 iaNRZt"
       role="tablist"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 hFkNOm"
+        class="StyledBox-sc-13pk1d4-0 jKAhip"
       >
         <button
           aria-expanded="true"
           aria-selected="true"
-          class="StyledButtonKind-sc-1vhfpnt-0 bICtWz"
+          class="StyledButtonKind-sc-1vhfpnt-0 fCDdYY"
           role="tab"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 dsfsDz"
+            class="StyledBox-sc-13pk1d4-0 hMXKog"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 ewtkHK"
+              class="StyledBox-sc-13pk1d4-0 iwsvlV"
             >
               <span
                 aria-hidden="true"
-                class="StyledText-sc-1sadyjn-0 gxPAiZ fa fa-shell"
+                class="StyledText-sc-1sadyjn-0 yzFQy fa fa-shell"
                 role="presentation"
               />
               <div
-                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 bnQbNj"
+                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 dBHSGM"
               />
               <span
-                class="StyledText-sc-1sadyjn-0 hxuJKP"
+                class="StyledText-sc-1sadyjn-0 jgpRFU"
               >
                 Use the API to …
               </span>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 xKDIh"
+              class="StyledBox-sc-13pk1d4-0 qKBCC"
             >
               <svg
                 aria-label="FormUp"
-                class="StyledIcon-sc-ofa7kd-0 bwOwIm"
+                class="StyledIcon-sc-ofa7kd-0 beBVfJ"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -292,58 +292,58 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
           </div>
         </button>
         <div
-          class="StyledBox-sc-13pk1d4-0 iNDmPr"
+          class="StyledBox-sc-13pk1d4-0 hUSFEE"
           style=""
         >
           <div
             aria-hidden="false"
-            class="StyledBox-sc-13pk1d4-0 iNDmPr Collapsible__AnimatedBox-sc-15kniua-0 fBjAck"
+            class="StyledBox-sc-13pk1d4-0 hUSFEE Collapsible__AnimatedBox-sc-15kniua-0 kCNXHn"
             open=""
             style="max-height: 0;"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 kAkXMK"
+              class="StyledBox-sc-13pk1d4-0 hhPSRZ"
             >
               <div
-                class="StyledBox-sc-13pk1d4-0 bPoCLd CLIGuide__StyledAccordion-sc-1q6mc5x-0 czGaBT"
+                class="StyledBox-sc-13pk1d4-0 bANFZy CLIGuide__StyledAccordion-sc-1q6mc5x-0 VozNo"
                 role="tablist"
               >
                 <div
-                  class="StyledBox-sc-13pk1d4-0 hFkNOm"
+                  class="StyledBox-sc-13pk1d4-0 jKAhip"
                 >
                   <button
                     aria-expanded="false"
                     aria-selected="false"
-                    class="StyledButtonKind-sc-1vhfpnt-0 bICtWz"
+                    class="StyledButtonKind-sc-1vhfpnt-0 fCDdYY"
                     role="tab"
                     type="button"
                   >
                     <div
-                      class="StyledBox-sc-13pk1d4-0 dsfsDz"
+                      class="StyledBox-sc-13pk1d4-0 hMXKog"
                     >
                       <div
-                        class="StyledBox-sc-13pk1d4-0 kKfTPQ"
+                        class="StyledBox-sc-13pk1d4-0 hIPiEv"
                       >
                         <span
                           aria-hidden="true"
-                          class="StyledText-sc-1sadyjn-0 gNWhMe fa fa-shell"
+                          class="StyledText-sc-1sadyjn-0 iPFcFJ fa fa-shell"
                           role="presentation"
                         />
                         <div
-                          class="StyledBox__StyledBoxGap-sc-13pk1d4-1 bnQbNj"
+                          class="StyledBox__StyledBoxGap-sc-13pk1d4-1 dBHSGM"
                         />
                         <span
-                          class="StyledText-sc-1sadyjn-0 hLeSgE"
+                          class="StyledText-sc-1sadyjn-0 fWxpFz"
                         >
                           Get something from somewhere
                         </span>
                       </div>
                       <div
-                        class="StyledBox-sc-13pk1d4-0 xKDIh"
+                        class="StyledBox-sc-13pk1d4-0 qKBCC"
                       >
                         <svg
                           aria-label="FormDown"
-                          class="StyledIcon-sc-ofa7kd-0 bwOwIm"
+                          class="StyledIcon-sc-ofa7kd-0 beBVfJ"
                           viewBox="0 0 24 24"
                         >
                           <path
@@ -357,58 +357,58 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                     </div>
                   </button>
                   <div
-                    class="StyledBox-sc-13pk1d4-0 iNDmPr"
+                    class="StyledBox-sc-13pk1d4-0 hUSFEE"
                   >
                     <div
                       aria-hidden="true"
-                      class="StyledBox-sc-13pk1d4-0 iNDmPr Collapsible__AnimatedBox-sc-15kniua-0 cxsREl"
+                      class="StyledBox-sc-13pk1d4-0 hUSFEE Collapsible__AnimatedBox-sc-15kniua-0 dTvbxu"
                     />
                   </div>
                 </div>
               </div>
               <div
-                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 fSulfd"
+                class="StyledBox__StyledBoxGap-sc-13pk1d4-1 gwMrom"
               />
               <div
-                class="StyledBox-sc-13pk1d4-0 bPoCLd CLIGuide__StyledAccordion-sc-1q6mc5x-0 czGaBT"
+                class="StyledBox-sc-13pk1d4-0 bANFZy CLIGuide__StyledAccordion-sc-1q6mc5x-0 VozNo"
                 role="tablist"
               >
                 <div
-                  class="StyledBox-sc-13pk1d4-0 hFkNOm"
+                  class="StyledBox-sc-13pk1d4-0 jKAhip"
                 >
                   <button
                     aria-expanded="false"
                     aria-selected="false"
-                    class="StyledButtonKind-sc-1vhfpnt-0 bICtWz"
+                    class="StyledButtonKind-sc-1vhfpnt-0 fCDdYY"
                     role="tab"
                     type="button"
                   >
                     <div
-                      class="StyledBox-sc-13pk1d4-0 dsfsDz"
+                      class="StyledBox-sc-13pk1d4-0 hMXKog"
                     >
                       <div
-                        class="StyledBox-sc-13pk1d4-0 kKfTPQ"
+                        class="StyledBox-sc-13pk1d4-0 hIPiEv"
                       >
                         <span
                           aria-hidden="true"
-                          class="StyledText-sc-1sadyjn-0 gNWhMe fa fa-shell"
+                          class="StyledText-sc-1sadyjn-0 iPFcFJ fa fa-shell"
                           role="presentation"
                         />
                         <div
-                          class="StyledBox__StyledBoxGap-sc-13pk1d4-1 bnQbNj"
+                          class="StyledBox__StyledBoxGap-sc-13pk1d4-1 dBHSGM"
                         />
                         <span
-                          class="StyledText-sc-1sadyjn-0 hLeSgE"
+                          class="StyledText-sc-1sadyjn-0 fWxpFz"
                         >
                           Get something else from somewhere else
                         </span>
                       </div>
                       <div
-                        class="StyledBox-sc-13pk1d4-0 xKDIh"
+                        class="StyledBox-sc-13pk1d4-0 qKBCC"
                       >
                         <svg
                           aria-label="FormDown"
-                          class="StyledIcon-sc-ofa7kd-0 bwOwIm"
+                          class="StyledIcon-sc-ofa7kd-0 beBVfJ"
                           viewBox="0 0 24 24"
                         >
                           <path
@@ -422,11 +422,11 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                     </div>
                   </button>
                   <div
-                    class="StyledBox-sc-13pk1d4-0 iNDmPr"
+                    class="StyledBox-sc-13pk1d4-0 hUSFEE"
                   >
                     <div
                       aria-hidden="true"
-                      class="StyledBox-sc-13pk1d4-0 iNDmPr Collapsible__AnimatedBox-sc-15kniua-0 cxsREl"
+                      class="StyledBox-sc-13pk1d4-0 hUSFEE Collapsible__AnimatedBox-sc-15kniua-0 dTvbxu"
                     />
                   </div>
                 </div>
@@ -442,13 +442,13 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
 
 exports[`CLIGuidesList renders without crashing 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fxRgDK"
+  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 lixbyN"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 iNDmPr"
+      class="StyledBox-sc-13pk1d4-0 hUSFEE"
     />
   </div>
 </div>
