@@ -36,7 +36,7 @@ export function getReleaseURL(version: string): string {
       return `https://github.com/giantswarm/happa/commit/${semverVersion.getPreRelease()}`;
     }
 
-    return `https://docs.giantswarm.io/changes/web-ui/happa/v${version}/`;
+    return `https://github.com/giantswarm/happa/releases/tag/v${version}/`;
   } catch (err) {
     ErrorReporter.getInstance().notify(err as Error);
 
