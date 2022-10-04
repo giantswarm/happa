@@ -3,7 +3,7 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { updateResource } from '../generic/updateResource';
-import { IAWSCluster } from './';
+import { ApiVersion, IAWSCluster } from './';
 
 export function updateAWSCluster(
   client: IHttpClient,
@@ -12,7 +12,7 @@ export function updateAWSCluster(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    apiVersion: ApiVersion,
     kind: 'awsclusters',
     namespace: awsCluster.metadata.namespace!,
     name: awsCluster.metadata.name,

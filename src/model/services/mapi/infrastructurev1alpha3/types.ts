@@ -1,6 +1,8 @@
 import * as corev1 from '../corev1';
 import * as metav1 from '../metav1';
 
+export const ApiVersion = 'infrastructure.giantswarm.io/v1alpha3';
+
 export interface IAWSClusterSpecClusterDNS {
   domain: string;
 }
@@ -92,7 +94,7 @@ export interface IAWSClusterStatus {
 export const AWSCluster = 'AWSCluster';
 
 export interface IAWSCluster {
-  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof AWSCluster;
   metadata: metav1.IObjectMeta;
   spec?: IAWSClusterSpec;
@@ -102,7 +104,7 @@ export interface IAWSCluster {
 export const AWSClusterList = 'AWSClusterList';
 
 export interface IAWSClusterList extends metav1.IList<IAWSCluster> {
-  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof AWSClusterList;
 }
 
@@ -114,7 +116,7 @@ export interface IAWSControlPlaneSpec {
 export const AWSControlPlane = 'AWSControlPlane';
 
 export interface IAWSControlPlane {
-  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof AWSControlPlane;
   metadata: metav1.IObjectMeta;
   spec: IAWSControlPlaneSpec;
@@ -123,7 +125,7 @@ export interface IAWSControlPlane {
 export const AWSControlPlaneList = 'AWSControlPlaneList';
 
 export interface IAWSControlPlaneList extends metav1.IList<IAWSControlPlane> {
-  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof AWSControlPlaneList;
 }
 
@@ -140,7 +142,7 @@ export interface IG8sControlPlaneStatus {
 export const G8sControlPlane = 'G8sControlPlane';
 
 export interface IG8sControlPlane {
-  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof G8sControlPlane;
   metadata: metav1.IObjectMeta;
   spec: IG8sControlPlaneSpec;
@@ -150,7 +152,7 @@ export interface IG8sControlPlane {
 export const G8sControlPlaneList = 'G8sControlPlaneList';
 
 export interface IG8sControlPlaneList extends metav1.IList<IG8sControlPlane> {
-  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof G8sControlPlaneList;
 }
 
@@ -207,7 +209,7 @@ export interface IAWSMachineDeploymentStatus {
 export const AWSMachineDeployment = 'AWSMachineDeployment';
 
 export interface IAWSMachineDeployment {
-  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof AWSMachineDeployment;
   metadata: metav1.IObjectMeta;
   spec: IAWSMachineDeploymentSpec;
@@ -218,6 +220,6 @@ export const AWSMachineDeploymentList = 'AWSMachineDeploymentList';
 
 export interface IAWSMachineDeploymentList
   extends metav1.IList<IAWSMachineDeployment> {
-  apiVersion: 'infrastructure.giantswarm.io/v1alpha3';
+  apiVersion: typeof ApiVersion;
   kind: typeof AWSMachineDeploymentList;
 }

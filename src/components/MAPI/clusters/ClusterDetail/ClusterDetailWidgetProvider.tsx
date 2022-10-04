@@ -12,6 +12,7 @@ import { Providers } from 'model/constants';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
+import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { selectOrganizations } from 'model/stores/organization/selectors';
@@ -44,10 +45,10 @@ function getProviderInfo(
   link?: string;
   loaderWidth?: number;
 }[] {
-  const infrastructureRef = cluster?.spec?.infrastructureRef;
+  const { kind, apiVersion } = cluster?.spec?.infrastructureRef || {};
 
-  switch (infrastructureRef?.kind) {
-    case capgv1beta1.GCPCluster: {
+  switch (true) {
+    case kind === capgv1beta1.GCPCluster: {
       const projectID = getProviderClusterAccountID(providerCluster);
 
       return [
@@ -64,7 +65,7 @@ function getProviderInfo(
       ];
     }
 
-    case capzv1beta1.AzureCluster: {
+    case kind === capzv1beta1.AzureCluster: {
       const subscriptionID = credentialListIsLoading
         ? undefined
         : credentials
@@ -95,7 +96,10 @@ function getProviderInfo(
       ];
     }
 
-    case infrav1alpha3.AWSCluster: {
+    case kind === infrav1alpha2.AWSCluster &&
+      apiVersion === infrav1alpha2.ApiVersion:
+    case kind === infrav1alpha3.AWSCluster &&
+      apiVersion === infrav1alpha3.ApiVersion: {
       const accountID = credentialListIsLoading
         ? undefined
         : credentials
