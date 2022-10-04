@@ -33,7 +33,7 @@ export const randomClusterAWS1: capiv1beta1.ICluster = {
       port: 0,
     },
     infrastructureRef: {
-      apiVersion: 'infrastructure.giantswarm.io/v1beta1',
+      apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
       kind: 'AWSCluster',
       name: 'c7hm5',
       namespace: 'org-org1',
@@ -77,7 +77,7 @@ export const randomClusterAWS2: capiv1beta1.ICluster = {
       port: 0,
     },
     infrastructureRef: {
-      apiVersion: 'infrastructure.giantswarm.io/v1beta1',
+      apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
       kind: 'AWSCluster',
       name: 'as81f',
       namespace: 'org-org1',
