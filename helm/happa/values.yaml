@@ -28,6 +28,13 @@ azure:
       allowed: []
       default: ""
 
+capa:
+  availabilityZones: []
+  machinetypes:
+    capabilities: {}
+    allowed: []
+    default: ""
+
 gcp:
   availabilityZones: []
   machinetypes:
