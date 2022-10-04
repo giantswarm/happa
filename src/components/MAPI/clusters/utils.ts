@@ -22,6 +22,7 @@ import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
+import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -354,6 +355,8 @@ export function createDefaultCluster(config: {
   const { kind, apiVersion } = config.providerCluster;
   switch (true) {
     case kind === capzv1beta1.AzureCluster:
+    case kind === infrav1alpha2.AWSCluster &&
+      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion:
       return createDefaultV1Alpha3Cluster(config);
@@ -413,6 +416,8 @@ export function createDefaultControlPlaneNodes(config: {
   switch (true) {
     case kind === capzv1beta1.AzureCluster:
       return [createDefaultAzureMachine(config)];
+    case kind === infrav1alpha2.AWSCluster &&
+      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion: {
       const name = generateUID(5);
@@ -693,6 +698,8 @@ export async function createCluster(
       break;
     }
 
+    case kind === infrav1alpha2.AWSCluster &&
+      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion: {
       // AWS cluster
@@ -950,8 +957,9 @@ export function getClusterConditions(
     return statuses;
   }
 
+  const { kind, apiVersion } = infrastructureRef;
   switch (true) {
-    case infrastructureRef.kind === capgv1beta1.GCPCluster:
+    case kind === capgv1beta1.GCPCluster:
       statuses.isConditionUnknown =
         typeof cluster.status === 'undefined' ||
         typeof cluster.status.conditions === 'undefined';
@@ -961,7 +969,7 @@ export function getClusterConditions(
       );
       break;
 
-    case infrastructureRef.kind === capzv1beta1.AzureCluster:
+    case kind === capzv1beta1.AzureCluster:
       statuses.isConditionUnknown =
         typeof cluster.status === 'undefined' ||
         typeof cluster.status.conditions === 'undefined';
@@ -969,8 +977,10 @@ export function getClusterConditions(
       statuses.isUpgrading = isClusterUpgrading(cluster);
       break;
 
-    case infrastructureRef.kind === infrav1alpha3.AWSCluster &&
-      infrastructureRef.apiVersion === infrav1alpha3.ApiVersion: {
+    case kind === infrav1alpha2.AWSCluster &&
+      apiVersion === infrav1alpha2.ApiVersion:
+    case kind === infrav1alpha3.AWSCluster &&
+      apiVersion === infrav1alpha3.ApiVersion: {
       if (!providerCluster) break;
 
       statuses.isConditionUnknown = infrav1alpha3.isConditionUnknown(
