@@ -202,6 +202,45 @@ export function usePermissionsForClusters(
 
       break;
 
+    case Providers.CAPA:
+      computed.canCreate = canCreateClusterApps;
+      computed.canDelete = canDeleteClusterApps;
+      computed.canUpdate = canUpdateClusterApps;
+
+      computed.canGet =
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'cluster.x-k8s.io',
+          'clusters'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'infrastructure.cluster.x-k8s.io',
+          'awsclusters'
+        );
+
+      computed.canList =
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'cluster.x-k8s.io',
+          'clusters'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'infrastructure.cluster.x-k8s.io',
+          'awsclusters'
+        );
+
+      break;
+
     case Providers.GCP:
       computed.canCreate = canCreateClusterApps;
       computed.canDelete = canDeleteClusterApps;
