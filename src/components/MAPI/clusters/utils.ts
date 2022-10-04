@@ -292,7 +292,7 @@ function createDefaultAWSCluster(config: {
   releaseVersion: string;
 }): infrav1alpha3.IAWSCluster {
   return {
-    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    apiVersion: infrav1alpha3.ApiVersion,
     kind: infrav1alpha3.AWSCluster,
     metadata: {
       namespace: config.namespace,
@@ -347,9 +347,15 @@ function createDefaultAWSCluster(config: {
 export function createDefaultCluster(config: {
   providerCluster: ProviderCluster;
 }) {
-  switch (config.providerCluster?.kind) {
-    case capzv1beta1.AzureCluster:
-    case infrav1alpha3.AWSCluster:
+  if (typeof config.providerCluster === 'undefined') {
+    throw new Error('Unsupported provider.');
+  }
+
+  const { kind, apiVersion } = config.providerCluster;
+  switch (true) {
+    case kind === capzv1beta1.AzureCluster:
+    case kind === infrav1alpha3.AWSCluster &&
+      apiVersion === infrav1alpha3.ApiVersion:
       return createDefaultV1Alpha3Cluster(config);
 
     default:
@@ -399,10 +405,16 @@ function createDefaultV1Alpha3Cluster(config: {
 export function createDefaultControlPlaneNodes(config: {
   providerCluster: ProviderCluster;
 }): ControlPlaneNode[] {
-  switch (config.providerCluster?.kind) {
-    case capzv1beta1.AzureCluster:
+  if (typeof config.providerCluster === 'undefined') {
+    throw new Error('Unsupported provider.');
+  }
+
+  const { kind, apiVersion } = config.providerCluster;
+  switch (true) {
+    case kind === capzv1beta1.AzureCluster:
       return [createDefaultAzureMachine(config)];
-    case infrav1alpha3.AWSCluster: {
+    case kind === infrav1alpha3.AWSCluster &&
+      apiVersion === infrav1alpha3.ApiVersion: {
       const name = generateUID(5);
       const awsCP = createDefaultAWSControlPlane({ ...config, name });
       const g8sCP = createDefaultG8sControlPlane({
@@ -479,7 +491,7 @@ function createDefaultAWSControlPlane(config: {
     config.providerCluster!.metadata.labels![infrav1alpha3.labelReleaseVersion];
 
   return {
-    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    apiVersion: infrav1alpha3.ApiVersion,
     kind: infrav1alpha3.AWSControlPlane,
     metadata: {
       namespace,
@@ -512,7 +524,7 @@ function createDefaultG8sControlPlane(config: {
   const name = config.awsControlPlane.metadata.name;
 
   return {
-    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    apiVersion: infrav1alpha3.ApiVersion,
     kind: infrav1alpha3.G8sControlPlane,
     metadata: {
       namespace,
@@ -547,6 +559,10 @@ export async function createCluster(
   providerCluster: ProviderCluster;
   controlPlaneNodes: ControlPlaneNode[];
 }> {
+  if (typeof config.providerCluster === 'undefined') {
+    return Promise.reject(new Error('Unsupported provider.'));
+  }
+
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let cluster: Cluster;
   // eslint-disable-next-line @typescript-eslint/init-declarations
@@ -554,8 +570,9 @@ export async function createCluster(
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let controlPlaneNodes: ControlPlaneNode[];
 
-  switch (config.providerCluster!.kind) {
-    case capzv1beta1.AzureCluster: {
+  const { kind, apiVersion } = config.providerCluster;
+  switch (true) {
+    case kind === capzv1beta1.AzureCluster: {
       // Azure cluster
       try {
         providerCluster = await capzv1beta1.createAzureCluster(
@@ -583,8 +600,8 @@ export async function createCluster(
         providerCluster = await capzv1beta1.getAzureCluster(
           httpClientFactory(),
           auth,
-          config.providerCluster!.metadata.namespace!,
-          config.providerCluster!.metadata.name
+          config.providerCluster.metadata.namespace!,
+          config.providerCluster.metadata.name
         );
       }
 
@@ -676,7 +693,8 @@ export async function createCluster(
       break;
     }
 
-    case infrav1alpha3.AWSCluster: {
+    case kind === infrav1alpha3.AWSCluster &&
+      apiVersion === infrav1alpha3.ApiVersion: {
       // AWS cluster
       try {
         providerCluster = await infrav1alpha3.createAWSCluster(
@@ -702,8 +720,8 @@ export async function createCluster(
         providerCluster = await infrav1alpha3.getAWSCluster(
           httpClientFactory(),
           auth,
-          config.providerCluster!.metadata.namespace!,
-          config.providerCluster!.metadata.name
+          config.providerCluster.metadata.namespace!,
+          config.providerCluster.metadata.name
         );
       }
 
@@ -932,8 +950,8 @@ export function getClusterConditions(
     return statuses;
   }
 
-  switch (infrastructureRef.kind) {
-    case capgv1beta1.GCPCluster:
+  switch (true) {
+    case infrastructureRef.kind === capgv1beta1.GCPCluster:
       statuses.isConditionUnknown =
         typeof cluster.status === 'undefined' ||
         typeof cluster.status.conditions === 'undefined';
@@ -943,7 +961,7 @@ export function getClusterConditions(
       );
       break;
 
-    case capzv1beta1.AzureCluster:
+    case infrastructureRef.kind === capzv1beta1.AzureCluster:
       statuses.isConditionUnknown =
         typeof cluster.status === 'undefined' ||
         typeof cluster.status.conditions === 'undefined';
@@ -951,7 +969,8 @@ export function getClusterConditions(
       statuses.isUpgrading = isClusterUpgrading(cluster);
       break;
 
-    case infrav1alpha3.AWSCluster: {
+    case infrastructureRef.kind === infrav1alpha3.AWSCluster &&
+      infrastructureRef.apiVersion === infrav1alpha3.ApiVersion: {
       if (!providerCluster) break;
 
       statuses.isConditionUnknown = infrav1alpha3.isConditionUnknown(

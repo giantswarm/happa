@@ -46,8 +46,8 @@ function getProviderInfo(
 }[] {
   const infrastructureRef = cluster?.spec?.infrastructureRef;
 
-  switch (infrastructureRef?.kind) {
-    case capgv1beta1.GCPCluster: {
+  switch (true) {
+    case infrastructureRef?.kind === capgv1beta1.GCPCluster: {
       const projectID = getProviderClusterAccountID(providerCluster);
 
       return [
@@ -64,7 +64,7 @@ function getProviderInfo(
       ];
     }
 
-    case capzv1beta1.AzureCluster: {
+    case infrastructureRef?.kind === capzv1beta1.AzureCluster: {
       const subscriptionID = credentialListIsLoading
         ? undefined
         : credentials
@@ -95,7 +95,8 @@ function getProviderInfo(
       ];
     }
 
-    case infrav1alpha3.AWSCluster: {
+    case infrastructureRef?.kind === infrav1alpha3.AWSCluster &&
+      infrastructureRef?.apiVersion === infrav1alpha3.ApiVersion: {
       const accountID = credentialListIsLoading
         ? undefined
         : credentials

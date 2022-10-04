@@ -1,3 +1,4 @@
+import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
@@ -13,6 +14,7 @@ export type ControlPlaneNode =
   | infrav1alpha2.IG8sControlPlane
   | infrav1alpha3.IAWSControlPlane
   | infrav1alpha3.IG8sControlPlane
+  | capav1beta1.IAWSMachineTemplate
   | capgv1beta1.IGCPMachineTemplate
   | capiv1beta1.IMachine;
 
@@ -22,6 +24,7 @@ export type ControlPlaneNodeList =
   | infrav1alpha2.IG8sControlPlaneList
   | infrav1alpha3.IAWSControlPlaneList
   | infrav1alpha3.IG8sControlPlaneList
+  | capav1beta1.IAWSMachineTemplateList
   | capgv1beta1.IGCPMachineTemplateList
   | capiv1beta1.IMachineList;
 
@@ -33,6 +36,7 @@ export type ProviderCluster =
   | capzv1beta1.IAzureCluster
   | infrav1alpha2.IAWSCluster
   | infrav1alpha3.IAWSCluster
+  | capav1beta1.IAWSCluster
   | capgv1beta1.IGCPCluster
   | undefined;
 
@@ -40,6 +44,7 @@ export type ProviderClusterList =
   | capzv1beta1.IAzureClusterList
   | infrav1alpha2.IAWSClusterList
   | infrav1alpha3.IAWSClusterList
+  | capav1beta1.IAWSClusterList
   | capgv1beta1.IGCPClusterList;
 
 export type NodePool =
@@ -57,6 +62,7 @@ export type ProviderNodePool =
   | capzv1beta1.IAzureMachinePool
   | infrav1alpha2.IAWSMachineDeployment
   | infrav1alpha3.IAWSMachineDeployment
+  | capav1beta1.IAWSMachinePool
   | capgv1beta1.IGCPMachineTemplate
   | undefined;
 
@@ -65,6 +71,7 @@ export type ProviderNodePoolList =
   | capzv1beta1.IAzureMachinePoolList
   | infrav1alpha2.IAWSMachineDeploymentList
   | infrav1alpha3.IAWSMachineDeploymentList
+  | capav1beta1.IAWSMachinePoolList
   | capgv1beta1.IGCPMachineTemplateList;
 
 export type BootstrapConfig = gscorev1alpha1.ISpark | undefined;

@@ -3,7 +3,7 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { updateResource } from '../generic/updateResource';
-import { IG8sControlPlane } from './';
+import { ApiVersion, IG8sControlPlane } from './';
 
 export function updateG8sControlPlane(
   client: IHttpClient,
@@ -12,7 +12,7 @@ export function updateG8sControlPlane(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    apiVersion: ApiVersion,
     kind: 'g8scontrolplanes',
     namespace: g8sControlPlane.metadata.namespace,
     name: g8sControlPlane.metadata.name,
