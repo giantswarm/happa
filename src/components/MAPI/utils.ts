@@ -1093,6 +1093,8 @@ export function getClusterDescription(
 
   const { kind, apiVersion } = infrastructureRef;
   switch (true) {
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.ApiVersion:
     case kind === capgv1beta1.GCPCluster:
     case kind === capzv1beta1.AzureCluster:
       return (
