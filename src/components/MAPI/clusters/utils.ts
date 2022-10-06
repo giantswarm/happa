@@ -17,7 +17,6 @@ import {
 import { IProviderNodePoolForNodePool } from 'MAPI/workernodes/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { Constants, Providers } from 'model/constants';
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
@@ -960,18 +959,6 @@ export function getClusterConditions(
 
   const { kind, apiVersion } = infrastructureRef;
   switch (true) {
-    case kind === capav1beta1.AWSCluster &&
-      apiVersion === capav1beta1.ApiVersion:
-    case kind === capgv1beta1.GCPCluster:
-      statuses.isConditionUnknown =
-        typeof cluster.status === 'undefined' ||
-        typeof cluster.status.conditions === 'undefined';
-      statuses.isCreating = capiv1beta1.isConditionFalse(
-        cluster,
-        capiv1beta1.conditionTypeControlPlaneInitialized
-      );
-      break;
-
     case kind === capzv1beta1.AzureCluster:
       statuses.isConditionUnknown =
         typeof cluster.status === 'undefined' ||
@@ -999,6 +986,15 @@ export function getClusterConditions(
       );
       break;
     }
+    default:
+      statuses.isConditionUnknown =
+        typeof cluster.status === 'undefined' ||
+        typeof cluster.status.conditions === 'undefined';
+      statuses.isCreating = capiv1beta1.isConditionFalse(
+        cluster,
+        capiv1beta1.conditionTypeControlPlaneInitialized
+      );
+      break;
   }
 
   return statuses;
