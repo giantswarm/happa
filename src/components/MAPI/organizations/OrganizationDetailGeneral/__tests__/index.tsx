@@ -902,3 +902,64 @@ describe('OrganizationDetailGeneral on GCP', () => {
     );
   });
 });
+
+describe('OrganizationDetailGeneral on CAPA', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPA;
+
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays various stats about the resources that belong to the organization', async () => {
+    // eslint-disable-next-line no-magic-numbers
+    jest.setTimeout(10000);
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterListCAPA);
+
+    render(
+      getComponent({
+        organizationName: 'org1',
+        organizationNamespace: 'org-org1',
+      })
+    );
+
+    // Clusters summary.
+    await waitFor(() =>
+      expect(screen.getByLabelText('Workload clusters')).toHaveTextContent('2')
+    );
+
+    // Releases.
+    expect(screen.queryByText('Releases')).not.toBeInTheDocument();
+
+    // Versions.
+    await waitFor(() =>
+      expect(screen.getByText('Versions')).toBeInTheDocument()
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Cluster app version')).toHaveTextContent(
+        '0.9.2, 0.9.3'
+      )
+    );
+  });
+});

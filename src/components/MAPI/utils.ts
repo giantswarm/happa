@@ -1093,13 +1093,6 @@ export function getClusterDescription(
 
   const { kind, apiVersion } = infrastructureRef;
   switch (true) {
-    case kind === capgv1beta1.GCPCluster:
-    case kind === capzv1beta1.AzureCluster:
-      return (
-        cluster.metadata.annotations?.[
-          capiv1beta1.annotationClusterDescription
-        ] || defaultValue
-      );
     case kind === infrav1alpha2.AWSCluster &&
       apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
@@ -1113,7 +1106,11 @@ export function getClusterDescription(
         defaultValue
       );
     default:
-      return defaultValue;
+      return (
+        cluster.metadata.annotations?.[
+          capiv1beta1.annotationClusterDescription
+        ] || defaultValue
+      );
   }
 }
 

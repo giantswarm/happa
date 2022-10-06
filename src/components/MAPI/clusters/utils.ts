@@ -959,16 +959,6 @@ export function getClusterConditions(
 
   const { kind, apiVersion } = infrastructureRef;
   switch (true) {
-    case kind === capgv1beta1.GCPCluster:
-      statuses.isConditionUnknown =
-        typeof cluster.status === 'undefined' ||
-        typeof cluster.status.conditions === 'undefined';
-      statuses.isCreating = capiv1beta1.isConditionFalse(
-        cluster,
-        capiv1beta1.conditionTypeControlPlaneInitialized
-      );
-      break;
-
     case kind === capzv1beta1.AzureCluster:
       statuses.isConditionUnknown =
         typeof cluster.status === 'undefined' ||
@@ -996,6 +986,15 @@ export function getClusterConditions(
       );
       break;
     }
+    default:
+      statuses.isConditionUnknown =
+        typeof cluster.status === 'undefined' ||
+        typeof cluster.status.conditions === 'undefined';
+      statuses.isCreating = capiv1beta1.isConditionFalse(
+        cluster,
+        capiv1beta1.conditionTypeControlPlaneInitialized
+      );
+      break;
   }
 
   return statuses;

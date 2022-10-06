@@ -188,7 +188,7 @@ export const randomClusterCAPA2: capiv1beta1.ICluster = {
     labels: {
       app: 'cluster-aws',
       'app.kubernetes.io/managed-by': 'Helm',
-      'app.kubernetes.io/version': '0.9.2',
+      'app.kubernetes.io/version': '0.9.3',
       'application.giantswarm.io/team': 'hydra',
       'cluster-apps-operator.giantswarm.io/watching': '',
       'cluster.x-k8s.io/cluster-name': 'fdsa1',

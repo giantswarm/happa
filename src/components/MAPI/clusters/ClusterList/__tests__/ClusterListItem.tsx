@@ -11,6 +11,7 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
+import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
@@ -702,7 +703,7 @@ describe('ClusterListItem on GCP', () => {
         cluster: {
           ...capiv1beta1Mocks.randomClusterGCP1,
           status: {
-            ...capiv1beta1Mocks.randomCluster1.status,
+            ...capiv1beta1Mocks.randomClusterGCP1.status,
             conditions: [
               {
                 status: 'False',
@@ -713,6 +714,67 @@ describe('ClusterListItem on GCP', () => {
           },
         },
         providerCluster: capgv1beta1Mocks.randomGCPCluster1,
+      })
+    );
+
+    expect(await screen.findByText('Cluster creating…')).toBeInTheDocument();
+    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+  });
+});
+
+describe('ClusterListItem on CAPA', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPA;
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays various information about the cluster', () => {
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPA1,
+        providerCluster: capav1beta1Mocks.randomAWSCluster1,
+      })
+    );
+
+    expect(screen.getByLabelText('Name: asdf1')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Description: test capa cluster')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Cluster app version: 0.9.2')
+    ).toBeInTheDocument();
+  });
+
+  it('displays cluster status', async () => {
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1beta1Mocks.randomClusterCAPA1,
+          status: {
+            ...capiv1beta1Mocks.randomClusterCAPA1.status,
+            conditions: [
+              {
+                status: 'False',
+                type: 'ControlPlaneInitialized',
+                lastTransitionTime: '2022-09-29T09:19:19Z',
+              },
+            ],
+          },
+        },
+        providerCluster: capav1beta1Mocks.randomAWSCluster1,
       })
     );
 
