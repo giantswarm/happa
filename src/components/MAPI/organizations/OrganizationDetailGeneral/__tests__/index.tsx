@@ -17,6 +17,7 @@ import nock from 'nock';
 import * as React from 'react';
 import { SWRConfig } from 'swr';
 import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
+import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
@@ -936,6 +937,20 @@ describe('OrganizationDetailGeneral on CAPA', () => {
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterListCAPA);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinepools/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPA1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterCAPA1MachinePoolList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsmachinepools/${capiv1beta1Mocks.randomClusterCAPA1MachinePoolList.items[0].spec?.template.spec?.infrastructureRef.name}/`
+      )
+      .reply(StatusCodes.Ok, capav1beta1Mocks.randomClusterCAPA1AWSMachinePool);
 
     render(
       getComponent({
@@ -947,6 +962,19 @@ describe('OrganizationDetailGeneral on CAPA', () => {
     // Clusters summary.
     await waitFor(() =>
       expect(screen.getByLabelText('Workload clusters')).toHaveTextContent('2')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Worker nodes')).toHaveTextContent('3')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
+        '48 GB'
+      )
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('CPU in worker nodes')).toHaveTextContent(
+        '12'
+      )
     );
 
     // Releases.

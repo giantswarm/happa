@@ -116,9 +116,114 @@ export const randomCluster3MachinePool1: capiv1beta1.IMachinePool = {
   },
 };
 
+export const randomClusterCAPA1MachinePool1: capiv1beta1.IMachinePool = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: 'MachinePool',
+  metadata: {
+    annotations: {
+      'machine-pool.giantswarm.io/name': 'workers',
+      'meta.helm.sh/release-name': 'asdf1',
+      'meta.helm.sh/release-namespace': 'org-org1',
+    },
+    creationTimestamp: '2022-10-07T09:06:02Z',
+    finalizers: ['machinepool.cluster.x-k8s.io'],
+    generation: 3,
+    labels: {
+      app: 'cluster-aws',
+      'app.kubernetes.io/managed-by': 'Helm',
+      'app.kubernetes.io/version': '0.9.2',
+      'application.giantswarm.io/team': 'hydra',
+      'cluster.x-k8s.io/cluster-name': 'asdf1',
+      'cluster.x-k8s.io/watch-filter': 'capi',
+      'giantswarm.io/cluster': 'asdf1',
+      'giantswarm.io/machine-pool': 'asdf1-machine-pool0',
+      'giantswarm.io/organization': 'org1',
+      'helm.sh/chart': 'cluster-aws-0.9.2',
+      'release.giantswarm.io/version': '20.0.0-alpha1',
+    },
+    name: 'asdf1-machine-pool0',
+    namespace: 'org-org1',
+    ownerReferences: [
+      {
+        apiVersion: 'cluster.x-k8s.io/v1beta1',
+        kind: 'Cluster',
+        name: 'asdf1',
+        uid: '',
+      },
+    ],
+  },
+  spec: {
+    clusterName: 'asdf1',
+    minReadySeconds: 0,
+    replicas: 3,
+    template: {
+      metadata: {
+        name: '',
+      },
+      spec: {
+        bootstrap: {
+          configRef: {
+            apiVersion: 'bootstrap.cluster.x-k8s.io/v1beta1',
+            kind: 'KubeadmConfig',
+            name: 'asdf1-machine-pool0',
+            namespace: 'org-org1',
+          },
+          dataSecretName: 'asdf1-machine-pool0',
+        },
+        clusterName: 'asdf1',
+        infrastructureRef: {
+          apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+          kind: 'AWSMachinePool',
+          name: 'asdf1-machine-pool0',
+          namespace: 'org-org1',
+        },
+        version: 'v1.22.12',
+      },
+    },
+  },
+  status: {
+    availableReplicas: 3,
+    bootstrapReady: true,
+    conditions: [
+      {
+        lastTransitionTime: '2022-10-07T09:20:49Z',
+        status: 'True',
+        type: 'Ready',
+      },
+      {
+        lastTransitionTime: '2022-10-07T09:12:32Z',
+        status: 'True',
+        type: 'BootstrapReady',
+      },
+      {
+        lastTransitionTime: '2022-10-07T09:12:34Z',
+        status: 'True',
+        type: 'InfrastructureReady',
+      },
+      {
+        lastTransitionTime: '2022-10-07T09:20:49Z',
+        status: 'True',
+        type: 'ReplicasReady',
+      },
+    ],
+    infrastructureReady: true,
+    observedGeneration: 3,
+    phase: 'Running',
+    readyReplicas: 3,
+    replicas: 3,
+  },
+};
+
 export const randomCluster3MachinePoolList: capiv1beta1.IMachinePoolList = {
   apiVersion: 'cluster.x-k8s.io/v1beta1',
   kind: capiv1beta1.MachinePoolList,
   metadata: {},
   items: [randomCluster3MachinePool1],
+};
+
+export const randomClusterCAPA1MachinePoolList: capiv1beta1.IMachinePoolList = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: capiv1beta1.MachinePoolList,
+  metadata: {},
+  items: [randomClusterCAPA1MachinePool1],
 };
