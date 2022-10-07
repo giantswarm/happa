@@ -157,30 +157,34 @@ export async function fetchNodePoolListForCluster(
 
       break;
 
-    case kind === capzv1beta1.AzureCluster:
-      if (supportsNonExpMachinePools(cluster)) {
-        list = await capiv1beta1.getMachinePoolList(httpClientFactory(), auth, {
+    case kind === capzv1beta1.AzureCluster &&
+      !supportsNonExpMachinePools(cluster):
+      list = await capiexpv1alpha3.getMachinePoolList(
+        httpClientFactory(),
+        auth,
+        {
           labelSelector: {
             matchingLabels: {
-              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capiv1beta1.labelCluster]: cluster.metadata.name,
             },
           },
           namespace,
-        });
-      } else {
-        list = await capiexpv1alpha3.getMachinePoolList(
-          httpClientFactory(),
-          auth,
-          {
-            labelSelector: {
-              matchingLabels: {
-                [capiv1beta1.labelCluster]: cluster.metadata.name,
-              },
-            },
-            namespace,
-          }
-        );
-      }
+        }
+      );
+
+      break;
+
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.ApiVersion:
+    case kind === capzv1beta1.AzureCluster:
+      list = await capiv1beta1.getMachinePoolList(httpClientFactory(), auth, {
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelClusterName]: cluster.metadata.name,
+          },
+        },
+        namespace,
+      });
 
       break;
 
@@ -237,22 +241,24 @@ export function fetchNodePoolListForClusterKey(
         namespace,
       });
 
-    case kind === capzv1beta1.AzureCluster:
-      if (supportsNonExpMachinePools(cluster)) {
-        return capiv1beta1.getMachinePoolListKey({
-          labelSelector: {
-            matchingLabels: {
-              [capiv1beta1.labelClusterName]: cluster.metadata.name,
-            },
-          },
-          namespace,
-        });
-      }
-
+    case kind === capzv1beta1.AzureCluster &&
+      !supportsNonExpMachinePools(cluster):
       return capiexpv1alpha3.getMachinePoolListKey({
         labelSelector: {
           matchingLabels: {
             [capiv1beta1.labelCluster]: cluster.metadata.name,
+          },
+        },
+        namespace,
+      });
+
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.ApiVersion:
+    case kind === capzv1beta1.AzureCluster:
+      return capiv1beta1.getMachinePoolListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelClusterName]: cluster.metadata.name,
           },
         },
         namespace,
@@ -292,6 +298,14 @@ export async function fetchProviderNodePoolForNodePool(
   const kind = infrastructureRef.kind;
 
   switch (true) {
+    case kind === capav1beta1.AWSMachinePool:
+      return capav1beta1.getAWSMachinePool(
+        httpClientFactory(),
+        auth,
+        nodePool.metadata.namespace!,
+        infrastructureRef.name
+      );
+
     case kind === capgv1beta1.GCPMachineTemplate:
       return capgv1beta1.getGCPMachineTemplate(
         httpClientFactory(),
