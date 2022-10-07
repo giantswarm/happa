@@ -1026,6 +1026,17 @@ export function getNodePoolScaling(
       return status;
     }
 
+    // CAPA
+    case kind === capiv1beta1.MachinePool &&
+      providerNodePoolKind === capav1beta1.AWSMachinePool: {
+      status.min =
+        (providerNodePool as capav1beta1.IAWSMachinePool).spec?.minSize ?? -1;
+      status.max =
+        (providerNodePool as capav1beta1.IAWSMachinePool).spec?.maxSize ?? -1;
+
+      return status;
+    }
+
     // Azure
     case kind === capiv1beta1.MachinePool: {
       [status.min, status.max] = capiv1beta1.getMachinePoolScaling(
