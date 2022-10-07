@@ -894,6 +894,10 @@ export function getProviderNodePoolMachineTypes(
   providerNodePool: ProviderNodePool
 ): NodePoolMachineTypes | undefined {
   switch (providerNodePool?.kind) {
+    case capav1beta1.AWSMachinePool:
+      return {
+        primary: providerNodePool.spec?.awsLaunchTemplate.instanceType ?? '',
+      };
     case capgv1beta1.GCPMachineTemplate:
       return {
         primary: providerNodePool.spec?.template.spec.instanceType ?? '',
