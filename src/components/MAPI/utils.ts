@@ -1061,6 +1061,14 @@ export function getNodePoolAvailabilityZones(
   const providerNodePoolKind = providerNodePool?.kind;
 
   switch (true) {
+    // CAPA
+    case kind === capiv1beta1.MachinePool &&
+      providerNodePoolKind === capav1beta1.AWSMachinePool:
+      return (
+        (providerNodePool as capav1beta1.IAWSMachinePool).spec
+          ?.availabilityZones ?? []
+      );
+
     // Azure
     case kind === capiv1beta1.MachinePool:
       return (nodePool as capiv1beta1.IMachinePool).spec?.failureDomains ?? [];
