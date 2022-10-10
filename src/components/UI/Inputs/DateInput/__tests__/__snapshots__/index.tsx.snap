@@ -2,7 +2,7 @@
 
 exports[`DateInput renders a button that triggers the calendar 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -48,7 +48,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
 
 exports[`DateInput renders a disabled input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -106,7 +106,7 @@ exports[`DateInput renders a disabled input 1`] = `
 
 exports[`DateInput renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -156,7 +156,7 @@ exports[`DateInput renders a simple input 1`] = `
 
 exports[`DateInput renders an input with a help message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -218,7 +218,7 @@ exports[`DateInput renders an input with a help message 1`] = `
 
 exports[`DateInput renders an input with a label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -275,7 +275,7 @@ exports[`DateInput renders an input with a label 1`] = `
 
 exports[`DateInput renders an input with a validation error 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -337,7 +337,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
 
 exports[`DateInput renders an input with an info message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
