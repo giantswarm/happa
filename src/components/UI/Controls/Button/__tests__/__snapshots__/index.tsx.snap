@@ -2,7 +2,7 @@
 
 exports[`Button renders a button with a loading animation 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -38,7 +38,7 @@ exports[`Button renders a button with a loading animation 1`] = `
 
 exports[`Button renders a danger button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -67,7 +67,7 @@ exports[`Button renders a danger button 1`] = `
 
 exports[`Button renders a disabled button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -97,7 +97,7 @@ exports[`Button renders a disabled button 1`] = `
 
 exports[`Button renders a link button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -126,7 +126,7 @@ exports[`Button renders a link button 1`] = `
 
 exports[`Button renders a primary button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -155,7 +155,7 @@ exports[`Button renders a primary button 1`] = `
 
 exports[`Button renders a secondary button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -184,7 +184,7 @@ exports[`Button renders a secondary button 1`] = `
 
 exports[`Button renders a warning button 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -213,7 +213,7 @@ exports[`Button renders a warning button 1`] = `
 
 exports[`Button renders without crashing 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"

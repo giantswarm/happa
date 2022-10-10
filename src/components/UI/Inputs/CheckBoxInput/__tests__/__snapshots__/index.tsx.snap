@@ -2,7 +2,7 @@
 
 exports[`CheckBoxInput renders a disabled input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -15,7 +15,7 @@ exports[`CheckBoxInput renders a disabled input 1`] = `
         class="StyledBox-sc-13pk1d4-0 hqVIvd FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 igLsYG"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 fdLEqj"
           disabled=""
           label="Some input"
         >
@@ -47,7 +47,7 @@ exports[`CheckBoxInput renders a disabled input 1`] = `
 
 exports[`CheckBoxInput renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -60,7 +60,7 @@ exports[`CheckBoxInput renders a simple input 1`] = `
         class="StyledBox-sc-13pk1d4-0 hqVIvd FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 fvGmiH"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 bvqeDC"
           label="Some input"
         >
           <div
@@ -88,7 +88,7 @@ exports[`CheckBoxInput renders a simple input 1`] = `
 
 exports[`CheckBoxInput renders a toggle input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -111,7 +111,7 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
         class="StyledBox-sc-13pk1d4-0 hqVIvd FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 fvGmiH"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 bvqeDC"
           label="Hi friends"
         >
           <div
@@ -147,7 +147,7 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
 
 exports[`CheckBoxInput renders an input with a form field label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -165,7 +165,7 @@ exports[`CheckBoxInput renders an input with a form field label 1`] = `
         class="StyledBox-sc-13pk1d4-0 hqVIvd FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 fvGmiH"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 bvqeDC"
           label="Some input"
         >
           <div
@@ -193,7 +193,7 @@ exports[`CheckBoxInput renders an input with a form field label 1`] = `
 
 exports[`CheckBoxInput renders an input with a help message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -211,7 +211,7 @@ exports[`CheckBoxInput renders an input with a help message 1`] = `
         class="StyledBox-sc-13pk1d4-0 hqVIvd FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 fvGmiH"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 bvqeDC"
           label="Some input"
         >
           <div
@@ -239,7 +239,7 @@ exports[`CheckBoxInput renders an input with a help message 1`] = `
 
 exports[`CheckBoxInput renders an input with a validation error 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -252,7 +252,7 @@ exports[`CheckBoxInput renders an input with a validation error 1`] = `
         class="StyledBox-sc-13pk1d4-0 hqVIvd FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 fvGmiH"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 bvqeDC"
           label="Some input"
         >
           <div
@@ -285,7 +285,7 @@ exports[`CheckBoxInput renders an input with a validation error 1`] = `
 
 exports[`CheckBoxInput renders an input with an info message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -298,7 +298,7 @@ exports[`CheckBoxInput renders an input with an info message 1`] = `
         class="StyledBox-sc-13pk1d4-0 hqVIvd FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 fvGmiH"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 bvqeDC"
           label="Some input"
         >
           <div
