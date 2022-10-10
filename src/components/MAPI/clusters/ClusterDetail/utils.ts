@@ -11,11 +11,13 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, Providers } from 'model/constants';
+import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
+import { extractIDFromARN } from 'model/services/mapi/legacy/credentials';
 import * as metav1 from 'model/services/mapi/metav1';
 import { supportsHACPNodes } from 'model/stores/nodepool/utils';
 import { mutate } from 'swr';
@@ -346,6 +348,12 @@ export function getCredentialsAzureTenantID(
   if (!mainCredential) return '';
 
   return mainCredential.azureTenantID || '';
+}
+
+export function getAWSClusterRoleIdentityAccountID(
+  awsClusterRoleIdentity: capav1beta1.IAWSClusterRoleIdentity
+) {
+  return extractIDFromARN(awsClusterRoleIdentity.spec?.roleARN) || '';
 }
 
 export interface IControlPlaneNodesStats {

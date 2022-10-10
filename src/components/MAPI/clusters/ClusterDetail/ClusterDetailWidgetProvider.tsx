@@ -9,6 +9,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
+import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
@@ -28,7 +29,11 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import { usePermissionsForOrgCredentials } from '../permissions/usePermissionsForOrgCredentials';
-import { getCredentialsAccountID, getCredentialsAzureTenantID } from './utils';
+import {
+  getAWSClusterRoleIdentityAccountID,
+  getCredentialsAccountID,
+  getCredentialsAzureTenantID,
+} from './utils';
 
 const StyledLink = styled.a`
   color: ${({ theme }) => normalizeColor('text-weak', theme)};
@@ -38,7 +43,9 @@ function getProviderInfo(
   cluster?: capiv1beta1.ICluster,
   providerCluster?: ProviderCluster,
   credentials?: legacyCredentials.ICredential[],
-  credentialListIsLoading?: boolean
+  credentialListIsLoading?: boolean,
+  awsClusterRoleIdentity?: capav1beta1.IAWSClusterRoleIdentity,
+  awsClusterRoleIdentityIsLoading?: boolean
 ): {
   label?: string;
   value?: string;
@@ -48,6 +55,27 @@ function getProviderInfo(
   const { kind, apiVersion } = cluster?.spec?.infrastructureRef || {};
 
   switch (true) {
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.ApiVersion: {
+      const accountID = awsClusterRoleIdentityIsLoading
+        ? undefined
+        : awsClusterRoleIdentity
+        ? getAWSClusterRoleIdentityAccountID(awsClusterRoleIdentity)
+        : '';
+
+      return [
+        {
+          label: 'AWS region',
+          value: getProviderClusterLocation(providerCluster),
+        },
+        {
+          label: 'Account ID',
+          value: accountID,
+          link: `https://${accountID}.signin.aws.amazon.com/console`,
+        },
+      ];
+    }
+
     case kind === capgv1beta1.GCPCluster: {
       const projectID = getProviderClusterAccountID(providerCluster);
 
@@ -190,11 +218,54 @@ const ClusterDetailWidgetProvider: React.FC<
   const credentialListIsLoading =
     typeof credentialList === 'undefined' && credentialListIsValidating;
 
+  const awsClusterRoleIdentityName =
+    providerCluster &&
+    providerCluster.kind === capav1beta1.AWSCluster &&
+    providerCluster.apiVersion === capav1beta1.ApiVersion
+      ? providerCluster?.spec?.identityRef?.name
+      : undefined;
+  const awsClusterRoleIdentityKey = awsClusterRoleIdentityName
+    ? capav1beta1.getAWSClusterRoleIdentityKey(awsClusterRoleIdentityName)
+    : undefined;
+  const awsClusterRoleIdentityClient = useHttpClient();
+  const {
+    data: awsClusterRoleIdentity,
+    isValidating: awsClusterRoleIdentityIsValidating,
+    error: awsClusterRoleIdentityError,
+  } = useSWR<capav1beta1.IAWSClusterRoleIdentity, GenericResponseError>(
+    awsClusterRoleIdentityKey,
+    () =>
+      capav1beta1.getAWSClusterRoleIdentity(
+        awsClusterRoleIdentityClient,
+        auth,
+        awsClusterRoleIdentityName!
+      )
+  );
+
+  useEffect(() => {
+    if (awsClusterRoleIdentityError) {
+      new FlashMessage(
+        `Could not fetch AWSClusterRoleIdentity resource`,
+        messageType.ERROR,
+        messageTTL.LONG,
+        extractErrorMessage(awsClusterRoleIdentityError)
+      );
+
+      ErrorReporter.getInstance().notify(awsClusterRoleIdentityError);
+    }
+  }, [awsClusterRoleIdentityError]);
+
+  const awsClusterRoleIdentityIsLoading =
+    typeof awsClusterRoleIdentity === 'undefined' &&
+    awsClusterRoleIdentityIsValidating;
+
   const providerInfoItems = getProviderInfo(
     cluster,
     providerCluster,
     credentialListIsLoading ? undefined : credentialList?.items,
-    credentialListIsLoading
+    credentialListIsLoading,
+    awsClusterRoleIdentity,
+    awsClusterRoleIdentityIsLoading
   );
 
   return (
@@ -202,6 +273,7 @@ const ClusterDetailWidgetProvider: React.FC<
       <Grid
         columns={['auto', 'flex']}
         gap={{ column: 'small' }}
+        align='baseline'
         data-testid='provider-info'
       >
         {providerInfoItems.map((item, idx) => (

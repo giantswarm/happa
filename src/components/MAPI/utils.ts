@@ -1123,6 +1123,10 @@ export function getProviderClusterLocation(
 
   const { kind, apiVersion } = providerCluster;
   switch (true) {
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.ApiVersion:
+      return (providerCluster as capav1beta1.IAWSCluster).spec?.region ?? '';
+
     case kind === capgv1beta1.GCPCluster:
       return (providerCluster as capgv1beta1.IGCPCluster).spec?.region ?? '';
 

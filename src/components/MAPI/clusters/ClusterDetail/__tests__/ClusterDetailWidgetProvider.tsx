@@ -7,15 +7,18 @@ import {
 import { createMemoryHistory } from 'history';
 import { usePermissionsForOrgCredentials } from 'MAPI/clusters/permissions/usePermissionsForOrgCredentials';
 import { ProviderCluster } from 'MAPI/types';
+import { StatusCodes } from 'model/constants';
 import * as providers from 'model/constants/providers';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { IMainState } from 'model/stores/main/types';
 import { IOrganizationState } from 'model/stores/organization/types';
 import { IState } from 'model/stores/state';
+import nock from 'nock';
 import React from 'react';
 import { useParams } from 'react-router';
 import { SWRConfig } from 'swr';
+import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
@@ -143,6 +146,27 @@ async function setupGCP() {
   const utils = setup(
     capiv1beta1Mocks.randomClusterGCP1,
     capgv1beta1Mocks.randomGCPCluster1
+  );
+
+  if (screen.queryAllByText('Loading...').length > 0) {
+    await waitForElementToBeRemoved(() => screen.queryAllByText('Loading...'));
+  }
+
+  return {
+    ...utils,
+  };
+}
+
+async function setupCAPA() {
+  nock(window.config.mapiEndpoint)
+    .get(
+      '/apis/infrastructure.cluster.x-k8s.io/v1beta1/awsclusterroleidentities/default/'
+    )
+    .reply(StatusCodes.Ok, capav1beta1Mocks.defaultAWSClusterRoleIdentity);
+
+  const utils = setup(
+    capiv1beta1Mocks.randomClusterCAPA1,
+    capav1beta1Mocks.randomAWSCluster1
   );
 
   if (screen.queryAllByText('Loading...').length > 0) {
@@ -352,6 +376,42 @@ describe('ClusterDetailWidgetProvider on GCP', () => {
     expect(within(providerInfo).getByRole('link')).toHaveAttribute(
       'href',
       'https://console.cloud.google.com/home/dashboard?project=project-352614'
+    );
+  });
+});
+
+describe('ClusterDetailWidgetProvider on CAPA', () => {
+  const provider: PropertiesOf<typeof providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = providers.CAPA;
+
+    (usePermissionsForOrgCredentials as jest.Mock).mockReturnValue({
+      canList: false,
+    });
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays loading animations if the cluster is still loading', () => {
+    setup();
+    expect(screen.getAllByLabelText('Loading...').length).toEqual(4);
+  });
+
+  it('displays cluster region and account ID', async () => {
+    await setupCAPA();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('AWS region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('eu-west-2')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('Account ID')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('262033476510')).toBeInTheDocument();
+    expect(within(providerInfo).queryByRole('link')).toBeInTheDocument();
+    expect(within(providerInfo).getByRole('link')).toHaveAttribute(
+      'href',
+      'https://262033476510.signin.aws.amazon.com/console'
     );
   });
 });
