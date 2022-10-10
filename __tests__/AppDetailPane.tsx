@@ -178,7 +178,7 @@ describe('Installed app detail pane', () => {
 
       await findByText(/has been deleted./i);
       // eslint-disable-next-line no-magic-numbers
-    }, 10000);
+    });
 
     it('updates secrets of an already installed app', async () => {
       nock(API_ENDPOINT)
@@ -236,7 +236,7 @@ describe('Installed app detail pane', () => {
         screen.getByLabelText(/App details/i)
       );
       // eslint-disable-next-line no-magic-numbers
-    }, 10000);
+    });
 
     it('deletes secrets of an already installed app', async () => {
       nock(API_ENDPOINT)
@@ -281,7 +281,7 @@ describe('Installed app detail pane', () => {
 
       await findByText(/has been deleted./i);
       // eslint-disable-next-line no-magic-numbers
-    }, 10000);
+    });
   });
 
   it('deletes already installed app', async () => {
