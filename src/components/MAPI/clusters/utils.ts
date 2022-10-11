@@ -11,15 +11,14 @@ import {
   fetchProviderClusterForClusterKey,
   generateUID,
   getClusterDescription,
+  getProviderNodePoolMachineTypes,
   IMachineType,
   IProviderClusterForClusterName,
 } from 'MAPI/utils';
 import { IProviderNodePoolForNodePool } from 'MAPI/workernodes/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { Constants, Providers } from 'model/constants';
-import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
-import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
@@ -57,34 +56,15 @@ export function getWorkerNodesCPU(
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
-    const readyReplicas = nodePool.status?.readyReplicas;
-    if (!readyReplicas) continue;
+    if (!providerNodePool) return -1;
 
-    // eslint-disable-next-line @typescript-eslint/init-declarations
-    let instanceType: string | undefined;
-
-    switch (providerNodePool?.kind) {
-      case capgv1beta1.GCPMachineTemplate:
-        instanceType = providerNodePool.spec?.template.spec?.instanceType;
-        break;
-
-      case capzexpv1alpha3.AzureMachinePool:
-      case capzv1beta1.AzureMachinePool:
-        instanceType = providerNodePool.spec?.template.vmSize;
-        break;
-
-      case infrav1alpha3.AWSMachineDeployment:
-        instanceType = providerNodePool.spec.provider.worker.instanceType;
-        break;
-
-      default:
-        return -1;
-    }
-
-    if (!instanceType) return -1;
-
+    const instanceType =
+      getProviderNodePoolMachineTypes(providerNodePool)?.primary ?? '';
     const machineTypeProperties = machineTypes[instanceType];
     if (!machineTypeProperties) return -1;
+
+    const readyReplicas = nodePool.status?.readyReplicas;
+    if (!readyReplicas) continue;
 
     count += machineTypeProperties.cpu * readyReplicas;
   }
@@ -101,37 +81,15 @@ export function getWorkerNodesMemory(
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
-    const readyReplicas = nodePool.status?.readyReplicas;
-    if (!readyReplicas) continue;
+    if (!providerNodePool) return -1;
 
-    // eslint-disable-next-line @typescript-eslint/init-declarations
-    let instanceType: string | undefined;
-
-    switch (providerNodePool?.kind) {
-      case capzexpv1alpha3.AzureMachinePool:
-      case capzv1beta1.AzureMachinePool: {
-        instanceType = providerNodePool.spec?.template.vmSize;
-        break;
-      }
-
-      case infrav1alpha3.AWSMachineDeployment: {
-        instanceType = providerNodePool.spec.provider.worker.instanceType;
-        break;
-      }
-
-      case capgv1beta1.GCPMachineTemplate: {
-        instanceType = providerNodePool.spec?.template.spec?.instanceType;
-        break;
-      }
-
-      default:
-        return -1;
-    }
-
-    if (!instanceType) return -1;
-
+    const instanceType =
+      getProviderNodePoolMachineTypes(providerNodePool)?.primary ?? '';
     const machineTypeProperties = machineTypes[instanceType];
     if (!machineTypeProperties) return -1;
+
+    const readyReplicas = nodePool.status?.readyReplicas;
+    if (!readyReplicas) continue;
 
     count += machineTypeProperties.memory * readyReplicas;
   }
