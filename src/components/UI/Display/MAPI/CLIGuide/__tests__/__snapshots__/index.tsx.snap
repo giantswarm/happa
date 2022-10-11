@@ -2,7 +2,7 @@
 
 exports[`CLIGuide renders the contents when open 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -84,7 +84,7 @@ exports[`CLIGuide renders the contents when open 1`] = `
 
 exports[`CLIGuide renders without crashing 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -157,7 +157,7 @@ exports[`CLIGuide renders without crashing 1`] = `
 
 exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -234,7 +234,7 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
 
 exports[`CLIGuidesList renders the contents when open 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
@@ -442,7 +442,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
 
 exports[`CLIGuidesList renders without crashing 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fEWbpp"
+  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
 >
   <div
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
