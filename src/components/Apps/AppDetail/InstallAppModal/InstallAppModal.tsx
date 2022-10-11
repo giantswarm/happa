@@ -106,10 +106,14 @@ const InstallAppModal: React.FC<
     if (page > 0) {
       setPage(page - 1);
     }
+    setValuesYAMLError('');
+    setSecretsYAMLError('');
   };
 
   const onClose = () => {
     setVisible(false);
+    setValuesYAMLError('');
+    setSecretsYAMLError('');
   };
 
   const openModal = () => {

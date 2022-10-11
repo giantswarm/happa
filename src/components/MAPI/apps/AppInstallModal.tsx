@@ -144,11 +144,15 @@ const AppInstallModal: React.FC<
     if (page > 0) {
       setPage(page - 1);
     }
+    setValuesYAMLError('');
+    setSecretsYAMLError('');
   };
 
   const onClose = () => {
     setVisible(false);
     setQuery('');
+    setValuesYAMLError('');
+    setSecretsYAMLError('');
   };
 
   const selectedClusterID = useSelector(
