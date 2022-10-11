@@ -1151,37 +1151,6 @@ export function getProviderClusterLocation(
   }
 }
 
-export function getProviderClusterAccountID(
-  providerCluster: ProviderCluster
-): string | undefined {
-  if (typeof providerCluster === 'undefined') {
-    return undefined;
-  }
-
-  const { kind, apiVersion } = providerCluster;
-  switch (true) {
-    case kind === capgv1beta1.GCPCluster:
-      return (providerCluster as capgv1beta1.IGCPCluster).spec?.project ?? '';
-
-    case kind === capzv1beta1.AzureCluster: {
-      const id = (providerCluster as capzv1beta1.IAzureCluster).spec
-        ?.subscriptionID;
-      if (typeof id === 'undefined') return '';
-
-      return id;
-    }
-
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
-    case kind === infrav1alpha3.AWSCluster &&
-      apiVersion === infrav1alpha3.ApiVersion:
-      return '';
-
-    default:
-      return undefined;
-  }
-}
-
 export function getProviderNodePoolLocation(
   providerNodePool: ProviderNodePool
 ): string {
