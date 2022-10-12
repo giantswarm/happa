@@ -1,5 +1,5 @@
 import { FormField, FormFieldProps, TextInput as Input } from 'grommet';
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { setMultipleRefs } from 'utils/componentUtils';
 
 interface IFileInputProps
@@ -64,17 +64,21 @@ const FileInput = React.forwardRef<HTMLInputElement, IFileInputProps>(
       pad,
       children,
       value,
+      onClick,
       ...props
     },
     ref
   ) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
 
-    useEffect(() => {
-      if (inputRef.current) {
-        inputRef.current.files = value!;
+    const handleFileInputClicked = (
+      e: React.MouseEvent<HTMLInputElement, MouseEvent>
+    ) => {
+      if (inputRef.current !== null) {
+        inputRef.current.value = '';
+        if (onClick) onClick(e);
       }
-    }, [value]);
+    };
 
     return (
       <FormField
@@ -97,6 +101,7 @@ const FileInput = React.forwardRef<HTMLInputElement, IFileInputProps>(
           disabled={disabled}
           required={required}
           name={name}
+          onClick={handleFileInputClicked}
           {...props}
           ref={setMultipleRefs(inputRef, ref)}
         />
