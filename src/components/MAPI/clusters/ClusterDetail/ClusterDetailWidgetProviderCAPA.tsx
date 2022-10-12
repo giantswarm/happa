@@ -13,6 +13,8 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
+import { usePermissionsForAWSClusterRoleIdentities } from '../permissions/usePermissionsForAWSClusterRoleIdentities';
+
 const ValueWrapper = styled.div`
   display: inline-block;
   line-height: 1.7;
@@ -37,9 +39,14 @@ const ClusterDetailWidgetProviderCAPA: React.FC<
       ? providerCluster.spec?.identityRef
       : undefined;
 
-  const roleIdentityKey = roleIdentityRef
-    ? capav1beta1.getAWSClusterRoleIdentityKey(roleIdentityRef.name)
-    : undefined;
+  const provider = window.config.info.general.provider;
+  const { canGet: canGetRoleIdentity } =
+    usePermissionsForAWSClusterRoleIdentities(provider, 'default');
+
+  const roleIdentityKey =
+    roleIdentityRef && canGetRoleIdentity
+      ? capav1beta1.getAWSClusterRoleIdentityKey(roleIdentityRef.name)
+      : undefined;
 
   const {
     data: roleIdentity,

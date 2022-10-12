@@ -5,6 +5,7 @@ import {
   within,
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
+import { usePermissionsForAWSClusterRoleIdentities } from 'MAPI/clusters/permissions/usePermissionsForAWSClusterRoleIdentities';
 import { usePermissionsForOrgCredentials } from 'MAPI/clusters/permissions/usePermissionsForOrgCredentials';
 import { ProviderCluster } from 'MAPI/types';
 import { StatusCodes } from 'model/constants';
@@ -33,6 +34,9 @@ jest.mock('react-router', () => ({
   useParams: jest.fn(),
 }));
 
+jest.mock(
+  'MAPI/clusters/permissions/usePermissionsForAWSClusterRoleIdentities'
+);
 jest.mock('MAPI/clusters/permissions/usePermissionsForOrgCredentials');
 
 jest.mock('model/services/mapi/legacy/credentials', () => ({
@@ -157,12 +161,6 @@ async function setupGCP() {
 }
 
 async function setupCAPA() {
-  nock(window.config.mapiEndpoint)
-    .get(
-      '/apis/infrastructure.cluster.x-k8s.io/v1beta1/awsclusterroleidentities/default/'
-    )
-    .reply(StatusCodes.Ok, capav1beta1Mocks.defaultAWSClusterRoleIdentity);
-
   const utils = setup(
     capiv1beta1Mocks.randomClusterCAPA1,
     capav1beta1Mocks.randomAWSCluster1
@@ -347,10 +345,6 @@ describe('ClusterDetailWidgetProvider on GCP', () => {
 
   beforeAll(() => {
     window.config.info.general.provider = providers.GCP;
-
-    (usePermissionsForOrgCredentials as jest.Mock).mockReturnValue({
-      canList: false,
-    });
   });
 
   afterAll(() => {
@@ -379,15 +373,15 @@ describe('ClusterDetailWidgetProvider on GCP', () => {
   });
 });
 
-describe('ClusterDetailWidgetProvider on CAPA', () => {
+describe('ClusterDetailWidgetProvider when user can not get AWSClusterRoleIdentity on CAPA', () => {
   const provider: PropertiesOf<typeof providers> =
     window.config.info.general.provider;
 
   beforeAll(() => {
     window.config.info.general.provider = providers.CAPA;
 
-    (usePermissionsForOrgCredentials as jest.Mock).mockReturnValue({
-      canList: false,
+    (usePermissionsForAWSClusterRoleIdentities as jest.Mock).mockReturnValue({
+      canGet: false,
     });
   });
 
@@ -401,6 +395,43 @@ describe('ClusterDetailWidgetProvider on CAPA', () => {
   });
 
   it('displays cluster region and account ID', async () => {
+    await setupCAPA();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('AWS region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('eu-west-2')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('Account ID')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('n/a')).toBeInTheDocument();
+    expect(within(providerInfo).queryByRole('link')).not.toBeInTheDocument();
+  });
+});
+
+describe('ClusterDetailWidgetProvider when user can get AWSClusterRoleIdentity on CAPA', () => {
+  const provider: PropertiesOf<typeof providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = providers.CAPA;
+
+    (usePermissionsForAWSClusterRoleIdentities as jest.Mock).mockReturnValue({
+      canGet: true,
+    });
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays loading animations if the cluster is still loading', () => {
+    setup();
+    expect(screen.getAllByLabelText('Loading...').length).toEqual(4);
+  });
+
+  it('displays cluster region and account ID', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/infrastructure.cluster.x-k8s.io/v1beta1/awsclusterroleidentities/default/'
+      )
+      .reply(StatusCodes.Ok, capav1beta1Mocks.defaultAWSClusterRoleIdentity);
     await setupCAPA();
     const providerInfo = screen.getByTestId('provider-info');
     expect(within(providerInfo).getByText('AWS region')).toBeInTheDocument();
