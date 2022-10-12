@@ -8,6 +8,7 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
+import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
@@ -861,6 +862,63 @@ describe('WorkerNodesNodePoolItem on AWS', () => {
     ).toBeInTheDocument();
 
     jest.clearAllTimers();
+  });
+});
+
+describe('WorkerNodesNodePoolItem on CAPA', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPA;
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays various information about the node pool', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
+        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePool,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Name: asdf1-machine-pool0')
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('Description: workers')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Instance type: m5.xlarge')
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByLabelText(
+        'Availability zones: eu-west-2a, eu-west-2b, eu-west-2c'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('displays the autoscaler configuration', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
+        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePool,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Autoscaler minimum node count: 3')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler maximum node count: 10')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler target node count: 3')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler current node count: 3')
+    ).toBeInTheDocument();
   });
 });
 

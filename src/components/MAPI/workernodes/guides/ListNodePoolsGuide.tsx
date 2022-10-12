@@ -16,8 +16,6 @@ function getProviderNodePoolResourceName(
     case Providers.AWS:
     case Providers.GCP:
       return 'MachineDeployment';
-    case Providers.AZURE:
-      return 'MachinePool';
     default:
       return 'MachinePool';
   }
@@ -67,7 +65,13 @@ const ListNodePoolsGuide: React.FC<
         <CLIGuideStep
           title='2. List node pools'
           command={
-            provider === Providers.GCP
+            provider === Providers.CAPA
+              ? `
+              kubectl --context ${context} \\
+                get machinepools.cluster.x-k8s.io \\
+                --selector cluster.x-k8s.io/cluster-name=${clusterName} \\
+                --namespace ${clusterNamespace}`
+              : provider === Providers.GCP
               ? `
               kubectl --context ${context} \\
                 get machinedeployments.cluster.x-k8s.io \\
