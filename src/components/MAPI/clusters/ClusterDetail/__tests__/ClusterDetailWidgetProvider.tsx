@@ -100,7 +100,6 @@ function setup(
   const utils = render(
     getComponent(
       {
-        cluster,
         providerCluster,
       },
       defaultState

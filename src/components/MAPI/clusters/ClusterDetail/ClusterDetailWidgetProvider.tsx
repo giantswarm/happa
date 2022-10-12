@@ -2,7 +2,6 @@ import { Grid } from 'grommet';
 import { ProviderCluster } from 'MAPI/types';
 import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
-import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
@@ -20,17 +19,15 @@ interface IClusterDetailWidgetProviderProps
     React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
     'title'
   > {
-  cluster?: capiv1beta1.ICluster;
   providerCluster?: ProviderCluster;
 }
 
 const ClusterDetailWidgetProvider: React.FC<
   React.PropsWithChildren<IClusterDetailWidgetProviderProps>
-> = ({ cluster, providerCluster, ...props }) => {
-  const isLoading =
-    typeof cluster === 'undefined' || typeof providerCluster === 'undefined';
+> = ({ providerCluster, ...props }) => {
+  const isLoading = typeof providerCluster === 'undefined';
 
-  const { kind, apiVersion } = cluster?.spec?.infrastructureRef || {};
+  const { kind, apiVersion } = providerCluster || {};
 
   return (
     <ClusterDetailWidget title='Provider' inline={true} {...props}>
