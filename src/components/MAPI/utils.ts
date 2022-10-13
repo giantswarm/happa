@@ -523,6 +523,7 @@ export function fetchClusterListKey(
   return capiv1beta1.getClusterListKey(getOptions);
 }
 
+// eslint-disable-next-line complexity
 export async function fetchControlPlaneNodesForCluster(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
@@ -537,6 +538,54 @@ export async function fetchControlPlaneNodesForCluster(
 
   const { kind, apiVersion } = infrastructureRef;
   switch (true) {
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.ApiVersion: {
+      const [capaCP, machineCP] = await Promise.allSettled([
+        capav1beta1.getAWSMachineTemplateList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capiv1beta1.labelRole]: 'control-plane',
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }),
+        capiv1beta1.getMachineList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capiv1beta1.labelMachineControlPlane]: '',
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }),
+      ]);
+
+      if (capaCP.status === 'rejected' && machineCP.status === 'rejected') {
+        return Promise.reject(capaCP.reason);
+      }
+
+      let cpNodes: ControlPlaneNode[] = [];
+      if (capaCP.status === 'fulfilled' && capaCP.value.items.length > 0) {
+        cpNodes = [
+          ...cpNodes,
+          capaCP.value.items.sort(
+            (a, b) =>
+              new Date(a.metadata.creationTimestamp ?? 0).getTime() -
+              new Date(b.metadata.creationTimestamp ?? 0).getTime()
+          )[0],
+        ];
+      }
+      if (
+        machineCP.status === 'fulfilled' &&
+        machineCP.value.items.length > 0
+      ) {
+        cpNodes = [...cpNodes, ...machineCP.value.items];
+      }
+
+      return cpNodes;
+    }
+
     case kind === capgv1beta1.GCPCluster: {
       const [gcpCP, machineCP] = await Promise.allSettled([
         capgv1beta1.getGCPMachineTemplateList(httpClientFactory(), auth, {
@@ -655,6 +704,18 @@ export function fetchControlPlaneNodesForClusterKey(
 
   const { kind, apiVersion } = infrastructureRef;
   switch (true) {
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.ApiVersion:
+      return capav1beta1.getAWSMachineTemplateListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelClusterName]: cluster.metadata.name,
+            [capiv1beta1.labelRole]: 'control-plane',
+          },
+        },
+        namespace: cluster.metadata.namespace,
+      });
+
     case kind === capgv1beta1.GCPCluster:
       return capgv1beta1.getGCPMachineTemplateListKey({
         labelSelector: {
