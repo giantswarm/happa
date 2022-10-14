@@ -732,11 +732,47 @@ export function isClusterScopeUseCase(useCase: IPermissionsUseCase): boolean {
  */
 function getResourcesToIgnore(
   provider: PropertiesOf<typeof Providers>
-): string[] {
-  const providerSpecificResources: Record<string, string[]> = {
-    [Providers.AWS]: ['awsclusters', 'g8scontrolplanes', 'awscontrolplanes'],
-    [Providers.AZURE]: ['azureclusters', 'azuremachines'],
-    [Providers.GCP]: ['gcpclusters'],
+): { resource: string; apiGroup: string }[] {
+  const providerSpecificResources: Record<
+    string,
+    { resource: string; apiGroup: string }[]
+  > = {
+    [Providers.AWS]: [
+      {
+        resource: 'awsclusters',
+        apiGroup: 'infrastructure.giantswarm.io',
+      },
+      {
+        resource: 'g8scontrolplanes',
+        apiGroup: 'infrastructure.giantswarm.io',
+      },
+      {
+        resource: 'awscontrolplanes',
+        apiGroup: 'infrastructure.giantswarm.io',
+      },
+    ],
+    [Providers.AZURE]: [
+      {
+        resource: 'azureclusters',
+        apiGroup: 'infrastructure.cluster.x-k8s.io',
+      },
+      {
+        resource: 'azuremachines',
+        apiGroup: 'infrastructure.cluster.x-k8s.io',
+      },
+    ],
+    [Providers.CAPA]: [
+      {
+        resource: 'awsclusters',
+        apiGroup: 'infrastructure.cluster.x-k8s.io',
+      },
+    ],
+    [Providers.GCP]: [
+      {
+        resource: 'gcpclusters',
+        apiGroup: 'infrastructure.cluster.x-k8s.io',
+      },
+    ],
   };
 
   delete providerSpecificResources[provider];
@@ -778,7 +814,12 @@ export function getStatusesForUseCases(
 
         // If the resource is in the list of resources to ignore,
         // we skip it.
-        if (resourcesToIgnore.includes(resource)) return true;
+        if (
+          resourcesToIgnore.some(
+            (r) => r.resource === resource && r.apiGroup === apiGroup
+          )
+        )
+          return true;
 
         return hasPermission(
           permissions,

@@ -306,6 +306,7 @@ useCases:
       - apiGroups:
           - infrastructure.cluster.x-k8s.io
         resources:
+          - awsclusters
           - azureclusters
           - azuremachines
           - gcpclusters
@@ -342,6 +343,7 @@ useCases:
       - apiGroups:
           - infrastructure.cluster.x-k8s.io
         resources:
+          - awsclusters
           - azureclusters
           - azuremachines
           - gcpclusters
