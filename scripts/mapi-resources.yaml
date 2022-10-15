@@ -1,8 +1,3 @@
-- apiVersionAlias: capiv1beta1
-  apiVersion: cluster.x-k8s.io/v1beta1
-  resources:
-  - name: Cluster
-    crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api/main/config/crd/bases/cluster.x-k8s.io_clusters.yaml
 - apiVersionAlias: capav1beta1
   apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
   resources:
