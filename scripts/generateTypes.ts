@@ -5,7 +5,11 @@ import path from 'path';
 import { compile } from 'json-schema-to-typescript';
 import { DeepPartial } from 'utils/helpers';
 import { error, log } from './utils';
-import { IResourceInfo, mapiResources } from './mapiResources';
+import {
+  getMapiResourcesList,
+  IApiGroupInfo,
+  IResourceInfo,
+} from './getMapiResourcesList';
 
 const bannerComment = `
 /**
@@ -122,56 +126,69 @@ async function ensureResourceTypeFile(
   }
 }
 
-export async function generateTypes() {
+async function readMapiResourcesListFile() {
+  log('Reading MAPI resources list from file...');
+
+  const mapiResources = await getMapiResourcesList();
+
+  log('Read MAPI resources list file successfully.');
+
+  return mapiResources;
+}
+
+async function generateTypes(group: IApiGroupInfo) {
+  log(`Generating types for ${group.apiVersion}:`);
+
+  const requests = group.resources.map((r) =>
+    fetchTypesForResource(r, group.apiVersion)
+  );
+  const responses = await Promise.allSettled(requests);
+
+  log(`  Ensuring directories... `, false);
+  // Create apiGroupVersion folder (e.g. /capiv1beta1) and export
+  await ensureApiVersionFolder(group.apiVersionAlias);
+
+  const typesDirPath = path.resolve(
+    mapiServicesDirectory,
+    group.apiVersionAlias,
+    'types'
+  );
+
+  // Create types subfolder and export 'ApiVersion' const
+  await ensureTypesFolder(typesDirPath, group.apiVersion);
+  log('done.');
+
+  log(`  Writing types:`);
+  for (let i = 0; i < requests.length; i++) {
+    const resource = group.resources[i];
+    log(`    ${resource.name}... `, false);
+
+    const response = responses[i];
+
+    if (response.status === 'rejected') {
+      error(`Could not get types: ${response.reason}`);
+
+      continue;
+    }
+
+    // Create resource type file and export types
+    await ensureResourceTypeFile(typesDirPath, resource.name, response.value);
+    log(`done.`);
+  }
+}
+
+export async function main() {
   // TODO: how to overwrite apiVersion and metadata fields?
   // TODO: write interface for list of resource
   try {
-    for (const entry of mapiResources) {
-      log(`Generating types for ${entry.apiVersion}:`);
+    const mapiResources = await readMapiResourcesListFile();
 
-      const requests = entry.resources.map((r) =>
-        fetchTypesForResource(r, entry.apiVersion)
-      );
-      const responses = await Promise.allSettled(requests);
-
-      log(`  Ensuring directories... `, false);
-      // Create apiGroupVersion folder (e.g. /capiv1beta1) and export
-      await ensureApiVersionFolder(entry.apiVersionAlias);
-
-      const typesDirPath = path.resolve(
-        mapiServicesDirectory,
-        entry.apiVersionAlias,
-        'types'
-      );
-
-      // Create types subfolder and export 'ApiVersion' const
-      await ensureTypesFolder(typesDirPath, entry.apiVersion);
-      log('done.');
-
-      log(`  Writing types:`);
-      for (let i = 0; i < requests.length; i++) {
-        const resource = entry.resources[i];
-        log(`    ${resource.name}... `, false);
-
-        const response = responses[i];
-        if (response.status === 'rejected') {
-          error(`Could not get types: ${response.reason}`);
-
-          continue;
-        }
-
-        // Create resource type file and export types
-        await ensureResourceTypeFile(
-          typesDirPath,
-          resource.name,
-          response.value
-        );
-        log(`done.`);
-      }
+    for (const group of mapiResources) {
+      await generateTypes(group);
     }
   } catch (err) {
     error((err as Error).toString());
   }
 }
 
-generateTypes();
+main();
