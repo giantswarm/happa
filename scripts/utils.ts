@@ -3,5 +3,5 @@ export function log(message: string, newLine: boolean = true): void {
 }
 
 export function error(message: string): void {
-  process.stderr.write(`${message}`);
+  process.stderr.write(`${message}\n`);
 }

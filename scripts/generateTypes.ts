@@ -10,11 +10,16 @@ import {
   IApiGroupInfo,
   IResourceInfo,
 } from './getMapiResourcesList';
+import { JSONSchema4 } from 'schema-utils/declarations/validate';
 
-const bannerComment = `
+const generatedHeader = `
 /**
  * This file was automatically generated, PLEASE DO NOT MODIFY IT BY HAND.
  */
+
+import * as metav1 from 'model/services/mapi/metav1';
+
+import { ApiVersion } from '.';
 `;
 
 /**
@@ -23,12 +28,27 @@ const bannerComment = `
 interface ICRD {
   kind: 'CustomResourceDefinition';
   spec: {
-    versions: { name: string; schema: { openAPIV3Schema: Object } }[];
+    versions: { name: string; schema: { openAPIV3Schema: JSONSchema4 } }[];
   };
 }
 
 function formatInterfaceName(resourceName: string): string {
   return `I${resourceName[0].toLocaleUpperCase()}${resourceName.slice(1)}`;
+}
+
+function applyCustomTsTypes(schema: JSONSchema4): JSONSchema4 {
+  return {
+    ...schema,
+    properties: {
+      ...schema.properties,
+      apiVersion: {
+        tsType: 'typeof ApiVersion',
+      },
+      metadata: {
+        tsType: 'metav1.IObjectMeta',
+      },
+    },
+  };
 }
 
 async function fetchTypesForResource(
@@ -60,11 +80,15 @@ async function fetchTypesForResource(
     }
 
     // generate TS types
-    const output = await compile(schema, formatInterfaceName(resource.name), {
-      additionalProperties: false,
-      bannerComment,
-      style: { singleQuote: true },
-    });
+    const output = await compile(
+      applyCustomTsTypes(schema as JSONSchema4),
+      formatInterfaceName(resource.name),
+      {
+        additionalProperties: false,
+        bannerComment: generatedHeader,
+        style: { singleQuote: true },
+      }
+    );
 
     return output;
   } catch (err) {
@@ -178,7 +202,6 @@ async function generateTypes(group: IApiGroupInfo) {
 }
 
 export async function main() {
-  // TODO: how to overwrite apiVersion and metadata fields?
   // TODO: write interface for list of resource
   try {
     const mapiResources = await readMapiResourcesListFile();
