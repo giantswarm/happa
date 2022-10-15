@@ -12,18 +12,8 @@ import {
 } from './getMapiResourcesList';
 import { JSONSchema4 } from 'schema-utils/declarations/validate';
 
-const generatedHeader = `
 /**
- * This file was automatically generated, PLEASE DO NOT MODIFY IT BY HAND.
- */
-
-import * as metav1 from 'model/services/mapi/metav1';
-
-import { ApiVersion } from '.';
-`;
-
-/**
- * Expected interface of CustomResourceDefinition (incomplete)
+ * Expected interface of CustomResourceDefinition
  */
 interface ICRD {
   kind: 'CustomResourceDefinition';
@@ -32,21 +22,48 @@ interface ICRD {
   };
 }
 
+const mapiServicesDirectory = path.resolve('src', 'model', 'services', 'mapi');
+
+const defaultTsTypesConfig: Record<string, JSONSchema4> = {
+  apiVersion: {
+    tsType: 'typeof ApiVersion',
+  },
+  metadata: {
+    tsType: 'metav1.IObjectMeta',
+  },
+};
+
+function formatTypesFileHeader(apiVersion: string): string {
+  return `/**
+ * This file was automatically generated, PLEASE DO NOT MODIFY IT BY HAND.
+ */
+  
+import * as metav1 from 'model/services/mapi/metav1';
+
+export const ApiVersion = '${apiVersion}';
+
+`;
+}
+
+function formatResourceKindDeclaration(resourceName: string): string {
+  return `export const ${resourceName} = '${resourceName}';
+
+`;
+}
+
 function formatInterfaceName(resourceName: string): string {
   return `I${resourceName[0].toLocaleUpperCase()}${resourceName.slice(1)}`;
 }
 
-function applyCustomTsTypes(schema: JSONSchema4): JSONSchema4 {
+function applyCustomTsTypes(
+  schema: JSONSchema4,
+  defaultTsTypesConfig: Record<string, JSONSchema4>
+): JSONSchema4 {
   return {
     ...schema,
     properties: {
       ...schema.properties,
-      apiVersion: {
-        tsType: 'typeof ApiVersion',
-      },
-      metadata: {
-        tsType: 'metav1.IObjectMeta',
-      },
+      ...defaultTsTypesConfig,
     },
   };
 }
@@ -80,12 +97,18 @@ async function fetchTypesForResource(
     }
 
     // generate TS types
+    const config = {
+      ...defaultTsTypesConfig,
+      kind: {
+        tsType: `typeof ${resource.name}`,
+      },
+    };
     const output = await compile(
-      applyCustomTsTypes(schema as JSONSchema4),
+      applyCustomTsTypes(schema as JSONSchema4, config),
       formatInterfaceName(resource.name),
       {
         additionalProperties: false,
-        bannerComment: generatedHeader,
+        bannerComment: '',
         style: { singleQuote: true },
       }
     );
@@ -96,66 +119,36 @@ async function fetchTypesForResource(
   }
 }
 
-const mapiServicesDirectory = path.resolve('src', 'model', 'services', 'mapi');
-
-async function ensureApiVersionFolder(apiVersionAlias: string) {
-  const apiGroupVersionDirPath = path.resolve(
-    mapiServicesDirectory,
-    apiVersionAlias
-  );
+async function ensureApiVersionFolder(apiVersionDirPath: string) {
   try {
-    await fs.mkdir(apiGroupVersionDirPath);
+    await fs.mkdir(apiVersionDirPath);
   } catch {
     return Promise.resolve();
   }
 
   await fs.writeFile(
-    path.resolve(apiGroupVersionDirPath, 'index.ts'),
+    path.resolve(apiVersionDirPath, 'index.ts'),
     `export * from './types';\n`
   );
 }
 
-async function ensureTypesFolder(typesDirPath: string, apiVersion: string) {
-  try {
-    await fs.mkdir(typesDirPath);
-  } catch {
-    return Promise.resolve();
-  }
-
-  // export `ApiVersion` constant
-  await fs.writeFile(
-    path.resolve(typesDirPath, 'index.ts'),
-    `export const ApiVersion = '${apiVersion}';\n`
+async function createTypesFile(
+  apiVersionDirPath: string,
+  header: string,
+  data: string
+) {
+  return fs.writeFile(
+    path.resolve(apiVersionDirPath, 'types.ts'),
+    header + data
   );
 }
 
-async function ensureResourceTypeFile(
-  typesDirPath: string,
-  resourceName: string,
-  data: string
-) {
-  const resourceFileName = `${resourceName.toLocaleLowerCase()}.ts`;
-
-  await fs.writeFile(path.resolve(typesDirPath, resourceFileName), data);
-
-  const exportLine = `export * from './${resourceName.toLocaleLowerCase()}';\n`;
-  let contents;
-  try {
-    contents = await fs.readFile(path.resolve(typesDirPath, 'index.ts'));
-  } catch {}
-
-  if (!contents?.toString().includes(exportLine)) {
-    // export types
-    await fs.appendFile(path.resolve(typesDirPath, 'index.ts'), exportLine);
-  }
-}
-
 async function readMapiResourcesListFile() {
-  log('Reading MAPI resources list from file...');
+  log('Reading MAPI resources list from file... ', false);
 
   const mapiResources = await getMapiResourcesList();
 
-  log('Read MAPI resources list file successfully.');
+  log('done.');
 
   return mapiResources;
 }
@@ -169,36 +162,39 @@ async function generateTypes(group: IApiGroupInfo) {
   const responses = await Promise.allSettled(requests);
 
   log(`  Ensuring directories... `, false);
-  // Create apiGroupVersion folder (e.g. /capiv1beta1) and export
-  await ensureApiVersionFolder(group.apiVersionAlias);
-
-  const typesDirPath = path.resolve(
+  const apiVersionDirPath = path.resolve(
     mapiServicesDirectory,
-    group.apiVersionAlias,
-    'types'
+    group.apiVersionAlias
   );
-
-  // Create types subfolder and export 'ApiVersion' const
-  await ensureTypesFolder(typesDirPath, group.apiVersion);
+  await ensureApiVersionFolder(apiVersionDirPath);
   log('done.');
 
-  log(`  Writing types:`);
+  let data = '';
+  let resourceNamesWritten = [];
   for (let i = 0; i < requests.length; i++) {
     const resource = group.resources[i];
-    log(`    ${resource.name}... `, false);
-
     const response = responses[i];
 
     if (response.status === 'rejected') {
-      error(`Could not get types: ${response.reason}`);
+      error(
+        `Could not get types for resource ${resource.name}: ${response.reason}`
+      );
 
       continue;
     }
-
-    // Create resource type file and export types
-    await ensureResourceTypeFile(typesDirPath, resource.name, response.value);
-    log(`done.`);
+    data +=
+      formatResourceKindDeclaration(resource.name) + response.value + '\n';
+    resourceNamesWritten.push(resource.name);
   }
+
+  log(`  Writing types...`);
+  resourceNamesWritten.forEach((r) => log(`    ${r}`));
+  await createTypesFile(
+    apiVersionDirPath,
+    formatTypesFileHeader(group.apiVersion),
+    data
+  );
+  log(`  done.`);
 }
 
 export async function main() {
