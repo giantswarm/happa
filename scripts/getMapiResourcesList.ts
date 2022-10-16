@@ -3,14 +3,6 @@ import fs from 'fs/promises';
 import path from 'path';
 
 const filePath = path.resolve('scripts', 'mapi-resources.yaml');
-
-export async function getMapiResourcesList(): Promise<IApiGroupInfo[]> {
-  const contents = await fs.readFile(filePath);
-  const data = yaml.load(contents.toString()) as IApiGroupInfo[];
-
-  return data;
-}
-
 export interface IResourceInfo {
   /**
    * name of the name of the resource - this will be used as the name
@@ -37,4 +29,11 @@ export interface IApiGroupInfo {
    * resources specifies a list of resources for this API group and version.
    */
   resources: IResourceInfo[];
+}
+
+export async function getMapiResourcesList(): Promise<IApiGroupInfo[]> {
+  const contents = await fs.readFile(filePath);
+  const data = yaml.load(contents.toString()) as IApiGroupInfo[];
+
+  return data;
 }
