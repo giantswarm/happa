@@ -144,7 +144,7 @@
     "@types/lunr": "2.3.4",
     "@types/mermaid": "9.1.0",
     "@types/mini-css-extract-plugin": "2.5.0",
-    "@types/node": "16.11.65",
+    "@types/node": "16.11.66",
     "@types/platform": "1.3.4",
     "@types/react": "18.0.21",
     "@types/react-breadcrumbs": "2.1.5",
