@@ -4,6 +4,7 @@ import { getTypesForResource } from './getTypesForResource';
 import {
   createTypesFile,
   ensureApiVersionFolder,
+  formatListResourceExport,
   formatResourceKindExport,
 } from './writeTypes';
 
@@ -48,7 +49,10 @@ async function getTypesFileContents(
       continue;
     }
 
-    data += formatResourceKindExport(resource.name) + `\n${response.value}\n`;
+    data +=
+      formatResourceKindExport(resource.name) +
+      `\n${response.value}\n` +
+      formatListResourceExport(resource.name);
 
     resourceNamesWritten.push(resource.name);
   }
@@ -80,7 +84,6 @@ async function generateTypes(group: IApiGroupInfo): Promise<void> {
 }
 
 export async function main() {
-  // TODO: write interface for list of resource
   try {
     const mapiResources = await readMapiResourcesListFile();
 

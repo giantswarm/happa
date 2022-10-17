@@ -31,6 +31,25 @@ function formatListResourceName(resourceName: string): string {
   return `${resourceName}List`;
 }
 
+export function formatListResourceExport(resourceName: string): string {
+  const resourceInterfaceName = formatInterfaceName(resourceName);
+
+  const listResourceName = formatListResourceName(resourceName);
+  const listResourceInterfaceName = formatInterfaceName(listResourceName);
+
+  return (
+    formatResourceKindExport(listResourceName) +
+    `
+export interface ${listResourceInterfaceName}
+  extends metav1.IList<${resourceInterfaceName}> {
+  apiVersion: typeof ApiVersion;
+  kind: typeof ${listResourceName};
+}
+  
+`
+  );
+}
+
 export async function ensureApiVersionFolder(apiVersionAlias: string) {
   const apiVersionDirPath = getApiVersionDirPath(apiVersionAlias);
 
