@@ -1084,7 +1084,7 @@ describe('PermissionsOverview on GCP', () => {
         ],
       },
       {
-        name: 'Some use case mentioning provider credentials',
+        name: 'Some use case mentioning provider credentials, but does not contain permissions check for the Secrets resource',
         category: 'some category',
         scope: {
           namespaces: ['*'],
@@ -1130,7 +1130,9 @@ describe('PermissionsOverview on GCP', () => {
       screen.queryByText('Some use case with provider credentials')
     ).not.toBeInTheDocument();
     expect(
-      screen.getByText('Some use case mentioning provider credentials')
+      screen.getByText(
+        'Some use case mentioning provider credentials, but does not contain permissions check for the Secrets resource'
+      )
     ).toBeInTheDocument();
     expect(screen.getByText('Some use case with secrets')).toBeInTheDocument();
   });
