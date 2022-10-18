@@ -275,12 +275,12 @@ describe('ClusterDetailWidgetApps', () => {
         ...applicationv1alpha1Mocks.randomCluster1AppsList,
         items: [
           ...applicationv1alpha1Mocks.randomCluster1AppsList.items,
-          generateApp(clusterId, namespace, 'some-random-app'),
-          generateApp(clusterId, namespace),
-          generateApp(clusterId, namespace, undefined, 'not-deployed'),
-          generateApp(clusterId, namespace),
-          generateApp(clusterId, namespace, 'some-random-app'),
-          generateApp(clusterId, namespace),
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace, status: 'not-deployed' }),
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace }),
         ],
       });
 
@@ -314,12 +314,12 @@ describe('ClusterDetailWidgetApps', () => {
         ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList,
         items: [
           ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList.items,
-          generateApp(clusterId, namespace, 'some-random-app'),
-          generateApp(clusterId, namespace),
-          generateApp(clusterId, namespace, undefined, 'not-deployed'),
-          generateApp(clusterId, namespace),
-          generateApp(clusterId, namespace, 'some-random-app'),
-          generateApp(clusterId, namespace),
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace, status: 'not-deployed' }),
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace }),
         ],
       });
 
@@ -368,8 +368,20 @@ describe('ClusterDetailWidgetApps', () => {
       .reply(StatusCodes.Ok, {
         ...applicationv1alpha1Mocks.randomCluster1AppsList,
         items: [
-          generateApp(clusterId, namespace, 'coredns-app', 'deployed', '1.2.0'),
-          generateApp(clusterId, namespace, 'coredns-app', 'deployed', '1.3.0'),
+          generateApp({
+            clusterId,
+            namespace,
+            specName: 'coredns-app',
+            status: 'deployed',
+            version: '1.2.0',
+          }),
+          generateApp({
+            clusterId,
+            namespace,
+            specName: 'coredns-app',
+            status: 'deployed',
+            version: '1.3.0',
+          }),
         ],
       });
 
@@ -412,8 +424,20 @@ describe('ClusterDetailWidgetApps', () => {
         ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList,
         items: [
           ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList.items,
-          generateApp(clusterId, namespace, 'coredns-app', 'deployed', '1.2.0'),
-          generateApp(clusterId, namespace, 'coredns-app', 'deployed', '1.3.0'),
+          generateApp({
+            clusterId,
+            namespace,
+            specName: 'coredns-app',
+            status: 'deployed',
+            version: '1.2.0',
+          }),
+          generateApp({
+            clusterId,
+            namespace,
+            specName: 'coredns-app',
+            status: 'deployed',
+            version: '1.3.0',
+          }),
         ],
       });
 
@@ -469,8 +493,20 @@ describe('ClusterDetailWidgetApps', () => {
       .reply(StatusCodes.Ok, {
         ...applicationv1alpha1Mocks.randomCluster1AppsList,
         items: [
-          generateApp(clusterId, namespace, 'coredns-app', 'deployed', '1.2.0'),
-          generateApp(clusterId, namespace, 'coredns-app', 'deployed', '1.3.0'),
+          generateApp({
+            clusterId,
+            namespace,
+            specName: 'coredns-app',
+            status: 'deployed',
+            version: '1.2.0',
+          }),
+          generateApp({
+            clusterId,
+            namespace,
+            specName: 'coredns-app',
+            status: 'deployed',
+            version: '1.3.0',
+          }),
         ],
       });
 
@@ -507,8 +543,20 @@ describe('ClusterDetailWidgetApps', () => {
       .reply(StatusCodes.Ok, {
         ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList,
         items: [
-          generateApp(clusterId, namespace, 'coredns-app', 'deployed', '1.2.0'),
-          generateApp(clusterId, namespace, 'coredns-app', 'deployed', '1.3.0'),
+          generateApp({
+            clusterId,
+            namespace,
+            specName: 'coredns-app',
+            status: 'deployed',
+            version: '1.2.0',
+          }),
+          generateApp({
+            clusterId,
+            namespace,
+            specName: 'coredns-app',
+            status: 'deployed',
+            version: '1.3.0',
+          }),
         ],
       });
 

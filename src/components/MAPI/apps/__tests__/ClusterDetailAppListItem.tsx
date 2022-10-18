@@ -9,12 +9,12 @@ import {
 import { Accordion } from 'grommet';
 import { createMemoryHistory } from 'history';
 import { StatusCodes } from 'model/constants';
-import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
+import { generateApp } from 'test/mockHttpCalls/applicationv1alpha1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -23,84 +23,6 @@ import ClusterDetailAppListItem from '../ClusterDetailAppListItem';
 import { IAppsPermissions } from '../permissions/types';
 import { usePermissionsForAppCatalogEntries } from '../permissions/usePermissionsForAppCatalogEntries';
 import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatalogs';
-
-function generateApp(
-  name: string = 'some-app',
-  version: string = '1.2.1',
-  installedAs: string = 'some-app-alias'
-): applicationv1alpha1.IApp {
-  const namespace = capiv1beta1Mocks.randomCluster1.metadata.name;
-
-  return {
-    apiVersion: 'application.giantswarm.io/v1alpha1',
-    kind: 'App',
-    metadata: {
-      annotations: {
-        'chart-operator.giantswarm.io/force-helm-upgrade': 'true',
-      },
-      creationTimestamp: new Date().toISOString(),
-      finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
-      generation: 1,
-      labels: {
-        app: name,
-        'app-operator.giantswarm.io/version': '3.2.1',
-        'giantswarm.io/cluster': namespace,
-        'giantswarm.io/managed-by': 'Helm',
-        'giantswarm.io/organization': 'org1',
-        'giantswarm.io/service-type': 'managed',
-      },
-      name: installedAs,
-      namespace,
-      resourceVersion: '294675096',
-      selfLink: `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/${name}`,
-      uid: '859c4eb1-ece4-4eca-85b2-a4a456b6ae81',
-    },
-    spec: {
-      catalog: 'default',
-      config: {
-        configMap: {
-          name: `${namespace}-cluster-values`,
-          namespace,
-        },
-        secret: {
-          name: '',
-          namespace: '',
-        },
-      },
-      kubeConfig: {
-        context: {
-          name: `${namespace}-kubeconfig`,
-        },
-        inCluster: false,
-        secret: {
-          name: `${namespace}-kubeconfig`,
-          namespace,
-        },
-      },
-      name,
-      namespace: 'giantswarm',
-      userConfig: {
-        configMap: {
-          name: '',
-          namespace: '',
-        },
-        secret: {
-          name: '',
-          namespace: '',
-        },
-      },
-      version,
-    },
-    status: {
-      appVersion: '0.4.1',
-      release: {
-        lastDeployed: '2021-04-27T16:21:37Z',
-        status,
-      },
-      version,
-    },
-  };
-}
 
 const defaultPermissions: IAppsPermissions = {
   canGet: true,
@@ -155,11 +77,15 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('displays app name and alias', async () => {
-    render(
-      getComponent({
-        app: generateApp(),
-      })
-    );
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+      specName: 'some-app',
+      name: 'some-app-alias',
+    });
+
+    render(getComponent({ app }));
 
     const appNameWidget = await screen.findByLabelText('App name');
     expect(within(appNameWidget).getByText('some-app')).toBeInTheDocument();
@@ -195,12 +121,15 @@ describe('ClusterDetailAppListItem', () => {
       .reply(StatusCodes.Ok, entryList);
 
     const currentVersion = '1.2.0';
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+      specName: 'coredns',
+      version: currentVersion,
+    });
 
-    render(
-      getComponent({
-        app: generateApp('coredns', currentVersion),
-      })
-    );
+    render(getComponent({ app }));
 
     const appVersionWidget = await screen.findByLabelText('Version');
     expect(
@@ -254,12 +183,15 @@ describe('ClusterDetailAppListItem', () => {
       );
 
     const currentVersion = '1.2.0-dev';
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+      specName: 'coredns',
+      version: currentVersion,
+    });
 
-    render(
-      getComponent({
-        app: generateApp('coredns', currentVersion),
-      })
-    );
+    render(getComponent({ app }));
 
     const appVersionWidget = await screen.findByLabelText('Version');
     expect(
@@ -283,7 +215,11 @@ describe('ClusterDetailAppListItem', () => {
       defaultPermissions
     );
 
-    const app = generateApp();
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+    });
 
     const { rerender } = render(getComponent({ app }));
 
@@ -310,7 +246,13 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('can upgrade to a newer version', async () => {
-    let app = generateApp('coredns', '1.2.0', 'coredns');
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    let app = generateApp({
+      clusterId,
+      namespace: clusterId,
+      specName: 'coredns',
+      version: '1.2.0',
+    });
     const newVersion = '1.3.0';
 
     nock(window.config.mapiEndpoint)
@@ -376,7 +318,13 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it('can downgrade to an older version', async () => {
-    let app = generateApp('coredns', '1.3.0', 'coredns');
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    let app = generateApp({
+      clusterId,
+      namespace: clusterId,
+      specName: 'coredns',
+      version: '1.3.0',
+    });
     const newVersion = '1.2.0';
 
     nock(window.config.mapiEndpoint)
@@ -442,7 +390,13 @@ describe('ClusterDetailAppListItem', () => {
   });
 
   it(`does not allow updating an app for a 'read-only' user`, async () => {
-    const app = generateApp('coredns', '1.2.0', 'coredns');
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+      specName: 'coredns',
+      version: '1.2.0',
+    });
     const newVersion = '1.3.0';
 
     nock(window.config.mapiEndpoint)
@@ -487,11 +441,13 @@ describe('ClusterDetailAppListItem', () => {
       canList: false,
     });
 
-    render(
-      getComponent({
-        app: generateApp('coredns', '1.2.0', 'coredns'),
-      })
-    );
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+    });
+
+    render(getComponent({ app }));
 
     const detailsButton = screen.getByRole('button', { name: /Details/ });
     expect(detailsButton).toBeDisabled();
@@ -510,7 +466,11 @@ describe('ClusterDetailAppListItem', () => {
       .get(`/apis/application.giantswarm.io/v1alpha1/catalogs/`)
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.defaultCatalogList);
 
-    const app = generateApp('some-app', '1.2.3');
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+    });
 
     render(getComponent({ app }));
 

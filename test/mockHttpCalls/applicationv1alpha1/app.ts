@@ -1,14 +1,25 @@
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { generateRandomString } from 'test/mockHttpCalls';
 
-export function generateApp(
-  clusterId: string,
-  namespace: string,
-  specName: string = 'some-app',
-  status = 'deployed' as 'deployed' | 'not-deployed',
-  version: string = '1.0.1'
-): applicationv1alpha1.IApp {
-  const appName = generateRandomString();
+export function generateApp({
+  clusterId,
+  namespace,
+  name,
+  specName,
+  status = 'deployed',
+  version = '1.0.1',
+  upstreamVersion = '0.4.1',
+}: {
+  clusterId: string;
+  namespace: string;
+  name?: string;
+  specName?: string;
+  status?: 'deployed' | 'not-deployed';
+  version?: string;
+  upstreamVersion?: string;
+}): applicationv1alpha1.IApp {
+  const appSpecName = specName ?? generateRandomString();
+  const appName = name ?? appSpecName;
 
   return {
     apiVersion: 'application.giantswarm.io/v1alpha1',
@@ -36,7 +47,7 @@ export function generateApp(
     },
     spec: {
       catalog: 'default',
-      catalogNamespace: 'default',
+      // catalogNamespace: 'default',
       config: {
         configMap: {
           name: `${clusterId}-cluster-values`,
@@ -57,7 +68,7 @@ export function generateApp(
           namespace,
         },
       },
-      name: specName,
+      name: appSpecName,
       namespace: 'giantswarm',
       userConfig: {
         configMap: {
@@ -72,7 +83,7 @@ export function generateApp(
       version,
     },
     status: {
-      appVersion: '0.4.1',
+      appVersion: upstreamVersion,
       release: {
         lastDeployed: '2021-04-27T16:21:37Z',
         status,

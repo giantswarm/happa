@@ -8,6 +8,7 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
+import { generateApp } from 'test/mockHttpCalls/applicationv1alpha1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import { getComponentWithStore } from 'test/renderUtils';
 import { DeepPartial } from 'utils/helpers';
@@ -15,83 +16,6 @@ import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import ClusterDetailAppListWidgetConfiguration from '../ClusterDetailAppListWidgetConfiguration';
 import { IAppsPermissions } from '../permissions/types';
-
-function generateApp(
-  name: string = 'some-app',
-  version: string = '1.2.1'
-): applicationv1alpha1.IApp {
-  const namespace = capiv1beta1Mocks.randomCluster1.metadata.name;
-
-  return {
-    apiVersion: 'application.giantswarm.io/v1alpha1',
-    kind: 'App',
-    metadata: {
-      annotations: {
-        'chart-operator.giantswarm.io/force-helm-upgrade': 'true',
-      },
-      creationTimestamp: new Date().toISOString(),
-      finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
-      generation: 1,
-      labels: {
-        app: name,
-        'app-operator.giantswarm.io/version': '3.2.1',
-        'giantswarm.io/cluster': namespace,
-        'giantswarm.io/managed-by': 'Helm',
-        'giantswarm.io/organization': 'org1',
-        'giantswarm.io/service-type': 'managed',
-      },
-      name,
-      namespace,
-      resourceVersion: '294675096',
-      selfLink: `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/${name}`,
-      uid: '859c4eb1-ece4-4eca-85b2-a4a456b6ae81',
-    },
-    spec: {
-      catalog: 'default',
-      config: {
-        configMap: {
-          name: `${namespace}-cluster-values`,
-          namespace,
-        },
-        secret: {
-          name: '',
-          namespace: '',
-        },
-      },
-      kubeConfig: {
-        context: {
-          name: `${namespace}-kubeconfig`,
-        },
-        inCluster: false,
-        secret: {
-          name: `${namespace}-kubeconfig`,
-          namespace,
-        },
-      },
-      name,
-      namespace: 'giantswarm',
-      userConfig: {
-        configMap: {
-          name: '',
-          namespace: '',
-        },
-        secret: {
-          name: '',
-          namespace: '',
-        },
-      },
-      version,
-    },
-    status: {
-      appVersion: '0.4.1',
-      release: {
-        lastDeployed: '2021-04-27T16:21:37Z',
-        status,
-      },
-      version,
-    },
-  };
-}
 
 function getComponent(
   props: React.ComponentPropsWithoutRef<
@@ -132,7 +56,11 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
   });
 
   it('displays if the app has config values set up', () => {
-    const app = generateApp();
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+    });
     app.spec.userConfig!.configMap = {
       name: 'some-configmap',
       namespace: 'some-namespace',
@@ -157,7 +85,11 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
   });
 
   it('displays if the app has secret values set up', () => {
-    const app = generateApp();
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+    });
     app.spec.userConfig!.secret = {
       name: 'some-secret',
       namespace: 'some-namespace',
@@ -182,7 +114,11 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
   });
 
   it('can parse and upload config values for an app', async () => {
-    let app = generateApp();
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    let app = generateApp({
+      clusterId,
+      namespace: clusterId,
+    });
     delete app.spec.userConfig!.configMap;
 
     render(
@@ -283,7 +219,11 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
   });
 
   it('can update existing config values for an app', async () => {
-    const app = generateApp();
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+    });
     app.spec.userConfig!.configMap = {
       name: `${app.metadata.name}-user-values`,
       namespace: `${app.metadata.namespace}`,
@@ -367,7 +307,11 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
   });
 
   it('can parse and upload secret values for an app', async () => {
-    let app = generateApp();
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    let app = generateApp({
+      clusterId,
+      namespace: clusterId,
+    });
     delete app.spec.userConfig!.secret;
 
     render(
@@ -467,7 +411,11 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
   });
 
   it('can update existing secret values for an app', async () => {
-    const app = generateApp();
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+    });
     app.spec.userConfig!.secret = {
       name: `${app.metadata.name}-user-secrets`,
       namespace: `${app.metadata.namespace}`,
@@ -553,9 +501,15 @@ describe('ClusterDetailAppListWidgetConfiguration', () => {
   });
 
   it('displays if the user does not have permissions to configure apps', () => {
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+    });
+
     render(
       getComponent({
-        app: generateApp(),
+        app,
         appsPermissions: { ...defaultAppsPermissions, canConfigure: false },
       })
     );
