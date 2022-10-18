@@ -1,4 +1,8 @@
-import { getNamespaceFromOrgName, supportsReleases } from 'MAPI/utils';
+import {
+  getNamespaceFromOrgName,
+  isCAPIProvider,
+  supportsReleases,
+} from 'MAPI/utils';
 import { Constants } from 'model/constants';
 import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
@@ -658,22 +662,56 @@ export function getPermissionsUseCases(
   return filterPermissionsUseCases(useCases, provider);
 }
 
+function useCaseContainsReleases(useCase: IPermissionsUseCase): boolean {
+  return useCase.permissions.some(
+    (permission) =>
+      permission.resources.includes('releases') &&
+      permission.apiGroups.includes('release.giantswarm.io')
+  );
+}
+
+function useCaseContainsLegacyOrgCredentials(
+  useCase: IPermissionsUseCase
+): boolean {
+  return (
+    /provider credential/i.test(useCase.name) &&
+    useCase.permissions.some(
+      (permission) =>
+        permission.resources.includes('secrets') &&
+        permission.apiGroups.includes('')
+    )
+  );
+}
+
+function useCaseContainsCAPAProviderCredentials(
+  useCase: IPermissionsUseCase
+): boolean {
+  return useCase.permissions.some(
+    (permission) =>
+      permission.resources.includes('awsclusterroleidentities') &&
+      permission.apiGroups.includes('infrastructure.cluster.x-k8s.io')
+  );
+}
+
 function filterPermissionsUseCases(
   useCases: IPermissionsUseCase[],
   provider: PropertiesOf<typeof Providers>
 ): IPermissionsUseCase[] {
-  if (!supportsReleases(provider)) {
-    return useCases.filter(
-      (useCase) =>
-        !useCase.permissions.some(
-          (permission) =>
-            permission.resources.includes('releases') &&
-            permission.apiGroups.includes('release.giantswarm.io')
-        )
-    );
-  }
+  const providerSupportsReleases = supportsReleases(provider);
+  const providerSupportsLegacyOrgCredentials = !isCAPIProvider(provider);
 
-  return useCases;
+  return useCases.filter((useCase) => {
+    switch (true) {
+      case !providerSupportsReleases && useCaseContainsReleases(useCase):
+      case !providerSupportsLegacyOrgCredentials &&
+        useCaseContainsLegacyOrgCredentials(useCase):
+      case provider !== Providers.CAPA &&
+        useCaseContainsCAPAProviderCredentials(useCase):
+        return false;
+      default:
+        return true;
+    }
+  });
 }
 
 export function isGlobalUseCase(useCase: IPermissionsUseCase): boolean {
@@ -694,11 +732,47 @@ export function isClusterScopeUseCase(useCase: IPermissionsUseCase): boolean {
  */
 function getResourcesToIgnore(
   provider: PropertiesOf<typeof Providers>
-): string[] {
-  const providerSpecificResources: Record<string, string[]> = {
-    [Providers.AWS]: ['awsclusters', 'g8scontrolplanes', 'awscontrolplanes'],
-    [Providers.AZURE]: ['azureclusters', 'azuremachines'],
-    [Providers.GCP]: ['gcpclusters'],
+): { resource: string; apiGroup: string }[] {
+  const providerSpecificResources: Record<
+    string,
+    { resource: string; apiGroup: string }[]
+  > = {
+    [Providers.AWS]: [
+      {
+        resource: 'awsclusters',
+        apiGroup: 'infrastructure.giantswarm.io',
+      },
+      {
+        resource: 'g8scontrolplanes',
+        apiGroup: 'infrastructure.giantswarm.io',
+      },
+      {
+        resource: 'awscontrolplanes',
+        apiGroup: 'infrastructure.giantswarm.io',
+      },
+    ],
+    [Providers.AZURE]: [
+      {
+        resource: 'azureclusters',
+        apiGroup: 'infrastructure.cluster.x-k8s.io',
+      },
+      {
+        resource: 'azuremachines',
+        apiGroup: 'infrastructure.cluster.x-k8s.io',
+      },
+    ],
+    [Providers.CAPA]: [
+      {
+        resource: 'awsclusters',
+        apiGroup: 'infrastructure.cluster.x-k8s.io',
+      },
+    ],
+    [Providers.GCP]: [
+      {
+        resource: 'gcpclusters',
+        apiGroup: 'infrastructure.cluster.x-k8s.io',
+      },
+    ],
   };
 
   delete providerSpecificResources[provider];
@@ -740,7 +814,12 @@ export function getStatusesForUseCases(
 
         // If the resource is in the list of resources to ignore,
         // we skip it.
-        if (resourcesToIgnore.includes(resource)) return true;
+        if (
+          resourcesToIgnore.some(
+            (r) => r.resource === resource && r.apiGroup === apiGroup
+          )
+        )
+          return true;
 
         return hasPermission(
           permissions,
