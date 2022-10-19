@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { getNamespaceFromOrgName } from 'MAPI/utils';
-import { StatusCodes } from 'model/constants';
+import { Providers, StatusCodes } from 'model/constants';
 import { IOrganizationState } from 'model/stores/organization/types';
 import { IState } from 'model/stores/state';
 import nock from 'nock';
@@ -84,8 +84,16 @@ jest.mock('MAPI/apps/permissions/usePermissionsForApps');
 jest.mock('MAPI/apps/permissions/usePermissionsForCatalogs');
 jest.mock('MAPI/apps/permissions/usePermissionsForAppCatalogEntries');
 
-describe('ClusterDetailWidgetApps', () => {
+describe('ClusterDetailWidgetApps on Azure', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const orgId = 'org1';
+  const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+  const namespace = clusterId;
+
   beforeAll(() => {
+    window.config.info.general.provider = Providers.AZURE;
+
     (usePermissionsForApps as jest.Mock).mockReturnValue(
       defaultAppsPermissions
     );
@@ -95,46 +103,23 @@ describe('ClusterDetailWidgetApps', () => {
     (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
       defaultPermissions
     );
-  });
-
-  it('displays loading animations if the cluster is still loading', () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
-
     (useParams as jest.Mock).mockReturnValue({
       orgId,
       clusterId,
     });
+  });
 
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays loading animations if the cluster is still loading', () => {
     render(getComponent({ isClusterApp: false }));
 
     expect(screen.getAllByLabelText('Loading...').length).toEqual(3);
   });
 
-  it('displays loading animations if the cluster is still loading on CAPA', () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomClusterCAPA1.metadata.name;
-
-    (useParams as jest.Mock).mockReturnValue({
-      orgId,
-      clusterId,
-    });
-
-    render(getComponent({ isClusterApp: true }));
-
-    expect(screen.getAllByLabelText('Loading...').length).toEqual(3);
-  });
-
   it('displays a placeholder if there are no apps', async () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
-    const namespace = clusterId;
-
-    (useParams as jest.Mock).mockReturnValue({
-      orgId,
-      clusterId,
-    });
-
     nock(window.config.mapiEndpoint)
       .get(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/`
@@ -145,36 +130,6 @@ describe('ClusterDetailWidgetApps', () => {
       });
 
     render(getComponent({ isClusterApp: false }));
-    expect(await screen.findByText('No apps installed')).toBeInTheDocument();
-    expect(
-      screen.getByText((_, node) => {
-        return (
-          node?.textContent === 'To find apps to install, browse our apps.'
-        );
-      })
-    ).toBeInTheDocument();
-  });
-
-  it('displays a placeholder if there are no apps on CAPA', async () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomClusterCAPA1.metadata.name;
-    const namespace = getNamespaceFromOrgName(orgId);
-
-    (useParams as jest.Mock).mockReturnValue({
-      orgId,
-      clusterId,
-    });
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/?labelSelector=giantswarm.io%2Fcluster%3D${clusterId}`
-      )
-      .reply(StatusCodes.Ok, {
-        ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList,
-        items: [],
-      });
-
-    render(getComponent({ isClusterApp: true }));
     expect(await screen.findByText('No apps installed')).toBeInTheDocument();
     expect(
       screen.getByText((_, node) => {
@@ -186,15 +141,6 @@ describe('ClusterDetailWidgetApps', () => {
   });
 
   it('does not display a prompt to install apps if the user does not have permissions to do so', async () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
-    const namespace = clusterId;
-
-    (useParams as jest.Mock).mockReturnValue({
-      orgId,
-      clusterId: clusterId,
-    });
-
     (usePermissionsForApps as jest.Mock).mockReturnValue({
       ...defaultAppsPermissions,
       canCreate: false,
@@ -210,42 +156,6 @@ describe('ClusterDetailWidgetApps', () => {
       });
 
     render(getComponent({ isClusterApp: false }));
-
-    expect(await screen.findByText('No apps installed')).toBeInTheDocument();
-    expect(
-      screen.queryByText((_, node) => {
-        return (
-          node?.textContent === 'To find apps to install, browse our apps.'
-        );
-      })
-    ).not.toBeInTheDocument();
-  });
-
-  it('does not display a prompt to install apps if the user does not have permissions to do so on CAPA', async () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomClusterCAPA1.metadata.name;
-    const namespace = getNamespaceFromOrgName(orgId);
-
-    (useParams as jest.Mock).mockReturnValue({
-      orgId,
-      clusterId: clusterId,
-    });
-
-    (usePermissionsForApps as jest.Mock).mockReturnValue({
-      ...defaultAppsPermissions,
-      canCreate: false,
-    });
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/?labelSelector=giantswarm.io%2Fcluster%3D${clusterId}`
-      )
-      .reply(StatusCodes.Ok, {
-        ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList,
-        items: [],
-      });
-
-    render(getComponent({ isClusterApp: true }));
 
     expect(await screen.findByText('No apps installed')).toBeInTheDocument();
     expect(
@@ -258,15 +168,6 @@ describe('ClusterDetailWidgetApps', () => {
   });
 
   it('displays stats about the apps installed in the cluster', async () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
-    const namespace = clusterId;
-
-    (useParams as jest.Mock).mockReturnValue({
-      orgId,
-      clusterId: clusterId,
-    });
-
     nock(window.config.mapiEndpoint)
       .get(
         `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/`
@@ -296,67 +197,7 @@ describe('ClusterDetailWidgetApps', () => {
     expect(await screen.findByLabelText('1 not deployed')).toBeInTheDocument();
   });
 
-  it('displays stats about the apps installed in the cluster on CAPA', async () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomClusterCAPA1.metadata.name;
-    const namespace = getNamespaceFromOrgName(orgId);
-
-    (useParams as jest.Mock).mockReturnValue({
-      orgId,
-      clusterId: clusterId,
-    });
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/?labelSelector=giantswarm.io%2Fcluster%3D${clusterId}`
-      )
-      .reply(StatusCodes.Ok, {
-        ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList,
-        items: [
-          ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList.items,
-          generateApp({ clusterId, namespace }),
-          generateApp({ clusterId, namespace }),
-          generateApp({ clusterId, namespace, status: 'not-deployed' }),
-          generateApp({ clusterId, namespace }),
-          generateApp({ clusterId, namespace }),
-          generateApp({ clusterId, namespace }),
-        ],
-      });
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/${clusterId}-default-apps/`
-      )
-      .reply(
-        StatusCodes.Ok,
-        applicationv1alpha1Mocks.randomClusterCAPA1DefaultApp
-      );
-
-    render(getComponent({ isClusterApp: true }));
-
-    expect(
-      await screen.findByLabelText(
-        `${
-          [
-            ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList.items,
-            applicationv1alpha1Mocks.randomClusterCAPA1DefaultApp,
-          ].length + 6
-        } app resources`
-      )
-    ).toBeInTheDocument();
-    expect(await screen.findByLabelText('1 not deployed')).toBeInTheDocument();
-  });
-
   it('displays the number of upgradable apps', async () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
-    const namespace = clusterId;
-
-    (useParams as jest.Mock).mockReturnValue({
-      orgId,
-      clusterId,
-    });
-
     nock(window.config.mapiEndpoint)
       .get(`/apis/application.giantswarm.io/v1alpha1/catalogs/`)
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.defaultCatalogList);
@@ -402,16 +243,174 @@ describe('ClusterDetailWidgetApps', () => {
     ).toBeInTheDocument();
   });
 
-  it('displays the number of upgradable apps on CAPA', async () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomClusterCAPA1.metadata.name;
-    const namespace = getNamespaceFromOrgName(orgId);
+  it('does not display the number of upgradable apps if the user does not have permissions to get catalog resources', async () => {
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canList: false,
+    });
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue({
+      ...defaultPermissions,
+      canList: false,
+    });
 
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/`
+      )
+      .reply(StatusCodes.Ok, {
+        ...applicationv1alpha1Mocks.randomCluster1AppsList,
+        items: [
+          generateApp({
+            clusterId,
+            namespace,
+            specName: 'coredns-app',
+            status: 'deployed',
+            version: '1.2.0',
+          }),
+          generateApp({
+            clusterId,
+            namespace,
+            specName: 'coredns-app',
+            status: 'deployed',
+            version: '1.3.0',
+          }),
+        ],
+      });
+
+    render(getComponent({ isClusterApp: false }));
+
+    expect(
+      await screen.findByLabelText('upgrades available not available')
+    ).toBeInTheDocument();
+  });
+});
+
+describe('ClusterDetailWidgetApps on CAPA', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const orgId = 'org1';
+  const clusterId = capiv1beta1Mocks.randomClusterCAPA1.metadata.name;
+  const namespace = getNamespaceFromOrgName(orgId);
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPA;
+
+    (usePermissionsForApps as jest.Mock).mockReturnValue(
+      defaultAppsPermissions
+    );
+    (usePermissionsForCatalogs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
     (useParams as jest.Mock).mockReturnValue({
       orgId,
       clusterId,
     });
+  });
 
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays loading animations if the cluster is still loading', () => {
+    render(getComponent({ isClusterApp: true }));
+
+    expect(screen.getAllByLabelText('Loading...').length).toEqual(3);
+  });
+
+  it('displays a placeholder if there are no apps', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/?labelSelector=giantswarm.io%2Fcluster%3D${clusterId}`
+      )
+      .reply(StatusCodes.Ok, {
+        ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList,
+        items: [],
+      });
+
+    render(getComponent({ isClusterApp: true }));
+    expect(await screen.findByText('No apps installed')).toBeInTheDocument();
+    expect(
+      screen.getByText((_, node) => {
+        return (
+          node?.textContent === 'To find apps to install, browse our apps.'
+        );
+      })
+    ).toBeInTheDocument();
+  });
+
+  it('does not display a prompt to install apps if the user does not have permissions to do so', async () => {
+    (usePermissionsForApps as jest.Mock).mockReturnValue({
+      ...defaultAppsPermissions,
+      canCreate: false,
+    });
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/?labelSelector=giantswarm.io%2Fcluster%3D${clusterId}`
+      )
+      .reply(StatusCodes.Ok, {
+        ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList,
+        items: [],
+      });
+
+    render(getComponent({ isClusterApp: true }));
+
+    expect(await screen.findByText('No apps installed')).toBeInTheDocument();
+    expect(
+      screen.queryByText((_, node) => {
+        return (
+          node?.textContent === 'To find apps to install, browse our apps.'
+        );
+      })
+    ).not.toBeInTheDocument();
+  });
+
+  it('displays stats about the apps installed in the cluster', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/?labelSelector=giantswarm.io%2Fcluster%3D${clusterId}`
+      )
+      .reply(StatusCodes.Ok, {
+        ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList,
+        items: [
+          ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList.items,
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace, status: 'not-deployed' }),
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace }),
+          generateApp({ clusterId, namespace }),
+        ],
+      });
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/${clusterId}-default-apps/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        applicationv1alpha1Mocks.randomClusterCAPA1DefaultApp
+      );
+
+    render(getComponent({ isClusterApp: true }));
+
+    expect(
+      await screen.findByLabelText(
+        `${
+          [
+            ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList.items,
+            applicationv1alpha1Mocks.randomClusterCAPA1DefaultApp,
+          ].length + 6
+        } app resources`
+      )
+    ).toBeInTheDocument();
+    expect(await screen.findByLabelText('1 not deployed')).toBeInTheDocument();
+  });
+
+  it('displays the number of upgradable apps', async () => {
     nock(window.config.mapiEndpoint)
       .get(`/apis/application.giantswarm.io/v1alpha1/catalogs/`)
       .reply(StatusCodes.Ok, applicationv1alpha1Mocks.defaultCatalogList);
@@ -468,65 +467,6 @@ describe('ClusterDetailWidgetApps', () => {
   });
 
   it('does not display the number of upgradable apps if the user does not have permissions to get catalog resources', async () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
-    const namespace = clusterId;
-
-    (useParams as jest.Mock).mockReturnValue({
-      orgId,
-      clusterId,
-    });
-
-    (usePermissionsForCatalogs as jest.Mock).mockReturnValue({
-      ...defaultPermissions,
-      canList: false,
-    });
-    (usePermissionsForAppCatalogEntries as jest.Mock).mockReturnValue({
-      ...defaultPermissions,
-      canList: false,
-    });
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/`
-      )
-      .reply(StatusCodes.Ok, {
-        ...applicationv1alpha1Mocks.randomCluster1AppsList,
-        items: [
-          generateApp({
-            clusterId,
-            namespace,
-            specName: 'coredns-app',
-            status: 'deployed',
-            version: '1.2.0',
-          }),
-          generateApp({
-            clusterId,
-            namespace,
-            specName: 'coredns-app',
-            status: 'deployed',
-            version: '1.3.0',
-          }),
-        ],
-      });
-
-    render(getComponent({ isClusterApp: false }));
-
-    expect(
-      await screen.findByLabelText('upgrades available not available')
-    ).toBeInTheDocument();
-  });
-
-  it('does not display the number of upgradable apps if the user does not have permissions to get catalog resources on CAPA', async () => {
-    const orgId = 'org1';
-    const clusterId = capiv1beta1Mocks.randomClusterCAPA1.metadata.name;
-    const namespace = getNamespaceFromOrgName(orgId);
-
-    (useParams as jest.Mock).mockReturnValue({
-      orgId,
-      clusterId,
-    });
-
     (usePermissionsForCatalogs as jest.Mock).mockReturnValue({
       ...defaultPermissions,
       canList: false,
