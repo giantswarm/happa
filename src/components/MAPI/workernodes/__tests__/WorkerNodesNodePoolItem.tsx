@@ -201,7 +201,9 @@ describe('WorkerNodesNodePoolItem on Azure', () => {
       getComponent({
         nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
         providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
-        additionalColumns: getAdditionalColumns(Providers.AZURE),
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomCluster1
+        ),
       })
     );
 
@@ -225,7 +227,9 @@ describe('WorkerNodesNodePoolItem on Azure', () => {
             },
           },
         },
-        additionalColumns: getAdditionalColumns(Providers.AZURE),
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomCluster1
+        ),
       })
     );
 
@@ -641,7 +645,9 @@ describe('WorkerNodesNodePoolItem on AWS', () => {
         nodePool: capiv1beta1Mocks.randomClusterAWS1MachineDeployment1,
         providerNodePool:
           infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1,
-        additionalColumns: getAdditionalColumns(Providers.AWS),
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomClusterAWS1
+        ),
       })
     );
 
@@ -663,7 +669,9 @@ describe('WorkerNodesNodePoolItem on AWS', () => {
             },
           },
         },
-        additionalColumns: getAdditionalColumns(Providers.AWS),
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomClusterAWS1
+        ),
       })
     );
 
@@ -918,6 +926,57 @@ describe('WorkerNodesNodePoolItem on CAPA', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByLabelText('Autoscaler current node count: 3')
+    ).toBeInTheDocument();
+  });
+
+  it('displays information about instances distribution', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
+        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePool,
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomClusterCAPA1
+        ),
+      })
+    );
+
+    const spotInstancesDisabledLabel = screen.getByLabelText(
+      'Spot instances disabled'
+    );
+    expect(spotInstancesDisabledLabel).toBeInTheDocument();
+
+    fireEvent.mouseOver(spotInstancesDisabledLabel);
+
+    expect(screen.getByText('Spot instances disabled')).toBeInTheDocument();
+    expect(
+      screen.getByText('On-demand base capacity: 100')
+    ).toBeInTheDocument();
+    expect(screen.getByText('Spot instance percentage: 0')).toBeInTheDocument();
+  });
+
+  it('displays if spot instances are used', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
+        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePoolSpot,
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomClusterCAPA1
+        ),
+      })
+    );
+
+    const spotInstancesEnabledLabel = screen.getByLabelText(
+      'Spot instances enabled'
+    );
+    expect(spotInstancesEnabledLabel).toBeInTheDocument();
+
+    fireEvent.mouseOver(spotInstancesEnabledLabel);
+
+    expect(screen.getByText('Spot instances enabled')).toBeInTheDocument();
+    expect(screen.getByText('Using maximum price: $0.90'));
+    expect(screen.getByText('On-demand base capacity: 0')).toBeInTheDocument();
+    expect(
+      screen.getByText('Spot instance percentage: 50')
     ).toBeInTheDocument();
   });
 });
