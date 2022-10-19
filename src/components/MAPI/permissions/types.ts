@@ -30,7 +30,7 @@ export interface IPermissionsUseCase {
   name: string;
   description?: string;
   category?: string;
-  providers?: (typeof Providers | string)[];
+  providers?: PropertiesOf<typeof Providers>[];
   scope: {
     cluster?: boolean;
     namespaces?: UseCaseScopeNamespace[];
@@ -43,7 +43,7 @@ export interface IPermissionsForUseCase {
   resources: string[];
   resourceNames?: string[];
   verbs: PermissionVerb[];
-  providers?: (typeof Providers | string)[];
+  providers?: PropertiesOf<typeof Providers>[];
 }
 
 type UseCaseScopeNamespace = 'default' | '*' | string;

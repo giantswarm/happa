@@ -631,7 +631,6 @@ describe('permissions::utils', () => {
         const statuses = getStatusesForUseCases(
           input.permissions,
           input.useCases,
-          input.provider,
           input.organizations
         );
 
