@@ -1,3 +1,4 @@
+import { Providers } from 'model/constants';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import * as rbacv1 from 'model/services/mapi/rbacv1';
 
@@ -29,6 +30,7 @@ export interface IPermissionsUseCase {
   name: string;
   description?: string;
   category?: string;
+  providers?: PropertiesOf<typeof Providers>[];
   scope: {
     cluster?: boolean;
     namespaces?: UseCaseScopeNamespace[];
@@ -41,6 +43,7 @@ export interface IPermissionsForUseCase {
   resources: string[];
   resourceNames?: string[];
   verbs: PermissionVerb[];
+  providers?: PropertiesOf<typeof Providers>[];
 }
 
 type UseCaseScopeNamespace = 'default' | '*' | string;
