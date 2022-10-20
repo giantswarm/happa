@@ -963,6 +963,15 @@ export interface IAWSMachinePool {
         type?: string;
       };
       /**
+       * SpotMarketOptions are options for configuring AWSMachinePool instances to be run using AWS Spot instances.
+       */
+      spotMarketOptions?: {
+        /**
+         * MaxPrice defines the maximum price the user is willing to pay for Spot VM instances
+         */
+        maxPrice?: string;
+      };
+      /**
        * SSHKeyName is the name of the ssh key to attach to the instance. Valid values are empty string (do not use SSH keys), a valid SSH key name, or omitted (use the default SSH key name)
        */
       sshKeyName?: string;
