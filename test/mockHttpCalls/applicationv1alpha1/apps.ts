@@ -1017,3 +1017,471 @@ export const randomCluster3AppsList: applicationv1alpha1.IAppList = {
     selfLink: '/apis/application.giantswarm.io/v1alpha1/namespaces/as43z/apps/',
   },
 };
+
+export const randomClusterCAPA1DefaultApp: applicationv1alpha1.IApp = {
+  apiVersion: 'application.giantswarm.io/v1alpha1',
+  kind: 'App',
+  metadata: {
+    annotations: {
+      'kubectl.kubernetes.io/last-applied-configuration':
+        '{"apiVersion":"application.giantswarm.io/v1alpha1","kind":"App","metadata":{"annotations":{},"labels":{"app-operator.giantswarm.io/version":"0.0.0"},"name":"asdf1-default-apps","namespace":"org-org1"},"spec":{"catalog":"cluster","config":{"configMap":{"name":"","namespace":""},"secret":{"name":"","namespace":""}},"kubeConfig":{"context":{"name":""},"inCluster":true,"secret":{"name":"","namespace":""}},"name":"default-apps-aws","namespace":"org-org1","userConfig":{"configMap":{"name":"asdf1-default-apps-userconfig","namespace":"org-org1"}},"version":"0.5.5"}}\n',
+    },
+    creationTimestamp: '2022-10-10T09:20:55Z',
+    finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+    generation: 1,
+    labels: {
+      'app-operator.giantswarm.io/version': '0.0.0',
+      'app.kubernetes.io/name': 'default-apps-aws',
+    },
+    name: 'asdf1-default-apps',
+    namespace: 'org-org1',
+    resourceVersion: '62752402',
+    uid: '0fb59102-8cd5-4046-ae4d-58b5c93cabfd',
+  },
+  spec: {
+    catalog: 'cluster',
+    config: {
+      configMap: {
+        name: '',
+        namespace: '',
+      },
+      secret: {
+        name: '',
+        namespace: '',
+      },
+    },
+    kubeConfig: {
+      context: {
+        name: '',
+      },
+      inCluster: true,
+      secret: {
+        name: '',
+        namespace: '',
+      },
+    },
+    name: 'default-apps-aws',
+    namespace: 'org-org1',
+    userConfig: {
+      configMap: {
+        name: 'asdf1-default-apps-userconfig',
+        namespace: 'org-org1',
+      },
+    },
+    version: '0.5.5',
+  },
+  status: {
+    appVersion: '',
+    release: {
+      lastDeployed: '2022-10-10T09:20:56Z',
+      status: 'deployed',
+    },
+    version: '0.5.5',
+  },
+};
+
+export const randomClusterCAPA1AppsList: applicationv1alpha1.IAppList = {
+  apiVersion: 'application.giantswarm.io/v1alpha1',
+  kind: applicationv1alpha1.AppList,
+  metadata: {
+    resourceVersion: '71861408',
+  },
+  items: [
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'chart-operator.giantswarm.io/force-helm-upgrade': 'false',
+        },
+        creationTimestamp: '2022-10-10T09:20:56Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app-operator.giantswarm.io/version': '0.0.0',
+          'app.kubernetes.io/name': 'app-operator',
+          'giantswarm.io/cluster': 'asdf1',
+          'giantswarm.io/managed-by': 'cluster-apps-operator',
+        },
+        name: 'asdf1-app-operator',
+        namespace: 'org-org1',
+        resourceVersion: '62752470',
+        uid: '7a4be5b7-244b-4dab-82b5-d91841d2cc04',
+      },
+      spec: {
+        catalog: 'control-plane-catalog',
+        config: {
+          configMap: {
+            name: 'asdf1-app-operator-values',
+            namespace: 'org-org1',
+          },
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        install: {},
+        kubeConfig: {
+          context: {
+            name: '',
+          },
+          inCluster: true,
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        name: 'app-operator',
+        namespace: 'org-org1',
+        namespaceConfig: {},
+        userConfig: {
+          configMap: {
+            name: '',
+            namespace: '',
+          },
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        version: '6.4.0',
+      },
+      status: {
+        appVersion: '6.4.0',
+        release: {
+          lastDeployed: '2022-10-10T09:20:58Z',
+          status: 'deployed',
+        },
+        version: '6.4.0',
+      },
+    },
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'app-operator.giantswarm.io/latest-configmap-version': '68103702',
+          'app-operator.giantswarm.io/trigger-reconciliation':
+            '2022-10-10T09:27:06Z',
+          'chart-operator.giantswarm.io/force-helm-upgrade': 'false',
+          'meta.helm.sh/release-name': 'asdf1-default-apps',
+          'meta.helm.sh/release-namespace': 'org-org1',
+        },
+        creationTimestamp: '2022-10-10T09:20:56Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app.giantswarm.io/branch': '',
+          'app.giantswarm.io/commit': '',
+          'app.kubernetes.io/instance': 'asdf1-default-apps',
+          'app.kubernetes.io/managed-by': 'Helm',
+          'app.kubernetes.io/name': 'default-apps-aws',
+          'app.kubernetes.io/version': '0.5.5',
+          'application.giantswarm.io/team': 'hydra',
+          'giantswarm.io/cluster': 'asdf1',
+          'giantswarm.io/managed-by': 'asdf1-default-apps',
+          'giantswarm.io/organization': 'org1',
+          'giantswarm.io/service-type': 'managed',
+          'helm.sh/chart': 'default-apps-aws-0.5.5',
+        },
+        name: 'asdf1-aws-ebs-csi-driver',
+        namespace: 'org-org1',
+        resourceVersion: '68104716',
+        uid: 'ddf02daa-308d-4159-aa5e-2cb0681193e1',
+      },
+      spec: {
+        catalog: 'default',
+        config: {
+          configMap: {
+            name: 'asdf1-cluster-values',
+            namespace: 'org-org1',
+          },
+        },
+        kubeConfig: {
+          context: {
+            name: 'asdf1-admin@asdf1',
+          },
+          inCluster: false,
+          secret: {
+            name: 'asdf1-kubeconfig',
+            namespace: 'org-org1',
+          },
+        },
+        name: 'aws-ebs-csi-driver-app',
+        namespace: 'kube-system',
+        version: '2.16.1',
+      },
+      status: {
+        appVersion: '1.8.0',
+        release: {
+          lastDeployed: '2022-10-10T14:35:29Z',
+          status: 'deployed',
+        },
+        version: '2.16.1',
+      },
+    },
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'app-operator.giantswarm.io/latest-configmap-version': '68103702',
+          'app-operator.giantswarm.io/trigger-reconciliation':
+            '2022-10-10T09:27:06Z',
+          'chart-operator.giantswarm.io/force-helm-upgrade': 'false',
+          'meta.helm.sh/release-name': 'asdf1-default-apps',
+          'meta.helm.sh/release-namespace': 'org-org1',
+        },
+        creationTimestamp: '2022-10-10T09:20:56Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app.giantswarm.io/branch': '',
+          'app.giantswarm.io/commit': '',
+          'app.kubernetes.io/instance': 'asdf1-default-apps',
+          'app.kubernetes.io/managed-by': 'Helm',
+          'app.kubernetes.io/name': 'default-apps-aws',
+          'app.kubernetes.io/version': '0.5.5',
+          'application.giantswarm.io/team': 'hydra',
+          'giantswarm.io/cluster': 'asdf1',
+          'giantswarm.io/managed-by': 'asdf1-default-apps',
+          'giantswarm.io/organization': 'org1',
+          'giantswarm.io/service-type': 'managed',
+          'helm.sh/chart': 'default-apps-aws-0.5.5',
+        },
+        name: 'asdf1-capi-node-labeler',
+        namespace: 'org-org1',
+        resourceVersion: '68104847',
+        uid: 'cbaed317-7c31-430f-bb56-cfd4c11823c1',
+      },
+      spec: {
+        catalog: 'default',
+        config: {
+          configMap: {
+            name: 'asdf1-cluster-values',
+            namespace: 'org-org1',
+          },
+        },
+        kubeConfig: {
+          context: {
+            name: 'asdf1-admin@asdf1',
+          },
+          inCluster: false,
+          secret: {
+            name: 'asdf1-kubeconfig',
+            namespace: 'org-org1',
+          },
+        },
+        name: 'capi-node-labeler',
+        namespace: 'kube-system',
+        version: '0.3.4',
+      },
+      status: {
+        appVersion: '0.0.1',
+        release: {
+          lastDeployed: '2022-10-10T14:35:44Z',
+          status: 'deployed',
+        },
+        version: '0.3.4',
+      },
+    },
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'app-operator.giantswarm.io/latest-configmap-version': '68103702',
+          'app-operator.giantswarm.io/trigger-reconciliation':
+            '2022-10-10T09:27:06Z',
+          'chart-operator.giantswarm.io/force-helm-upgrade': 'true',
+          'meta.helm.sh/release-name': 'asdf1-default-apps',
+          'meta.helm.sh/release-namespace': 'org-org1',
+        },
+        creationTimestamp: '2022-10-10T09:20:56Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app.giantswarm.io/branch': '',
+          'app.giantswarm.io/commit': '',
+          'app.kubernetes.io/instance': 'asdf1-default-apps',
+          'app.kubernetes.io/managed-by': 'Helm',
+          'app.kubernetes.io/name': 'default-apps-aws',
+          'app.kubernetes.io/version': '0.5.5',
+          'application.giantswarm.io/team': 'hydra',
+          'giantswarm.io/cluster': 'asdf1',
+          'giantswarm.io/managed-by': 'asdf1-default-apps',
+          'giantswarm.io/organization': 'org1',
+          'giantswarm.io/service-type': 'managed',
+          'helm.sh/chart': 'default-apps-aws-0.5.5',
+        },
+        name: 'asdf1-cert-exporter',
+        namespace: 'org-org1',
+        resourceVersion: '68104484',
+        uid: 'a6971bdd-ce2d-4369-80d6-e351b119213c',
+      },
+      spec: {
+        catalog: 'default',
+        config: {
+          configMap: {
+            name: 'asdf1-cluster-values',
+            namespace: 'org-org1',
+          },
+        },
+        kubeConfig: {
+          context: {
+            name: 'asdf1-admin@asdf1',
+          },
+          inCluster: false,
+          secret: {
+            name: 'asdf1-kubeconfig',
+            namespace: 'org-org1',
+          },
+        },
+        name: 'cert-exporter',
+        namespace: 'kube-system',
+        version: '2.3.0',
+      },
+      status: {
+        appVersion: '2.3.0',
+        release: {
+          lastDeployed: '2022-10-10T14:35:55Z',
+          status: 'deployed',
+        },
+        version: '2.3.0',
+      },
+    },
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'app-operator.giantswarm.io/latest-configmap-version': '68103702',
+          'app-operator.giantswarm.io/trigger-reconciliation':
+            '2022-10-10T09:27:06Z',
+          'chart-operator.giantswarm.io/force-helm-upgrade': 'true',
+          'meta.helm.sh/release-name': 'asdf1-default-apps',
+          'meta.helm.sh/release-namespace': 'org-org1',
+        },
+        creationTimestamp: '2022-10-10T09:20:56Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app.giantswarm.io/branch': '',
+          'app.giantswarm.io/commit': '',
+          'app.kubernetes.io/instance': 'asdf1-default-apps',
+          'app.kubernetes.io/managed-by': 'Helm',
+          'app.kubernetes.io/name': 'default-apps-aws',
+          'app.kubernetes.io/version': '0.5.5',
+          'application.giantswarm.io/team': 'hydra',
+          'giantswarm.io/cluster': 'asdf1',
+          'giantswarm.io/managed-by': 'asdf1-default-apps',
+          'giantswarm.io/organization': 'org1',
+          'giantswarm.io/service-type': 'managed',
+          'helm.sh/chart': 'default-apps-aws-0.5.5',
+        },
+        name: 'asdf1-cert-manager',
+        namespace: 'org-org1',
+        resourceVersion: '68104818',
+        uid: '5fe08cee-a291-44a5-a5f8-b2363ee80d05',
+      },
+      spec: {
+        catalog: 'default',
+        config: {
+          configMap: {
+            name: 'asdf1-cluster-values',
+            namespace: 'org-org1',
+          },
+        },
+        kubeConfig: {
+          context: {
+            name: 'asdf1-admin@asdf1',
+          },
+          inCluster: false,
+          secret: {
+            name: 'asdf1-kubeconfig',
+            namespace: 'org-org1',
+          },
+        },
+        name: 'cert-manager-app',
+        namespace: 'kube-system',
+        version: '2.15.3',
+      },
+      status: {
+        appVersion: '1.7.3',
+        release: {
+          lastDeployed: '2022-10-10T14:35:11Z',
+          status: 'deployed',
+        },
+        version: '2.15.3',
+      },
+    },
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'chart-operator.giantswarm.io/force-helm-upgrade': 'false',
+        },
+        creationTimestamp: '2022-10-10T09:20:57Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app-operator.giantswarm.io/version': '6.4.0',
+          'app.kubernetes.io/name': 'chart-operator',
+          'giantswarm.io/cluster': 'asdf1',
+          'giantswarm.io/managed-by': 'cluster-apps-operator',
+        },
+        name: 'asdf1-chart-operator',
+        namespace: 'org-org1',
+        resourceVersion: '68106032',
+        uid: 'f90d0258-ffa1-4362-9b47-59752f7d316f',
+      },
+      spec: {
+        catalog: 'default',
+        config: {
+          configMap: {
+            name: 'asdf1-cluster-values',
+            namespace: 'org-org1',
+          },
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        install: {},
+        kubeConfig: {
+          context: {
+            name: 'asdf1-kubeconfig',
+          },
+          inCluster: false,
+          secret: {
+            name: 'asdf1-kubeconfig',
+            namespace: 'org-org1',
+          },
+        },
+        name: 'chart-operator',
+        namespace: 'giantswarm',
+        namespaceConfig: {},
+        userConfig: {
+          configMap: {
+            name: '',
+            namespace: '',
+          },
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        version: '2.30.0',
+      },
+      status: {
+        appVersion: '2.30.0',
+        release: {
+          lastDeployed: '2022-10-10T14:35:03Z',
+          status: 'deployed',
+        },
+        version: '2.30.0',
+      },
+    },
+  ],
+};
