@@ -259,6 +259,36 @@ useCases:
           - list
           - patch
           - update
+  - name: "Inspect provider credentials"
+    description: "Read AWSClusterRoleIdentity CRs used to store cloud provider credentials"
+    category: "provider credentials"
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups:
+          - "infrastructure.cluster.x-k8s.io"
+        resources:
+          - awsclusterroleidentities
+        verbs:
+          - get
+          - list
+  - name: "Manage provider credentials"
+    description: "Create, modify, delete AWSClusterRoleIdentity CRs used to store cloud provider credentials"
+    category: "provider credentials"
+    scope:
+      cluster: true
+    permissions:
+      - apiGroups:
+          - "infrastructure.cluster.x-k8s.io"
+        resources:
+          - awsclusterroleidentities
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
   - name: "Inspect clusters"
     description: "Read resources that form workload clusters"
     category: "workload clusters"
@@ -276,6 +306,7 @@ useCases:
       - apiGroups:
           - infrastructure.cluster.x-k8s.io
         resources:
+          - awsclusters
           - azureclusters
           - azuremachines
           - gcpclusters
@@ -312,6 +343,7 @@ useCases:
       - apiGroups:
           - infrastructure.cluster.x-k8s.io
         resources:
+          - awsclusters
           - azureclusters
           - azuremachines
           - gcpclusters
