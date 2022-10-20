@@ -991,14 +991,44 @@ export interface INodePoolSpotInstancesAWS {
   nodeCount: number;
 }
 
+export interface INodePoolSpotInstancesCAPA {
+  enabled: boolean;
+  maxPrice: string;
+  onDemandBaseCapacity: number;
+  onDemandPercentageAboveBaseCapacity: number;
+}
+
 export type NodePoolSpotInstances =
   | INodePoolSpotInstancesAzure
-  | INodePoolSpotInstancesAWS;
+  | INodePoolSpotInstancesAWS
+  | INodePoolSpotInstancesCAPA;
 
 export function getProviderNodePoolSpotInstances(
   providerNodePool: ProviderNodePool
 ): NodePoolSpotInstances | undefined {
   switch (providerNodePool?.kind) {
+    case capav1beta1.AWSMachinePool: {
+      const onDemandBaseCapacity =
+        providerNodePool.spec?.mixedInstancesPolicy?.instancesDistribution
+          ?.onDemandBaseCapacity ?? 0;
+      const onDemandPercentageAboveBaseCapacity =
+        providerNodePool.spec?.mixedInstancesPolicy?.instancesDistribution
+          ?.onDemandPercentageAboveBaseCapacity ?? 0;
+      const maxPrice =
+        providerNodePool.spec?.awsLaunchTemplate.spotMarketOptions?.maxPrice ??
+        '';
+
+      return {
+        enabled:
+          typeof providerNodePool.spec?.awsLaunchTemplate.spotMarketOptions !==
+            // eslint-disable-next-line no-magic-numbers
+            'undefined' && onDemandPercentageAboveBaseCapacity < 100,
+        maxPrice,
+        onDemandBaseCapacity: onDemandBaseCapacity,
+        onDemandPercentageAboveBaseCapacity:
+          onDemandPercentageAboveBaseCapacity,
+      };
+    }
     case capzexpv1alpha3.AzureMachinePool:
     case capzv1beta1.AzureMachinePool: {
       try {

@@ -81,15 +81,18 @@ const ClusterDetailWidgetApps: React.FC<
     ? applicationv1alpha1.getAppListKey(appListGetOptions)
     : null;
 
-  const { data: appList, error: appListError } = useSWR<
-    applicationv1alpha1.IAppList,
-    GenericResponseError
-  >(appListKey, () =>
-    applicationv1alpha1.getAppList(
-      appListClient.current,
-      auth,
-      appListGetOptions
-    )
+  const {
+    data: appList,
+    error: appListError,
+    isValidating: appListIsValidating,
+  } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
+    appListKey,
+    () =>
+      applicationv1alpha1.getAppList(
+        appListClient.current,
+        auth,
+        appListGetOptions
+      )
   );
 
   useEffect(() => {
@@ -97,6 +100,12 @@ const ClusterDetailWidgetApps: React.FC<
       ErrorReporter.getInstance().notify(appListError);
     }
   }, [appListError]);
+
+  const appListIsLoading =
+    typeof canListApps === 'undefined' ||
+    (appListIsValidating &&
+      typeof appList === 'undefined' &&
+      typeof appListError === 'undefined');
 
   const appClient = useRef(clientFactory());
 
@@ -113,16 +122,19 @@ const ClusterDetailWidgetApps: React.FC<
       ? applicationv1alpha1.getAppKey(appsNamespace, defaultAppName)
       : null;
 
-  const { data: defaultApp, error: defaultAppError } = useSWR<
-    applicationv1alpha1.IApp,
-    GenericResponseError
-  >(defaultAppKey, () =>
-    applicationv1alpha1.getApp(
-      appClient.current,
-      auth,
-      appsNamespace!,
-      defaultAppName!
-    )
+  const {
+    data: defaultApp,
+    error: defaultAppError,
+    isValidating: defaultAppIsValidating,
+  } = useSWR<applicationv1alpha1.IApp, GenericResponseError>(
+    defaultAppKey,
+    () =>
+      applicationv1alpha1.getApp(
+        appClient.current,
+        auth,
+        appsNamespace!,
+        defaultAppName!
+      )
   );
 
   useEffect(() => {
@@ -130,6 +142,12 @@ const ClusterDetailWidgetApps: React.FC<
       ErrorReporter.getInstance().notify(defaultAppError);
     }
   }, [defaultAppError]);
+
+  const defaultAppIsLoading =
+    typeof canListApps === 'undefined' ||
+    (defaultAppIsValidating &&
+      typeof defaultApp === 'undefined' &&
+      typeof defaultAppError === 'undefined');
 
   const userInstalledApps = useMemo(() => {
     if (typeof appList === 'undefined') {
@@ -144,35 +162,42 @@ const ClusterDetailWidgetApps: React.FC<
   const insufficientPermissionsForApps = canListApps === false;
 
   const appCounters = useMemo(() => {
-    if (appListError || insufficientPermissionsForApps) {
+    if (appListError || defaultAppError || insufficientPermissionsForApps) {
       return {
         apps: -1,
         notDeployed: -1,
       };
     }
-    if (typeof appList === 'undefined') {
+
+    if (appListIsLoading) {
       return {
         apps: undefined,
         notDeployed: undefined,
       };
     }
 
-    if (isClusterApp && typeof defaultApp === 'undefined') {
+    if (isClusterApp && defaultAppIsLoading) {
       return {
         apps: undefined,
         notDeployed: undefined,
       };
     }
 
-    const apps = isClusterApp ? [...appList.items, defaultApp!] : appList.items;
+    const apps = appList ? [...appList.items] : [];
+    if (isClusterApp && defaultApp) {
+      apps.push(defaultApp);
+    }
 
     return computeAppsCategorizedCounters(apps);
   }, [
     appList,
     appListError,
+    appListIsLoading,
     insufficientPermissionsForApps,
     isClusterApp,
     defaultApp,
+    defaultAppError,
+    defaultAppIsLoading,
   ]);
 
   const hasNoApps =
@@ -221,7 +246,7 @@ const ClusterDetailWidgetApps: React.FC<
     if (
       upgradableAppsError ||
       !canReadCatalogResources ||
-      insufficientPermissionsForApps
+      appCounters.apps === -1
     )
       return -1;
 
@@ -233,7 +258,7 @@ const ClusterDetailWidgetApps: React.FC<
   }, [
     upgradableAppsError,
     canReadCatalogResources,
-    insufficientPermissionsForApps,
+    appCounters,
     upgradableApps,
     userInstalledApps,
   ]);
