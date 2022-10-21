@@ -1,8 +1,8 @@
-import { error, log } from './utils';
+import { error, log } from '../utils';
 import { getMapiResourcesList, IApiGroupInfo } from './getMapiResourcesList';
 import { getTypesForResource } from './getTypesForResource';
 import {
-  createTypesFile,
+  writeTypes,
   ensureApiVersionFolder,
   formatListResourceExport,
   formatResourceKindExport,
@@ -52,7 +52,8 @@ async function getTypesFileContents(
     data +=
       formatResourceKindExport(resource.name) +
       `\n${response.value}\n` +
-      formatListResourceExport(resource.name);
+      formatListResourceExport(resource.name) +
+      '\n';
 
     resourceNamesWritten.push(resource.name);
   }
@@ -64,7 +65,7 @@ async function getTypesFileContents(
 
 async function generateTypes(group: IApiGroupInfo): Promise<void> {
   try {
-    log(`Generating types for ${group.apiVersion}:`);
+    log(`Generating types for ${group.apiVersion} (${group.apiVersionAlias}):`);
 
     const { resourceNamesWritten, data } = await getTypesFileContents(group);
 
@@ -73,7 +74,7 @@ async function generateTypes(group: IApiGroupInfo): Promise<void> {
     log(`  Writing types...`);
     resourceNamesWritten.forEach((r) => log(`    ${r}`));
 
-    await createTypesFile(group, data);
+    await writeTypes(group, data);
 
     log(`  done.`);
   } catch (err) {
@@ -83,22 +84,23 @@ async function generateTypes(group: IApiGroupInfo): Promise<void> {
   }
 }
 
-export async function main() {
+async function main() {
   try {
     const mapiResources = await readMapiResourcesListFile();
 
-    const tasks = mapiResources.map(
+    const generateTypesTasks = mapiResources.map(
       (apiGroup) => () => generateTypes(apiGroup)
     );
 
-    async function iterate() {
-      const task = tasks.shift();
+    // Generate TS types for each API group sequentially
+    async function generateNext() {
+      const task = generateTypesTasks.shift();
       if (!task) return;
 
       await task();
-      await iterate();
+      await generateNext();
     }
-    await iterate();
+    await generateNext();
   } catch (err) {
     error((err as Error).toString());
   }

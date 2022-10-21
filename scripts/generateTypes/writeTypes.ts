@@ -1,15 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { IApiGroupInfo } from './getMapiResourcesList';
-import { formatInterfaceName } from './getTypesForResource';
 
 const typesFileName = 'types';
 
 const mapiServicesDirectory = path.resolve('src', 'model', 'services', 'mapi');
-
-function getApiVersionDirPath(apiVersionAlias: string) {
-  return path.resolve(mapiServicesDirectory, apiVersionAlias);
-}
 
 function formatTypesFileHeader(apiVersion: string): string {
   return `/**
@@ -18,17 +13,19 @@ function formatTypesFileHeader(apiVersion: string): string {
 
 import * as metav1 from 'model/services/mapi/metav1';
 
-export const ApiVersion = '${apiVersion}';
-
-`;
-}
-
-export function formatResourceKindExport(resourceName: string) {
-  return `export const ${resourceName} = '${resourceName}';\n`;
+export const ApiVersion = '${apiVersion}';`;
 }
 
 function formatListResourceName(resourceName: string): string {
   return `${resourceName}List`;
+}
+
+export function formatInterfaceName(resourceName: string): string {
+  return `I${resourceName[0].toLocaleUpperCase()}${resourceName.slice(1)}`;
+}
+
+export function formatResourceKindExport(resourceName: string) {
+  return `export const ${resourceName} = '${resourceName}';\n`;
 }
 
 export function formatListResourceExport(resourceName: string): string {
@@ -37,17 +34,15 @@ export function formatListResourceExport(resourceName: string): string {
   const listResourceName = formatListResourceName(resourceName);
   const listResourceInterfaceName = formatInterfaceName(listResourceName);
 
-  return (
-    formatResourceKindExport(listResourceName) +
-    `
-export interface ${listResourceInterfaceName}
-  extends metav1.IList<${resourceInterfaceName}> {
+  return `${formatResourceKindExport(listResourceName)}
+export interface ${listResourceInterfaceName} extends metav1.IList<${resourceInterfaceName}> {
   apiVersion: typeof ApiVersion;
   kind: typeof ${listResourceName};
+}\n`;
 }
-  
-`
-  );
+
+function getApiVersionDirPath(apiVersionAlias: string) {
+  return path.resolve(mapiServicesDirectory, apiVersionAlias);
 }
 
 export async function ensureApiVersionFolder(apiVersionAlias: string) {
@@ -65,7 +60,7 @@ export async function ensureApiVersionFolder(apiVersionAlias: string) {
   );
 }
 
-export async function createTypesFile(group: IApiGroupInfo, data: string) {
+export async function writeTypes(group: IApiGroupInfo, data: string) {
   const apiVersionDirPath = getApiVersionDirPath(group.apiVersionAlias);
   const header = formatTypesFileHeader(group.apiVersion);
 

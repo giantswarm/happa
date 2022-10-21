@@ -2,7 +2,11 @@ import yaml from 'js-yaml';
 import fs from 'fs/promises';
 import path from 'path';
 
-const filePath = path.resolve('scripts', 'mapi-resources.yaml');
+const filePath = path.resolve(
+  'scripts',
+  'generateTypes',
+  'mapi-resources.yaml'
+);
 export interface IResourceInfo {
   /**
    * name of the name of the resource - this will be used as the name
