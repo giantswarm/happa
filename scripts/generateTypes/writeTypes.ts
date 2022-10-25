@@ -13,7 +13,7 @@ function formatTypesFileHeader(apiVersion: string): string {
 
 import * as metav1 from 'model/services/mapi/metav1';
 
-export const ApiVersion = '${apiVersion}';`;
+export const ApiVersion = '${apiVersion}';\n`;
 }
 
 function formatListResourceName(resourceName: string): string {

@@ -50,10 +50,9 @@ async function getTypesFileContents(
     }
 
     data +=
-      formatResourceKindExport(resource.name) +
+      `\n${formatResourceKindExport(resource.name)}` +
       `\n${response.value}\n` +
-      formatListResourceExport(resource.name) +
-      '\n';
+      formatListResourceExport(resource.name);
 
     resourceNamesWritten.push(resource.name);
   }
