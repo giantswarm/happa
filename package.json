@@ -23,7 +23,7 @@
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook",
     "postinstall": "husky install",
-    "generate-types": "./node_modules/.bin/ts-node-esm scripts/generateTypes/index.ts"
+    "generate-types": "./node_modules/.bin/ts-node-esm scripts/generateTypes/index.ts && yarn format:staged \"src/model/services/mapi/**/*.{js,ts,tsx}\" --loglevel error"
   },
   "eslintIgnore": [
     "node_modules",
