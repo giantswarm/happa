@@ -321,13 +321,6 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     return getClusterDescription(cluster, providerCluster);
   }, [cluster, providerCluster, providerClusterIsLoading]);
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
-  const clusterVersion = useMemo(() => {
-    if (!cluster) return undefined;
-
-    return isClusterApp
-      ? capiv1beta1.getClusterAppVersion(cluster)
-      : capiv1beta1.getReleaseVersion(cluster);
-  }, [cluster, isClusterApp]);
 
   const clusterK8sApiURL = cluster
     ? capiv1beta1.getKubernetesAPIEndpointURL(cluster)
@@ -448,7 +441,6 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
               render={() =>
                 cluster && (
                   <ClusterDetailApps
-                    clusterVersion={clusterVersion}
                     isClusterApp={isClusterApp}
                     isClusterCreating={
                       clusterStatus === ClusterStatus.CreationInProgress

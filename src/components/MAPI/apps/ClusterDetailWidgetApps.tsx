@@ -107,48 +107,6 @@ const ClusterDetailWidgetApps: React.FC<
       typeof appList === 'undefined' &&
       typeof appListError === 'undefined');
 
-  const appClient = useRef(clientFactory());
-
-  const defaultAppName = useMemo(() => {
-    if (typeof appList === 'undefined') {
-      return undefined;
-    }
-
-    return applicationv1alpha1.getDefaultAppName(appList.items, provider);
-  }, [appList, provider]);
-
-  const defaultAppKey =
-    canListApps && defaultAppName && appsNamespace
-      ? applicationv1alpha1.getAppKey(appsNamespace, defaultAppName)
-      : null;
-
-  const {
-    data: defaultApp,
-    error: defaultAppError,
-    isValidating: defaultAppIsValidating,
-  } = useSWR<applicationv1alpha1.IApp, GenericResponseError>(
-    defaultAppKey,
-    () =>
-      applicationv1alpha1.getApp(
-        appClient.current,
-        auth,
-        appsNamespace!,
-        defaultAppName!
-      )
-  );
-
-  useEffect(() => {
-    if (defaultAppError) {
-      ErrorReporter.getInstance().notify(defaultAppError);
-    }
-  }, [defaultAppError]);
-
-  const defaultAppIsLoading =
-    typeof canListApps === 'undefined' ||
-    (defaultAppIsValidating &&
-      typeof defaultApp === 'undefined' &&
-      typeof defaultAppError === 'undefined');
-
   const userInstalledApps = useMemo(() => {
     if (typeof appList === 'undefined') {
       return undefined;
@@ -162,7 +120,7 @@ const ClusterDetailWidgetApps: React.FC<
   const insufficientPermissionsForApps = canListApps === false;
 
   const appCounters = useMemo(() => {
-    if (appListError || defaultAppError || insufficientPermissionsForApps) {
+    if (appListError || insufficientPermissionsForApps) {
       return {
         apps: -1,
         notDeployed: -1,
@@ -176,29 +134,10 @@ const ClusterDetailWidgetApps: React.FC<
       };
     }
 
-    if (isClusterApp && defaultAppIsLoading) {
-      return {
-        apps: undefined,
-        notDeployed: undefined,
-      };
-    }
-
-    const apps = appList ? [...appList.items] : [];
-    if (isClusterApp && defaultApp) {
-      apps.push(defaultApp);
-    }
+    const apps = appList?.items ?? [];
 
     return computeAppsCategorizedCounters(apps);
-  }, [
-    appList,
-    appListError,
-    appListIsLoading,
-    insufficientPermissionsForApps,
-    isClusterApp,
-    defaultApp,
-    defaultAppError,
-    defaultAppIsLoading,
-  ]);
+  }, [appList, appListError, appListIsLoading, insufficientPermissionsForApps]);
 
   const hasNoApps =
     typeof appCounters.apps === 'number' && appCounters.apps === 0;

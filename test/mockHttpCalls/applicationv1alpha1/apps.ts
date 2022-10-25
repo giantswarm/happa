@@ -1018,68 +1018,6 @@ export const randomCluster3AppsList: applicationv1alpha1.IAppList = {
   },
 };
 
-export const randomClusterCAPA1DefaultApp: applicationv1alpha1.IApp = {
-  apiVersion: 'application.giantswarm.io/v1alpha1',
-  kind: 'App',
-  metadata: {
-    annotations: {
-      'kubectl.kubernetes.io/last-applied-configuration':
-        '{"apiVersion":"application.giantswarm.io/v1alpha1","kind":"App","metadata":{"annotations":{},"labels":{"app-operator.giantswarm.io/version":"0.0.0"},"name":"asdf1-default-apps","namespace":"org-org1"},"spec":{"catalog":"cluster","config":{"configMap":{"name":"","namespace":""},"secret":{"name":"","namespace":""}},"kubeConfig":{"context":{"name":""},"inCluster":true,"secret":{"name":"","namespace":""}},"name":"default-apps-aws","namespace":"org-org1","userConfig":{"configMap":{"name":"asdf1-default-apps-userconfig","namespace":"org-org1"}},"version":"0.5.5"}}\n',
-    },
-    creationTimestamp: '2022-10-10T09:20:55Z',
-    finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
-    generation: 1,
-    labels: {
-      'app-operator.giantswarm.io/version': '0.0.0',
-      'app.kubernetes.io/name': 'default-apps-aws',
-    },
-    name: 'asdf1-default-apps',
-    namespace: 'org-org1',
-    resourceVersion: '62752402',
-    uid: '0fb59102-8cd5-4046-ae4d-58b5c93cabfd',
-  },
-  spec: {
-    catalog: 'cluster',
-    config: {
-      configMap: {
-        name: '',
-        namespace: '',
-      },
-      secret: {
-        name: '',
-        namespace: '',
-      },
-    },
-    kubeConfig: {
-      context: {
-        name: '',
-      },
-      inCluster: true,
-      secret: {
-        name: '',
-        namespace: '',
-      },
-    },
-    name: 'default-apps-aws',
-    namespace: 'org-org1',
-    userConfig: {
-      configMap: {
-        name: 'asdf1-default-apps-userconfig',
-        namespace: 'org-org1',
-      },
-    },
-    version: '0.5.5',
-  },
-  status: {
-    appVersion: '',
-    release: {
-      lastDeployed: '2022-10-10T09:20:56Z',
-      status: 'deployed',
-    },
-    version: '0.5.5',
-  },
-};
-
 export const randomClusterCAPA1AppsList: applicationv1alpha1.IAppList = {
   apiVersion: 'application.giantswarm.io/v1alpha1',
   kind: applicationv1alpha1.AppList,
@@ -1087,6 +1025,68 @@ export const randomClusterCAPA1AppsList: applicationv1alpha1.IAppList = {
     resourceVersion: '71861408',
   },
   items: [
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'kubectl.kubernetes.io/last-applied-configuration':
+            '{"apiVersion":"application.giantswarm.io/v1alpha1","kind":"App","metadata":{"annotations":{},"labels":{"app-operator.giantswarm.io/version":"0.0.0"},"name":"asdf1-default-apps","namespace":"org-org1"},"spec":{"catalog":"cluster","config":{"configMap":{"name":"","namespace":""},"secret":{"name":"","namespace":""}},"kubeConfig":{"context":{"name":""},"inCluster":true,"secret":{"name":"","namespace":""}},"name":"default-apps-aws","namespace":"org-org1","userConfig":{"configMap":{"name":"asdf1-default-apps-userconfig","namespace":"org-org1"}},"version":"0.5.5"}}\n',
+        },
+        creationTimestamp: '2022-10-10T09:20:55Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app-operator.giantswarm.io/version': '0.0.0',
+          'app.kubernetes.io/name': 'default-apps-aws',
+          'giantswarm.io/cluster': 'asdf1',
+        },
+        name: 'asdf1-default-apps',
+        namespace: 'org-org1',
+        resourceVersion: '62752402',
+        uid: '0fb59102-8cd5-4046-ae4d-58b5c93cabfd',
+      },
+      spec: {
+        catalog: 'cluster',
+        config: {
+          configMap: {
+            name: '',
+            namespace: '',
+          },
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        kubeConfig: {
+          context: {
+            name: '',
+          },
+          inCluster: true,
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        name: 'default-apps-aws',
+        namespace: 'org-org1',
+        userConfig: {
+          configMap: {
+            name: 'asdf1-default-apps-userconfig',
+            namespace: 'org-org1',
+          },
+        },
+        version: '0.5.5',
+      },
+      status: {
+        appVersion: '',
+        release: {
+          lastDeployed: '2022-10-10T09:20:56Z',
+          status: 'deployed',
+        },
+        version: '0.5.5',
+      },
+    },
     {
       apiVersion: 'application.giantswarm.io/v1alpha1',
       kind: 'App',
