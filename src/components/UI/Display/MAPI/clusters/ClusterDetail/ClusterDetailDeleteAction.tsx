@@ -106,6 +106,8 @@ const ClusterDetailDeleteAction: React.FC<
       return;
     }
 
+    if (!debouncedIsNameConfirmed) return;
+
     onDelete();
     hideConfirmation();
   };

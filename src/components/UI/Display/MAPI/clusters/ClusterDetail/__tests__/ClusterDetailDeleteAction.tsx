@@ -126,6 +126,9 @@ describe('ClusterDetailDeleteAction', () => {
     const nameInput = screen.getByLabelText('Cluster name');
     expect(nameInput).toBeInTheDocument();
 
+    fireEvent.keyDown(nameInput, { key: 'enter', keyCode: 13 });
+    expect(onDeleteMockFn).not.toHaveBeenCalled();
+
     fireEvent.change(nameInput, { target: { value: 'at3s' } });
     expect(deleteButton).toBeDisabled();
 
