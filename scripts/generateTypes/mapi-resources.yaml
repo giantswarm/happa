@@ -9,12 +9,20 @@
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsclusterroleidentities.yaml
   - name: AWSMachinePool
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsmachinepools.yaml
+    verbs:
+      - get
   - name: AWSMachineTemplate
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsmachinetemplates.yaml
+    verbs:
+      - get
 - apiVersionAlias: capgv1beta1
   apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
   resources:
   - name: GCPCluster
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-gcp/main/config/crd/bases/infrastructure.cluster.x-k8s.io_gcpclusters.yaml
+    verbs:
+      - get
   - name: GCPMachineTemplate
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-gcp/main/config/crd/bases/infrastructure.cluster.x-k8s.io_gcpmachinetemplates.yaml
+    verbs:
+      - get
