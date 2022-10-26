@@ -14,7 +14,15 @@ interface ICRDPartial {
   kind: 'CustomResourceDefinition';
   spec: {
     versions: { name: string; schema: { openAPIV3Schema: JSONSchema4 } }[];
+    names: { kind: string; listKind: string; plural: string; singular: string };
   };
+}
+
+export interface ICRD extends DeepPartial<ICRDPartial> {}
+
+export interface ICRDForResource {
+  resource: IResourceInfo;
+  crd: ICRD;
 }
 
 /**
@@ -38,23 +46,20 @@ function getTsTypesConfig(config: { kind: string }): JSONSchema4 {
   };
 }
 
-async function fetchCRDSchema(
-  resource: IResourceInfo,
-  resourceVersion: string
-): Promise<JSONSchema4> {
-  const response = await fetch(resource.crdURL);
-  const data = await response.text();
-  const parsedOutput = yaml.load(data) as DeepPartial<ICRDPartial>;
-
+function getCRDSchemaForVersion(
+  resourceVersion: string,
+  resourceName: string,
+  CRD: ICRD
+): JSONSchema4 {
   // try and get schema definition from CRD file contents
   const resourceVersionNumber = resourceVersion.split('/')?.[1];
-  const crdVersion = parsedOutput.spec?.versions?.find(
+  const crdVersion = CRD.spec?.versions?.find(
     (v) => v?.name === resourceVersionNumber
   );
   if (!crdVersion) {
     return Promise.reject(
       new Error(
-        `Could not find schema version ${resourceVersionNumber} for resource ${resource}`
+        `Could not find schema version ${resourceVersionNumber} for resource ${resourceName}`
       )
     );
   }
@@ -65,7 +70,7 @@ async function fetchCRDSchema(
   if (!schema) {
     return Promise.reject(
       new Error(
-        `Resource ${resource} does not have an Open API v3 schema for version ${resourceVersionNumber}`
+        `Resource ${resourceName} does not have an Open API v3 schema for version ${resourceVersionNumber}`
       )
     );
   }
@@ -73,18 +78,25 @@ async function fetchCRDSchema(
   return schema;
 }
 
+export async function fetchCRD(URL: string): Promise<ICRD> {
+  const response = await fetch(URL);
+  const data = await response.text();
+  return yaml.load(data) as ICRD;
+}
+
 export async function getTypesForResource(
-  resource: IResourceInfo,
-  resourceVersion: string
+  version: string,
+  resourceName: string,
+  CRD: ICRD
 ): Promise<string> {
   try {
-    const schema = await fetchCRDSchema(resource, resourceVersion);
+    const schema = getCRDSchemaForVersion(version, resourceName, CRD);
 
-    const config = getTsTypesConfig({ kind: resource.name });
+    const config = getTsTypesConfig({ kind: resourceName });
 
     const output = await compile(
       merge(schema, config),
-      formatInterfaceName(resource.name),
+      formatInterfaceName(resourceName),
       {
         additionalProperties: false,
         bannerComment: '',

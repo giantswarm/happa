@@ -1,6 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { IApiGroupInfo } from './getMapiResourcesList';
+
+export interface IResourceNames {
+  kind: string;
+  listKind: string;
+  plural: string;
+}
 
 const typesFileName = 'types';
 
@@ -16,10 +21,6 @@ import * as metav1 from 'model/services/mapi/metav1';
 export const ApiVersion = '${apiVersion}';\n`;
 }
 
-function formatListResourceName(resourceName: string): string {
-  return `${resourceName}List`;
-}
-
 export function formatInterfaceName(resourceName: string): string {
   return `I${resourceName[0].toLocaleUpperCase()}${resourceName.slice(1)}`;
 }
@@ -28,16 +29,16 @@ export function formatResourceKindExport(resourceName: string) {
   return `export const ${resourceName} = '${resourceName}';\n`;
 }
 
-export function formatListResourceExport(resourceName: string): string {
-  const resourceInterfaceName = formatInterfaceName(resourceName);
+export function formatListResourceExport(
+  resourceNames: IResourceNames
+): string {
+  const resourceInterfaceName = formatInterfaceName(resourceNames.kind);
+  const listResourceInterfaceName = formatInterfaceName(resourceNames.listKind);
 
-  const listResourceName = formatListResourceName(resourceName);
-  const listResourceInterfaceName = formatInterfaceName(listResourceName);
-
-  return `${formatResourceKindExport(listResourceName)}
+  return `${formatResourceKindExport(resourceNames.listKind)}
 export interface ${listResourceInterfaceName} extends metav1.IList<${resourceInterfaceName}> {
   apiVersion: typeof ApiVersion;
-  kind: typeof ${listResourceName};
+  kind: typeof ${resourceNames.listKind};
 }\n`;
 }
 
@@ -45,24 +46,31 @@ function getApiVersionDirPath(apiVersionAlias: string) {
   return path.resolve(mapiServicesDirectory, apiVersionAlias);
 }
 
-export async function ensureApiVersionFolder(apiVersionAlias: string) {
+export async function ensureApiVersionFolder(
+  apiVersionAlias: string
+): Promise<string> {
   const apiVersionDirPath = getApiVersionDirPath(apiVersionAlias);
 
   try {
     await fs.mkdir(apiVersionDirPath);
   } catch {
-    return Promise.resolve();
+    return Promise.resolve(apiVersionDirPath);
   }
 
   await fs.writeFile(
     path.resolve(apiVersionDirPath, 'index.ts'),
     `export * from './${typesFileName}';\n`
   );
+
+  return apiVersionDirPath;
 }
 
-export async function writeTypes(group: IApiGroupInfo, data: string) {
-  const apiVersionDirPath = getApiVersionDirPath(group.apiVersionAlias);
-  const header = formatTypesFileHeader(group.apiVersion);
+export async function writeTypes(
+  apiVersionDirPath: string,
+  apiVersion: string,
+  data: string
+) {
+  const header = formatTypesFileHeader(apiVersion);
 
   return fs.writeFile(
     path.resolve(apiVersionDirPath, `${typesFileName}.ts`),
