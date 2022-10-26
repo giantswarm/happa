@@ -15,6 +15,7 @@ interface ICRDPartial {
   spec: {
     versions: { name: string; schema: { openAPIV3Schema: JSONSchema4 } }[];
     names: { kind: string; listKind: string; plural: string; singular: string };
+    scope: 'Namespaced' | 'Cluster';
   };
 }
 

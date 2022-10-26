@@ -36,19 +36,20 @@ function formatClientFunctionGetMethod(
   apiVersion: string,
   resourceName: string,
   resourceNamePlural: string,
+  namespaced: boolean,
   verb: ClientFunctionVerbs
 ): string {
   return `export function ${getClientFunctionMethodName(resourceName, verb)}(
   client: IHttpClient,
-  auth: IOAuth2Provider,
-  namespace: string,
+  auth: IOAuth2Provider,${namespaced ? '\nnamespace: string,' : ''}
   name: string
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: '${apiVersion}',
-    kind: '${resourceNamePlural.toLocaleLowerCase()}',
-    namespace,
+    kind: '${resourceNamePlural.toLocaleLowerCase()}',${
+    namespaced ? '\nnamespace,' : ''
+  }
     name,
   });
 
@@ -57,14 +58,12 @@ function formatClientFunctionGetMethod(
   )}>(client, auth, url.toString());
 }
 
-export function ${getClientFunctionMethodName(
-    resourceName,
-    verb
-  )}Key(namespace: string, name: string) {
-  return \`${getClientFunctionMethodName(
-    resourceName,
-    verb
-  )}/\${namespace}/\${name}\`;
+export function ${getClientFunctionMethodName(resourceName, verb)}Key(${
+    namespaced ? 'namespace: string, ' : ''
+  } name: string) {
+  return \`${getClientFunctionMethodName(resourceName, verb)}${
+    namespaced ? '/${namespace}' : ''
+  }/\${name}\`;
 }\n`;
 }
 
@@ -72,6 +71,7 @@ export async function writeClientFunction(
   apiVersionDirPath: string,
   apiVersion: string,
   resourceNames: IResourceNames,
+  namespaced: boolean,
   verb: ClientFunctionVerbs
 ) {
   const header = formatClientFunctionFileHeader(resourceNames.kind, verb);
@@ -83,6 +83,7 @@ export async function writeClientFunction(
         apiVersion,
         resourceNames.kind,
         resourceNames.plural,
+        namespaced,
         verb
       )}`;
       break;

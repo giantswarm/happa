@@ -30,6 +30,10 @@ function getResourceNames(crdForResource: ICRDForResource): IResourceNames {
   };
 }
 
+function getResourceScope(crdForResource: ICRDForResource): boolean {
+  return (crdForResource.crd.spec?.scope ?? 'Namespaced') === 'Namespaced';
+}
+
 async function readMapiResourcesListFile(): Promise<IApiGroupInfo[]> {
   log('Reading MAPI resources list from file... ', false);
 
@@ -125,13 +129,18 @@ async function writeClientFunctions(
   const clientFunctionsWritten: Record<string, string[]> = {};
 
   const requests = crdsForTypedResources.reduce<
-    { resourceNames: IResourceNames; verb: ClientFunctionVerbs }[]
+    {
+      resourceNames: IResourceNames;
+      namespaced: boolean;
+      verb: ClientFunctionVerbs;
+    }[]
   >((prev, curr) => {
     if (!curr.resource.verbs) return prev;
     return [
       ...prev,
       ...curr.resource.verbs.map((v) => ({
         resourceNames: getResourceNames(curr),
+        namespaced: getResourceScope(curr),
         verb: v,
       })),
     ];
@@ -139,7 +148,13 @@ async function writeClientFunctions(
 
   const responses = await Promise.allSettled(
     requests.map((r) =>
-      writeClientFunction(apiVersionDirPath, apiGroup, r.resourceNames, r.verb)
+      writeClientFunction(
+        apiVersionDirPath,
+        apiGroup,
+        r.resourceNames,
+        r.namespaced,
+        r.verb
+      )
     )
   );
 
