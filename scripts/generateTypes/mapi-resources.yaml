@@ -3,6 +3,8 @@
   resources:
   - name: AWSCluster
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsclusters.yaml
+    verbs:
+      - get
   - name: AWSClusterRoleIdentity
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsclusterroleidentities.yaml
   - name: AWSMachinePool

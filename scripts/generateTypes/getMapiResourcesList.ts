@@ -7,6 +7,13 @@ const filePath = path.resolve(
   'generateTypes',
   'mapi-resources.yaml'
 );
+
+export type ClientFunctionVerbs =
+  | 'get'
+  | 'list'
+  | 'update'
+  | 'create'
+  | 'delete';
 export interface IResourceInfo {
   /**
    * name of the name of the resource - this will be used as the name
@@ -18,6 +25,11 @@ export interface IResourceInfo {
    * crdURL is the URL at which the .yaml file of the CRD can be found.
    */
   crdURL: string;
+  /**
+   * verbs specifies the methods we wish to interact with the verb. Corresponding
+   * client functions will be generated based on the verbs specified.
+   */
+  verbs?: ClientFunctionVerbs[];
 }
 
 export interface IApiGroupInfo {
