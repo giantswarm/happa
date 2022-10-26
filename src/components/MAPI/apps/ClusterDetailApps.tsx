@@ -2,7 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Paragraph } from 'grommet';
 import ListAppsGuide from 'MAPI/clusters/guides/ListAppsGuide';
-import { extractErrorMessage, getProviderName } from 'MAPI/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -199,9 +199,7 @@ const ClusterDetailApps: React.FC<
               <h3>{isClusterApp ? 'Default Apps' : 'Preinstalled Apps'}</h3>
               <Disclaimer margin={{ bottom: 'medium' }} fill={true}>
                 {isClusterApp
-                  ? `These are installed in every Giant Swarm workload cluster on ${getProviderName(
-                      provider
-                    )}, to provide essential functionality.`
+                  ? `These are installed in every Giant Swarm workload cluster to provide essential functionality.`
                   : 'These apps are preinstalled on your cluster and managed by Giant Swarm.'}
               </Disclaimer>
 
