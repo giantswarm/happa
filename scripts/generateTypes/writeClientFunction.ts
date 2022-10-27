@@ -1,9 +1,12 @@
 import fs from 'fs/promises';
 import path from 'path';
 import {
+  formatClientFunctionCreateMethod,
+  formatClientFunctionDeleteMethod,
   formatClientFunctionFileHeader,
   formatClientFunctionGetMethod,
   formatClientFunctionListMethod,
+  formatClientFunctionUpdateMethod,
   getClientFunctionMethodName,
 } from './templates';
 import { ClientFunctionVerbs } from './getMapiResourcesList';
@@ -40,6 +43,33 @@ export async function writeClientFunction(
       resourceName = resourceNames.listKind;
 
       data += formatClientFunctionListMethod(
+        apiVersion,
+        resourceName,
+        resourceNames.plural,
+        namespaced,
+        verb
+      );
+      break;
+    case 'create':
+      data += formatClientFunctionCreateMethod(
+        apiVersion,
+        resourceName,
+        resourceNames.plural,
+        namespaced,
+        verb
+      );
+      break;
+    case 'update':
+      data += formatClientFunctionUpdateMethod(
+        apiVersion,
+        resourceName,
+        resourceNames.plural,
+        namespaced,
+        verb
+      );
+      break;
+    case 'delete':
+      data += formatClientFunctionDeleteMethod(
         apiVersion,
         resourceName,
         resourceNames.plural,

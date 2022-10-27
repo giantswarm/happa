@@ -25,6 +25,21 @@ export function formatInterfaceName(resourceName: string): string {
   return `I${resourceName[0].toLocaleUpperCase()}${resourceName.slice(1)}`;
 }
 
+function pascalCaseToCamelCase(str: string) {
+  const firstLowerCaseIndex = str
+    .split('')
+    .findIndex((char) => char === char.toLocaleLowerCase());
+
+  if (firstLowerCaseIndex === -1) return str;
+
+  const firstUpperCaseIndex = Math.max(firstLowerCaseIndex - 1, 1);
+
+  return (
+    str.substring(0, firstUpperCaseIndex).toLocaleLowerCase() +
+    str.substring(firstUpperCaseIndex)
+  );
+}
+
 export function formatResourceKindExport(resourceName: string) {
   return `export const ${resourceName} = '${resourceName}';\n`;
 }
@@ -148,5 +163,101 @@ export function ${clientFunctionName}Key(
   });
 
   return url.toString();
+}\n`;
+}
+
+export function formatClientFunctionCreateMethod(
+  apiVersion: string,
+  resourceName: string,
+  resourceNamePlural: string,
+  namespaced: boolean,
+  verb: ClientFunctionVerbs
+) {
+  const clientFunctionName = getClientFunctionMethodName(resourceName, verb);
+  const resourceInterfaceName = formatInterfaceName(resourceName);
+  const resourceNameParam = pascalCaseToCamelCase(resourceName);
+
+  return `export function ${clientFunctionName}(
+  client: IHttpClient,
+  auth: IOAuth2Provider,
+  ${resourceNameParam}: ${resourceInterfaceName}
+) {
+  const url = k8sUrl.create({
+    baseUrl: window.config.mapiEndpoint,
+    apiVersion: '${apiVersion}',
+    kind: '${resourceNamePlural}',${
+    namespaced ? `\nnamespace: ${resourceNameParam}.metadata.namespace!,` : ''
+  }
+  });
+
+  return ${genericMethodNames[verb]}<${resourceInterfaceName}>(
+    client,
+    auth,
+    url.toString(),
+    ${resourceNameParam}
+  );
+}\n`;
+}
+
+export function formatClientFunctionUpdateMethod(
+  apiVersion: string,
+  resourceName: string,
+  resourceNamePlural: string,
+  namespaced: boolean,
+  verb: ClientFunctionVerbs
+) {
+  const clientFunctionName = getClientFunctionMethodName(resourceName, verb);
+  const resourceInterfaceName = formatInterfaceName(resourceName);
+  const resourceNameParam = pascalCaseToCamelCase(resourceName);
+
+  return `export function ${clientFunctionName}(
+  client: IHttpClient,
+  auth: IOAuth2Provider,
+  ${resourceNameParam}: ${resourceInterfaceName}
+) {
+  const url = k8sUrl.create({
+    baseUrl: window.config.mapiEndpoint,
+    apiVersion: '${apiVersion}',
+    kind: '${resourceNamePlural}',
+    name: ${resourceNameParam}.metadata.name,${
+    namespaced ? `\nnamespace: ${resourceNameParam}.metadata.namespace!,` : ''
+  }
+  });
+
+  return ${genericMethodNames[verb]}<${resourceInterfaceName}>(
+    client,
+    auth,
+    url.toString(),
+    ${resourceNameParam}
+  );
+}\n`;
+}
+
+export function formatClientFunctionDeleteMethod(
+  apiVersion: string,
+  resourceName: string,
+  resourceNamePlural: string,
+  namespaced: boolean,
+  verb: ClientFunctionVerbs
+) {
+  const clientFunctionName = getClientFunctionMethodName(resourceName, verb);
+  const resourceInterfaceName = formatInterfaceName(resourceName);
+  const resourceNameParam = pascalCaseToCamelCase(resourceName);
+
+  return `export function ${clientFunctionName}(
+  client: IHttpClient,
+  auth: IOAuth2Provider,
+  ${resourceNameParam}: ${resourceInterfaceName}
+) {
+  const url = k8sUrl.create({
+    baseUrl: window.config.mapiEndpoint,
+    apiVersion: '${apiVersion}',
+    kind: '${resourceNamePlural}',
+    name: ${resourceNameParam}.metadata.name,${
+    namespaced ? `\nnamespace: ${resourceNameParam}.metadata.namespace!,` : ''
+  }
+  });
+
+  return ${genericMethodNames[verb]}(client, auth, url.toString());
 }\n`;
 }
