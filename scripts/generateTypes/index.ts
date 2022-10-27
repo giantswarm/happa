@@ -9,12 +9,14 @@ import {
   getTypesForResource,
   ICRDForResource,
 } from './getTypesForResource';
+import {
+  formatListResourceExport,
+  formatResourceKindExport,
+} from './templates';
 import { writeClientFunction } from './writeClientFunction';
 import {
   writeTypes,
   ensureApiVersionFolder,
-  formatListResourceExport,
-  formatResourceKindExport,
   IResourceNames,
 } from './writeTypes';
 

@@ -5,7 +5,7 @@ import { JSONSchema4 } from 'schema-utils/declarations/validate';
 import { compile } from 'json-schema-to-typescript';
 import { merge } from 'lodash';
 import { DeepPartial } from 'redux';
-import { formatInterfaceName } from './writeTypes';
+import { formatInterfaceName } from './templates';
 
 /**
  * Partial interface of CustomResourceDefinition
