@@ -12,6 +12,14 @@ import {
 import { ClientFunctionVerbs } from './getMapiResourcesList';
 import { IResourceNames } from './writeTypes';
 
+const formatFunctionsForVerbs = {
+  get: formatClientFunctionGetMethod,
+  list: formatClientFunctionListMethod,
+  create: formatClientFunctionCreateMethod,
+  update: formatClientFunctionUpdateMethod,
+  delete: formatClientFunctionDeleteMethod,
+};
+
 function getClientFunctionFileName(
   resourceName: string,
   verb: ClientFunctionVerbs
@@ -26,60 +34,19 @@ export async function writeClientFunction(
   namespaced: boolean,
   verb: ClientFunctionVerbs
 ) {
-  let resourceName = resourceNames.kind;
-  let data: string = '\n';
-
-  switch (verb) {
-    case 'get':
-      data += formatClientFunctionGetMethod(
-        apiVersion,
-        resourceName,
-        resourceNames.plural,
-        namespaced,
-        verb
-      );
-      break;
-    case 'list':
-      resourceName = resourceNames.listKind;
-
-      data += formatClientFunctionListMethod(
-        apiVersion,
-        resourceName,
-        resourceNames.plural,
-        namespaced,
-        verb
-      );
-      break;
-    case 'create':
-      data += formatClientFunctionCreateMethod(
-        apiVersion,
-        resourceName,
-        resourceNames.plural,
-        namespaced,
-        verb
-      );
-      break;
-    case 'update':
-      data += formatClientFunctionUpdateMethod(
-        apiVersion,
-        resourceName,
-        resourceNames.plural,
-        namespaced,
-        verb
-      );
-      break;
-    case 'delete':
-      data += formatClientFunctionDeleteMethod(
-        apiVersion,
-        resourceName,
-        resourceNames.plural,
-        namespaced,
-        verb
-      );
-      break;
-  }
+  const resourceName =
+    verb === 'list' ? resourceNames.listKind : resourceNames.kind;
 
   const header = formatClientFunctionFileHeader(resourceName, verb);
+  const data: string =
+    '\n' +
+    formatFunctionsForVerbs[verb](
+      apiVersion,
+      resourceName,
+      resourceNames.plural,
+      namespaced,
+      verb
+    );
 
   return fs.writeFile(
     path.resolve(
