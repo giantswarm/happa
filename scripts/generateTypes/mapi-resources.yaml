@@ -13,10 +13,12 @@
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsmachinepools.yaml
     verbs:
       - get
+      - list
   - name: AWSMachineTemplate
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsmachinetemplates.yaml
     verbs:
       - get
+      - list
 - apiVersionAlias: capgv1beta1
   apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
   resources:
@@ -28,3 +30,4 @@
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-gcp/main/config/crd/bases/infrastructure.cluster.x-k8s.io_gcpmachinetemplates.yaml
     verbs:
       - get
+      - list

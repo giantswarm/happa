@@ -3,10 +3,18 @@ import path from 'path';
 import {
   formatClientFunctionFileHeader,
   formatClientFunctionGetMethod,
+  formatClientFunctionListMethod,
   getClientFunctionMethodName,
 } from './templates';
 import { ClientFunctionVerbs } from './getMapiResourcesList';
 import { IResourceNames } from './writeTypes';
+
+function getClientFunctionFileName(
+  resourceName: string,
+  verb: ClientFunctionVerbs
+) {
+  return `${getClientFunctionMethodName(resourceName, verb)}.ts`;
+}
 
 export async function writeClientFunction(
   apiVersionDirPath: string,
@@ -15,25 +23,38 @@ export async function writeClientFunction(
   namespaced: boolean,
   verb: ClientFunctionVerbs
 ) {
-  const header = formatClientFunctionFileHeader(resourceNames.kind, verb);
-  let data: string = '';
+  let resourceName = resourceNames.kind;
+  let data: string = '\n';
 
   switch (verb) {
     case 'get':
-      data += `\n${formatClientFunctionGetMethod(
+      data += formatClientFunctionGetMethod(
         apiVersion,
-        resourceNames.kind,
+        resourceName,
         resourceNames.plural,
         namespaced,
         verb
-      )}`;
+      );
+      break;
+    case 'list':
+      resourceName = resourceNames.listKind;
+
+      data += formatClientFunctionListMethod(
+        apiVersion,
+        resourceName,
+        resourceNames.plural,
+        namespaced,
+        verb
+      );
       break;
   }
+
+  const header = formatClientFunctionFileHeader(resourceName, verb);
 
   return fs.writeFile(
     path.resolve(
       apiVersionDirPath,
-      `${getClientFunctionMethodName(resourceNames.kind, verb)}.ts`
+      getClientFunctionFileName(resourceName, verb)
     ),
     header + data
   );
