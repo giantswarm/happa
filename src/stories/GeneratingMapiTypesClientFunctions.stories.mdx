@@ -1,0 +1,59 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title='Development/Generating MAPI types' />
+
+# Generating TS types and client functions for the MAPI client
+
+## Introduction
+happa uses an HTTP client to communicate with the management cluster's Kubernetes API (MAPI). In order to facilitate making requests to the MAPI and working with MAPI custom resources, we define client functions and TypeScript (TS) types. These are generated from the resources' Custom Resource Definitions (CRDs).
+
+## How to generate
+Run `yarn generate-mapi` from happa's base directory.
+
+This generates TS types and MAPI client functions for resources declared in [`scripts/generate/mapi-resources.yaml`](`https://github.com/giantswarm/happa/blob/main/scripts/generate/mapi-resources.yaml`), and formats the generated files with Prettier.
+
+
+## Declaring resources
+Resources for which we wish to generate TS types and client functions can be declared in [`scripts/generate/mapi-resources.yaml`](`https://github.com/giantswarm/happa/blob/main/scripts/generate/mapi-resources.yaml`).
+
+### Example
+Below is an example definition for a resource group entry:
+
+```yaml
+- apiVersionAlias: capgv1beta1
+  apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+  resources:
+  - name: GCPCluster
+    crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-gcp/main/config/crd/bases/infrastructure.cluster.x-k8s.io_gcpclusters.yaml
+```
+
+### Schema
+#### apiVersion
+`apiVersion` is the API version for all resources defined under the resource group entry's `resources` field. This should be the full API version, containing both the API group name and version number.
+
+#### apiVersionAlias
+`apiVersionAlias` is used to group the resources, and its value will be used as the folder name for the generated files for the resources. While resource groups can share the same `apiVersion`, the `apiVersionAlias` should be a unique value, and provides a way for us to organize resources in a more accessible way.
+
+#### resources
+`resources` defines a list of resources for this API version.
+
+##### name
+`name` is the name of the resource, and should be given in PascalCase. This value, prepended with an `I`, will be used as the name for the generated TS interface. To reduce confusion, this should preferably match the `.spec.names.kind` field of the resource's CRD.
+
+##### crdURL
+`crdURL` is the URL at which the `.yaml` file fo the CRD can be found. If referencing a CRD from GitHub, please make sure to use the URL of the raw file contents.
+
+##### verbs
+`verbs` specifies the Kubernetes verbs we wish to use to interact with a resource. Client functions will only be generated for the defined verbs. Value should be one of: `get`, `list`, `update`, `create`, or `delete`.
+
+## Providing custom TS types
+For most cases it should not be necessary to overwrite the types defined by the schema defined in the resource's CRD. However, to allow the generated TS types to work better with happa's codebase, custom TS types can be provided via the `getTSTypesConfig` method in [`scripts/generate/getTypes`](https://github.com/giantswarm/happa/blob/main/scripts/generate/getTypes.ts).
+
+### Example
+Below is an example of a custom TS type. With the `tsType` field, we can specify a custom TS type to replace the predefined type for a field (in this case, `apiVersion`).
+
+```javascript
+apiVersion: {
+  tsType: 'typeof ApiVersion'
+}
+```
