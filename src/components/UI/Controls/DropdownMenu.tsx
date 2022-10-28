@@ -36,6 +36,7 @@ export const Link = styled.a`
   width: 100%;
   &:hover,
   &:focus {
+    text-decoration: none;
     background: ${(props) => props.theme.colors.shade9};
   }
 `;
