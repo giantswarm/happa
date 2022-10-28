@@ -28,7 +28,7 @@ export const List = styled.ul`
 
 export const Link = styled.a`
   display: inline-block;
-  text-decoration: none !important;
+  text-decoration: none;
   color: #fff;
   font-size: 14px;
   font-weight: 400;
@@ -36,6 +36,7 @@ export const Link = styled.a`
   width: 100%;
   &:hover,
   &:focus {
+    text-decoration: none;
     background: ${(props) => props.theme.colors.shade9};
   }
 `;
