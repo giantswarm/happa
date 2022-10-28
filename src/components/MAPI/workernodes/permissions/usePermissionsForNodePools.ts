@@ -235,6 +235,46 @@ export function usePermissionsForNodePools(
 
       break;
 
+    case Providers.CAPA:
+      // Node pools are mutated through the cluster app's ConfigMap
+      computed.canCreate = canUpdateClusterApps;
+      computed.canDelete = canUpdateClusterApps;
+      computed.canUpdate = canUpdateClusterApps;
+
+      computed.canGet =
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'cluster.x-k8s.io',
+          'machinepools'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'infrastructure.cluster.x-k8s.io',
+          'awsmachinepools'
+        );
+
+      computed.canList =
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'cluster.x-k8s.io',
+          'machinepools'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'infrastructure.cluster.x-k8s.io',
+          'awsmachinepools'
+        );
+
+      break;
+
     case Providers.GCP:
       // Node pools are mutated through the cluster app's ConfigMap
       computed.canCreate = canUpdateClusterApps;

@@ -52,6 +52,14 @@ const InstallAppForm: React.FC<
     onChangeSecretsYAML?.(e.target.files);
   };
 
+  const handleValuesYAMLFileInputClicked = () => {
+    onChangeValuesYAML?.(null);
+  };
+
+  const handleSecretsYAMLFileInputClicked = () => {
+    onChangeSecretsYAML?.(null);
+  };
+
   const updateVersion = (newVersion?: string) => {
     if (typeof newVersion === 'undefined') return;
 
@@ -141,6 +149,7 @@ const InstallAppForm: React.FC<
         label='User level config values YAML'
         id='user-level-config'
         onChange={updateValuesYAML}
+        onClick={handleValuesYAMLFileInputClicked}
         error={valuesYAMLError}
       />
 
@@ -149,6 +158,7 @@ const InstallAppForm: React.FC<
         label='User level secret values YAML'
         id='user-level-secret'
         onChange={updateSecretsYAML}
+        onClick={handleSecretsYAMLFileInputClicked}
         error={secretsYAMLError}
       />
     </Box>

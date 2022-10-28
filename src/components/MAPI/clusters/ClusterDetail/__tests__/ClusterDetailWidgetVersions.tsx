@@ -142,3 +142,45 @@ describe('ClusterDetailWidgetVersions on GCP', () => {
     ).toBeInTheDocument();
   });
 });
+
+describe('ClusterDetailWidgetVersions on CAPA', () => {
+  const provider = window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPA;
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays the cluster app version', () => {
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPA1,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Cluster app version: 0.9.2')
+    ).toBeInTheDocument();
+  });
+
+  it(`displays a link to the cluster app version's release notes`, () => {
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPA1,
+      })
+    );
+
+    const releaseNotesLink = screen.getByLabelText(
+      'Cluster app version 0.9.2 release notes'
+    );
+    expect(releaseNotesLink).toBeInTheDocument();
+
+    expect(releaseNotesLink).toHaveAttribute(
+      'href',
+      'https://github.com/giantswarm/cluster-aws/releases/tag/v0.9.2'
+    );
+  });
+});

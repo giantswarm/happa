@@ -845,7 +845,7 @@ export function createDefaultAWSMachineDeployment(config: {
   location: string;
 }): infrav1alpha3.IAWSMachineDeployment {
   return {
-    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    apiVersion: infrav1alpha3.ApiVersion,
     kind: infrav1alpha3.AWSMachineDeployment,
     metadata: {
       namespace: config.namespace,

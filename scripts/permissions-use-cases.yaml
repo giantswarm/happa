@@ -126,6 +126,9 @@ useCases:
     category: "releases"
     scope:
       cluster: true
+    providers:
+      - aws
+      - azure
     permissions:
       - apiGroups:
           - release.giantswarm.io
@@ -233,6 +236,9 @@ useCases:
     scope:
       namespaces:
         - "*"
+    providers:
+      - aws
+      - azure
     permissions:
       - apiGroups:
           - ""
@@ -244,6 +250,9 @@ useCases:
   - name: "Manage provider credentials"
     description: "Create, modify, delete secrets used to store cloud provider credentials in an organization namespace"
     category: "provider credentials"
+    providers:
+      - aws
+      - azure
     scope:
       namespaces:
         - "*"
@@ -252,6 +261,40 @@ useCases:
           - ""
         resources:
           - secrets
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+  - name: "Inspect provider credentials"
+    description: "Read AWSClusterRoleIdentity CRs used to store cloud provider credentials"
+    category: "provider credentials"
+    scope:
+      cluster: true
+    providers:
+      - capa
+    permissions:
+      - apiGroups:
+          - "infrastructure.cluster.x-k8s.io"
+        resources:
+          - awsclusterroleidentities
+        verbs:
+          - get
+          - list
+  - name: "Manage provider credentials"
+    description: "Create, modify, delete AWSClusterRoleIdentity CRs used to store cloud provider credentials"
+    category: "provider credentials"
+    scope:
+      cluster: true
+    providers:
+      - capa
+    permissions:
+      - apiGroups:
+          - "infrastructure.cluster.x-k8s.io"
+        resources:
+          - awsclusterroleidentities
         verbs:
           - create
           - delete
@@ -278,10 +321,29 @@ useCases:
         resources:
           - azureclusters
           - azuremachines
+        verbs:
+          - get
+          - list
+        providers:
+          - azure
+      - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+        resources:
+          - awsclusters
+        verbs:
+          - get
+          - list
+        providers:
+          - capa
+      - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+        resources:
           - gcpclusters
         verbs:
           - get
           - list
+        providers:
+          - gcp
       - apiGroups:
           - infrastructure.giantswarm.io
         resources:
@@ -291,6 +353,8 @@ useCases:
         verbs:
           - get
           - list
+        providers:
+          - aws
   - name: "Manage clusters"
     description: "Create, modify, delete resources that form workload clusters"
     category: "workload clusters"
@@ -314,7 +378,6 @@ useCases:
         resources:
           - azureclusters
           - azuremachines
-          - gcpclusters
         verbs:
           - create
           - delete
@@ -322,6 +385,34 @@ useCases:
           - list
           - patch
           - update
+        providers:
+          - azure
+      - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+        resources:
+          - awsclusters
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+        providers:
+          - capa
+      - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+        resources:
+          - gcpclutsers
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+        providers:
+          - gcp
       - apiGroups:
           - infrastructure.giantswarm.io
         resources:
@@ -335,6 +426,8 @@ useCases:
           - list
           - patch
           - update
+        providers:
+          - aws
   - name: "Create client certificates"
     description: "Create client certificates for workload cluster access"
     category: "workload clusters"

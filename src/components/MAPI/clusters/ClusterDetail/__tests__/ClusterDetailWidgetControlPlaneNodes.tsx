@@ -4,6 +4,7 @@ import { Providers, StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
+import * as capa1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
 import * as capg1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
@@ -349,5 +350,73 @@ describe('ClusterDetailWidgetControlPlaneNodes on GCP', () => {
     expect(await screen.findByTitle('europe-west3-a'));
     expect(await screen.findByTitle('europe-west3-b'));
     expect(await screen.findByTitle('europe-west3-c'));
+  });
+});
+
+describe('ClusterDetailWidgetControlPlaneNodes on CAPA', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPA;
+
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays if the control plane is ready', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machines/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3Dasdf1%2Ccluster.x-k8s.io%2Fcontrol-plane%3D`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterCAPA1MachineList);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsmachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3Dasdf1%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capa1beta1Mocks.randomClusterCAPA1AWSMachineTemplateList
+      );
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPA1,
+      })
+    );
+
+    expect(
+      await screen.findByLabelText('All 3 control plane nodes ready')
+    ).toBeInTheDocument();
+  });
+
+  it(`displays the cluster's availability zones`, async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machines/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3Dasdf1%2Ccluster.x-k8s.io%2Fcontrol-plane%3D`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterCAPA1MachineList);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsmachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3Dasdf1%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capa1beta1Mocks.randomClusterCAPA1AWSMachineTemplateList
+      );
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPA1,
+      })
+    );
+
+    expect(await screen.findByText('Availability zones'));
+    expect(await screen.findByTitle('eu-west-2a'));
+    expect(await screen.findByTitle('eu-west-2b'));
+    expect(await screen.findByTitle('eu-west-2c'));
   });
 });

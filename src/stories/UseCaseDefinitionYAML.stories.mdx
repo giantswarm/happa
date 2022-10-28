@@ -10,15 +10,15 @@ The _use case definition_ format is a specification developed by Giant Swarm. It
 
 Example:
 
-For more beackground information, refer to [roadmap#1049](https://github.com/giantswarm/roadmap/issues/1049).
+For more background information, refer to [roadmap#1049](https://github.com/giantswarm/roadmap/issues/1049).
 
 The definition is used to configure happa so that users and admins can evaluate Kubernetes permissions with regard to the use cases defined. Without such a definition, RBAC permissions could only be listed individually (think of `kubectl auth can-i --list`), resulting in information that is very hard to translate into information that is meaningful for end-users.
 
-As of April 2022, the definition resides only in happa (see [`src/permissions-use-cases.yaml`](https://github.com/giantswarm/happa/blob/0405d6b2133de51397a0e989a8e732bed644e891/src/permissions-use-cases.yaml)). In the future, we expect this file to be supplied to happa on a per-installation basis via configuration, so that the use case definition can be individualized for customers who require it.
+As of April 2022, the definition resides only in happa (see [`scripts/permissions-use-cases.yaml`](https://github.com/giantswarm/happa/blob/main/scripts/permissions-use-cases.yaml)). In the future, we expect this file to be supplied to happa on a per-installation basis via configuration, so that the use case definition can be individualized for customers who require it.
 
 ## Example
 
-Below is an example file defining three use cases.
+Below is an example file defining some use cases.
 
 ```yaml
 useCases:
@@ -63,6 +63,55 @@ useCases:
         verbs:
           - get
           - list
+  - name: "Inspect releases"
+    description: "Read workload cluster releases"
+    category: "releases"
+    scope:
+      cluster: true
+    providers:
+      - aws
+      - azure
+    permissions:
+      - apiGroups:
+          - release.giantswarm.io
+        resources:
+          - releases
+        verbs:
+          - get
+          - list
+  - name: "Inspect clusters"
+    description: "Read resources that form workload clusters"
+    category: "workload clusters"
+    scope:
+      namespaces:
+        - "*"
+    permissions:
+      - apiGroups:
+          - cluster.x-k8s.io
+        resources:
+          - clusters
+        verbs:
+          - get
+          - list
+      - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+        resources:
+          - azureclusters
+          - azuremachines
+        verbs:
+          - get
+          - list
+        providers:
+          - azure
+      - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+        resources:
+          - awsclusters
+        verbs:
+          - get
+          - list
+        providers:
+          - capa
 ```
 
 ## Schema
@@ -99,6 +148,10 @@ scope:
 scope:
   namespaces: ["*"]
 ```
+
+### Providers
+
+An optional providers field can be provided to indicate that a use case or a permission rule is only applicable for the specified providers.
 
 ### Permissions
 

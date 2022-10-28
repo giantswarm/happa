@@ -6,6 +6,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
+import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
@@ -461,6 +462,129 @@ describe('ClusterDetailWidgetWorkerNodes on AWS', () => {
 
     expect(await screen.findByLabelText('2 node pools')).toBeInTheDocument();
     expect(await screen.findByLabelText('6 nodes')).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText('CPUs not available')
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText('GB RAM not available')
+    ).toBeInTheDocument();
+  });
+});
+
+describe('ClusterDetailWidgetWorkerNodes on CAPA', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPA;
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays stats about node pools', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinepools/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPA1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterCAPA1MachinePoolList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsmachinepools/${capiv1beta1Mocks.randomClusterCAPA1MachinePoolList.items[0].spec?.template.spec?.infrastructureRef.name}/`
+      )
+      .reply(StatusCodes.Ok, capav1beta1Mocks.randomClusterCAPA1AWSMachinePool);
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPA1,
+      })
+    );
+
+    expect(await screen.findByLabelText('1 node pool')).toBeInTheDocument();
+    expect(await screen.findByLabelText('3 nodes')).toBeInTheDocument();
+    expect(await screen.findByLabelText('12 CPUs')).toBeInTheDocument();
+    expect(await screen.findByLabelText('48 GB RAM')).toBeInTheDocument();
+  });
+
+  it('only displays a part of the stats if provider-specific resources fail to load', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinepools/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPA1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterCAPA1MachinePoolList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsmachinepools/${capiv1beta1Mocks.randomClusterCAPA1MachinePoolList.items[0].spec?.template.spec?.infrastructureRef.name}/`
+      )
+      .reply(StatusCodes.NotFound, {});
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPA1,
+      })
+    );
+
+    expect(await screen.findByLabelText('1 node pool')).toBeInTheDocument();
+    expect(await screen.findByLabelText('3 nodes')).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText('CPUs not available')
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText('GB RAM not available')
+    ).toBeInTheDocument();
+  });
+
+  it('only displays a part of the stats if one of the machine types is unknown', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinepools/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPA1.metadata.name}`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterCAPA1MachinePoolList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsmachinepools/${capiv1beta1Mocks.randomClusterCAPA1MachinePoolList.items[0].spec?.template.spec?.infrastructureRef.name}/`
+      )
+      .reply(StatusCodes.Ok, {
+        ...capav1beta1Mocks.randomClusterCAPA1AWSMachinePool,
+        spec: {
+          ...capav1beta1Mocks.randomClusterCAPA1AWSMachinePool.spec,
+          awsLaunchTemplate: {
+            ...capav1beta1Mocks.randomClusterCAPA1AWSMachinePool.spec!
+              .awsLaunchTemplate,
+            instanceType: 'random-instance-type',
+          },
+        },
+      });
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPA1,
+      })
+    );
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPA1,
+      })
+    );
+
+    expect(await screen.findByLabelText('1 node pool')).toBeInTheDocument();
+    expect(await screen.findByLabelText('3 nodes')).toBeInTheDocument();
     expect(
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();

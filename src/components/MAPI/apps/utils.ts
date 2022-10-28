@@ -857,28 +857,7 @@ export function compareApps(
 
 export function formatYAMLError(err: unknown): string {
   if (err instanceof YAMLException) {
-    interface IYAMLExceptionInternals extends YAMLException {
-      mark: {
-        buffer: string;
-        column: number;
-        line: number;
-        name: string;
-        position: number;
-        snippet: string;
-      };
-      reason: string;
-    }
-
-    const { reason, mark } = err as IYAMLExceptionInternals;
-    let { line, column } = mark;
-    /**
-     * Lines and columns are counted from 1, but the library
-     * counts from 0.
-     */
-    line++;
-    column++;
-
-    return `YAML parse error: ${reason} (${line}:${column})`;
+    return err.toString(true).replace(/^YAMLException/, 'YAML parse error');
   }
 
   return String(err);

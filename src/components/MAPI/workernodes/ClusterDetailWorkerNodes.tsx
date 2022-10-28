@@ -23,8 +23,10 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
+import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
@@ -59,22 +61,29 @@ import WorkerNodesNodePoolItem, {
 } from './WorkerNodesNodePoolItem';
 import WorkerNodesSpotInstancesAWS from './WorkerNodesSpotInstancesAWS';
 import WorkerNodesSpotInstancesAzure from './WorkerNodesSpotInstancesAzure';
+import WorkerNodesSpotInstancesCAPA from './WorkerNodesSpotInstancesCAPA';
 
 const LOADING_COMPONENTS = new Array(4).fill(0);
 
 export function getAdditionalColumns(
-  provider: PropertiesOf<typeof Providers>
+  cluster: Cluster
 ): IWorkerNodesAdditionalColumn[] {
-  switch (provider) {
-    case Providers.AZURE:
+  const infrastructureRef = cluster?.spec?.infrastructureRef;
+  if (!infrastructureRef) return [];
+
+  const { kind, apiVersion } = infrastructureRef;
+
+  switch (true) {
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.ApiVersion:
       return [
         {
-          title: 'Spot VMs',
+          title: 'Spot instances',
           render: (_, providerNodePool) => {
             return (
-              <WorkerNodesSpotInstancesAzure
+              <WorkerNodesSpotInstancesCAPA
                 providerNodePool={
-                  providerNodePool as capzexpv1alpha3.IAzureMachinePool
+                  providerNodePool as capav1beta1.IAWSMachinePool
                 }
               />
             );
@@ -82,7 +91,26 @@ export function getAdditionalColumns(
         },
       ];
 
-    case Providers.AWS:
+    case kind === capzv1beta1.AzureCluster:
+      return [
+        {
+          title: 'Spot VMs',
+          render: (_, providerNodePool) => {
+            return (
+              <WorkerNodesSpotInstancesAzure
+                providerNodePool={
+                  providerNodePool as
+                    | capzexpv1alpha3.IAzureMachinePool
+                    | capzv1beta1.IAzureMachinePool
+                }
+              />
+            );
+          },
+        },
+      ];
+
+    case kind === infrav1alpha3.AWSCluster &&
+      apiVersion === infrav1alpha3.ApiVersion:
       return [
         {
           title: 'Spot count',
@@ -108,6 +136,7 @@ function formatMachineTypeColumnTitle(
 ) {
   switch (provider) {
     case Providers.AWS:
+    case Providers.CAPA:
     case Providers.GCP:
       return 'Instance type';
     case Providers.AZURE:
@@ -431,10 +460,11 @@ const ClusterDetailWorkerNodes: React.FC<
     );
     const nameColumnWidth = getNameColumnWidth(longestNameLength);
 
-    const additionalColumns = useMemo(
-      () => getAdditionalColumns(provider),
-      [provider]
-    );
+    const additionalColumns = useMemo(() => {
+      if (!cluster) return [];
+
+      return getAdditionalColumns(cluster);
+    }, [cluster]);
 
     const [isCreateFormOpen, setIsCreateFormOpen] = useState(
       state?.hasNoNodePools ?? false

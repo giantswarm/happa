@@ -3,7 +3,7 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { deleteResource } from '../generic/deleteResource';
-import { IAWSControlPlane } from './types';
+import { ApiVersion, IAWSControlPlane } from './';
 
 export function deleteAWSControlPlane(
   client: IHttpClient,
@@ -12,7 +12,7 @@ export function deleteAWSControlPlane(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
+    apiVersion: ApiVersion,
     kind: 'awscontrolplanes',
     namespace: awsControlPlane.metadata.namespace,
     name: awsControlPlane.metadata.name,

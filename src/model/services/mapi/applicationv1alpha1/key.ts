@@ -69,10 +69,10 @@ export function getDefaultAppNameForProvider(
   provider: PropertiesOf<typeof Providers>
 ) {
   switch (provider) {
-    case Providers.GCP:
-      return 'default-apps-gcp';
+    case Providers.CAPA:
+      return 'default-apps-aws';
     default:
-      return undefined;
+      return `default-apps-${provider}`;
   }
 }
 

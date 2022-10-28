@@ -8,6 +8,7 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
+import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
@@ -200,7 +201,9 @@ describe('WorkerNodesNodePoolItem on Azure', () => {
       getComponent({
         nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
         providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
-        additionalColumns: getAdditionalColumns(Providers.AZURE),
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomCluster1
+        ),
       })
     );
 
@@ -224,7 +227,9 @@ describe('WorkerNodesNodePoolItem on Azure', () => {
             },
           },
         },
-        additionalColumns: getAdditionalColumns(Providers.AZURE),
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomCluster1
+        ),
       })
     );
 
@@ -640,7 +645,9 @@ describe('WorkerNodesNodePoolItem on AWS', () => {
         nodePool: capiv1beta1Mocks.randomClusterAWS1MachineDeployment1,
         providerNodePool:
           infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1,
-        additionalColumns: getAdditionalColumns(Providers.AWS),
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomClusterAWS1
+        ),
       })
     );
 
@@ -662,7 +669,9 @@ describe('WorkerNodesNodePoolItem on AWS', () => {
             },
           },
         },
-        additionalColumns: getAdditionalColumns(Providers.AWS),
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomClusterAWS1
+        ),
       })
     );
 
@@ -861,6 +870,114 @@ describe('WorkerNodesNodePoolItem on AWS', () => {
     ).toBeInTheDocument();
 
     jest.clearAllTimers();
+  });
+});
+
+describe('WorkerNodesNodePoolItem on CAPA', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPA;
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays various information about the node pool', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
+        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePool,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Name: asdf1-machine-pool0')
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('Description: workers')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Instance type: m5.xlarge')
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByLabelText(
+        'Availability zones: eu-west-2a, eu-west-2b, eu-west-2c'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('displays the autoscaler configuration', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
+        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePool,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Autoscaler minimum node count: 3')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler maximum node count: 10')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler target node count: 3')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler current node count: 3')
+    ).toBeInTheDocument();
+  });
+
+  it('displays information about instances distribution', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
+        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePool,
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomClusterCAPA1
+        ),
+      })
+    );
+
+    const spotInstancesDisabledLabel = screen.getByLabelText(
+      'Spot instances disabled'
+    );
+    expect(spotInstancesDisabledLabel).toBeInTheDocument();
+
+    fireEvent.mouseOver(spotInstancesDisabledLabel);
+
+    expect(screen.getByText('Spot instances disabled')).toBeInTheDocument();
+    expect(
+      screen.getByText('On-demand base capacity: 100')
+    ).toBeInTheDocument();
+    expect(screen.getByText('Spot instance percentage: 0')).toBeInTheDocument();
+  });
+
+  it('displays if spot instances are used', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
+        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePoolSpot,
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomClusterCAPA1
+        ),
+      })
+    );
+
+    const spotInstancesEnabledLabel = screen.getByLabelText(
+      'Spot instances enabled'
+    );
+    expect(spotInstancesEnabledLabel).toBeInTheDocument();
+
+    fireEvent.mouseOver(spotInstancesEnabledLabel);
+
+    expect(screen.getByText('Spot instances enabled')).toBeInTheDocument();
+    expect(screen.getByText('Using maximum price: $0.90'));
+    expect(screen.getByText('On-demand base capacity: 0')).toBeInTheDocument();
+    expect(
+      screen.getByText('Spot instance percentage: 50')
+    ).toBeInTheDocument();
   });
 });
 

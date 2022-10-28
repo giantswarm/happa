@@ -17,6 +17,7 @@ import {
   computePermissions,
   computeResourceRulesFromRoles,
   createRulesReviewResponseFromBindings,
+  filterPermissionsUseCases,
   getPermissionsCartesians,
   getStatusesForUseCases,
   hasPermission,
@@ -491,7 +492,6 @@ describe('permissions::utils', () => {
       input: {
         permissions: IPermissionMap;
         useCases: IPermissionsUseCase[];
-        provider?: PropertiesOf<typeof Providers>;
         organizations?: IOrganization[];
       };
       expected: PermissionsUseCaseStatuses;
@@ -524,6 +524,9 @@ describe('permissions::utils', () => {
           'Inspect shared app catalogs': {
             '': true,
           },
+          'Inspect releases': {
+            '': false,
+          },
           'Inspect clusters': {
             test1: false,
             test2: true,
@@ -551,6 +554,9 @@ describe('permissions::utils', () => {
           },
           'Inspect shared app catalogs': {
             '': true,
+          },
+          'Inspect releases': {
+            '': false,
           },
           'Inspect clusters': {},
         },
@@ -584,38 +590,7 @@ describe('permissions::utils', () => {
           'Inspect shared app catalogs': {
             '': true,
           },
-          'Inspect clusters': {
-            test1: false,
-            test2: true,
-          },
-        },
-      },
-      {
-        description: 'ignores resources not applicable to the given provider',
-        input: {
-          permissions: {
-            'org-test1': {},
-            'org-test2': {
-              'cluster.x-k8s.io:clusters:*': ['*'],
-              'infrastructure.cluster.x-k8s.io:azureclusters:*': ['*'],
-              'infrastructure.cluster.x-k8s.io:azuremachines:*': ['*'],
-            },
-            default: {
-              '*:*:*': ['*'],
-            },
-          },
-          useCases: createMockUseCases(),
-          provider: Providers.AZURE,
-          organizations: [
-            { id: 'test1', namespace: 'org-test1' },
-            { id: 'test2', namespace: 'org-test2' },
-          ],
-        },
-        expected: {
-          'Inspect namespaces': {
-            '': false,
-          },
-          'Inspect shared app catalogs': {
+          'Inspect releases': {
             '': true,
           },
           'Inspect clusters': {
@@ -631,7 +606,6 @@ describe('permissions::utils', () => {
         const statuses = getStatusesForUseCases(
           input.permissions,
           input.useCases,
-          input.provider,
           input.organizations
         );
 
@@ -872,6 +846,157 @@ describe('permissions::utils', () => {
   });
 });
 
+describe('filterPermissionsUseCases', () => {
+  interface ITestCase {
+    description: string;
+    input: {
+      useCases: IPermissionsUseCase[];
+      provider: PropertiesOf<typeof Providers>;
+    };
+    expected: IPermissionsUseCase[];
+  }
+
+  const testCases: ITestCase[] = [
+    {
+      description: 'filters permissions use cases by the given provider',
+      input: {
+        useCases: createMockUseCases(),
+        provider: 'gcp',
+      },
+      expected: [
+        {
+          name: 'Inspect namespaces',
+          category: 'access control',
+          description:
+            'List namespaces and get an individual namespace&apos;s details',
+          scope: { cluster: true },
+          permissions: [
+            {
+              apiGroups: [''],
+              resources: ['namespaces'],
+              verbs: ['get', 'list'],
+            },
+          ],
+        },
+        {
+          name: 'Inspect shared app catalogs',
+          category: 'app catalogs',
+          description:
+            'Read catalogs and their entries in the &quot;default&quot; namespace',
+          permissions: [
+            {
+              apiGroups: ['application.giantswarm.io'],
+              resources: ['catalogs', 'appcatalogentries'],
+              verbs: ['get', 'list'],
+            },
+          ],
+          scope: { namespaces: ['default'] },
+        },
+        {
+          name: 'Inspect clusters',
+          category: 'workload clusters',
+          description: 'Read resources that form workload clusters',
+          scope: { namespaces: ['*'] },
+          permissions: [
+            {
+              apiGroups: ['cluster.x-k8s.io'],
+              resources: ['clusters'],
+              verbs: ['get', 'list'],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      description:
+        'filters permissions use case permission rules by the given provider',
+      input: {
+        useCases: createMockUseCases(),
+        provider: 'aws',
+      },
+      expected: [
+        {
+          name: 'Inspect namespaces',
+          category: 'access control',
+          description:
+            'List namespaces and get an individual namespace&apos;s details',
+          scope: { cluster: true },
+          permissions: [
+            {
+              apiGroups: [''],
+              resources: ['namespaces'],
+              verbs: ['get', 'list'],
+            },
+          ],
+        },
+        {
+          name: 'Inspect shared app catalogs',
+          category: 'app catalogs',
+          description:
+            'Read catalogs and their entries in the &quot;default&quot; namespace',
+          permissions: [
+            {
+              apiGroups: ['application.giantswarm.io'],
+              resources: ['catalogs', 'appcatalogentries'],
+              verbs: ['get', 'list'],
+            },
+          ],
+          scope: { namespaces: ['default'] },
+        },
+        {
+          name: 'Inspect releases',
+          category: 'app catalogs',
+          providers: ['aws', 'azure'],
+
+          description: '',
+          permissions: [
+            {
+              apiGroups: ['security.giantswarm.io'],
+              resources: ['releases'],
+              verbs: ['get', 'list'],
+            },
+          ],
+          scope: { cluster: true },
+        },
+        {
+          name: 'Inspect clusters',
+          category: 'workload clusters',
+          description: 'Read resources that form workload clusters',
+          scope: { namespaces: ['*'] },
+          permissions: [
+            {
+              apiGroups: ['cluster.x-k8s.io'],
+              resources: ['clusters'],
+              verbs: ['get', 'list'],
+            },
+            {
+              apiGroups: ['infrastructure.giantswarm.io'],
+              resources: [
+                'awsclusters',
+                'awscontrolplanes',
+                'g8scontrolplanes',
+              ],
+              verbs: ['get', 'list'],
+              providers: ['aws'],
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  for (const { description, input, expected } of testCases) {
+    it(description, () => {
+      const statuses = filterPermissionsUseCases(
+        input.useCases,
+        input.provider
+      );
+
+      expect(statuses).toStrictEqual(expected);
+    });
+  }
+});
+
 function makeRulesReview(
   status: authorizationv1.ISelfSubjectRulesReviewStatus
 ): authorizationv1.ISelfSubjectRulesReview {
@@ -914,6 +1039,21 @@ function createMockUseCases(): IPermissionsUseCase[] {
       scope: { namespaces: ['default'] },
     },
     {
+      name: 'Inspect releases',
+      category: 'app catalogs',
+      providers: ['aws', 'azure'],
+
+      description: '',
+      permissions: [
+        {
+          apiGroups: ['security.giantswarm.io'],
+          resources: ['releases'],
+          verbs: ['get', 'list'],
+        },
+      ],
+      scope: { cluster: true },
+    },
+    {
       name: 'Inspect clusters',
       category: 'workload clusters',
       description: 'Read resources that form workload clusters',
@@ -928,11 +1068,13 @@ function createMockUseCases(): IPermissionsUseCase[] {
           apiGroups: ['infrastructure.cluster.x-k8s.io'],
           resources: ['azureclusters', 'azuremachines'],
           verbs: ['get', 'list'],
+          providers: ['azure'],
         },
         {
           apiGroups: ['infrastructure.giantswarm.io'],
           resources: ['awsclusters', 'awscontrolplanes', 'g8scontrolplanes'],
           verbs: ['get', 'list'],
+          providers: ['aws'],
         },
       ],
     },

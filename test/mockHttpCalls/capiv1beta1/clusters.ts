@@ -33,7 +33,7 @@ export const randomClusterAWS1: capiv1beta1.ICluster = {
       port: 0,
     },
     infrastructureRef: {
-      apiVersion: 'infrastructure.giantswarm.io/v1beta1',
+      apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
       kind: 'AWSCluster',
       name: 'c7hm5',
       namespace: 'org-org1',
@@ -77,7 +77,7 @@ export const randomClusterAWS2: capiv1beta1.ICluster = {
       port: 0,
     },
     infrastructureRef: {
-      apiVersion: 'infrastructure.giantswarm.io/v1beta1',
+      apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
       kind: 'AWSCluster',
       name: 'as81f',
       namespace: 'org-org1',
@@ -85,6 +85,177 @@ export const randomClusterAWS2: capiv1beta1.ICluster = {
   },
   status: {
     infrastructureReady: false,
+  },
+};
+
+export const randomClusterCAPA1: capiv1beta1.ICluster = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: 'Cluster',
+  metadata: {
+    annotations: {
+      'cluster.giantswarm.io/description': 'test capa cluster',
+      'meta.helm.sh/release-name': 'asdf1',
+      'meta.helm.sh/release-namespace': 'org-org1',
+      'network-topology.giantswarm.io/mode': 'None',
+    },
+    creationTimestamp: '2022-09-29T09:14:00Z',
+    finalizers: [],
+    labels: {
+      app: 'cluster-aws',
+      'app.kubernetes.io/managed-by': 'Helm',
+      'app.kubernetes.io/version': '0.9.2',
+      'application.giantswarm.io/team': 'hydra',
+      'cluster-apps-operator.giantswarm.io/watching': '',
+      'cluster.x-k8s.io/cluster-name': 'asdf1',
+      'cluster.x-k8s.io/watch-filter': 'capi',
+      'giantswarm.io/cluster': 'asdf1',
+      'giantswarm.io/organization': 'org1',
+      'helm.sh/chart': 'cluster-aws-0.9.2',
+      'release.giantswarm.io/version': '20.0.0-alpha1',
+    },
+    name: 'asdf1',
+    namespace: 'org-org1',
+  },
+  spec: {
+    controlPlaneEndpoint: {
+      host: 'asdf1-apiserver-123412345.eu-west-2.elb.amazonaws.com',
+      port: 6443,
+    },
+    controlPlaneRef: {
+      apiVersion: 'controlplane.cluster.x-k8s.io/v1beta1',
+      kind: 'KubeadmControlPlane',
+      name: 'asdf1',
+      namespace: 'org-org1',
+    },
+    infrastructureRef: {
+      apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+      kind: 'AWSCluster',
+      name: 'asdf1',
+      namespace: 'org-org1',
+    },
+  },
+  status: {
+    conditions: [
+      {
+        lastTransitionTime: '2022-09-29T09:22:07Z',
+        status: 'True',
+        type: 'Ready',
+      },
+      {
+        lastTransitionTime: '2022-09-29T09:19:19Z',
+        status: 'True',
+        type: 'ControlPlaneInitialized',
+      },
+      {
+        lastTransitionTime: '2022-09-29T09:22:07Z',
+        status: 'True',
+        type: 'ControlPlaneReady',
+      },
+      {
+        lastTransitionTime: '2022-09-29T09:17:04Z',
+        status: 'True',
+        type: 'InfrastructureReady',
+      },
+    ],
+    controlPlaneReady: true,
+    failureDomains: {
+      'eu-west-2a': {
+        controlPlane: true,
+      },
+      'eu-west-2b': {
+        controlPlane: true,
+      },
+      'eu-west-2c': {
+        controlPlane: true,
+      },
+    },
+    infrastructureReady: true,
+    phase: 'Provisioned',
+  },
+};
+
+export const randomClusterCAPA2: capiv1beta1.ICluster = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: 'Cluster',
+  metadata: {
+    annotations: {
+      'cluster.giantswarm.io/description': 'another test capa cluster',
+      'meta.helm.sh/release-name': 'fdsa1',
+      'meta.helm.sh/release-namespace': 'org-org1',
+    },
+    creationTimestamp: '2022-09-28T09:15:00Z',
+    finalizers: [],
+    labels: {
+      app: 'cluster-aws',
+      'app.kubernetes.io/managed-by': 'Helm',
+      'app.kubernetes.io/version': '0.9.3',
+      'application.giantswarm.io/team': 'hydra',
+      'cluster-apps-operator.giantswarm.io/watching': '',
+      'cluster.x-k8s.io/cluster-name': 'fdsa1',
+      'cluster.x-k8s.io/watch-filter': 'capi',
+      'giantswarm.io/cluster': 'fdsa1',
+      'giantswarm.io/organization': 'org1',
+      'helm.sh/chart': 'cluster-aws-0.9.2',
+      'release.giantswarm.io/version': '20.0.0-alpha1',
+    },
+    name: 'fdsa1',
+    namespace: 'org-org1',
+  },
+  spec: {
+    controlPlaneEndpoint: {
+      host: 'fdsa1-apiserver-123412345.eu-west-2.elb.amazonaws.com',
+      port: 6443,
+    },
+    controlPlaneRef: {
+      apiVersion: 'controlplane.cluster.x-k8s.io/v1beta1',
+      kind: 'KubeadmControlPlane',
+      name: 'fdsa1',
+      namespace: 'org-org1',
+    },
+    infrastructureRef: {
+      apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+      kind: 'AWSCluster',
+      name: 'fdsa1',
+      namespace: 'org-org1',
+    },
+  },
+  status: {
+    conditions: [
+      {
+        lastTransitionTime: '2022-09-28T09:20:00Z',
+        status: 'True',
+        type: 'Ready',
+      },
+      {
+        lastTransitionTime: '2022-09-28T09:19:00Z',
+        status: 'True',
+        type: 'ControlPlaneInitialized',
+      },
+      {
+        lastTransitionTime: '2022-09-28T09:22:00Z',
+        status: 'True',
+        type: 'ControlPlaneReady',
+      },
+      {
+        lastTransitionTime: '2022-09-28T00:17:00Z',
+        status: 'True',
+        type: 'InfrastructureReady',
+      },
+    ],
+    controlPlaneReady: true,
+    failureDomains: {
+      'eu-west-2a': {
+        controlPlane: true,
+      },
+      'eu-west-2b': {
+        controlPlane: true,
+      },
+      'eu-west-2c': {
+        controlPlane: true,
+      },
+    },
+    infrastructureReady: true,
+    phase: 'Provisioned',
   },
 };
 
@@ -453,6 +624,15 @@ export const randomClusterListAWS: capiv1beta1.IClusterList = {
     selfLink: '/apis/cluster.x-k8s.io/v1beta1/clusters/',
   },
   items: [randomClusterAWS1, randomClusterAWS2],
+};
+
+export const randomClusterListCAPA: capiv1beta1.IClusterList = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: 'ClusterList',
+  metadata: {
+    selfLink: '/apis/cluster.x-k8s.io/v1beta1/clusters/',
+  },
+  items: [randomClusterCAPA1, randomClusterCAPA2],
 };
 
 export const randomClusterListGCP: capiv1beta1.IClusterList = {

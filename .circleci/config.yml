@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@4.24.0
+  architect: giantswarm/architect@4.25.3
 
 defaults: &defaults
   working_directory: ~/happa
   docker:
-    - image: cimg/node:16.17
+    - image: cimg/node:16.18
 
 job_filters: &job_filters
   filters:

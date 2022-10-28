@@ -13,6 +13,7 @@ import nock from 'nock';
 import React from 'react';
 import { useRouteMatch } from 'react-router';
 import { SWRConfig } from 'swr';
+import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
@@ -381,7 +382,7 @@ describe('ClusterDetail', () => {
     const cluster = {
       ...capiv1beta1Mocks.randomClusterGCP1,
       status: {
-        ...capiv1beta1Mocks.randomCluster1.status,
+        ...capiv1beta1Mocks.randomClusterGCP1.status,
         conditions: [
           {
             status: 'False',
@@ -412,6 +413,61 @@ describe('ClusterDetail', () => {
         `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${
           cluster.metadata.namespace
         }/gcpclusters/${cluster.spec!.infrastructureRef!.name}/`
+      )
+      .reply(StatusCodes.Ok, providerCluster);
+
+    render(getComponent({}));
+
+    if (screen.queryAllByText('Loading...').length > 0) {
+      await waitForElementToBeRemoved(() =>
+        screen.queryAllByText('Loading...')
+      );
+    }
+
+    const clusterStatus = screen.getByTestId('cluster-status');
+    expect(clusterStatus).toBeInTheDocument();
+    expect(
+      within(clusterStatus).getByText(
+        'The cluster is currently being created. This step usually takes about 15 minutes.'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('displays a warning when cluster creation is in progress on CAPA', async () => {
+    const cluster = {
+      ...capiv1beta1Mocks.randomClusterCAPA1,
+      status: {
+        ...capiv1beta1Mocks.randomClusterCAPA1.status,
+        conditions: [
+          {
+            status: 'False',
+            type: 'ControlPlaneInitialized',
+            lastTransitionTime: '2022-09-29T09:19:19Z',
+          },
+        ],
+      },
+    };
+    const providerCluster = capav1beta1Mocks.randomAWSCluster1;
+
+    (useRouteMatch as jest.Mock).mockReturnValue(
+      getRouteMatch(cluster.metadata.name)
+    );
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${cluster.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, cluster);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${
+          cluster.metadata.namespace
+        }/awsclusters/${cluster.spec!.infrastructureRef!.name}/`
       )
       .reply(StatusCodes.Ok, providerCluster);
 
