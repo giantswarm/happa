@@ -1,14 +1,7 @@
 import { error, log } from '../utils';
-import {
-  ClientFunctionVerbs,
-  getMapiResourcesList,
-  IApiGroupInfo,
-} from './getMapiResourcesList';
-import {
-  fetchCRD,
-  getTypesForResource,
-  ICRDForResource,
-} from './getTypesForResource';
+import { fetchCRD, ICRDForResource } from './getCRD';
+import { getMapiResourcesList, IApiGroupInfo } from './getMapiResourcesList';
+import { getTypesForResource } from './getTypes';
 import {
   formatListResourceExport,
   formatResourceKindExport,
@@ -16,26 +9,11 @@ import {
 import {
   writeTypes,
   ensureApiVersionFolder,
-  IResourceNames,
   writeExports,
   writeClientFunction,
-} from './writeTypes';
-
-function getResourceNames(crdForResource: ICRDForResource): IResourceNames {
-  return {
-    kind: crdForResource.resource.name,
-    listKind:
-      crdForResource.crd.spec?.names?.listKind ||
-      `${crdForResource.resource.name}List`,
-    plural:
-      crdForResource.crd.spec?.names?.plural ||
-      `${crdForResource.resource.name.toLocaleLowerCase()}s`,
-  };
-}
-
-function getResourceScope(crdForResource: ICRDForResource): boolean {
-  return (crdForResource.crd.spec?.scope ?? 'Namespaced') === 'Namespaced';
-}
+  getResourceNames,
+  getWriteClientFunctionRequests,
+} from './write';
 
 async function readMapiResourcesListFile(): Promise<IApiGroupInfo[]> {
   log('Reading MAPI resources list from file... ', false);
@@ -129,23 +107,7 @@ async function writeClientFunctions(
   apiGroup: string,
   crdsForTypedResources: ICRDForResource[]
 ) {
-  const requests = crdsForTypedResources.reduce<
-    {
-      resourceNames: IResourceNames;
-      namespaced: boolean;
-      verb: ClientFunctionVerbs;
-    }[]
-  >((prev, curr) => {
-    if (!curr.resource.verbs) return prev;
-    return [
-      ...prev,
-      ...curr.resource.verbs.map((v) => ({
-        resourceNames: getResourceNames(curr),
-        namespaced: getResourceScope(curr),
-        verb: v,
-      })),
-    ];
-  }, []);
+  const requests = getWriteClientFunctionRequests(crdsForTypedResources);
 
   const responses = await Promise.allSettled(
     requests.map((r) =>
@@ -159,9 +121,8 @@ async function writeClientFunctions(
     )
   );
 
-  const clientFunctionsWritten: Record<string, string[]> = {};
   const data: string[] = [];
-
+  const clientFunctionsWritten: Record<string, string[]> = {};
   for (let i = 0; i < requests.length; i++) {
     const { resourceNames, verb } = requests[i];
     const response = responses[i];

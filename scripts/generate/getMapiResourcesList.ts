@@ -2,11 +2,7 @@ import yaml from 'js-yaml';
 import fs from 'fs/promises';
 import path from 'path';
 
-const filePath = path.resolve(
-  'scripts',
-  'generateTypes',
-  'mapi-resources.yaml'
-);
+const filePath = path.resolve('scripts', 'generate', 'mapi-resources.yaml');
 
 export type ClientFunctionVerbs =
   | 'get'
@@ -14,6 +10,7 @@ export type ClientFunctionVerbs =
   | 'update'
   | 'create'
   | 'delete';
+
 export interface IResourceInfo {
   /**
    * name of the name of the resource - this will be used as the name

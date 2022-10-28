@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { ICRDForResource } from './getCRD';
 import { ClientFunctionVerbs } from './getMapiResourcesList';
 import {
   formatGeneratedFileExport,
@@ -49,6 +50,24 @@ export async function ensureApiVersionFolder(
   return apiVersionDirPath;
 }
 
+export function getResourceNames(
+  crdForResource: ICRDForResource
+): IResourceNames {
+  return {
+    kind: crdForResource.resource.name,
+    listKind:
+      crdForResource.crd.spec?.names?.listKind ||
+      `${crdForResource.resource.name}List`,
+    plural:
+      crdForResource.crd.spec?.names?.plural ||
+      `${crdForResource.resource.name.toLocaleLowerCase()}s`,
+  };
+}
+
+function getResourceScope(crdForResource: ICRDForResource): boolean {
+  return (crdForResource.crd.spec?.scope ?? 'Namespaced') === 'Namespaced';
+}
+
 export async function writeTypes(
   apiVersionDirPath: string,
   apiVersion: string,
@@ -60,6 +79,28 @@ export async function writeTypes(
     path.resolve(apiVersionDirPath, `${typesFileName}.ts`),
     header + data
   );
+}
+
+export function getWriteClientFunctionRequests(
+  crdsForTypedResources: ICRDForResource[]
+) {
+  return crdsForTypedResources.reduce<
+    {
+      resourceNames: IResourceNames;
+      namespaced: boolean;
+      verb: ClientFunctionVerbs;
+    }[]
+  >((prev, curr) => {
+    if (!curr.resource.verbs) return prev;
+    return [
+      ...prev,
+      ...curr.resource.verbs.map((v) => ({
+        resourceNames: getResourceNames(curr),
+        namespaced: getResourceScope(curr),
+        verb: v,
+      })),
+    ];
+  }, []);
 }
 
 export async function writeClientFunction(

@@ -1,30 +1,9 @@
-import { IResourceInfo } from './getMapiResourcesList';
-import yaml from 'js-yaml';
-import fetch from 'node-fetch';
 import { JSONSchema4 } from 'schema-utils/declarations/validate';
 import { compile } from 'json-schema-to-typescript';
 import { merge } from 'lodash';
-import { DeepPartial } from 'redux';
+
 import { formatInterfaceName } from './templates';
-
-/**
- * Partial interface of CustomResourceDefinition
- */
-interface ICRDPartial {
-  kind: 'CustomResourceDefinition';
-  spec: {
-    versions: { name: string; schema: { openAPIV3Schema: JSONSchema4 } }[];
-    names: { kind: string; listKind: string; plural: string; singular: string };
-    scope: 'Namespaced' | 'Cluster';
-  };
-}
-
-export interface ICRD extends DeepPartial<ICRDPartial> {}
-
-export interface ICRDForResource {
-  resource: IResourceInfo;
-  crd: ICRD;
-}
+import { ICRD } from './getCRD';
 
 /**
  * Provide custom TS types for specified fields
@@ -77,12 +56,6 @@ function getCRDSchemaForVersion(
   }
 
   return schema;
-}
-
-export async function fetchCRD(URL: string): Promise<ICRD> {
-  const response = await fetch(URL);
-  const data = await response.text();
-  return yaml.load(data) as ICRD;
 }
 
 export async function getTypesForResource(
