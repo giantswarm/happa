@@ -1,8 +1,12 @@
+/**
+ * This file was automatically generated, PLEASE DO NOT MODIFY IT BY HAND.
+ */
+
 import { IHttpClient } from 'model/clients/HttpClient';
+import { getResource } from 'model/services/mapi/generic/getResource';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { getResource } from '../generic/getResource';
 import { IGCPMachineTemplate } from '.';
 
 export function getGCPMachineTemplate(
