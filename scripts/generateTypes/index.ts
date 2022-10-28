@@ -13,11 +13,12 @@ import {
   formatListResourceExport,
   formatResourceKindExport,
 } from './templates';
-import { writeClientFunction } from './writeClientFunction';
 import {
   writeTypes,
   ensureApiVersionFolder,
   IResourceNames,
+  writeExports,
+  writeClientFunction,
 } from './writeTypes';
 
 function getResourceNames(crdForResource: ICRDForResource): IResourceNames {
@@ -127,9 +128,7 @@ async function writeClientFunctions(
   apiVersionDirPath: string,
   apiGroup: string,
   crdsForTypedResources: ICRDForResource[]
-): Promise<Record<string, string[]>> {
-  const clientFunctionsWritten: Record<string, string[]> = {};
-
+) {
   const requests = crdsForTypedResources.reduce<
     {
       resourceNames: IResourceNames;
@@ -160,6 +159,9 @@ async function writeClientFunctions(
     )
   );
 
+  const clientFunctionsWritten: Record<string, string[]> = {};
+  const data: string[] = [];
+
   for (let i = 0; i < requests.length; i++) {
     const { resourceNames, verb } = requests[i];
     const response = responses[i];
@@ -172,11 +174,13 @@ async function writeClientFunctions(
       continue;
     }
 
+    data.push(response.value);
+
     clientFunctionsWritten[resourceNames.kind] ??= [];
     clientFunctionsWritten[resourceNames.kind].push(verb);
   }
 
-  return clientFunctionsWritten;
+  return { clientFunctionsWritten, data };
 }
 
 async function generate(group: IApiGroupInfo): Promise<void> {
@@ -185,7 +189,7 @@ async function generate(group: IApiGroupInfo): Promise<void> {
 
     const crdsForResources = await fetchCRDs(group);
 
-    const { resourceNamesGenerated, data } = await generateTypes(
+    const { resourceNamesGenerated, data: typesData } = await generateTypes(
       group.apiVersion,
       crdsForResources
     );
@@ -194,23 +198,26 @@ async function generate(group: IApiGroupInfo): Promise<void> {
 
     log(`  Writing TS types and client functions...`);
 
-    await writeTypes(apiVersionDirPath, group.apiVersion, data);
+    await writeTypes(apiVersionDirPath, group.apiVersion, typesData);
 
     const crdsForTypedResources = crdsForResources.filter((r) =>
       resourceNamesGenerated.includes(r.resource.name)
     );
 
-    const resourceClientFunctionsWritten = await writeClientFunctions(
-      apiVersionDirPath,
-      group.apiVersion,
-      crdsForTypedResources
-    );
+    const { clientFunctionsWritten, data: clientFnData } =
+      await writeClientFunctions(
+        apiVersionDirPath,
+        group.apiVersion,
+        crdsForTypedResources
+      );
 
     for (const [resourceName, verbs] of Object.entries(
-      resourceClientFunctionsWritten
+      clientFunctionsWritten
     )) {
       log(`    ${resourceName}: ${verbs.join(', ')}`);
     }
+
+    await writeExports(apiVersionDirPath, clientFnData);
 
     log(`  done.`);
   } catch (err) {
