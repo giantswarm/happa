@@ -28,7 +28,7 @@ export const List = styled.ul`
 
 export const Link = styled.a`
   display: inline-block;
-  text-decoration: none;
+  text-decoration: none !important;
   color: #fff;
   font-size: 14px;
   font-weight: 400;
