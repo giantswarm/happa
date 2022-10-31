@@ -125,11 +125,14 @@ const Detail = styled.div`
 const Keyword = styled.span`
   margin-right: 10px;
   margin-bottom: 10px;
-  font-family: Inconsolata, monospace;
+  font-size: 13px;
   background-color: ${({ theme }) => theme.colors.darkBlueDarker2};
   padding: 5px 8px;
   border-radius: 5px;
   display: inline-block;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
 `;
 
 const VersionPickerRow = styled.div`
