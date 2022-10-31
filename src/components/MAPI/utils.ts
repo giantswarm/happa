@@ -1405,6 +1405,20 @@ export function extractErrorMessage(
   return message;
 }
 
+export function getClusterK8sAPIUrl(
+  cluster: capiv1beta1.ICluster,
+  provider: PropertiesOf<typeof Providers>
+): string | undefined {
+  const baseURL = getClusterBaseURL(provider);
+
+  const hostname = baseURL.host.replace(
+    window.config.info.general.installationName,
+    cluster.metadata.name
+  );
+
+  return `https://${hostname}${baseURL.port ? `:${baseURL.port}` : ''}`;
+}
+
 export function getK8sAPIUrl(provider: PropertiesOf<typeof Providers>): string {
   return getClusterBaseURL(provider).toString();
 }
@@ -1436,8 +1450,15 @@ export function isCAPZCluster(cluster: Cluster): boolean {
   return compare(releaseVersion, Constants.AZURE_CAPZ_VERSION) >= 0;
 }
 
-function isCAPGCluster(cluster: Cluster): boolean {
+export function isCAPGCluster(cluster: Cluster): boolean {
   return cluster.spec?.infrastructureRef?.kind === capgv1beta1.GCPCluster;
+}
+
+export function isCAPACluster(cluster: Cluster): boolean {
+  return (
+    cluster.spec?.infrastructureRef?.kind === capav1beta1.AWSCluster &&
+    cluster.spec?.infrastructureRef?.apiVersion === capav1beta1.ApiVersion
+  );
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {

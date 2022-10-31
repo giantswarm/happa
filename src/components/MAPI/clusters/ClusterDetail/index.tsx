@@ -14,6 +14,9 @@ import {
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
   getClusterDescription,
+  getClusterK8sAPIUrl,
+  isCAPACluster,
+  isCAPGCluster,
   isResourceManagedByGitOps,
   supportsReleases,
 } from 'MAPI/utils';
@@ -323,7 +326,9 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
 
   const clusterK8sApiURL = cluster
-    ? capiv1beta1.getKubernetesAPIEndpointURL(cluster)
+    ? isCAPGCluster(cluster) || isCAPACluster(cluster)
+      ? getClusterK8sAPIUrl(cluster, provider)
+      : capiv1beta1.getKubernetesAPIEndpointURL(cluster)
     : undefined;
 
   const {

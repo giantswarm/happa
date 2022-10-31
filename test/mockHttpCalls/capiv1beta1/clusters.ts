@@ -29,7 +29,7 @@ export const randomClusterAWS1: capiv1beta1.ICluster = {
   },
   spec: {
     controlPlaneEndpoint: {
-      host: '',
+      host: 'test.k8s.gs.com',
       port: 0,
     },
     infrastructureRef: {
