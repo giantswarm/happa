@@ -7,6 +7,7 @@ import {
   TransitionGroup,
 } from 'react-transition-group';
 import styled from 'styled-components';
+import { MAX_VARIANT_LENGTH } from 'UI/Display/Cluster/ClusterIDLabel';
 import ClusterListEmptyPlaceholder from 'UI/Display/MAPI/clusters/ClusterList/ClusterListEmptyPlaceholder';
 
 import { IProviderClusterForCluster } from '../utils';
@@ -126,6 +127,15 @@ const AnimatedItem = styled(ClusterListItem)`
     }
   }
 `;
+
+const NAME_CHAR_WIDTH = 9;
+
+function getNameColumnWidth(nameLength: number) {
+  const charCount = Math.min(nameLength, MAX_VARIANT_LENGTH);
+
+  return charCount * NAME_CHAR_WIDTH;
+}
+
 interface IClusterListProps {
   isLoading: boolean;
   hasNoClusters: boolean;
@@ -178,6 +188,12 @@ const ClusterList: React.FC<React.PropsWithChildren<IClusterListProps>> = (
       : ITEM_TIMEOUT,
   };
 
+  const nameLengths = clustersWithProviderClusters?.map(
+    ({ cluster }) => cluster.metadata.name.length
+  );
+  const longestNameLength = nameLengths ? Math.max(...nameLengths) : 0;
+  const nameColumnWidth = getNameColumnWidth(longestNameLength);
+
   return (
     <SwitchTransition>
       <CSSTransition
@@ -220,6 +236,7 @@ const ClusterList: React.FC<React.PropsWithChildren<IClusterListProps>> = (
                         canListReleases={canListReleases}
                         canListCPNodes={canListCPNodes}
                         margin={{ bottom: 'medium' }}
+                        nameColumnWidth={nameColumnWidth}
                       />
                     </CSSTransition>
                   )

@@ -68,6 +68,7 @@ interface IClusterListItemProps
   canCreateClusters?: boolean;
   canListReleases?: boolean;
   canListCPNodes?: boolean;
+  nameColumnWidth?: number;
 }
 
 const ClusterListItem: React.FC<
@@ -82,6 +83,7 @@ const ClusterListItem: React.FC<
   canListReleases,
   canListCPNodes,
   className,
+  nameColumnWidth,
   ...props
 }) => {
   const name = cluster?.metadata.name;
@@ -235,6 +237,7 @@ const ClusterListItem: React.FC<
                   clusterID={value}
                   variant={ClusterIDLabelType.Name}
                   copyEnabled={true}
+                  width={nameColumnWidth}
                 />
               </Text>
             )}
