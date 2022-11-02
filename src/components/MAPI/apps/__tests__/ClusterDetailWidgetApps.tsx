@@ -386,24 +386,12 @@ describe('ClusterDetailWidgetApps on CAPA', () => {
         ],
       });
 
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/${clusterId}-default-apps/`
-      )
-      .reply(
-        StatusCodes.Ok,
-        applicationv1alpha1Mocks.randomClusterCAPA1DefaultApp
-      );
-
     render(getComponent({ isClusterApp: true }));
 
     expect(
       await screen.findByLabelText(
         `${
-          [
-            ...applicationv1alpha1Mocks.randomClusterCAPA1AppsList.items,
-            applicationv1alpha1Mocks.randomClusterCAPA1DefaultApp,
-          ].length + 6
+          applicationv1alpha1Mocks.randomClusterCAPA1AppsList.items.length + 6
         } app resources`
       )
     ).toBeInTheDocument();
@@ -439,15 +427,6 @@ describe('ClusterDetailWidgetApps on CAPA', () => {
           }),
         ],
       });
-
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/${clusterId}-default-apps/`
-      )
-      .reply(
-        StatusCodes.Ok,
-        applicationv1alpha1Mocks.randomClusterCAPA1DefaultApp
-      );
 
     nock(window.config.mapiEndpoint)
       .get(

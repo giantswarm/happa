@@ -6,7 +6,6 @@ import {
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { usePermissionsForApps } from 'MAPI/apps/permissions/usePermissionsForApps';
-import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { getNamespaceFromOrgName } from 'MAPI/utils';
 import { Providers, StatusCodes } from 'model/constants';
 import { IOrganizationState } from 'model/stores/organization/types';
@@ -18,7 +17,6 @@ import { SWRConfig } from 'swr';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
 import { generateApp } from 'test/mockHttpCalls/applicationv1alpha1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
-import * as releasev1alpha1 from 'test/mockHttpCalls/releasev1alpha1';
 import preloginState from 'test/preloginState';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
@@ -78,7 +76,6 @@ jest.mock('react-router', () => ({
 }));
 
 jest.mock('MAPI/apps/permissions/usePermissionsForApps');
-jest.mock('MAPI/releases/permissions/usePermissionsForReleases');
 
 describe('ClusterDetailApps on Azure', () => {
   const provider: PropertiesOf<typeof Providers> =
@@ -91,9 +88,6 @@ describe('ClusterDetailApps on Azure', () => {
     window.config.info.general.provider = Providers.AZURE;
 
     (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
-    (usePermissionsForReleases as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
     (useParams as jest.Mock).mockReturnValue({
       orgId,
       clusterId,
@@ -125,11 +119,7 @@ describe('ClusterDetailApps on Azure', () => {
         ],
       });
 
-    nock(window.config.mapiEndpoint)
-      .get('/apis/release.giantswarm.io/v1alpha1/releases/v14.1.5/')
-      .reply(StatusCodes.Ok, releasev1alpha1.v14_1_5);
-
-    render(getComponent({ isClusterApp: false, clusterVersion: '14.1.5' }));
+    render(getComponent({ isClusterApp: false }));
 
     if (screen.queryAllByText('Loading...').length > 0) {
       await waitForElementToBeRemoved(() =>
@@ -179,11 +169,7 @@ describe('ClusterDetailApps on Azure', () => {
         ],
       });
 
-    nock(window.config.mapiEndpoint)
-      .get('/apis/release.giantswarm.io/v1alpha1/releases/v14.1.5/')
-      .reply(StatusCodes.Ok, releasev1alpha1.v14_1_5);
-
-    render(getComponent({ isClusterApp: false, clusterVersion: '14.1.5' }));
+    render(getComponent({ isClusterApp: false }));
 
     if (screen.queryAllByText('Loading...').length > 0) {
       await waitForElementToBeRemoved(() =>
@@ -261,16 +247,7 @@ describe('ClusterDetailApps on CAPA', () => {
         ],
       });
 
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/${clusterId}-default-apps/`
-      )
-      .reply(
-        StatusCodes.Ok,
-        applicationv1alpha1Mocks.randomClusterCAPA1DefaultApp
-      );
-
-    render(getComponent({ isClusterApp: true, clusterVersion: '0.9.2' }));
+    render(getComponent({ isClusterApp: true }));
 
     if (screen.queryAllByText('Loading...').length > 0) {
       await waitForElementToBeRemoved(() =>
@@ -318,16 +295,7 @@ describe('ClusterDetailApps on CAPA', () => {
         ],
       });
 
-    nock(window.config.mapiEndpoint)
-      .get(
-        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/${clusterId}-default-apps/`
-      )
-      .reply(
-        StatusCodes.Ok,
-        applicationv1alpha1Mocks.randomClusterCAPA1DefaultApp
-      );
-
-    render(getComponent({ isClusterApp: true, clusterVersion: '0.9.2' }));
+    render(getComponent({ isClusterApp: true }));
 
     if (screen.queryAllByText('Loading...').length > 0) {
       await waitForElementToBeRemoved(() =>
