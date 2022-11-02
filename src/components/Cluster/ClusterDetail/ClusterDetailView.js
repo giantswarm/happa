@@ -375,8 +375,8 @@ class ClusterDetailView extends React.Component {
               <Tab path={tabsPaths.Apps} title='Apps'>
                 {supporsAppsViaMapi ? (
                   <ClusterDetailApps
-                    clusterVersion={release_version}
                     isClusterCreating={clusterIsCreating}
+                    isClusterApp={false}
                   />
                 ) : (
                   <ClusterApps

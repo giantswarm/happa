@@ -16,7 +16,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import {
-  getDefaultAppName,
+  getDefaultAppNameForProvider,
   IApp,
   isAppManagedByFlux,
 } from 'model/services/mapi/applicationv1alpha1';
@@ -593,18 +593,16 @@ export function mapReleaseToApps(
 
 export function isUserInstalledApp(
   app: IApp,
-  apps: IApp[],
   isClusterApp: boolean,
   provider: PropertiesOf<typeof Providers>
 ) {
   const managedBy = app.metadata.labels?.[applicationv1alpha1.labelManagedBy];
 
   if (isClusterApp) {
-    const defaultAppName = getDefaultAppName(apps, provider);
+    const defaultAppName = getDefaultAppNameForProvider(provider);
+    const appName = app.metadata.labels?.[applicationv1alpha1.labelAppName];
 
-    return (
-      managedBy !== 'cluster-apps-operator' && managedBy !== defaultAppName
-    );
+    return managedBy !== 'cluster-apps-operator' && appName !== defaultAppName;
   }
 
   return managedBy !== 'cluster-operator';
@@ -616,7 +614,7 @@ export function filterUserInstalledApps(
   provider: PropertiesOf<typeof Providers>
 ): applicationv1alpha1.IApp[] {
   return apps.filter((app) => {
-    return isUserInstalledApp(app, apps, isClusterApp, provider);
+    return isUserInstalledApp(app, isClusterApp, provider);
   });
 }
 
@@ -626,7 +624,7 @@ export function filterDefaultApps(
   provider: PropertiesOf<typeof Providers>
 ): applicationv1alpha1.IApp[] {
   return apps.filter((app) => {
-    return !isUserInstalledApp(app, apps, isClusterApp, provider);
+    return !isUserInstalledApp(app, isClusterApp, provider);
   });
 }
 

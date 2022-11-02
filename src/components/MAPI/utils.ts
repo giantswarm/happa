@@ -1555,17 +1555,6 @@ export function isCAPIProvider(provider: string): boolean {
   }
 }
 
-export function getProviderName(
-  provider: PropertiesOf<typeof import('model/constants').Providers>
-): string {
-  switch (provider) {
-    case Providers.GCP:
-      return 'Google Cloud Platform';
-    default:
-      return provider;
-  }
-}
-
 /**
  * Returns whether or not a cluster is a management cluster, by
  * the criteria that the cluster:

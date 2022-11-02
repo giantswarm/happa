@@ -2,7 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Paragraph } from 'grommet';
 import ListAppsGuide from 'MAPI/clusters/guides/ListAppsGuide';
-import { extractErrorMessage, getProviderName } from 'MAPI/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -14,17 +14,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
+import { FlashMessageType } from 'styles';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
+import FlashMessageComponent from 'UI/Display/FlashMessage';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import ClusterDetailAppList from './ClusterDetailAppList';
-import ClusterDetailDefaultApps from './ClusterDetailDefaultApps';
-import ClusterDetailReleaseApps from './ClusterDetailReleaseApps';
 import { usePermissionsForApps } from './permissions/usePermissionsForApps';
 import {
   compareApps,
+  filterDefaultApps,
   filterUserInstalledApps,
   isAppChangingVersion,
   removeChildApps,
@@ -40,14 +41,13 @@ const Disclaimer = styled(Paragraph)`
 `;
 
 interface IClusterDetailApps {
-  clusterVersion?: string;
   isClusterApp?: boolean;
   isClusterCreating?: boolean;
 }
 
 const ClusterDetailApps: React.FC<
   React.PropsWithChildren<IClusterDetailApps>
-> = ({ clusterVersion, isClusterApp, isClusterCreating = false }) => {
+> = ({ isClusterApp, isClusterCreating = false }) => {
   const { pathname } = useLocation();
   const { clusterId, orgId } = useParams<{
     clusterId: string;
@@ -145,6 +145,16 @@ const ClusterDetailApps: React.FC<
     return removeChildApps(apps).sort(compareApps);
   }, [appList, isClusterApp, provider]);
 
+  const defaultApps = useMemo(() => {
+    if (typeof appList === 'undefined' || typeof isClusterApp === 'undefined') {
+      return [];
+    }
+
+    const apps = filterDefaultApps(appList.items, isClusterApp, provider);
+
+    return removeChildApps(apps).sort(compareApps);
+  }, [appList, isClusterApp, provider]);
+
   return (
     <DocumentTitle title={`Apps | ${clusterId}`}>
       <Breadcrumb
@@ -184,39 +194,35 @@ const ClusterDetailApps: React.FC<
             </Box>
           </ClusterDetailAppList>
 
-          {typeof isClusterApp !== 'undefined' &&
-            typeof clusterVersion !== 'undefined' && (
-              <>
-                <h3>{isClusterApp ? 'Default Apps' : 'Preinstalled Apps'}</h3>
-                <Disclaimer margin={{ bottom: 'medium' }} fill={true}>
-                  {isClusterApp
-                    ? `These are installed in every Giant Swarm workload cluster on ${getProviderName(
-                        provider
-                      )}, to provide essential functionality.`
-                    : 'These apps are preinstalled on your cluster and managed by Giant Swarm.'}
-                </Disclaimer>
+          {typeof isClusterApp !== 'undefined' && (
+            <>
+              <h3>{isClusterApp ? 'Default Apps' : 'Preinstalled Apps'}</h3>
+              <Disclaimer margin={{ bottom: 'medium' }} fill={true}>
+                {isClusterApp
+                  ? `These are installed in every Giant Swarm workload cluster to provide essential functionality.`
+                  : 'These apps are preinstalled on your cluster and managed by Giant Swarm.'}
+              </Disclaimer>
 
-                {isClusterApp ? (
-                  <ClusterDetailDefaultApps
-                    appList={appList}
-                    namespace={appsNamespace}
-                    isLoading={isLoading}
-                    isClusterCreating={isClusterCreating}
-                    errorMessage={extractErrorMessage(appListError)}
-                    appsPermissions={appsPermissions}
-                  />
-                ) : (
-                  <ClusterDetailReleaseApps
-                    appList={appList}
-                    isLoading={isLoading}
-                    isClusterCreating={isClusterCreating}
-                    errorMessage={extractErrorMessage(appListError)}
-                    appsPermissions={appsPermissions}
-                    releaseVersion={clusterVersion}
-                  />
-                )}
-              </>
-            )}
+              <ClusterDetailAppList
+                apps={defaultApps}
+                appList={appList}
+                appsPermissions={appsPermissions}
+                isLoading={isLoading}
+                isClusterCreating={isClusterCreating}
+                margin={{ bottom: 'medium' }}
+                errorMessage={extractErrorMessage(appListError)}
+                isClusterApp={isClusterApp}
+              />
+
+              {typeof appListError !== 'undefined' && (
+                <FlashMessageComponent type={FlashMessageType.Danger}>
+                  Unable to load the list of{' '}
+                  {isClusterApp ? 'default' : 'preinstalled'} apps. Please try
+                  again later or contact support: support@giantswarm.io
+                </FlashMessageComponent>
+              )}
+            </>
+          )}
 
           {appsNamespace && (
             <Box margin={{ top: 'medium' }} direction='column' gap='small'>
