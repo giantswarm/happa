@@ -29,7 +29,8 @@ function pascalCaseToCamelCase(str: string) {
 }
 
 export function formatGeneratedFileExport(fileName: string) {
-  return `export * from './${fileName}';\n`;
+  return `export * from './${fileName}';
+  `;
 }
 
 export function formatInterfaceName(resourceName: string): string {
@@ -41,11 +42,13 @@ export function formatTypesFileHeader(apiVersion: string): string {
   
   import * as metav1 from 'model/services/mapi/metav1';
   
-  export const ApiVersion = '${apiVersion}';\n`;
+  export const ApiVersion = '${apiVersion}';
+  `;
 }
 
 export function formatResourceKindExport(resourceName: string) {
-  return `export const ${resourceName} = '${resourceName}';\n`;
+  return `export const ${resourceName} = '${resourceName}';
+  `;
 }
 
 export function formatListResourceExport(
@@ -58,7 +61,8 @@ export function formatListResourceExport(
 export interface ${listResourceInterfaceName} extends metav1.IList<${resourceInterfaceName}> {
   apiVersion: typeof ApiVersion;
   kind: typeof ${resourceNames.listKind};
-}\n`;
+}
+`;
 }
 
 export function getClientFunctionMethodName(
@@ -85,7 +89,8 @@ import { ${genericMethodName} } from 'model/services/mapi/generic/${genericMetho
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { ${formatInterfaceName(resourceName)} } from '.';\n`;
+import { ${formatInterfaceName(resourceName)} } from '.';
+`;
 }
 
 export function formatClientFunctionGetMethod(
@@ -99,13 +104,15 @@ export function formatClientFunctionGetMethod(
 
   return `export function ${clientFunctionName}(
   client: IHttpClient,
-  auth: IOAuth2Provider,${namespaced ? '\nnamespace: string,' : ''}
+  auth: IOAuth2Provider,
+  ${namespaced ? 'namespace: string,' : ''}
   name: string
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: '${apiVersion}',
-    kind: '${resourceNamePlural}',${namespaced ? '\nnamespace,' : ''}
+    kind: '${resourceNamePlural}',
+    ${namespaced ? 'namespace,' : ''}
     name,
   });
 
@@ -118,7 +125,8 @@ export function ${clientFunctionName}Key(${
     namespaced ? 'namespace: string, ' : ''
   } name: string) {
   return \`${clientFunctionName}${namespaced ? '/${namespace}' : ''}/\${name}\`;
-}\n`;
+}
+`;
 }
 
 export function formatClientFunctionListMethod(
@@ -133,9 +141,8 @@ export function formatClientFunctionListMethod(
     clientFunctionName
   )}Options`;
 
-  return `export interface ${listOptionsInterfaceName} {${
-    namespaced ? '\nnamespace?: string;' : ''
-  }
+  return `export interface ${listOptionsInterfaceName} {
+  ${namespaced ? 'namespace?: string;' : ''}
   labelSelector?: k8sUrl.IK8sLabelSelector;
 }
 
@@ -167,7 +174,8 @@ export function ${clientFunctionName}Key(
   });
 
   return url.toString();
-}\n`;
+}
+`;
 }
 
 export function formatClientFunctionCreateMethod(
@@ -189,9 +197,8 @@ export function formatClientFunctionCreateMethod(
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: '${apiVersion}',
-    kind: '${resourceNamePlural}',${
-    namespaced ? `\nnamespace: ${resourceNameParam}.metadata.namespace!,` : ''
-  }
+    kind: '${resourceNamePlural}',
+    ${namespaced ? `namespace: ${resourceNameParam}.metadata.namespace!,` : ''}
   });
 
   return ${genericMethodNames[verb]}<${resourceInterfaceName}>(
@@ -200,7 +207,8 @@ export function formatClientFunctionCreateMethod(
     url.toString(),
     ${resourceNameParam}
   );
-}\n`;
+}
+`;
 }
 
 export function formatClientFunctionUpdateMethod(
@@ -223,9 +231,8 @@ export function formatClientFunctionUpdateMethod(
     baseUrl: window.config.mapiEndpoint,
     apiVersion: '${apiVersion}',
     kind: '${resourceNamePlural}',
-    name: ${resourceNameParam}.metadata.name,${
-    namespaced ? `\nnamespace: ${resourceNameParam}.metadata.namespace!,` : ''
-  }
+    name: ${resourceNameParam}.metadata.name,
+    ${namespaced ? `namespace: ${resourceNameParam}.metadata.namespace!,` : ''}
   });
 
   return ${genericMethodNames[verb]}<${resourceInterfaceName}>(
@@ -234,7 +241,8 @@ export function formatClientFunctionUpdateMethod(
     url.toString(),
     ${resourceNameParam}
   );
-}\n`;
+}
+`;
 }
 
 export function formatClientFunctionDeleteMethod(
@@ -257,11 +265,11 @@ export function formatClientFunctionDeleteMethod(
     baseUrl: window.config.mapiEndpoint,
     apiVersion: '${apiVersion}',
     kind: '${resourceNamePlural}',
-    name: ${resourceNameParam}.metadata.name,${
-    namespaced ? `\nnamespace: ${resourceNameParam}.metadata.namespace!,` : ''
-  }
+    name: ${resourceNameParam}.metadata.name,
+    ${namespaced ? `namespace: ${resourceNameParam}.metadata.namespace!,` : ''}
   });
 
   return ${genericMethodNames[verb]}(client, auth, url.toString());
-}\n`;
+}
+`;
 }
