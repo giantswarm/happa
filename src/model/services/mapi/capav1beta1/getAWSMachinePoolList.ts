@@ -1,9 +1,13 @@
+/**
+ * This file was automatically generated, PLEASE DO NOT MODIFY IT BY HAND.
+ */
+
 import { IHttpClient } from 'model/clients/HttpClient';
+import { getListResource } from 'model/services/mapi/generic/getListResource';
 import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import { getListResource } from '../generic/getListResource';
-import { IAWSMachinePoolList } from './types';
+import { IAWSMachinePoolList } from '.';
 
 export interface IGetAWSMachinePoolListOptions {
   namespace?: string;
