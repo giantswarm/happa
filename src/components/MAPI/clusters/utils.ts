@@ -1146,3 +1146,11 @@ export function fetchControlPlaneNodesK8sVersionsKey(
 ): string {
   return `fetchControlPlaneNodesK8sVersions/${cluster.metadata.namespace}/${cluster.metadata.name}`;
 }
+
+export function getClusterCreationDuration(cluster: Cluster): string {
+  if (cluster.spec?.infrastructureRef?.kind === 'GCPCluster') {
+    return '5 minutes';
+  }
+
+  return '15 minutes';
+}
