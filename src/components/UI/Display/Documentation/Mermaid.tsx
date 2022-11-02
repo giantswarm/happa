@@ -1,7 +1,7 @@
-import mermaid, { Config } from 'mermaid';
+import mermaid, { MermaidConfig } from 'mermaid';
 import React, { useEffect } from 'react';
 
-const DEFAULT_CONFIG: Config = {
+const DEFAULT_CONFIG: MermaidConfig = {
   startOnLoad: true,
   theme: 'neutral',
   securityLevel: 'strict',
@@ -12,11 +12,11 @@ const DEFAULT_CONFIG: Config = {
     htmlLabels: false,
     useMaxWidth: true,
   },
-} as Config;
+} as MermaidConfig;
 
 interface IMermaidProps extends React.ComponentPropsWithoutRef<'div'> {
   chart: string;
-  config?: Config;
+  config?: MermaidConfig;
 }
 
 const Mermaid: React.FC<React.PropsWithChildren<IMermaidProps>> = ({
