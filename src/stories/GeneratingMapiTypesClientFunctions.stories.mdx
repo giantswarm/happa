@@ -25,6 +25,9 @@ Below is an example definition for a resource group entry:
   resources:
   - name: GCPCluster
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-gcp/main/config/crd/bases/infrastructure.cluster.x-k8s.io_gcpclusters.yaml
+    verbs:
+    - get
+    - list
 ```
 
 ### Schema
