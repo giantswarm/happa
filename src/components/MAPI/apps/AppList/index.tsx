@@ -17,6 +17,7 @@ import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 import useSWR, { useSWRConfig } from 'swr';
 import AppsListPage from 'UI/Display/Apps/AppList/AppsListPage';
 import AppInstallationSelectedCluster from 'UI/Display/MAPI/apps/AppInstallationSelectedCluster';
@@ -48,6 +49,10 @@ import {
 const SEARCH_THROTTLE_RATE_MS = 250;
 
 const AppList: React.FC<React.PropsWithChildren<{}>> = () => {
+  const {
+    state: { selectedCatalog },
+  } = useLocation<{ selectedCatalog?: string }>();
+
   const isAdmin = useSelector(getUserIsAdmin);
   const organizations = useSelector(selectOrganizations());
   const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
@@ -127,9 +132,14 @@ const AppList: React.FC<React.PropsWithChildren<{}>> = () => {
       return;
     }
 
-    // Pre-select all catalogs.
-    for (const catalog of catalogList.items) {
-      selectCatalog(catalog.metadata.name);
+    // Pre-select selected catalogs from location state.
+    // Otherwise, pre-select all catalogs.
+    if (selectedCatalog) {
+      selectCatalog(selectedCatalog);
+    } else {
+      for (const catalog of catalogList.items) {
+        selectCatalog(catalog.metadata.name);
+      }
     }
 
     // We don't need to run this again if the selected catalogs change.
