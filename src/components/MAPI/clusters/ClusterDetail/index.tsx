@@ -326,11 +326,11 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     ? capiv1beta1.getKubernetesAPIEndpointURL(cluster)
     : undefined;
 
-  const { status: clusterStatus, clusterUpdateSchedule } = useClusterStatus(
-    cluster,
-    providerCluster,
-    releaseList?.items
-  );
+  const {
+    status: clusterStatus,
+    clusterUpdateSchedule,
+    clusterCreationDuration,
+  } = useClusterStatus(cluster, providerCluster, releaseList?.items);
 
   const updateDescription = async (newValue: string) => {
     if (!cluster) return;
@@ -417,6 +417,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
             >
               <ClusterStatusComponent
                 status={clusterStatus}
+                clusterCreationDuration={clusterCreationDuration}
                 clusterUpdateSchedule={clusterUpdateSchedule}
                 inheritColor={true}
                 showFullMessage={true}

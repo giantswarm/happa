@@ -37,6 +37,7 @@ import {
   createDefaultControlPlaneNodes,
   createDefaultProviderCluster,
   findLatestReleaseVersion,
+  getClusterCreationDuration,
 } from '../utils';
 import CreateClusterControlPlaneNodeAZs from './CreateClusterControlPlaneNodeAZs';
 import CreateClusterControlPlaneNodesCount from './CreateClusterControlPlaneNodesCount';
@@ -330,6 +331,7 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
   }, [state.controlPlaneNodes]);
   const labels = filterLabels(capiv1beta1.getClusterLabels(state.cluster));
   const servicePriority = capiv1beta1.getClusterServicePriority(state.cluster);
+  const clusterCreationDuration = getClusterCreationDuration(state.cluster);
 
   return (
     <Breadcrumb data={{ title: 'CREATE CLUSTER', pathname: match.url }}>
@@ -418,8 +420,8 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
               </Box>
               <Box margin={{ top: 'medium' }} gap='small'>
                 <Text color='text-weak'>
-                  It will take around 15 minutes for the control plane to become
-                  available.
+                  {`It will take around ${clusterCreationDuration} for the control plane to become
+                  available.`}
                 </Text>
                 <Text>
                   <i

@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import {
   ClusterStatus,
   getClusterConditions,
+  getClusterCreationDuration,
   getClusterUpdateSchedule,
   IClusterUpdateSchedule,
   isClusterUpgradable,
@@ -20,7 +21,11 @@ export function useClusterStatus(
   cluster?: capiv1beta1.ICluster,
   providerCluster?: ProviderCluster,
   releases?: releasev1alpha1.IRelease[]
-): { status?: ClusterStatus; clusterUpdateSchedule?: IClusterUpdateSchedule } {
+): {
+  status?: ClusterStatus;
+  clusterUpdateSchedule?: IClusterUpdateSchedule;
+  clusterCreationDuration?: string;
+} {
   const isAdmin = useSelector(getUserIsAdmin);
   const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
   const provider = window.config.info.general.provider;
@@ -51,7 +56,10 @@ export function useClusterStatus(
 
     case isConditionUnknown:
     case isCreating:
-      return { status: ClusterStatus.CreationInProgress };
+      return {
+        status: ClusterStatus.CreationInProgress,
+        clusterCreationDuration: getClusterCreationDuration(cluster),
+      };
 
     case isUpgrading:
       return { status: ClusterStatus.UpgradeInProgress };

@@ -213,11 +213,11 @@ const ClusterDetailWidgetRelease: React.FC<
     );
   }, [releaseList, targetVersion]);
 
-  const { status: clusterStatus, clusterUpdateSchedule } = useClusterStatus(
-    cluster,
-    providerCluster,
-    releaseList?.items
-  );
+  const {
+    status: clusterStatus,
+    clusterUpdateSchedule,
+    clusterCreationDuration,
+  } = useClusterStatus(cluster, providerCluster, releaseList?.items);
 
   const [upgradeModalVisible, setUpgradeModalVisible] = useState(false);
 
@@ -404,6 +404,7 @@ const ClusterDetailWidgetRelease: React.FC<
           clusterStatus === ClusterStatus.UpgradeScheduled) && (
           <ClusterStatusComponent
             status={clusterStatus}
+            clusterCreationDuration={clusterCreationDuration}
             clusterUpdateSchedule={clusterUpdateSchedule}
             margin={{ left: 'small' }}
           />

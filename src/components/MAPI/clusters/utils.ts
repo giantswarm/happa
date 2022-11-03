@@ -18,6 +18,7 @@ import {
 import { IProviderNodePoolForNodePool } from 'MAPI/workernodes/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { Constants, Providers } from 'model/constants';
+import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
@@ -1145,4 +1146,12 @@ export function fetchControlPlaneNodesK8sVersionsKey(
   cluster: capiv1beta1.ICluster
 ): string {
   return `fetchControlPlaneNodesK8sVersions/${cluster.metadata.namespace}/${cluster.metadata.name}`;
+}
+
+export function getClusterCreationDuration(cluster: Cluster): string {
+  if (cluster.spec?.infrastructureRef?.kind === capgv1beta1.GCPCluster) {
+    return '5 minutes';
+  }
+
+  return '15 minutes';
 }

@@ -86,7 +86,11 @@ const ClusterListItem: React.FC<
 }) => {
   const name = cluster?.metadata.name;
 
-  const { status: clusterStatus, clusterUpdateSchedule } = useClusterStatus(
+  const {
+    status: clusterStatus,
+    clusterUpdateSchedule,
+    clusterCreationDuration,
+  } = useClusterStatus(
     cluster,
     providerCluster === null ? undefined : providerCluster,
     releases
@@ -252,6 +256,7 @@ const ClusterListItem: React.FC<
               {clusterStatus && (
                 <ClusterStatus
                   status={clusterStatus}
+                  clusterCreationDuration={clusterCreationDuration}
                   clusterUpdateSchedule={clusterUpdateSchedule}
                 />
               )}

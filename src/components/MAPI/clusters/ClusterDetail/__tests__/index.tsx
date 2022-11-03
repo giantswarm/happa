@@ -428,7 +428,7 @@ describe('ClusterDetail', () => {
     expect(clusterStatus).toBeInTheDocument();
     expect(
       within(clusterStatus).getByText(
-        'The cluster is currently being created. This step usually takes about 15 minutes.'
+        'The cluster is currently being created. This step usually takes about 5 minutes.'
       )
     ).toBeInTheDocument();
   });

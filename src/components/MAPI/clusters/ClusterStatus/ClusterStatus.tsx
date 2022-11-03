@@ -11,6 +11,7 @@ import {
 interface IClusterStatusProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
   status: ClusterStatusType;
+  clusterCreationDuration?: string;
   clusterUpdateSchedule?: IClusterUpdateSchedule;
   inheritColor?: boolean;
   showFullMessage?: boolean;
@@ -18,6 +19,7 @@ interface IClusterStatusProps
 
 const ClusterStatus: React.FC<React.PropsWithChildren<IClusterStatusProps>> = ({
   status,
+  clusterCreationDuration,
   clusterUpdateSchedule,
   inheritColor,
   showFullMessage,
@@ -33,8 +35,7 @@ const ClusterStatus: React.FC<React.PropsWithChildren<IClusterStatusProps>> = ({
       color = 'text-weak';
       iconClassName = 'fa fa-change-in-progress';
       message = 'Cluster creating…';
-      fullMessage =
-        'The cluster is currently being created. This step usually takes about 15 minutes.';
+      fullMessage = `The cluster is currently being created. This step usually takes about ${clusterCreationDuration}.`;
       break;
 
     case ClusterStatusType.UpgradeInProgress:
