@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { createMemoryHistory, MemoryHistory } from 'history';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import * as applicationv1alpha1Mocks from 'test/mockHttpCalls/applicationv1alpha1';
@@ -14,9 +14,9 @@ import { usePermissionsForCatalogs } from '../permissions/usePermissionsForCatal
 function getComponent(
   props: React.ComponentPropsWithoutRef<
     typeof ClusterDetailAppListWidgetCatalog
-  >
+  >,
+  history?: MemoryHistory
 ) {
-  const history = createMemoryHistory();
   const auth = new TestOAuth2(history, true);
 
   const Component = (p: typeof props) => (
@@ -30,7 +30,7 @@ function getComponent(
     props,
     undefined,
     undefined,
-    history,
+    history ?? createMemoryHistory(),
     auth
   );
 }
@@ -87,6 +87,29 @@ describe('ClusterDetailAppListWidgetCatalog', () => {
     ).toBeInTheDocument();
 
     expect(screen.getByText(/managed/i)).toBeInTheDocument();
+  });
+
+  it('displays a link to the app catalogs page', async () => {
+    const catalog = applicationv1alpha1Mocks.defaultAppCatalog;
+    const clusterId = capiv1beta1Mocks.randomCluster1.metadata.name;
+    const app = generateApp({
+      clusterId,
+      namespace: clusterId,
+    });
+
+    const history = createMemoryHistory();
+    history.push = jest.fn();
+
+    render(getComponent({ app, catalog }, history));
+
+    const catalogLink = await screen.findByText('Default Catalog');
+    expect(catalogLink).toBeInTheDocument();
+
+    fireEvent.click(catalogLink);
+    expect(history.push).toHaveBeenCalledWith({
+      pathname: '/apps',
+      state: { selectedCatalog: 'default' },
+    });
   });
 
   it(`displays the app catalog name for users who do not have permissions to get the app's catalog`, async () => {
