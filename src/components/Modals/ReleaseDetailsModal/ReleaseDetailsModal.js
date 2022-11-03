@@ -74,7 +74,7 @@ class ReleaseDetailsModal extends React.Component {
           key={release.version}
           data-testid={`release-${release.version}`}
         >
-          <p className='release-selector-modal--release-details--date'>
+          <p>
             Released <Date relative={true} value={release.timestamp} />
           </p>
 
