@@ -49,9 +49,9 @@ import {
 const SEARCH_THROTTLE_RATE_MS = 250;
 
 const AppList: React.FC<React.PropsWithChildren<{}>> = () => {
-  const {
-    state: { selectedCatalog },
-  } = useLocation<{ selectedCatalog?: string }>();
+  const { state: locationState } = useLocation<
+    { selectedCatalog?: string } | undefined
+  >();
 
   const isAdmin = useSelector(getUserIsAdmin);
   const organizations = useSelector(selectOrganizations());
@@ -134,8 +134,8 @@ const AppList: React.FC<React.PropsWithChildren<{}>> = () => {
 
     // Pre-select selected catalogs from location state.
     // Otherwise, pre-select all catalogs.
-    if (selectedCatalog) {
-      selectCatalog(selectedCatalog);
+    if (locationState?.selectedCatalog) {
+      selectCatalog(locationState.selectedCatalog);
     } else {
       for (const catalog of catalogList.items) {
         selectCatalog(catalog.metadata.name);
