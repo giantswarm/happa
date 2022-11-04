@@ -209,6 +209,7 @@ workflows:
               only: /^v.*/
 
       - architect/push-to-app-catalog:
+          executor: app-build-suite
           name: push-fe-docs-to-operations-platform-app-catalog
           context: architect
           app_catalog: "giantswarm-operations-platform-catalog"

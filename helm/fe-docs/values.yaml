@@ -5,8 +5,8 @@ groupID: 1000
 image:
   name: fe-docs
   repository: giantswarm/fe-docs
-  tag: '[[.Version]]'
-  sha: '[[.SHA]]'
+  tag: "[[.Version]]"
+  sha: "[[.SHA]]"
 
 port: 8080
 hostnames: []

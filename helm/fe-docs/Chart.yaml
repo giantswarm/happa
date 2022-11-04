@@ -2,5 +2,7 @@ apiVersion: v1
 name: fe-docs
 description: The Giant Swarm front end documentation.
 home: https://github.com/giantswarm/happa
-version: [[ .Version ]]
-appVersion: [[ .AppVersion ]]
+version: "[[ .Version ]]"
+appVersion: "[[ .AppVersion ]]"
+annotations:
+  application.giantswarm.io/team: team-rainbow
