@@ -1,3 +1,4 @@
 smoke-tests-cluster-type: kind
- 
+smoke-tests-cluster-config-file: tests/ats/kind_config.yaml
+
 skip-steps: [functional, upgrade]
