@@ -2,7 +2,12 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
 import { Box, Text } from 'grommet';
 import InstallIngressButton from 'MAPI/apps/InstallIngressButton';
-import { extractErrorMessage } from 'MAPI/utils';
+import {
+  extractErrorMessage,
+  getClusterK8sAPIUrl,
+  isCAPACluster,
+  isCAPGCluster,
+} from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -39,6 +44,7 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
 interface IClusterDetailIngressProps
   extends React.ComponentPropsWithoutRef<'div'> {
   provider?: PropertiesOf<typeof Providers>;
+  cluster?: capiv1beta1.ICluster;
   isClusterApp?: boolean;
   k8sEndpoint?: string;
   kvmTCPHTTPPort?: number;
@@ -50,8 +56,8 @@ const ClusterDetailIngress: React.FC<
   React.PropsWithChildren<IClusterDetailIngressProps>
   // eslint-disable-next-line complexity
 > = ({
+  cluster,
   isClusterApp,
-  k8sEndpoint,
   kvmTCPHTTPPort,
   kvmTCPHTTPSPort,
   mutateCluster,
@@ -123,6 +129,18 @@ const ClusterDetailIngress: React.FC<
     return Boolean(app);
   }, [appList?.items]);
 
+  const k8sEndpoint = useMemo(() => {
+    if (rest.k8sEndpoint) {
+      return rest.k8sEndpoint;
+    }
+
+    return cluster
+      ? isCAPGCluster(cluster) || isCAPACluster(cluster)
+        ? getClusterK8sAPIUrl(cluster, provider)
+        : capiv1beta1.getClusterK8sAPIUrl(cluster)
+      : undefined;
+  }, [cluster, provider, rest.k8sEndpoint]);
+
   return (
     <DocumentTitle title={`Ingress | ${clusterId}`}>
       <Breadcrumb
@@ -192,8 +210,6 @@ const ClusterDetailIngress: React.FC<
 };
 
 ClusterDetailIngress.defaultProps = {
-  provider: Providers.AWS,
-  k8sEndpoint: '',
   kvmTCPHTTPPort: 0,
   kvmTCPHTTPSPort: 0,
 };

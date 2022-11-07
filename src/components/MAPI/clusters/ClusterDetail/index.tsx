@@ -14,9 +14,6 @@ import {
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
   getClusterDescription,
-  getClusterK8sAPIUrl,
-  isCAPACluster,
-  isCAPGCluster,
   isResourceManagedByGitOps,
   supportsReleases,
 } from 'MAPI/utils';
@@ -325,12 +322,6 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   }, [cluster, providerCluster, providerClusterIsLoading]);
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
 
-  const k8sAPIUrl = cluster
-    ? isCAPGCluster(cluster) || isCAPACluster(cluster)
-      ? getClusterK8sAPIUrl(cluster, provider)
-      : capiv1beta1.getClusterK8sAPIUrl(cluster)
-    : undefined;
-
   const {
     status: clusterStatus,
     clusterUpdateSchedule,
@@ -464,9 +455,8 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
               render={() =>
                 cluster && (
                   <ClusterDetailIngress
-                    provider={provider}
+                    cluster={cluster}
                     isClusterApp={isClusterApp}
-                    k8sEndpoint={k8sAPIUrl}
                     mutateCluster={mutateCluster}
                   />
                 )

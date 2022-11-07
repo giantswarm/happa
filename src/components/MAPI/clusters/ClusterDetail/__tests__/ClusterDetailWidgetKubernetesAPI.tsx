@@ -85,31 +85,9 @@ describe('ClusterDetailWidgetKubernetesAPI on Azure', () => {
       cluster: capiv1beta1Mocks.randomCluster1,
     });
 
-    expect(screen.getByText('https://test.k8s.gs.com')).toBeInTheDocument();
-  });
-});
-
-describe('ClusterDetailWidgetKubernetesAPI on AWS', () => {
-  const provider: PropertiesOf<typeof Providers> =
-    window.config.info.general.provider;
-
-  beforeAll(() => {
-    window.config.info.general.provider = Providers.AWS;
-
-    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
-      defaultPermissions
-    );
-  });
-  afterAll(() => {
-    window.config.info.general.provider = provider;
-  });
-
-  it('displays the kubernetes API endpoint URL for the cluster', () => {
-    renderWithStore(ClusterDetailWidgetKubernetesAPI, {
-      cluster: capiv1beta1Mocks.randomClusterAWS1,
-    });
-
-    expect(screen.getByText('https://test.k8s.gs.com')).toBeInTheDocument();
+    expect(
+      screen.getByText('https://api.j5y9m.k8s.test.gigantic.io:443')
+    ).toBeInTheDocument();
   });
 });
 
