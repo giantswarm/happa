@@ -74,9 +74,7 @@ export function getClusterOrganizationLabel(
   return cluster.metadata.labels?.[labelOrganization];
 }
 
-export function getKubernetesAPIEndpointURL(
-  cluster: ICluster
-): string | undefined {
+export function getClusterK8sAPIUrl(cluster: ICluster): string | undefined {
   let hostname = cluster.spec?.controlPlaneEndpoint?.host;
   if (!hostname) return '';
 
