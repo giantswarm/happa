@@ -13,7 +13,6 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, Providers } from 'model/constants';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
-import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -64,10 +63,8 @@ export async function updateClusterDescription(
 
   if (
     providerCluster &&
-    ((providerCluster.kind === infrav1alpha2.AWSCluster &&
-      providerCluster.apiVersion === infrav1alpha2.ApiVersion) ||
-      (providerCluster.kind === infrav1alpha3.AWSCluster &&
-        providerCluster.apiVersion === infrav1alpha3.ApiVersion)) &&
+    providerCluster.kind === infrav1alpha3.AWSCluster &&
+    providerCluster.apiVersion === infrav1alpha3.ApiVersion &&
     typeof providerCluster.spec !== 'undefined'
   ) {
     providerCluster.spec.cluster.description = newDescription;
@@ -75,7 +72,7 @@ export async function updateClusterDescription(
     const updatedProviderCluster = await infrav1alpha3.updateAWSCluster(
       httpClientFactory(),
       auth,
-      providerCluster as infrav1alpha3.IAWSCluster
+      providerCluster
     );
 
     mutate(
@@ -162,8 +159,6 @@ export async function deleteProviderClusterForCluster(
 
   const { kind, apiVersion } = providerCluster;
   switch (true) {
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion: {
       const client = httpClientFactory();
@@ -256,10 +251,8 @@ export async function deleteClusterResources(
     const kind = cluster.spec?.infrastructureRef?.kind;
     const apiVersion = cluster.spec?.infrastructureRef?.apiVersion;
     if (
-      (kind === infrav1alpha2.AWSCluster &&
-        apiVersion === infrav1alpha2.ApiVersion) ||
-      (kind === infrav1alpha3.AWSCluster &&
-        apiVersion === infrav1alpha3.ApiVersion)
+      kind === infrav1alpha3.AWSCluster &&
+      apiVersion === infrav1alpha3.ApiVersion
     ) {
       await deleteProviderClusterForCluster(httpClientFactory, auth, cluster);
       await deleteControlPlaneNodesForCluster(httpClientFactory, auth, cluster);
