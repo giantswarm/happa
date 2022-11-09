@@ -2,12 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import Instructions from 'Cluster/ClusterDetail/Ingress/Instructions';
 import { Box, Text } from 'grommet';
 import InstallIngressButton from 'MAPI/apps/InstallIngressButton';
-import {
-  extractErrorMessage,
-  getClusterK8sAPIUrl,
-  isCAPACluster,
-  isCAPGCluster,
-} from 'MAPI/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -27,7 +22,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import { usePermissionsForApps } from './permissions/usePermissionsForApps';
-import { findIngressApp } from './utils';
+import { findIngressApp, getClusterK8sEndpoint } from './utils';
 
 const IngressWrapper = styled.div``;
 
@@ -134,11 +129,7 @@ const ClusterDetailIngress: React.FC<
       return rest.k8sEndpoint;
     }
 
-    return cluster
-      ? isCAPGCluster(cluster) || isCAPACluster(cluster)
-        ? getClusterK8sAPIUrl(cluster, provider)
-        : capiv1beta1.getClusterK8sAPIUrl(cluster)
-      : undefined;
+    return cluster ? getClusterK8sEndpoint(cluster, provider) : undefined;
   }, [cluster, provider, rest.k8sEndpoint]);
 
   return (

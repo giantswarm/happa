@@ -12,6 +12,7 @@ import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import ErrorReporter from 'utils/errors/ErrorReporter';
+import { isIPAddress } from 'utils/helpers';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
@@ -1408,24 +1409,40 @@ export function extractErrorMessage(
 export function getClusterK8sAPIUrl(
   cluster: capiv1beta1.ICluster,
   provider: PropertiesOf<typeof Providers>
-): string | undefined {
-  const baseURL = getClusterBaseURL(provider);
+) {
+  let hostname = cluster.spec?.controlPlaneEndpoint?.host;
+  if (!hostname) return '';
 
-  const hostname = baseURL.host.replace(
+  const port = cluster.spec?.controlPlaneEndpoint?.port;
+
+  // If the control plane host is an IP address then it is a CAPI cluster
+  if (isIPAddress(hostname)) {
+    hostname = getClusterBaseUrl(cluster, provider).host;
+  }
+
+  return `https://${hostname}${port ? `:${port}` : ''}`;
+}
+
+export function getK8sAPIUrl(provider: PropertiesOf<typeof Providers>): string {
+  return getInstallationBaseURL(provider).toString();
+}
+
+export function getClusterBaseUrl(
+  cluster: capiv1beta1.ICluster,
+  provider: PropertiesOf<typeof Providers>
+) {
+  const installationBaseURL = getInstallationBaseURL(provider);
+
+  const clusterBaseUrl = new URL(installationBaseURL);
+  clusterBaseUrl.host = clusterBaseUrl.host.replace(
     window.config.info.general.installationName,
     cluster.metadata.name
   );
 
-  return `https://${hostname}${baseURL.port ? `:${baseURL.port}` : ''}`;
+  return clusterBaseUrl;
 }
 
-export function getK8sAPIUrl(provider: PropertiesOf<typeof Providers>): string {
-  return getClusterBaseURL(provider).toString();
-}
-
-export function getClusterBaseURL(
-  provider: PropertiesOf<typeof Providers>
-): URL {
+function getInstallationBaseURL(provider: PropertiesOf<typeof Providers>): URL {
   const audienceURL = new URL(window.config.audience);
   // Remove all characters until the first `.`.
   audienceURL.host = audienceURL.host.substring(
