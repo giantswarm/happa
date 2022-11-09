@@ -736,13 +736,13 @@ export async function createCluster(
                 return infrav1alpha3.createAWSControlPlane(
                   httpClientFactory(),
                   auth,
-                  n as infrav1alpha3.IAWSControlPlane
+                  n
                 );
               case infrav1alpha3.G8sControlPlane:
                 return infrav1alpha3.createG8sControlPlane(
                   httpClientFactory(),
                   auth,
-                  n as infrav1alpha3.IG8sControlPlane
+                  n
                 );
               default:
                 return Promise.reject(
