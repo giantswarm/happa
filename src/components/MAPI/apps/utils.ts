@@ -7,9 +7,12 @@ import {
 } from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
 import {
+  getClusterBaseUrl,
   getClusterDescription,
+  getClusterK8sAPIUrl,
   getClusterReleaseVersion,
   getNamespaceFromOrgName,
+  isCAPACluster,
 } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
@@ -714,6 +717,19 @@ export function createIngressApp(
       secretContents: '',
     }
   );
+}
+
+export function getClusterK8sEndpoint(
+  cluster: capiv1beta1.ICluster,
+  provider: PropertiesOf<typeof Providers>
+) {
+  if (isCAPACluster(cluster)) {
+    const hostname = getClusterBaseUrl(cluster, provider).host;
+
+    return `https://${hostname}`;
+  }
+
+  return getClusterK8sAPIUrl(cluster, provider);
 }
 
 export function isTestRelease(releaseVersion: string): boolean {

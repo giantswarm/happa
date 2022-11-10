@@ -1,7 +1,5 @@
-import { getClusterBaseURL } from 'MAPI/utils';
 import { Constants } from 'model/constants';
 import * as corev1 from 'model/services/mapi/corev1';
-import { isIPAddress } from 'utils/helpers';
 
 import { ICluster, ICondition, IMachine, IMachinePool } from './';
 
@@ -72,27 +70,6 @@ export function getClusterOrganizationLabel(
   cluster: ICluster
 ): string | undefined {
   return cluster.metadata.labels?.[labelOrganization];
-}
-
-export function getKubernetesAPIEndpointURL(
-  cluster: ICluster
-): string | undefined {
-  let hostname = cluster.spec?.controlPlaneEndpoint?.host;
-  if (!hostname) return '';
-
-  const port = cluster.spec?.controlPlaneEndpoint?.port;
-
-  // If the control plane host is an IP address then it is a CAPI cluster
-  if (isIPAddress(hostname)) {
-    const baseURL = getClusterBaseURL(window.config.info.general.provider);
-
-    hostname = baseURL.host.replace(
-      window.config.info.general.installationName,
-      cluster.metadata.name
-    );
-  }
-
-  return `https://${hostname}${port ? `:${port}` : ''}`;
 }
 
 export function getClusterLabels(cluster: ICluster): IClusterLabelMap {

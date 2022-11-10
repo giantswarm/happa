@@ -322,10 +322,6 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   }, [cluster, providerCluster, providerClusterIsLoading]);
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
 
-  const clusterK8sApiURL = cluster
-    ? capiv1beta1.getKubernetesAPIEndpointURL(cluster)
-    : undefined;
-
   const {
     status: clusterStatus,
     clusterUpdateSchedule,
@@ -459,9 +455,8 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
               render={() =>
                 cluster && (
                   <ClusterDetailIngress
-                    provider={provider}
+                    cluster={cluster}
                     isClusterApp={isClusterApp}
-                    k8sEndpoint={clusterK8sApiURL}
                     mutateCluster={mutateCluster}
                   />
                 )

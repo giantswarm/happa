@@ -22,7 +22,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
 import { usePermissionsForApps } from './permissions/usePermissionsForApps';
-import { findIngressApp } from './utils';
+import { findIngressApp, getClusterK8sEndpoint } from './utils';
 
 const IngressWrapper = styled.div``;
 
@@ -39,6 +39,7 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
 interface IClusterDetailIngressProps
   extends React.ComponentPropsWithoutRef<'div'> {
   provider?: PropertiesOf<typeof Providers>;
+  cluster?: capiv1beta1.ICluster;
   isClusterApp?: boolean;
   k8sEndpoint?: string;
   kvmTCPHTTPPort?: number;
@@ -50,8 +51,8 @@ const ClusterDetailIngress: React.FC<
   React.PropsWithChildren<IClusterDetailIngressProps>
   // eslint-disable-next-line complexity
 > = ({
+  cluster,
   isClusterApp,
-  k8sEndpoint,
   kvmTCPHTTPPort,
   kvmTCPHTTPSPort,
   mutateCluster,
@@ -123,6 +124,14 @@ const ClusterDetailIngress: React.FC<
     return Boolean(app);
   }, [appList?.items]);
 
+  const k8sEndpoint = useMemo(() => {
+    if (rest.k8sEndpoint) {
+      return rest.k8sEndpoint;
+    }
+
+    return cluster ? getClusterK8sEndpoint(cluster, provider) : undefined;
+  }, [cluster, provider, rest.k8sEndpoint]);
+
   return (
     <DocumentTitle title={`Ingress | ${clusterId}`}>
       <Breadcrumb
@@ -192,8 +201,6 @@ const ClusterDetailIngress: React.FC<
 };
 
 ClusterDetailIngress.defaultProps = {
-  provider: Providers.AWS,
-  k8sEndpoint: '',
   kvmTCPHTTPPort: 0,
   kvmTCPHTTPSPort: 0,
 };

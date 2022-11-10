@@ -12,6 +12,7 @@ import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import ErrorReporter from 'utils/errors/ErrorReporter';
+import { isIPAddress } from 'utils/helpers';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
@@ -1405,13 +1406,43 @@ export function extractErrorMessage(
   return message;
 }
 
-export function getK8sAPIUrl(provider: PropertiesOf<typeof Providers>): string {
-  return getClusterBaseURL(provider).toString();
+export function getClusterK8sAPIUrl(
+  cluster: capiv1beta1.ICluster,
+  provider: PropertiesOf<typeof Providers>
+) {
+  let hostname = cluster.spec?.controlPlaneEndpoint?.host;
+  if (!hostname) return '';
+
+  const port = cluster.spec?.controlPlaneEndpoint?.port;
+
+  // If the control plane host is an IP address then it is a CAPI cluster
+  if (isIPAddress(hostname)) {
+    hostname = getClusterBaseUrl(cluster, provider).host;
+  }
+
+  return `https://${hostname}${port ? `:${port}` : ''}`;
 }
 
-export function getClusterBaseURL(
+export function getK8sAPIUrl(provider: PropertiesOf<typeof Providers>): string {
+  return getInstallationBaseURL(provider).toString();
+}
+
+export function getClusterBaseUrl(
+  cluster: capiv1beta1.ICluster,
   provider: PropertiesOf<typeof Providers>
-): URL {
+) {
+  const installationBaseURL = getInstallationBaseURL(provider);
+
+  const clusterBaseUrl = new URL(installationBaseURL);
+  clusterBaseUrl.host = clusterBaseUrl.host.replace(
+    window.config.info.general.installationName,
+    cluster.metadata.name
+  );
+
+  return clusterBaseUrl;
+}
+
+function getInstallationBaseURL(provider: PropertiesOf<typeof Providers>): URL {
   const audienceURL = new URL(window.config.audience);
   // Remove all characters until the first `.`.
   audienceURL.host = audienceURL.host.substring(
@@ -1436,8 +1467,15 @@ export function isCAPZCluster(cluster: Cluster): boolean {
   return compare(releaseVersion, Constants.AZURE_CAPZ_VERSION) >= 0;
 }
 
-function isCAPGCluster(cluster: Cluster): boolean {
+export function isCAPGCluster(cluster: Cluster): boolean {
   return cluster.spec?.infrastructureRef?.kind === capgv1beta1.GCPCluster;
+}
+
+export function isCAPACluster(cluster: Cluster): boolean {
+  return (
+    cluster.spec?.infrastructureRef?.kind === capav1beta1.AWSCluster &&
+    cluster.spec?.infrastructureRef?.apiVersion === capav1beta1.ApiVersion
+  );
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
