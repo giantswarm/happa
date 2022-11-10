@@ -53,12 +53,12 @@ guestCluster:
 kubernetes:
   auth:
     controlPlaneAdminTargetGroup: ""
-  versions: ""
+  versions: {}
 
 happa:
   address: ""
   host: ""
-  letsencrypt: ""
+  letsencrypt: false
   featureFlags:
     mapiAuth: false
     mapiClusters: false
@@ -67,7 +67,7 @@ happa:
 happaapi:
   address: ""
   host: ""
-  letsencrypt: ""
+  letsencrypt: false
 
 athena:
   address: ""
@@ -93,7 +93,7 @@ registry:
 
 security:
   restrictAccess:
-    api: ""
+    api: false
   subnet:
     vpn: ""
     customer:
