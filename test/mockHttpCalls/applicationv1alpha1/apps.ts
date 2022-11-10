@@ -1485,3 +1485,367 @@ export const randomClusterCAPA1AppsList: applicationv1alpha1.IAppList = {
     },
   ],
 };
+
+export const randomClusterGCP1AppsList: applicationv1alpha1.IAppList = {
+  apiVersion: 'application.giantswarm.io/v1alpha1',
+  kind: applicationv1alpha1.AppList,
+  metadata: {
+    resourceVersion: '21664731',
+  },
+  items: [
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'app-operator.giantswarm.io/latest-configmap-version': '62846797',
+          'kubectl.kubernetes.io/last-applied-configuration':
+            '{"apiVersion":"application.giantswarm.io/v1alpha1","kind":"App","metadata":{"annotations":{},"labels":{"app-operator.giantswarm.io/version":"0.0.0","giantswarm.io/cluster":"m317f","giantswarm.io/managed-by":"cluster"},"name":"m317f-default-apps","namespace":"org-org1"},"spec":{"catalog":"cluster","config":{"configMap":{"name":"m317f-cluster-values","namespace":"org-org1"},"secret":{"name":"","namespace":""}},"kubeConfig":{"context":{"name":""},"inCluster":true,"secret":{"name":"","namespace":""}},"name":"default-apps-gcp","namespace":"org-org1","userConfig":{"configMap":{"name":"m317f-default-apps-userconfig","namespace":"org-org1"}},"version":"0.14.3"}}\n',
+        },
+        creationTimestamp: '2022-11-07T13:44:53Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app-operator.giantswarm.io/version': '0.0.0',
+          'app.kubernetes.io/name': 'default-apps-gcp',
+          'giantswarm.io/cluster': 'm317f',
+          'giantswarm.io/managed-by': 'cluster',
+        },
+        name: 'm317f-default-apps',
+        namespace: 'org-org1',
+        resourceVersion: '62846981',
+        uid: '7bd478d8-ac8c-4fb6-8a58-f12ae5f3eb30',
+      },
+      spec: {
+        catalog: 'cluster',
+        config: {
+          configMap: {
+            name: 'm317f-cluster-values',
+            namespace: 'org-org1',
+          },
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        kubeConfig: {
+          context: {
+            name: '',
+          },
+          inCluster: true,
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        name: 'default-apps-gcp',
+        namespace: 'org-org1',
+        userConfig: {
+          configMap: {
+            name: 'm317f-default-apps-userconfig',
+            namespace: 'org-org1',
+          },
+        },
+        version: '0.14.3',
+      },
+      status: {
+        appVersion: '',
+        release: {
+          lastDeployed: '2022-11-07T13:44:55Z',
+          status: 'deployed',
+        },
+        version: '0.14.3',
+      },
+    },
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'chart-operator.giantswarm.io/force-helm-upgrade': 'false',
+        },
+        creationTimestamp: '2022-11-07T13:44:54Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app-operator.giantswarm.io/version': '0.0.0',
+          'app.kubernetes.io/name': 'app-operator',
+          'giantswarm.io/cluster': 'm317f',
+          'giantswarm.io/managed-by': 'cluster-apps-operator',
+        },
+        name: 'm317f-app-operator',
+        namespace: 'org-org1',
+        resourceVersion: '62847031',
+        uid: '83e7ec91-c1aa-4e42-a09c-bcc935c7e2c9',
+      },
+      spec: {
+        catalog: 'control-plane-catalog',
+        config: {
+          configMap: {
+            name: 'm317f-app-operator-values',
+            namespace: 'org-org1',
+          },
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        install: {},
+        kubeConfig: {
+          context: {
+            name: '',
+          },
+          inCluster: true,
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        name: 'app-operator',
+        namespace: 'org-org1',
+        namespaceConfig: {},
+        userConfig: {
+          configMap: {
+            name: '',
+            namespace: '',
+          },
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        version: '6.4.1',
+      },
+      status: {
+        appVersion: '6.4.1',
+        release: {
+          lastDeployed: '2022-11-07T13:44:58Z',
+          status: 'deployed',
+        },
+        version: '6.4.1',
+      },
+    },
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'chart-operator.giantswarm.io/force-helm-upgrade': 'false',
+        },
+        creationTimestamp: '2022-11-07T13:44:54Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app-operator.giantswarm.io/version': '6.4.1',
+          'app.kubernetes.io/name': 'chart-operator',
+          'giantswarm.io/cluster': 'm317f',
+          'giantswarm.io/managed-by': 'cluster-apps-operator',
+        },
+        name: 'm317f-chart-operator',
+        namespace: 'org-org1',
+        resourceVersion: '62846996',
+        uid: '6035f064-43d2-4eee-8bd4-9ec7d5f75db1',
+      },
+      spec: {
+        catalog: 'default',
+        config: {
+          configMap: {
+            name: 'm317f-cluster-values',
+            namespace: 'org-org1',
+          },
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        install: {},
+        kubeConfig: {
+          context: {
+            name: 'm317f-kubeconfig',
+          },
+          inCluster: false,
+          secret: {
+            name: 'm317f-kubeconfig',
+            namespace: 'org-org1',
+          },
+        },
+        name: 'chart-operator',
+        namespace: 'giantswarm',
+        namespaceConfig: {},
+        userConfig: {
+          configMap: {
+            name: '',
+            namespace: '',
+          },
+          secret: {
+            name: '',
+            namespace: '',
+          },
+        },
+        version: '2.30.0',
+      },
+    },
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'chart-operator.giantswarm.io/force-helm-upgrade': 'false',
+          'meta.helm.sh/release-name': 'm317f-default-apps',
+          'meta.helm.sh/release-namespace': 'org-org1',
+        },
+        creationTimestamp: '2022-11-07T13:44:55Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app.giantswarm.io/branch': '',
+          'app.giantswarm.io/commit': '',
+          'app.kubernetes.io/instance': 'm317f-default-apps',
+          'app.kubernetes.io/managed-by': 'Helm',
+          'app.kubernetes.io/name': 'default-apps-gcp',
+          'app.kubernetes.io/version': '0.14.3',
+          'application.giantswarm.io/team': 'hydra',
+          'giantswarm.io/cluster': 'm317f',
+          'giantswarm.io/managed-by': 'm317f-default-apps',
+          'giantswarm.io/organization': 'org1',
+          'giantswarm.io/service-type': 'managed',
+          'helm.sh/chart': 'default-apps-gcp-0.14.3',
+        },
+        name: 'm317f-capi-node-labeler',
+        namespace: 'org-org1',
+        resourceVersion: '62847034',
+        uid: 'ecce42d3-204a-440b-975f-27236584a2bd',
+      },
+      spec: {
+        catalog: 'default',
+        config: {
+          configMap: {
+            name: 'm317f-cluster-values',
+            namespace: 'org-org1',
+          },
+        },
+        kubeConfig: {
+          context: {
+            name: 'm317f-admin@m317f',
+          },
+          inCluster: false,
+          secret: {
+            name: 'm317f-kubeconfig',
+            namespace: 'org-org1',
+          },
+        },
+        name: 'capi-node-labeler',
+        namespace: 'kube-system',
+        version: '0.3.4',
+      },
+    },
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'chart-operator.giantswarm.io/force-helm-upgrade': 'true',
+          'meta.helm.sh/release-name': 'm317f-default-apps',
+          'meta.helm.sh/release-namespace': 'org-org1',
+        },
+        creationTimestamp: '2022-11-07T13:44:55Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app.giantswarm.io/branch': '',
+          'app.giantswarm.io/commit': '',
+          'app.kubernetes.io/instance': 'm317f-default-apps',
+          'app.kubernetes.io/managed-by': 'Helm',
+          'app.kubernetes.io/name': 'default-apps-gcp',
+          'app.kubernetes.io/version': '0.14.3',
+          'application.giantswarm.io/team': 'hydra',
+          'giantswarm.io/cluster': 'm317f',
+          'giantswarm.io/managed-by': 'm317f-default-apps',
+          'giantswarm.io/organization': 'org1',
+          'giantswarm.io/service-type': 'managed',
+          'helm.sh/chart': 'default-apps-gcp-0.14.3',
+        },
+        name: 'm317f-cert-exporter',
+        namespace: 'org-org1',
+        resourceVersion: '62846956',
+        uid: 'ba690040-2c80-4eca-abd4-e66571d4318a',
+      },
+      spec: {
+        catalog: 'default',
+        config: {
+          configMap: {
+            name: 'm317f-cluster-values',
+            namespace: 'org-org1',
+          },
+        },
+        kubeConfig: {
+          context: {
+            name: 'm317f-admin@m317f',
+          },
+          inCluster: false,
+          secret: {
+            name: 'm317f-kubeconfig',
+            namespace: 'org-org1',
+          },
+        },
+        name: 'cert-exporter',
+        namespace: 'kube-system',
+        version: '2.3.0',
+      },
+    },
+    {
+      apiVersion: 'application.giantswarm.io/v1alpha1',
+      kind: 'App',
+      metadata: {
+        annotations: {
+          'chart-operator.giantswarm.io/force-helm-upgrade': 'true',
+          'meta.helm.sh/release-name': 'm317f-default-apps',
+          'meta.helm.sh/release-namespace': 'org-org1',
+        },
+        creationTimestamp: '2022-11-07T13:44:55Z',
+        finalizers: ['operatorkit.giantswarm.io/app-operator-app'],
+        generation: 1,
+        labels: {
+          'app.giantswarm.io/branch': '',
+          'app.giantswarm.io/commit': '',
+          'app.kubernetes.io/instance': 'm317f-default-apps',
+          'app.kubernetes.io/managed-by': 'Helm',
+          'app.kubernetes.io/name': 'default-apps-gcp',
+          'app.kubernetes.io/version': '0.14.3',
+          'application.giantswarm.io/team': 'hydra',
+          'giantswarm.io/cluster': 'm317f',
+          'giantswarm.io/managed-by': 'm317f-default-apps',
+          'giantswarm.io/organization': 'org1',
+          'giantswarm.io/service-type': 'managed',
+          'helm.sh/chart': 'default-apps-gcp-0.14.3',
+        },
+        name: 'm317f-cert-manager',
+        namespace: 'org-org1',
+        resourceVersion: '62846951',
+        uid: 'b1d39adc-a8a9-4335-b179-6b67a7ddcbb5',
+      },
+      spec: {
+        catalog: 'default',
+        config: {
+          configMap: {
+            name: 'm317f-cluster-values',
+            namespace: 'org-org1',
+          },
+        },
+        kubeConfig: {
+          context: {
+            name: 'm317f-admin@m317f',
+          },
+          inCluster: false,
+          secret: {
+            name: 'm317f-kubeconfig',
+            namespace: 'org-org1',
+          },
+        },
+        name: 'cert-manager-app',
+        namespace: 'kube-system',
+        version: '2.17.1',
+      },
+    },
+  ],
+};
