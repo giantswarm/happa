@@ -7,7 +7,6 @@ import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
-import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
@@ -189,8 +188,6 @@ export async function fetchNodePoolListForCluster(
 
       break;
 
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion:
       list = await capiv1beta1.getMachineDeploymentList(
@@ -265,8 +262,6 @@ export function fetchNodePoolListForClusterKey(
         namespace,
       });
 
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion:
       return capiv1beta1.getMachineDeploymentListKey({
@@ -652,8 +647,6 @@ export async function fetchControlPlaneNodesForCluster(
       return cpNodes.items;
     }
 
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion: {
       const [awsCP, g8sCP] = await Promise.allSettled([
@@ -738,8 +731,6 @@ export function fetchControlPlaneNodesForClusterKey(
         namespace: cluster.metadata.namespace,
       });
 
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion:
       return infrav1alpha3.getAWSControlPlaneListKey({
@@ -795,8 +786,6 @@ export async function fetchProviderClusterForCluster(
         infrastructureRef.name
       );
 
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion:
       return infrav1alpha3.getAWSCluster(
@@ -836,8 +825,6 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
         infrastructureRef.name
       );
 
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion:
       return infrav1alpha3.getAWSClusterKey(
@@ -1222,8 +1209,6 @@ export function getClusterDescription(
 
   const { kind, apiVersion } = infrastructureRef;
   switch (true) {
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion:
       return (
@@ -1264,8 +1249,6 @@ export function getProviderClusterLocation(
         (providerCluster as capzv1beta1.IAzureCluster).spec?.location ?? ''
       );
 
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion: {
       const region = (providerCluster as infrav1alpha3.IAWSCluster).spec
@@ -1506,8 +1489,6 @@ export function supportsClientCertificates(cluster: Cluster): boolean {
     case kind === capzv1beta1.AzureCluster:
       return true;
 
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion: {
       const releaseVersion = getClusterReleaseVersion(cluster);

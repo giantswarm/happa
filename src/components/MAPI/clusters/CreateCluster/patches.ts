@@ -3,7 +3,6 @@ import { determineRandomAZs, getSupportedAvailabilityZones } from 'MAPI/utils';
 import { Constants } from 'model/constants';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
-import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import { compare } from 'utils/semver';
 
@@ -44,10 +43,8 @@ export function withClusterReleaseVersion(
   return (cluster, providerCluster, controlPlaneNodes) => {
     const hasNonNamespacedResources =
       providerCluster &&
-      ((providerCluster.kind === infrav1alpha2.AWSCluster &&
-        providerCluster.apiVersion === infrav1alpha2.ApiVersion) ||
-        (providerCluster.kind === infrav1alpha3.AWSCluster &&
-          providerCluster.apiVersion === infrav1alpha3.ApiVersion)) &&
+      providerCluster.kind === infrav1alpha3.AWSCluster &&
+      providerCluster.apiVersion === infrav1alpha3.ApiVersion &&
       compare(newVersion, Constants.AWS_NAMESPACED_CLUSTERS_VERSION) < 0;
     const defaultNamespace = 'default';
 
@@ -114,10 +111,8 @@ export function withClusterDescription(newDescription: string): ClusterPatch {
 
     if (
       providerCluster &&
-      ((providerCluster.kind === infrav1alpha2.AWSCluster &&
-        providerCluster.apiVersion === infrav1alpha2.ApiVersion) ||
-        (providerCluster.kind === infrav1alpha3.AWSCluster &&
-          providerCluster.apiVersion === infrav1alpha3.ApiVersion)) &&
+      providerCluster.kind === infrav1alpha3.AWSCluster &&
+      providerCluster.apiVersion === infrav1alpha3.ApiVersion &&
       providerCluster.spec
     ) {
       providerCluster.spec.cluster.description = newDescription;
@@ -149,10 +144,7 @@ export function withClusterControlPlaneNodesCount(count: number): ClusterPatch {
     const supportedAZs = getSupportedAvailabilityZones().all;
 
     for (const controlPlaneNode of controlPlaneNodes) {
-      if (
-        controlPlaneNode.apiVersion !== infrav1alpha2.ApiVersion &&
-        controlPlaneNode.apiVersion !== infrav1alpha3.ApiVersion
-      ) {
+      if (controlPlaneNode.apiVersion !== infrav1alpha3.ApiVersion) {
         continue;
       }
 

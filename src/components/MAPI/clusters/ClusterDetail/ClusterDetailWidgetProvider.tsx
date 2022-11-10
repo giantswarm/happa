@@ -3,7 +3,6 @@ import { ProviderCluster } from 'MAPI/types';
 import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
-import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import React from 'react';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
@@ -52,10 +51,8 @@ const ClusterDetailWidgetProvider: React.FC<
           <ClusterDetailWidgetProviderAzure
             providerCluster={providerCluster as capzv1beta1.IAzureCluster}
           />
-        ) : (kind === infrav1alpha2.AWSCluster &&
-            apiVersion === infrav1alpha2.ApiVersion) ||
-          (kind === infrav1alpha3.AWSCluster &&
-            apiVersion === infrav1alpha3.ApiVersion) ? (
+        ) : kind === infrav1alpha3.AWSCluster &&
+          apiVersion === infrav1alpha3.ApiVersion ? (
           <ClusterDetailWidgetProviderAWS
             providerCluster={providerCluster as infrav1alpha3.IAWSCluster}
           />
