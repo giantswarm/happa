@@ -283,6 +283,7 @@ const ClusterDetailAppListItem: React.FC<
           >
             <ClusterDetailAppListWidgetName
               app={app}
+              canListAppCatalogEntries={canListAppCatalogEntries}
               flex={{ grow: 1, shrink: 1 }}
               pad='xsmall'
               direction='row'

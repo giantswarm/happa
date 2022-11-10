@@ -63,19 +63,7 @@ const Instructions: React.FC<React.PropsWithChildren<IInstructionsProps>> = ({
       <Wrapper {...rest}>
         <Info>
           <InfoRow>
-            <Label>Base domain:</Label>
-            <URIWrapper>
-              <OptionalValue
-                value={basePath}
-                loaderWidth={200}
-                loaderHeight={20}
-              >
-                {() => <StyledURIBlock>{basePath}</StyledURIBlock>}
-              </OptionalValue>
-            </URIWrapper>
-          </InfoRow>
-          <InfoRow>
-            <Label>Load balancer DNS name:</Label>
+            <Label id='base-domain-label'>Base domain:</Label>
             <URIWrapper>
               <OptionalValue
                 value={basePath}
@@ -83,13 +71,31 @@ const Instructions: React.FC<React.PropsWithChildren<IInstructionsProps>> = ({
                 loaderHeight={20}
               >
                 {() => (
-                  <StyledURIBlock>{`${IngressPathPrefixes.LoadBalancer}${basePath}`}</StyledURIBlock>
+                  <StyledURIBlock aria-labelledby='base-domain-label'>
+                    {basePath}
+                  </StyledURIBlock>
                 )}
               </OptionalValue>
             </URIWrapper>
           </InfoRow>
           <InfoRow>
-            <Label>Hostname pattern:</Label>
+            <Label id='load-balancer-label'>Load balancer DNS name:</Label>
+            <URIWrapper>
+              <OptionalValue
+                value={basePath}
+                loaderWidth={200}
+                loaderHeight={20}
+              >
+                {() => (
+                  <StyledURIBlock aria-labelledby='load-balancer-label'>
+                    {`${IngressPathPrefixes.LoadBalancer}${basePath}`}
+                  </StyledURIBlock>
+                )}
+              </OptionalValue>
+            </URIWrapper>
+          </InfoRow>
+          <InfoRow>
+            <Label id='hostname-label'>Hostname pattern:</Label>
             <URIWrapper>
               <OptionalValue
                 value={basePath}
@@ -99,6 +105,7 @@ const Instructions: React.FC<React.PropsWithChildren<IInstructionsProps>> = ({
                 {() => (
                   <StyledURIBlock
                     copyContent={`${IngressPathPrefixes.Pattern}${basePath}`}
+                    aria-labelledby='hostname-label'
                   >
                     <Emphasis>{IngressPathPrefixes.Pattern}</Emphasis>
                     {basePath}
