@@ -2,7 +2,7 @@ name: happa
 namespace: giantswarm
 image:
   repository: giantswarm/happa
-  tag: "[[ .Version ]]"
+  tag: "[[.Version]]"
 
 userID: 101
 groupID: 101
