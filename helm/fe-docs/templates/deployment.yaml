@@ -23,8 +23,6 @@ spec:
       containers:
         - name: {{ .Values.image.name }}
           image: "{{ .Values.registry.domain }}/{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-          securityContext:
-            readOnlyRootFilesystem: true
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.port }}
