@@ -2,7 +2,6 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
 import { MainRoutes, UsersRoutes } from 'model/constants/routes';
 import { getLoggedInUser } from 'model/stores/main/selectors';
-import { getOrganizationByID } from 'model/stores/organization/utils';
 import {
   invitationCreate,
   invitationsLoad,
@@ -133,23 +132,10 @@ class Users extends React.Component {
       },
     });
 
-    const organizations = Object.values(this.props.organizations.items);
-
-    const invitationOrgs = invitationForm.organizations.map((id) => {
-      const org = getOrganizationByID(id, organizations);
-
-      return org.name ?? org.id;
-    });
-
-    const invitation = {
-      ...invitationForm,
-      organizations: invitationOrgs,
-    };
-
     this.props
       .dispatch(usersLoad()) // Hack to ensure fresh Giant Swarm access token before inviting the user.
       .then(() => {
-        return this.props.dispatch(invitationCreate(invitation));
+        return this.props.dispatch(invitationCreate(invitationForm));
       })
       .then((result) => {
         this.setState({
