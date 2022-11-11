@@ -11,7 +11,9 @@ interface ITruncatedProps
   numEnd?: number;
   numStart?: number;
   replacer?: string;
+  tooltip?: string;
   tooltipPlacement?: 'top' | 'bottom';
+  showTooltip?: boolean;
 }
 
 const Wrapper = styled.span``;
@@ -26,7 +28,9 @@ const Truncated: React.FC<React.PropsWithChildren<ITruncatedProps>> = ({
   numEnd,
   numStart,
   replacer,
+  tooltip,
   tooltipPlacement,
+  showTooltip = false,
   ...rest
 }) => {
   let str = String(children);
@@ -35,7 +39,7 @@ const Truncated: React.FC<React.PropsWithChildren<ITruncatedProps>> = ({
   str = truncate(str, replacer as string, numStart as number, numEnd as number);
 
   // Skip the tooltip if the content was not truncated
-  const skipTooltip = str === children;
+  const skipTooltip = str === children && !showTooltip;
 
   return (
     <Wrapper {...rest}>
@@ -48,7 +52,7 @@ const Truncated: React.FC<React.PropsWithChildren<ITruncatedProps>> = ({
               placement={tooltipPlacement ?? 'top'}
               width={{ max: 'none' }}
             >
-              {String(children)}
+              {tooltip ?? String(children)}
             </Tooltip>
           }
         >

@@ -4,6 +4,7 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import ClusterIDLabel, {
   ClusterIDLabelType,
+  MAX_VARIANT_LENGTH,
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import TextInput from 'UI/Inputs/TextInput';
 
@@ -47,6 +48,14 @@ const NoSearchResults = styled.div`
   margin-top: 50px;
 `;
 
+const NAME_CHAR_WIDTH = 7.5;
+
+function getNameColumnWidth(nameLength: number) {
+  const charCount = Math.min(nameLength, MAX_VARIANT_LENGTH);
+
+  return charCount * NAME_CHAR_WIDTH;
+}
+
 interface IClusterPickerCluster
   extends Pick<IBaseCluster, 'id' | 'name' | 'owner'> {
   isAvailable: boolean;
@@ -80,6 +89,10 @@ const ClusterPicker: FC<React.PropsWithChildren<IClusterPicker>> = (props) => {
 
     (e.target as HTMLElement).click();
   };
+
+  const nameLengths = props.clusters.map((cluster) => cluster.id.length);
+  const longestNameLength = nameLengths ? Math.max(...nameLengths) : 0;
+  const nameColumnWidth = getNameColumnWidth(longestNameLength);
 
   return (
     <Box height={{ min: 'fit-content' }}>
@@ -130,6 +143,7 @@ const ClusterPicker: FC<React.PropsWithChildren<IClusterPicker>> = (props) => {
                       ? ClusterIDLabelType.ID
                       : ClusterIDLabelType.Name
                   }
+                  width={nameColumnWidth}
                 />
                 <ClusterTitle>{cluster.name}</ClusterTitle>
                 <ClusterNotice>

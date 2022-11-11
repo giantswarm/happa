@@ -2,8 +2,12 @@ import { Keyboard } from 'grommet';
 import React from 'react';
 import styled from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
+import Truncated from 'UI/Util/Truncated';
 import CachingColorHash from 'utils/cachingColorHash';
+import { getTruncationParams } from 'utils/helpers';
 import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
+
+export const MAX_VARIANT_LENGTH = 10;
 
 const colorHash = new CachingColorHash();
 
@@ -33,11 +37,15 @@ const Wrapper = styled.span`
   }
 `;
 
-const Label = styled.span<{ clusterID: string }>`
+const Label = styled.span<{ clusterID: string; width?: number }>`
   background-color: ${(props) => colorHash.calculateColor(props.clusterID)};
   font-family: ${(props) => props.theme.fontFamilies.console};
   padding: 0.2em 0.4em;
   border-radius: 0.2em;
+  display: inline-block;
+  box-sizing: content-box;
+  width: ${({ width }) => (width ? `${width}px` : 'auto')};
+  text-align: center;
 `;
 
 export enum ClusterIDLabelType {
@@ -49,11 +57,12 @@ interface IClusterIDLabelProps extends React.ComponentPropsWithoutRef<'span'> {
   clusterID: string;
   copyEnabled?: boolean;
   variant?: ClusterIDLabelType;
+  width?: number;
 }
 
 const ClusterIDLabel: React.FC<
   React.PropsWithChildren<IClusterIDLabelProps>
-> = ({ clusterID, copyEnabled, variant, ...props }) => {
+> = ({ clusterID, copyEnabled, variant, width, ...props }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const copyToClipboard = (e: React.MouseEvent<HTMLElement>) => {
@@ -63,18 +72,16 @@ const ClusterIDLabel: React.FC<
     setClipboardContent(clusterID);
   };
 
-  let label = clusterID.substring(0, 5);
-  if (label !== clusterID) {
-    label = `${clusterID.substring(0, 4)}…`;
-  }
-
   const labelComponent = (
-    <Label clusterID={clusterID}>
-      <TooltipContainer
-        content={<Tooltip>{`Cluster ${variant}: ${clusterID}`}</Tooltip>}
+    <Label clusterID={clusterID} width={width}>
+      <Truncated
+        aria-label={clusterID}
+        {...getTruncationParams(MAX_VARIANT_LENGTH)}
+        tooltip={`Cluster ${variant}: ${clusterID}`}
+        showTooltip={true}
       >
-        <span aria-label={clusterID}>{label}</span>
-      </TooltipContainer>
+        {clusterID}
+      </Truncated>
     </Label>
   );
 
