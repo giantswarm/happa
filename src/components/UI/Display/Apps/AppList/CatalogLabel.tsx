@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
@@ -35,7 +35,7 @@ const Text = styled.div``;
 
 export interface ICatalogLabelProps {
   iconUrl?: string;
-  catalogName: string;
+  catalogName: ReactNode;
   description?: string;
   isManaged?: boolean;
   error?: string;
@@ -81,7 +81,9 @@ const CatalogLabel: React.FC<React.PropsWithChildren<ICatalogLabelProps>> = (
         {props.description && (
           <TooltipContainer
             content={
-              <Tooltip id={`app-catalog-description-${props.catalogName}`}>
+              <Tooltip
+                id={`app-catalog-description-${props.catalogName?.toString()}`}
+              >
                 {props.description}
               </Tooltip>
             }
@@ -92,7 +94,9 @@ const CatalogLabel: React.FC<React.PropsWithChildren<ICatalogLabelProps>> = (
 
         {!props.description && text}
 
-        {props.error && <ErrorIcon name={props.catalogName} />}
+        {props.error && (
+          <ErrorIcon name={props.catalogName?.toString() ?? ''} />
+        )}
       </Text>
     </Wrapper>
   );

@@ -29,8 +29,8 @@ export const randomClusterAWS1: capiv1beta1.ICluster = {
   },
   spec: {
     controlPlaneEndpoint: {
-      host: '',
-      port: 0,
+      host: 'api.c7hm5.k8s.test.gigantic.io',
+      port: 443,
     },
     infrastructureRef: {
       apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
@@ -484,8 +484,8 @@ export const randomCluster1: capiv1beta1.ICluster = {
       },
     },
     controlPlaneEndpoint: {
-      host: 'test.k8s.gs.com',
-      port: 0,
+      host: 'api.j5y9m.k8s.test.gigantic.io',
+      port: 443,
     },
     infrastructureRef: {
       apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',

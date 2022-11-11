@@ -1,5 +1,6 @@
 import URIBlock from 'Cluster/ClusterDetail/URIBlock';
 import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
+import { getClusterK8sAPIUrl } from 'MAPI/utils';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import { selectOrganizations } from 'model/stores/organization/selectors';
@@ -33,8 +34,8 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<
   const selectedOrg = orgId ? organizations[orgId] : undefined;
   const namespace = selectedOrg?.namespace;
 
-  const k8sApiURL = cluster
-    ? capiv1beta1.getKubernetesAPIEndpointURL(cluster)
+  const k8sAPIUrl = cluster
+    ? getClusterK8sAPIUrl(cluster, provider)
     : undefined;
 
   const gettingStartedPath = useMemo(() => {
@@ -54,9 +55,9 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<
   const shouldDisplayGetStarted = useMemo(
     () =>
       canCreateKeyPairs &&
-      typeof k8sApiURL !== 'undefined' &&
+      typeof k8sAPIUrl !== 'undefined' &&
       clusterInOrgNamespace,
-    [canCreateKeyPairs, clusterInOrgNamespace, k8sApiURL]
+    [canCreateKeyPairs, clusterInOrgNamespace, k8sAPIUrl]
   );
 
   return (
@@ -72,7 +73,7 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<
       }}
       {...props}
     >
-      <OptionalValue value={k8sApiURL} loaderWidth={400} loaderHeight={24}>
+      <OptionalValue value={k8sAPIUrl} loaderWidth={400} loaderHeight={24}>
         {/* @ts-expect-error */}
         {(value) => <URIBlock>{value}</URIBlock>}
       </OptionalValue>

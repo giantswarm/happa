@@ -2,8 +2,10 @@ import {
   computeAppCatalogUITitle,
   isAppCatalogVisibleToUsers,
 } from 'MAPI/apps/utils';
+import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppListWidget';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
@@ -49,7 +51,20 @@ const ClusterDetailAppListWidgetCatalog: React.FC<
       <OptionalValue value={catalogTitle} loaderWidth={150}>
         {(value) => (
           <CatalogLabel
-            catalogName={value}
+            catalogName={
+              canListCatalogs ? (
+                <Link
+                  to={{
+                    pathname: AppsRoutes.Home,
+                    state: { selectedCatalog: catalog?.metadata.name },
+                  }}
+                >
+                  {value}
+                </Link>
+              ) : (
+                value
+              )
+            }
             isManaged={isManaged}
             aria-label={`App catalog: ${value}`}
           />
