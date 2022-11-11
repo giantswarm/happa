@@ -230,7 +230,7 @@
     "webpack-merge": "5.8.0"
   },
   "resolutions": {
-    "@braintree/sanitize-url": "6.0.1",
+    "@braintree/sanitize-url": "6.0.2",
     "@types/react": "18.0.25",
     "kind-of": "6.0.3",
     "lodash": "4.17.21",
