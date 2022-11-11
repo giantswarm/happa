@@ -38,14 +38,14 @@ spec:
         runAsGroup: {{ .Values.groupID }}
       containers:
       - name: happa
-        image: "{{ .Values.registry.domain }}/{{ .Values.image.repository }}:{{ .Chart.appVersion }}"
+        image: "{{ .Values.registry.domain }}/{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
         securityContext:
           readOnlyRootFilesystem: true
         env:
           - name: HAPPA_CONFIG_PATH
             value: "/var/run/{{ .Values.name }}/configmap/config.yaml"
           - name: HAPPA_VERSION
-            value: "{{ .Chart.appVersion }}"
+            value: "{{ .Chart.AppVersion }}"
         livenessProbe:
           httpGet:
             path: /
