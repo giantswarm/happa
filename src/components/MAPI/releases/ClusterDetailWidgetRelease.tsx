@@ -159,10 +159,19 @@ const ClusterDetailWidgetRelease: React.FC<
   }, [isAdmin, isImpersonatingNonAdmin, provider, releaseList, releaseVersion]);
 
   const nextVersion = useMemo(() => {
-    return supportedUpgradeVersions.find(
+    if (!releaseList || !releaseVersion) return undefined;
+
+    const activeVersions = getSupportedUpgradeVersions(
+      releaseVersion,
+      provider,
+      false,
+      releaseList.items
+    );
+
+    return activeVersions.find(
       (r) => r.status !== ui.ReleaseVersionStatus.PreRelease
     )?.version;
-  }, [supportedUpgradeVersions]);
+  }, [provider, releaseList, releaseVersion]);
 
   const isUpgradable = typeof nextVersion !== 'undefined';
 
