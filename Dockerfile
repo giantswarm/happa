@@ -11,7 +11,7 @@ RUN find /www \
   -iregex '.*\.(css|csv|html?|js|svg|txt|xml|json|webmanifest|ttf)' \
   -exec gzip -9 -k '{}' \;
 
-FROM quay.io/giantswarm/nginx:1.21-alpine
+FROM quay.io/giantswarm/nginx:1.23-alpine
 
 ENV NODE_VERSION 16.7.0
 
