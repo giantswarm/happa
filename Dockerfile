@@ -1,4 +1,4 @@
-FROM quay.io/giantswarm/alpine:3.16.2 AS compress
+FROM quay.io/giantswarm/alpine:3.16.3 AS compress
 
 RUN apk --no-cache add findutils gzip
 
