@@ -176,6 +176,7 @@ export interface IAppConfig {
   catalogName: string;
   configMapContents: string;
   secretContents: string;
+  isAppBundle?: boolean;
 }
 
 /**
@@ -210,7 +211,9 @@ export async function createApp(
       name: appConfig.name,
       namespace: appsNamespace,
       labels: {
-        [applicationv1alpha1.labelAppOperator]: '1.0.0',
+        [applicationv1alpha1.labelAppOperator]: appConfig.isAppBundle
+          ? '0.0.0'
+          : '1.0.0',
         [applicationv1alpha1.labelCluster]: clusterID,
       },
     },
@@ -229,7 +232,7 @@ export async function createApp(
         context: {
           name: clusterID,
         },
-        inCluster: false,
+        inCluster: appConfig.isAppBundle ? true : false,
         secret: {
           name: kubeConfigSecretName,
           namespace: appsNamespace,

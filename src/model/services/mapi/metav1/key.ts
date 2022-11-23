@@ -25,6 +25,17 @@ export function isStatusError<
 }
 
 /**
+ * Returns a message if an object is K8s status response.
+ * @param obj
+ * @param reason
+ */
+export function getStatusMessage(obj: unknown) {
+  if (!isStatus(obj)) return '';
+
+  return obj.message;
+}
+
+/**
  * Quantity helper functions copied from the official kubernetes client.
  * {@link https://github.com/kubernetes-client/javascript/blob/ad6e451ce01f698ab18ceb03fb712e014bc93a5b/src/util.ts}
  *

@@ -161,16 +161,25 @@ const AppInstallModal: React.FC<
 
   const appName = selectedAppCatalogEntry.spec.appName;
 
+  const isAppBundle =
+    selectedAppCatalogEntry.metadata.annotations?.[
+      applicationv1alpha1.annotationAppType
+    ] === 'bundle';
+
+  useEffect(() => {
+    const n = isAppBundle ? `${selectedClusterID}-${appName}` : appName;
+    setName(n);
+    setNameError('');
+    setNamespace(n);
+    setNamespaceError('');
+  }, [isAppBundle, appName, selectedClusterID]);
+
   const openModal = () => {
     if (selectedClusterID) {
       setPage(1);
     } else {
       setPage(0);
     }
-    setName(appName);
-    setNameError('');
-    setNamespace(appName);
-    setNamespaceError('');
     setVisible(true);
   };
 
@@ -472,6 +481,16 @@ const AppInstallModal: React.FC<
       ? organization.namespace
       : selectedClusterID;
 
+    let configMapContents = valuesYAML ?? '';
+    if (isAppBundle) {
+      const values = valuesYAML ? (yaml.load(valuesYAML) as object) : {};
+      configMapContents = yaml.dump({
+        ...values,
+        clusterName: selectedClusterID,
+        organization: organization.id,
+      });
+    }
+
     try {
       setLoading(true);
 
@@ -486,9 +505,10 @@ const AppInstallModal: React.FC<
           catalogName: catalogName,
           chartName: appName,
           version: selectedAppCatalogEntry.spec.version,
-          namespace: namespace,
-          configMapContents: valuesYAML ?? '',
+          namespace: isAppBundle ? selectedClusterNamespace : namespace,
+          configMapContents,
           secretContents: secretsYAML ?? '',
+          isAppBundle,
         }
       );
 
@@ -552,7 +572,15 @@ const AppInstallModal: React.FC<
           break;
 
         default:
-          errorMessage = `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`;
+          errorMessage = (
+            <>
+              Something went wrong while trying to install your app. Please try
+              again later or contact support: support@giantswarm.io
+              <Text size='small' as='div' margin={{ top: 'medium' }}>
+                {metav1.getStatusMessage((error as GenericResponseError)?.data)}
+              </Text>
+            </>
+          );
       }
 
       new FlashMessage(errorMessage, messageType.ERROR, messageTTL.LONG);
@@ -676,6 +704,7 @@ const AppInstallModal: React.FC<
                   namespaceError={namespaceError}
                   version={selectedAppCatalogEntry.spec.version}
                   availableVersions={versions}
+                  isAppBundle={isAppBundle}
                   onChangeName={updateName}
                   onChangeNamespace={updateNamespace}
                   onChangeSecretsYAML={updateSecretsYAML}
