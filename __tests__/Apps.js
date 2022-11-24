@@ -288,7 +288,7 @@ describe('Apps and App Catalog', () => {
       fireEvent.click(getByText(V4_CLUSTER.name));
 
       // Set a new application name
-      const appNameInput = getByLabelText(/application name/i);
+      const appNameInput = getByLabelText(/app resource name/i);
       fireEvent.change(appNameInput, {
         target: { value: 'test-app' },
       });
