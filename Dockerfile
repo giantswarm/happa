@@ -1,4 +1,4 @@
-FROM quay.io/giantswarm/alpine:3.16.2 AS compress
+FROM quay.io/giantswarm/alpine:3.16.3 AS compress
 
 RUN apk --no-cache add findutils gzip
 
@@ -11,7 +11,7 @@ RUN find /www \
   -iregex '.*\.(css|csv|html?|js|svg|txt|xml|json|webmanifest|ttf)' \
   -exec gzip -9 -k '{}' \;
 
-FROM quay.io/giantswarm/nginx:1.21-alpine
+FROM quay.io/giantswarm/nginx:1.23-alpine
 
 ENV NODE_VERSION 16.7.0
 
