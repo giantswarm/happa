@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@dev:add-chart-name-mismatch-parameter-when-using-abs2
+  architect: giantswarm/architect@4.27.0
 
 defaults: &defaults
   working_directory: ~/happa
