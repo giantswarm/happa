@@ -195,7 +195,7 @@ describe('AppInstallModal', () => {
       await screen.findByText(capiv1beta1Mocks.randomCluster1.metadata.name)
     );
 
-    const input = screen.getByRole('textbox', { name: /application name/gi });
+    const input = screen.getByRole('textbox', { name: /app resource name/gi });
     fireEvent.change(input, {
       target: { value: app.metadata.name },
     });
