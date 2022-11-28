@@ -163,7 +163,7 @@
     "@types/request": "2.48.8",
     "@types/serialize-javascript": "5.0.2",
     "@types/styled-components": "5.1.26",
-    "@types/superagent": "4.1.15",
+    "@types/superagent": "4.1.16",
     "@types/terser-webpack-plugin": "5.0.4",
     "@types/underscore": "1.11.4",
     "@types/uuid": "8.3.4",
