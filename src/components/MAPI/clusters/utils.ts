@@ -22,6 +22,7 @@ import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
+import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -312,6 +313,8 @@ export function createDefaultCluster(config: {
   const { kind, apiVersion } = config.providerCluster;
   switch (true) {
     case kind === capzv1beta1.AzureCluster:
+    case kind === infrav1alpha2.AWSCluster &&
+      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion:
       return createDefaultV1Alpha3Cluster(config);
@@ -371,6 +374,8 @@ export function createDefaultControlPlaneNodes(config: {
   switch (true) {
     case kind === capzv1beta1.AzureCluster:
       return [createDefaultAzureMachine(config)];
+    case kind === infrav1alpha2.AWSCluster &&
+      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion: {
       const name = generateUID(5);
@@ -651,6 +656,8 @@ export async function createCluster(
       break;
     }
 
+    case kind === infrav1alpha2.AWSCluster &&
+      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion: {
       // AWS cluster
@@ -735,13 +742,13 @@ export async function createCluster(
                 return infrav1alpha3.createAWSControlPlane(
                   httpClientFactory(),
                   auth,
-                  n
+                  n as infrav1alpha3.IAWSControlPlane
                 );
               case infrav1alpha3.G8sControlPlane:
                 return infrav1alpha3.createG8sControlPlane(
                   httpClientFactory(),
                   auth,
-                  n
+                  n as infrav1alpha3.IG8sControlPlane
                 );
               default:
                 return Promise.reject(
@@ -918,6 +925,8 @@ export function getClusterConditions(
       statuses.isUpgrading = isClusterUpgrading(cluster);
       break;
 
+    case kind === infrav1alpha2.AWSCluster &&
+      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
       apiVersion === infrav1alpha3.ApiVersion: {
       if (!providerCluster) break;
