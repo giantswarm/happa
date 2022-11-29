@@ -164,6 +164,7 @@ const ClusterDetailWidgetRelease: React.FC<
     const activeVersions = getSupportedUpgradeVersions(
       releaseVersion,
       provider,
+      // Don't prompt users, including admins, to update to inactive versions
       false,
       releaseList.items
     );
