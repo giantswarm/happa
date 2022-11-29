@@ -132,7 +132,6 @@ export function compareClusters(
 export function isClusterUpgradable(
   cluster: capiv1beta1.ICluster,
   provider: PropertiesOf<typeof Providers>,
-  isAdmin: boolean,
   releases?: releasev1alpha1.IRelease[]
 ): boolean {
   if (!releases) return false;
@@ -144,7 +143,7 @@ export function isClusterUpgradable(
     const releaseHelper = releasesUtils.getReleaseHelper(
       releaseVersion,
       provider,
-      isAdmin,
+      false,
       releases
     );
 
