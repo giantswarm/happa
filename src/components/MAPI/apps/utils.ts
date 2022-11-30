@@ -9,10 +9,8 @@ import * as releasesUtils from 'MAPI/releases/utils';
 import {
   getClusterBaseUrl,
   getClusterDescription,
-  getClusterK8sAPIUrl,
   getClusterReleaseVersion,
   getNamespaceFromOrgName,
-  isCAPACluster,
 } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
@@ -25,7 +23,10 @@ import {
 } from 'model/services/mapi/applicationv1alpha1';
 import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
+import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
+import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Cache, mutate } from 'swr';
@@ -726,13 +727,26 @@ export function getClusterK8sEndpoint(
   cluster: capiv1beta1.ICluster,
   provider: PropertiesOf<typeof Providers>
 ) {
-  if (isCAPACluster(cluster)) {
-    const hostname = getClusterBaseUrl(cluster, provider).host;
-
-    return `https://${hostname}`;
+  const infrastructureRef = cluster.spec?.infrastructureRef;
+  if (!infrastructureRef) {
+    return '';
   }
 
-  return getClusterK8sAPIUrl(cluster, provider);
+  const { kind, apiVersion } = infrastructureRef;
+  let hostname = null;
+  switch (true) {
+    case kind === capzv1beta1.AzureCluster:
+    case kind === infrav1alpha2.AWSCluster &&
+      apiVersion === infrav1alpha2.ApiVersion:
+    case kind === infrav1alpha3.AWSCluster &&
+      apiVersion === infrav1alpha3.ApiVersion:
+      hostname = cluster.spec?.controlPlaneEndpoint?.host;
+      break;
+    default:
+      hostname = getClusterBaseUrl(cluster, provider).host;
+  }
+
+  return hostname ? `https://${hostname}` : '';
 }
 
 export function isTestRelease(releaseVersion: string): boolean {
