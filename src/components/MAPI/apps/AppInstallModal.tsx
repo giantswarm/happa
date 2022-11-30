@@ -22,6 +22,7 @@ import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissi
 import { getPreviewReleaseVersions } from 'MAPI/releases/utils';
 import { ClusterList } from 'MAPI/types';
 import {
+  extractErrorMessage,
   fetchProviderClustersForClusters,
   fetchProviderClustersForClustersKey,
   getClusterDescription,
@@ -541,6 +542,7 @@ const AppInstallModal: React.FC<
       }
 
       let errorMessage: React.ReactNode = '';
+      let errorMessageText: React.ReactNode = '';
       switch (true) {
         case metav1.isStatusError(
           (error as GenericResponseError)?.data,
@@ -572,18 +574,16 @@ const AppInstallModal: React.FC<
           break;
 
         default:
-          errorMessage = (
-            <>
-              Something went wrong while trying to install your app. Please try
-              again later or contact support: support@giantswarm.io
-              <Text size='small' as='div' margin={{ top: 'medium' }}>
-                {metav1.getStatusMessage((error as GenericResponseError)?.data)}
-              </Text>
-            </>
-          );
+          errorMessage = `Something went wrong while trying to install your app. Please try again later or contact support: support@giantswarm.io`;
+          errorMessageText = extractErrorMessage(error);
       }
 
-      new FlashMessage(errorMessage, messageType.ERROR, messageTTL.LONG);
+      new FlashMessage(
+        errorMessage,
+        messageType.ERROR,
+        messageTTL.LONG,
+        errorMessageText
+      );
 
       setLoading(false);
     }
