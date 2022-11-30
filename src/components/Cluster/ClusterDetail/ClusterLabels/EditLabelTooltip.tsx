@@ -262,20 +262,22 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
               />
             </TooltipContainer>
           </Keyboard>
-          {!unauthorized && !readOnly && canClusterLabelBeDeleted(label.key) && (
-            <DeleteLabelButton
-              allowInteraction={allowInteraction}
-              onOpen={onOpen}
-              onDelete={() => {
-                onSave({ key: label.key, value: null });
-              }}
-              role='button'
-              backgroundColor={label.backgroundColor}
-              color={label.textColor}
-              aria-label={`Delete '${label.key}' label`}
-              aria-disabled={!allowInteraction || currentlyEditing}
-            />
-          )}
+          {!unauthorized &&
+            !readOnly &&
+            canClusterLabelBeDeleted(label.key) && (
+              <DeleteLabelButton
+                allowInteraction={allowInteraction}
+                onOpen={onOpen}
+                onDelete={() => {
+                  onSave({ key: label.key, value: null });
+                }}
+                role='button'
+                backgroundColor={label.backgroundColor}
+                color={label.textColor}
+                aria-label={`Delete '${label.key}' label`}
+                aria-disabled={!allowInteraction || currentlyEditing}
+              />
+            )}
         </LabelWrapper>
       )}
       {currentlyEditing && (
