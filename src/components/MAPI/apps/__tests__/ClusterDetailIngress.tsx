@@ -169,13 +169,13 @@ describe('ClusterDetailIngress on Azure', () => {
     }
 
     expect(screen.getByLabelText('Base domain:')).toHaveTextContent(
-      '.j5y9m.k8s.test.gigantic.io:443'
+      '.j5y9m.k8s.test.gigantic.io'
     );
     expect(screen.getByLabelText('Load balancer DNS name:')).toHaveTextContent(
-      'ingress.j5y9m.k8s.test.gigantic.io:443'
+      'ingress.j5y9m.k8s.test.gigantic.io'
     );
     expect(screen.getByLabelText('Hostname pattern:')).toHaveTextContent(
-      'YOUR_PREFIX.j5y9m.k8s.test.gigantic.io:443'
+      'YOUR_PREFIX.j5y9m.k8s.test.gigantic.io'
     );
   });
 });

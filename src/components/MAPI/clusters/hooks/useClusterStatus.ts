@@ -1,12 +1,7 @@
 import { ProviderCluster } from 'MAPI/types';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
-import {
-  getIsImpersonatingNonAdmin,
-  getUserIsAdmin,
-} from 'model/stores/main/selectors';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 import {
   ClusterStatus,
@@ -26,22 +21,13 @@ export function useClusterStatus(
   clusterUpdateSchedule?: IClusterUpdateSchedule;
   clusterCreationDuration?: string;
 } {
-  const isAdmin = useSelector(getUserIsAdmin);
-  const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
   const provider = window.config.info.general.provider;
   const { isConditionUnknown, isCreating, isUpgrading, isDeleting } =
     getClusterConditions(cluster, providerCluster);
 
   const isUpgradable = useMemo(
-    () =>
-      cluster &&
-      isClusterUpgradable(
-        cluster,
-        provider,
-        isAdmin && !isImpersonatingNonAdmin,
-        releases
-      ),
-    [cluster, provider, isAdmin, isImpersonatingNonAdmin, releases]
+    () => cluster && isClusterUpgradable(cluster, provider, releases),
+    [cluster, provider, releases]
   );
 
   const clusterUpdateSchedule = getClusterUpdateSchedule(cluster);
