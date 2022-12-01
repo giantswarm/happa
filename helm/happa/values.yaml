@@ -2,7 +2,6 @@ name: happa
 namespace: giantswarm
 image:
   repository: giantswarm/happa
-  tag: [[ .Version ]]
 
 userID: 101
 groupID: 101
@@ -53,12 +52,12 @@ guestCluster:
 kubernetes:
   auth:
     controlPlaneAdminTargetGroup: ""
-  versions: ""
+  versions: {}
 
 happa:
   address: ""
   host: ""
-  letsencrypt: ""
+  letsencrypt: false
   featureFlags:
     mapiAuth: false
     mapiClusters: false
@@ -67,7 +66,7 @@ happa:
 happaapi:
   address: ""
   host: ""
-  letsencrypt: ""
+  letsencrypt: false
 
 athena:
   address: ""
@@ -93,7 +92,7 @@ registry:
 
 security:
   restrictAccess:
-    api: ""
+    api: false
   subnet:
     vpn: ""
     customer:

@@ -3,7 +3,8 @@ name: happa
 description: >-
   Web user interface for Giant Swarm Kubernetes as a Service.
 home: https://github.com/giantswarm/happa
-version: [[ .Version ]]
-appVersion: [[ .AppVersion ]]
+version: ""
+appVersion: ""
 annotations:
   config.giantswarm.io/version: 1.x.x
+  application.giantswarm.io/team: team-rainbow
