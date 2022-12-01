@@ -1,0 +1,409 @@
+import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { Box, Text } from 'grommet';
+import produce from 'immer';
+import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
+import {
+  extractErrorMessage,
+  generateUID,
+  getClusterDescription,
+  getClusterReleaseVersion,
+} from 'MAPI/utils';
+import { Providers } from 'model/constants';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { filterLabels } from 'model/stores/cluster/utils';
+import React, { useEffect, useMemo, useReducer, useState } from 'react';
+import Button from 'UI/Controls/Button';
+import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+
+import { computeControlPlaneNodesStats } from '../ClusterDetail/utils';
+import CreateClusterGuide from '../guides/CreateClusterGuide';
+import {
+  createCluster,
+  createDefaultCluster,
+  createDefaultControlPlaneNodes,
+  createDefaultProviderCluster,
+  findLatestReleaseVersion,
+  getClusterCreationDuration,
+} from '../utils';
+import CreateClusterControlPlaneNodeAZs from './CreateClusterControlPlaneNodeAZs';
+import CreateClusterControlPlaneNodesCount from './CreateClusterControlPlaneNodesCount';
+import CreateClusterDescription from './CreateClusterDescription';
+import CreateClusterName from './CreateClusterName';
+import CreateClusterRelease from './CreateClusterRelease';
+import CreateClusterServicePriority from './CreateClusterServicePriority';
+import {
+  ClusterPatch,
+  IClusterPropertyValue,
+  withClusterReleaseVersion,
+} from './patches';
+
+enum ClusterPropertyField {
+  Name,
+  Description,
+  Release,
+  ServicePriority,
+  ControlPlaneNodeAZs,
+  ControlPlaneNodesCount,
+}
+
+interface IApplyPatchAction {
+  type: 'applyPatch';
+  property: ClusterPropertyField;
+  value: ClusterPatch;
+}
+
+interface IChangeValidationResultAction {
+  type: 'changeValidationStatus';
+  property: ClusterPropertyField;
+  value: boolean;
+}
+
+interface IStartCreationAction {
+  type: 'startCreation';
+}
+
+interface IEndCreationAction {
+  type: 'endCreation';
+}
+
+interface ISetLatestReleaseAction {
+  type: 'setLatestRelease';
+  value: { version: string; components: IReleaseComponent[] };
+}
+
+type ClusterAction =
+  | IApplyPatchAction
+  | IChangeValidationResultAction
+  | IStartCreationAction
+  | IEndCreationAction
+  | ISetLatestReleaseAction;
+
+interface IClusterState {
+  provider: PropertiesOf<typeof Providers>;
+  cluster: Cluster;
+  providerCluster: ProviderCluster;
+  controlPlaneNodes: ControlPlaneNode[];
+  validationResults: Record<ClusterPropertyField, boolean>;
+  isCreating: boolean;
+  latestRelease: string;
+  latestReleaseComponents: IReleaseComponent[];
+  orgNamespace: string;
+}
+
+interface IReducerConfig {
+  namespace: string;
+  organization: string;
+  orgNamespace: string;
+}
+
+function makeInitialState(
+  provider: PropertiesOf<typeof Providers>,
+  config: IReducerConfig
+): IClusterState {
+  const name = generateUID(5);
+
+  const resourceConfig = {
+    ...config,
+    name,
+    releaseVersion: '',
+  };
+  const providerCluster = createDefaultProviderCluster(
+    provider,
+    resourceConfig
+  );
+  const controlPlaneNodes = createDefaultControlPlaneNodes({ providerCluster });
+  const cluster = createDefaultCluster({ providerCluster });
+
+  return {
+    provider,
+    cluster,
+    providerCluster,
+    controlPlaneNodes,
+    validationResults: {
+      [ClusterPropertyField.Name]: true,
+      [ClusterPropertyField.Description]: true,
+      [ClusterPropertyField.ServicePriority]: true,
+      [ClusterPropertyField.Release]: true,
+      [ClusterPropertyField.ControlPlaneNodeAZs]: true,
+      [ClusterPropertyField.ControlPlaneNodesCount]: true,
+    },
+    isCreating: false,
+    latestRelease: '',
+    latestReleaseComponents: [],
+    orgNamespace: config.orgNamespace,
+  };
+}
+
+const reducer: React.Reducer<IClusterState, ClusterAction> = produce(
+  (draft, action) => {
+    switch (action.type) {
+      case 'applyPatch':
+        action.value(
+          draft.cluster,
+          draft.providerCluster,
+          draft.controlPlaneNodes
+        );
+        break;
+      case 'changeValidationStatus':
+        draft.validationResults[action.property] = action.value;
+        break;
+      case 'startCreation':
+        draft.isCreating = true;
+        break;
+      case 'endCreation':
+        draft.isCreating = false;
+        break;
+      case 'setLatestRelease':
+        // Apply the version to the CRs if no version was set before.
+        if (!draft.latestRelease) {
+          withClusterReleaseVersion(
+            action.value.version,
+            action.value.components,
+            draft.orgNamespace
+          )(draft.cluster, draft.providerCluster, draft.controlPlaneNodes);
+        }
+
+        draft.latestRelease = action.value.version;
+        draft.latestReleaseComponents = action.value.components;
+        break;
+    }
+  }
+);
+
+interface ICreateClusterFormProps {
+  namespace: string;
+  organizationID: string;
+  releaseList?: releasev1alpha1.IRelease[];
+  onCreationCancel?: () => void;
+  onCreationComplete?: (clusterId: string) => void;
+}
+
+const CreateClusterForm: React.FC<ICreateClusterFormProps> = ({
+  namespace,
+  organizationID,
+  releaseList,
+  onCreationCancel,
+  onCreationComplete,
+}) => {
+  const provider = window.config.info.general.provider;
+
+  const [state, dispatch] = useReducer(
+    reducer,
+    makeInitialState(provider, {
+      namespace,
+      organization: organizationID,
+      orgNamespace: namespace,
+    })
+  );
+
+  useEffect(() => {
+    const latestRelease = findLatestReleaseVersion(releaseList ?? []);
+
+    dispatch({
+      type: 'setLatestRelease',
+      value: {
+        version: latestRelease?.metadata.name.slice(1) ?? '',
+        components: latestRelease?.spec.components ?? [],
+      },
+    });
+  }, [releaseList]);
+
+  const [isRetrying, setIsRetrying] = useState(false);
+
+  const isValid =
+    state.latestRelease &&
+    Object.values(state.validationResults).every((r) => r);
+
+  const handleCancel = () => {
+    dispatch({ type: 'endCreation' });
+
+    if (onCreationCancel) onCreationCancel();
+  };
+
+  const handleChange =
+    (property: ClusterPropertyField) => (newValue: IClusterPropertyValue) => {
+      dispatch({
+        type: 'applyPatch',
+        property,
+        value: newValue.patch,
+      });
+      dispatch({
+        type: 'changeValidationStatus',
+        property,
+        value: newValue.isValid,
+      });
+    };
+
+  const clientFactory = useHttpClientFactory();
+  const auth = useAuthProvider();
+
+  const handleCreation = async (e: React.FormEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    dispatch({ type: 'startCreation' });
+
+    try {
+      await createCluster(clientFactory, auth, state, isRetrying);
+
+      dispatch({ type: 'endCreation' });
+
+      new FlashMessage(
+        (
+          <>
+            Cluster <code>{state.cluster.metadata.name}</code> created
+            successfully
+          </>
+        ),
+        messageType.SUCCESS,
+        messageTTL.LONG,
+        `Create your first node pool by clicking the "Add node pool" button.`
+      );
+
+      if (onCreationComplete) {
+        onCreationComplete(state.cluster.metadata.name);
+      }
+    } catch (err) {
+      dispatch({ type: 'endCreation' });
+
+      const errorMessage = extractErrorMessage(err);
+
+      new FlashMessage(
+        (
+          <>
+            Could not create cluster <code>{state.cluster.metadata.name}</code>:{' '}
+            {errorMessage}
+          </>
+        ),
+        messageType.ERROR,
+        messageTTL.LONG,
+        'Please try again or contact support: support@giantswarm.io'
+      );
+
+      ErrorReporter.getInstance().notify(err as Error);
+
+      setIsRetrying(true);
+    }
+  };
+
+  const releaseVersion = getClusterReleaseVersion(state.cluster);
+  const description = getClusterDescription(
+    state.cluster,
+    state.providerCluster
+  );
+  const controlPlaneAZs = useMemo(() => {
+    return computeControlPlaneNodesStats(state.controlPlaneNodes)
+      .availabilityZones;
+  }, [state.controlPlaneNodes]);
+  const labels = filterLabels(capiv1beta1.getClusterLabels(state.cluster));
+  const servicePriority = capiv1beta1.getClusterServicePriority(state.cluster);
+  const clusterCreationDuration = getClusterCreationDuration(state.cluster);
+
+  return (
+    <>
+      <Box
+        as='form'
+        onSubmit={handleCreation}
+        width={{ max: '100%', width: 'large' }}
+        gap='medium'
+        margin='auto'
+      >
+        <CreateClusterName
+          id={`cluster-${ClusterPropertyField.Name}`}
+          cluster={state.cluster}
+          providerCluster={state.providerCluster}
+          controlPlaneNodes={state.controlPlaneNodes}
+          onChange={handleChange(ClusterPropertyField.Name)}
+        />
+        <CreateClusterDescription
+          id={`cluster-${ClusterPropertyField.Description}`}
+          cluster={state.cluster}
+          providerCluster={state.providerCluster}
+          controlPlaneNodes={state.controlPlaneNodes}
+          onChange={handleChange(ClusterPropertyField.Description)}
+          autoFocus={true}
+        />
+        <CreateClusterRelease
+          id={`cluster-${ClusterPropertyField.Release}`}
+          cluster={state.cluster}
+          providerCluster={state.providerCluster}
+          controlPlaneNodes={state.controlPlaneNodes}
+          onChange={handleChange(ClusterPropertyField.Release)}
+          orgNamespace={state.orgNamespace}
+        />
+        <CreateClusterServicePriority
+          id={`cluster-${ClusterPropertyField.ServicePriority}`}
+          cluster={state.cluster}
+          providerCluster={state.providerCluster}
+          controlPlaneNodes={state.controlPlaneNodes}
+          onChange={handleChange(ClusterPropertyField.ServicePriority)}
+        />
+        {provider === Providers.AZURE && (
+          <CreateClusterControlPlaneNodeAZs
+            id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
+            cluster={state.cluster}
+            providerCluster={state.providerCluster}
+            controlPlaneNodes={state.controlPlaneNodes}
+            onChange={handleChange(ClusterPropertyField.ControlPlaneNodeAZs)}
+          />
+        )}
+        {provider === Providers.AWS && (
+          <CreateClusterControlPlaneNodesCount
+            id={`cluster-${ClusterPropertyField.ControlPlaneNodesCount}`}
+            cluster={state.cluster}
+            providerCluster={state.providerCluster}
+            controlPlaneNodes={state.controlPlaneNodes}
+            onChange={handleChange(ClusterPropertyField.ControlPlaneNodesCount)}
+          />
+        )}
+        <Box margin={{ top: 'medium' }}>
+          <Box direction='row' gap='small'>
+            <Button
+              primary={true}
+              disabled={!isValid}
+              type='submit'
+              loading={state.isCreating}
+            >
+              Create cluster
+            </Button>
+
+            {!state.isCreating && (
+              <Button onClick={handleCancel}>Cancel</Button>
+            )}
+          </Box>
+          <Box margin={{ top: 'medium' }} gap='small'>
+            <Text color='text-weak'>
+              {`It will take around ${clusterCreationDuration} for the control plane to become
+                  available.`}
+            </Text>
+            <Text>
+              <i
+                className='fa fa-info'
+                aria-hidden={true}
+                role='presentation'
+              />{' '}
+              As a next step, we recommend to add at least one node pool to the
+              cluster so you could run workloads.
+            </Text>
+          </Box>
+        </Box>
+      </Box>
+      <Box margin={{ top: 'large' }} direction='column' gap='small'>
+        <CreateClusterGuide
+          provider={state.provider}
+          clusterName={state.cluster.metadata.name}
+          organizationName={organizationID}
+          releaseVersion={releaseVersion}
+          description={description}
+          labels={labels}
+          servicePriority={servicePriority}
+          controlPlaneAZs={controlPlaneAZs}
+        />
+      </Box>
+    </>
+  );
+};
+
+export default CreateClusterForm;
