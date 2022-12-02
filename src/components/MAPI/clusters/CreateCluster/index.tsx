@@ -18,6 +18,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 
+import CreateClusterAppForm from './CreateClusterAppForm';
 import CreateClusterForm from './CreateClusterForm';
 
 enum CreationMethod {
@@ -66,6 +67,7 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
     return activeReleases.length > 0;
   }, [releaseList?.items]);
 
+  // TODO: actually fetch cluster app ACEs for the installation
   const supportsClusterAppResourcesCreation = useMemo(() => {
     return true;
   }, []);
@@ -148,6 +150,14 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
               onCreationCancel={onCreationCancel}
               onCreationComplete={onCreationComplete}
               releaseList={releaseList?.items}
+            />
+          )}
+          {creationMethod === CreationMethod.AppResources && (
+            <CreateClusterAppForm
+              namespace={namespace}
+              organizationID={organizationID}
+              onCreationCancel={onCreationCancel}
+              onCreationComplete={onCreationComplete}
             />
           )}
         </Box>
