@@ -188,6 +188,8 @@ workflows:
           requires:
             - checkout
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
 
@@ -201,6 +203,8 @@ workflows:
           requires:
             - build-fe-docs
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
 
@@ -215,6 +219,8 @@ workflows:
           requires:
             - push-fe-docs-to-quay
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
 
