@@ -58,6 +58,9 @@
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
+    "@rjsf/core": "^5.0.0-beta.13",
+    "@rjsf/utils": "^5.0.0-beta.13",
+    "@rjsf/validator-ajv8": "^5.0.0-beta.13",
     "@sentry/react": "7.22.0",
     "@sentry/tracing": "7.22.0",
     "bootstrap": "3.4.1",
@@ -151,6 +154,7 @@
     "@types/react-breadcrumbs": "2.1.5",
     "@types/react-dom": "18.0.9",
     "@types/react-gravatar": "2.6.10",
+    "@types/react-jsonschema-form": "^1.7.8",
     "@types/react-redux": "7.1.24",
     "@types/react-router": "5.1.19",
     "@types/react-router-dom": "5.3.3",

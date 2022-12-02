@@ -1,3 +1,6 @@
+import Form, { IChangeEvent } from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
 import {
@@ -65,8 +68,8 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     return getAppCatalogEntrySchemaURL(selectedProvider as PrototypeProviders);
   }, [selectedProvider]);
 
-  const { data: _appSchema, error: appSchemaError } = useSWR<
-    string,
+  const { data: appSchema, error: appSchemaError } = useSWR<
+    RJSFSchema,
     GenericResponseError
   >(fetchAppCatalogEntrySchemaKey(schemaURL), () =>
     fetchAppCatalogEntrySchema(appSchemaClient.current, auth, schemaURL!)
@@ -78,20 +81,26 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     }
   }, [appSchemaError]);
 
-  const handleCreation = (e: React.FormEvent<HTMLElement>) => {
+  const appSchemaIsLoading =
+    appSchema === undefined && appSchemaError === undefined;
+
+  const handleCreation = (
+    { formData }: IChangeEvent<RJSFSchema>,
+    e: React.FormEvent<HTMLElement>
+  ) => {
     e.preventDefault();
 
+    // TODO: create cluster app resources
+
     if (onCreationComplete) onCreationComplete('');
+
+    // TODO: remove
+    // eslint-disable-next-line no-console
+    console.log(formData);
   };
 
   return (
-    <Box
-      as='form'
-      onSubmit={handleCreation}
-      width={{ max: '100%', width: 'large' }}
-      gap='medium'
-      margin='auto'
-    >
+    <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
       <InputGroup label='Provider'>
         <Box width='200px'>
           <Select
@@ -103,15 +112,26 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
           />
         </Box>
       </InputGroup>
-      <Box margin={{ top: 'medium' }}>
-        <Box direction='row' gap='small'>
-          <Button primary={true} type='submit' loading={isCreating}>
-            Create cluster
-          </Button>
+      {!appSchemaIsLoading && (
+        <Form
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          schema={appSchema!}
+          validator={validator}
+          onSubmit={handleCreation}
+        >
+          <Box margin={{ top: 'medium' }}>
+            <Box direction='row' gap='small'>
+              <Button primary={true} type='submit' loading={isCreating}>
+                Create cluster
+              </Button>
 
-          {!isCreating && <Button onClick={onCreationCancel}>Cancel</Button>}
-        </Box>
-      </Box>
+              {!isCreating && (
+                <Button onClick={onCreationCancel}>Cancel</Button>
+              )}
+            </Box>
+          </Box>
+        </Form>
+      )}
     </Box>
   );
 };

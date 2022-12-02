@@ -1,3 +1,4 @@
+import { RJSFSchema } from '@rjsf/utils';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -214,14 +215,14 @@ export async function fetchAppCatalogEntrySchema(
   client: IHttpClient,
   _auth: IOAuth2Provider,
   url: string
-): Promise<string> {
+): Promise<RJSFSchema> {
   client.setRequestConfig({
     forceCORS: true,
     url,
     headers: {},
   });
 
-  const response = await client.execute<string>();
+  const response = await client.execute<RJSFSchema>();
 
   return response.data;
 }
