@@ -2,7 +2,8 @@ import Form, { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { Box } from 'grommet';
+import { Box, Text } from 'grommet';
+import { spinner } from 'images';
 import {
   fetchAppCatalogEntrySchema,
   fetchAppCatalogEntrySchemaKey,
@@ -10,6 +11,7 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import InputGroup from 'UI/Inputs/InputGroup';
@@ -17,6 +19,12 @@ import Select from 'UI/Inputs/Select';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+
+const Wrapper = styled.div`
+  position: relative;
+  margin: auto;
+  text-align: center;
+`;
 
 type PrototypeProviders =
   | 'AWS'
@@ -200,26 +208,36 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
           </InputGroup>
         </Box>
       </Box>
-      {!appSchemaIsLoading && (
-        <Form
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-          schema={appSchema!}
-          validator={validator}
-          onSubmit={handleCreation}
-        >
-          <Box margin={{ top: 'medium' }}>
-            <Box direction='row' gap='small'>
-              <Button primary={true} type='submit' loading={isCreating}>
-                Create cluster
-              </Button>
-
-              {!isCreating && (
-                <Button onClick={onCreationCancel}>Cancel</Button>
-              )}
-            </Box>
-          </Box>
-        </Form>
+      {appSchemaIsLoading && (
+        <Wrapper>
+          <img className='loader' src={spinner} />
+        </Wrapper>
       )}
+      {!appSchemaIsLoading &&
+        (typeof appSchema === 'undefined' ? (
+          <Text>
+            No <code>values.schema.json</code> file found for the selected
+            branch.
+          </Text>
+        ) : (
+          <Form
+            schema={appSchema}
+            validator={validator}
+            onSubmit={handleCreation}
+          >
+            <Box margin={{ top: 'medium' }}>
+              <Box direction='row' gap='small'>
+                <Button primary={true} type='submit' loading={isCreating}>
+                  Create cluster
+                </Button>
+
+                {!isCreating && (
+                  <Button onClick={onCreationCancel}>Cancel</Button>
+                )}
+              </Box>
+            </Box>
+          </Form>
+        ))}
     </Box>
   );
 };
