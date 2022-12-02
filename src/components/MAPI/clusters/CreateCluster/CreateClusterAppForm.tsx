@@ -8,6 +8,7 @@ import {
   fetchAppCatalogEntrySchemaKey,
 } from 'MAPI/apps/AppList/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { IHttpClient } from 'model/clients/HttpClient';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
@@ -15,6 +16,7 @@ import InputGroup from 'UI/Inputs/InputGroup';
 import Select from 'UI/Inputs/Select';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 type PrototypeProviders =
   | 'AWS'
@@ -23,19 +25,72 @@ type PrototypeProviders =
   | 'Open Stack'
   | 'VSphere';
 
-const schemaURLForProviders: Record<PrototypeProviders, string> = {
-  AWS: 'https://raw.githubusercontent.com/giantswarm/cluster-aws/master/helm/cluster-aws/values.schema.json',
-  'Cloud Director':
-    'https://raw.githubusercontent.com/giantswarm/cluster-cloud-director/main/helm/cluster-cloud-director/values.schema.json',
-  GCP: 'https://raw.githubusercontent.com/giantswarm/cluster-gcp/main/helm/cluster-gcp/values.schema.json',
-  'Open Stack':
-    'https://raw.githubusercontent.com/giantswarm/cluster-openstack/main/helm/cluster-openstack/values.schema.json',
-  VSphere:
-    'https://raw.githubusercontent.com/giantswarm/cluster-vsphere/main/helm/cluster-vsphere/values.schema.json',
-};
+const prototypeProviders: PrototypeProviders[] = [
+  'AWS',
+  'Cloud Director',
+  'GCP',
+  'Open Stack',
+  'VSphere',
+];
 
-function getAppCatalogEntrySchemaURL(provider: PrototypeProviders) {
-  return schemaURLForProviders[provider];
+function getAppRepoName(provider: PrototypeProviders): string {
+  switch (provider) {
+    case 'AWS':
+      return 'cluster-aws';
+    case 'Cloud Director':
+      return 'cluster-cloud-director';
+    case 'GCP':
+      return 'cluster-gcp';
+    case 'Open Stack':
+      return 'cluster-openstack';
+    case 'VSphere':
+      return 'cluster-vsphere';
+    default:
+      return '';
+  }
+}
+
+function getAppCatalogEntrySchemaURL(
+  provider: PrototypeProviders,
+  branch?: string
+): string {
+  const appRepoName = getAppRepoName(provider);
+  const branchName = branch || getDefaultRepoBranch(provider);
+
+  return `https://raw.githubusercontent.com/giantswarm/${appRepoName}/${branchName}/helm/${appRepoName}/values.schema.json`;
+}
+
+interface IRepoBranchEntry {
+  name: string;
+}
+
+async function fetchAppRepoBranches(
+  client: IHttpClient,
+  _auth: IOAuth2Provider,
+  provider: PrototypeProviders
+): Promise<IRepoBranchEntry[]> {
+  const appRepoName = getAppRepoName(provider);
+  const url = `https://api.github.com/repos/giantswarm/${appRepoName}/branches`;
+
+  client.setRequestConfig({
+    forceCORS: true,
+    url,
+    headers: {},
+  });
+
+  const response = await client.execute<IRepoBranchEntry[]>();
+
+  return response.data;
+}
+
+function fetchAppRepoBranchesKey(provider: PrototypeProviders) {
+  const appRepoName = getAppRepoName(provider);
+
+  return `https://api.github.com/repos/giantswarm/${appRepoName}/branches`;
+}
+
+function getDefaultRepoBranch(provider: PrototypeProviders) {
+  return provider === 'AWS' ? 'master' : 'main';
 }
 
 interface ICreateClusterAppFormProps {
@@ -51,19 +106,38 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
 }) => {
   const [isCreating, _setIsCreating] = useState<boolean>(false);
 
-  const [selectedProvider, setSelectedProvider] = useState<string>(
-    Object.keys(schemaURLForProviders)[0]
+  const [selectedProvider, setSelectedProvider] = useState<PrototypeProviders>(
+    prototypeProviders[0]
+  );
+  const [selectedBranch, setSelectedBranch] = useState<string>(
+    getDefaultRepoBranch(prototypeProviders[0])
   );
 
   const clientFactory = useHttpClientFactory();
-  const appSchemaClient = useRef(clientFactory());
   const auth = useAuthProvider();
+
+  const appRepoBranchesClient = useRef(clientFactory());
+
+  const { data: repoBranches, error: repoBranchesError } = useSWR<
+    IRepoBranchEntry[],
+    GenericResponseError
+  >(fetchAppRepoBranchesKey(selectedProvider), () =>
+    fetchAppRepoBranches(appRepoBranchesClient.current, auth, selectedProvider)
+  );
+
+  useEffect(() => {
+    if (repoBranchesError) {
+      ErrorReporter.getInstance().notify(repoBranchesError);
+    }
+  }, [repoBranchesError]);
+
+  const appSchemaClient = useRef(clientFactory());
 
   const schemaURL = useMemo(() => {
     if (!selectedProvider) return undefined;
 
-    return getAppCatalogEntrySchemaURL(selectedProvider as PrototypeProviders);
-  }, [selectedProvider]);
+    return getAppCatalogEntrySchemaURL(selectedProvider, selectedBranch);
+  }, [selectedBranch, selectedProvider]);
 
   const { data: appSchema, error: appSchemaError } = useSWR<
     RJSFSchema,
@@ -80,6 +154,14 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
 
   const appSchemaIsLoading =
     appSchema === undefined && appSchemaError === undefined;
+
+  const handleSelectedProviderChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newProvider = e.target.value as PrototypeProviders;
+    setSelectedProvider(newProvider);
+    setSelectedBranch(getDefaultRepoBranch(newProvider));
+  };
 
   const handleCreation = (
     { formData }: IChangeEvent<RJSFSchema>,
@@ -98,17 +180,26 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
 
   return (
     <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
-      <InputGroup label='Provider'>
-        <Box width='200px'>
+      <Box direction='row' gap='medium'>
+        <InputGroup label='Provider'>
           <Select
             value={selectedProvider}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setSelectedProvider(e.target.value as PrototypeProviders)
-            }
-            options={Object.keys(schemaURLForProviders)}
+            onChange={handleSelectedProviderChange}
+            options={prototypeProviders}
           />
+        </InputGroup>
+        <Box flex={{ grow: 1 }}>
+          <InputGroup label='Branch'>
+            <Select
+              value={selectedBranch}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSelectedBranch(e.target.value)
+              }
+              options={repoBranches?.map((entry) => entry.name) ?? []}
+            />
+          </InputGroup>
         </Box>
-      </InputGroup>
+      </Box>
       {!appSchemaIsLoading && (
         <Form
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
