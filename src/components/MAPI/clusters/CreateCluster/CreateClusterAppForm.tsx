@@ -21,7 +21,7 @@ type PrototypeProviders =
   | 'AWS'
   | 'Cloud Director'
   | 'GCP'
-  | 'Openstack'
+  | 'Open Stack'
   | 'VSphere';
 
 const schemaURLForProviders: Record<PrototypeProviders, string> = {
@@ -29,7 +29,7 @@ const schemaURLForProviders: Record<PrototypeProviders, string> = {
   'Cloud Director':
     'https://raw.githubusercontent.com/giantswarm/cluster-cloud-director/main/helm/cluster-cloud-director/values.schema.json',
   GCP: 'https://raw.githubusercontent.com/giantswarm/cluster-gcp/main/helm/cluster-gcp/values.schema.json',
-  Openstack:
+  'Open Stack':
     'https://raw.githubusercontent.com/giantswarm/cluster-openstack/main/helm/cluster-openstack/values.schema.json',
   VSphere:
     'https://raw.githubusercontent.com/giantswarm/cluster-vsphere/main/helm/cluster-vsphere/values.schema.json',
