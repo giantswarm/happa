@@ -110,7 +110,6 @@ interface ICreateClusterAppFormProps {
 
 const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   onCreationCancel,
-  onCreationComplete,
 }) => {
   const [isCreating, _setIsCreating] = useState<boolean>(false);
 
@@ -177,11 +176,9 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   ) => {
     e.preventDefault();
 
-    // TODO: create cluster app resources
+    // TODO: don't create cluster app resources for now
+    // and disable navigating to cluster details page
 
-    if (onCreationComplete) onCreationComplete('');
-
-    // TODO: remove
     // eslint-disable-next-line no-console
     console.log(formData);
   };
