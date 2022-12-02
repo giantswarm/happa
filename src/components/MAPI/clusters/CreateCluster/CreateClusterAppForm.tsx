@@ -16,7 +16,6 @@ import Select from 'UI/Inputs/Select';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
-// TODO: prototype
 type PrototypeProviders =
   | 'AWS'
   | 'Cloud Director'
@@ -38,7 +37,6 @@ const schemaURLForProviders: Record<PrototypeProviders, string> = {
 function getAppCatalogEntrySchemaURL(provider: PrototypeProviders) {
   return schemaURLForProviders[provider];
 }
-//
 
 interface ICreateClusterAppFormProps {
   namespace: string;
@@ -53,7 +51,6 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
 }) => {
   const [isCreating, _setIsCreating] = useState<boolean>(false);
 
-  // TODO: prototype
   const [selectedProvider, setSelectedProvider] = useState<string>(
     Object.keys(schemaURLForProviders)[0]
   );
