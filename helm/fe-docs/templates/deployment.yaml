@@ -22,9 +22,7 @@ spec:
         runAsGroup: {{ .Values.groupID }}
       containers:
         - name: {{ .Values.image.name }}
-          image: "{{ .Values.registry.domain }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          securityContext:
-            readOnlyRootFilesystem: true
+          image: "{{ .Values.registry.domain }}/{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.port }}

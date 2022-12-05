@@ -146,7 +146,7 @@
                     "type": "string"
                 },
                 "letsencrypt": {
-                    "type": "string"
+                    "type": "boolean"
                 }
             }
         },
@@ -160,7 +160,7 @@
                     "type": "string"
                 },
                 "letsencrypt": {
-                    "type": "string"
+                    "type": "boolean"
                 }
             }
         },
@@ -203,7 +203,7 @@
                     }
                 },
                 "versions": {
-                    "type": "string"
+                    "type": "object"
                 }
             }
         },
@@ -283,7 +283,7 @@
                     "type": "object",
                     "properties": {
                         "api": {
-                            "type": "string"
+                            "type": "boolean"
                         }
                     }
                 },
