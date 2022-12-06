@@ -1,4 +1,4 @@
-import Form, { IChangeEvent } from '@rjsf/core';
+import { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
@@ -16,6 +16,7 @@ import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import InputGroup from 'UI/Inputs/InputGroup';
 import Select from 'UI/Inputs/Select';
+import JSONSchemaForm from 'UI/JSONSchemaForm';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
@@ -217,7 +218,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
             branch.
           </Text>
         ) : (
-          <Form
+          <JSONSchemaForm
             schema={appSchema}
             validator={validator}
             onSubmit={handleCreation}
@@ -233,7 +234,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
                 )}
               </Box>
             </Box>
-          </Form>
+          </JSONSchemaForm>
         ))}
     </Box>
   );
