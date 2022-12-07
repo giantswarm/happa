@@ -1,5 +1,5 @@
 import { IChangeEvent } from '@rjsf/core';
-import { RJSFSchema } from '@rjsf/utils';
+import { getDefaultFormState, RJSFSchema, ValidatorType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
@@ -10,7 +10,13 @@ import {
 } from 'MAPI/apps/AppList/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
@@ -170,6 +176,25 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   const appSchemaIsLoading =
     appSchema === undefined && appSchemaError === undefined;
 
+  const [formData, setFormData] = useState<RJSFSchema | undefined>(undefined);
+  const formDataKey = useRef<number | undefined>(undefined);
+
+  const resetFormData = useCallback(() => {
+    setFormData(
+      appSchema
+        ? getDefaultFormState<RJSFSchema, RJSFSchema>(
+            validator as ValidatorType<RJSFSchema>,
+            appSchema
+          )
+        : appSchema
+    );
+    formDataKey.current = Date.now();
+  }, [appSchema]);
+
+  useEffect(() => {
+    resetFormData();
+  }, [selectedProvider, selectedBranch, resetFormData]);
+
   const handleSelectedProviderChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -177,8 +202,6 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     setSelectedProvider(newProvider);
     setSelectedBranch(getDefaultRepoBranch(newProvider));
   };
-
-  const [formData, setFormData] = useState<RJSFSchema | undefined>(undefined);
 
   const handleFormDataChange = ({
     formData: data,
@@ -197,6 +220,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
 
     // eslint-disable-next-line no-console
     console.log(formData);
+    resetFormData();
   };
 
   return (
@@ -240,6 +264,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
               formData={formData}
               onSubmit={handleCreation}
               onChange={handleFormDataChange}
+              key={formDataKey.current}
             >
               <Box margin={{ top: 'medium' }}>
                 <Box direction='row' gap='small'>
