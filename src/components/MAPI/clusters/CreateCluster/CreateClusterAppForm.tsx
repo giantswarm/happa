@@ -171,8 +171,16 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     setSelectedBranch(getDefaultRepoBranch(newProvider));
   };
 
+  const [formData, setFormData] = useState<RJSFSchema | undefined>(undefined);
+
+  const handleFormDataChange = ({
+    formData: data,
+  }: IChangeEvent<RJSFSchema>) => {
+    setFormData(data);
+  };
+
   const handleCreation = (
-    { formData }: IChangeEvent<RJSFSchema>,
+    _: IChangeEvent<RJSFSchema>,
     e: React.FormEvent<HTMLElement>
   ) => {
     e.preventDefault();
@@ -221,7 +229,9 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
           <JSONSchemaForm
             schema={appSchema}
             validator={validator}
+            formData={formData}
             onSubmit={handleCreation}
+            onChange={handleFormDataChange}
           >
             <Box margin={{ top: 'medium' }}>
               <Box direction='row' gap='small'>
