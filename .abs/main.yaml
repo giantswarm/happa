@@ -1,0 +1,3 @@
+replace-chart-version-with-git: true
+replace-app-version-with-git: true
+destination: ./build
