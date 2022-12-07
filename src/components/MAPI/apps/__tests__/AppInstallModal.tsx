@@ -195,7 +195,7 @@ describe('AppInstallModal', () => {
       await screen.findByText(capiv1beta1Mocks.randomCluster1.metadata.name)
     );
 
-    const input = screen.getByRole('textbox', { name: /application name/gi });
+    const input = screen.getByRole('textbox', { name: /app resource name/gi });
     fireEvent.change(input, {
       target: { value: app.metadata.name },
     });
@@ -209,6 +209,116 @@ describe('AppInstallModal', () => {
     expect(
       await withMarkup(screen.findByText)(
         `Your app ${app.metadata.name} is being installed on ${capiv1beta1Mocks.randomCluster1.metadata.name}`
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('can install an app bundle using the default values', async () => {
+    const app = applicationv1alpha1Mocks.randomCluster1AppBundle;
+    const cluster = capiv1beta1Mocks.randomCluster1;
+    const clusterName = cluster.metadata.name;
+    const appCatalogEntry =
+      applicationv1alpha1Mocks.defaultCatalogAppCatalogEntryAppBundle;
+    const appName = `${clusterName}-${appCatalogEntry.spec.appName}`;
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'cluster.x-k8s.io',
+            resource: 'clusters',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1beta1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterList);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/api/v1/namespaces/${clusterName}/configmaps/${appName}-user-values/`
+      )
+      .reply(StatusCodes.NotFound, {
+        apiVersion: 'v1',
+        kind: 'Status',
+        message: 'Lolz',
+        status: metav1.K8sStatuses.Failure,
+        reason: metav1.K8sStatusErrorReasons.NotFound,
+        code: StatusCodes.NotFound,
+      });
+
+    nock(window.config.mapiEndpoint)
+      .get(`/api/v1/namespaces/${clusterName}/secrets/${appName}-user-secrets/`)
+      .reply(StatusCodes.NotFound, {
+        apiVersion: 'v1',
+        kind: 'Status',
+        message: 'Lolz',
+        status: metav1.K8sStatuses.Failure,
+        reason: metav1.K8sStatusErrorReasons.NotFound,
+        code: StatusCodes.NotFound,
+      });
+
+    nock(window.config.mapiEndpoint)
+      .post(`/api/v1/namespaces/${clusterName}/configmaps/`)
+      .reply(StatusCodes.Ok, {
+        kind: 'ConfigMap',
+        apiVersion: 'v1',
+        metadata: {
+          name: `${appName}-user-values`,
+          namespace: clusterName,
+        },
+      });
+
+    nock(window.config.mapiEndpoint)
+      .post(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${clusterName}/apps/`
+      )
+      .reply(StatusCodes.Ok, app);
+
+    render(
+      getComponent({
+        selectedAppCatalogEntry: appCatalogEntry,
+        catalogName: appCatalogEntry.spec.catalog.name,
+        versions: [
+          {
+            chartVersion: '0.9.0',
+            created: '2022-11-10T13:59:08Z',
+            includesVersion: '',
+            test: false,
+          },
+        ],
+        selectVersion: () => {},
+        appsPermissions: defaultAppsPermissions,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Install in cluster' }));
+
+    fireEvent.click(await screen.findByText(clusterName));
+
+    const input = screen.getByRole('textbox', { name: /app resource name/gi });
+    expect(input).toHaveValue(appName);
+    fireEvent.change(input, {
+      target: { value: app.metadata.name },
+    });
+
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'Install app',
+      })
+    );
+
+    expect(
+      await withMarkup(screen.findByText)(
+        `Your app ${appName} is being installed on ${clusterName}`
       )
     ).toBeInTheDocument();
   });

@@ -15,6 +15,7 @@ interface IInstallAppFormProps {
   version: string;
   availableVersions: IVersion[];
   secretsYAMLError: string;
+  isAppBundle?: boolean;
   onChangeName: (newName: string) => void;
   onChangeNamespace: (newNS: string) => void;
   onChangeVersion: (newVersion: string) => void;
@@ -39,6 +40,7 @@ const InstallAppForm: React.FC<
   namespace,
   valuesYAMLError,
   secretsYAMLError,
+  isAppBundle,
 }) => {
   const updateName = (newName: string) => {
     onChangeName?.(newName);
@@ -98,8 +100,12 @@ const InstallAppForm: React.FC<
   return (
     <Box direction='column' gap='small' height={{ min: 'fit-content' }}>
       <TextInput
-        help='What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
-        label='Application Name'
+        help={
+          isAppBundle
+            ? 'Must be unique within the management cluster. We recommend to use the name we provide.'
+            : 'What do you want to call this app? If you want to run multiple apps then this is how you will be able to tell them apart.'
+        }
+        label='App resource name'
         id='application-name'
         onChange={(e) => updateName(e.target.value)}
         error={nameError}
@@ -121,7 +127,7 @@ const InstallAppForm: React.FC<
         />
       </FormField>
 
-      {formAbilities.hasFixedNamespace ? (
+      {isAppBundle ? null : formAbilities.hasFixedNamespace ? (
         <TextInput
           help={`This app must be installed in the ${formAbilities.appNamespace} namespace`}
           key='fixed-namespace'
@@ -145,7 +151,7 @@ const InstallAppForm: React.FC<
       )}
 
       <FileInput
-        help='Apps can be configured using a yaml file with values. If you have one, you can upload it here already.'
+        help='Apps can be configured using a YAML file with values. If you have one, you can upload it here already.'
         label='User level config values YAML'
         id='user-level-config'
         onChange={updateValuesYAML}
