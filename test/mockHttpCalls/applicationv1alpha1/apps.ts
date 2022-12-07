@@ -1849,3 +1849,49 @@ export const randomClusterGCP1AppsList: applicationv1alpha1.IAppList = {
     },
   ],
 };
+
+export const randomCluster1AppBundle: applicationv1alpha1.IApp = {
+  apiVersion: 'application.giantswarm.io/v1alpha1',
+  kind: 'App',
+  metadata: {
+    creationTimestamp: '2022-12-07T12:00:04Z',
+    generation: 1,
+    labels: {
+      'app-operator.giantswarm.io/version': '0.0.0',
+      'app.kubernetes.io/name': 'security-pack',
+      'giantswarm.io/cluster': 'j5y9m',
+    },
+    name: 'j5y9m-security-pack',
+    namespace: 'j5y9m',
+    resourceVersion: '996766191',
+    uid: '94732d33-6272-45df-a2a5-dd6068d7ba15',
+  },
+  spec: {
+    catalog: 'giantswarm',
+    config: {
+      configMap: {
+        name: 'j5y9m-cluster-values',
+        namespace: 'j5y9m',
+      },
+    },
+    kubeConfig: {
+      context: {
+        name: 'j5y9m',
+      },
+      inCluster: true,
+      secret: {
+        name: 'j5y9m-kubeconfig',
+        namespace: 'j5y9m',
+      },
+    },
+    name: 'security-pack',
+    namespace: 'j5y9m',
+    userConfig: {
+      configMap: {
+        name: 'j5y9m-security-pack-user-values',
+        namespace: 'j5y9m',
+      },
+    },
+    version: '0.9.0',
+  },
+};
