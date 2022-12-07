@@ -14,6 +14,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
+import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
 import InputGroup from 'UI/Inputs/InputGroup';
 import Select from 'UI/Inputs/Select';
 import JSONSchemaForm from 'UI/JSONSchemaForm';
@@ -25,6 +26,12 @@ const Wrapper = styled.div`
   position: relative;
   margin: auto;
   text-align: center;
+`;
+
+const Styled = styled.div`
+  .codeblock--prompt-indicator {
+    display: none;
+  }
 `;
 
 type PrototypeProviders =
@@ -226,25 +233,37 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
             branch.
           </Text>
         ) : (
-          <JSONSchemaForm
-            schema={appSchema}
-            validator={validator}
-            formData={formData}
-            onSubmit={handleCreation}
-            onChange={handleFormDataChange}
-          >
-            <Box margin={{ top: 'medium' }}>
-              <Box direction='row' gap='small'>
-                <Button primary={true} type='submit' loading={isCreating}>
-                  Create cluster
-                </Button>
+          <>
+            <JSONSchemaForm
+              schema={appSchema}
+              validator={validator}
+              formData={formData}
+              onSubmit={handleCreation}
+              onChange={handleFormDataChange}
+            >
+              <Box margin={{ top: 'medium' }}>
+                <Box direction='row' gap='small'>
+                  <Button primary={true} type='submit' loading={isCreating}>
+                    Create cluster
+                  </Button>
 
-                {!isCreating && (
-                  <Button onClick={onCreationCancel}>Cancel</Button>
-                )}
+                  {!isCreating && (
+                    <Button onClick={onCreationCancel}>Cancel</Button>
+                  )}
+                </Box>
               </Box>
-            </Box>
-          </JSONSchemaForm>
+            </JSONSchemaForm>
+            {formData !== undefined && (
+              <Box margin={{ top: 'large' }} gap='small'>
+                <Text weight='bold'>Form data preview</Text>
+                <Styled>
+                  <CodeBlock>
+                    <Prompt>{JSON.stringify(formData, null, '\r  ')}</Prompt>
+                  </CodeBlock>
+                </Styled>
+              </Box>
+            )}
+          </>
         ))}
     </Box>
   );
