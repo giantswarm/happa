@@ -1,5 +1,5 @@
 import { IChangeEvent } from '@rjsf/core';
-import { getDefaultFormState, RJSFSchema, ValidatorType } from '@rjsf/utils';
+import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
@@ -10,13 +10,7 @@ import {
 } from 'MAPI/apps/AppList/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
@@ -176,24 +170,13 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   const appSchemaIsLoading =
     appSchema === undefined && appSchemaError === undefined;
 
-  const [formData, setFormData] = useState<RJSFSchema | undefined>(undefined);
+  const [formData, setFormData] = useState<RJSFSchema>({});
   const formDataKey = useRef<number | undefined>(undefined);
 
-  const resetFormData = useCallback(() => {
-    setFormData(
-      appSchema
-        ? getDefaultFormState<RJSFSchema, RJSFSchema>(
-            validator as ValidatorType<RJSFSchema>,
-            appSchema
-          )
-        : appSchema
-    );
+  const resetFormData = () => {
+    setFormData({});
     formDataKey.current = Date.now();
-  }, [appSchema]);
-
-  useEffect(() => {
-    resetFormData();
-  }, [selectedProvider, selectedBranch, resetFormData]);
+  };
 
   const handleSelectedProviderChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -201,6 +184,14 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     const newProvider = e.target.value as PrototypeProviders;
     setSelectedProvider(newProvider);
     setSelectedBranch(getDefaultRepoBranch(newProvider));
+    resetFormData();
+  };
+
+  const handleSelectedBranchChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSelectedBranch(e.target.value);
+    resetFormData();
   };
 
   const handleFormDataChange = ({
@@ -237,9 +228,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
           <InputGroup label='Branch'>
             <Select
               value={selectedBranch}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setSelectedBranch(e.target.value)
-              }
+              onChange={handleSelectedBranchChange}
               options={repoBranches?.map((entry) => entry.name) ?? []}
             />
           </InputGroup>
