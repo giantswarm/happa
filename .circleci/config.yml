@@ -186,6 +186,7 @@ workflows:
       - architect/run-tests-with-ats:
           name: execute chart tests
           app-test-suite_version: v0.2.9
+          app-test-suite_container_tag: v0.2.9
           filters:
             branches:
               ignore:
