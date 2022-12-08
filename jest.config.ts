@@ -16,6 +16,7 @@ const esModules = [
   'unified',
   'unist-util',
   'ip-regex',
+  'nanoid',
 ].join('|');
 
 const config: Config.InitialOptions = {
