@@ -4,6 +4,7 @@ import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import { spinner } from 'images';
+import yaml from 'js-yaml';
 import {
   fetchAppCatalogEntrySchema,
   fetchAppCatalogEntrySchemaKey,
@@ -14,8 +15,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
-import { CodeBlock, Prompt } from 'UI/Display/Documentation/CodeBlock';
+import { CodeBlock } from 'UI/Display/Documentation/CodeBlock';
+import Line from 'UI/Display/Documentation/Line';
 import InputGroup from 'UI/Inputs/InputGroup';
+import RadioInput from 'UI/Inputs/RadioInput';
 import Select from 'UI/Inputs/Select';
 import JSONSchemaForm from 'UI/JSONSchemaForm';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -26,12 +29,6 @@ const Wrapper = styled.div`
   position: relative;
   margin: auto;
   text-align: center;
-`;
-
-const Styled = styled.div`
-  .codeblock--prompt-indicator {
-    display: none;
-  }
 `;
 
 type PrototypeProviders =
@@ -108,6 +105,17 @@ function fetchAppRepoBranchesKey(provider: PrototypeProviders) {
 function getDefaultRepoBranch(provider: PrototypeProviders) {
   return provider === 'AWS' ? 'master' : 'main';
 }
+
+enum FormDataPreviewFormat {
+  Json,
+  Yaml,
+}
+
+const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+  return <Line prompt={false} text={children} />;
+};
+
+Prompt.displayName = 'Prompt';
 
 interface ICreateClusterAppFormProps {
   namespace: string;
@@ -214,6 +222,9 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     resetFormData();
   };
 
+  const [formDataPreviewFormat, setFormDataPreviewFormat] =
+    useState<FormDataPreviewFormat>(FormDataPreviewFormat.Json);
+
   return (
     <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
       <Box direction='row' gap='medium'>
@@ -268,13 +279,43 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
               </Box>
             </JSONSchemaForm>
             {formData !== undefined && (
-              <Box margin={{ top: 'large' }} gap='small'>
+              <Box margin={{ top: 'large' }}>
                 <Text weight='bold'>Form data preview</Text>
-                <Styled>
-                  <CodeBlock>
+                <Box direction='row' gap='medium' margin={{ top: 'small' }}>
+                  <RadioInput
+                    label='JSON'
+                    name='json'
+                    checked={
+                      formDataPreviewFormat === FormDataPreviewFormat.Json
+                    }
+                    onChange={() =>
+                      setFormDataPreviewFormat(FormDataPreviewFormat.Json)
+                    }
+                  />
+                  <RadioInput
+                    label='YAML'
+                    name='yaml'
+                    checked={
+                      formDataPreviewFormat === FormDataPreviewFormat.Yaml
+                    }
+                    onChange={() =>
+                      setFormDataPreviewFormat(FormDataPreviewFormat.Yaml)
+                    }
+                  />
+                </Box>
+                <CodeBlock>
+                  {formDataPreviewFormat === FormDataPreviewFormat.Json && (
                     <Prompt>{JSON.stringify(formData, null, '\r  ')}</Prompt>
-                  </CodeBlock>
-                </Styled>
+                  )}
+                  {formDataPreviewFormat === FormDataPreviewFormat.Yaml && (
+                    <Prompt>
+                      {yaml.dump(formData, {
+                        indent: 2,
+                        quotingType: '"',
+                      })}
+                    </Prompt>
+                  )}
+                </CodeBlock>
               </Box>
             )}
           </>
