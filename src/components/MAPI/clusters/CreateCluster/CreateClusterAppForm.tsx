@@ -4,6 +4,7 @@ import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
 import { spinner } from 'images';
+import yaml from 'js-yaml';
 import {
   fetchAppCatalogEntrySchema,
   fetchAppCatalogEntrySchemaKey,
@@ -14,7 +15,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
+import { CodeBlock } from 'UI/Display/Documentation/CodeBlock';
+import Line from 'UI/Display/Documentation/Line';
 import InputGroup from 'UI/Inputs/InputGroup';
+import RadioInput from 'UI/Inputs/RadioInput';
 import Select from 'UI/Inputs/Select';
 import JSONSchemaForm from 'UI/JSONSchemaForm';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -102,6 +106,17 @@ function getDefaultRepoBranch(provider: PrototypeProviders) {
   return provider === 'AWS' ? 'master' : 'main';
 }
 
+enum FormDataPreviewFormat {
+  Json,
+  Yaml,
+}
+
+const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+  return <Line prompt={false} text={children} />;
+};
+
+Prompt.displayName = 'Prompt';
+
 interface ICreateClusterAppFormProps {
   namespace: string;
   organizationID: string;
@@ -163,16 +178,38 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   const appSchemaIsLoading =
     appSchema === undefined && appSchemaError === undefined;
 
+  const [formData, setFormData] = useState<RJSFSchema>({});
+  const formDataKey = useRef<number | undefined>(undefined);
+
+  const resetFormData = () => {
+    setFormData({});
+    formDataKey.current = Date.now();
+  };
+
   const handleSelectedProviderChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const newProvider = e.target.value as PrototypeProviders;
     setSelectedProvider(newProvider);
     setSelectedBranch(getDefaultRepoBranch(newProvider));
+    resetFormData();
+  };
+
+  const handleSelectedBranchChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSelectedBranch(e.target.value);
+    resetFormData();
+  };
+
+  const handleFormDataChange = ({
+    formData: data,
+  }: IChangeEvent<RJSFSchema>) => {
+    setFormData(data);
   };
 
   const handleCreation = (
-    { formData }: IChangeEvent<RJSFSchema>,
+    _: IChangeEvent<RJSFSchema>,
     e: React.FormEvent<HTMLElement>
   ) => {
     e.preventDefault();
@@ -182,7 +219,11 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
 
     // eslint-disable-next-line no-console
     console.log(formData);
+    resetFormData();
   };
+
+  const [formDataPreviewFormat, setFormDataPreviewFormat] =
+    useState<FormDataPreviewFormat>(FormDataPreviewFormat.Json);
 
   return (
     <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
@@ -198,9 +239,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
           <InputGroup label='Branch'>
             <Select
               value={selectedBranch}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setSelectedBranch(e.target.value)
-              }
+              onChange={handleSelectedBranchChange}
               options={repoBranches?.map((entry) => entry.name) ?? []}
             />
           </InputGroup>
@@ -218,23 +257,68 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
             branch.
           </Text>
         ) : (
-          <JSONSchemaForm
-            schema={appSchema}
-            validator={validator}
-            onSubmit={handleCreation}
-          >
-            <Box margin={{ top: 'medium' }}>
-              <Box direction='row' gap='small'>
-                <Button primary={true} type='submit' loading={isCreating}>
-                  Create cluster
-                </Button>
+          <>
+            <JSONSchemaForm
+              schema={appSchema}
+              validator={validator}
+              formData={formData}
+              onSubmit={handleCreation}
+              onChange={handleFormDataChange}
+              key={formDataKey.current}
+            >
+              <Box margin={{ top: 'medium' }}>
+                <Box direction='row' gap='small'>
+                  <Button primary={true} type='submit' loading={isCreating}>
+                    Create cluster
+                  </Button>
 
-                {!isCreating && (
-                  <Button onClick={onCreationCancel}>Cancel</Button>
-                )}
+                  {!isCreating && (
+                    <Button onClick={onCreationCancel}>Cancel</Button>
+                  )}
+                </Box>
               </Box>
-            </Box>
-          </JSONSchemaForm>
+            </JSONSchemaForm>
+            {formData !== undefined && (
+              <Box margin={{ top: 'large' }}>
+                <Text weight='bold'>Form data preview</Text>
+                <Box direction='row' gap='medium' margin={{ top: 'small' }}>
+                  <RadioInput
+                    label='JSON'
+                    name='json'
+                    checked={
+                      formDataPreviewFormat === FormDataPreviewFormat.Json
+                    }
+                    onChange={() =>
+                      setFormDataPreviewFormat(FormDataPreviewFormat.Json)
+                    }
+                  />
+                  <RadioInput
+                    label='YAML'
+                    name='yaml'
+                    checked={
+                      formDataPreviewFormat === FormDataPreviewFormat.Yaml
+                    }
+                    onChange={() =>
+                      setFormDataPreviewFormat(FormDataPreviewFormat.Yaml)
+                    }
+                  />
+                </Box>
+                <CodeBlock>
+                  {formDataPreviewFormat === FormDataPreviewFormat.Json && (
+                    <Prompt>{JSON.stringify(formData, null, '\r  ')}</Prompt>
+                  )}
+                  {formDataPreviewFormat === FormDataPreviewFormat.Yaml && (
+                    <Prompt>
+                      {yaml.dump(formData, {
+                        indent: 2,
+                        quotingType: '"',
+                      })}
+                    </Prompt>
+                  )}
+                </CodeBlock>
+              </Box>
+            )}
+          </>
         ))}
     </Box>
   );
