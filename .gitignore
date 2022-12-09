@@ -34,3 +34,6 @@ tsconfig.tsbuildinfo
 
 # Storybook
 /storybook-static
+
+# app-test-suite
+/ats/test_results*.xml

@@ -1,0 +1,100 @@
+name: happa
+namespace: giantswarm
+image:
+  repository: giantswarm/happa
+
+userID: 101
+groupID: 101
+
+port: 8000
+protocol: TCP
+
+api:
+  address: ""
+
+aws:
+  availabilityZones: []
+  instance:
+    capabilities: {}
+    allowed: []
+    default: ""
+
+azure:
+  availabilityZones: []
+  vm:
+    vmSize:
+      capabilities: {}
+      allowed: []
+      default: ""
+
+capa:
+  availabilityZones: []
+  machinetypes:
+    capabilities: {}
+    allowed: []
+    default: ""
+
+gcp:
+  availabilityZones: []
+  machinetypes:
+    capabilities: {}
+    allowed: []
+    default: ""
+
+ingress:
+  tls:
+    crtPemB64: ""
+    keyPemB64: ""
+
+guestCluster:
+  base: ""
+
+kubernetes:
+  auth:
+    controlPlaneAdminTargetGroup: ""
+  versions: {}
+
+happa:
+  address: ""
+  host: "example.com"
+  letsencrypt: false
+  featureFlags:
+    mapiAuth: false
+    mapiClusters: false
+  defaultRequestTimeoutSeconds: 10
+
+happaapi:
+  address: ""
+  host: "example.com"
+  letsencrypt: false
+
+athena:
+  address: ""
+
+managementCluster:
+  name: ""
+  customer: ""
+  pipeline: ""
+  provider:
+    kind: ""
+    region: ""
+
+oidc:
+  issuerAddress: ""
+
+passage:
+  address: ""
+
+registry:
+  domain: quay.io
+  pullSecret:
+    dockerConfigJSON: "e30="
+
+security:
+  restrictAccess:
+    api: false
+  subnet:
+    vpn: ""
+    customer:
+      public: ""
+      private: ""
