@@ -4,6 +4,7 @@ import React from 'react';
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
 import CheckboxWidget from './CheckboxWidget';
+import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
 import ToggleWidget from './ToggleWidget';
@@ -19,6 +20,7 @@ const customWidgets = {
 const customTemplates = {
   ArrayFieldTemplate,
   BaseInputTemplate,
+  FieldTemplate,
   ObjectFieldTemplate,
 };
 

@@ -3,6 +3,8 @@ import React from 'react';
 import TextInput from 'UI/Inputs/TextInput';
 
 const BaseInputTemplate: React.FC<WidgetProps> = ({
+  id,
+  label,
   schema,
   options,
   value,
@@ -18,8 +20,12 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
 
   const inputProps = getInputProps(schema, type as string, options);
 
+  const isArrayItem = /(-\d+)$/.test(label);
+
   return (
     <TextInput
+      id={id}
+      label={isArrayItem ? undefined : label}
       value={value}
       placeholder={placeholder}
       disabled={disabled}
