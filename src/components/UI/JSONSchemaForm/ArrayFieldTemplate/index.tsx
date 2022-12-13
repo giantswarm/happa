@@ -1,7 +1,7 @@
 import { ArrayFieldTemplateProps } from '@rjsf/utils';
 import { Accordion, AccordionPanel, Box, Text } from 'grommet';
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Button from 'UI/Controls/Button';
 
 const StyledButton = styled(Button)`
@@ -12,6 +12,19 @@ const Icon = styled(Text)<{ isActive?: boolean }>`
   transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
   transform-origin: center center;
   transition: 0.15s ease-out;
+`;
+
+const ArrayItemsWrapper = styled(Box)<{ itemsAreObjects?: boolean }>`
+  width: 100%;
+  margin-bottom: -10px;
+
+  ${({ itemsAreObjects }) =>
+    !itemsAreObjects &&
+    css`
+      label {
+        display: none;
+      }
+    `}
 `;
 
 const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
@@ -61,9 +74,9 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
           <Box gap={itemsAreObjects ? 'large' : 'small'}>
             {items.map((element) => (
               <Box key={element.key} direction='row' gap='small'>
-                <Box fill={true} margin={{ bottom: '-10px' }}>
+                <ArrayItemsWrapper itemsAreObjects={itemsAreObjects}>
                   {element.children}
-                </Box>
+                </ArrayItemsWrapper>
                 <StyledButton
                   icon={<i className='fa fa-delete' />}
                   onClick={element.onDropIndexClick(element.index)}

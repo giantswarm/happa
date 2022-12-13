@@ -28,13 +28,11 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
 
   const inputProps = getInputProps(schema, type as string, options);
 
-  const isArrayItem = /(-\d+)$/.test(label);
-
   return inputProps.type === 'number' ? (
     <Box width={{ max: 'small' }}>
       <NumberPicker
         id={id}
-        label={isArrayItem ? undefined : label}
+        label={label}
         value={value}
         placeholder={placeholder}
         disabled={disabled}
@@ -48,7 +46,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   ) : (
     <TextInput
       id={id}
-      label={isArrayItem ? undefined : label}
+      label={label}
       value={value}
       placeholder={placeholder}
       disabled={disabled}
