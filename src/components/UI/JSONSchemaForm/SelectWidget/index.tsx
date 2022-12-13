@@ -21,6 +21,7 @@ const SelectWidget: React.FC<WidgetProps> = ({
       label={label}
       value={selectedOption}
       onChange={(e) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         handleChange(e.option);
       }}
       options={options.enumOptions || []}
