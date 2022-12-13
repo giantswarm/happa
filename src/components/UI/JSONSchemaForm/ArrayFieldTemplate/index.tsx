@@ -1,12 +1,17 @@
 import { ArrayFieldTemplateProps } from '@rjsf/utils';
-import { Box, BoxProps, Text } from 'grommet';
-import React from 'react';
+import { Accordion, AccordionPanel, Box, Text } from 'grommet';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
-import InputGroup from 'UI/Inputs/InputGroup';
 
 const StyledButton = styled(Button)`
   height: 40px;
+`;
+
+const Icon = styled(Text)<{ isActive?: boolean }>`
+  transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
+  transform-origin: center center;
+  transition: 0.15s ease-out;
 `;
 
 const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
@@ -16,61 +21,75 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
   schema,
   onAddClick,
 }) => {
+  const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
+
   const itemsAreObjects =
     schema.items &&
     typeof schema.items !== 'boolean' &&
     !Array.isArray(schema.items) &&
     schema.items.type === 'object';
 
-  const containerProps: BoxProps = itemsAreObjects
-    ? {
-        border: 'all',
-        pad: { top: 'small', bottom: 'medium', horizontal: 'medium' },
-        round: 'xsmall',
-      }
-    : {};
-
   return (
-    <InputGroup
-      label={<Text size='medium'>{title}</Text>}
-      margin={{ bottom: 'medium' }}
+    <Accordion
+      activeIndex={activeIndexes}
+      onActive={setActiveIndexes}
+      animate={false}
     >
-      <Box margin={{ bottom: 'medium' }} gap='medium'>
-        {items.length === 0 && (
-          <Box
-            pad='medium'
-            round='xsmall'
-            border='all'
-            align='center'
-            justify='center'
-          >
-            No items added
-          </Box>
-        )}
-        {items.map((element) => (
-          <Box
-            key={element.key}
-            direction='row'
-            gap='medium'
-            {...containerProps}
-          >
-            <Box fill={true} margin={{ bottom: '-10px' }}>
-              {element.children}
-            </Box>
-            <StyledButton
-              icon={<i className='fa fa-delete' />}
-              onClick={element.onDropIndexClick(element.index)}
-              margin={{ top: itemsAreObjects ? 'small' : 'none' }}
+      <AccordionPanel
+        header={
+          <Box direction='row' align='center' height='40px'>
+            <Icon
+              className='fa fa-chevron-down'
+              isActive={activeIndexes.includes(0)}
+              role='presentation'
+              aria-hidden='true'
+              size='28px'
+              margin={{ right: 'xsmall' }}
             />
+            <Text weight='bold'>{title}</Text>
           </Box>
-        ))}
-      </Box>
-      {canAdd && (
-        <Button icon={<i className='fa fa-add-circle' />} onClick={onAddClick}>
-          Add
-        </Button>
-      )}
-    </InputGroup>
+        }
+      >
+        <Box
+          margin={{
+            bottom: 'medium',
+          }}
+          border='all'
+          pad='medium'
+          round='xsmall'
+        >
+          <Box gap={itemsAreObjects ? 'large' : 'small'}>
+            {items.map((element) => (
+              <Box key={element.key} direction='row' gap='small'>
+                <Box fill={true} margin={{ bottom: '-10px' }}>
+                  {element.children}
+                </Box>
+                <StyledButton
+                  icon={<i className='fa fa-delete' />}
+                  onClick={element.onDropIndexClick(element.index)}
+                />
+              </Box>
+            ))}
+          </Box>
+          {canAdd && (
+            <Button
+              icon={<i className='fa fa-add-circle' />}
+              onClick={onAddClick}
+              margin={{
+                top:
+                  items.length > 0
+                    ? itemsAreObjects
+                      ? 'large'
+                      : 'medium'
+                    : 'none',
+              }}
+            >
+              Add {title} item
+            </Button>
+          )}
+        </Box>
+      </AccordionPanel>
+    </Accordion>
   );
 };
 

@@ -2,7 +2,6 @@ import { ObjectFieldTemplateProps } from '@rjsf/utils';
 import { Accordion, AccordionPanel, Box, Text } from 'grommet';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import InputGroup from 'UI/Inputs/InputGroup';
 
 const Icon = styled(Text)<{ isActive?: boolean }>`
   transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
@@ -21,11 +20,16 @@ const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
 
   if (isRootItem || isArrayItem) {
     return (
-      <InputGroup label={title === '' ? undefined : title}>
+      <Box>
+        {title !== '' && (
+          <Text weight='bold' margin={{ bottom: 'small' }}>
+            {title}
+          </Text>
+        )}
         {properties.map((element) => (
           <div key={element.name}>{element.content}</div>
         ))}
-      </InputGroup>
+      </Box>
     );
   }
 
@@ -55,7 +59,7 @@ const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
             bottom: 'medium',
           }}
           border='all'
-          pad={{ top: 'small', bottom: 'medium', horizontal: 'medium' }}
+          pad={{ vertical: 'small', horizontal: 'medium' }}
           round='xsmall'
         >
           {properties.map((element) => (
