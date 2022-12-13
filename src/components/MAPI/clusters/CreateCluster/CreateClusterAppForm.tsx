@@ -9,6 +9,7 @@ import {
   fetchAppCatalogEntrySchema,
   fetchAppCatalogEntrySchemaKey,
 } from 'MAPI/apps/AppList/utils';
+import { generateUID } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -24,6 +25,8 @@ import JSONSchemaForm from 'UI/JSONSchemaForm';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+
+import ClusterNameWidget from './ClusterNameWidget';
 
 const Wrapper = styled.div`
   position: relative;
@@ -72,6 +75,10 @@ function getAppCatalogEntrySchemaURL(
 
   return `https://raw.githubusercontent.com/giantswarm/${appRepoName}/${branchName}/helm/${appRepoName}/values.schema.json`;
 }
+
+const getDefaultFormData = () => ({
+  clusterName: generateUID(5),
+});
 
 interface IRepoBranchEntry {
   name: string;
@@ -178,11 +185,11 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   const appSchemaIsLoading =
     appSchema === undefined && appSchemaError === undefined;
 
-  const [formData, setFormData] = useState<RJSFSchema>({});
+  const [formData, setFormData] = useState<RJSFSchema>(getDefaultFormData());
   const formDataKey = useRef<number | undefined>(undefined);
 
   const resetFormData = () => {
-    setFormData({});
+    setFormData(getDefaultFormData());
     formDataKey.current = Date.now();
   };
 
@@ -225,6 +232,13 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   const [formDataPreviewFormat, setFormDataPreviewFormat] =
     useState<FormDataPreviewFormat>(FormDataPreviewFormat.Json);
 
+  const uiSchema = {
+    'ui:order': ['clusterName', 'clusterDescription', '*'],
+    clusterName: {
+      'ui:widget': ClusterNameWidget,
+    },
+  };
+
   return (
     <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
       <Box direction='row' gap='medium'>
@@ -260,6 +274,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
           <>
             <JSONSchemaForm
               schema={appSchema}
+              uiSchema={uiSchema}
               validator={validator}
               formData={formData}
               onSubmit={handleCreation}
