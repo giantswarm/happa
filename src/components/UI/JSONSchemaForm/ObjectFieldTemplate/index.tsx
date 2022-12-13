@@ -10,13 +10,14 @@ const Icon = styled(Text)<{ isActive?: boolean }>`
 `;
 
 const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
+  idSchema,
   title,
   properties,
 }) => {
   const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
 
   const isRootItem = title === '';
-  const isArrayItem = /(-\d+)$/.test(title);
+  const isArrayItem = /(_\d+)$/.test(idSchema.$id);
 
   if (isRootItem || isArrayItem) {
     return (
