@@ -10,9 +10,10 @@ metadata:
   labels:
     app: happa
   annotations:
-    {{- if .Values.happa.letsencrypt }}
-    kubernetes.io/tls-acme: "true"
+    {{- if .Values.ingress.tls.letsencrypt }}
     cert-manager.io/cluster-issuer: "letsencrypt-giantswarm"
+    {{- else if ne .Values.ingress.tls.clusterIssuer "" }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.clusterIssuer }}
     {{- end }}
     {{- if .Values.security.restrictAccess.api }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ template "whitelistCIDR" . }}

@@ -43,6 +43,8 @@ gcp:
 
 ingress:
   tls:
+    letsencrypt: false
+    clusterIssuer: ""
     crtPemB64: ""
     keyPemB64: ""
 
@@ -57,7 +59,6 @@ kubernetes:
 happa:
   address: ""
   host: ""
-  letsencrypt: false
   featureFlags:
     mapiAuth: false
     mapiClusters: false
@@ -66,7 +67,6 @@ happa:
 happaapi:
   address: ""
   host: ""
-  letsencrypt: false
 
 athena:
   address: ""
