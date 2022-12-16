@@ -121,7 +121,7 @@ export async function fetchClusterListForOrganizations(
         organizationEntry
       );
       const cachedClusterList: capiv1beta1.IClusterList | undefined =
-        cache.get(clusterListKey);
+        cache.get(clusterListKey)?.data;
 
       if (cachedClusterList) {
         return cachedClusterList.items;
@@ -135,7 +135,10 @@ export async function fetchClusterListForOrganizations(
           organizationEntry
         );
 
-        cache.set(clusterListKey, clusters);
+        cache.set(clusterListKey, {
+          ...cache.get(clusterListKey),
+          data: clusters,
+        });
 
         return clusters.items;
       } catch (err) {

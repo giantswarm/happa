@@ -938,7 +938,7 @@ export async function hasNewerVersion(
 
   const cachedAppCatalogEntryList:
     | applicationv1alpha1.IAppCatalogEntryList
-    | undefined = cache.get(appCatalogEntryListKey);
+    | undefined = cache.get(appCatalogEntryListKey)?.data;
 
   if (cachedAppCatalogEntryList) {
     appCatalogEntryListItems.push(...cachedAppCatalogEntryList.items);
@@ -952,7 +952,10 @@ export async function hasNewerVersion(
         );
 
       appCatalogEntryListItems.push(...appCatalogEntryList.items);
-      cache.set(appCatalogEntryListKey, appCatalogEntryList);
+      cache.set(appCatalogEntryListKey, {
+        ...cache.get(appCatalogEntryListKey),
+        data: appCatalogEntryList,
+      });
     } catch (err) {
       if (
         !metav1.isStatusError(
@@ -1093,43 +1096,47 @@ export async function fetchCatalogListForOrganizations(
     ),
   ];
 
-  const requests = namespaces.map(async (namespace) => {
-    catalogListGetOptions.namespace = namespace;
+  const requests: Promise<applicationv1alpha1.ICatalog[]>[] = namespaces.map(
+    async (namespace) => {
+      catalogListGetOptions.namespace = namespace;
 
-    const catalogListKey = applicationv1alpha1.getCatalogListKey(
-      catalogListGetOptions
-    );
-
-    const cachedCatalogList: applicationv1alpha1.ICatalogList =
-      cache.get(catalogListKey);
-
-    if (cachedCatalogList) {
-      return cachedCatalogList.items;
-    }
-
-    try {
-      const catalogs = await applicationv1alpha1.getCatalogList(
-        clientFactory(),
-        auth,
+      const catalogListKey = applicationv1alpha1.getCatalogListKey(
         catalogListGetOptions
       );
 
-      cache.set(catalogListKey, catalogs);
+      const cachedCatalogList = cache.get(catalogListKey)?.data;
 
-      return catalogs.items;
-    } catch (err) {
-      if (
-        !metav1.isStatusError(
-          (err as GenericResponse).data,
-          metav1.K8sStatusErrorReasons.Forbidden
-        )
-      ) {
-        return Promise.reject(err);
+      if (cachedCatalogList) {
+        return cachedCatalogList.items;
       }
 
-      return [];
+      try {
+        const catalogs = await applicationv1alpha1.getCatalogList(
+          clientFactory(),
+          auth,
+          catalogListGetOptions
+        );
+
+        cache.set(catalogListKey, {
+          ...cache.get(catalogListKey),
+          data: catalogs,
+        });
+
+        return catalogs.items;
+      } catch (err) {
+        if (
+          !metav1.isStatusError(
+            (err as GenericResponse).data,
+            metav1.K8sStatusErrorReasons.Forbidden
+          )
+        ) {
+          return Promise.reject(err);
+        }
+
+        return [];
+      }
     }
-  });
+  );
 
   const responses = await Promise.all(requests);
 
@@ -1206,8 +1213,9 @@ export async function fetchAppCatalogEntryListForOrganizations(
         appCatalogEntryListGetOptions
       );
 
-    const cachedAppCatalogEntryList: applicationv1alpha1.IAppCatalogEntryList =
-      cache.get(appCatalogEntryListKey);
+    const cachedAppCatalogEntryList:
+      | applicationv1alpha1.IAppCatalogEntryList
+      | undefined = cache.get(appCatalogEntryListKey)?.data;
 
     if (cachedAppCatalogEntryList) {
       return cachedAppCatalogEntryList.items;
@@ -1221,7 +1229,10 @@ export async function fetchAppCatalogEntryListForOrganizations(
           appCatalogEntryListGetOptions
         );
 
-      cache.set(appCatalogEntryListKey, appCatalogEntries);
+      cache.set(appCatalogEntryListKey, {
+        ...cache.get(appCatalogEntryListKey),
+        data: appCatalogEntries,
+      });
 
       return appCatalogEntries.items;
     } catch (err) {
