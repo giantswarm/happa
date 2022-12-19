@@ -4,21 +4,21 @@ import React from 'react';
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
 import CheckboxWidget from './CheckboxWidget';
+import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
 import ToggleWidget from './ToggleWidget';
-import UpDownWidget from './UpDownWidget';
 
 const customFields = {};
 const customWidgets = {
   checkbox: CheckboxWidget,
   toggle: ToggleWidget,
-  updown: UpDownWidget,
   select: SelectWidget,
 };
 const customTemplates = {
   ArrayFieldTemplate,
   BaseInputTemplate,
+  FieldTemplate,
   ObjectFieldTemplate,
 };
 
