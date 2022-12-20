@@ -2,12 +2,27 @@ import { WidgetProps } from '@rjsf/utils';
 import React from 'react';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 
-const ToggleWidget: React.FC<WidgetProps> = ({ label, onChange }) => {
+const ToggleWidget: React.FC<WidgetProps> = ({
+  id,
+  label,
+  schema,
+  onChange,
+}) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.checked);
   };
 
-  return <CheckBoxInput toggle={true} label={label} onChange={handleChange} />;
+  const { description } = schema;
+
+  return (
+    <CheckBoxInput
+      id={id}
+      help={description}
+      toggle={true}
+      fieldLabel={label}
+      onChange={handleChange}
+    />
+  );
 };
 
 export default ToggleWidget;

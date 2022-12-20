@@ -28,32 +28,46 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
 
   const inputProps = getInputProps(schema, type as string, options);
 
-  return inputProps.type === 'number' ? (
-    <Box width={{ max: 'small' }}>
-      <NumberPicker
-        id={id}
-        label={label}
-        value={value}
-        placeholder={placeholder}
-        disabled={disabled}
-        readOnly={readonly}
-        min={inputProps.min}
-        max={inputProps.max}
-        step={inputProps.step}
-        onChange={handleNumberChange}
-      />
+  const { description } = schema;
+
+  const isArrayItem = /(_\d+)$/.test(id);
+  const simplifiedView = isArrayItem && !description;
+
+  const displayLabel = simplifiedView ? '' : label;
+
+  return (
+    <Box
+      margin={{ top: simplifiedView ? 'small' : 'none' }}
+      width={{ max: inputProps.type === 'number' ? 'small' : 'auto' }}
+    >
+      {inputProps.type === 'number' ? (
+        <NumberPicker
+          id={id}
+          label={displayLabel}
+          help={description}
+          value={value}
+          placeholder={placeholder}
+          disabled={disabled}
+          readOnly={readonly}
+          min={inputProps.min}
+          max={inputProps.max}
+          step={inputProps.step}
+          onChange={handleNumberChange}
+        />
+      ) : (
+        <TextInput
+          id={id}
+          label={displayLabel}
+          help={description}
+          value={value}
+          placeholder={placeholder}
+          disabled={disabled}
+          readOnly={readonly}
+          onChange={handleChange}
+          {...inputProps}
+        />
+      )}
     </Box>
-  ) : (
-    <TextInput
-      id={id}
-      label={label}
-      value={value}
-      placeholder={placeholder}
-      disabled={disabled}
-      readOnly={readonly}
-      onChange={handleChange}
-      {...inputProps}
-    />
   );
 };
 

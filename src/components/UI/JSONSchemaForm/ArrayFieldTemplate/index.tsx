@@ -1,7 +1,7 @@
 import { ArrayFieldTemplateProps } from '@rjsf/utils';
 import { Accordion, AccordionPanel, Box, Text } from 'grommet';
 import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 
 const StyledButton = styled(Button)`
@@ -12,19 +12,9 @@ const Icon = styled(Text)<{ isActive?: boolean }>`
   transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
   transform-origin: center center;
   transition: 0.15s ease-out;
-`;
-
-const ArrayItemsWrapper = styled(Box)<{ itemsAreObjects?: boolean }>`
-  width: 100%;
-  margin-bottom: -10px;
-
-  ${({ itemsAreObjects }) =>
-    !itemsAreObjects &&
-    css`
-      label {
-        display: none;
-      }
-    `}
+  font-size: 28px;
+  line-height: 20px;
+  margin-left: -6px;
 `;
 
 const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
@@ -35,6 +25,8 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
   onAddClick,
 }) => {
   const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
+
+  const { description } = schema;
 
   const itemsAreObjects =
     schema.items &&
@@ -50,36 +42,43 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
     >
       <AccordionPanel
         header={
-          <Box direction='row' align='center' height='40px'>
-            <Icon
-              className='fa fa-chevron-down'
-              isActive={activeIndexes.includes(0)}
-              role='presentation'
-              aria-hidden='true'
-              size='28px'
-              margin={{ right: 'xsmall' }}
-            />
-            <Text weight='bold'>{title}</Text>
+          <Box>
+            <Box direction='row' align='center' margin={{ vertical: 'small' }}>
+              <Icon
+                className='fa fa-chevron-down'
+                isActive={activeIndexes.includes(0)}
+                role='presentation'
+                aria-hidden='true'
+              />
+              <Text weight='bold'>{title}</Text>
+            </Box>
+            {description && (
+              <Text size='small' color='text-weak' margin={{ bottom: 'small' }}>
+                {description}
+              </Text>
+            )}
           </Box>
         }
       >
         <Box
           margin={{
-            bottom: 'medium',
+            bottom: 'small',
           }}
           border='all'
-          pad='medium'
+          pad={{ top: 'small', bottom: 'medium', horizontal: 'medium' }}
           round='xsmall'
         >
-          <Box gap={itemsAreObjects ? 'large' : 'small'}>
+          <Box
+            gap={itemsAreObjects ? 'large' : 'none'}
+            border={itemsAreObjects ? 'between' : false}
+          >
             {items.map((element) => (
               <Box key={element.key} direction='row' gap='small'>
-                <ArrayItemsWrapper itemsAreObjects={itemsAreObjects}>
-                  {element.children}
-                </ArrayItemsWrapper>
+                <Box fill>{element.children}</Box>
                 <StyledButton
                   icon={<i className='fa fa-delete' />}
                   onClick={element.onDropIndexClick(element.index)}
+                  margin={{ top: 'small' }}
                 />
               </Box>
             ))}
@@ -89,12 +88,7 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
               icon={<i className='fa fa-add-circle' />}
               onClick={onAddClick}
               margin={{
-                top:
-                  items.length > 0
-                    ? itemsAreObjects
-                      ? 'large'
-                      : 'medium'
-                    : 'none',
+                top: items.length > 0 ? 'medium' : 'small',
               }}
             >
               Add {title} item
