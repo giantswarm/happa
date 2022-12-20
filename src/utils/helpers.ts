@@ -1,3 +1,4 @@
+import { RJSFSchema } from '@rjsf/utils';
 import compareAsc from 'date-fns/fp/compareAsc';
 import format from 'date-fns/fp/format';
 import formatDistance from 'date-fns/fp/formatDistance';
@@ -476,4 +477,45 @@ export function getHumanReadableMemory(size: number, minDecimals: number = 0) {
 
 export function isIPAddress(s: string): boolean {
   return ipRegex().test(s);
+}
+
+/**
+ * Determines whether a given string is a valid URL of https/http protocol
+ * @param str
+ */
+export function isValidURL(str: string): boolean {
+  try {
+    const url = new URL(str);
+
+    return url.protocol === 'https:' || url.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Traverses a JSON schema object recursively via the schema's "properties" field
+ * @param obj
+ * @param processFn
+ * @returns obj
+ */
+export function traverseJSONSchemaObject(
+  obj: RJSFSchema,
+  processFn: (obj: RJSFSchema) => void
+): Record<string, unknown> {
+  if (
+    obj.type === 'object' &&
+    obj.properties &&
+    typeof obj.properties === 'object'
+  ) {
+    for (const value of Object.values(
+      obj.properties as Record<string, unknown>
+    )) {
+      traverseJSONSchemaObject(value as Record<string, unknown>, processFn);
+    }
+  } else {
+    processFn(obj);
+  }
+
+  return obj;
 }
