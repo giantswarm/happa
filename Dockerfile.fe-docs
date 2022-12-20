@@ -1,4 +1,4 @@
-FROM quay.io/giantswarm/nginx-unprivileged:1.22-alpine
+FROM quay.io/giantswarm/nginx-unprivileged:1.23-alpine
 
 USER 0
 
