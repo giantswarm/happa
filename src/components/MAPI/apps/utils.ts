@@ -1410,6 +1410,10 @@ export async function resolveExternalSchemaRef(
     const patchedDefs: Record<string, RJSFSchema> = {};
 
     for (const response of responses) {
+      if (response.status === 'rejected') {
+        throw response.reason;
+      }
+
       if (response.status === 'fulfilled') {
         const processRefs = (obj: RJSFSchema) => {
           const ref: string | undefined = obj.$ref;
