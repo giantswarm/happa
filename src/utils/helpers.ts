@@ -513,6 +513,8 @@ export function traverseJSONSchemaObject(
     )) {
       traverseJSONSchemaObject(value as Record<string, unknown>, processFn);
     }
+  } else if (obj.type === 'array' && typeof obj.items === 'object') {
+    traverseJSONSchemaObject(obj.items, processFn);
   } else {
     processFn(obj);
   }
