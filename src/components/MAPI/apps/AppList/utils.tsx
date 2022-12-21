@@ -326,10 +326,7 @@ export async function resolveExternalSchemaRef(
       return obj;
     };
 
-    const patchedSchema = traverseJSONSchemaObject(
-      schema as Record<string, unknown>,
-      processURLs
-    );
+    const patchedSchema = traverseJSONSchemaObject(schema, processURLs);
 
     const requests = Array.from(urls).map(async (url: string) => {
       client.setRequestConfig({
@@ -349,8 +346,27 @@ export async function resolveExternalSchemaRef(
 
     for (const response of responses) {
       if (response.status === 'fulfilled') {
-        patchedDefs[hashURLToJSONRef(response.value.url)] =
-          response.value.schemaData;
+        // resolve relative references within external schema
+        const processRefs = (obj: RJSFSchema) => {
+          const ref: string | undefined = obj.$ref;
+          if (ref && ref.startsWith('#/')) {
+            // update external $ref to point to definition in schema instead
+            obj.$ref = ref.replace('#/', `#/$defs/${hashURLToJSONRef(ref)}/`);
+          }
+
+          return obj;
+        };
+
+        const patchedDef = traverseJSONSchemaObject(
+          response.value.schemaData,
+          processRefs
+        );
+
+        // delete external schema title to avoid overwriting parent schema's name
+        // for the field
+        delete patchedDef.title;
+
+        patchedDefs[hashURLToJSONRef(response.value.url)] = patchedDef;
       }
     }
 
