@@ -1429,10 +1429,6 @@ export async function resolveExternalSchemaRef(
           processRefs
         );
 
-        // delete external schema title to avoid overwriting parent schema's name
-        // for the field
-        delete patchedDef.title;
-
         // update $id so relative $refs within the subschema are handled correctly
         patchedDef.$id = `/$defs/${hashURLToJSONRef(response.value.url)}`;
 

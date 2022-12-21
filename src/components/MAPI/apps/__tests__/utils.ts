@@ -298,14 +298,14 @@ describe('utils', () => {
           },
         },
         required: ['name'],
-        title: 'Some property for testing puroses',
+        title: 'Some property for testing purposes',
         type: 'object',
       };
 
       const externalSchema2 = {
         $id: 'https://schema.giantswarm.io/anotherProperty/v0.0.1',
         $schema: 'https://json-schema.org/draft/2020-12/schema',
-        title: 'Another property for testing puroses',
+        title: 'Another property for testing purposes',
         type: 'string',
       };
 
@@ -333,11 +333,13 @@ describe('utils', () => {
               },
             },
             required: ['name'],
+            title: 'Some property for testing purposes',
             type: 'object',
           },
           'https:schema.giantswarm.ioanotherPropertyv0.0.1': {
             $id: '/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
             $schema: 'https://json-schema.org/draft/2020-12/schema',
+            title: 'Another property for testing purposes',
             type: 'string',
           },
         },
@@ -371,7 +373,7 @@ describe('utils', () => {
           },
         },
         required: ['name'],
-        title: 'Some property for testing puroses',
+        title: 'Some property for testing purposes',
         type: 'object',
       };
 
@@ -395,6 +397,7 @@ describe('utils', () => {
               },
             },
             required: ['name'],
+            title: 'Some property for testing purposes',
             type: 'object',
           },
         },
@@ -432,7 +435,7 @@ describe('utils', () => {
           },
         },
         required: ['name'],
-        title: 'Some property for testing puroses',
+        title: 'Some property for testing purposes',
         type: 'object',
       };
 
@@ -461,6 +464,7 @@ describe('utils', () => {
               },
             },
             required: ['name'],
+            title: 'Some property for testing purposes',
             type: 'object',
           },
         },
