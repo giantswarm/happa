@@ -38,7 +38,7 @@ const FormWrapper = styled(Box).attrs({
 const FormGroup = styled(Box)`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: start;
 
   ${mq(CSSBreakpoints.Small)} {
     flex-direction: column;
@@ -47,9 +47,14 @@ const FormGroup = styled(Box)`
 `;
 
 const Label = styled.label`
+  line-height: 36px;
   white-space: nowrap;
   font-weight: normal;
   margin: 0;
+
+  ${mq(CSSBreakpoints.Small)} {
+    line-height: normal;
+  }
 `;
 
 const InputWrapper = styled(Box)`
@@ -79,7 +84,7 @@ const StyledTextInput = styled(TextInput)<StyledTextInputProps>`
   }
 `;
 
-const GROUP_NAME_PREFIX = 'customer:';
+const GROUP_NAME_PREFIX_EXAMPLE = 'customer:';
 function formatSubjectName(value: string, prefix: string) {
   if (value.startsWith(prefix)) {
     return value;
@@ -107,7 +112,7 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
 }) => {
   const [userNameValue, setUserNameValue] = useState(userName);
   const [groupNameValue, setGroupNameValue] = useState(
-    formatSubjectName(groupName, GROUP_NAME_PREFIX)
+    formatSubjectName(groupName, GROUP_NAME_PREFIX_EXAMPLE)
   );
   const [serviceAccountNameValue, setServiceAccountNameValue] = useState(
     formatSubjectName(serviceAccountName, Constants.SERVICE_ACCOUNT_PREFIX)
@@ -129,7 +134,7 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
   }, [subjectType]);
 
   const handleSubjectTypeChange = (type: SubjectTypes) => () => {
-    setGroupNameValue(formatSubjectName(groupName, GROUP_NAME_PREFIX));
+    setGroupNameValue(groupName);
     setUserNameValue(userName);
     setServiceAccountNameValue(
       formatSubjectName(serviceAccountName, Constants.SERVICE_ACCOUNT_PREFIX)
@@ -150,7 +155,7 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
   };
 
   const handleGroupNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGroupNameValue(formatSubjectName(e.target.value, GROUP_NAME_PREFIX));
+    setGroupNameValue(e.target.value);
   };
 
   const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -220,24 +225,21 @@ const SubjectForm: React.FC<ISubjectFormProps> = ({
                   ref={groupNameInputRef}
                   id='groupName'
                   margin='none'
-                  dark={groupNameValue === GROUP_NAME_PREFIX}
                   value={groupNameValue}
                   onChange={handleGroupNameChange}
                   spellCheck={false}
                 />
               </InputWrapper>
-              <Button
-                type='submit'
-                disabled={groupNameValue === GROUP_NAME_PREFIX}
-              >
+              <Button type='submit' disabled={groupNameValue === ''}>
                 Show permissions
               </Button>
             </FormGroup>
             <Text size='small'>
               The group name refers to a group in your identity provider. Here
               it must be entered exactly as it is used in RoleBinding and
-              ClusterRoleBinding resources, so it must be prefixed with{' '}
-              <code>customer:</code>
+              ClusterRoleBinding resources. This means that it usually starts
+              with a Dex connector identifier, followed by a colon. Example:{' '}
+              <code>customer:MyGroup</code>
             </Text>
           </Form>
         </FormWrapper>
