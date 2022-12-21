@@ -1,5 +1,3 @@
-import { RJSFSchema } from '@rjsf/utils';
-import { merge } from 'lodash';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -10,11 +8,7 @@ import React from 'react';
 import AppsList from 'UI/Display/Apps/AppList/AppsListPage';
 import CatalogLabel from 'UI/Display/Apps/AppList/CatalogLabel';
 import { IFacetOption } from 'UI/Inputs/Facets';
-import {
-  compareDates,
-  isValidURL,
-  traverseJSONSchemaObject,
-} from 'utils/helpers';
+import { compareDates } from 'utils/helpers';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import RoutePath from 'utils/routePath';
 
@@ -209,33 +203,6 @@ export function fetchAppCatalogEntryReadmeKey(fromURL?: string) {
   return fromURL ?? null;
 }
 
-/**
- * Retrieve the contents of an application's values.schema.json
- * from a given URL.
- * @param client
- * @param _auth
- * @param fromURL
- */
-export async function fetchAppCatalogEntrySchema(
-  client: IHttpClient,
-  _auth: IOAuth2Provider,
-  url: string
-): Promise<RJSFSchema> {
-  client.setRequestConfig({
-    forceCORS: true,
-    url,
-    headers: {},
-  });
-
-  const response = await client.execute<RJSFSchema>();
-
-  return resolveExternalSchemaRef(client, response.data);
-}
-
-export function fetchAppCatalogEntrySchemaKey(url?: string) {
-  return url ?? null;
-}
-
 type AppPageApps = React.ComponentPropsWithoutRef<typeof AppsList>['apps'];
 
 export function mapAppCatalogEntriesToAppPageApps(
@@ -292,86 +259,4 @@ export function getAppCatalogEntryLogoURL(
     appCatalogEntry.spec.chart.icon ??
     ''
   );
-}
-
-function hashURLToJSONRef(url: string): string {
-  // URLs can contain the '/', '#', and '$' characters,
-  // which have special meaning in JSON $ref,
-  return url.replace(/#|$|\//g, '');
-}
-
-/**
- * Resolves external schema references with URLS of https/http protocol,
- * by fetching the schema from the referenced URL and patching the $defs
- * @param client
- * @param schema
- * @returns RJFSchema
- */
-export async function resolveExternalSchemaRef(
-  client: IHttpClient,
-  schema: RJSFSchema
-): Promise<RJSFSchema> {
-  try {
-    const urls: Set<string> = new Set();
-    const processURLs = (obj: RJSFSchema) => {
-      const ref: string | undefined = obj.$ref;
-      if (ref && isValidURL(ref)) {
-        // collect URLs
-        urls.add(ref);
-
-        // update external $ref to point to definition in schema instead
-        obj.$ref = `#/$defs/${hashURLToJSONRef(ref)}`;
-      }
-
-      return obj;
-    };
-
-    const patchedSchema = traverseJSONSchemaObject(schema, processURLs);
-
-    const requests = Array.from(urls).map(async (url: string) => {
-      client.setRequestConfig({
-        forceCORS: true,
-        url,
-        headers: {},
-      });
-
-      const response = await client.execute<RJSFSchema>();
-
-      return { url, schemaData: response.data };
-    });
-
-    const responses = await Promise.allSettled(requests);
-
-    const patchedDefs: Record<string, RJSFSchema> = {};
-
-    for (const response of responses) {
-      if (response.status === 'fulfilled') {
-        // resolve relative references within external schema
-        const processRefs = (obj: RJSFSchema) => {
-          const ref: string | undefined = obj.$ref;
-          if (ref && ref.startsWith('#/')) {
-            // update external $ref to point to definition in schema instead
-            obj.$ref = ref.replace('#/', `#/$defs/${hashURLToJSONRef(ref)}/`);
-          }
-
-          return obj;
-        };
-
-        const patchedDef = traverseJSONSchemaObject(
-          response.value.schemaData,
-          processRefs
-        );
-
-        // delete external schema title to avoid overwriting parent schema's name
-        // for the field
-        delete patchedDef.title;
-
-        patchedDefs[hashURLToJSONRef(response.value.url)] = patchedDef;
-      }
-    }
-
-    return merge(patchedSchema, { $defs: patchedDefs });
-  } catch (e) {
-    return Promise.reject(e);
-  }
 }

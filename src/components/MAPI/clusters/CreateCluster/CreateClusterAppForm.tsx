@@ -8,7 +8,7 @@ import yaml from 'js-yaml';
 import {
   fetchAppCatalogEntrySchema,
   fetchAppCatalogEntrySchemaKey,
-} from 'MAPI/apps/AppList/utils';
+} from 'MAPI/apps/utils';
 import { generateUID } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';

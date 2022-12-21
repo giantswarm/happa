@@ -1,5 +1,7 @@
+import { RJSFSchema } from '@rjsf/utils';
 import produce from 'immer';
 import { YAMLException } from 'js-yaml';
+import { merge } from 'lodash';
 import {
   getClusterOrganization,
   hasClusterAppLabel,
@@ -31,7 +33,11 @@ import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Cache, mutate } from 'swr';
 import ErrorReporter from 'utils/errors/ErrorReporter';
-import { DeepPartial } from 'utils/helpers';
+import {
+  DeepPartial,
+  isValidURL,
+  traverseJSONSchemaObject,
+} from 'utils/helpers';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
@@ -1324,4 +1330,113 @@ export function fetchAppsForClustersKey(
   );
 
   return `fetchAppsForClusters/${clusterKeys.join()}`;
+}
+
+/**
+ * Retrieve the contents of an application's values.schema.json
+ * from a given URL.
+ * @param client
+ * @param _auth
+ * @param fromURL
+ */
+export async function fetchAppCatalogEntrySchema(
+  client: IHttpClient,
+  _auth: IOAuth2Provider,
+  url: string
+): Promise<RJSFSchema> {
+  client.setRequestConfig({
+    forceCORS: true,
+    url,
+    headers: {},
+  });
+
+  const response = await client.execute<RJSFSchema>();
+
+  return resolveExternalSchemaRef(client, response.data);
+}
+
+export function fetchAppCatalogEntrySchemaKey(url?: string) {
+  return url ?? null;
+}
+
+function hashURLToJSONRef(url: string): string {
+  // URLs can contain the '/', '#', and '$' characters,
+  // which have special meaning in JSON $ref,
+  return url.replace(/#|$|\//g, '');
+}
+
+/**
+ * Resolves external schema references with URLS of https/http protocol,
+ * by fetching the schema from the referenced URL and patching the $defs
+ * @param client
+ * @param schema
+ * @returns RJFSchema
+ */
+export async function resolveExternalSchemaRef(
+  client: IHttpClient,
+  schema: RJSFSchema
+): Promise<RJSFSchema> {
+  try {
+    const urls: Set<string> = new Set();
+    const processURLs = (obj: RJSFSchema) => {
+      const ref: string | undefined = obj.$ref;
+      if (ref && isValidURL(ref)) {
+        // collect URLs
+        urls.add(ref);
+
+        // update external $ref to point to definition in schema instead
+        obj.$ref = `#/$defs/${hashURLToJSONRef(ref)}`;
+      }
+
+      return obj;
+    };
+
+    const patchedSchema = traverseJSONSchemaObject(schema, processURLs);
+
+    const requests = Array.from(urls).map(async (url: string) => {
+      client.setRequestConfig({
+        forceCORS: true,
+        url,
+        headers: {},
+      });
+
+      const response = await client.execute<RJSFSchema>();
+
+      return { url, schemaData: response.data };
+    });
+
+    const responses = await Promise.allSettled(requests);
+
+    const patchedDefs: Record<string, RJSFSchema> = {};
+
+    for (const response of responses) {
+      if (response.status === 'fulfilled') {
+        // resolve relative references within external schema
+        const processRefs = (obj: RJSFSchema) => {
+          const ref: string | undefined = obj.$ref;
+          if (ref && ref.startsWith('#/$defs/')) {
+            // update external $ref to point to definition in schema instead
+            obj.$ref = ref.replace('#/', `#/$defs/${hashURLToJSONRef(ref)}/`);
+          }
+
+          return obj;
+        };
+
+        const patchedDef = traverseJSONSchemaObject(
+          response.value.schemaData,
+          processRefs
+        );
+
+        // delete external schema title to avoid overwriting parent schema's name
+        // for the field
+        delete patchedDef.title;
+
+        patchedDefs[hashURLToJSONRef(response.value.url)] = patchedDef;
+      }
+    }
+
+    return merge(patchedSchema, { $defs: patchedDefs });
+  } catch (e) {
+    return Promise.reject(e);
+  }
 }
