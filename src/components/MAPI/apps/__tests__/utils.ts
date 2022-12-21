@@ -276,8 +276,11 @@ describe('utils', () => {
           someProperty: {
             $ref: 'https://schema.giantswarm.io/someProperty/v0.0.1',
           },
-          anotherProprty: {
-            $ref: 'https://schema.giantswarm.io/anotherProperty/v0.0.1',
+          anotherProperty: {
+            type: 'array',
+            items: {
+              $ref: 'https://schema.giantswarm.io/anotherProperty/v0.0.1',
+            },
           },
         },
       };
@@ -302,18 +305,8 @@ describe('utils', () => {
       const externalSchema2 = {
         $id: 'https://schema.giantswarm.io/anotherProperty/v0.0.1',
         $schema: 'https://json-schema.org/draft/2020-12/schema',
-        description: 'Another test property.',
-        properties: {
-          name: {
-            description: 'Another property name.',
-            examples: ['example'],
-            title: 'Name',
-            type: 'string',
-          },
-        },
-        required: ['name'],
         title: 'Another property for testing puroses',
-        type: 'object',
+        type: 'string',
       };
 
       nock('https://schema.giantswarm.io')
@@ -345,17 +338,7 @@ describe('utils', () => {
           'https:schema.giantswarm.ioanotherPropertyv0.0.1': {
             $id: '/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
             $schema: 'https://json-schema.org/draft/2020-12/schema',
-            description: 'Another test property.',
-            properties: {
-              name: {
-                description: 'Another property name.',
-                examples: ['example'],
-                title: 'Name',
-                type: 'string',
-              },
-            },
-            required: ['name'],
-            type: 'object',
+            type: 'string',
           },
         },
       });
@@ -424,7 +407,9 @@ describe('utils', () => {
         type: 'object',
         properties: {
           someProperty: {
-            $ref: 'https://schema.giantswarm.io/someProperty/v0.0.1',
+            anyOf: [
+              { $ref: 'https://schema.giantswarm.io/someProperty/v0.0.1' },
+            ],
           },
         },
       };
