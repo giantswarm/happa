@@ -1,5 +1,4 @@
 import { getInputProps, WidgetProps } from '@rjsf/utils';
-import { Box } from 'grommet';
 import React from 'react';
 import NumberPicker from 'UI/Inputs/NumberPicker';
 import TextInput from 'UI/Inputs/TextInput';
@@ -28,29 +27,46 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
 
   const inputProps = getInputProps(schema, type as string, options);
 
+  const { description } = schema;
+
+  const isArrayItem = /(_\d+)$/.test(id);
+  const simplifiedView = isArrayItem && !description;
+
+  const displayLabel = simplifiedView ? '' : label;
+
+  const margin = {
+    top: simplifiedView ? 'small' : 'none',
+    bottom: 'small',
+  };
+
   return inputProps.type === 'number' ? (
-    <Box width={{ max: 'small' }}>
-      <NumberPicker
-        id={id}
-        label={label}
-        value={value}
-        placeholder={placeholder}
-        disabled={disabled}
-        readOnly={readonly}
-        min={inputProps.min}
-        max={inputProps.max}
-        step={inputProps.step}
-        onChange={handleNumberChange}
-      />
-    </Box>
-  ) : (
-    <TextInput
+    <NumberPicker
       id={id}
-      label={label}
+      label={displayLabel}
+      help={description}
       value={value}
       placeholder={placeholder}
       disabled={disabled}
       readOnly={readonly}
+      min={inputProps.min}
+      max={inputProps.max}
+      step={inputProps.step}
+      margin={margin}
+      contentProps={{
+        width: { max: inputProps.type === 'number' ? 'small' : 'auto' },
+      }}
+      onChange={handleNumberChange}
+    />
+  ) : (
+    <TextInput
+      id={id}
+      label={displayLabel}
+      help={description}
+      value={value}
+      placeholder={placeholder}
+      disabled={disabled}
+      readOnly={readonly}
+      margin={margin}
       onChange={handleChange}
       {...inputProps}
     />

@@ -5,9 +5,21 @@ import ClusterIDLabel, {
   ClusterIDLabelType,
 } from 'UI/Display/Cluster/ClusterIDLabel';
 
-const ClusterNameWidget: React.FC<WidgetProps> = ({ id, label, value }) => {
+const ClusterNameWidget: React.FC<WidgetProps> = ({
+  id,
+  label,
+  schema,
+  value,
+}) => {
+  const { description } = schema;
+
   return (
-    <FormField htmlFor={id} label={label} contentProps={{ border: false }}>
+    <FormField
+      htmlFor={id}
+      label={label}
+      help={description}
+      contentProps={{ border: false }}
+    >
       <ClusterIDLabel
         clusterID={value}
         variant={ClusterIDLabelType.Name}

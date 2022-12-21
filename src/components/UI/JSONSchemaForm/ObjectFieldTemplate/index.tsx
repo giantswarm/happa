@@ -1,5 +1,5 @@
 import { ObjectFieldTemplateProps } from '@rjsf/utils';
-import { Accordion, AccordionPanel, Box, Text } from 'grommet';
+import { Accordion, AccordionPanel, Box, FormField, Text } from 'grommet';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
@@ -7,10 +7,14 @@ const Icon = styled(Text)<{ isActive?: boolean }>`
   transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
   transform-origin: center center;
   transition: 0.15s ease-out;
+  font-size: 28px;
+  line-height: 20px;
+  margin-left: -6px;
 `;
 
 const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
   idSchema,
+  schema,
   title,
   properties,
 }) => {
@@ -19,18 +23,20 @@ const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
   const isRootItem = title === '';
   const isArrayItem = /(_\d+)$/.test(idSchema.$id);
 
+  const { description } = schema;
+
   if (isRootItem || isArrayItem) {
     return (
-      <Box>
-        {title !== '' && (
-          <Text weight='bold' margin={{ bottom: 'small' }}>
-            {title}
-          </Text>
-        )}
+      <FormField
+        label={title !== '' ? title : undefined}
+        help={title !== '' && description ? description : undefined}
+        contentProps={{ border: false }}
+        margin={{ bottom: isArrayItem ? 'none' : 'small' }}
+      >
         {properties.map((element) => (
           <div key={element.name}>{element.content}</div>
         ))}
-      </Box>
+      </FormField>
     );
   }
 
@@ -42,16 +48,21 @@ const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
     >
       <AccordionPanel
         header={
-          <Box direction='row' align='center' height='40px'>
-            <Icon
-              className='fa fa-chevron-down'
-              isActive={activeIndexes.includes(0)}
-              role='presentation'
-              aria-hidden='true'
-              size='28px'
-              margin={{ right: 'xsmall' }}
-            />
-            <Text weight='bold'>{title}</Text>
+          <Box>
+            <Box direction='row' align='center' margin={{ vertical: 'small' }}>
+              <Icon
+                className='fa fa-chevron-down'
+                isActive={activeIndexes.includes(0)}
+                role='presentation'
+                aria-hidden='true'
+              />
+              <Text weight='bold'>{title}</Text>
+            </Box>
+            {description && (
+              <Text size='small' color='text-weak' margin={{ bottom: 'small' }}>
+                {description}
+              </Text>
+            )}
           </Box>
         }
       >
