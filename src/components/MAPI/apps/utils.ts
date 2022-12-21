@@ -1411,12 +1411,14 @@ export async function resolveExternalSchemaRef(
 
     for (const response of responses) {
       if (response.status === 'fulfilled') {
-        // resolve relative references within external schema
         const processRefs = (obj: RJSFSchema) => {
           const ref: string | undefined = obj.$ref;
-          if (ref && ref.startsWith('#/$defs/')) {
-            // update external $ref to point to definition in schema instead
-            obj.$ref = ref.replace('#/', `#/$defs/${hashURLToJSONRef(ref)}/`);
+          if (ref && ref.startsWith('#/')) {
+            // update relative $ref to point to correct $def
+            obj.$ref = ref.replace(
+              '#/',
+              `#/$defs/${hashURLToJSONRef(response.value.url)}/`
+            );
           }
 
           return obj;
@@ -1430,6 +1432,9 @@ export async function resolveExternalSchemaRef(
         // delete external schema title to avoid overwriting parent schema's name
         // for the field
         delete patchedDef.title;
+
+        // update $id so relative $refs within the subschema are handled correctly
+        patchedDef.$id = `/$defs/${hashURLToJSONRef(response.value.url)}`;
 
         patchedDefs[hashURLToJSONRef(response.value.url)] = patchedDef;
       }
