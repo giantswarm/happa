@@ -1366,8 +1366,138 @@ function hashURLToJSONRef(url: string): string {
 }
 
 /**
+ * Collects all URL $refs from a schema and updates the external $ref
+ * to point to internal $def
+ * @param schema
+ */
+function parseSchemaForURLs(schema: RJSFSchema): [RJSFSchema, Set<string>] {
+  const urls: Set<string> = new Set();
+
+  const processURLs = (obj: RJSFSchema) => {
+    const ref: string | undefined = obj.$ref;
+    if (ref && isValidURL(ref)) {
+      // collect URLs
+      urls.add(ref);
+
+      // update external $ref to point to definition in schema instead
+      obj.$ref = `#/$defs/${hashURLToJSONRef(ref)}`;
+    }
+
+    return obj;
+  };
+
+  const patchedSchema = traverseJSONSchemaObject(schema, processURLs);
+
+  return [patchedSchema, urls];
+}
+
+/**
+ * Fetch schema from URL
+ * @param client
+ * @param url
+ */
+async function fetchExternalSchema(
+  client: IHttpClient,
+  url: string
+): Promise<{ url: string; schemaData: RJSFSchema }> {
+  client.setRequestConfig({
+    forceCORS: true,
+    url,
+    headers: {},
+  });
+
+  const response = await client.execute<RJSFSchema>();
+
+  return { url, schemaData: response.data };
+}
+
+/**
+ * Patch an external schema by updating its internal references and $id,
+ * so that it can be merged into the parent schema's $defs
+ * @param url
+ * @param schema
+ */
+function patchExternalSchema(url: string, schema: RJSFSchema): RJSFSchema {
+  const processRefs = (obj: RJSFSchema) => {
+    const ref: string | undefined = obj.$ref;
+    if (ref && ref.startsWith('#/')) {
+      // update relative $ref to point to correct $def
+      obj.$ref = ref.replace('#/', `#/$defs/${hashURLToJSONRef(url)}/`);
+    }
+
+    return obj;
+  };
+
+  const patchedSchema = traverseJSONSchemaObject(schema, processRefs);
+
+  // update $id so relative $refs within the subschema are handled correctly
+  patchedSchema.$id = `/$defs/${hashURLToJSONRef(url)}`;
+
+  return patchedSchema;
+}
+
+/**
+ * Recursively fetch an external schema from URL, patch it, and parse it for external $refs with URLs
+ * @param client
+ * @param schema
+ * @param urls
+ * @param patchedDefs
+ */
+async function processExternalSchema(
+  client: IHttpClient,
+  urls: Set<string>,
+  patchedDefs: Record<string, RJSFSchema>
+): Promise<Record<string, RJSFSchema>> {
+  try {
+    if (urls.size === 0) {
+      return patchedDefs;
+    }
+
+    const requests = Array.from(urls).map((url) =>
+      fetchExternalSchema(client, url)
+    );
+
+    const responses = await Promise.allSettled(requests);
+
+    for (const response of responses) {
+      if (response.status === 'rejected') {
+        throw response.reason;
+      }
+
+      if (response.status === 'fulfilled') {
+        const { url, schemaData: fetchedSchema } = response.value;
+
+        urls.delete(url);
+
+        const patchedSchema = patchExternalSchema(url, fetchedSchema);
+
+        patchedDefs[hashURLToJSONRef(url)] = patchedSchema;
+
+        const [patchedSchemaForNewUrls, newUrls] =
+          parseSchemaForURLs(patchedSchema);
+
+        for (const newUrl of newUrls) {
+          // if we haven't already processed the schema from a new URL,
+          // add it to the list of URLs to fetch from
+          if (!patchedDefs[hashURLToJSONRef(newUrl)]) {
+            urls.add(newUrl);
+          }
+
+          // update stored schema
+          patchedDefs[hashURLToJSONRef(url)] = patchedSchemaForNewUrls;
+        }
+      }
+    }
+
+    return processExternalSchema(client, urls, patchedDefs);
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
+
+/**
  * Resolves external schema references with URLS of https/http protocol,
- * by fetching the schema from the referenced URL and patching the $defs
+ * by fetching the schema from the referenced URLs and patching the parent schema's $defs
  * @param client
  * @param schema
  * @returns RJFSchema
@@ -1377,68 +1507,10 @@ export async function resolveExternalSchemaRef(
   schema: RJSFSchema
 ): Promise<RJSFSchema> {
   try {
-    const urls: Set<string> = new Set();
-    const processURLs = (obj: RJSFSchema) => {
-      const ref: string | undefined = obj.$ref;
-      if (ref && isValidURL(ref)) {
-        // collect URLs
-        urls.add(ref);
+    // parse parent schema for initial list of URLs
+    const [patchedSchema, urls] = parseSchemaForURLs(schema);
 
-        // update external $ref to point to definition in schema instead
-        obj.$ref = `#/$defs/${hashURLToJSONRef(ref)}`;
-      }
-
-      return obj;
-    };
-
-    const patchedSchema = traverseJSONSchemaObject(schema, processURLs);
-
-    const requests = Array.from(urls).map(async (url: string) => {
-      client.setRequestConfig({
-        forceCORS: true,
-        url,
-        headers: {},
-      });
-
-      const response = await client.execute<RJSFSchema>();
-
-      return { url, schemaData: response.data };
-    });
-
-    const responses = await Promise.allSettled(requests);
-
-    const patchedDefs: Record<string, RJSFSchema> = {};
-
-    for (const response of responses) {
-      if (response.status === 'rejected') {
-        throw response.reason;
-      }
-
-      if (response.status === 'fulfilled') {
-        const processRefs = (obj: RJSFSchema) => {
-          const ref: string | undefined = obj.$ref;
-          if (ref && ref.startsWith('#/')) {
-            // update relative $ref to point to correct $def
-            obj.$ref = ref.replace(
-              '#/',
-              `#/$defs/${hashURLToJSONRef(response.value.url)}/`
-            );
-          }
-
-          return obj;
-        };
-
-        const patchedDef = traverseJSONSchemaObject(
-          response.value.schemaData,
-          processRefs
-        );
-
-        // update $id so relative $refs within the subschema are handled correctly
-        patchedDef.$id = `/$defs/${hashURLToJSONRef(response.value.url)}`;
-
-        patchedDefs[hashURLToJSONRef(response.value.url)] = patchedDef;
-      }
-    }
+    const patchedDefs = await processExternalSchema(client, urls, {});
 
     return merge(patchedSchema, { $defs: patchedDefs });
   } catch (e) {
