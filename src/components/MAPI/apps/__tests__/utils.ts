@@ -319,8 +319,8 @@ describe('utils', () => {
 
       expect(await resolveExternalSchemaRef(clientFactory(), schema)).toEqual({
         $defs: {
-          'https:schema.giantswarm.iosomePropertyv0.0.1': {
-            $id: '/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+          'https://schema.giantswarm.io/someProperty/v0.0.1': {
+            $id: '/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
             $schema: 'https://json-schema.org/draft/2020-12/schema',
             description: 'Some test property.',
             properties: {
@@ -335,8 +335,8 @@ describe('utils', () => {
             title: 'Some property for testing purposes',
             type: 'object',
           },
-          'https:schema.giantswarm.ioanotherPropertyv0.0.1': {
-            $id: '/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
+          'https://schema.giantswarm.io/anotherProperty/v0.0.1': {
+            $id: '/$defs/https:~1~1schema.giantswarm.io~1anotherProperty~1v0.0.1',
             $schema: 'https://json-schema.org/draft/2020-12/schema',
             title: 'Another property for testing purposes',
             type: 'string',
@@ -346,12 +346,12 @@ describe('utils', () => {
         type: 'object',
         properties: {
           someProperty: {
-            $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+            $ref: '#/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
           },
           anotherProperty: {
             type: 'array',
             items: {
-              $ref: '#/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
+              $ref: '#/$defs/https:~1~1schema.giantswarm.io~1anotherProperty~1v0.0.1',
             },
           },
         },
@@ -395,9 +395,9 @@ describe('utils', () => {
 
       expect(await resolveExternalSchemaRef(clientFactory(), schema)).toEqual({
         $defs: {
-          'https:schema.giantswarm.iosomePropertyv0.0.1': {
+          'https://schema.giantswarm.io/someProperty/v0.0.1': {
             $schema: 'https://json-schema.org/draft/2020-12/schema',
-            $id: '/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+            $id: '/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
             description: 'Some test property.',
             properties: {
               name: {
@@ -416,10 +416,10 @@ describe('utils', () => {
         type: 'object',
         properties: {
           someProperty: {
-            $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+            $ref: '#/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
           },
           someProperty2: {
-            $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+            $ref: '#/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
           },
         },
       });
@@ -466,9 +466,9 @@ describe('utils', () => {
 
       expect(await resolveExternalSchemaRef(clientFactory(), schema)).toEqual({
         $defs: {
-          'https:schema.giantswarm.iosomePropertyv0.0.1': {
+          'https://schema.giantswarm.io/someProperty/v0.0.1': {
             $schema: 'https://json-schema.org/draft/2020-12/schema',
-            $id: '/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+            $id: '/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
             $defs: {
               name: {
                 description: 'Some property name.',
@@ -480,7 +480,7 @@ describe('utils', () => {
             description: 'Some test property.',
             properties: {
               name: {
-                $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1/$defs/name',
+                $ref: '#/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1/$defs/name',
               },
             },
             required: ['name'],
@@ -493,7 +493,9 @@ describe('utils', () => {
         properties: {
           someProperty: {
             anyOf: [
-              { $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1' },
+              {
+                $ref: '#/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
+              },
             ],
           },
         },
@@ -572,8 +574,8 @@ describe('utils', () => {
 
       expect(await resolveExternalSchemaRef(clientFactory(), schema)).toEqual({
         $defs: {
-          'https:schema.giantswarm.iosomePropertyv0.0.1': {
-            $id: '/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+          'https://schema.giantswarm.io/someProperty/v0.0.1': {
+            $id: '/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
             $schema: 'https://json-schema.org/draft/2020-12/schema',
             description: 'Some test property.',
             properties: {
@@ -586,7 +588,7 @@ describe('utils', () => {
               anotherProperty: {
                 type: 'array',
                 items: {
-                  $ref: '#/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
+                  $ref: '#/$defs/https:~1~1schema.giantswarm.io~1anotherProperty~1v0.0.1',
                 },
               },
             },
@@ -594,15 +596,15 @@ describe('utils', () => {
             title: 'Some property for testing purposes',
             type: 'object',
           },
-          'https:schema.giantswarm.ioanotherPropertyv0.0.1': {
-            $id: '/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
+          'https://schema.giantswarm.io/anotherProperty/v0.0.1': {
+            $id: '/$defs/https:~1~1schema.giantswarm.io~1anotherProperty~1v0.0.1',
             $schema: 'https://json-schema.org/draft/2020-12/schema',
             description: 'Another test property.',
             properties: {
               aProperty: {
                 allOf: [
                   {
-                    $ref: '#/$defs/https:schema.giantswarm.ioyetAnotherPropertyv0.0.1',
+                    $ref: '#/$defs/https:~1~1schema.giantswarm.io~1yetAnotherProperty~1v0.0.1',
                   },
                 ],
               },
@@ -610,8 +612,8 @@ describe('utils', () => {
             title: 'Another property for testing purposes',
             type: 'object',
           },
-          'https:schema.giantswarm.ioyetAnotherPropertyv0.0.1': {
-            $id: '/$defs/https:schema.giantswarm.ioyetAnotherPropertyv0.0.1',
+          'https://schema.giantswarm.io/yetAnotherProperty/v0.0.1': {
+            $id: '/$defs/https:~1~1schema.giantswarm.io~1yetAnotherProperty~1v0.0.1',
             $schema: 'https://json-schema.org/draft/2020-12/schema',
             title: 'Yet another property for testing purposes',
             type: 'string',
@@ -621,7 +623,7 @@ describe('utils', () => {
         type: 'object',
         properties: {
           someProperty: {
-            $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+            $ref: '#/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
           },
         },
       });
@@ -690,8 +692,8 @@ describe('utils', () => {
 
       expect(await resolveExternalSchemaRef(clientFactory(), schema)).toEqual({
         $defs: {
-          'https:schema.giantswarm.iosomePropertyv0.0.1': {
-            $id: '/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+          'https://schema.giantswarm.io/someProperty/v0.0.1': {
+            $id: '/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
             $schema: 'https://json-schema.org/draft/2020-12/schema',
             description: 'Some test property.',
             properties: {
@@ -704,7 +706,7 @@ describe('utils', () => {
               anotherProperty: {
                 type: 'array',
                 items: {
-                  $ref: '#/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
+                  $ref: '#/$defs/https:~1~1schema.giantswarm.io~1anotherProperty~1v0.0.1',
                 },
               },
             },
@@ -712,15 +714,15 @@ describe('utils', () => {
             title: 'Some property for testing purposes',
             type: 'object',
           },
-          'https:schema.giantswarm.ioanotherPropertyv0.0.1': {
-            $id: '/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
+          'https://schema.giantswarm.io/anotherProperty/v0.0.1': {
+            $id: '/$defs/https:~1~1schema.giantswarm.io~1anotherProperty~1v0.0.1',
             $schema: 'https://json-schema.org/draft/2020-12/schema',
             description: 'Another test property.',
             properties: {
               aProperty: {
                 allOf: [
                   {
-                    $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+                    $ref: '#/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
                   },
                 ],
               },
@@ -733,7 +735,7 @@ describe('utils', () => {
         type: 'object',
         properties: {
           someProperty: {
-            $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+            $ref: '#/$defs/https:~1~1schema.giantswarm.io~1someProperty~1v0.0.1',
           },
         },
       });
