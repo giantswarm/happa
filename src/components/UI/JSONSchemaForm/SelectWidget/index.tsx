@@ -14,9 +14,13 @@ const SelectWidget: React.FC<WidgetProps> = ({
     onChange(option.value);
   };
 
-  const selectedOption = options.enumOptions?.find(
-    (option) => option.value === value
-  );
+  const enumOptions =
+    options.enumOptions?.map((option) => ({
+      label: option.label,
+      value: option.value,
+    })) || [];
+
+  const selectedOption = enumOptions.find((option) => option.value === value);
 
   const { description } = schema;
 
@@ -30,7 +34,7 @@ const SelectWidget: React.FC<WidgetProps> = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         handleChange(e.option);
       }}
-      options={options.enumOptions || []}
+      options={enumOptions}
     />
   );
 };

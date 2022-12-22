@@ -25,9 +25,13 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
     }
   };
 
+  const handleSuggestionSelect = (e: { suggestion: string }) => {
+    onChange(e.suggestion);
+  };
+
   const inputProps = getInputProps(schema, type as string, options);
 
-  const { description } = schema;
+  const { description, examples } = schema;
 
   const isArrayItem = /(_\d+)$/.test(id);
   const simplifiedView = isArrayItem && !description;
@@ -62,12 +66,14 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
       id={id}
       label={displayLabel}
       help={description}
-      value={value}
+      suggestions={examples as string[]}
+      value={value ?? ''}
       placeholder={placeholder}
       disabled={disabled}
       readOnly={readonly}
       margin={margin}
       onChange={handleChange}
+      onSuggestionSelect={handleSuggestionSelect}
       {...inputProps}
     />
   );
