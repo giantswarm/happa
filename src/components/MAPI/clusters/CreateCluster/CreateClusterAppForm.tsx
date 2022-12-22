@@ -8,8 +8,8 @@ import yaml from 'js-yaml';
 import {
   fetchAppCatalogEntrySchema,
   fetchAppCatalogEntrySchemaKey,
-} from 'MAPI/apps/AppList/utils';
-import { generateUID } from 'MAPI/utils';
+} from 'MAPI/apps/utils';
+import { extractErrorMessage, generateUID } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -23,6 +23,7 @@ import RadioInput from 'UI/Inputs/RadioInput';
 import Select from 'UI/Inputs/Select';
 import JSONSchemaForm from 'UI/JSONSchemaForm';
 import ErrorReporter from 'utils/errors/ErrorReporter';
+import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
@@ -178,6 +179,12 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
 
   useEffect(() => {
     if (appSchemaError) {
+      new FlashMessage(
+        'Something went wrong while trying to fetch external app schema.',
+        messageType.ERROR,
+        messageTTL.LONG,
+        extractErrorMessage(appSchemaError)
+      );
       ErrorReporter.getInstance().notify(appSchemaError);
     }
   }, [appSchemaError]);
@@ -265,6 +272,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
         </Wrapper>
       )}
       {!appSchemaIsLoading &&
+        typeof appSchemaError === 'undefined' &&
         (typeof appSchema === 'undefined' ? (
           <Text>
             No <code>values.schema.json</code> file found for the selected

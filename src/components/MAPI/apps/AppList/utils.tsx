@@ -1,4 +1,3 @@
-import { RJSFSchema } from '@rjsf/utils';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { AppsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
@@ -202,33 +201,6 @@ export async function fetchAppCatalogEntryReadme(
 
 export function fetchAppCatalogEntryReadmeKey(fromURL?: string) {
   return fromURL ?? null;
-}
-
-/**
- * Retrieve the contents of an application's values.schema.json
- * from a given URL.
- * @param client
- * @param _auth
- * @param fromURL
- */
-export async function fetchAppCatalogEntrySchema(
-  client: IHttpClient,
-  _auth: IOAuth2Provider,
-  url: string
-): Promise<RJSFSchema> {
-  client.setRequestConfig({
-    forceCORS: true,
-    url,
-    headers: {},
-  });
-
-  const response = await client.execute<RJSFSchema>();
-
-  return response.data;
-}
-
-export function fetchAppCatalogEntrySchemaKey(url?: string) {
-  return url ?? null;
 }
 
 type AppPageApps = React.ComponentPropsWithoutRef<typeof AppsList>['apps'];
