@@ -1360,9 +1360,9 @@ export function fetchAppCatalogEntrySchemaKey(url?: string) {
 }
 
 function hashURLToJSONRef(url: string): string {
-  // URLs can contain the '/', '#', and '$' characters,
-  // which have special meaning in JSON $ref,
-  return url.replace(/#|$|\//g, '');
+  // URLs contain the '/' character, which has to be escaped
+  // when used in JSON pointers
+  return url.replaceAll('/', '~1');
 }
 
 /**
@@ -1471,7 +1471,7 @@ async function processExternalSchema(
 
         const patchedSchema = patchExternalSchema(url, fetchedSchema);
 
-        patchedDefs[hashURLToJSONRef(url)] = patchedSchema;
+        patchedDefs[url] = patchedSchema;
 
         const [patchedSchemaForNewUrls, newUrls] =
           parseSchemaForURLs(patchedSchema);
@@ -1479,12 +1479,12 @@ async function processExternalSchema(
         for (const newUrl of newUrls) {
           // if we haven't already processed the schema from a new URL,
           // add it to the list of URLs to fetch from
-          if (!patchedDefs[hashURLToJSONRef(newUrl)]) {
+          if (!patchedDefs[newUrl]) {
             urls.add(newUrl);
           }
 
           // update stored schema
-          patchedDefs[hashURLToJSONRef(url)] = patchedSchemaForNewUrls;
+          patchedDefs[url] = patchedSchemaForNewUrls;
         }
       }
     }
