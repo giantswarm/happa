@@ -25,10 +25,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
     }
   };
 
-  const handleSuggestionSelect = (e: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    suggestion: any;
-  }) => {
+  const handleSuggestionSelect = (e: { suggestion: string }) => {
     onChange(e.suggestion);
   };
 
