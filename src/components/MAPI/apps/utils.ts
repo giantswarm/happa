@@ -1361,7 +1361,7 @@ export function fetchAppCatalogEntrySchemaKey(url?: string) {
 
 function hashURLToJSONRef(url: string): string {
   // URLs contain the '/' character, which has to be escaped
-  // when used in JSON pointers
+  // when used in JSON pointers. See https://www.rfc-editor.org/rfc/rfc6901#section-4
   return url.replaceAll('/', '~1');
 }
 
