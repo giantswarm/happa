@@ -318,7 +318,6 @@ describe('utils', () => {
         .reply(StatusCodes.Ok, externalSchema2);
 
       expect(await resolveExternalSchemaRef(clientFactory(), schema)).toEqual({
-        ...schema,
         $defs: {
           'https:schema.giantswarm.iosomePropertyv0.0.1': {
             $id: '/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
@@ -341,6 +340,19 @@ describe('utils', () => {
             $schema: 'https://json-schema.org/draft/2020-12/schema',
             title: 'Another property for testing purposes',
             type: 'string',
+          },
+        },
+        $schema: 'http://json-schema.org/schema#',
+        type: 'object',
+        properties: {
+          someProperty: {
+            $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+          },
+          anotherProperty: {
+            type: 'array',
+            items: {
+              $ref: '#/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
+            },
           },
         },
       });
@@ -382,7 +394,6 @@ describe('utils', () => {
         .reply(StatusCodes.Ok, externalSchema);
 
       expect(await resolveExternalSchemaRef(clientFactory(), schema)).toEqual({
-        ...schema,
         $defs: {
           'https:schema.giantswarm.iosomePropertyv0.0.1': {
             $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -399,6 +410,16 @@ describe('utils', () => {
             required: ['name'],
             title: 'Some property for testing purposes',
             type: 'object',
+          },
+        },
+        $schema: 'http://json-schema.org/schema#',
+        type: 'object',
+        properties: {
+          someProperty: {
+            $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+          },
+          someProperty2: {
+            $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
           },
         },
       });
@@ -444,7 +465,6 @@ describe('utils', () => {
         .reply(StatusCodes.Ok, externalSchema);
 
       expect(await resolveExternalSchemaRef(clientFactory(), schema)).toEqual({
-        ...schema,
         $defs: {
           'https:schema.giantswarm.iosomePropertyv0.0.1': {
             $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -466,6 +486,254 @@ describe('utils', () => {
             required: ['name'],
             title: 'Some property for testing purposes',
             type: 'object',
+          },
+        },
+        $schema: 'http://json-schema.org/schema#',
+        type: 'object',
+        properties: {
+          someProperty: {
+            anyOf: [
+              { $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1' },
+            ],
+          },
+        },
+      });
+    });
+
+    it('resolves external schema references with external schema references', async () => {
+      const schema: RJSFSchema = {
+        $schema: 'http://json-schema.org/schema#',
+        type: 'object',
+        properties: {
+          someProperty: {
+            $ref: 'https://schema.giantswarm.io/someProperty/v0.0.1',
+          },
+        },
+      };
+
+      const externalSchema1 = {
+        $id: 'https://schema.giantswarm.io/someProperty/v0.0.1',
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        description: 'Some test property.',
+        properties: {
+          name: {
+            description: 'Some property name.',
+            examples: ['example'],
+            title: 'Name',
+            type: 'string',
+          },
+          anotherProperty: {
+            type: 'array',
+            items: {
+              $ref: 'https://schema.giantswarm.io/anotherProperty/v0.0.1',
+            },
+          },
+        },
+        required: ['name'],
+        title: 'Some property for testing purposes',
+        type: 'object',
+      };
+
+      const externalSchema2 = {
+        $id: 'https://schema.giantswarm.io/anotherProperty/v0.0.1',
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        description: 'Another test property.',
+        properties: {
+          aProperty: {
+            allOf: [
+              {
+                $ref: 'https://schema.giantswarm.io/yetAnotherProperty/v0.0.1',
+              },
+            ],
+          },
+        },
+        title: 'Another property for testing purposes',
+        type: 'object',
+      };
+
+      const externalSchema3 = {
+        $id: 'https://schema.giantswarm.io/yetAnotherProperty/v0.0.1',
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        title: 'Yet another property for testing purposes',
+        type: 'string',
+      };
+
+      nock('https://schema.giantswarm.io')
+        .get('/someProperty/v0.0.1')
+        .reply(StatusCodes.Ok, externalSchema1);
+
+      nock('https://schema.giantswarm.io')
+        .get('/anotherProperty/v0.0.1')
+        .reply(StatusCodes.Ok, externalSchema2);
+
+      nock('https://schema.giantswarm.io')
+        .get('/yetAnotherProperty/v0.0.1')
+        .reply(StatusCodes.Ok, externalSchema3);
+
+      expect(await resolveExternalSchemaRef(clientFactory(), schema)).toEqual({
+        $defs: {
+          'https:schema.giantswarm.iosomePropertyv0.0.1': {
+            $id: '/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            description: 'Some test property.',
+            properties: {
+              name: {
+                description: 'Some property name.',
+                examples: ['example'],
+                title: 'Name',
+                type: 'string',
+              },
+              anotherProperty: {
+                type: 'array',
+                items: {
+                  $ref: '#/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
+                },
+              },
+            },
+            required: ['name'],
+            title: 'Some property for testing purposes',
+            type: 'object',
+          },
+          'https:schema.giantswarm.ioanotherPropertyv0.0.1': {
+            $id: '/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            description: 'Another test property.',
+            properties: {
+              aProperty: {
+                allOf: [
+                  {
+                    $ref: '#/$defs/https:schema.giantswarm.ioyetAnotherPropertyv0.0.1',
+                  },
+                ],
+              },
+            },
+            title: 'Another property for testing purposes',
+            type: 'object',
+          },
+          'https:schema.giantswarm.ioyetAnotherPropertyv0.0.1': {
+            $id: '/$defs/https:schema.giantswarm.ioyetAnotherPropertyv0.0.1',
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            title: 'Yet another property for testing purposes',
+            type: 'string',
+          },
+        },
+        $schema: 'http://json-schema.org/schema#',
+        type: 'object',
+        properties: {
+          someProperty: {
+            $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+          },
+        },
+      });
+    });
+
+    it('resolves external schema references with circular external schema references', async () => {
+      const schema: RJSFSchema = {
+        $schema: 'http://json-schema.org/schema#',
+        type: 'object',
+        properties: {
+          someProperty: {
+            $ref: 'https://schema.giantswarm.io/someProperty/v0.0.1',
+          },
+        },
+      };
+
+      // externalSchema1 refers to externalSchema2
+      const externalSchema1 = {
+        $id: 'https://schema.giantswarm.io/someProperty/v0.0.1',
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        description: 'Some test property.',
+        properties: {
+          name: {
+            description: 'Some property name.',
+            examples: ['example'],
+            title: 'Name',
+            type: 'string',
+          },
+          anotherProperty: {
+            type: 'array',
+            items: {
+              $ref: 'https://schema.giantswarm.io/anotherProperty/v0.0.1',
+            },
+          },
+        },
+        required: ['name'],
+        title: 'Some property for testing purposes',
+        type: 'object',
+      };
+
+      // externalSchema2 refers to externalSchema1
+      const externalSchema2 = {
+        $id: 'https://schema.giantswarm.io/anotherProperty/v0.0.1',
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        description: 'Another test property.',
+        properties: {
+          aProperty: {
+            allOf: [
+              {
+                $ref: 'https://schema.giantswarm.io/someProperty/v0.0.1',
+              },
+            ],
+          },
+        },
+        title: 'Another property for testing purposes',
+        type: 'object',
+      };
+
+      nock('https://schema.giantswarm.io')
+        .get('/someProperty/v0.0.1')
+        .reply(StatusCodes.Ok, externalSchema1);
+
+      nock('https://schema.giantswarm.io')
+        .get('/anotherProperty/v0.0.1')
+        .reply(StatusCodes.Ok, externalSchema2);
+
+      expect(await resolveExternalSchemaRef(clientFactory(), schema)).toEqual({
+        $defs: {
+          'https:schema.giantswarm.iosomePropertyv0.0.1': {
+            $id: '/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            description: 'Some test property.',
+            properties: {
+              name: {
+                description: 'Some property name.',
+                examples: ['example'],
+                title: 'Name',
+                type: 'string',
+              },
+              anotherProperty: {
+                type: 'array',
+                items: {
+                  $ref: '#/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
+                },
+              },
+            },
+            required: ['name'],
+            title: 'Some property for testing purposes',
+            type: 'object',
+          },
+          'https:schema.giantswarm.ioanotherPropertyv0.0.1': {
+            $id: '/$defs/https:schema.giantswarm.ioanotherPropertyv0.0.1',
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            description: 'Another test property.',
+            properties: {
+              aProperty: {
+                allOf: [
+                  {
+                    $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
+                  },
+                ],
+              },
+            },
+            title: 'Another property for testing purposes',
+            type: 'object',
+          },
+        },
+        $schema: 'http://json-schema.org/schema#',
+        type: 'object',
+        properties: {
+          someProperty: {
+            $ref: '#/$defs/https:schema.giantswarm.iosomePropertyv0.0.1',
           },
         },
       });
