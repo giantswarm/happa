@@ -86,15 +86,18 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
     );
   }, [app, appCatalogEntryListGetOptions, canListAppCatalogEntries]);
 
-  const { data: appCatalogEntryList, error: appCatalogEntryListError } = useSWR<
-    applicationv1alpha1.IAppCatalogEntryList,
-    GenericResponseError
-  >(appCatalogEntryListKey, () =>
-    applicationv1alpha1.getAppCatalogEntryList(
-      appCatalogEntryListClient.current,
-      auth,
-      appCatalogEntryListGetOptions
-    )
+  const {
+    data: appCatalogEntryList,
+    error: appCatalogEntryListError,
+    isLoading: appCatalogEntryListIsLoading,
+  } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponseError>(
+    appCatalogEntryListKey,
+    () =>
+      applicationv1alpha1.getAppCatalogEntryList(
+        appCatalogEntryListClient.current,
+        auth,
+        appCatalogEntryListGetOptions
+      )
   );
 
   useEffect(() => {
@@ -114,9 +117,7 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
 
   const isLoading =
     typeof app === 'undefined' ||
-    (canListAppCatalogEntries &&
-      typeof appCatalogEntryList === 'undefined' &&
-      typeof appCatalogEntryListError === 'undefined');
+    (canListAppCatalogEntries && appCatalogEntryListIsLoading);
 
   const currentEntry = useMemo(() => {
     if (!appCatalogEntryList || !currentVersion) return undefined;

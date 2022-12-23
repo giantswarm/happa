@@ -69,10 +69,11 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
     ? fetchClusterListKey(provider, namespace, selectedOrg)
     : null;
 
-  const { data: clusterList, error: clusterListError } = useSWR<
-    ClusterListType,
-    GenericResponseError
-  >(clusterListKey, () =>
+  const {
+    data: clusterList,
+    error: clusterListError,
+    isLoading: clusterListIsLoading,
+  } = useSWR<ClusterListType, GenericResponseError>(clusterListKey, () =>
     fetchClusterList(clientFactory, auth, provider, namespace, selectedOrg)
   );
 
@@ -86,11 +87,14 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
     ? fetchProviderClustersForClustersKey(clusterList.items)
     : null;
 
-  const { data: providerClusterList, error: providerClusterListError } = useSWR<
-    IProviderClusterForClusterName[],
-    GenericResponseError
-  >(providerClusterKey, () =>
-    fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
+  const {
+    data: providerClusterList,
+    error: providerClusterListError,
+    isLoading: providerClusterListIsLoading,
+  } = useSWR<IProviderClusterForClusterName[], GenericResponseError>(
+    providerClusterKey,
+    () =>
+      fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
   );
 
   useEffect(() => {
@@ -108,7 +112,7 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
 
   const clustersRef = useRef<IProviderClusterForCluster[]>();
   const sortedClustersWithProviderClusters = useMemo(() => {
-    if (!clusterList?.items && !providerClusterList) {
+    if (clusterListIsLoading || providerClusterListIsLoading) {
       clustersRef.current = undefined;
     }
 
@@ -120,12 +124,14 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
     }
 
     return clustersRef.current;
-  }, [clusterList?.items, providerClusterList]);
+  }, [
+    clusterList?.items,
+    clusterListIsLoading,
+    providerClusterList,
+    providerClusterListIsLoading,
+  ]);
 
-  const clusterListIsLoading =
-    sortedClustersWithProviderClusters === undefined &&
-    clusterListError === undefined &&
-    providerClusterListError === undefined;
+  const isLoading = sortedClustersWithProviderClusters === undefined;
 
   const newClusterPath = useMemo(() => {
     if (!selectedOrg) return '';
@@ -142,7 +148,7 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
   const hasNoClusters =
     hasOrgs &&
     namespace !== undefined &&
-    !clusterListIsLoading &&
+    !isLoading &&
     sortedClustersWithProviderClusters?.length === 0;
 
   const hasError =
@@ -240,7 +246,7 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
             <ClusterListErrorPlaceholder organizationName={selectedOrgName!} />
           ) : (
             <ClusterList
-              isLoading={clusterListIsLoading}
+              isLoading={isLoading}
               hasNoClusters={hasNoClusters}
               orgID={selectedOrgID!}
               orgName={selectedOrgName!}

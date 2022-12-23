@@ -57,8 +57,8 @@ const ClusterDetailWidgetProviderAWS: React.FC<
 
   const {
     data: credentialList,
-    isLoading: credentialListIsLoading,
     error: credentialListError,
+    isLoading: credentialListIsLoading,
   } = useSWR<legacyCredentials.ICredentialList, GenericResponseError>(
     credentialListKey,
     () =>
