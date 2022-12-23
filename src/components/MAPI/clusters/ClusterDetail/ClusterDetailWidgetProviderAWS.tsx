@@ -57,7 +57,7 @@ const ClusterDetailWidgetProviderAWS: React.FC<
 
   const {
     data: credentialList,
-    isValidating: credentialListIsValidating,
+    isLoading: credentialListIsLoading,
     error: credentialListError,
   } = useSWR<legacyCredentials.ICredentialList, GenericResponseError>(
     credentialListKey,
@@ -81,9 +81,6 @@ const ClusterDetailWidgetProviderAWS: React.FC<
       ErrorReporter.getInstance().notify(credentialListError);
     }
   }, [credentialListError, orgId]);
-
-  const credentialListIsLoading =
-    typeof credentialList === 'undefined' && credentialListIsValidating;
 
   const credentials = credentialListIsLoading
     ? undefined

@@ -39,7 +39,7 @@ const CreateClusterRelease: React.FC<
   const {
     data: releaseList,
     error: releaseListError,
-    isValidating: releaseIsValidating,
+    isLoading: releaseListIsLoading,
   } = useSWR<releasev1alpha1.IReleaseList, GenericResponseError>(
     releasev1alpha1.getReleaseListKey(),
     () => releasev1alpha1.getReleaseList(releaseListClient, auth)
@@ -50,11 +50,6 @@ const CreateClusterRelease: React.FC<
       ErrorReporter.getInstance().notify(releaseListError);
     }
   }, [releaseListError]);
-
-  const releaseIsLoading =
-    releaseIsValidating &&
-    typeof releaseList === 'undefined' &&
-    typeof releaseListError === 'undefined';
 
   const releases = useMemo(() => {
     if (!releaseList) return {};
@@ -118,7 +113,7 @@ const CreateClusterRelease: React.FC<
         releases={releases}
         isAdmin={isAdmin && !isImpersonatingNonAdmin}
         errorMessage={extractErrorMessage(releaseListError)}
-        isLoading={releaseIsLoading}
+        isLoading={releaseListIsLoading}
         selectRelease={handleChange}
         selectedRelease={value}
       />

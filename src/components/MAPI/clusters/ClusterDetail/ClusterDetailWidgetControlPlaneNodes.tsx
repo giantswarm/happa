@@ -88,17 +88,14 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
   const {
     data: controlPlaneNodes,
     error: controlPlaneNodesError,
-    isValidating: controlPlaneNodesIsValidating,
+    isLoading: controlPlaneNodesIsLoading,
   } = useSWR<ControlPlaneNode[], GenericResponseError>(
     controlPlaneNodesKey,
     () => fetchControlPlaneNodesForCluster(clientFactory, auth, cluster!)
   );
 
   const isLoading =
-    typeof cluster === 'undefined' ||
-    (typeof controlPlaneNodes === 'undefined' &&
-      typeof controlPlaneNodesError === 'undefined' &&
-      controlPlaneNodesIsValidating);
+    typeof cluster === 'undefined' || controlPlaneNodesIsLoading;
 
   useEffect(() => {
     if (controlPlaneNodesError) {

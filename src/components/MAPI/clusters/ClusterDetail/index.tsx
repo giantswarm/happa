@@ -299,7 +299,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   const {
     data: providerCluster,
     error: providerClusterError,
-    isValidating: providerClusterIsValidating,
+    isLoading: providerClusterIsLoading,
   } = useSWR<ProviderCluster, GenericResponseError>(providerClusterKey, () =>
     fetchProviderClusterForCluster(clientFactory, auth, cluster!)
   );
@@ -309,11 +309,6 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
       ErrorReporter.getInstance().notify(providerClusterError);
     }
   }, [providerClusterError]);
-
-  const providerClusterIsLoading =
-    typeof providerCluster === 'undefined' &&
-    typeof providerClusterError === 'undefined' &&
-    providerClusterIsValidating;
 
   const clusterDescription = useMemo(() => {
     if (!cluster || providerClusterIsLoading) return undefined;

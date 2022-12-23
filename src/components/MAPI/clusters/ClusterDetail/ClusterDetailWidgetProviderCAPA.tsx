@@ -50,8 +50,8 @@ const ClusterDetailWidgetProviderCAPA: React.FC<
 
   const {
     data: roleIdentity,
-    isValidating: roleIdentityIsValidating,
     error: roleIdentityError,
+    isLoading: roleIdentityIsLoading,
   } = useSWR<capav1beta1.IAWSClusterRoleIdentity, GenericResponseError>(
     roleIdentityKey,
     () =>
@@ -74,9 +74,6 @@ const ClusterDetailWidgetProviderCAPA: React.FC<
       ErrorReporter.getInstance().notify(roleIdentityError);
     }
   }, [roleIdentityError]);
-
-  const roleIdentityIsLoading =
-    typeof roleIdentity === 'undefined' && roleIdentityIsValidating;
 
   const accountID = roleIdentityIsLoading
     ? undefined
