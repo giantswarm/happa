@@ -88,7 +88,7 @@ const InstallIngressButton: React.FC<
 
   const {
     data: appList,
-    isValidating: appListIsValidating,
+    isLoading: appListIsLoading,
     error: appListError,
     mutate: mutateAppList,
   } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
@@ -126,7 +126,7 @@ const InstallIngressButton: React.FC<
   const {
     data: ingressAppToInstall,
     error: ingressAppToInstallError,
-    isValidating: ingressAppToInstallIsValidating,
+    isLoading: ingressAppToInstallIsLoading,
   } = useSWR<applicationv1alpha1.IAppCatalogEntry | null, GenericResponseError>(
     ingressAppCatalogEntryKey,
     () => getIngressAppCatalogEntry(appCatalogEntryClient.current, auth)
@@ -165,12 +165,10 @@ const InstallIngressButton: React.FC<
     case !errorMessage && isInstalling:
       isLoading = true;
       break;
-    case !errorMessage && typeof appList === 'undefined' && appListIsValidating:
+    case appListIsLoading:
       isLoading = true;
       break;
-    case !errorMessage &&
-      typeof ingressAppToInstall === 'undefined' &&
-      ingressAppToInstallIsValidating:
+    case ingressAppToInstallIsLoading:
       isLoading = true;
       break;
   }
