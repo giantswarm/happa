@@ -47,7 +47,7 @@ const AccessControl: React.FC<React.PropsWithChildren<IAccessControlProps>> = ({
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
-  const { data, mutate, error, isValidating } = useSWR<
+  const { data, mutate, error, isLoading } = useSWR<
     ui.IAccessControlRoleItem[],
     GenericResponseError
   >(getRoleItemsKey(permissions, organizationNamespace), () =>
@@ -66,11 +66,7 @@ const AccessControl: React.FC<React.PropsWithChildren<IAccessControlProps>> = ({
     [data, activeRoleName]
   );
 
-  const rolesIsLoading =
-    typeof data === 'undefined' && typeof error === 'undefined' && isValidating;
-
-  const activeRoleIsLoading =
-    rolesIsLoading && typeof activeRole === 'undefined';
+  const activeRoleIsLoading = isLoading && typeof activeRole === 'undefined';
 
   useLayoutEffect(() => {
     if (!activeRole && data && data.length > 0) {
@@ -193,7 +189,7 @@ const AccessControl: React.FC<React.PropsWithChildren<IAccessControlProps>> = ({
             }}
             basis='1/4'
             roles={data ?? []}
-            isLoading={rolesIsLoading}
+            isLoading={isLoading}
             activeRoleName={activeRoleName}
             setActiveRoleName={setActiveRoleName}
             errorMessage={extractErrorMessage(error)}
