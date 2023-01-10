@@ -32,7 +32,7 @@ export function usePermissionsForAppConfigsInClusterNamespace(
     data: configMapsAccess,
     error: configMapsError,
     isValidating: configMapsIsValidating,
-  } = useSWR<Record<typeof verbs[number], boolean>, GenericResponseError>(
+  } = useSWR<Record<(typeof verbs)[number], boolean>, GenericResponseError>(
     fetchAccessForResourceKey(namespace, verbs, '', 'configmaps'),
     () =>
       fetchAccessForResource(
@@ -52,7 +52,7 @@ export function usePermissionsForAppConfigsInClusterNamespace(
     data: secretsAccess,
     error: secretsError,
     isValidating: secretsIsValidating,
-  } = useSWR<Record<typeof verbs[number], boolean>, GenericResponseError>(
+  } = useSWR<Record<(typeof verbs)[number], boolean>, GenericResponseError>(
     fetchAccessForResourceKey(namespace, verbs, '', 'secrets'),
     () =>
       fetchAccessForResource(

@@ -38,7 +38,7 @@ export function usePermissionsForAppsInClusterNamespace(
     data: appAccess,
     error,
     isValidating,
-  } = useSWR<Record<typeof verbs[number], boolean>, GenericResponseError>(
+  } = useSWR<Record<(typeof verbs)[number], boolean>, GenericResponseError>(
     fetchAccessForResourceKey(namespace, verbs, group, resource),
     () =>
       fetchAccessForResource(
