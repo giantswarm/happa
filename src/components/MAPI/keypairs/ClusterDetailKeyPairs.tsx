@@ -114,17 +114,12 @@ const ClusterDetailKeyPairs: React.FC<
   const {
     data: keyPairList,
     error: keyPairListError,
-    isValidating: keyPairListIsValidating,
+    isLoading: keyPairListIsLoading,
   } = useSWR<legacyKeyPairs.IKeyPairList, GenericResponseError>(
     keyPairListKey,
     () =>
       legacyKeyPairs.getKeyPairList(keyPairListClient.current, auth, clusterId)
   );
-
-  const keyPairListIsLoading =
-    typeof keyPairList === 'undefined' &&
-    typeof keyPairListError === 'undefined' &&
-    keyPairListIsValidating;
 
   useEffect(() => {
     if (keyPairListError) {

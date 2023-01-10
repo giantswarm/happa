@@ -35,16 +35,13 @@ export function usePermissions() {
     firstLoadComplete && user?.type === LoggedInUserTypes.MAPI
       ? usePermissionsKey
       : null;
-  const { data, error, isValidating } = useSWR<
+  const { data, error, isLoading } = useSWR<
     IPermissionMap,
     GenericResponseError
   >(key, () => fetchPermissions(httpClientFactory, auth, organizations), {
     refreshInterval: Constants.PERMISSIONS_REFRESH_INTERVAL,
     revalidateIfStale: false,
   });
-
-  const isLoading =
-    typeof data === 'undefined' && typeof error === 'undefined' && isValidating;
 
   useEffect(() => {
     if (error) {

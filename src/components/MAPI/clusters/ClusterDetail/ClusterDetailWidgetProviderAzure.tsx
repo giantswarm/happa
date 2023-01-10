@@ -52,8 +52,8 @@ const ClusterDetailWidgetProviderAzure: React.FC<
 
   const {
     data: credentialList,
-    isValidating: credentialListIsValidating,
     error: credentialListError,
+    isLoading: credentialListIsLoading,
   } = useSWR<legacyCredentials.ICredentialList, GenericResponseError>(
     credentialListKey,
     () =>
@@ -76,9 +76,6 @@ const ClusterDetailWidgetProviderAzure: React.FC<
       ErrorReporter.getInstance().notify(credentialListError);
     }
   }, [credentialListError, orgId]);
-
-  const credentialListIsLoading =
-    typeof credentialList === 'undefined' && credentialListIsValidating;
 
   const credentials = credentialListIsLoading
     ? undefined

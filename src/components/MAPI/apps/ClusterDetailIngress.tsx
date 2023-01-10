@@ -102,15 +102,14 @@ const ClusterDetailIngress: React.FC<
   const {
     data: appList,
     error: appListError,
-    isValidating: appListIsValidating,
+    isLoading: appListIsLoading,
   } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
     appListKey,
     () => applicationv1alpha1.getAppList(appListClient, auth, appListGetOptions)
   );
 
-  const appListIsLoading =
-    typeof appsPermissions.canList === 'undefined' ||
-    (typeof appList === 'undefined' && appListIsValidating && !appListError);
+  const isLoading =
+    typeof appsPermissions.canList === 'undefined' || appListIsLoading;
 
   useEffect(() => {
     if (appListError) {
@@ -141,14 +140,14 @@ const ClusterDetailIngress: React.FC<
         }}
       >
         <IngressWrapper {...rest}>
-          {appListIsLoading && (
+          {isLoading && (
             <Box direction='row' align='center' gap='small'>
               <StyledLoadingIndicator loading={true} />
               <Text color='text-weak'>Loading ingress information…</Text>
             </Box>
           )}
 
-          {!appListIsLoading && !appListError && (
+          {!isLoading && !appListError && (
             <Box margin={{ bottom: 'medium' }}>
               {hasIngress ? (
                 <Text>
@@ -166,7 +165,7 @@ const ClusterDetailIngress: React.FC<
             </Box>
           )}
 
-          {hasIngress && !appListIsLoading && !appListError && (
+          {hasIngress && !isLoading && !appListError && (
             <Instructions
               provider={provider}
               k8sEndpoint={k8sEndpoint}
@@ -175,7 +174,7 @@ const ClusterDetailIngress: React.FC<
             />
           )}
 
-          {!hasIngress && !appListIsLoading && !appListError && (
+          {!hasIngress && !isLoading && !appListError && (
             <InstallIngressButton
               clusterID={clusterId}
               appsNamespace={appsNamespace!}

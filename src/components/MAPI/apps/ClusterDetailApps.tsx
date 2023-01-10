@@ -94,7 +94,7 @@ const ClusterDetailApps: React.FC<
   const {
     data: appList,
     error: appListError,
-    isValidating: appListIsValidating,
+    isLoading: appListIsLoading,
   } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
     appListKey,
     () =>
@@ -114,11 +114,6 @@ const ClusterDetailApps: React.FC<
       },
     }
   );
-  const appListIsLoading =
-    typeof appsPermissions.canList === 'undefined' ||
-    (appListIsValidating &&
-      typeof appList === 'undefined' &&
-      typeof appListError === 'undefined');
 
   useEffect(() => {
     if (appListError) {
@@ -126,7 +121,10 @@ const ClusterDetailApps: React.FC<
     }
   }, [appListError]);
 
-  const isLoading = appListIsLoading || typeof appsNamespace === 'undefined';
+  const isLoading =
+    typeof appsPermissions.canList === 'undefined' ||
+    appListIsLoading ||
+    typeof appsNamespace === 'undefined';
 
   const dispatch = useDispatch();
 

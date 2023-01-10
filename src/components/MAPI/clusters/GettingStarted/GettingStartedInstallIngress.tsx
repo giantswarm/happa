@@ -30,10 +30,13 @@ const GettingStartedInstallIngress: React.FC<
 
   const orgClient = useHttpClient();
   const orgKey = securityv1alpha1.getOrganizationKey(orgId);
-  const { data: org, error: orgError } = useSWR<
-    securityv1alpha1.IOrganization,
-    GenericResponseError
-  >(orgKey, () => securityv1alpha1.getOrganization(orgClient, auth, orgId));
+  const {
+    data: org,
+    error: orgError,
+    isLoading: orgIsLoading,
+  } = useSWR<securityv1alpha1.IOrganization, GenericResponseError>(orgKey, () =>
+    securityv1alpha1.getOrganization(orgClient, auth, orgId)
+  );
 
   useEffect(() => {
     if (orgError) {
@@ -60,10 +63,11 @@ const GettingStartedInstallIngress: React.FC<
       ? fetchClusterKey(provider, namespace, clusterId)
       : null;
 
-  const { data: cluster, error: clusterError } = useSWR<
-    Cluster,
-    GenericResponseError
-  >(clusterKey, () =>
+  const {
+    data: cluster,
+    error: clusterError,
+    isLoading: clusterIsLoading,
+  } = useSWR<Cluster, GenericResponseError>(clusterKey, () =>
     fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
   );
 
@@ -92,11 +96,7 @@ const GettingStartedInstallIngress: React.FC<
   const hasError =
     typeof orgError !== 'undefined' || typeof clusterError !== 'undefined';
 
-  const isLoadingResources =
-    typeof org === 'undefined' &&
-    typeof orgError === 'undefined' &&
-    typeof cluster === 'undefined' &&
-    typeof clusterError === 'undefined';
+  const isLoadingResources = orgIsLoading && clusterIsLoading;
 
   return (
     <Breadcrumb
