@@ -285,11 +285,12 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
               uiSchema={uiSchema}
               validator={validator}
               formData={formData}
+              showErrorList='bottom'
               onSubmit={handleCreation}
               onChange={handleFormDataChange}
               key={formDataKey.current}
             >
-              <Box margin={{ top: 'medium' }}>
+              <Box margin={{ vertical: 'medium' }}>
                 <Box direction='row' gap='small'>
                   <Button primary={true} type='submit' loading={isCreating}>
                     Create cluster

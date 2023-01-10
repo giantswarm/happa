@@ -4,9 +4,7 @@ import Select from 'UI/Inputs/Select';
 
 const SelectWidget: React.FC<WidgetProps> = ({
   id,
-  label,
   options,
-  schema,
   value,
   onChange,
 }) => {
@@ -22,14 +20,10 @@ const SelectWidget: React.FC<WidgetProps> = ({
 
   const selectedOption = enumOptions.find((option) => option.value === value);
 
-  const { description } = schema;
-
   return (
     <Select
       id={id}
-      label={label}
       value={selectedOption}
-      help={description}
       onChange={(e) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         handleChange(e.option);

@@ -5,7 +5,6 @@ import TextInput from 'UI/Inputs/TextInput';
 
 const BaseInputTemplate: React.FC<WidgetProps> = ({
   id,
-  label,
   schema,
   options,
   value,
@@ -13,6 +12,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   placeholder,
   disabled,
   readonly,
+  required,
   onChange,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,47 +31,36 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
 
   const inputProps = getInputProps(schema, type as string, options);
 
-  const { description, examples } = schema;
+  const { examples } = schema;
 
-  const isArrayItem = /(_\d+)$/.test(id);
-  const simplifiedView = isArrayItem && !description;
-
-  const displayLabel = simplifiedView ? '' : label;
-
-  const margin = {
-    top: simplifiedView ? 'small' : 'none',
-    bottom: 'small',
-  };
-
-  return inputProps.type === 'number' ? (
+  return schema.type === 'integer' ? (
     <NumberPicker
       id={id}
-      label={displayLabel}
-      help={description}
+      error={null}
       value={value}
       placeholder={placeholder}
       disabled={disabled}
       readOnly={readonly}
+      required={required}
       min={inputProps.min}
       max={inputProps.max}
       step={inputProps.step}
-      margin={margin}
+      margin={{ bottom: 'none' }}
       contentProps={{
-        width: { max: inputProps.type === 'number' ? 'small' : 'auto' },
+        width: { max: 'small' },
       }}
       onChange={handleNumberChange}
     />
   ) : (
     <TextInput
       id={id}
-      label={displayLabel}
-      help={description}
       suggestions={examples as string[]}
       value={value ?? ''}
       placeholder={placeholder}
       disabled={disabled}
       readOnly={readonly}
-      margin={margin}
+      required={required}
+      margin={{ bottom: 'none' }}
       onChange={handleChange}
       onSuggestionSelect={handleSuggestionSelect}
       {...inputProps}

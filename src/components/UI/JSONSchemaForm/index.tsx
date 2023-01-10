@@ -4,6 +4,8 @@ import React from 'react';
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
 import CheckboxWidget from './CheckboxWidget';
+import ErrorListTemplate from './ErrorListTemplate';
+import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
@@ -18,7 +20,9 @@ const customWidgets = {
 const customTemplates = {
   ArrayFieldTemplate,
   BaseInputTemplate,
+  ErrorListTemplate,
   FieldTemplate,
+  FieldErrorTemplate,
   ObjectFieldTemplate,
 };
 
@@ -28,6 +32,7 @@ const JSONSchemaForm: React.FC<FormProps> = (props) => {
       fields={customFields}
       widgets={customWidgets}
       templates={customTemplates}
+      noHtml5Validate
       {...props}
     />
   );

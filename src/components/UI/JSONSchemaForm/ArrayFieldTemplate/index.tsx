@@ -1,20 +1,11 @@
 import { ArrayFieldTemplateProps } from '@rjsf/utils';
-import { Accordion, AccordionPanel, Box, Text } from 'grommet';
-import React, { useState } from 'react';
+import { Box } from 'grommet';
+import React from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 
 const StyledButton = styled(Button)`
   height: 40px;
-`;
-
-const Icon = styled(Text)<{ isActive?: boolean }>`
-  transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
-  transform-origin: center center;
-  transition: 0.15s ease-out;
-  font-size: 28px;
-  line-height: 20px;
-  margin-left: -6px;
 `;
 
 const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
@@ -24,10 +15,6 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
   schema,
   onAddClick,
 }) => {
-  const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
-
-  const { description } = schema;
-
   const itemsAreObjects =
     schema.items &&
     typeof schema.items !== 'boolean' &&
@@ -35,68 +22,35 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
     schema.items.type === 'object';
 
   return (
-    <Accordion
-      activeIndex={activeIndexes}
-      onActive={setActiveIndexes}
-      animate={false}
-    >
-      <AccordionPanel
-        header={
-          <Box>
-            <Box direction='row' align='center' margin={{ vertical: 'small' }}>
-              <Icon
-                className='fa fa-chevron-down'
-                isActive={activeIndexes.includes(0)}
-                role='presentation'
-                aria-hidden='true'
-              />
-              <Text weight='bold'>{title}</Text>
-            </Box>
-            {description && (
-              <Text size='small' color='text-weak' margin={{ bottom: 'small' }}>
-                {description}
-              </Text>
-            )}
-          </Box>
-        }
+    <>
+      <Box
+        gap={itemsAreObjects ? 'large' : 'none'}
+        border={itemsAreObjects ? 'between' : false}
       >
-        <Box
+        {items.map((element) => (
+          <Box key={element.key} direction='row' gap='small'>
+            <Box fill>{element.children}</Box>
+            <StyledButton
+              icon={<i className='fa fa-delete' />}
+              onClick={element.onDropIndexClick(element.index)}
+              margin={{ top: 'small' }}
+            />
+          </Box>
+        ))}
+      </Box>
+      {canAdd && (
+        <Button
+          icon={<i className='fa fa-add-circle' />}
+          onClick={onAddClick}
           margin={{
+            top: items.length > 0 ? 'medium' : 'small',
             bottom: 'small',
           }}
-          border='all'
-          pad={{ top: 'small', bottom: 'medium', horizontal: 'medium' }}
-          round='xsmall'
         >
-          <Box
-            gap={itemsAreObjects ? 'large' : 'none'}
-            border={itemsAreObjects ? 'between' : false}
-          >
-            {items.map((element) => (
-              <Box key={element.key} direction='row' gap='small'>
-                <Box fill>{element.children}</Box>
-                <StyledButton
-                  icon={<i className='fa fa-delete' />}
-                  onClick={element.onDropIndexClick(element.index)}
-                  margin={{ top: 'small' }}
-                />
-              </Box>
-            ))}
-          </Box>
-          {canAdd && (
-            <Button
-              icon={<i className='fa fa-add-circle' />}
-              onClick={onAddClick}
-              margin={{
-                top: items.length > 0 ? 'medium' : 'small',
-              }}
-            >
-              Add {title} item
-            </Button>
-          )}
-        </Box>
-      </AccordionPanel>
-    </Accordion>
+          Add {title} item
+        </Button>
+      )}
+    </>
   );
 };
 
