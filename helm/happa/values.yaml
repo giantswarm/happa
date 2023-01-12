@@ -81,6 +81,8 @@ managementCluster:
 
 oidc:
   issuerAddress: ""
+  giantswarm:
+    writeAllGroups: []
 
 passage:
   address: ""

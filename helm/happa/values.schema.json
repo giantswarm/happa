@@ -243,6 +243,14 @@
             "properties": {
                 "issuerAddress": {
                     "type": "string"
+                },
+                "giantswarm": {
+                    "type": "object",
+                    "properties": {
+                        "writeAllGroups": {
+                            "type": "array"
+                        }
+                    }
                 }
             }
         },
