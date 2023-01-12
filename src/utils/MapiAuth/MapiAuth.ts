@@ -2,17 +2,19 @@
 
 import OAuth2 from 'utils/OAuth2/OAuth2';
 
-export enum MapiAuthConnectors {
+export enum MapiAuthConnectorFilters {
   Customer = 'customer',
   GiantSwarm = 'giantswarm',
 }
 
 class MapiAuth extends OAuth2 {
-  public attemptLogin(connector = MapiAuthConnectors.Customer): Promise<void> {
+  public attemptLogin(
+    connector = MapiAuthConnectorFilters.Customer
+  ): Promise<void> {
     const authURL = new URL(
       this.userManager.settings.metadata!.authorization_endpoint!
     );
-    authURL.searchParams.set('connector_id', connector);
+    authURL.searchParams.set('connector_filter', connector);
 
     this.userManager.settings.metadata!.authorization_endpoint =
       authURL.toString();
