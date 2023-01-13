@@ -8,14 +8,14 @@ exports[`Tabs renders a basic tab layout 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hUSFEE StyledTabs-sc-a4fwxl-2 uzbFk"
-      role="tablist"
+      class="StyledBox-sc-13pk1d4-0 dEaSmx StyledTabs-sc-a4fwxl-2 uzbFk"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 lijetV"
+        class="StyledBox-sc-13pk1d4-0 edhlAs"
+        role="tablist"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 bqzrgz StyledTabs__StyledTabsHeader-sc-a4fwxl-0 cUuna-D"
+          class="StyledBox-sc-13pk1d4-0 jDtci StyledTabs__StyledTabsHeader-sc-a4fwxl-0 cUuna-D"
         >
           <button
             aria-expanded="true"
@@ -25,7 +25,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 cIUtEX StyledTab-sc-1nnwnsb-0 hHUtFL"
+              class="StyledBox-sc-13pk1d4-0 jmwauO StyledTab-sc-1nnwnsb-0 hHUtFL"
             >
               <span
                 class="StyledText-sc-1sadyjn-0 ertqbC"
@@ -42,7 +42,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 hUkuJT StyledTab-sc-1nnwnsb-0 hHUtFL"
+              class="StyledBox-sc-13pk1d4-0 hWAQKy StyledTab-sc-1nnwnsb-0 hHUtFL"
             >
               <span
                 class="StyledText-sc-1sadyjn-0 yzFQy"
@@ -59,7 +59,7 @@ exports[`Tabs renders a basic tab layout 1`] = `
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 hUkuJT StyledTab-sc-1nnwnsb-0 hHUtFL"
+              class="StyledBox-sc-13pk1d4-0 hWAQKy StyledTab-sc-1nnwnsb-0 hHUtFL"
             >
               <span
                 class="StyledText-sc-1sadyjn-0 yzFQy"

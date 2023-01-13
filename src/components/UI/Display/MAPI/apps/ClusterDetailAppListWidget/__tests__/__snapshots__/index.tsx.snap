@@ -9,10 +9,10 @@ exports[`ClusterDetailAppListWidget renders a simple widget 1`] = `
   >
     <div
       aria-label="Some widget"
-      class="StyledBox-sc-13pk1d4-0 dcSRqt"
+      class="StyledBox-sc-13pk1d4-0 jsGoKs"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 hcghUc ClusterDetailAppListWidget__TitleWrapper-sc-1uv4dc5-0"
+        class="StyledBox-sc-13pk1d4-0 kVbrRF ClusterDetailAppListWidget__TitleWrapper-sc-1uv4dc5-0"
       >
         <span
           class="StyledText-sc-1sadyjn-0 eKNfcf ClusterDetailAppListWidget__Title-sc-1uv4dc5-1 gYRpLo"
@@ -21,7 +21,7 @@ exports[`ClusterDetailAppListWidget renders a simple widget 1`] = `
         </span>
       </div>
       <div
-        class="StyledBox-sc-13pk1d4-0 hUSFEE"
+        class="StyledBox-sc-13pk1d4-0 dEaSmx"
       >
         <span
           class="StyledText-sc-1sadyjn-0 iPFcFJ"

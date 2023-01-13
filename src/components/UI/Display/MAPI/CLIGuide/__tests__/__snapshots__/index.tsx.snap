@@ -90,24 +90,21 @@ exports[`CLIGuide renders without crashing 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 bANFZy CLIGuide__StyledAccordion-sc-1q6mc5x-0 VozNo"
-      role="tablist"
+      class="StyledBox-sc-13pk1d4-0 hKLvXb CLIGuide__StyledAccordion-sc-1q6mc5x-0 VozNo"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 jKAhip"
+        class="StyledBox-sc-13pk1d4-0 hoPFxc"
       >
         <button
           aria-expanded="false"
-          aria-selected="false"
           class="StyledButtonKind-sc-1vhfpnt-0 fCDdYY"
-          role="tab"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 hMXKog"
+            class="StyledBox-sc-13pk1d4-0 kOZkFt"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 hIPiEv"
+              class="StyledBox-sc-13pk1d4-0 ilrmLO"
             >
               <span
                 aria-hidden="true"
@@ -124,7 +121,7 @@ exports[`CLIGuide renders without crashing 1`] = `
               </span>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 qKBCC"
+              class="StyledBox-sc-13pk1d4-0 jVRlqT"
             >
               <svg
                 aria-label="FormDown"
@@ -142,11 +139,12 @@ exports[`CLIGuide renders without crashing 1`] = `
           </div>
         </button>
         <div
-          class="StyledBox-sc-13pk1d4-0 hUSFEE"
+          class="StyledBox-sc-13pk1d4-0 dEaSmx"
+          role="region"
         >
           <div
             aria-hidden="true"
-            class="StyledBox-sc-13pk1d4-0 hUSFEE Collapsible__AnimatedBox-sc-15kniua-0 dTvbxu"
+            class="StyledBox-sc-13pk1d4-0 dEaSmx Collapsible__AnimatedBox-sc-15kniua-0 dTvbxu"
           />
         </div>
       </div>
@@ -163,27 +161,24 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hUSFEE"
+      class="StyledBox-sc-13pk1d4-0 dEaSmx"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 bANFZy CLIGuide__StyledAccordion-sc-1q6mc5x-0 VozNo"
-        role="tablist"
+        class="StyledBox-sc-13pk1d4-0 hKLvXb CLIGuide__StyledAccordion-sc-1q6mc5x-0 VozNo"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 jKAhip"
+          class="StyledBox-sc-13pk1d4-0 hoPFxc"
         >
           <button
             aria-expanded="false"
-            aria-selected="false"
             class="StyledButtonKind-sc-1vhfpnt-0 fCDdYY"
-            role="tab"
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 hMXKog"
+              class="StyledBox-sc-13pk1d4-0 kOZkFt"
             >
               <div
-                class="StyledBox-sc-13pk1d4-0 hIPiEv"
+                class="StyledBox-sc-13pk1d4-0 ilrmLO"
               >
                 <span
                   aria-hidden="true"
@@ -200,7 +195,7 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
                 </span>
               </div>
               <div
-                class="StyledBox-sc-13pk1d4-0 qKBCC"
+                class="StyledBox-sc-13pk1d4-0 jVRlqT"
               >
                 <svg
                   aria-label="FormDown"
@@ -218,11 +213,12 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
             </div>
           </button>
           <div
-            class="StyledBox-sc-13pk1d4-0 hUSFEE"
+            class="StyledBox-sc-13pk1d4-0 dEaSmx"
+            role="region"
           >
             <div
               aria-hidden="true"
-              class="StyledBox-sc-13pk1d4-0 hUSFEE Collapsible__AnimatedBox-sc-15kniua-0 dTvbxu"
+              class="StyledBox-sc-13pk1d4-0 dEaSmx Collapsible__AnimatedBox-sc-15kniua-0 dTvbxu"
             />
           </div>
         </div>
@@ -448,7 +444,7 @@ exports[`CLIGuidesList renders without crashing 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 hUSFEE"
+      class="StyledBox-sc-13pk1d4-0 dEaSmx"
     />
   </div>
 </div>

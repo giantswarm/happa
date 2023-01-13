@@ -9,10 +9,10 @@ exports[`ClusterDetailWidget renders a inline widget 1`] = `
   >
     <div
       aria-label="Some widget"
-      class="StyledBox-sc-13pk1d4-0 evstQt"
+      class="StyledBox-sc-13pk1d4-0 jfNMAI"
     >
       <header
-        class="StyledBox-sc-13pk1d4-0 kZfnBN ClusterDetailWidget__StyledCardHeader-sc-15uj98x-0 fYBKVW"
+        class="StyledBox-sc-13pk1d4-0 dSSonU ClusterDetailWidget__StyledCardHeader-sc-15uj98x-0 fYBKVW"
       >
         <span
           class="StyledText-sc-1sadyjn-0 yzFQy"
@@ -21,7 +21,7 @@ exports[`ClusterDetailWidget renders a inline widget 1`] = `
         </span>
       </header>
       <div
-        class="StyledBox-sc-13pk1d4-0 idhgJp"
+        class="StyledBox-sc-13pk1d4-0 fTtzTw"
       >
         <span
           class="StyledText-sc-1sadyjn-0 iPFcFJ"
@@ -43,10 +43,10 @@ exports[`ClusterDetailWidget renders a simple widget 1`] = `
   >
     <div
       aria-label="Some widget"
-      class="StyledBox-sc-13pk1d4-0 evstQt"
+      class="StyledBox-sc-13pk1d4-0 jfNMAI"
     >
       <header
-        class="StyledBox-sc-13pk1d4-0 ZvexX ClusterDetailWidget__StyledCardHeader-sc-15uj98x-0 fYBKVW"
+        class="StyledBox-sc-13pk1d4-0 hyFyum ClusterDetailWidget__StyledCardHeader-sc-15uj98x-0 fYBKVW"
       >
         <span
           class="StyledText-sc-1sadyjn-0 yzFQy"
@@ -55,7 +55,7 @@ exports[`ClusterDetailWidget renders a simple widget 1`] = `
         </span>
       </header>
       <div
-        class="StyledBox-sc-13pk1d4-0 idhgJp"
+        class="StyledBox-sc-13pk1d4-0 fTtzTw"
       >
         <span
           class="StyledText-sc-1sadyjn-0 iPFcFJ"
