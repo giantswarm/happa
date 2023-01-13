@@ -48,7 +48,6 @@ const CreateClusterServicePriority: React.FC<
           onChange={handleChange}
           options={['highest', 'medium', 'lowest']}
           labelKey={toTitleCase}
-          readOnly={readOnly}
           disabled={disabled}
         />
       </Box>
