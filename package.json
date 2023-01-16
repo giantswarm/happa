@@ -207,7 +207,7 @@
     "json-schema-to-typescript": "11.0.2",
     "lint-staged": "13.1.0",
     "mini-css-extract-plugin": "2.7.2",
-    "nock": "13.2.9",
+    "nock": "13.3.0",
     "node-sass": "8.0.0",
     "postinstall-postinstall": "2.1.0",
     "prettier": "2.8.2",
@@ -235,7 +235,7 @@
     "kind-of": "6.0.3",
     "lodash": "4.17.21",
     "http-proxy": "1.18.1",
-    "node-fetch": "2.6.7",
+    "node-fetch": "2.6.8",
     "trim": "1.0.1",
     "underscore": "1.13.6"
   },
