@@ -46,10 +46,10 @@ Some warnings regarding unmatched dependency versions are expected and can be ig
 
 Then, to bring up Happa connected to an installation, you need to have a `kubectl` context that points to the installation's management cluster. You also need to have `get` permissions for the `happa-configmap` `ConfigMap`, in the `giantswarm` namespace.
 
-You can log into the installation's management cluster using the [kubectl gs](https://github.com/giantswarm/kubectl-gs) plugin. Here's how you would start Happa after using the plugin to log into the `ginger` installation:
+You can log into the installation's management cluster using the [kubectl gs](https://github.com/giantswarm/kubectl-gs) plugin. Here's how you would start Happa after using the plugin to log into the `gauss` installation:
 
 ```nohighlight
-HAPPA_KUBECTL_CONTEXT=gs-ginger yarn start
+HAPPA_KUBECTL_CONTEXT=gs-gauss yarn start
 ```
 
 ### Running tests
