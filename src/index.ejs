@@ -81,7 +81,11 @@
         happaVersion: '{!= happaVersion !}',
         defaultRequestTimeoutSeconds: {!= defaultRequestTimeoutSeconds !},
         mapiAuthRedirectURL: '{!= mapiAuthRedirectURL !}',
-        mapiAuthAdminGroup: '{!= mapiAuthAdminGroup !}',
+        mapiAuthAdminGroups: [
+          {! mapiAuthAdminGroups.split(' ').filter(Boolean).map((group) => { !}
+            '{!= group !}',
+          {! }) !}
+        ],
         sentryDsn: '{!= sentryDsn !}',
         sentryEnvironment: '{!= sentryEnvironment !}',
         sentryReleaseVersion: '{!= sentryReleaseVersion !}',

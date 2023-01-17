@@ -7,7 +7,7 @@ import { Dispatch } from 'redux';
 import ShadowMask from 'shared/ShadowMask';
 import styled from 'styled-components';
 import { clearQueues } from 'utils/flashMessage';
-import MapiAuth, { MapiAuthConnectors } from 'utils/MapiAuth/MapiAuth';
+import MapiAuth, { MapiAuthConnectorFilters } from 'utils/MapiAuth/MapiAuth';
 
 import { useAuthProvider } from './MAPI/MapiAuthProvider';
 
@@ -35,7 +35,10 @@ const AdminLogin: React.FC<React.PropsWithChildren<IAdminLoginProps>> = () => {
 
   useEffect(() => {
     dispatch(
-      mainActions.mapiLogin(auth as MapiAuth, MapiAuthConnectors.GiantSwarm)
+      mainActions.mapiLogin(
+        auth as MapiAuth,
+        MapiAuthConnectorFilters.GiantSwarm
+      )
     );
 
     return () => {

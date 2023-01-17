@@ -44,8 +44,8 @@ export function getLoggedInUser(state: IState): ILoggedInUser | null {
 export function getIsImpersonatingNonAdmin(state: IState): boolean {
   return (
     state.main.impersonation !== null &&
-    !state.main.impersonation?.groups?.includes(
-      window.config.mapiAuthAdminGroup
+    !state.main.impersonation?.groups?.some((group) =>
+      window.config.mapiAuthAdminGroups.includes(group)
     )
   );
 }

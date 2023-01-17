@@ -36,7 +36,7 @@ import {
   removeUserFromStorage,
   setUserToStorage,
 } from 'utils/localStorageUtils';
-import MapiAuth, { MapiAuthConnectors } from 'utils/MapiAuth/MapiAuth';
+import MapiAuth, { MapiAuthConnectorFilters } from 'utils/MapiAuth/MapiAuth';
 import {
   IOAuth2ImpersonationMetadata,
   IOAuth2Provider,
@@ -391,7 +391,7 @@ export function logout(
 
 export function mapiLogin(
   auth: MapiAuth,
-  connector?: MapiAuthConnectors
+  connector?: MapiAuthConnectorFilters
 ): ThunkAction<
   Promise<void>,
   IState,
