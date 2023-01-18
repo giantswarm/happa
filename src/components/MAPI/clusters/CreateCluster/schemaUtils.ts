@@ -3,35 +3,92 @@ import { generateUID } from 'MAPI/utils';
 
 import ClusterNameWidget from './ClusterNameWidget';
 
-export const prototypeProviders = [
-  'AWS',
-  'Cloud Director',
-  'GCP',
-  'Open Stack',
-  'VSphere',
-] as const;
-
-export type PrototypeProviders = typeof prototypeProviders[number];
-
-export const getDefaultFormData = (provider: PrototypeProviders) => {
-  switch (provider) {
-    case 'VSphere':
-      return {
-        cluster: {
-          name: generateUID(5),
-        },
-      };
-    default:
-      return {
-        clusterName: generateUID(5),
-      };
-  }
-};
-
 const uiSchemaProviderDefault: Record<string, GenericObjectType> = {
   v0: {
     'ui:options': {
-      order: ['clusterName', 'clusterDescription', '*'],
+      order: [
+        'clusterName',
+        'clusterDescription',
+        'organization',
+        'controlPlane',
+        '*',
+      ],
+    },
+    clusterName: {
+      'ui:options': {
+        widget: ClusterNameWidget,
+      },
+    },
+  },
+};
+
+const uiSchemaProviderAWS: Record<string, GenericObjectType> = {
+  v0: {
+    'ui:options': {
+      order: [
+        'clusterName',
+        'clusterDescription',
+        'organization',
+        'controlPlane',
+        '*',
+      ],
+    },
+    clusterName: {
+      'ui:options': {
+        widget: ClusterNameWidget,
+      },
+    },
+  },
+};
+
+const uiSchemaProviderCloudDirector: Record<string, GenericObjectType> = {
+  v0: {
+    'ui:options': {
+      order: [
+        'clusterDescription',
+        'cluster',
+        'organization',
+        'controlPlane',
+        '*',
+      ],
+    },
+    clusterName: {
+      'ui:options': {
+        widget: ClusterNameWidget,
+      },
+    },
+  },
+};
+
+const uiSchemaProviderGCP: Record<string, GenericObjectType> = {
+  v0: {
+    'ui:options': {
+      order: [
+        'clusterName',
+        'clusterDescription',
+        'organization',
+        'controlPlane',
+        '*',
+      ],
+    },
+    clusterName: {
+      'ui:options': {
+        widget: ClusterNameWidget,
+      },
+    },
+  },
+};
+
+const uiSchemaProviderOpenStack: Record<string, GenericObjectType> = {
+  v0: {
+    'ui:options': {
+      order: [
+        'clusterName',
+        'clusterDescription',
+        'organization',
+        'controlPlane',
+        '*',
+      ],
     },
     clusterName: {
       'ui:options': {
@@ -44,11 +101,11 @@ const uiSchemaProviderDefault: Record<string, GenericObjectType> = {
 const uiSchemaProviderVSphere: Record<string, GenericObjectType> = {
   v0: {
     'ui:options': {
-      order: ['cluster', '*'],
+      order: ['cluster', 'controlPlane', '*'],
     },
     cluster: {
       'ui:options': {
-        order: ['name', '*'],
+        order: ['name', 'organization', '*'],
       },
       name: {
         'ui:options': {
@@ -57,6 +114,35 @@ const uiSchemaProviderVSphere: Record<string, GenericObjectType> = {
       },
     },
   },
+};
+
+export const prototypeProviders = [
+  'AWS',
+  'Cloud Director',
+  'GCP',
+  'Open Stack',
+  'VSphere',
+] as const;
+
+export type PrototypeProviders = typeof prototypeProviders[number];
+
+export const getDefaultFormData = (
+  provider: PrototypeProviders,
+  organization: string
+) => {
+  switch (provider) {
+    case 'VSphere':
+      return {
+        cluster: {
+          name: generateUID(5),
+        },
+      };
+    default:
+      return {
+        clusterName: generateUID(5),
+        organization,
+      };
+  }
 };
 
 export function getUiSchema(
@@ -75,6 +161,22 @@ export function getUiSchema(
   let uiSchema;
 
   switch (provider) {
+    case 'AWS':
+      uiSchema = uiSchemaProviderAWS;
+      break;
+
+    case 'Cloud Director':
+      uiSchema = uiSchemaProviderCloudDirector;
+      break;
+
+    case 'GCP':
+      uiSchema = uiSchemaProviderGCP;
+      break;
+
+    case 'Open Stack':
+      uiSchema = uiSchemaProviderOpenStack;
+      break;
+
     case 'VSphere':
       uiSchema = uiSchemaProviderVSphere;
       break;

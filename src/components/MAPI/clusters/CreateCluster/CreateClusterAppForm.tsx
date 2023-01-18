@@ -120,6 +120,7 @@ interface ICreateClusterAppFormProps {
 
 const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   onCreationCancel,
+  organizationID,
 }) => {
   const [isCreating, _setIsCreating] = useState<boolean>(false);
 
@@ -179,12 +180,12 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     appSchema === undefined && appSchemaError === undefined;
 
   const [formData, setFormData] = useState<RJSFSchema>(
-    getDefaultFormData(selectedProvider)
+    getDefaultFormData(selectedProvider, organizationID)
   );
   const formDataKey = useRef<number | undefined>(undefined);
 
   const resetFormData = (newProvider: PrototypeProviders) => {
-    setFormData(getDefaultFormData(newProvider));
+    setFormData(getDefaultFormData(newProvider, organizationID));
     formDataKey.current = Date.now();
   };
 
@@ -230,8 +231,6 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   const uiSchema = useMemo(() => {
     return getUiSchema(selectedProvider, selectedBranch);
   }, [selectedBranch, selectedProvider]);
-
-  console.log(uiSchema);
 
   return (
     <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
