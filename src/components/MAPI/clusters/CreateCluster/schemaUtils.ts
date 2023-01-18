@@ -147,13 +147,8 @@ export const getDefaultFormData = (
 
 export function getUiSchema(
   provider: PrototypeProviders,
-  branchName: string
+  version: string
 ): UiSchema {
-  // TODO: replace when we use app version instead of branch name
-  const version = branchName.includes('release-')
-    ? branchName.replace('release-', '')
-    : 'v0.0.0';
-
   // select major version
   const majorVersion = version.split('.')[0];
 
