@@ -1,5 +1,5 @@
 import { IChangeEvent } from '@rjsf/core';
-import { RJSFSchema } from '@rjsf/utils';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
@@ -125,6 +125,67 @@ const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 
 Prompt.displayName = 'Prompt';
 
+type UiSchemaGenericKeys = 'CLUSTER_NAME' | 'CLUSTER_DESCRIPTION';
+
+type UiSchemaKeysMap = Record<UiSchemaGenericKeys, string>;
+
+function getUiSchemaKeysMap(
+  provider: PrototypeProviders,
+  version: string
+): UiSchemaKeysMap {
+  // select major version
+  const majorVersion = version.split('.')[0];
+
+  const uiSchemaKeysMapProviderDefault: Record<
+    string,
+    Record<UiSchemaGenericKeys, string>
+  > = {
+    v0: {
+      CLUSTER_NAME: 'clusterName',
+      CLUSTER_DESCRIPTION: 'clusterDescription',
+    },
+  };
+
+  switch (provider) {
+    default:
+      return uiSchemaKeysMapProviderDefault[majorVersion];
+  }
+}
+
+function generateUiSchemaForProvider(
+  provider: PrototypeProviders,
+  uiSchemaKeysMap: UiSchemaKeysMap
+): UiSchema {
+  const { CLUSTER_NAME, CLUSTER_DESCRIPTION } = uiSchemaKeysMap;
+
+  switch (provider) {
+    default:
+      return {
+        'ui:order': [CLUSTER_NAME, CLUSTER_DESCRIPTION, '*'],
+        [CLUSTER_NAME]: {
+          'ui:widget': ClusterNameWidget,
+        },
+      };
+  }
+}
+
+function getAppVersionFromBranchName(branchName: string) {
+  return branchName.includes('release-')
+    ? branchName.replace('release-', '')
+    : 'v0.0.0';
+}
+
+function getUiSchema(
+  provider: PrototypeProviders,
+  branchName: string
+): UiSchema {
+  // TODO: replace when we use app version instead of branch name
+  const version = getAppVersionFromBranchName(branchName);
+  const uiSchemaKeysMap = getUiSchemaKeysMap(provider, version);
+
+  return generateUiSchemaForProvider(provider, uiSchemaKeysMap);
+}
+
 interface ICreateClusterAppFormProps {
   namespace: string;
   organizationID: string;
@@ -239,12 +300,11 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   const [formDataPreviewFormat, setFormDataPreviewFormat] =
     useState<FormDataPreviewFormat>(FormDataPreviewFormat.Json);
 
-  const uiSchema = {
-    'ui:order': ['clusterName', 'clusterDescription', '*'],
-    clusterName: {
-      'ui:widget': ClusterNameWidget,
-    },
-  };
+  const uiSchema = useMemo(() => {
+    return getUiSchema(selectedProvider, selectedBranch);
+  }, [selectedBranch, selectedProvider]);
+
+  console.log(uiSchema);
 
   return (
     <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
