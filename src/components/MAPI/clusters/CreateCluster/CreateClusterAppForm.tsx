@@ -228,14 +228,15 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   const [formDataPreviewFormat, setFormDataPreviewFormat] =
     useState<FormDataPreviewFormat>(FormDataPreviewFormat.Json);
 
-  const uiSchema = useMemo(() => {
-    // TODO: replace when we use app version instead of branch name
-    const version = selectedBranch.includes('release-')
-      ? selectedBranch.replace('release-', '')
-      : 'v0.0.0';
+  // TODO: replace when we use app version instead of branch name
+  const version = selectedBranch.includes('release-')
+    ? selectedBranch.replace('release-', '')
+    : 'v0.0.0';
 
-    return getUiSchema(selectedProvider, version);
-  }, [selectedBranch, selectedProvider]);
+  const uiSchema = useMemo(
+    () => getUiSchema(selectedProvider, version),
+    [version, selectedProvider]
+  );
 
   return (
     <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
