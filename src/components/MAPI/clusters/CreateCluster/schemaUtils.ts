@@ -4,25 +4,6 @@ import { compare } from 'utils/semver';
 
 import ClusterNameWidget from './ClusterNameWidget';
 
-const uiSchemaProviderDefault: Record<string, GenericObjectType> = {
-  v0: {
-    'ui:options': {
-      order: [
-        'clusterName',
-        'clusterDescription',
-        'organization',
-        'controlPlane',
-        '*',
-      ],
-    },
-    clusterName: {
-      'ui:options': {
-        widget: ClusterNameWidget,
-      },
-    },
-  },
-};
-
 const uiSchemaProviderAWS: Record<string, GenericObjectType> = {
   v0: {
     'ui:options': {
@@ -166,6 +147,15 @@ export const getDefaultFormData = (
   }
 };
 
+const uiSchemaForProvider: Record<PrototypeProviders, UiSchema> = {
+  AWS: uiSchemaProviderAWS,
+  Azure: uiSchemaProviderAzure,
+  'Cloud Director': uiSchemaProviderCloudDirector,
+  GCP: uiSchemaProviderGCP,
+  'Open Stack': uiSchemaProviderOpenStack,
+  VSphere: uiSchemaProviderVSphere,
+};
+
 export function getUiSchema(
   provider: PrototypeProviders,
   version: string
@@ -173,38 +163,7 @@ export function getUiSchema(
   // select major version
   const majorVersion = version.split('.')[0];
 
-  // eslint-disable-next-line @typescript-eslint/init-declarations
-  let uiSchema;
-
-  switch (provider) {
-    case 'AWS':
-      uiSchema = uiSchemaProviderAWS;
-      break;
-
-    case 'Azure':
-      uiSchema = uiSchemaProviderAzure;
-      break;
-
-    case 'Cloud Director':
-      uiSchema = uiSchemaProviderCloudDirector;
-      break;
-
-    case 'GCP':
-      uiSchema = uiSchemaProviderGCP;
-      break;
-
-    case 'Open Stack':
-      uiSchema = uiSchemaProviderOpenStack;
-      break;
-
-    case 'VSphere':
-      uiSchema = uiSchemaProviderVSphere;
-      break;
-
-    default:
-      uiSchema = uiSchemaProviderDefault;
-      break;
-  }
+  const uiSchema = uiSchemaForProvider[provider];
 
   const latestVersion = Object.keys(uiSchema).sort(compare)[0];
 
