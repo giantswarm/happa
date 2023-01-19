@@ -42,6 +42,25 @@ const uiSchemaProviderAWS: Record<string, GenericObjectType> = {
   },
 };
 
+const uiSchemaProviderAzure: Record<string, GenericObjectType> = {
+  v0: {
+    'ui:options': {
+      order: [
+        'clusterName',
+        'clusterDescription',
+        'organization',
+        'controlPlane',
+        '*',
+      ],
+    },
+    clusterName: {
+      'ui:options': {
+        widget: ClusterNameWidget,
+      },
+    },
+  },
+};
+
 const uiSchemaProviderCloudDirector: Record<string, GenericObjectType> = {
   v0: {
     'ui:options': {
@@ -119,6 +138,7 @@ const uiSchemaProviderVSphere: Record<string, GenericObjectType> = {
 
 export const prototypeProviders = [
   'AWS',
+  'Azure',
   'Cloud Director',
   'GCP',
   'Open Stack',
@@ -159,6 +179,10 @@ export function getUiSchema(
   switch (provider) {
     case 'AWS':
       uiSchema = uiSchemaProviderAWS;
+      break;
+
+    case 'Azure':
+      uiSchema = uiSchemaProviderAzure;
       break;
 
     case 'Cloud Director':

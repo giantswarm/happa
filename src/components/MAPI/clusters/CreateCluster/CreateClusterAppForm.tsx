@@ -44,6 +44,8 @@ function getAppRepoName(provider: PrototypeProviders): string {
   switch (provider) {
     case 'AWS':
       return 'cluster-aws';
+    case 'Azure':
+      return 'cluster-azure';
     case 'Cloud Director':
       return 'cluster-cloud-director';
     case 'GCP':
