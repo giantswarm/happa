@@ -1,5 +1,6 @@
 import { GenericObjectType, UiSchema } from '@rjsf/utils';
 import { generateUID } from 'MAPI/utils';
+import { compare } from 'utils/semver';
 
 import ClusterNameWidget from './ClusterNameWidget';
 
@@ -181,5 +182,9 @@ export function getUiSchema(
       break;
   }
 
-  return uiSchema[majorVersion];
+  const latestVersion = Object.keys(uiSchema).sort(compare)[0];
+
+  // fallback to latest version if version specified by schema does
+  // not have a corresponding ui schema
+  return uiSchema[majorVersion] ?? uiSchema[latestVersion];
 }
