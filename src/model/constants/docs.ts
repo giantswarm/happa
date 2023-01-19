@@ -6,15 +6,16 @@
  */
 
 // Entry point for app platform docs.
-export const appPlatformURL = 'https://docs.giantswarm.io/app-platform/';
+export const appPlatformURL =
+  'https://docs.giantswarm.io/getting-started/app-platform/';
 
 // App CR configuration guide
 export const appCRConfigurationURL =
-  'https://docs.giantswarm.io/app-platform/getting-started/#configuring-an-app-cr';
+  'https://docs.giantswarm.io/getting-started/app-platform/deploy-app/#configuring-an-app-cr';
 
 // App configuration guide
 export const appConfigurationURL =
-  'https://docs.giantswarm.io/app-platform/app-configuration/';
+  'https://docs.giantswarm.io/getting-started/app-platform/app-configuration/';
 
 // How to prepare an AWS account for use with Giant Swarm.
 export const cloudProviderAccountSetupAwsURL =
@@ -26,7 +27,7 @@ export const cloudProviderAccountSetupAzureURL =
 
 // List of points to check before an upgrade.
 export const clusterUpgradeChecklistURL =
-  'https://docs.giantswarm.io/general/cluster-upgrades/#checklist';
+  'https://docs.giantswarm.io/platform-overview/cluster-management/cluster-upgrades/#checklist';
 
 // General Kubernetes explanation on exposig workloads to the outside world.
 export const exposingWorkloadsURL =
@@ -48,60 +49,60 @@ export const ingressControllerInstallationURL =
 
 // Collection of Kubernetes resources.
 export const kubernetesResourcesURL =
-  'https://docs.giantswarm.io/kubernetes/resources/';
+  'https://docs.giantswarm.io/support/k8s-resources/';
 
 // All information about node pools.
 export const nodePoolsURL = 'https://docs.giantswarm.io/advanced/node-pools/';
 
 // Organization concept docs.
 export const organizationsExplainedURL =
-  'https://docs.giantswarm.io/general/organizations/';
+  'https://docs.giantswarm.io/platform-overview/organizations/';
 
 export const organizationsNamingConventionsURL =
-  'https://docs.giantswarm.io/general/organizations/#naming-conventions';
+  'https://docs.giantswarm.io/platform-overview/organizations/#naming-conventions';
 
 export const organizationAccessControlWebUI =
-  'https://docs.giantswarm.io/ui-api/web/organizations/access-control/';
+  'https://docs.giantswarm.io/platform-overview/web-interface/organizations/access-control/';
 
 export const gsctlCreateKubeconfigURL =
-  'https://docs.giantswarm.io/ui-api/gsctl/create-kubeconfig/';
+  'https://docs.giantswarm.io/use-the-api/gsctl/create-kubeconfig/';
 
 export const kubectlGSInstallationURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/installation/';
+  'https://docs.giantswarm.io/use-the-api/kubectl-gs/installation/';
 
 export const kubectlGSGetOrganizationsURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-organizations/';
+  'https://docs.giantswarm.io/use-the-api/kubectl-gs/get-organizations/';
 
 export const kubectlGSLoginURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/login/';
+  'https://docs.giantswarm.io/use-the-api/kubectl-gs/login/';
 
 export const kubectlGSGetClustersURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-clusters/';
+  'https://docs.giantswarm.io/use-the-api/kubectl-gs/get-clusters/';
 
 export const kubectlGSUpdateClusterURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/update-cluster/';
+  'https://docs.giantswarm.io/use-the-api/kubectl-gs/update-cluster/';
 
 export const kubectlGSGetCatalogsURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-catalogs/';
+  'https://docs.giantswarm.io/use-the-api/kubectl-gs/get-catalogs/';
 
 export const kubectlGSTemplateClusterURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/template-cluster/';
+  'https://docs.giantswarm.io/use-the-api/kubectl-gs/template-cluster/';
 
 export const kubectlGSTemplateAppURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/template-app/';
+  'https://docs.giantswarm.io/use-the-api/kubectl-gs/template-app/';
 
 export const kubectlGSGetNodePoolsURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/get-nodepools/';
+  'https://docs.giantswarm.io/use-the-api/kubectl-gs/get-nodepools/';
 
 export const kubectlGSTemplateNodePoolURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/template-nodepool/';
+  'https://docs.giantswarm.io/use-the-api/kubectl-gs/template-nodepool/';
 
 export const kubectlGSUpdateAppURL =
-  'https://docs.giantswarm.io/ui-api/kubectl-gs/update-app/';
+  'https://docs.giantswarm.io/use-the-api/kubectl-gs/update-app/';
 
 // Management API introduction page
 export const managementAPIIntroduction =
-  'https://docs.giantswarm.io/ui-api/management-api/overview/';
+  'https://docs.giantswarm.io/use-the-api/management-api/';
 
 // How to create a RoleBinding
 export const kubectlCreateRoleBindingURL =
@@ -142,7 +143,7 @@ export const crds = {
 
 // CRD docs URL function
 export function crdSchemaURL(fullName: string) {
-  const baseURL = 'https://docs.giantswarm.io/ui-api/management-api/crd/';
+  const baseURL = 'https://docs.giantswarm.io/use-the-api/management-api/crd/';
 
   return `${baseURL}${fullName}/`;
 }
