@@ -53,11 +53,6 @@ const uiSchemaProviderCloudDirector: Record<string, GenericObjectType> = {
         '*',
       ],
     },
-    clusterName: {
-      'ui:options': {
-        widget: ClusterNameWidget,
-      },
-    },
   },
 };
 
@@ -133,17 +128,30 @@ export const getDefaultFormData = (
   organization: string
 ) => {
   switch (provider) {
-    case 'VSphere':
-      return {
-        cluster: {
-          name: generateUID(5),
-        },
-      };
-    default:
+    case 'AWS':
+    case 'Azure':
+    case 'GCP':
+    case 'Open Stack':
       return {
         clusterName: generateUID(5),
         organization,
       };
+
+    case 'Cloud Director':
+      return {
+        organization,
+      };
+
+    case 'VSphere':
+      return {
+        cluster: {
+          name: generateUID(5),
+          organization,
+        },
+      };
+
+    default:
+      return {};
   }
 };
 
