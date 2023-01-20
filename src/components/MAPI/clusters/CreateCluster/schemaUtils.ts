@@ -1,11 +1,12 @@
 import { GenericObjectType, UiSchema } from '@rjsf/utils';
 import { generateUID } from 'MAPI/utils';
 import { compare } from 'utils/semver';
+import { VersionImpl } from 'utils/Version';
 
 import ClusterNameWidget from './ClusterNameWidget';
 
 const uiSchemaProviderAWS: Record<string, GenericObjectType> = {
-  v0: {
+  0: {
     'ui:options': {
       order: [
         'clusterName',
@@ -24,7 +25,7 @@ const uiSchemaProviderAWS: Record<string, GenericObjectType> = {
 };
 
 const uiSchemaProviderAzure: Record<string, GenericObjectType> = {
-  v0: {
+  0: {
     'ui:options': {
       order: [
         'clusterName',
@@ -43,7 +44,7 @@ const uiSchemaProviderAzure: Record<string, GenericObjectType> = {
 };
 
 const uiSchemaProviderCloudDirector: Record<string, GenericObjectType> = {
-  v0: {
+  0: {
     'ui:options': {
       order: [
         'clusterDescription',
@@ -57,7 +58,7 @@ const uiSchemaProviderCloudDirector: Record<string, GenericObjectType> = {
 };
 
 const uiSchemaProviderGCP: Record<string, GenericObjectType> = {
-  v0: {
+  0: {
     'ui:options': {
       order: [
         'clusterName',
@@ -76,7 +77,7 @@ const uiSchemaProviderGCP: Record<string, GenericObjectType> = {
 };
 
 const uiSchemaProviderOpenStack: Record<string, GenericObjectType> = {
-  v0: {
+  0: {
     'ui:options': {
       order: [
         'clusterName',
@@ -95,7 +96,7 @@ const uiSchemaProviderOpenStack: Record<string, GenericObjectType> = {
 };
 
 const uiSchemaProviderVSphere: Record<string, GenericObjectType> = {
-  v0: {
+  0: {
     'ui:options': {
       order: ['cluster', 'controlPlane', '*'],
     },
@@ -168,8 +169,7 @@ export function getUiSchema(
   provider: PrototypeProviders,
   version: string
 ): UiSchema {
-  // select major version
-  const majorVersion = version.split('.')[0];
+  const majorVersion = new VersionImpl(version.slice(1)).getMajor();
 
   const uiSchema = uiSchemaForProvider[provider];
 
