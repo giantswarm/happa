@@ -21,7 +21,7 @@ describe('CLIGuide', () => {
     });
 
     fireEvent.click(
-      screen.getByRole('tab', { name: /Get something from somewhere/ })
+      screen.getByRole('button', { name: /Get something from somewhere/ })
     );
 
     expect(await screen.findByText('Just some content')).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('CLIGuidesList', () => {
       ],
     });
 
-    fireEvent.click(screen.getByRole('tab', { name: /Use the API to …/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Use the API to …/ }));
 
     expect(
       await screen.findByText('Get something from somewhere')
