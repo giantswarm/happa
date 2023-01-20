@@ -129,7 +129,7 @@ describe('ClusterDetailApps on Azure', () => {
 
     expect(screen.getByText('Installed Apps')).toBeInTheDocument();
 
-    const installedApps = screen.getAllByRole('tablist')[0];
+    const installedApps = screen.getAllByTestId('applist')[0];
     expect(
       within(installedApps).getByLabelText('App name: some-app')
     ).toBeInTheDocument();
@@ -179,7 +179,7 @@ describe('ClusterDetailApps on Azure', () => {
 
     expect(screen.getByText('Preinstalled Apps')).toBeInTheDocument();
 
-    const preinstalledApps = screen.getAllByRole('tablist')[1];
+    const preinstalledApps = screen.getAllByTestId('applist')[1];
     expect(
       within(preinstalledApps).getByLabelText('App name: cert-exporter')
     ).toBeInTheDocument();
@@ -257,7 +257,7 @@ describe('ClusterDetailApps on CAPA', () => {
 
     expect(screen.getByText('Installed Apps')).toBeInTheDocument();
 
-    const installedApps = screen.getAllByRole('tablist')[0];
+    const installedApps = screen.getAllByTestId('applist')[0];
     expect(
       within(installedApps).getByLabelText('App name: some-app')
     ).toBeInTheDocument();
@@ -305,7 +305,7 @@ describe('ClusterDetailApps on CAPA', () => {
 
     expect(screen.getByText('Default Apps')).toBeInTheDocument();
 
-    const defaultApps = screen.getAllByRole('tablist')[1];
+    const defaultApps = screen.getAllByTestId('applist')[1];
     expect(
       within(defaultApps).getByLabelText('App name: app-operator')
     ).toBeInTheDocument();

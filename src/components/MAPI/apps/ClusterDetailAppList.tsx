@@ -60,7 +60,7 @@ const ClusterDetailAppList: React.FC<
   };
 
   return (
-    <Box {...props}>
+    <Box {...props} data-testid='applist'>
       <Accordion
         gap='small'
         multiple={true}
