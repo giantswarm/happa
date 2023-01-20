@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import { OidcMetadata } from 'oidc-client';
+import { OidcMetadata } from 'oidc-client-ts';
 
 export interface IOAuth2CustomMetadata {
   issuer: string;
@@ -10,7 +10,7 @@ export interface IOAuth2CustomMetadata {
   userInfoEndpoint: string;
   endSessionEndpoint: string;
 
-  idTokenSigningAlgValuesSupported: string[];
+  tokenEndpointAuthSigningAlgValuesSupported: string[];
   tokenEndpointAuthMethodsSupported: string[];
   scopesSupported: string[];
   responseTypesSupported: string[];
@@ -31,8 +31,8 @@ export function convertToOIDCMetadata(
     userinfo_endpoint: metadata.userInfoEndpoint,
     end_session_endpoint: metadata.endSessionEndpoint,
 
-    id_token_signing_alg_values_supported:
-      metadata.idTokenSigningAlgValuesSupported,
+    token_endpoint_auth_signing_alg_values_supported:
+      metadata.tokenEndpointAuthSigningAlgValuesSupported,
     token_endpoint_auth_methods_supported:
       metadata.tokenEndpointAuthMethodsSupported,
     scopes_supported: metadata.scopesSupported,
