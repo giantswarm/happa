@@ -1,7 +1,3 @@
-<!-- HIRING_BANNER start -->
-[![We are hiring](https://user-images.githubusercontent.com/273727/185643314-9ff1e016-35de-4f47-b08e-6aad9777e8ba.svg)](https://www.giantswarm.io/careers#open-positions)
-<!-- HIRING_BANNER end -->
-
 [![CircleCI](https://circleci.com/gh/giantswarm/happa/tree/main.svg?style=shield&circle-token=6e98ba111259986b590f228cd20e20fcea3dd2e5)](https://circleci.com/gh/giantswarm/happa/tree/master)
 [![Docker Repository on Quay](https://quay.io/repository/giantswarm/happa/status 'Docker Repository on Quay')](https://quay.io/repository/giantswarm/happa)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=shield)](https://github.com/prettier/prettier)
