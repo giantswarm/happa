@@ -1,170 +1,190 @@
 {
     "$schema": "http://json-schema.org/schema#",
-    "type": "object",
     "properties": {
+        "arrayFields": {
+            "properties": {
+                "arrayMinMaxItems": {
+                    "description": "Array with the minimum and maximum number of items",
+                    "items": {
+                        "type": "string"
+                    },
+                    "maxItems": 2,
+                    "minItems": 1,
+                    "title": "Array with min/max items",
+                    "type": "array"
+                },
+                "arrayOfObjects": {
+                    "items": {
+                        "properties": {
+                            "age": {
+                                "type": "number"
+                            },
+                            "name": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "title": "Array of objects",
+                    "type": "array"
+                },
+                "arrayOfStrings": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "Array of strings",
+                    "type": "array"
+                }
+            },
+            "title": "Array fields",
+            "type": "object"
+        },
+        "booleanFields": {
+            "properties": {
+                "boolean": {
+                    "description": "Boolean field with title and description.",
+                    "title": "Boolean",
+                    "type": "boolean"
+                }
+            },
+            "title": "Boolean fields",
+            "type": "object"
+        },
+        "numericFields": {
+            "properties": {
+                "integer": {
+                    "description": "Integer field with title and description.",
+                    "title": "Integer",
+                    "type": "integer"
+                },
+                "integerEnum": {
+                    "description": "Integer field with enumerated values and custom labels.",
+                    "oneOf": [
+                        {
+                            "const": 1,
+                            "title": "One"
+                        },
+                        {
+                            "const": 2,
+                            "title": "Two"
+                        },
+                        {
+                            "const": 3,
+                            "title": "Three"
+                        }
+                    ],
+                    "title": "Integer enum",
+                    "type": "integer"
+                },
+                "number": {
+                    "description": "Number field with title and description.",
+                    "title": "Number",
+                    "type": "number"
+                },
+                "numberLimit": {
+                    "description": "Number field with minimum and maximum values validation. Submit the form to see validation errors.",
+                    "maximum": 5,
+                    "minimum": 2,
+                    "title": "Number with min/max values",
+                    "type": "number"
+                }
+            },
+            "title": "Numeric fields",
+            "type": "object"
+        },
+        "objectFields": {
+            "properties": {
+                "object": {
+                    "properties": {
+                        "age": {
+                            "type": "integer"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    },
+                    "title": "Object",
+                    "type": "object"
+                },
+                "objectRequired": {
+                    "description": "Object field with required properties. Submit the form to see validation errors.",
+                    "properties": {
+                        "age": {
+                            "type": "number"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "name"
+                    ],
+                    "title": "Object with required",
+                    "type": "object"
+                }
+            },
+            "title": "Object fields",
+            "type": "object"
+        },
         "stringFields": {
-            "type": "object",
-            "title": "String fields",
             "properties": {
                 "string": {
-                    "type": "string",
+                    "description": "String field with title and description.",
                     "title": "String",
-                    "description": "String field with title and description."
+                    "type": "string"
+                },
+                "stringCustomLabels": {
+                    "description": "String field with enumerated values and custom labels.",
+                    "oneOf": [
+                        {
+                            "const": "firstValue",
+                            "title": "First Value"
+                        },
+                        {
+                            "const": "secondValue",
+                            "title": "Second Value"
+                        },
+                        {
+                            "const": "thirdValue",
+                            "title": "Third Value"
+                        }
+                    ],
+                    "title": "String enum with custom labels",
+                    "type": "string"
                 },
                 "stringEnum": {
-                    "type": "string",
-                    "title": "String enum",
                     "description": "String field with enumerated values.",
                     "enum": [
                         "firstValue",
                         "secondValue",
                         "thirdValue"
-                    ]
-                },
-                "stringCustomLabels": {
-                    "type": "string",
-                    "title": "String enum with custom labels",
-                    "description": "String field with enumerated values and custom labels.",
-                    "oneOf": [
-                        {"const": "firstValue", "title": "First Value"},
-                        {"const": "secondValue", "title": "Second Value"},
-                        {"const": "thirdValue", "title": "Third Value"}
-                    ]
-                },
-                "stringLength": {
-                    "type": "string",
-                    "title": "String with min/max length",
-                    "description": "String field with minLength and maxLength validation. Submit the form to see validation errors.",
-                    "minLength": 2,
-                    "maxLength": 5
-                },
-                "stringPattern": {
-                    "type": "string",
-                    "title": "String with pattern",
-                    "description": "String field with pattern validation. Submit the form to see validation errors.",
-                    "pattern": "^[a-z0-9]{10,20}$"
+                    ],
+                    "title": "String enum",
+                    "type": "string"
                 },
                 "stringFormat": {
-                    "type": "string",
-                    "title": "String with format",
                     "description": "String field with specific format (email, uri, date, ipv4, etc.).",
-                    "format": "ipv4"
+                    "format": "ipv4",
+                    "title": "String with format",
+                    "type": "string"
+                },
+                "stringLength": {
+                    "description": "String field with minLength and maxLength validation. Submit the form to see validation errors.",
+                    "maxLength": 5,
+                    "minLength": 2,
+                    "title": "String with min/max length",
+                    "type": "string"
+                },
+                "stringPattern": {
+                    "description": "String field with pattern validation. Submit the form to see validation errors.",
+                    "pattern": "^[a-z0-9]{10,20}$",
+                    "title": "String with pattern",
+                    "type": "string"
                 }
-            }
-        },
-        "numericFields": {
-            "type": "object",
-            "title": "Numeric fields",
-            "properties": {
-                "number": {
-                    "type": "number",
-                    "title": "Number",
-                    "description": "Number field with title and description."
-                },
-                "numberLimit": {
-                    "type": "number",
-                    "title": "Number with min/max values",
-                    "description": "Number field with minimum and maximum values validation. Submit the form to see validation errors.",
-                    "minimum": 2,
-                    "maximum": 5
-                },
-                "integer": {
-                    "type": "integer",
-                    "title": "Integer",
-                    "description": "Integer field with title and description."
-                },
-                "integerEnum": {
-                    "type": "integer",
-                    "title": "Integer enum",
-                    "description": "Integer field with enumerated values and custom labels.",
-                    "oneOf": [
-                        {"const": 1, "title": "One"},
-                        {"const": 2, "title": "Two"},
-                        {"const": 3, "title": "Three"}
-                     ]
-                }
-            }
-        },
-        "booleanFields": {
-            "type": "object",
-            "title": "Boolean fields",
-            "properties": {
-                "boolean": {
-                    "type": "boolean",
-                    "title": "Boolean",
-                    "description": "Boolean field with title and description."
-                }
-            }
-        },
-        "objectFields": {
-            "type": "object",
-            "title": "Object fields",
-            "properties": {
-                "object": {
-                    "type": "object",
-                    "title": "Object",
-                    "properties": {
-                        "name": {
-                            "type": "string"
-                        },
-                        "age": {
-                            "type": "integer"
-                        }
-                    }
-                },
-                "objectRequired": {
-                    "type": "object",
-                    "title": "Object with required",
-                    "description": "Object field with required properties. Submit the form to see validation errors.",
-                    "properties": {
-                        "name": {
-                            "type": "string"
-                        },
-                        "age": {
-                            "type": "number"
-                        }
-                    },
-                    "required": ["name"]
-                }
-            }
-        },
-        "arrayFields": {
-            "type": "object",
-            "title": "Array fields",
-            "properties": {
-                "arrayOfStrings": {
-                    "type": "array",
-                    "title": "Array of strings",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "arrayOfObjects": {
-                    "type": "array",
-                    "title": "Array of objects",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "age": {
-                                "type": "number"
-                            }
-                        }
-                    }
-                },
-                "arrayMinMaxItems": {
-                    "type": "array",
-                    "title": "Array with min/max items",
-                    "description": "Array with the minimum and maximum number of items",
-                    "minItems": 1,
-                    "maxItems": 2,
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
+            },
+            "title": "String fields",
+            "type": "object"
         }
-    }
+    },
+    "type": "object"
 }

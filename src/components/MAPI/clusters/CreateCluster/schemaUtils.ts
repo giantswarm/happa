@@ -114,7 +114,36 @@ const uiSchemaProviderVSphere: Record<string, GenericObjectType> = {
 };
 
 const uiSchemaTestSchema: Record<string, GenericObjectType> = {
-  0: {},
+  0: {
+    'ui:options': {
+      order: [
+        'stringFields',
+        'numericFields',
+        'booleanFields',
+        'objectFields',
+        'arrayFields',
+        '*',
+      ],
+    },
+    stringFields: {
+      'ui:options': {
+        order: [
+          'string',
+          'stringEnum',
+          'stringCustomLabels',
+          'stringLength',
+          'stringFormat',
+          'stringPattern',
+          '*',
+        ],
+      },
+    },
+    arrayFields: {
+      'ui:options': {
+        order: ['arrayOfStrings', 'arrayOfObjects', 'arrayMinMaxItems', '*'],
+      },
+    },
+  },
 };
 
 export const prototypeProviders = [
