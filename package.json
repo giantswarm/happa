@@ -65,6 +65,7 @@
     "@sentry/tracing": "7.22.0",
     "bootstrap": "3.4.1",
     "bowser": "2.11.0",
+    "clean-deep": "^3.4.0",
     "color-hash": "2.0.1",
     "connected-react-router": "6.9.3",
     "copy-to-clipboard": "3.3.3",

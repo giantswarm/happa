@@ -16,7 +16,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   onChange,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value === '' ? options.emptyValue || '' : e.target.value);
+    onChange(e.target.value === '' ? options.emptyValue : e.target.value);
   };
 
   const handleNumberChange = (patch: { value: number; valid: boolean }) => {

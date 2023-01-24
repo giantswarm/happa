@@ -2,6 +2,7 @@ import { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import cleanDeep from 'clean-deep';
 import { Box, Text } from 'grommet';
 import { spinner } from 'images';
 import yaml from 'js-yaml';
@@ -185,6 +186,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     getDefaultFormData(selectedProvider, organizationID)
   );
   const formDataKey = useRef<number | undefined>(undefined);
+  const cleanFormData = cleanDeep(formData, { emptyStrings: false });
 
   const resetFormData = (newProvider: PrototypeProviders) => {
     setFormData(getDefaultFormData(newProvider, organizationID));
@@ -223,7 +225,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     // and disable navigating to cluster details page
 
     // eslint-disable-next-line no-console
-    console.log(formData);
+    console.log(cleanFormData);
     resetFormData(selectedProvider);
   };
 
@@ -323,11 +325,13 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
                 </Box>
                 <CodeBlock>
                   {formDataPreviewFormat === FormDataPreviewFormat.Json && (
-                    <Prompt>{JSON.stringify(formData, null, '\r  ')}</Prompt>
+                    <Prompt>
+                      {JSON.stringify(cleanFormData, null, '\r  ')}
+                    </Prompt>
                   )}
                   {formDataPreviewFormat === FormDataPreviewFormat.Yaml && (
                     <Prompt>
-                      {yaml.dump(formData, {
+                      {yaml.dump(cleanFormData, {
                         indent: 2,
                         quotingType: '"',
                       })}
