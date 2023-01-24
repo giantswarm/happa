@@ -23,6 +23,7 @@ import InputGroup from 'UI/Inputs/InputGroup';
 import RadioInput from 'UI/Inputs/RadioInput';
 import Select from 'UI/Inputs/Select';
 import JSONSchemaForm from 'UI/JSONSchemaForm';
+import testSchema from 'UI/JSONSchemaForm/test.schema.json';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
@@ -33,6 +34,8 @@ import {
   getUiSchema,
   PrototypeProviders,
   prototypeProviders,
+  PrototypeSchemas,
+  prototypeSchemas,
 } from './schemaUtils';
 
 const Wrapper = styled.div`
@@ -108,6 +111,11 @@ enum FormDataPreviewFormat {
   Yaml,
 }
 
+// TODO: replace test schema URL with the correct one
+// after merging prototype branch into the main branch
+const testSchemaURL =
+  'https://raw.githubusercontent.com/giantswarm/happa/cluster-app-creation-form-prototype/src/components/UI/JSONSchemaForm/test.schema.json';
+
 const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return <Line prompt={false} text={children} />;
 };
@@ -127,23 +135,29 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
 }) => {
   const [isCreating, _setIsCreating] = useState<boolean>(false);
 
-  const [selectedProvider, setSelectedProvider] = useState<PrototypeProviders>(
-    prototypeProviders[0]
+  const [selectedSchema, setSelectedSchema] = useState<PrototypeSchemas>(
+    prototypeSchemas[0]
   );
-  const [selectedBranch, setSelectedBranch] = useState<string>(
-    getDefaultRepoBranch(prototypeProviders[0])
+  const selectedProvider = prototypeProviders.find(
+    (provider) => provider === selectedSchema
+  );
+  const [selectedBranch, setSelectedBranch] = useState<string | undefined>(
+    selectedProvider ? getDefaultRepoBranch(prototypeProviders[0]) : undefined
   );
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
 
   const appRepoBranchesClient = useRef(clientFactory());
+  const appRepoBranchesKey = selectedProvider
+    ? fetchAppRepoBranchesKey(selectedProvider)
+    : null;
 
   const { data: repoBranches, error: repoBranchesError } = useSWR<
     IRepoBranchEntry[],
     GenericResponseError
-  >(fetchAppRepoBranchesKey(selectedProvider), () =>
-    fetchAppRepoBranches(appRepoBranchesClient.current, auth, selectedProvider)
+  >(appRepoBranchesKey, () =>
+    fetchAppRepoBranches(appRepoBranchesClient.current, auth, selectedProvider!)
   );
 
   useEffect(() => {
@@ -160,53 +174,65 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     return getAppCatalogEntrySchemaURL(selectedProvider, selectedBranch);
   }, [selectedBranch, selectedProvider]);
 
-  const { data: appSchema, error: appSchemaError } = useSWR<
+  const appSchemaKey = selectedProvider
+    ? fetchAppCatalogEntrySchemaKey(schemaURL)
+    : null;
+  const { data: providerSchema, error: providerSchemaError } = useSWR<
     RJSFSchema,
     GenericResponseError
-  >(fetchAppCatalogEntrySchemaKey(schemaURL), () =>
+  >(appSchemaKey, () =>
     fetchAppCatalogEntrySchema(appSchemaClient.current, auth, schemaURL!)
   );
 
   useEffect(() => {
-    if (appSchemaError) {
+    if (providerSchemaError) {
       new FlashMessage(
         'Something went wrong while trying to fetch external app schema.',
         messageType.ERROR,
         messageTTL.LONG,
-        extractErrorMessage(appSchemaError)
+        extractErrorMessage(providerSchemaError)
       );
-      ErrorReporter.getInstance().notify(appSchemaError);
+      ErrorReporter.getInstance().notify(providerSchemaError);
     }
-  }, [appSchemaError]);
+  }, [providerSchemaError]);
+
+  const appSchema = selectedProvider
+    ? providerSchema
+    : (testSchema as RJSFSchema);
 
   const appSchemaIsLoading =
-    appSchema === undefined && appSchemaError === undefined;
+    appSchema === undefined && providerSchemaError === undefined;
 
   const [formData, setFormData] = useState<RJSFSchema>(
-    getDefaultFormData(selectedProvider, organizationID)
+    getDefaultFormData(selectedSchema, organizationID)
   );
   const formDataKey = useRef<number | undefined>(undefined);
   const cleanFormData = cleanDeep(formData, { emptyStrings: false });
 
-  const resetFormData = (newProvider: PrototypeProviders) => {
-    setFormData(getDefaultFormData(newProvider, organizationID));
+  const resetFormData = (newSchema: PrototypeSchemas) => {
+    setFormData(getDefaultFormData(newSchema, organizationID));
     formDataKey.current = Date.now();
   };
 
-  const handleSelectedProviderChange = (
+  const handleSelectedSchemaChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const newProvider = e.target.value as PrototypeProviders;
-    setSelectedProvider(newProvider);
-    setSelectedBranch(getDefaultRepoBranch(newProvider));
-    resetFormData(newProvider);
+    const newSchema = e.target.value as PrototypeSchemas;
+    setSelectedSchema(newSchema);
+    const newProvider = prototypeProviders.find(
+      (provider) => provider === newSchema
+    );
+    setSelectedBranch(
+      newProvider ? getDefaultRepoBranch(newProvider) : undefined
+    );
+    resetFormData(newSchema);
   };
 
   const handleSelectedBranchChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setSelectedBranch(e.target.value);
-    resetFormData(selectedProvider);
+    resetFormData(selectedSchema);
   };
 
   const handleFormDataChange = ({
@@ -226,41 +252,57 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
 
     // eslint-disable-next-line no-console
     console.log(cleanFormData);
-    resetFormData(selectedProvider);
+    resetFormData(selectedSchema);
   };
 
   const [formDataPreviewFormat, setFormDataPreviewFormat] =
     useState<FormDataPreviewFormat>(FormDataPreviewFormat.Json);
 
   // TODO: replace when we use app version instead of branch name
-  const version = selectedBranch.startsWith('release-')
-    ? selectedBranch.replace('release-', '').replace('x', '0')
-    : 'v0.0.0';
+  const version =
+    selectedBranch && selectedBranch.startsWith('release-')
+      ? selectedBranch.replace('release-', '').replace('x', '0')
+      : 'v0.0.0';
 
   const uiSchema = useMemo(
-    () => getUiSchema(selectedProvider, version),
-    [version, selectedProvider]
+    () => getUiSchema(selectedSchema, version),
+    [version, selectedSchema]
   );
 
   return (
     <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
       <Box direction='row' gap='medium'>
-        <InputGroup label='Provider'>
+        <InputGroup
+          label='Schema'
+          info={
+            <a
+              target='_blank'
+              rel='noopener noreferrer'
+              href={selectedProvider ? schemaURL : testSchemaURL}
+            >
+              <Text color='text-weak' size='small'>
+                Open schema in new tab <i className='fa fa-open-in-new' />
+              </Text>
+            </a>
+          }
+        >
           <Select
-            value={selectedProvider}
-            onChange={handleSelectedProviderChange}
-            options={prototypeProviders.slice()}
+            value={selectedSchema}
+            onChange={handleSelectedSchemaChange}
+            options={prototypeSchemas.slice()}
           />
         </InputGroup>
-        <Box flex={{ grow: 1 }}>
-          <InputGroup label='Branch'>
-            <Select
-              value={selectedBranch}
-              onChange={handleSelectedBranchChange}
-              options={repoBranches?.map((entry) => entry.name) ?? []}
-            />
-          </InputGroup>
-        </Box>
+        {selectedProvider && (
+          <Box flex={{ grow: 1 }}>
+            <InputGroup label='Branch'>
+              <Select
+                value={selectedBranch}
+                onChange={handleSelectedBranchChange}
+                options={repoBranches?.map((entry) => entry.name) ?? []}
+              />
+            </InputGroup>
+          </Box>
+        )}
       </Box>
       {appSchemaIsLoading && (
         <Wrapper>
@@ -268,7 +310,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
         </Wrapper>
       )}
       {!appSchemaIsLoading &&
-        typeof appSchemaError === 'undefined' &&
+        typeof providerSchemaError === 'undefined' &&
         (typeof appSchema === 'undefined' ? (
           <Text>
             No <code>values.schema.json</code> file found for the selected

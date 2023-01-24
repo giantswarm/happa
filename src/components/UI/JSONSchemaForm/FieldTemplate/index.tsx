@@ -12,8 +12,11 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
   children,
   label,
   schema,
+  required,
 }) => {
   const { type, description } = schema;
+
+  const displayLabel = `${label}${required ? '*' : ''}`;
 
   const isRootItem = id === 'root';
   const isArrayItem = /(_\d+)$/.test(id);
@@ -25,7 +28,7 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
   if (type === 'object' && isArrayItem) {
     return (
       <ObjectFormField
-        label={label}
+        label={displayLabel}
         help={description}
         error={errors}
         isArrayItem={isArrayItem}
@@ -37,7 +40,11 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
 
   if (type === 'array' || type === 'object') {
     return (
-      <AccordionFormField label={label} help={description} error={errors}>
+      <AccordionFormField
+        label={displayLabel}
+        help={description}
+        error={errors}
+      >
         {children}
       </AccordionFormField>
     );
@@ -45,7 +52,7 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
 
   return (
     <FormField
-      label={label}
+      label={displayLabel}
       help={description}
       error={rawErrors ? errors : undefined}
       htmlFor={id}

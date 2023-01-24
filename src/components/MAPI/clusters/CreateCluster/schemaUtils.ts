@@ -113,6 +113,39 @@ const uiSchemaProviderVSphere: Record<string, GenericObjectType> = {
   },
 };
 
+const uiSchemaTestSchema: Record<string, GenericObjectType> = {
+  0: {
+    'ui:options': {
+      order: [
+        'stringFields',
+        'numericFields',
+        'booleanFields',
+        'objectFields',
+        'arrayFields',
+        '*',
+      ],
+    },
+    stringFields: {
+      'ui:options': {
+        order: [
+          'string',
+          'stringEnum',
+          'stringCustomLabels',
+          'stringLength',
+          'stringFormat',
+          'stringPattern',
+          '*',
+        ],
+      },
+    },
+    arrayFields: {
+      'ui:options': {
+        order: ['arrayOfStrings', 'arrayOfObjects', 'arrayMinMaxItems', '*'],
+      },
+    },
+  },
+};
+
 export const prototypeProviders = [
   'AWS',
   'Azure',
@@ -124,11 +157,18 @@ export const prototypeProviders = [
 
 export type PrototypeProviders = typeof prototypeProviders[number];
 
+export type PrototypeSchemas = 'Test Schema' | PrototypeProviders;
+
+export const prototypeSchemas: PrototypeSchemas[] = [
+  'Test Schema',
+  ...prototypeProviders,
+];
+
 export const getDefaultFormData = (
-  provider: PrototypeProviders,
+  schema: PrototypeSchemas,
   organization: string
 ) => {
-  switch (provider) {
+  switch (schema) {
     case 'AWS':
     case 'Azure':
     case 'GCP':
@@ -156,22 +196,23 @@ export const getDefaultFormData = (
   }
 };
 
-const uiSchemaForProvider: Record<PrototypeProviders, UiSchema> = {
+const uiSchemaForSchema: Record<PrototypeSchemas, UiSchema> = {
   AWS: uiSchemaProviderAWS,
   Azure: uiSchemaProviderAzure,
   'Cloud Director': uiSchemaProviderCloudDirector,
   GCP: uiSchemaProviderGCP,
   'Open Stack': uiSchemaProviderOpenStack,
   VSphere: uiSchemaProviderVSphere,
+  'Test Schema': uiSchemaTestSchema,
 };
 
 export function getUiSchema(
-  provider: PrototypeProviders,
+  schema: PrototypeSchemas,
   version: string
 ): UiSchema {
   const majorVersion = new VersionImpl(version.slice(1)).getMajor();
 
-  const uiSchema = uiSchemaForProvider[provider];
+  const uiSchema = uiSchemaForSchema[schema];
 
   const latestVersion = Object.keys(uiSchema).sort(compare)[0];
 
