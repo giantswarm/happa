@@ -5,6 +5,7 @@ import Route from 'Route';
 
 import ClusterDetail from './ClusterDetail';
 import CreateCluster from './CreateCluster';
+import CreateClusterAppForm from './CreateCluster/CreateClusterAppForm';
 import GettingStarted from './GettingStarted';
 
 const Cluster: React.FC<React.PropsWithChildren<{}>> = () => {
@@ -14,6 +15,11 @@ const Cluster: React.FC<React.PropsWithChildren<{}>> = () => {
         component={CreateCluster}
         exact
         path={OrganizationsRoutes.Clusters.New}
+      />
+      <Route
+        component={CreateClusterAppForm}
+        exact
+        path={OrganizationsRoutes.Clusters.NewViaAppBundles}
       />
       <Route
         path={OrganizationsRoutes.Clusters.GettingStarted.Overview}
