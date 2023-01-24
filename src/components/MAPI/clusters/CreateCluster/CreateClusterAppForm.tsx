@@ -9,7 +9,7 @@ import {
   fetchAppCatalogEntrySchema,
   fetchAppCatalogEntrySchemaKey,
 } from 'MAPI/apps/utils';
-import { extractErrorMessage, generateUID } from 'MAPI/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -27,7 +27,12 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
-import ClusterNameWidget from './ClusterNameWidget';
+import {
+  getDefaultFormData,
+  getUiSchema,
+  PrototypeProviders,
+  prototypeProviders,
+} from './schemaUtils';
 
 const Wrapper = styled.div`
   position: relative;
@@ -35,25 +40,12 @@ const Wrapper = styled.div`
   text-align: center;
 `;
 
-type PrototypeProviders =
-  | 'AWS'
-  | 'Cloud Director'
-  | 'GCP'
-  | 'Open Stack'
-  | 'VSphere';
-
-const prototypeProviders: PrototypeProviders[] = [
-  'AWS',
-  'Cloud Director',
-  'GCP',
-  'Open Stack',
-  'VSphere',
-];
-
 function getAppRepoName(provider: PrototypeProviders): string {
   switch (provider) {
     case 'AWS':
       return 'cluster-aws';
+    case 'Azure':
+      return 'cluster-azure';
     case 'Cloud Director':
       return 'cluster-cloud-director';
     case 'GCP':
@@ -76,10 +68,6 @@ function getAppCatalogEntrySchemaURL(
 
   return `https://raw.githubusercontent.com/giantswarm/${appRepoName}/${branchName}/helm/${appRepoName}/values.schema.json`;
 }
-
-const getDefaultFormData = () => ({
-  clusterName: generateUID(5),
-});
 
 interface IRepoBranchEntry {
   name: string;
@@ -134,6 +122,7 @@ interface ICreateClusterAppFormProps {
 
 const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   onCreationCancel,
+  organizationID,
 }) => {
   const [isCreating, _setIsCreating] = useState<boolean>(false);
 
@@ -192,11 +181,13 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   const appSchemaIsLoading =
     appSchema === undefined && appSchemaError === undefined;
 
-  const [formData, setFormData] = useState<RJSFSchema>(getDefaultFormData());
+  const [formData, setFormData] = useState<RJSFSchema>(
+    getDefaultFormData(selectedProvider, organizationID)
+  );
   const formDataKey = useRef<number | undefined>(undefined);
 
-  const resetFormData = () => {
-    setFormData(getDefaultFormData());
+  const resetFormData = (newProvider: PrototypeProviders) => {
+    setFormData(getDefaultFormData(newProvider, organizationID));
     formDataKey.current = Date.now();
   };
 
@@ -206,14 +197,14 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     const newProvider = e.target.value as PrototypeProviders;
     setSelectedProvider(newProvider);
     setSelectedBranch(getDefaultRepoBranch(newProvider));
-    resetFormData();
+    resetFormData(newProvider);
   };
 
   const handleSelectedBranchChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setSelectedBranch(e.target.value);
-    resetFormData();
+    resetFormData(selectedProvider);
   };
 
   const handleFormDataChange = ({
@@ -233,18 +224,21 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
 
     // eslint-disable-next-line no-console
     console.log(formData);
-    resetFormData();
+    resetFormData(selectedProvider);
   };
 
   const [formDataPreviewFormat, setFormDataPreviewFormat] =
     useState<FormDataPreviewFormat>(FormDataPreviewFormat.Json);
 
-  const uiSchema = {
-    'ui:order': ['clusterName', 'clusterDescription', '*'],
-    clusterName: {
-      'ui:widget': ClusterNameWidget,
-    },
-  };
+  // TODO: replace when we use app version instead of branch name
+  const version = selectedBranch.startsWith('release-')
+    ? selectedBranch.replace('release-', '').replace('x', '0')
+    : 'v0.0.0';
+
+  const uiSchema = useMemo(
+    () => getUiSchema(selectedProvider, version),
+    [version, selectedProvider]
+  );
 
   return (
     <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
@@ -253,7 +247,7 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
           <Select
             value={selectedProvider}
             onChange={handleSelectedProviderChange}
-            options={prototypeProviders}
+            options={prototypeProviders.slice()}
           />
         </InputGroup>
         <Box flex={{ grow: 1 }}>
