@@ -2,138 +2,168 @@
     "$schema": "http://json-schema.org/schema#",
     "type": "object",
     "properties": {
-        "string": {
-            "type": "string",
-            "title": "String",
-            "description": "String field with title and description."
-        },
-        "number": {
-            "type": "number",
-            "title": "Number",
-            "description": "Number field with title and description."
-        },
-        "integer": {
-            "type": "integer",
-            "title": "Integer",
-            "description": "Integer field with title and description."
-        },
-        "boolean": {
-            "type": "boolean",
-            "title": "Boolean",
-            "description": "Boolean field with title and description."
-        },
-        "stringEnum": {
-            "type": "string",
-            "title": "String enum",
-            "description": "String field with enumerated values.",
-            "enum": [
-                "firstValue",
-                "secondValue",
-                "thirdValue"
-            ]
-        },
-        "stringCustomLabels": {
-            "type": "string",
-            "title": "String enum with custom labels",
-            "description": "String field with enumerated values and custom labels.",
-            "oneOf": [
-                {"const": "firstValue", "title": "First Value"},
-                {"const": "secondValue", "title": "Second Value"},
-                {"const": "thirdValue", "title": "Third Value"}
-            ]
-        },
-        "stringLength": {
-            "type": "string",
-            "title": "String with min/max length",
-            "description": "String field with minLength and maxLength validation. Submit the form to see validation errors.",
-            "minLength": 2,
-            "maxLength": 5
-        },
-        "stringPattern": {
-            "type": "string",
-            "title": "String with pattern",
-            "description": "String field with pattern validation. Submit the form to see validation errors.",
-            "pattern": "^[a-z0-9]{10,20}$"
-        },
-        "stringFormat": {
-            "type": "string",
-            "title": "String with format",
-            "description": "String field with specific format (email, uri, date, ipv4, etc.).",
-            "format": "ipv4"
-        },
-        "integerEnum": {
-            "type": "integer",
-            "title": "Integer enum",
-            "description": "Integer field with enumerated values and custom labels.",
-            "oneOf": [
-                {"const": 1, "title": "One"},
-                {"const": 2, "title": "Two"},
-                {"const": 3, "title": "Three"}
-             ]
-        },
-        "integerLimit": {
-            "type": "number",
-            "title": "Number with min/max values",
-            "description": "Number field with minimum and maximum values validation. Submit the form to see validation errors.",
-            "minimum": 2,
-            "maximum": 5
-        },
-        "object": {
+        "stringFields": {
             "type": "object",
-            "title": "Object",
+            "title": "String fields",
             "properties": {
-                "name": {
-                    "type": "string"
+                "string": {
+                    "type": "string",
+                    "title": "String",
+                    "description": "String field with title and description."
                 },
-                "age": {
-                    "type": "integer"
+                "stringEnum": {
+                    "type": "string",
+                    "title": "String enum",
+                    "description": "String field with enumerated values.",
+                    "enum": [
+                        "firstValue",
+                        "secondValue",
+                        "thirdValue"
+                    ]
+                },
+                "stringCustomLabels": {
+                    "type": "string",
+                    "title": "String enum with custom labels",
+                    "description": "String field with enumerated values and custom labels.",
+                    "oneOf": [
+                        {"const": "firstValue", "title": "First Value"},
+                        {"const": "secondValue", "title": "Second Value"},
+                        {"const": "thirdValue", "title": "Third Value"}
+                    ]
+                },
+                "stringLength": {
+                    "type": "string",
+                    "title": "String with min/max length",
+                    "description": "String field with minLength and maxLength validation. Submit the form to see validation errors.",
+                    "minLength": 2,
+                    "maxLength": 5
+                },
+                "stringPattern": {
+                    "type": "string",
+                    "title": "String with pattern",
+                    "description": "String field with pattern validation. Submit the form to see validation errors.",
+                    "pattern": "^[a-z0-9]{10,20}$"
+                },
+                "stringFormat": {
+                    "type": "string",
+                    "title": "String with format",
+                    "description": "String field with specific format (email, uri, date, ipv4, etc.).",
+                    "format": "ipv4"
                 }
             }
         },
-        "objectRequired": {
+        "numericFields": {
             "type": "object",
-            "title": "Object with required",
-            "description": "Object field with required properties. Submit the form to see validation errors.",
+            "title": "Numeric fields",
             "properties": {
-                "name": {
-                    "type": "string"
+                "number": {
+                    "type": "number",
+                    "title": "Number",
+                    "description": "Number field with title and description."
                 },
-                "age": {
-                    "type": "number"
+                "numberLimit": {
+                    "type": "number",
+                    "title": "Number with min/max values",
+                    "description": "Number field with minimum and maximum values validation. Submit the form to see validation errors.",
+                    "minimum": 2,
+                    "maximum": 5
+                },
+                "integer": {
+                    "type": "integer",
+                    "title": "Integer",
+                    "description": "Integer field with title and description."
+                },
+                "integerEnum": {
+                    "type": "integer",
+                    "title": "Integer enum",
+                    "description": "Integer field with enumerated values and custom labels.",
+                    "oneOf": [
+                        {"const": 1, "title": "One"},
+                        {"const": 2, "title": "Two"},
+                        {"const": 3, "title": "Three"}
+                     ]
                 }
-            },
-            "required": ["name"]
-        },
-        "arrayOfStrings": {
-            "type": "array",
-            "title": "Array of strings",
-            "items": {
-                "type": "string"
             }
         },
-        "arrayOfObjects": {
-            "type": "array",
-            "title": "Array of objects",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string"
+        "booleanFields": {
+            "type": "object",
+            "title": "Boolean fields",
+            "properties": {
+                "boolean": {
+                    "type": "boolean",
+                    "title": "Boolean",
+                    "description": "Boolean field with title and description."
+                }
+            }
+        },
+        "objectFields": {
+            "type": "object",
+            "title": "Object fields",
+            "properties": {
+                "object": {
+                    "type": "object",
+                    "title": "Object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "age": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "objectRequired": {
+                    "type": "object",
+                    "title": "Object with required",
+                    "description": "Object field with required properties. Submit the form to see validation errors.",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "age": {
+                            "type": "number"
+                        }
                     },
-                    "age": {
-                        "type": "number"
+                    "required": ["name"]
+                }
+            }
+        },
+        "arrayFields": {
+            "type": "object",
+            "title": "Array fields",
+            "properties": {
+                "arrayOfStrings": {
+                    "type": "array",
+                    "title": "Array of strings",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "arrayOfObjects": {
+                    "type": "array",
+                    "title": "Array of objects",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "age": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+                "arrayMinMaxItems": {
+                    "type": "array",
+                    "title": "Array with min/max items",
+                    "description": "Array with the minimum and maximum number of items",
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "items": {
+                        "type": "string"
                     }
                 }
-            }
-        },
-        "arrayMinItems": {
-            "type": "array",
-            "title": "Array with min/max items",
-            "description": "Array with the minimum and maximum number of items",
-            "minItems": 1,
-            "maxItems": 2,
-            "items": {
-                "type": "string"
             }
         }
     }
