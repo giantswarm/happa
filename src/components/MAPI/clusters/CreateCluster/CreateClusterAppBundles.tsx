@@ -140,8 +140,8 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
 ) => {
   const match = useRouteMatch<{
     orgId: string;
-    provider: PrototypeSchemas;
-    branch: string;
+    provider?: PrototypeSchemas;
+    branch?: string;
   }>();
   const { orgId, provider, branch } = match.params;
   const organizations = useSelector(selectOrganizations());
@@ -151,24 +151,42 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   const [isCreating, _setIsCreating] = useState<boolean>(false);
 
   const [selectedSchema, setSelectedSchema] = useState<PrototypeSchemas>(
-    decodeURIComponent(provider) as PrototypeSchemas
+    provider
+      ? (decodeURIComponent(provider) as PrototypeSchemas)
+      : prototypeSchemas[0]
   );
   const selectedProvider = prototypeProviders.find((p) => p === selectedSchema);
   const [selectedBranch, setSelectedBranch] = useState<string | undefined>(
-    selectedProvider ? decodeURIComponent(branch) : undefined
+    branch
+      ? decodeURIComponent(branch)
+      : selectedProvider
+      ? getDefaultRepoBranch(prototypeProviders[0])
+      : undefined
   );
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const path = RoutePath.createUsablePath(
-      OrganizationsRoutes.Clusters.NewViaAppBundles,
-      {
-        orgId: organizationID,
-        provider: encodeURIComponent(selectedSchema),
-        branch: encodeURIComponent(selectedBranch ?? 'test branch'),
-      }
-    );
+    // eslint-disable-next-line @typescript-eslint/init-declarations
+    let path: string;
+
+    if (!selectedBranch) {
+      path = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.NewViaAppBundles,
+        {
+          orgId: organizationID,
+        }
+      );
+    } else {
+      path = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.NewViaAppBundlesProviderBranch,
+        {
+          orgId: organizationID,
+          provider: encodeURIComponent(selectedSchema),
+          branch: encodeURIComponent(selectedBranch),
+        }
+      );
+    }
 
     dispatch(replace(path));
   }, [dispatch, organizationID, selectedBranch, selectedSchema]);

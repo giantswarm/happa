@@ -36,7 +36,8 @@ const OrganizationsRoutes = {
   Clusters: {
     Home: '/organizations/:orgId/clusters',
     New: '/organizations/:orgId/clusters/new',
-    NewViaAppBundles:
+    NewViaAppBundles: '/organizations/:orgId/clusters/new-via-app-bundles',
+    NewViaAppBundlesProviderBranch:
       '/organizations/:orgId/clusters/new-via-app-bundles/:provider/:branch',
     Detail: {
       Home: '/organizations/:orgId/clusters/:clusterId',

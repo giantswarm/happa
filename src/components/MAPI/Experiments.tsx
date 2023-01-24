@@ -143,8 +143,6 @@ const Experiments: React.FC<
         OrganizationsRoutes.Clusters.NewViaAppBundles,
         {
           orgId: selectedOrg.id,
-          provider: 'Test Schema',
-          branch: 'test branch',
         }
       )
     : '';

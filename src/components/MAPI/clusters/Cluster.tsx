@@ -18,7 +18,10 @@ const Cluster: React.FC<React.PropsWithChildren<{}>> = () => {
       />
       <Route
         component={CreateClusterAppBundles}
-        exact
+        path={OrganizationsRoutes.Clusters.NewViaAppBundlesProviderBranch}
+      />
+      <Route
+        component={CreateClusterAppBundles}
         path={OrganizationsRoutes.Clusters.NewViaAppBundles}
       />
       <Route
