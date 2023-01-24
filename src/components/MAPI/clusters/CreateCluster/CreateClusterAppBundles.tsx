@@ -3,7 +3,8 @@ import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import cleanDeep from 'clean-deep';
-import { Box, Text } from 'grommet';
+import { push } from 'connected-react-router';
+import { Box, Heading, Text } from 'grommet';
 import { spinner } from 'images';
 import yaml from 'js-yaml';
 import {
@@ -13,7 +14,14 @@ import {
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
+import { MainRoutes } from 'model/constants/routes';
+import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useRouteMatch } from 'react-router';
+import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
@@ -122,17 +130,19 @@ const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 
 Prompt.displayName = 'Prompt';
 
-interface ICreateClusterAppFormProps {
-  namespace: string;
-  organizationID: string;
-  onCreationCancel?: () => void;
-  onCreationComplete?: (clusterId: string) => void;
-}
+interface ICreateClusterAppBundlesProps
+  extends React.ComponentPropsWithoutRef<typeof Box> {}
 
-const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
-  onCreationCancel,
-  organizationID,
-}) => {
+// eslint-disable-next-line complexity
+const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
+  props
+) => {
+  const match = useRouteMatch<{ orgId: string }>();
+  const { orgId } = match.params;
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = orgId ? organizations[orgId] : undefined;
+  const organizationID = selectedOrg?.name ?? selectedOrg?.id ?? orgId;
+
   const [isCreating, _setIsCreating] = useState<boolean>(false);
 
   const [selectedSchema, setSelectedSchema] = useState<PrototypeSchemas>(
@@ -255,6 +265,12 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
     resetFormData(selectedSchema);
   };
 
+  const dispatch = useDispatch();
+
+  const handleCreationCancel = () => {
+    dispatch(push(MainRoutes.Home));
+  };
+
   const [formDataPreviewFormat, setFormDataPreviewFormat] =
     useState<FormDataPreviewFormat>(FormDataPreviewFormat.Json);
 
@@ -270,122 +286,151 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   );
 
   return (
-    <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
-      <Box direction='row' gap='medium'>
-        <InputGroup
-          label='Schema'
-          info={
-            <a
-              target='_blank'
-              rel='noopener noreferrer'
-              href={selectedProvider ? schemaURL : testSchemaURL}
-            >
-              <Text color='text-weak' size='small'>
-                Open schema in new tab <i className='fa fa-open-in-new' />
-              </Text>
-            </a>
-          }
-        >
-          <Select
-            value={selectedSchema}
-            onChange={handleSelectedSchemaChange}
-            options={prototypeSchemas.slice()}
-          />
-        </InputGroup>
-        {selectedProvider && (
-          <Box flex={{ grow: 1 }}>
-            <InputGroup label='Branch'>
-              <Select
-                value={selectedBranch}
-                onChange={handleSelectedBranchChange}
-                options={repoBranches?.map((entry) => entry.name) ?? []}
-              />
-            </InputGroup>
+    <Breadcrumb
+      data={{ title: 'CREATE CLUSTER APP BUNDLES', pathname: match.url }}
+    >
+      <DocumentTitle title={`Create Cluster App Bundles | ${orgId}`}>
+        <Box {...props}>
+          <Box
+            fill={true}
+            border={{ side: 'bottom' }}
+            margin={{ bottom: 'large' }}
+          >
+            <Heading level={1}>Create a cluster via app bundles</Heading>
           </Box>
-        )}
-      </Box>
-      {appSchemaIsLoading && (
-        <Wrapper>
-          <img className='loader' src={spinner} />
-        </Wrapper>
-      )}
-      {!appSchemaIsLoading &&
-        typeof providerSchemaError === 'undefined' &&
-        (typeof appSchema === 'undefined' ? (
-          <Text>
-            No <code>values.schema.json</code> file found for the selected
-            branch.
-          </Text>
-        ) : (
-          <>
-            <JSONSchemaForm
-              schema={appSchema}
-              uiSchema={uiSchema}
-              validator={validator}
-              formData={formData}
-              showErrorList='bottom'
-              onSubmit={handleCreation}
-              onChange={handleFormDataChange}
-              key={formDataKey.current}
-            >
-              <Box margin={{ vertical: 'medium' }}>
-                <Box direction='row' gap='small'>
-                  <Button primary={true} type='submit' loading={isCreating}>
-                    Create cluster
-                  </Button>
-
-                  {!isCreating && (
-                    <Button onClick={onCreationCancel}>Cancel</Button>
-                  )}
+          <Box
+            width={{ max: '100%', width: 'large' }}
+            gap='medium'
+            margin='auto'
+          >
+            <Box direction='row' gap='medium'>
+              <InputGroup
+                label='Schema'
+                info={
+                  <a
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    href={selectedProvider ? schemaURL : testSchemaURL}
+                  >
+                    <Text color='text-weak' size='small'>
+                      Open schema in new tab <i className='fa fa-open-in-new' />
+                    </Text>
+                  </a>
+                }
+              >
+                <Select
+                  value={selectedSchema}
+                  onChange={handleSelectedSchemaChange}
+                  options={prototypeSchemas.slice()}
+                />
+              </InputGroup>
+              {selectedProvider && (
+                <Box flex={{ grow: 1 }}>
+                  <InputGroup label='Branch'>
+                    <Select
+                      value={selectedBranch}
+                      onChange={handleSelectedBranchChange}
+                      options={repoBranches?.map((entry) => entry.name) ?? []}
+                    />
+                  </InputGroup>
                 </Box>
-              </Box>
-            </JSONSchemaForm>
-            {formData !== undefined && (
-              <Box margin={{ top: 'large' }}>
-                <Text weight='bold'>Form data preview</Text>
-                <Box direction='row' gap='medium' margin={{ top: 'small' }}>
-                  <RadioInput
-                    label='JSON'
-                    name='json'
-                    checked={
-                      formDataPreviewFormat === FormDataPreviewFormat.Json
-                    }
-                    onChange={() =>
-                      setFormDataPreviewFormat(FormDataPreviewFormat.Json)
-                    }
-                  />
-                  <RadioInput
-                    label='YAML'
-                    name='yaml'
-                    checked={
-                      formDataPreviewFormat === FormDataPreviewFormat.Yaml
-                    }
-                    onChange={() =>
-                      setFormDataPreviewFormat(FormDataPreviewFormat.Yaml)
-                    }
-                  />
-                </Box>
-                <CodeBlock>
-                  {formDataPreviewFormat === FormDataPreviewFormat.Json && (
-                    <Prompt>
-                      {JSON.stringify(cleanFormData, null, '\r  ')}
-                    </Prompt>
-                  )}
-                  {formDataPreviewFormat === FormDataPreviewFormat.Yaml && (
-                    <Prompt>
-                      {yaml.dump(cleanFormData, {
-                        indent: 2,
-                        quotingType: '"',
-                      })}
-                    </Prompt>
-                  )}
-                </CodeBlock>
-              </Box>
+              )}
+            </Box>
+            {appSchemaIsLoading && (
+              <Wrapper>
+                <img className='loader' src={spinner} />
+              </Wrapper>
             )}
-          </>
-        ))}
-    </Box>
+            {!appSchemaIsLoading &&
+              typeof providerSchemaError === 'undefined' &&
+              (typeof appSchema === 'undefined' ? (
+                <Text>
+                  No <code>values.schema.json</code> file found for the selected
+                  branch.
+                </Text>
+              ) : (
+                <>
+                  <JSONSchemaForm
+                    schema={appSchema}
+                    uiSchema={uiSchema}
+                    validator={validator}
+                    formData={formData}
+                    showErrorList='bottom'
+                    onSubmit={handleCreation}
+                    onChange={handleFormDataChange}
+                    key={formDataKey.current}
+                  >
+                    <Box margin={{ vertical: 'medium' }}>
+                      <Box direction='row' gap='small'>
+                        <Button
+                          primary={true}
+                          type='submit'
+                          loading={isCreating}
+                        >
+                          Create cluster
+                        </Button>
+
+                        {!isCreating && (
+                          <Button onClick={handleCreationCancel}>Cancel</Button>
+                        )}
+                      </Box>
+                    </Box>
+                  </JSONSchemaForm>
+                  {formData !== undefined && (
+                    <Box margin={{ top: 'large' }}>
+                      <Text weight='bold'>Form data preview</Text>
+                      <Box
+                        direction='row'
+                        gap='medium'
+                        margin={{ top: 'small' }}
+                      >
+                        <RadioInput
+                          label='JSON'
+                          name='json'
+                          checked={
+                            formDataPreviewFormat === FormDataPreviewFormat.Json
+                          }
+                          onChange={() =>
+                            setFormDataPreviewFormat(FormDataPreviewFormat.Json)
+                          }
+                        />
+                        <RadioInput
+                          label='YAML'
+                          name='yaml'
+                          checked={
+                            formDataPreviewFormat === FormDataPreviewFormat.Yaml
+                          }
+                          onChange={() =>
+                            setFormDataPreviewFormat(FormDataPreviewFormat.Yaml)
+                          }
+                        />
+                      </Box>
+                      <CodeBlock>
+                        {formDataPreviewFormat ===
+                          FormDataPreviewFormat.Json && (
+                          <Prompt>
+                            {JSON.stringify(cleanFormData, null, '\r  ')}
+                          </Prompt>
+                        )}
+                        {formDataPreviewFormat ===
+                          FormDataPreviewFormat.Yaml && (
+                          <Prompt>
+                            {yaml.dump(cleanFormData, {
+                              indent: 2,
+                              quotingType: '"',
+                            })}
+                          </Prompt>
+                        )}
+                      </CodeBlock>
+                    </Box>
+                  )}
+                </>
+              ))}
+          </Box>
+        </Box>
+      </DocumentTitle>
+    </Breadcrumb>
   );
 };
 
-export default CreateClusterAppForm;
+export default CreateClusterAppBundles;
