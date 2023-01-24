@@ -3,7 +3,7 @@ import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import cleanDeep from 'clean-deep';
-import { push } from 'connected-react-router';
+import { push, replace } from 'connected-react-router';
 import { Box, Heading, Text } from 'grommet';
 import { spinner } from 'images';
 import yaml from 'js-yaml';
@@ -14,7 +14,7 @@ import {
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
-import { MainRoutes } from 'model/constants/routes';
+import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -36,6 +36,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import RoutePath from 'utils/routePath';
 
 import {
   getDefaultFormData,
@@ -137,8 +138,12 @@ interface ICreateClusterAppBundlesProps
 const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   props
 ) => {
-  const match = useRouteMatch<{ orgId: string }>();
-  const { orgId } = match.params;
+  const match = useRouteMatch<{
+    orgId: string;
+    provider: PrototypeSchemas;
+    branch: string;
+  }>();
+  const { orgId, provider, branch } = match.params;
   const organizations = useSelector(selectOrganizations());
   const selectedOrg = orgId ? organizations[orgId] : undefined;
   const organizationID = selectedOrg?.name ?? selectedOrg?.id ?? orgId;
@@ -146,14 +151,27 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   const [isCreating, _setIsCreating] = useState<boolean>(false);
 
   const [selectedSchema, setSelectedSchema] = useState<PrototypeSchemas>(
-    prototypeSchemas[0]
+    decodeURIComponent(provider) as PrototypeSchemas
   );
-  const selectedProvider = prototypeProviders.find(
-    (provider) => provider === selectedSchema
-  );
+  const selectedProvider = prototypeProviders.find((p) => p === selectedSchema);
   const [selectedBranch, setSelectedBranch] = useState<string | undefined>(
-    selectedProvider ? getDefaultRepoBranch(prototypeProviders[0]) : undefined
+    selectedProvider ? decodeURIComponent(branch) : undefined
   );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const path = RoutePath.createUsablePath(
+      OrganizationsRoutes.Clusters.NewViaAppBundles,
+      {
+        orgId: organizationID,
+        provider: encodeURIComponent(selectedSchema),
+        branch: encodeURIComponent(selectedBranch ?? 'test branch'),
+      }
+    );
+
+    dispatch(replace(path));
+  }, [dispatch, organizationID, selectedBranch, selectedSchema]);
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -229,9 +247,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   ) => {
     const newSchema = e.target.value as PrototypeSchemas;
     setSelectedSchema(newSchema);
-    const newProvider = prototypeProviders.find(
-      (provider) => provider === newSchema
-    );
+    const newProvider = prototypeProviders.find((p) => p === newSchema);
     setSelectedBranch(
       newProvider ? getDefaultRepoBranch(newProvider) : undefined
     );
@@ -264,8 +280,6 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     console.log(cleanFormData);
     resetFormData(selectedSchema);
   };
-
-  const dispatch = useDispatch();
 
   const handleCreationCancel = () => {
     dispatch(push(MainRoutes.Home));
