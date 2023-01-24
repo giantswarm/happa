@@ -127,6 +127,11 @@ enum FormDataPreviewFormat {
   Yaml,
 }
 
+// TODO: replace test schema URL with the correct one
+// after merging prototype branch into the main branch
+const testSchemaURL =
+  'https://raw.githubusercontent.com/giantswarm/happa/cluster-app-creation-form-prototype/src/components/UI/JSONSchemaForm/test.schema.json';
+
 const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return <Line prompt={false} text={children} />;
 };
@@ -275,7 +280,20 @@ const CreateClusterAppForm: React.FC<ICreateClusterAppFormProps> = ({
   return (
     <Box width={{ max: '100%', width: 'large' }} gap='medium' margin='auto'>
       <Box direction='row' gap='medium'>
-        <InputGroup label='Schema'>
+        <InputGroup
+          label='Schema'
+          info={
+            <a
+              target='_blank'
+              rel='noopener noreferrer'
+              href={selectedProvider ? schemaURL : testSchemaURL}
+            >
+              <Text color='text-weak' size='small'>
+                Open schema in new tab <i className='fa fa-open-in-new' />
+              </Text>
+            </a>
+          }
+        >
           <Select
             value={selectedSchema}
             onChange={handleSelectedSchemaChange}
