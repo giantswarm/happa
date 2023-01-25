@@ -114,7 +114,7 @@ interface INumberPickerProps
   value?: number;
   min?: number;
   max?: number;
-  step?: number;
+  step?: number | 'any';
   onChange?: (patch: { value: number; valid: boolean }) => void;
 }
 
@@ -174,13 +174,15 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
     };
 
     const increment = () => {
-      const desiredValue = currValue + step!;
+      const desiredValue =
+        typeof step === 'number' ? currValue + step : currValue + 1;
 
       updateInput(desiredValue);
     };
 
     const decrement = () => {
-      const desiredValue = currValue - step!;
+      const desiredValue =
+        typeof step === 'number' ? currValue - step : currValue - 1;
 
       updateInput(desiredValue);
     };

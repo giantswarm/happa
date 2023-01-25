@@ -1352,7 +1352,7 @@ export function determineRandomAZs(
   }
 }
 
-const uidRegexp = /^[a-z]([a-z][0-9]|[0-9][a-z])+$/;
+const uidRegexp = /^[a-z]([a-z][0-9]|[0-9][a-z])+[a-z0-9]?$/;
 const supportedUIDChars = '023456789abcdefghijkmnopqrstuvwxyz';
 
 /**
@@ -1360,6 +1360,10 @@ const supportedUIDChars = '023456789abcdefghijkmnopqrstuvwxyz';
  * @param length
  */
 export function generateUID(length: number): string {
+  if (length < 3) {
+    throw new Error('Length is too short');
+  }
+
   const id = new Array(length);
 
   for (;;) {

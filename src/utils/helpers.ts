@@ -1,3 +1,4 @@
+import { RJSFSchema } from '@rjsf/utils';
 import compareAsc from 'date-fns/fp/compareAsc';
 import format from 'date-fns/fp/format';
 import formatDistance from 'date-fns/fp/formatDistance';
@@ -476,4 +477,83 @@ export function getHumanReadableMemory(size: number, minDecimals: number = 0) {
 
 export function isIPAddress(s: string): boolean {
   return ipRegex().test(s);
+}
+
+/**
+ * Determines whether a given string is a valid URL of https/http protocol
+ * @param str
+ */
+export function isValidURL(str: string): boolean {
+  try {
+    const url = new URL(str);
+
+    return url.protocol === 'https:' || url.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Traverses a JSON schema object recursively
+ * @param obj
+ * @param processFn
+ * @returns obj
+ */
+// eslint-disable-next-line complexity
+export function traverseJSONSchemaObject(
+  obj: RJSFSchema,
+  processFn: (obj: RJSFSchema) => void
+): Record<string, unknown> {
+  switch (true) {
+    case obj.type === 'object' &&
+      obj.properties &&
+      typeof obj.properties === 'object':
+      for (const value of Object.values(
+        obj.properties as Record<string, unknown>
+      )) {
+        traverseJSONSchemaObject(value as Record<string, unknown>, processFn);
+      }
+      break;
+
+    case obj.type === 'array' && obj.items && typeof obj.items === 'object':
+      traverseJSONSchemaObject(obj.items as Record<string, unknown>, processFn);
+      break;
+
+    case obj.type === 'array' && Array.isArray(obj.items):
+      for (const x of obj.items as Record<string, unknown>[]) {
+        if (typeof x === 'object') {
+          traverseJSONSchemaObject(x, processFn);
+        }
+      }
+      break;
+
+    case obj.anyOf !== undefined:
+      for (const x of obj.anyOf!) {
+        if (typeof x === 'object') {
+          traverseJSONSchemaObject(x, processFn);
+        }
+      }
+      break;
+
+    case obj.allOf !== undefined:
+      for (const x of obj.allOf!) {
+        if (typeof x === 'object') {
+          traverseJSONSchemaObject(x, processFn);
+        }
+      }
+      break;
+
+    case obj.oneOf !== undefined:
+      for (const x of obj.oneOf!) {
+        if (typeof x === 'object') {
+          traverseJSONSchemaObject(x, processFn);
+        }
+      }
+      break;
+
+    default:
+      processFn(obj);
+  }
+
+  return obj;
 }
