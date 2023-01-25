@@ -14,7 +14,7 @@ import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 import * as CreateClusterUtils from '../../utils';
-import ClusterCreate from '../';
+import ClusterCreate from '../CreateCluster';
 
 function getComponent(
   props: React.ComponentPropsWithoutRef<typeof ClusterCreate>

@@ -146,21 +146,25 @@ const uiSchemaTestSchema: Record<string, GenericObjectType> = {
   },
 };
 
-export const prototypeProviders = [
-  'AWS',
-  'Azure',
-  'Cloud Director',
-  'GCP',
-  'Open Stack',
-  'VSphere',
-] as const;
+export enum PrototypeProviders {
+  AWS = 'aws',
+  AZURE = 'azure',
+  CLOUDDIRECTOR = 'cloud-director',
+  GCP = 'gcp',
+  OPENSTACK = 'open-stack',
+  VSPHERE = 'vsphere',
+}
 
-export type PrototypeProviders = typeof prototypeProviders[number];
+export const prototypeProviders = Object.values(PrototypeProviders);
 
-export type PrototypeSchemas = 'Test Schema' | PrototypeProviders;
+enum TestSchema {
+  TEST = 'test',
+}
 
-export const prototypeSchemas: PrototypeSchemas[] = [
-  'Test Schema',
+export type PrototypeSchemas = TestSchema | PrototypeProviders;
+
+export const prototypeSchemas = [
+  ...Object.values(TestSchema),
   ...prototypeProviders,
 ];
 
@@ -169,21 +173,21 @@ export const getDefaultFormData = (
   organization: string
 ) => {
   switch (schema) {
-    case 'AWS':
-    case 'Azure':
-    case 'GCP':
-    case 'Open Stack':
+    case PrototypeProviders.AWS:
+    case PrototypeProviders.AZURE:
+    case PrototypeProviders.GCP:
+    case PrototypeProviders.OPENSTACK:
       return {
         clusterName: generateUID(5),
         organization,
       };
 
-    case 'Cloud Director':
+    case PrototypeProviders.CLOUDDIRECTOR:
       return {
         organization,
       };
 
-    case 'VSphere':
+    case PrototypeProviders.VSPHERE:
       return {
         cluster: {
           name: generateUID(5),
@@ -197,13 +201,13 @@ export const getDefaultFormData = (
 };
 
 const uiSchemaForSchema: Record<PrototypeSchemas, UiSchema> = {
-  AWS: uiSchemaProviderAWS,
-  Azure: uiSchemaProviderAzure,
-  'Cloud Director': uiSchemaProviderCloudDirector,
-  GCP: uiSchemaProviderGCP,
-  'Open Stack': uiSchemaProviderOpenStack,
-  VSphere: uiSchemaProviderVSphere,
-  'Test Schema': uiSchemaTestSchema,
+  [PrototypeProviders.AWS]: uiSchemaProviderAWS,
+  [PrototypeProviders.AZURE]: uiSchemaProviderAzure,
+  [PrototypeProviders.CLOUDDIRECTOR]: uiSchemaProviderCloudDirector,
+  [PrototypeProviders.GCP]: uiSchemaProviderGCP,
+  [PrototypeProviders.OPENSTACK]: uiSchemaProviderOpenStack,
+  [PrototypeProviders.VSPHERE]: uiSchemaProviderVSphere,
+  [TestSchema.TEST]: uiSchemaTestSchema,
 };
 
 export function getUiSchema(

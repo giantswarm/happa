@@ -4,7 +4,8 @@ import { Redirect, Switch } from 'react-router';
 import Route from 'Route';
 
 import ClusterDetail from './ClusterDetail';
-import CreateCluster from './CreateCluster';
+import CreateCluster from './CreateCluster/CreateCluster';
+import CreateClusterAppBundles from './CreateCluster/CreateClusterAppBundles';
 import GettingStarted from './GettingStarted';
 
 const Cluster: React.FC<React.PropsWithChildren<{}>> = () => {
@@ -14,6 +15,14 @@ const Cluster: React.FC<React.PropsWithChildren<{}>> = () => {
         component={CreateCluster}
         exact
         path={OrganizationsRoutes.Clusters.New}
+      />
+      <Route
+        component={CreateClusterAppBundles}
+        path={OrganizationsRoutes.Clusters.NewViaAppBundlesProviderBranch}
+      />
+      <Route
+        component={CreateClusterAppBundles}
+        path={OrganizationsRoutes.Clusters.NewViaAppBundles}
       />
       <Route
         path={OrganizationsRoutes.Clusters.GettingStarted.Overview}

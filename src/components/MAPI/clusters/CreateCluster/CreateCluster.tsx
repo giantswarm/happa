@@ -1,5 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { Box, Text } from 'grommet';
+import { push } from 'connected-react-router';
+import { Box, Heading, Text } from 'grommet';
 import produce from 'immer';
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import {
@@ -7,16 +8,26 @@ import {
   generateUID,
   getClusterDescription,
   getClusterReleaseVersion,
+  getNamespaceFromOrgName,
 } from 'MAPI/utils';
+import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
+import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { filterLabels } from 'model/stores/cluster/utils';
-import React, { useEffect, useMemo, useReducer, useState } from 'react';
+import { selectOrganizations } from 'model/stores/organization/selectors';
+import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { Breadcrumb } from 'react-breadcrumbs';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouteMatch } from 'react-router';
+import DocumentTitle from 'shared/DocumentTitle';
+import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import RoutePath from 'utils/routePath';
 
 import { computeControlPlaneNodesStats } from '../ClusterDetail/utils';
 import CreateClusterGuide from '../guides/CreateClusterGuide';
@@ -173,21 +184,20 @@ const reducer: React.Reducer<IClusterState, ClusterAction> = produce(
   }
 );
 
-interface ICreateClusterFormProps {
-  namespace: string;
-  organizationID: string;
-  releaseList?: releasev1alpha1.IRelease[];
-  onCreationCancel?: () => void;
-  onCreationComplete?: (clusterId: string) => void;
-}
+interface ICreateClusterProps
+  extends React.ComponentPropsWithoutRef<typeof Box> {}
 
-const CreateClusterForm: React.FC<ICreateClusterFormProps> = ({
-  namespace,
-  organizationID,
-  releaseList,
-  onCreationCancel,
-  onCreationComplete,
-}) => {
+const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
+  props
+) => {
+  const match = useRouteMatch<{ orgId: string }>();
+  const { orgId } = match.params;
+  const organizations = useSelector(selectOrganizations());
+  const selectedOrg = orgId ? organizations[orgId] : undefined;
+  const organizationID = selectedOrg?.name ?? selectedOrg?.id ?? orgId;
+
+  const namespace = selectedOrg?.namespace ?? getNamespaceFromOrgName(orgId);
+
   const provider = window.config.info.general.provider;
 
   const [state, dispatch] = useReducer(
@@ -199,28 +209,12 @@ const CreateClusterForm: React.FC<ICreateClusterFormProps> = ({
     })
   );
 
-  useEffect(() => {
-    const latestRelease = findLatestReleaseVersion(releaseList ?? []);
-
-    dispatch({
-      type: 'setLatestRelease',
-      value: {
-        version: latestRelease?.metadata.name.slice(1) ?? '',
-        components: latestRelease?.spec.components ?? [],
-      },
-    });
-  }, [releaseList]);
-
-  const [isRetrying, setIsRetrying] = useState(false);
-
-  const isValid =
-    state.latestRelease &&
-    Object.values(state.validationResults).every((r) => r);
+  const globalDispatch = useDispatch();
 
   const handleCancel = () => {
     dispatch({ type: 'endCreation' });
 
-    if (onCreationCancel) onCreationCancel();
+    globalDispatch(push(MainRoutes.Home));
   };
 
   const handleChange =
@@ -237,8 +231,40 @@ const CreateClusterForm: React.FC<ICreateClusterFormProps> = ({
       });
     };
 
+  const isValid =
+    state.latestRelease &&
+    Object.values(state.validationResults).every((r) => r);
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
+
+  const releaseListClient = useRef(clientFactory());
+  const { data: releaseList, error: releaseListError } = useSWR<
+    releasev1alpha1.IReleaseList,
+    GenericResponseError
+  >(releasev1alpha1.getReleaseListKey(), () =>
+    releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  );
+
+  useEffect(() => {
+    if (releaseListError) {
+      ErrorReporter.getInstance().notify(releaseListError);
+    }
+  }, [releaseListError]);
+
+  useEffect(() => {
+    const latestRelease = findLatestReleaseVersion(releaseList?.items ?? []);
+
+    dispatch({
+      type: 'setLatestRelease',
+      value: {
+        version: latestRelease?.metadata.name.slice(1) ?? '',
+        components: latestRelease?.spec.components ?? [],
+      },
+    });
+  }, [releaseList?.items]);
+
+  const [isRetrying, setIsRetrying] = useState(false);
 
   const handleCreation = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
@@ -262,9 +288,15 @@ const CreateClusterForm: React.FC<ICreateClusterFormProps> = ({
         `Create your first node pool by clicking the "Add node pool" button.`
       );
 
-      if (onCreationComplete) {
-        onCreationComplete(state.cluster.metadata.name);
-      }
+      // Navigate to the cluster's detail page.
+      const detailPath = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.Detail.Home,
+        {
+          orgId,
+          clusterId: state.cluster.metadata.name,
+        }
+      );
+      globalDispatch(push(detailPath));
     } catch (err) {
       dispatch({ type: 'endCreation' });
 
@@ -302,108 +334,123 @@ const CreateClusterForm: React.FC<ICreateClusterFormProps> = ({
   const clusterCreationDuration = getClusterCreationDuration(state.cluster);
 
   return (
-    <>
-      <Box
-        as='form'
-        onSubmit={handleCreation}
-        width={{ max: '100%', width: 'large' }}
-        gap='medium'
-        margin='auto'
-      >
-        <CreateClusterName
-          id={`cluster-${ClusterPropertyField.Name}`}
-          cluster={state.cluster}
-          providerCluster={state.providerCluster}
-          controlPlaneNodes={state.controlPlaneNodes}
-          onChange={handleChange(ClusterPropertyField.Name)}
-        />
-        <CreateClusterDescription
-          id={`cluster-${ClusterPropertyField.Description}`}
-          cluster={state.cluster}
-          providerCluster={state.providerCluster}
-          controlPlaneNodes={state.controlPlaneNodes}
-          onChange={handleChange(ClusterPropertyField.Description)}
-          autoFocus={true}
-        />
-        <CreateClusterRelease
-          id={`cluster-${ClusterPropertyField.Release}`}
-          cluster={state.cluster}
-          providerCluster={state.providerCluster}
-          controlPlaneNodes={state.controlPlaneNodes}
-          onChange={handleChange(ClusterPropertyField.Release)}
-          orgNamespace={state.orgNamespace}
-        />
-        <CreateClusterServicePriority
-          id={`cluster-${ClusterPropertyField.ServicePriority}`}
-          cluster={state.cluster}
-          providerCluster={state.providerCluster}
-          controlPlaneNodes={state.controlPlaneNodes}
-          onChange={handleChange(ClusterPropertyField.ServicePriority)}
-        />
-        {provider === Providers.AZURE && (
-          <CreateClusterControlPlaneNodeAZs
-            id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
-            cluster={state.cluster}
-            providerCluster={state.providerCluster}
-            controlPlaneNodes={state.controlPlaneNodes}
-            onChange={handleChange(ClusterPropertyField.ControlPlaneNodeAZs)}
-          />
-        )}
-        {provider === Providers.AWS && (
-          <CreateClusterControlPlaneNodesCount
-            id={`cluster-${ClusterPropertyField.ControlPlaneNodesCount}`}
-            cluster={state.cluster}
-            providerCluster={state.providerCluster}
-            controlPlaneNodes={state.controlPlaneNodes}
-            onChange={handleChange(ClusterPropertyField.ControlPlaneNodesCount)}
-          />
-        )}
-        <Box margin={{ top: 'medium' }}>
-          <Box direction='row' gap='small'>
-            <Button
-              primary={true}
-              disabled={!isValid}
-              type='submit'
-              loading={state.isCreating}
-            >
-              Create cluster
-            </Button>
-
-            {!state.isCreating && (
-              <Button onClick={handleCancel}>Cancel</Button>
-            )}
+    <Breadcrumb data={{ title: 'CREATE CLUSTER', pathname: match.url }}>
+      <DocumentTitle title={`Create Cluster | ${orgId}`}>
+        <Box {...props}>
+          <Box
+            fill={true}
+            border={{ side: 'bottom' }}
+            margin={{ bottom: 'large' }}
+          >
+            <Heading level={1}>Create a cluster</Heading>
           </Box>
-          <Box margin={{ top: 'medium' }} gap='small'>
-            <Text color='text-weak'>
-              {`It will take around ${clusterCreationDuration} for the control plane to become
+          <Box
+            as='form'
+            onSubmit={handleCreation}
+            width={{ max: '100%', width: 'large' }}
+            gap='medium'
+            margin='auto'
+          >
+            <CreateClusterName
+              id={`cluster-${ClusterPropertyField.Name}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNodes={state.controlPlaneNodes}
+              onChange={handleChange(ClusterPropertyField.Name)}
+            />
+            <CreateClusterDescription
+              id={`cluster-${ClusterPropertyField.Description}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNodes={state.controlPlaneNodes}
+              onChange={handleChange(ClusterPropertyField.Description)}
+              autoFocus={true}
+            />
+            <CreateClusterRelease
+              id={`cluster-${ClusterPropertyField.Release}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNodes={state.controlPlaneNodes}
+              onChange={handleChange(ClusterPropertyField.Release)}
+              orgNamespace={state.orgNamespace}
+            />
+            <CreateClusterServicePriority
+              id={`cluster-${ClusterPropertyField.ServicePriority}`}
+              cluster={state.cluster}
+              providerCluster={state.providerCluster}
+              controlPlaneNodes={state.controlPlaneNodes}
+              onChange={handleChange(ClusterPropertyField.ServicePriority)}
+            />
+            {provider === Providers.AZURE && (
+              <CreateClusterControlPlaneNodeAZs
+                id={`cluster-${ClusterPropertyField.ControlPlaneNodeAZs}`}
+                cluster={state.cluster}
+                providerCluster={state.providerCluster}
+                controlPlaneNodes={state.controlPlaneNodes}
+                onChange={handleChange(
+                  ClusterPropertyField.ControlPlaneNodeAZs
+                )}
+              />
+            )}
+            {provider === Providers.AWS && (
+              <CreateClusterControlPlaneNodesCount
+                id={`cluster-${ClusterPropertyField.ControlPlaneNodesCount}`}
+                cluster={state.cluster}
+                providerCluster={state.providerCluster}
+                controlPlaneNodes={state.controlPlaneNodes}
+                onChange={handleChange(
+                  ClusterPropertyField.ControlPlaneNodesCount
+                )}
+              />
+            )}
+            <Box margin={{ top: 'medium' }}>
+              <Box direction='row' gap='small'>
+                <Button
+                  primary={true}
+                  disabled={!isValid}
+                  type='submit'
+                  loading={state.isCreating}
+                >
+                  Create cluster
+                </Button>
+
+                {!state.isCreating && (
+                  <Button onClick={handleCancel}>Cancel</Button>
+                )}
+              </Box>
+              <Box margin={{ top: 'medium' }} gap='small'>
+                <Text color='text-weak'>
+                  {`It will take around ${clusterCreationDuration} for the control plane to become
                   available.`}
-            </Text>
-            <Text>
-              <i
-                className='fa fa-info'
-                aria-hidden={true}
-                role='presentation'
-              />{' '}
-              As a next step, we recommend to add at least one node pool to the
-              cluster so you could run workloads.
-            </Text>
+                </Text>
+                <Text>
+                  <i
+                    className='fa fa-info'
+                    aria-hidden={true}
+                    role='presentation'
+                  />{' '}
+                  As a next step, we recommend to add at least one node pool to
+                  the cluster so you could run workloads.
+                </Text>
+              </Box>
+            </Box>
+          </Box>
+          <Box margin={{ top: 'large' }} direction='column' gap='small'>
+            <CreateClusterGuide
+              provider={state.provider}
+              clusterName={state.cluster.metadata.name}
+              organizationName={orgId}
+              releaseVersion={releaseVersion}
+              description={description}
+              labels={labels}
+              servicePriority={servicePriority}
+              controlPlaneAZs={controlPlaneAZs}
+            />
           </Box>
         </Box>
-      </Box>
-      <Box margin={{ top: 'large' }} direction='column' gap='small'>
-        <CreateClusterGuide
-          provider={state.provider}
-          clusterName={state.cluster.metadata.name}
-          organizationName={organizationID}
-          releaseVersion={releaseVersion}
-          description={description}
-          labels={labels}
-          servicePriority={servicePriority}
-          controlPlaneAZs={controlPlaneAZs}
-        />
-      </Box>
-    </>
+      </DocumentTitle>
+    </Breadcrumb>
   );
 };
 
-export default CreateClusterForm;
+export default CreateCluster;
