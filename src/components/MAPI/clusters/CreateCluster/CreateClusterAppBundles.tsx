@@ -111,10 +111,8 @@ enum FormDataPreviewFormat {
   Yaml,
 }
 
-// TODO: replace test schema URL with the correct one
-// after merging prototype branch into the main branch
 const testSchemaURL =
-  'https://raw.githubusercontent.com/giantswarm/happa/cluster-app-creation-form-prototype/src/components/UI/JSONSchemaForm/test.schema.json';
+  'https://raw.githubusercontent.com/giantswarm/happa/main/src/components/UI/JSONSchemaForm/test.schema.json';
 
 const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return <Line prompt={false} text={children} />;
