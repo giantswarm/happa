@@ -1,0 +1,7 @@
+smoke-tests-cluster-type: kind
+smoke-tests-cluster-config-file: ats/kind_config.yaml
+
+skip-steps: [functional, upgrade]
+
+app-tests-app-config-file: ats/test-values.yaml
+app-tests-pytest-tests-dir: ats/

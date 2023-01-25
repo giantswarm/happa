@@ -1,5 +1,4 @@
 import { Anchor, Box, Heading, Paragraph, Text } from 'grommet';
-import { usePermissionsKey } from 'MAPI/permissions/usePermissions';
 import { extractErrorMessage } from 'MAPI/utils';
 import { MainRoutes } from 'model/constants/routes';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
@@ -57,15 +56,12 @@ const MapiUnauthorized: React.FC<
       );
     }
   };
-  const { cache, mutate } = useSWRConfig();
+  const { mutate } = useSWRConfig();
 
   const clearImpersonation = async () => {
     await auth.setImpersonationMetadata(null);
 
-    // TODO: Remove type casting when type inference bug is fixed upstream
-    (cache as unknown as Map<unknown, unknown>).clear();
-    mutate(usePermissionsKey, true);
-
+    mutate(() => true, undefined, { revalidate: true });
     new FlashMessage(
       'Impersonation removed successfully.',
       messageType.SUCCESS,

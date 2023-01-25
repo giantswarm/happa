@@ -75,7 +75,7 @@ const AppList: React.FC<React.PropsWithChildren<{}>> = () => {
   const {
     data: catalogList,
     error: catalogListError,
-    isValidating: catalogListIsValidating,
+    isLoading: catalogListIsLoading,
   } = useSWR<applicationv1alpha1.ICatalogList, GenericResponseError>(
     catalogListForOrganizationsKey,
     () =>
@@ -103,9 +103,6 @@ const AppList: React.FC<React.PropsWithChildren<{}>> = () => {
       ErrorReporter.getInstance().notify(catalogListError);
     }
   }, [catalogListError]);
-
-  const catalogListIsLoading =
-    typeof catalogList === 'undefined' && catalogListIsValidating;
 
   const {
     selectedCatalogs,
@@ -171,7 +168,7 @@ const AppList: React.FC<React.PropsWithChildren<{}>> = () => {
   const {
     data: appCatalogEntryList,
     error: appCatalogEntryListError,
-    isValidating: appCatalogEntryListIsValidating,
+    isLoading: appCatalogEntryListIsLoading,
   } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponseError>(
     appCatalogEntryListKey,
     () =>
@@ -199,10 +196,7 @@ const AppList: React.FC<React.PropsWithChildren<{}>> = () => {
     }
   }, [appCatalogEntryListError]);
 
-  const appCatalogEntryListIsLoading =
-    catalogListIsLoading ||
-    (typeof appCatalogEntryList === 'undefined' &&
-      appCatalogEntryListIsValidating);
+  const isLoading = catalogListIsLoading || appCatalogEntryListIsLoading;
 
   const selectedClusterID = useSelector(
     (state: IState) => state.main.selectedClusterID
@@ -315,7 +309,7 @@ const AppList: React.FC<React.PropsWithChildren<{}>> = () => {
           extractErrorMessage(appCatalogEntryListError)
         )}
         facetsIsLoading={catalogListIsLoading}
-        appsIsLoading={appCatalogEntryListIsLoading}
+        appsIsLoading={isLoading}
         selectedClusterBanner={
           selectedClusterID ? (
             <AppInstallationSelectedCluster

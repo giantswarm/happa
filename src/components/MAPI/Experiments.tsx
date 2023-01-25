@@ -32,7 +32,6 @@ import TextInput from 'UI/Inputs/TextInput';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import RoutePath from 'utils/routePath';
 
-import { usePermissionsKey } from './permissions/usePermissions';
 import { extractErrorMessage } from './utils';
 
 interface IExperimentsProps {}
@@ -81,7 +80,7 @@ const Experiments: React.FC<
     }
   };
 
-  const { cache, mutate } = useSWRConfig();
+  const { mutate } = useSWRConfig();
 
   const handleSetImpersonation = async (
     e: React.FormEvent<HTMLFormElement>
@@ -94,9 +93,7 @@ const Experiments: React.FC<
 
     await auth.setImpersonationMetadata(metadata);
 
-    // TODO: Remove type casting when type inference bug is fixed upstream
-    (cache as unknown as Map<unknown, unknown>).clear();
-    mutate(usePermissionsKey);
+    mutate(() => true, undefined, { revalidate: true });
 
     new FlashMessage(
       'Impersonation configured successfully.',
@@ -115,9 +112,7 @@ const Experiments: React.FC<
 
     await auth.setImpersonationMetadata(null);
 
-    // TODO: Remove type casting when type inference bug is fixed upstream
-    (cache as unknown as Map<unknown, unknown>).clear();
-    mutate(usePermissionsKey);
+    mutate(() => true, undefined, { revalidate: true });
 
     new FlashMessage(
       'Impersonation removed successfully.',

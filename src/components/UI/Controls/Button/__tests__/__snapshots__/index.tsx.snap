@@ -8,7 +8,7 @@ exports[`Button renders a button with a loading animation 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ypEDL Button__StyledBox-sc-160jtek-0 hSjceq"
+      class="StyledBox-sc-13pk1d4-0 jczBFS Button__StyledBox-sc-160jtek-0 hSjceq"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 GHeuE Button__StyledControl-sc-160jtek-2 laxGmE"
@@ -44,7 +44,7 @@ exports[`Button renders a danger button 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ypEDL Button__StyledBox-sc-160jtek-0 hSjceq"
+      class="StyledBox-sc-13pk1d4-0 jczBFS Button__StyledBox-sc-160jtek-0 hSjceq"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 eAoQmt Button__StyledControl-sc-160jtek-2 kcvpzh"
@@ -73,7 +73,7 @@ exports[`Button renders a disabled button 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ypEDL Button__StyledBox-sc-160jtek-0 hSjceq"
+      class="StyledBox-sc-13pk1d4-0 jczBFS Button__StyledBox-sc-160jtek-0 hSjceq"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 GHeuE Button__StyledControl-sc-160jtek-2 laxGmE"
@@ -103,7 +103,7 @@ exports[`Button renders a link button 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ypEDL Button__StyledBox-sc-160jtek-0 hSjceq"
+      class="StyledBox-sc-13pk1d4-0 jczBFS Button__StyledBox-sc-160jtek-0 hSjceq"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 YAtrT Button__StyledControl-sc-160jtek-2 kcvpzh"
@@ -132,7 +132,7 @@ exports[`Button renders a primary button 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ypEDL Button__StyledBox-sc-160jtek-0 hSjceq"
+      class="StyledBox-sc-13pk1d4-0 jczBFS Button__StyledBox-sc-160jtek-0 hSjceq"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 keQJiv Button__StyledControl-sc-160jtek-2 kcvpzh"
@@ -161,7 +161,7 @@ exports[`Button renders a secondary button 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ypEDL Button__StyledBox-sc-160jtek-0 hSjceq"
+      class="StyledBox-sc-13pk1d4-0 jczBFS Button__StyledBox-sc-160jtek-0 hSjceq"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 fOwTlG Button__StyledControl-sc-160jtek-2 kcvpzh"
@@ -190,7 +190,7 @@ exports[`Button renders a warning button 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ypEDL Button__StyledBox-sc-160jtek-0 hSjceq"
+      class="StyledBox-sc-13pk1d4-0 jczBFS Button__StyledBox-sc-160jtek-0 hSjceq"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 hPQykO Button__StyledControl-sc-160jtek-2 kcvpzh"
@@ -219,7 +219,7 @@ exports[`Button renders without crashing 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ypEDL Button__StyledBox-sc-160jtek-0 hSjceq"
+      class="StyledBox-sc-13pk1d4-0 jczBFS Button__StyledBox-sc-160jtek-0 hSjceq"
     >
       <button
         class="StyledButtonKind-sc-1vhfpnt-0 fOwTlG Button__StyledControl-sc-160jtek-2 kcvpzh"

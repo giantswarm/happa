@@ -244,17 +244,14 @@ const ClusterDetailWidgetRelease: React.FC<
   const {
     data: controlPlaneNodes,
     error: controlPlaneNodesError,
-    isValidating: controlPlaneNodesIsValidating,
+    isLoading: controlPlaneNodesIsLoading,
   } = useSWR<ControlPlaneNode[], GenericResponseError>(
     controlPlaneNodesKey,
     () => fetchControlPlaneNodesForCluster(clientFactory, auth, cluster!)
   );
 
-  const controlPlaneNodesIsLoading =
-    typeof cluster === 'undefined' ||
-    (typeof controlPlaneNodes === 'undefined' &&
-      typeof controlPlaneNodesError === 'undefined' &&
-      controlPlaneNodesIsValidating);
+  const isLoading =
+    typeof cluster === 'undefined' || controlPlaneNodesIsLoading;
 
   useEffect(() => {
     if (controlPlaneNodesError) {
@@ -263,7 +260,7 @@ const ClusterDetailWidgetRelease: React.FC<
   }, [controlPlaneNodesError]);
 
   const controlPlaneNodesStats = useMemo(() => {
-    if (controlPlaneNodesIsLoading) {
+    if (isLoading) {
       return {
         totalCount: undefined,
         readyCount: undefined,
@@ -280,7 +277,7 @@ const ClusterDetailWidgetRelease: React.FC<
     }
 
     return clusterDetailUtils.computeControlPlaneNodesStats(controlPlaneNodes);
-  }, [canListControlPlaneNodes, controlPlaneNodes, controlPlaneNodesIsLoading]);
+  }, [canListControlPlaneNodes, controlPlaneNodes, isLoading]);
 
   const handleUpgradeModalClose = () => {
     setUpgradeModalVisible(false);

@@ -8,10 +8,10 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gblWrj FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 cQJrKw FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 hgSnoV FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-label="Open Drop"
@@ -20,7 +20,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 idSNkE"
+            class="StyledBox-sc-13pk1d4-0 gXGEGx"
           >
             <svg
               aria-label="Calendar"
@@ -54,7 +54,7 @@ exports[`DateInput renders a disabled input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gblWrj FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"
@@ -63,10 +63,10 @@ exports[`DateInput renders a disabled input 1`] = `
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 cXKIgE FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 fOjCuh FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 jCKlnO"
+          class="StyledBox-sc-13pk1d4-0 Tapyn"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 hSnINN"
@@ -112,13 +112,13 @@ exports[`DateInput renders a simple input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gblWrj FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 cQJrKw FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 hgSnoV FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 jCKlnO"
+          class="StyledBox-sc-13pk1d4-0 Tapyn"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 hSnINN"
@@ -162,7 +162,7 @@ exports[`DateInput renders an input with a help message 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gblWrj FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"
@@ -176,10 +176,10 @@ exports[`DateInput renders an input with a help message 1`] = `
         This is a very cool input
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 cQJrKw FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 hgSnoV FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 jCKlnO"
+          class="StyledBox-sc-13pk1d4-0 Tapyn"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 hSnINN"
@@ -224,7 +224,7 @@ exports[`DateInput renders an input with a label 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gblWrj FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"
@@ -233,10 +233,10 @@ exports[`DateInput renders an input with a label 1`] = `
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 cQJrKw FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 hgSnoV FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 jCKlnO"
+          class="StyledBox-sc-13pk1d4-0 Tapyn"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 hSnINN"
@@ -281,7 +281,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gblWrj FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"
@@ -290,10 +290,10 @@ exports[`DateInput renders an input with a validation error 1`] = `
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 hrGGDs FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 cetaCN FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 jCKlnO"
+          class="StyledBox-sc-13pk1d4-0 Tapyn"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 hSnINN"
@@ -343,7 +343,7 @@ exports[`DateInput renders an input with an info message 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gblWrj FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"
@@ -352,10 +352,10 @@ exports[`DateInput renders an input with an info message 1`] = `
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 cQJrKw FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 hgSnoV FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 jCKlnO"
+          class="StyledBox-sc-13pk1d4-0 Tapyn"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 hSnINN"

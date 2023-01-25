@@ -20,7 +20,7 @@ interface IGlobalConfig {
   ingressBaseDomain: string;
   passageEndpoint: string;
   mapiAuthRedirectURL: string;
-  mapiAuthAdminGroup: string;
+  mapiAuthAdminGroups: string[];
   sentryDsn: string;
   sentryEnvironment: string;
   sentryReleaseVersion: string;

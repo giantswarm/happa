@@ -43,8 +43,6 @@ gcp:
 
 ingress:
   tls:
-    letsencrypt: false
-    clusterIssuer: ""
     crtPemB64: ""
     keyPemB64: ""
 
@@ -58,7 +56,8 @@ kubernetes:
 
 happa:
   address: ""
-  host: ""
+  host: "example.com"
+  letsencrypt: false
   featureFlags:
     mapiAuth: false
     mapiClusters: false
@@ -66,7 +65,8 @@ happa:
 
 happaapi:
   address: ""
-  host: ""
+  host: "example.com"
+  letsencrypt: false
 
 athena:
   address: ""
@@ -81,8 +81,6 @@ managementCluster:
 
 oidc:
   issuerAddress: ""
-  giantswarm:
-    writeAllGroups: []
 
 passage:
   address: ""
@@ -90,7 +88,7 @@ passage:
 registry:
   domain: quay.io
   pullSecret:
-    dockerConfigJSON: ""
+    dockerConfigJSON: "e30="
 
 security:
   restrictAccess:

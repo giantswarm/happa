@@ -18,7 +18,7 @@ export interface IConfigurationValues {
   gcpCapabilitiesJSON: string;
 
   mapiAuthRedirectURL: string;
-  mapiAuthAdminGroup: string;
+  mapiAuthAdminGroups: string;
 
   sentryDsn: string;
   sentryEnvironment: string;
@@ -99,8 +99,8 @@ export async function getConfigurationValues(
   );
 
   config.setDefault(
-    'mapi-auth-admin-group',
-    'giantswarm:giantswarm:giantswarm-admins'
+    'mapi-auth-admin-groups',
+    'giantswarm:giantswarm:giantswarm-admins giantswarm-ad:giantswarm-admins'
   );
   config.setDefault('mapi-auth-redirect-url', 'http://localhost:7000');
 
@@ -138,7 +138,7 @@ export async function getConfigurationValues(
     gcpCapabilitiesJSON: config.getString('gcp-capabilities-json'),
 
     mapiAuthRedirectURL: config.getString('mapi-auth-redirect-url'),
-    mapiAuthAdminGroup: config.getString('mapi-auth-admin-group'),
+    mapiAuthAdminGroups: config.getString('mapi-auth-admin-groups'),
 
     sentryDsn: config.getString('sentry-dsn'),
     sentryEnvironment: config.getString('sentry-environment'),

@@ -5,7 +5,7 @@ import {
   UserManager,
   UserManagerSettings,
   WebStorageStateStore,
-} from 'oidc-client';
+} from 'oidc-client-ts';
 import {
   convertToOIDCMetadata,
   IOAuth2CustomMetadata,
@@ -49,7 +49,7 @@ export interface IOAuth2Provider {
   attemptLogin: () => Promise<void>;
   handleLoginResponse: (fromURL: string) => Promise<IOAuth2User | null>;
   getLoggedInUser: () => Promise<IOAuth2User | null>;
-  renewUser: () => Promise<IOAuth2User>;
+  renewUser: () => Promise<IOAuth2User | null>;
   logout: () => Promise<void>;
   getImpersonationMetadata: () => Promise<IOAuth2ImpersonationMetadata | null>;
   setImpersonationMetadata: (
@@ -84,7 +84,7 @@ export interface IOAuth2Config {
   automaticSilentRenew?: boolean;
   includeIDTokenInSilentRenew?: boolean;
   loadUserInfo?: boolean;
-  revokeAccessTokenOnLogout?: boolean;
+  revokeTokensOnSignout?: boolean;
   filterProtocolClaims?: boolean;
   validateSubOnSilentRenew?: boolean;
   persistenceMethod?: Storage;
@@ -118,11 +118,10 @@ class OAuth2 implements IOAuth2Provider {
       automaticSilentRenew: config.automaticSilentRenew,
       includeIdTokenInSilentRenew: config.includeIDTokenInSilentRenew,
       loadUserInfo: config.loadUserInfo,
-      revokeAccessTokenOnSignout: config.revokeAccessTokenOnLogout,
+      revokeTokensOnSignout: config.revokeTokensOnSignout,
       filterProtocolClaims: config.filterProtocolClaims,
       validateSubOnSilentRenew: config.validateSubOnSilentRenew,
       userStore: this.persistenceMethod,
-      signingKeys: config.signingKeys,
       metadata: customMetadata,
     };
 
@@ -133,7 +132,7 @@ class OAuth2 implements IOAuth2Provider {
   }
 
   public attemptLogin(): Promise<void> {
-    return this.userManager.signinRedirect({ useReplaceToNavigate: true });
+    return this.userManager.signinRedirect({ redirectMethod: 'replace' });
   }
 
   public async handleLoginResponse(currentURL: string): Promise<IOAuth2User> {
@@ -157,8 +156,10 @@ class OAuth2 implements IOAuth2Provider {
     return getUserFromOIDCUser(origUser);
   }
 
-  public async renewUser(): Promise<IOAuth2User> {
+  public async renewUser(): Promise<IOAuth2User | null> {
     const origUser = await this.userManager.signinSilent();
+
+    if (!origUser) return null;
 
     const newUser = getUserFromOIDCUser(origUser);
 

@@ -30,7 +30,7 @@ export function makeDefaultConfig(): IOAuth2Config {
     automaticSilentRenew: false,
     includeIDTokenInSilentRenew: true,
     loadUserInfo: false,
-    revokeAccessTokenOnLogout: true,
+    revokeTokensOnSignout: true,
     filterProtocolClaims: true,
     validateSubOnSilentRenew: true,
     persistenceMethod: localStorage,
@@ -41,7 +41,7 @@ export function makeDefaultConfig(): IOAuth2Config {
       jwksUri: `${authority}/keys`,
       userInfoEndpoint: `${authority}/userinfo`,
 
-      idTokenSigningAlgValuesSupported: ['RS256'],
+      tokenEndpointAuthSigningAlgValuesSupported: ['RS256'],
       tokenEndpointAuthMethodsSupported: ['client_secret_basic'],
       scopesSupported: [
         'openid',

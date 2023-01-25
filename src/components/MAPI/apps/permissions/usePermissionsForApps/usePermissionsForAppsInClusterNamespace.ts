@@ -37,8 +37,8 @@ export function usePermissionsForAppsInClusterNamespace(
   const {
     data: appAccess,
     error,
-    isValidating,
-  } = useSWR<Record<typeof verbs[number], boolean>, GenericResponseError>(
+    isLoading,
+  } = useSWR<Record<(typeof verbs)[number], boolean>, GenericResponseError>(
     fetchAccessForResourceKey(namespace, verbs, group, resource),
     () =>
       fetchAccessForResource(
@@ -71,11 +71,6 @@ export function usePermissionsForAppsInClusterNamespace(
     provider,
     namespace
   );
-
-  const isLoading =
-    typeof appAccess === 'undefined' &&
-    typeof error === 'undefined' &&
-    isValidating;
 
   if (isLoading) {
     computed.canGet = undefined;

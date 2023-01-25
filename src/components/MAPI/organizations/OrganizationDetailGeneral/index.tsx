@@ -72,7 +72,7 @@ const OrganizationDetailGeneral: React.FC<
   const {
     data: clusterList,
     error: clusterListError,
-    isValidating: clusterListIsValidating,
+    isLoading: clusterListIsLoading,
   } = useSWR<ClusterList, GenericResponseError>(clusterListKey, () =>
     fetchClusterList(
       clientFactory,
@@ -146,8 +146,8 @@ const OrganizationDetailGeneral: React.FC<
 
   const {
     data: clustersSummary,
-    isValidating: clustersSummaryIsValidating,
     error: clustersSummaryError,
+    isLoading: clustersSummaryIsLoading,
   } = useSWR<ui.IOrganizationDetailClustersSummary, GenericResponseError>(
     () => fetchClustersSummaryKey(clusterList?.items),
     () =>
@@ -176,8 +176,8 @@ const OrganizationDetailGeneral: React.FC<
 
   const {
     data: releasesSummary,
-    isValidating: releasesSummaryIsValidating,
     error: releasesSummaryError,
+    isLoading: releasesSummaryIsLoading,
   } = useSWR<ui.IOrganizationDetailReleasesSummary, GenericResponseError>(
     releasesSummaryKey,
     () => fetchReleasesSummary(clientFactory, auth, clusterList!.items)
@@ -201,8 +201,8 @@ const OrganizationDetailGeneral: React.FC<
 
   const {
     data: versionsSummary,
-    isValidating: versionsSummaryIsValidating,
     error: versionsSummaryError,
+    isLoading: versionsSummaryIsLoading,
   } = useSWR<ui.IOrganizationDetailVersionsSummary, GenericResponseError>(
     versionsSummaryKey,
     () => fetchVersionsSummary(clientFactory, auth, clusterList!.items)
@@ -223,24 +223,14 @@ const OrganizationDetailGeneral: React.FC<
         canDeleteOrganizations={orgPermissions.canDelete}
         readOnly={isManagedByGitOps}
         clusterCount={clusterList?.items.length}
-        clusterCountLoading={
-          typeof clusterList === 'undefined' &&
-          typeof clusterListError === 'undefined' &&
-          clusterListIsValidating
-        }
+        clusterCountLoading={clusterListIsLoading}
         clustersSummary={clustersSummary}
-        clustersSummaryLoading={
-          typeof clustersSummary === 'undefined' && clustersSummaryIsValidating
-        }
+        clustersSummaryLoading={clustersSummaryIsLoading}
         releasesSummary={releasesSummary}
-        releasesSummaryLoading={
-          typeof releasesSummary === 'undefined' && releasesSummaryIsValidating
-        }
+        releasesSummaryLoading={releasesSummaryIsLoading}
         isReleasesSupported={isReleasesSupportedByProvider}
         versionsSummary={versionsSummary}
-        versionsSummaryLoading={
-          typeof versionsSummary === 'undefined' && versionsSummaryIsValidating
-        }
+        versionsSummaryLoading={versionsSummaryIsLoading}
         hasClusterApp={hasClusterApp}
       />
       <CLIGuidesList margin={{ top: 'large' }}>

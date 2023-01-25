@@ -631,7 +631,12 @@ export async function createCluster(
             namespace: cluster.metadata.namespace!,
           }),
           (draft?: capiv1beta1.IClusterList) => {
-            draft?.items.push(cluster);
+            if (!draft) return undefined;
+
+            return {
+              ...draft,
+              items: [...draft.items, cluster],
+            };
           },
           false
         );
@@ -711,7 +716,12 @@ export async function createCluster(
             namespace: cluster.metadata.namespace!,
           }),
           (draft?: capiv1beta1.IClusterList) => {
-            draft?.items.push(cluster);
+            if (!draft) return undefined;
+
+            return {
+              ...draft,
+              items: [...draft.items, cluster],
+            };
           },
           false
         );

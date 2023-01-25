@@ -1,7 +1,3 @@
-<!-- HIRING_BANNER start -->
-[![We are hiring](https://user-images.githubusercontent.com/273727/185643314-9ff1e016-35de-4f47-b08e-6aad9777e8ba.svg)](https://www.giantswarm.io/careers#open-positions)
-<!-- HIRING_BANNER end -->
-
 [![CircleCI](https://circleci.com/gh/giantswarm/happa/tree/main.svg?style=shield&circle-token=6e98ba111259986b590f228cd20e20fcea3dd2e5)](https://circleci.com/gh/giantswarm/happa/tree/master)
 [![Docker Repository on Quay](https://quay.io/repository/giantswarm/happa/status 'Docker Repository on Quay')](https://quay.io/repository/giantswarm/happa)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=shield)](https://github.com/prettier/prettier)
@@ -46,10 +42,10 @@ Some warnings regarding unmatched dependency versions are expected and can be ig
 
 Then, to bring up Happa connected to an installation, you need to have a `kubectl` context that points to the installation's management cluster. You also need to have `get` permissions for the `happa-configmap` `ConfigMap`, in the `giantswarm` namespace.
 
-You can log into the installation's management cluster using the [kubectl gs](https://github.com/giantswarm/kubectl-gs) plugin. Here's how you would start Happa after using the plugin to log into the `ginger` installation:
+You can log into the installation's management cluster using the [kubectl gs](https://github.com/giantswarm/kubectl-gs) plugin. Here's how you would start Happa after using the plugin to log into the `gauss` installation:
 
 ```nohighlight
-HAPPA_KUBECTL_CONTEXT=gs-ginger yarn start
+HAPPA_KUBECTL_CONTEXT=gs-gauss yarn start
 ```
 
 ### Running tests

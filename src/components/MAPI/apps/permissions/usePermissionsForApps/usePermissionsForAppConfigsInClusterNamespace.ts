@@ -31,8 +31,8 @@ export function usePermissionsForAppConfigsInClusterNamespace(
   const {
     data: configMapsAccess,
     error: configMapsError,
-    isValidating: configMapsIsValidating,
-  } = useSWR<Record<typeof verbs[number], boolean>, GenericResponseError>(
+    isLoading: configMapsIsLoading,
+  } = useSWR<Record<(typeof verbs)[number], boolean>, GenericResponseError>(
     fetchAccessForResourceKey(namespace, verbs, '', 'configmaps'),
     () =>
       fetchAccessForResource(
@@ -51,8 +51,8 @@ export function usePermissionsForAppConfigsInClusterNamespace(
   const {
     data: secretsAccess,
     error: secretsError,
-    isValidating: secretsIsValidating,
-  } = useSWR<Record<typeof verbs[number], boolean>, GenericResponseError>(
+    isLoading: secretsIsLoading,
+  } = useSWR<Record<(typeof verbs)[number], boolean>, GenericResponseError>(
     fetchAccessForResourceKey(namespace, verbs, '', 'secrets'),
     () =>
       fetchAccessForResource(
@@ -80,16 +80,6 @@ export function usePermissionsForAppConfigsInClusterNamespace(
       );
     }
   }, [configMapsError, secretsError]);
-
-  const configMapsIsLoading =
-    typeof configMapsAccess === 'undefined' &&
-    typeof configMapsError === 'undefined' &&
-    configMapsIsValidating;
-
-  const secretsIsLoading =
-    typeof secretsAccess === 'undefined' &&
-    typeof secretsError === 'undefined' &&
-    secretsIsValidating;
 
   if (configMapsIsLoading || secretsIsLoading) return computed;
 

@@ -306,11 +306,10 @@ const ClusterDetailWorkerNodes: React.FC<
         ? fetchClusterKey(provider, namespace, clusterId)
         : null;
 
-    const {
-      data: cluster,
-      error: clusterError,
-      isValidating: clusterIsValidating,
-    } = useSWR<Cluster, GenericResponseError>(clusterKey, () =>
+    const { data: cluster, isLoading: clusterIsLoading } = useSWR<
+      Cluster,
+      GenericResponseError
+    >(clusterKey, () =>
       fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
     );
 
@@ -346,7 +345,7 @@ const ClusterDetailWorkerNodes: React.FC<
     const {
       data: nodePoolList,
       error: nodePoolListError,
-      isValidating: nodePoolListIsValidating,
+      isLoading: nodePoolListIsLoading,
     } = useSWR<NodePoolList, GenericResponseError>(
       nodePoolListForClusterKey,
       () =>
@@ -358,13 +357,7 @@ const ClusterDetailWorkerNodes: React.FC<
         )
     );
 
-    const nodePoolListIsLoading =
-      (typeof cluster === 'undefined' &&
-        typeof clusterError === 'undefined' &&
-        clusterIsValidating) ||
-      (typeof nodePoolList === 'undefined' &&
-        typeof nodePoolListError === 'undefined' &&
-        nodePoolListIsValidating);
+    const isLoading = clusterIsLoading || nodePoolListIsLoading;
 
     useEffect(() => {
       if (nodePoolListError) {
@@ -597,7 +590,7 @@ const ClusterDetailWorkerNodes: React.FC<
                   <Box />
                 </Header>
                 <Box margin={{ top: 'xsmall' }}>
-                  {nodePoolListIsLoading &&
+                  {isLoading &&
                     LOADING_COMPONENTS.map((_, idx) => (
                       <WorkerNodesNodePoolItem
                         key={idx}
@@ -612,7 +605,7 @@ const ClusterDetailWorkerNodes: React.FC<
 
                   <AnimationWrapper>
                     <TransitionGroup>
-                      {!nodePoolListIsLoading &&
+                      {!isLoading &&
                         nodePoolsWithProviderNodePools.map(
                           ({ nodePool, providerNodePool }) => (
                             <BaseTransition

@@ -2,10 +2,12 @@ import { IOAuth2User } from 'utils/OAuth2/OAuth2User';
 
 import { LoggedInUserTypes } from './types';
 
-const MAPI_ADMIN_GROUP = window.config.mapiAuthAdminGroup;
+const MAPI_ADMIN_GROUPS = window.config.mapiAuthAdminGroups;
 
 export function mapOAuth2UserToUser(user: IOAuth2User): ILoggedInUser {
-  const isAdmin = user.groups.includes(MAPI_ADMIN_GROUP);
+  const isAdmin = user.groups.some((group) =>
+    MAPI_ADMIN_GROUPS.includes(group)
+  );
 
   return {
     email: user.email,

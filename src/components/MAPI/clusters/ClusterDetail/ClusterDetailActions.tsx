@@ -55,11 +55,13 @@ const ClusterDetailActions: React.FC<
   const orgClient = useRef(clientFactory());
 
   // The error is handled in the parent component.
-  const { data: org, error: orgError } = useSWR<
-    securityv1alpha1.IOrganization,
-    GenericResponseError
-  >(securityv1alpha1.getOrganizationKey(orgId), () =>
-    securityv1alpha1.getOrganization(orgClient.current, auth, orgId)
+  const {
+    data: org,
+    error: orgError,
+    isLoading: orgIsLoading,
+  } = useSWR<securityv1alpha1.IOrganization, GenericResponseError>(
+    securityv1alpha1.getOrganizationKey(orgId),
+    () => securityv1alpha1.getOrganization(orgClient.current, auth, orgId)
   );
 
   const namespace = org?.status?.namespace;
@@ -73,10 +75,11 @@ const ClusterDetailActions: React.FC<
       : null;
 
   // The error is handled in the parent component.
-  const { data: cluster, error: clusterError } = useSWR<
-    Cluster,
-    GenericResponseError
-  >(clusterKey, () =>
+  const {
+    data: cluster,
+    error: clusterError,
+    isLoading: clusterIsLoading,
+  } = useSWR<Cluster, GenericResponseError>(clusterKey, () =>
     fetchCluster(clientFactory, auth, provider, namespace!, clusterId)
   );
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
@@ -86,10 +89,11 @@ const ClusterDetailActions: React.FC<
     : null;
 
   // The error is handled in the parent component.
-  const { data: providerCluster, error: providerClusterError } = useSWR<
-    ProviderCluster,
-    GenericResponseError
-  >(providerClusterKey, () =>
+  const {
+    data: providerCluster,
+    error: providerClusterError,
+    isLoading: providerClusterIsLoading,
+  } = useSWR<ProviderCluster, GenericResponseError>(providerClusterKey, () =>
     fetchProviderClusterForCluster(clientFactory, auth, cluster!)
   );
 
@@ -103,16 +107,19 @@ const ClusterDetailActions: React.FC<
       ? fetchNodePoolListForClusterKey(cluster, cluster.metadata.namespace)
       : null;
 
-  const { data: nodePoolList, error: nodePoolListError } = useSWR<
-    NodePoolList,
-    GenericResponseError
-  >(nodePoolListForClusterKey, () =>
-    fetchNodePoolListForCluster(
-      clientFactory,
-      auth,
-      cluster,
-      cluster!.metadata.namespace
-    )
+  const {
+    data: nodePoolList,
+    error: nodePoolListError,
+    isLoading: nodePoolListIsLoading,
+  } = useSWR<NodePoolList, GenericResponseError>(
+    nodePoolListForClusterKey,
+    () =>
+      fetchNodePoolListForCluster(
+        clientFactory,
+        auth,
+        cluster,
+        cluster!.metadata.namespace
+      )
   );
 
   useEffect(() => {
@@ -167,15 +174,18 @@ const ClusterDetailActions: React.FC<
     ? applicationv1alpha1.getAppListKey(appListGetOptions)
     : null;
 
-  const { data: appList, error: appListError } = useSWR<
-    applicationv1alpha1.IAppList,
-    GenericResponseError
-  >(appListKey, () =>
-    applicationv1alpha1.getAppList(
-      appListClient.current,
-      auth,
-      appListGetOptions
-    )
+  const {
+    data: appList,
+    error: appListError,
+    isLoading: appListIsLoading,
+  } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
+    appListKey,
+    () =>
+      applicationv1alpha1.getAppList(
+        appListClient.current,
+        auth,
+        appListGetOptions
+      )
   );
 
   useEffect(() => {
@@ -212,16 +222,11 @@ const ClusterDetailActions: React.FC<
     typeof nodePoolListError !== 'undefined';
 
   const isLoadingResources =
-    typeof org === 'undefined' &&
-    typeof orgError === 'undefined' &&
-    typeof cluster === 'undefined' &&
-    typeof clusterError === 'undefined' &&
-    typeof providerCluster === 'undefined' &&
-    typeof providerClusterError === 'undefined' &&
-    typeof nodePoolList === 'undefined' &&
-    typeof nodePoolListError === 'undefined' &&
-    typeof appList === 'undefined' &&
-    typeof appListError === 'undefined';
+    orgIsLoading &&
+    clusterIsLoading &&
+    providerClusterIsLoading &&
+    nodePoolListIsLoading &&
+    appListIsLoading;
 
   const [isDeleting, setIsDeleting] = useState(false);
 

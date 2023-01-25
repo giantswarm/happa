@@ -15,7 +15,7 @@ import {
   selfSubjectRulesReviewWithSomeOrgs,
 } from 'test/mockHttpCalls';
 import { createInitialHistory, renderRouteWithStore } from 'test/renderUtils';
-import { MapiAuthConnectors } from 'utils/MapiAuth/MapiAuth';
+import { MapiAuthConnectorFilters } from 'utils/MapiAuth/MapiAuth';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
 describe('AdminLogin', () => {
@@ -47,7 +47,7 @@ describe('AdminLogin', () => {
     );
 
     expect(attemptLoginMockFn).toHaveBeenCalledWith(
-      MapiAuthConnectors.GiantSwarm
+      MapiAuthConnectorFilters.GiantSwarm
     );
 
     expect(await screen.findByText('Launch new cluster')).toBeInTheDocument();

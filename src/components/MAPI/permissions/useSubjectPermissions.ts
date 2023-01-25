@@ -25,15 +25,12 @@ export function useSubjectPermissions(subject?: IPermissionsSubject) {
 
   const key = subject ? fetchPermissionsForSubjectKey(subject) : null;
 
-  const { data, error, isValidating } = useSWR<
+  const { data, error, isLoading } = useSWR<
     IPermissionMap,
     GenericResponseError
   >(key, () =>
     fetchPermissionsForSubject(httpClientFactory, auth, organizations, subject!)
   );
-
-  const isLoading =
-    typeof data === 'undefined' && typeof error === 'undefined' && isValidating;
 
   useEffect(() => {
     if (error) {

@@ -16,15 +16,7 @@ interface ICreateClusterServicePriorityProps
 
 const CreateClusterServicePriority: React.FC<
   React.PropsWithChildren<ICreateClusterServicePriorityProps>
-> = ({
-  id,
-  cluster,
-  providerCluster,
-  onChange,
-  readOnly,
-  disabled,
-  ...props
-}) => {
+> = ({ id, cluster, providerCluster, onChange, disabled, ...props }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       isValid: true,
@@ -48,7 +40,6 @@ const CreateClusterServicePriority: React.FC<
           onChange={handleChange}
           options={['highest', 'medium', 'lowest']}
           labelKey={toTitleCase}
-          readOnly={readOnly}
           disabled={disabled}
         />
       </Box>

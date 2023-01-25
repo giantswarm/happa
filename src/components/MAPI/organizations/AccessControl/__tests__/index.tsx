@@ -134,9 +134,9 @@ describe('AccessControl', () => {
     expect(within(content).getByText('Cluster role')).toBeInTheDocument();
     expect(within(content).getByText('Managed by you')).toBeInTheDocument();
 
-    const group = within(
-      within(content).getByLabelText('Groups')
-    ).getByLabelText('Admins');
+    const group = await within(
+      await within(content).findByLabelText('Groups')
+    ).findByLabelText('Admins');
     expect(group).toBeInTheDocument();
 
     fireEvent.click(within(content).getByText('Permissions'));
@@ -1097,7 +1097,7 @@ describe('AccessControl', () => {
     fireEvent.click(currentRole);
 
     const content = screen.getByRole('main', { name: 'Role details' });
-    const section = within(content).getByLabelText('Service accounts');
+    const section = await within(content).findByLabelText('Service accounts');
     const subject = within(section).getByLabelText('some-random-account');
     fireEvent.click(within(subject).getByTitle('Delete'));
     fireEvent.click(screen.getByText('Remove'));

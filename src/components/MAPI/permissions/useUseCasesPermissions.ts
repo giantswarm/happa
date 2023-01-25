@@ -98,7 +98,7 @@ export function useUseCasesPermissions(
   const {
     data: permissionsAtClusterScope,
     error: permissionsAtClusterScopeError,
-    isValidating: permissionsAtClusterScopeIsValidating,
+    isLoading: permissionsAtClusterScopeIsLoading,
   } = useSWR<IPermissionMap, GenericResponseError>(
     permissionsAtClusterScopeKey,
     () =>
@@ -123,11 +123,6 @@ export function useUseCasesPermissions(
       ErrorReporter.getInstance().notify(permissionsAtClusterScopeError);
     }
   }, [permissionsAtClusterScopeError]);
-
-  const permissionsAtClusterScopeIsLoading =
-    typeof permissionsAtClusterScope === 'undefined' &&
-    typeof permissionsAtClusterScopeError === 'undefined' &&
-    permissionsAtClusterScopeIsValidating;
 
   const error = namespacePermissionsError || permissionsAtClusterScopeError;
   const isLoading =

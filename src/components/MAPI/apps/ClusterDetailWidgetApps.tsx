@@ -84,7 +84,7 @@ const ClusterDetailWidgetApps: React.FC<
   const {
     data: appList,
     error: appListError,
-    isValidating: appListIsValidating,
+    isLoading: appListIsLoading,
   } = useSWR<applicationv1alpha1.IAppList, GenericResponseError>(
     appListKey,
     () =>
@@ -101,20 +101,18 @@ const ClusterDetailWidgetApps: React.FC<
     }
   }, [appListError]);
 
-  const appListIsLoading =
-    typeof canListApps === 'undefined' ||
-    (appListIsValidating &&
-      typeof appList === 'undefined' &&
-      typeof appListError === 'undefined');
+  const isLoading = typeof canListApps === 'undefined' || appListIsLoading;
 
   const userInstalledApps = useMemo(() => {
     if (typeof appList === 'undefined') {
       return undefined;
     }
 
-    const apps = filterUserInstalledApps(appList.items, isClusterApp, provider);
-
-    return removeChildApps(apps);
+    return filterUserInstalledApps(
+      removeChildApps(appList.items),
+      isClusterApp,
+      provider
+    );
   }, [appList, isClusterApp, provider]);
 
   const insufficientPermissionsForApps = canListApps === false;
@@ -127,7 +125,7 @@ const ClusterDetailWidgetApps: React.FC<
       };
     }
 
-    if (appListIsLoading) {
+    if (isLoading) {
       return {
         apps: undefined,
         notDeployed: undefined,
@@ -137,7 +135,7 @@ const ClusterDetailWidgetApps: React.FC<
     const apps = appList?.items ?? [];
 
     return computeAppsCategorizedCounters(apps);
-  }, [appList, appListError, appListIsLoading, insufficientPermissionsForApps]);
+  }, [appList, appListError, isLoading, insufficientPermissionsForApps]);
 
   const hasNoApps =
     typeof appCounters.apps === 'number' && appCounters.apps === 0;

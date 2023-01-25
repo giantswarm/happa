@@ -21,12 +21,12 @@ export const Configurable: Story<
     const formValues = Object.fromEntries(formData);
 
     let ttl =
-      formValues.ttl as unknown as typeof messageTTL[keyof typeof messageTTL];
+      formValues.ttl as unknown as (typeof messageTTL)[keyof typeof messageTTL];
     if ((ttl as unknown) === FOREVER_TTL) ttl = false;
 
     new FlashMessage(
       formValues.title as string,
-      formValues.type as typeof messageType[keyof typeof messageType],
+      formValues.type as (typeof messageType)[keyof typeof messageType],
       ttl,
       formValues.subtitle as string
     );
