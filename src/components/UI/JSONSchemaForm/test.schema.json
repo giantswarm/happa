@@ -82,7 +82,7 @@
                     "type": "number"
                 },
                 "numberLimit": {
-                    "description": "Number field with minimum and maximum values validation. Submit the form to see validation errors.",
+                    "description": "Number field with minimum value 2 and maximum value 5.",
                     "maximum": 5,
                     "minimum": 2,
                     "title": "Number with min/max values",
@@ -107,7 +107,7 @@
                     "type": "object"
                 },
                 "objectRequired": {
-                    "description": "Object field with required properties. Submit the form to see validation errors.",
+                    "description": "Object where one property is required.",
                     "properties": {
                         "age": {
                             "type": "number"
@@ -163,7 +163,7 @@
                     "type": "string"
                 },
                 "stringFormat": {
-                    "description": "String field with specific format (email, uri, date, ipv4, etc.).",
+                    "description": "String field with format 'ipv4'.",
                     "format": "ipv4",
                     "title": "String with format",
                     "type": "string"
@@ -176,7 +176,7 @@
                     "type": "string"
                 },
                 "stringPattern": {
-                    "description": "String field with pattern validation. Submit the form to see validation errors.",
+                    "description": "String field with pattern validation for regular expression '^[a-z0-9]{10,20}$'.",
                     "pattern": "^[a-z0-9]{10,20}$",
                     "title": "String with pattern",
                     "type": "string"
