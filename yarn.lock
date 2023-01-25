@@ -5208,7 +5208,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-jsonschema-form@^1.7.8":
+"@types/react-jsonschema-form@1.7.8":
   version "1.7.8"
   resolved "https://registry.yarnpkg.com/@types/react-jsonschema-form/-/react-jsonschema-form-1.7.8.tgz#5d8b832ee33132b7eede5d74f9a4e00541fedbf8"
   integrity sha512-oFyNOa8VDSt1jGN4r+prTFD2hojZBsqLoTkRfo+XvANR3taLUeMJlGhtOP+hpi/k19OxpEb24TZciMmQyPZ9TA==
