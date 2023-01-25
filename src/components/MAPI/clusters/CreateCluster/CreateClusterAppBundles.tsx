@@ -1,5 +1,5 @@
 import { IChangeEvent } from '@rjsf/core';
-import { RJSFSchema } from '@rjsf/utils';
+import { EnumOptionsType, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import cleanDeep from 'clean-deep';
@@ -34,6 +34,7 @@ import JSONSchemaForm from 'UI/JSONSchemaForm';
 import testSchema from 'UI/JSONSchemaForm/test.schema.json';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { toTitleCase } from 'utils/helpers';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import RoutePath from 'utils/routePath';
@@ -55,20 +56,10 @@ const Wrapper = styled.div`
 
 function getAppRepoName(provider: PrototypeProviders): string {
   switch (provider) {
-    case 'AWS':
-      return 'cluster-aws';
-    case 'Azure':
-      return 'cluster-azure';
-    case 'Cloud Director':
-      return 'cluster-cloud-director';
-    case 'GCP':
-      return 'cluster-gcp';
-    case 'Open Stack':
+    case PrototypeProviders.OPENSTACK:
       return 'cluster-openstack';
-    case 'VSphere':
-      return 'cluster-vsphere';
     default:
-      return '';
+      return `cluster-${provider}`;
   }
 }
 
@@ -112,7 +103,7 @@ function fetchAppRepoBranchesKey(provider: PrototypeProviders) {
 }
 
 function getDefaultRepoBranch(provider: PrototypeProviders) {
-  return provider === 'AWS' ? 'master' : 'main';
+  return provider === PrototypeProviders.AWS ? 'master' : 'main';
 }
 
 enum FormDataPreviewFormat {
@@ -130,6 +121,29 @@ const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 };
 
 Prompt.displayName = 'Prompt';
+
+function formatSchemaSelectLabel(schema: PrototypeSchemas): string {
+  switch (schema) {
+    case PrototypeProviders.AWS:
+    case PrototypeProviders.GCP:
+      return schema.toLocaleUpperCase();
+
+    case PrototypeProviders.VSPHERE:
+      return 'VSphere';
+
+    default:
+      return `${schema
+        .split('-')
+        .map((word) => toTitleCase(word))
+        .join(' ')}`;
+  }
+}
+
+function formatSchemaSelectOptions(
+  schema: PrototypeSchemas[]
+): { label: string; value: PrototypeSchemas }[] {
+  return schema.map((s) => ({ label: formatSchemaSelectLabel(s), value: s }));
+}
 
 interface ICreateClusterAppBundlesProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
@@ -260,10 +274,8 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     formDataKey.current = Date.now();
   };
 
-  const handleSelectedSchemaChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newSchema = e.target.value as PrototypeSchemas;
+  const handleSelectedSchemaChange = (option: EnumOptionsType) => {
+    const newSchema = option.value as PrototypeSchemas;
     setSelectedSchema(newSchema);
     const newProvider = prototypeProviders.find((p) => p === newSchema);
     setSelectedBranch(
@@ -351,9 +363,12 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                 }
               >
                 <Select
-                  value={selectedSchema}
-                  onChange={handleSelectedSchemaChange}
-                  options={prototypeSchemas.slice()}
+                  value={formatSchemaSelectOptions(prototypeSchemas).find(
+                    (s) => s.value === selectedSchema
+                  )}
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                  onChange={(e) => handleSelectedSchemaChange(e.option)}
+                  options={formatSchemaSelectOptions(prototypeSchemas)}
                 />
               </InputGroup>
               {selectedProvider && (
