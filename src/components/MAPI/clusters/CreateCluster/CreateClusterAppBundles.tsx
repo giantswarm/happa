@@ -303,12 +303,8 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   ) => {
     e.preventDefault();
 
-    // TODO: don't create cluster app resources for now
-    // and disable navigating to cluster details page
-
     // eslint-disable-next-line no-console
     console.log(cleanFormData);
-    resetFormData(selectedSchema);
   };
 
   const handleCreationCancel = () => {
