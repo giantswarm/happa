@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 import ArrayFieldItemActions from '../ArrayFieldItemActions';
 
-const ArrayFieldItemW = styled(Box)`
+const ArrayFieldItemWrapper = styled(Box)`
   position: relative;
 
   &::before {
@@ -40,7 +40,7 @@ const ArrayFieldItem: React.FC<ArrayFieldTemplateItemType> = ({
   children,
 }) => {
   return (
-    <ArrayFieldItemW direction='row'>
+    <ArrayFieldItemWrapper direction='row'>
       <ArrayFieldItemActionsWrapper>
         {hasToolbar && (
           <ArrayFieldItemActions
@@ -55,7 +55,7 @@ const ArrayFieldItem: React.FC<ArrayFieldTemplateItemType> = ({
         )}
       </ArrayFieldItemActionsWrapper>
       <Box fill>{children}</Box>
-    </ArrayFieldItemW>
+    </ArrayFieldItemWrapper>
   );
 };
 
