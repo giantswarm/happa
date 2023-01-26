@@ -28,6 +28,23 @@
                     "title": "Array of objects",
                     "type": "array"
                 },
+                "arrayOfObjectsWithTitle": {
+                    "items": {
+                        "description": "Description of array item object",
+                        "properties": {
+                            "age": {
+                                "type": "number"
+                            },
+                            "name": {
+                                "type": "string"
+                            }
+                        },
+                        "title": "Array item object",
+                        "type": "object"
+                    },
+                    "title": "Array of objects with title",
+                    "type": "array"
+                },
                 "arrayOfStrings": {
                     "items": {
                         "type": "string"
