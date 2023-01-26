@@ -3,13 +3,15 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const Icon = styled(Text)<{ isActive?: boolean }>`
+  display: block;
+  width: 28px;
   transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
   transform-origin: center center;
   transition: 0.15s ease-out;
   font-size: 28px;
-  line-height: 20px;
-  margin-left: -6px;
 `;
+
+const leftPadding = '35px';
 
 interface AccordionFormFieldProps {
   label: string;
@@ -21,6 +23,7 @@ const AccordionFormField: React.FC<
   React.PropsWithChildren<AccordionFormFieldProps>
 > = ({ label, help, error, children }) => {
   const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
+  const isExpanded = activeIndexes.length !== 0;
 
   return (
     <Accordion
@@ -30,35 +33,30 @@ const AccordionFormField: React.FC<
     >
       <AccordionPanel
         header={
-          <Box>
-            <Box direction='row' align='center' margin={{ vertical: 'small' }}>
+          <Box direction='row' align='top' margin={{ vertical: 'small' }}>
+            <Box width={leftPadding}>
               <Icon
                 className='fa fa-chevron-down'
                 isActive={activeIndexes.includes(0)}
                 role='presentation'
                 aria-hidden='true'
               />
-              <Text weight='bold'>{label}</Text>
             </Box>
-            {help && (
-              <Text size='small' color='text-weak' margin={{ bottom: 'small' }}>
-                {help}
+            <Box>
+              <Text size='large' weight='bold'>
+                {label}
               </Text>
-            )}
-            {error && <Box margin={{ bottom: 'small' }}>{error}</Box>}
+              {help && isExpanded && (
+                <Text color='text-weak' margin={{ top: 'small' }}>
+                  {help}
+                </Text>
+              )}
+              {error && <Box margin={{ bottom: 'small' }}>{error}</Box>}
+            </Box>
           </Box>
         }
       >
-        <Box
-          border='all'
-          pad={{ vertical: 'small', horizontal: 'medium' }}
-          round='xsmall'
-          margin={{
-            bottom: 'medium',
-          }}
-        >
-          {children}
-        </Box>
+        <Box pad={{ left: leftPadding }}>{children}</Box>
       </AccordionPanel>
     </Accordion>
   );

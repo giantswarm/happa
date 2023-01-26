@@ -336,12 +336,8 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
           >
             <Heading level={1}>Create a cluster via app bundles</Heading>
           </Box>
-          <Box
-            width={{ max: '100%', width: 'large' }}
-            gap='medium'
-            margin='auto'
-          >
-            <Box direction='row' gap='medium'>
+          <Box gap='medium'>
+            <Box direction='row' gap='medium' width={{ max: 'large' }}>
               <InputGroup
                 label='Schema'
                 info={
@@ -418,7 +414,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                     </Box>
                   </JSONSchemaForm>
                   {formData !== undefined && (
-                    <Box margin={{ top: 'large' }}>
+                    <Box margin={{ top: 'large' }} width={{ max: 'large' }}>
                       <Text weight='bold'>Form data preview</Text>
                       <Box
                         direction='row'
