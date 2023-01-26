@@ -3538,10 +3538,10 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@rjsf/core@5.0.0-beta.13":
-  version "5.0.0-beta.13"
-  resolved "https://registry.yarnpkg.com/@rjsf/core/-/core-5.0.0-beta.13.tgz#e13bd67a448460f5d9005033486b277f4eb35cf6"
-  integrity sha512-uQ3A9aJhMJsz9ct5tV3ogZkSFEkKUxrM9SJ9Hc8ijxmuaW7Jv8tNv5jiWZZsLvNXlIONX83s6JqkiOJf6IOAvg==
+"@rjsf/core@5.0.0-beta.18":
+  version "5.0.0-beta.18"
+  resolved "https://registry.yarnpkg.com/@rjsf/core/-/core-5.0.0-beta.18.tgz#e519506d034d7884577eebf942edbb43c4319e7a"
+  integrity sha512-GqyQAsv29y4G8YbVbzQWEQEZFdbX9uQ0gV5c6U7ITLMcKIPYMKcUkLnRU83MQw8jGwmvrAZRB9bMyDrNWjqvkg==
   dependencies:
     lodash "^4.17.15"
     lodash-es "^4.17.15"

@@ -58,7 +58,7 @@
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
-    "@rjsf/core": "5.0.0-beta.13",
+    "@rjsf/core": "5.0.0-beta.18",
     "@rjsf/utils": "5.0.0-beta.13",
     "@rjsf/validator-ajv8": "5.0.0-beta.13",
     "@sentry/react": "7.33.0",
