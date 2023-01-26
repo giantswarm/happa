@@ -1,6 +1,7 @@
 import { FieldTemplateProps } from '@rjsf/utils';
-import { FormField } from 'grommet';
+import { Text } from 'grommet';
 import React from 'react';
+import InputGroup from 'UI/Inputs/InputGroup';
 
 import AccordionFormField from '../AccordionFormField';
 import ObjectFormField from '../ObjectFormField';
@@ -30,7 +31,7 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
       <ObjectFormField
         label={displayLabel}
         help={description}
-        error={errors}
+        error={rawErrors ? errors : undefined}
         isArrayItem={isArrayItem}
       >
         {children}
@@ -43,7 +44,7 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
       <AccordionFormField
         label={displayLabel}
         help={description}
-        error={errors}
+        error={rawErrors ? errors : undefined}
       >
         {children}
       </AccordionFormField>
@@ -51,15 +52,15 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
   }
 
   return (
-    <FormField
+    <InputGroup
       label={displayLabel}
-      help={description}
+      help={<Text color='text-weak'>{description}</Text>}
+      contentProps={{ width: { max: 'large' } }}
       error={rawErrors ? errors : undefined}
       htmlFor={id}
-      contentProps={{ border: false }}
     >
       {children}
-    </FormField>
+    </InputGroup>
   );
 };
 

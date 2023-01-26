@@ -140,7 +140,13 @@ const uiSchemaTestSchema: Record<string, GenericObjectType> = {
     },
     arrayFields: {
       'ui:options': {
-        order: ['arrayOfStrings', 'arrayOfObjects', 'arrayMinMaxItems', '*'],
+        order: [
+          'arrayOfStrings',
+          'arrayOfObjects',
+          'arrayOfObjectsWithTitle',
+          'arrayMinMaxItems',
+          '*',
+        ],
       },
     },
   },

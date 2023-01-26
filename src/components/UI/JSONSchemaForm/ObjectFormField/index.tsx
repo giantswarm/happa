@@ -13,14 +13,12 @@ const ObjectFormField: React.FC<
 > = ({ label, isArrayItem, help, error, children }) => {
   return (
     <Box margin={{ bottom: isArrayItem ? 'none' : 'small' }}>
-      <Text as='label' weight='bold' margin={{ vertical: 'small' }}>
+      <Text as='label' size='large' margin={{ vertical: 'small' }}>
         {label}
       </Text>
       {help && (
         <Box margin={{ bottom: 'small' }}>
-          <Text color='text-weak' size='small'>
-            {help}
-          </Text>
+          <Text color='text-weak'>{help}</Text>
         </Box>
       )}
       {error && <Box margin={{ bottom: 'small' }}>{error}</Box>}

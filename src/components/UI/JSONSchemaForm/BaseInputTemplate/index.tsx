@@ -45,7 +45,6 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
       min={inputProps.min}
       max={inputProps.max}
       step={inputProps.step}
-      margin={{ bottom: 'none' }}
       contentProps={{
         width: { max: 'small' },
       }}
@@ -60,7 +59,6 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
       disabled={disabled}
       readOnly={readonly}
       required={required}
-      margin={{ bottom: 'none' }}
       onChange={handleChange}
       onSuggestionSelect={handleSuggestionSelect}
       {...inputProps}
