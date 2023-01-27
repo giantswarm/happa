@@ -1,20 +1,15 @@
-import { FieldTemplateProps } from '@rjsf/utils';
-import { Text } from 'grommet';
-import React from 'react';
+import { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import { FormField, Text } from 'grommet';
+import React, { useContext, useMemo } from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 
+import { FormContext, IFormContext } from '..';
 import AccordionFormField from '../AccordionFormField';
 import ObjectFormField from '../ObjectFormField';
 
-const FieldTemplate: React.FC<FieldTemplateProps> = ({
-  id,
-  errors,
-  rawErrors,
-  children,
-  label,
-  schema,
-  required,
-}) => {
+const FieldTemplate: React.FC<
+  FieldTemplateProps<RJSFSchema, RJSFSchema, IFormContext>
+> = ({ id, errors, rawErrors, children, label, schema, required }) => {
   const { type, description } = schema;
 
   const displayLabel = `${label}${required ? '*' : ''}`;
@@ -22,8 +17,28 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
   const isRootItem = id === 'root';
   const isArrayItem = /(_\d+)$/.test(id);
 
+  const formContext = useContext(FormContext);
+
+  const showErrors = useMemo(() => {
+    if (!formContext?.touchedFields) return false;
+
+    return Array.from(formContext.touchedFields).some((field) =>
+      field.includes(id)
+    );
+  }, [formContext?.touchedFields, id]);
+
   if (isRootItem) {
-    return children;
+    return (
+      <FormField
+        label={displayLabel}
+        help={description}
+        error={rawErrors && showErrors ? errors : undefined}
+        htmlFor={id}
+        contentProps={{ border: false }}
+      >
+        {children}
+      </FormField>
+    );
   }
 
   if (type === 'object' && isArrayItem) {
@@ -31,7 +46,7 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
       <ObjectFormField
         label={displayLabel}
         help={description}
-        error={rawErrors ? errors : undefined}
+        error={rawErrors && showErrors ? errors : undefined}
         isArrayItem={isArrayItem}
       >
         {children}
@@ -44,7 +59,8 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
       <AccordionFormField
         label={displayLabel}
         help={description}
-        error={rawErrors ? errors : undefined}
+        error={rawErrors && showErrors ? errors : undefined}
+        onInactive={() => formContext?.setTouchedField(id)}
       >
         {children}
       </AccordionFormField>
@@ -56,7 +72,7 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
       label={displayLabel}
       help={<Text color='text-weak'>{description}</Text>}
       contentProps={{ width: { max: 'large' } }}
-      error={rawErrors ? errors : undefined}
+      error={rawErrors && showErrors ? errors : undefined}
       htmlFor={id}
     >
       {children}

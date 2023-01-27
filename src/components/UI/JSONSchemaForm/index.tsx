@@ -1,6 +1,6 @@
 import Form, { FormProps, IChangeEvent } from '@rjsf/core';
-import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
-import React, { useRef, useState } from 'react';
+import { RJSFSchema } from '@rjsf/utils';
+import React, { createContext, useState } from 'react';
 
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
@@ -27,68 +27,45 @@ const customTemplates = {
   ObjectFieldTemplate,
 };
 
-const JSONSchemaForm: React.FC<FormProps> = ({
-  onChange,
-  onSubmit,
-  ...props
-}) => {
-  const [touchedFormFields, setTouchedFormFields] = useState<Set<string>>(
-    new Set()
-  );
+export interface IFormContext {
+  touchedFields: Set<string>;
+  setTouchedField: (id: string) => void;
+}
 
-  const ref = useRef<Form<RJSFSchema> | null>(null);
+export const FormContext = createContext<IFormContext | null>(null);
 
-  const addTouchedFormField = (id: string) => {
-    setTouchedFormFields((state) => new Set(state.add(id)));
-  };
+const JSONSchemaForm: React.FC<FormProps> = ({ onChange, ...props }) => {
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
 
-  const handleBlur = (id?: string) => {
-    if (id) addTouchedFormField(id);
+  const setTouchedField = (id?: string) => {
+    if (!id) return;
+    setTouchedFields((state) => new Set(state.add(id)));
   };
 
   const handleChange = (data: IChangeEvent<RJSFSchema>, id?: string) => {
-    if (id) addTouchedFormField(id);
-
+    setTouchedField(id);
     if (onChange) {
       onChange(data, id);
     }
   };
 
-  const handleSubmit = (
-    data: IChangeEvent<RJSFSchema>,
-    event: React.FormEvent<RJSFSchema>
-  ) => {
-    if (onSubmit) {
-      onSubmit(data, event);
-    }
-  };
-
-  const processErrors = (errors: RJSFValidationError[]) => {
-    const filteredFields = Array.from(touchedFormFields).map((field) =>
-      field.replace(/^root/, '').replaceAll('_', '.')
-    );
-
-    const err = errors.filter((e) =>
-      filteredFields.some((f) => (e.property ? f.includes(e.property) : true))
-    );
-
-    return err;
+  const handleBlur = (id?: string) => {
+    setTouchedField(id);
   };
 
   return (
-    <Form
-      fields={customFields}
-      widgets={customWidgets}
-      templates={customTemplates}
-      onBlur={handleBlur}
-      onChange={handleChange}
-      onSubmit={handleSubmit}
-      ref={ref}
-      transformErrors={processErrors}
-      noHtml5Validate
-      liveValidate
-      {...props}
-    />
+    <FormContext.Provider value={{ touchedFields, setTouchedField }}>
+      <Form
+        fields={customFields}
+        widgets={customWidgets}
+        templates={customTemplates}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        noHtml5Validate
+        liveValidate
+        {...props}
+      />
+    </FormContext.Provider>
   );
 };
 
