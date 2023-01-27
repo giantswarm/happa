@@ -1,6 +1,6 @@
 import { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { FormField, Text } from 'grommet';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 
 import { FormContext, IFormContext } from '..';
@@ -19,20 +19,12 @@ const FieldTemplate: React.FC<
 
   const formContext = useContext(FormContext);
 
-  const showErrors = useMemo(() => {
-    if (!formContext?.touchedFields) return false;
-
-    return Array.from(formContext.touchedFields).some((field) =>
-      field.includes(id)
-    );
-  }, [formContext?.touchedFields, id]);
-
   if (isRootItem) {
     return (
       <FormField
         label={displayLabel}
         help={description}
-        error={rawErrors && showErrors ? errors : undefined}
+        error={rawErrors ? errors : undefined}
         htmlFor={id}
         contentProps={{ border: false }}
       >
@@ -46,7 +38,7 @@ const FieldTemplate: React.FC<
       <ObjectFormField
         label={displayLabel}
         help={description}
-        error={rawErrors && showErrors ? errors : undefined}
+        error={rawErrors ? errors : undefined}
         isArrayItem={isArrayItem}
       >
         {children}
@@ -59,7 +51,7 @@ const FieldTemplate: React.FC<
       <AccordionFormField
         label={displayLabel}
         help={description}
-        error={rawErrors && showErrors ? errors : undefined}
+        error={rawErrors ? errors : undefined}
         onInactive={() => formContext?.setTouchedField(id)}
       >
         {children}
@@ -72,7 +64,7 @@ const FieldTemplate: React.FC<
       label={displayLabel}
       help={<Text color='text-weak'>{description}</Text>}
       contentProps={{ width: { max: 'large' } }}
-      error={rawErrors && showErrors ? errors : undefined}
+      error={rawErrors ? errors : undefined}
       htmlFor={id}
     >
       {children}
