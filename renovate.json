@@ -74,6 +74,10 @@
       "groupName": "webpack packages"
     },
     {
+      "matchPackagePrefixes": ["@rjsf"],
+      "groupName": "react-jsonschema-form packages"
+    },
+    {
       "matchPackageNames": [
         "@types/bootstrap",
         "bootstrap"
