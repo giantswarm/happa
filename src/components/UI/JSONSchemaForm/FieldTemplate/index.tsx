@@ -20,12 +20,13 @@ const FieldTemplate: React.FC<
   const formContext = useContext(FormContext);
 
   const showErrors = useMemo(() => {
-    if (!formContext?.touchedFields) return false;
+    if (!formContext?.touchedFields || formContext.isSubmitAttempted)
+      return true;
 
     return Array.from(formContext.touchedFields).some((field) =>
       field.includes(id)
     );
-  }, [formContext?.touchedFields, id]);
+  }, [formContext?.isSubmitAttempted, formContext?.touchedFields, id]);
 
   if (isRootItem) {
     return (

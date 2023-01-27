@@ -30,12 +30,14 @@ const customTemplates = {
 export interface IFormContext {
   touchedFields: Set<string>;
   setTouchedField: (id: string) => void;
+  isSubmitAttempted: boolean;
 }
 
 export const FormContext = createContext<IFormContext | null>(null);
 
 const JSONSchemaForm: React.FC<FormProps> = ({ onChange, ...props }) => {
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+  const [isSubmitAttempted, setIsSubmitAttempted] = useState<boolean>(false);
 
   const setTouchedField = (id?: string) => {
     if (!id) return;
@@ -54,7 +56,9 @@ const JSONSchemaForm: React.FC<FormProps> = ({ onChange, ...props }) => {
   };
 
   return (
-    <FormContext.Provider value={{ touchedFields, setTouchedField }}>
+    <FormContext.Provider
+      value={{ touchedFields, setTouchedField, isSubmitAttempted }}
+    >
       <Form
         fields={customFields}
         widgets={customWidgets}
@@ -63,6 +67,7 @@ const JSONSchemaForm: React.FC<FormProps> = ({ onChange, ...props }) => {
         onBlur={handleBlur}
         noHtml5Validate
         liveValidate
+        onError={() => setIsSubmitAttempted(true)}
         {...props}
       />
     </FormContext.Provider>
