@@ -1,15 +1,24 @@
 import { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
-import { FormField, Text } from 'grommet';
-import React, { useContext, useMemo } from 'react';
+import { Text } from 'grommet';
+import React, { useMemo } from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 
-import { FormContext, IFormContext } from '..';
+import { IFormContext } from '..';
 import AccordionFormField from '../AccordionFormField';
 import ObjectFormField from '../ObjectFormField';
 
 const FieldTemplate: React.FC<
   FieldTemplateProps<RJSFSchema, RJSFSchema, IFormContext>
-> = ({ id, errors, rawErrors, children, label, schema, required }) => {
+> = ({
+  id,
+  errors,
+  rawErrors,
+  children,
+  label,
+  schema,
+  required,
+  formContext,
+}) => {
   const { type, description } = schema;
 
   const displayLabel = `${label}${required ? '*' : ''}`;
@@ -17,29 +26,14 @@ const FieldTemplate: React.FC<
   const isRootItem = id === 'root';
   const isArrayItem = /(_\d+)$/.test(id);
 
-  const formContext = useContext(FormContext);
-
   const showErrors = useMemo(() => {
-    if (!formContext?.touchedFields || formContext.isSubmitAttempted)
-      return true;
+    if (!formContext || formContext.showAllErrors) return true;
 
-    return Array.from(formContext.touchedFields).some((field) =>
-      field.includes(id)
-    );
-  }, [formContext?.isSubmitAttempted, formContext?.touchedFields, id]);
+    return formContext.touchedFields.some((field) => field.includes(id));
+  }, [formContext, id]);
 
   if (isRootItem) {
-    return (
-      <FormField
-        label={displayLabel}
-        help={description}
-        error={rawErrors && showErrors ? errors : undefined}
-        htmlFor={id}
-        contentProps={{ border: false }}
-      >
-        {children}
-      </FormField>
-    );
+    return children;
   }
 
   if (type === 'object' && isArrayItem) {
@@ -61,7 +55,7 @@ const FieldTemplate: React.FC<
         label={displayLabel}
         help={description}
         error={rawErrors && showErrors ? errors : undefined}
-        onInactive={() => formContext?.setTouchedField(id)}
+        onInactive={() => formContext?.addTouchedField(id)}
       >
         {children}
       </AccordionFormField>

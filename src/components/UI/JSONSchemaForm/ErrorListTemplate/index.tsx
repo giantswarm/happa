@@ -1,26 +1,23 @@
-import { ErrorListProps } from '@rjsf/utils';
+import { ErrorListProps, RJSFSchema } from '@rjsf/utils';
 import { Box, Paragraph } from 'grommet';
-import React, { useContext, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { FlashMessageType } from 'styles';
 import FlashMessage from 'UI/Display/FlashMessage';
 
-import { FormContext } from '..';
+import { IFormContext } from '..';
 
-const ErrorListTemplate: React.FC<ErrorListProps> = ({ errors }) => {
-  const formContext = useContext(FormContext);
-
+const ErrorListTemplate: React.FC<
+  ErrorListProps<RJSFSchema, RJSFSchema, IFormContext>
+> = ({ errors, formContext }) => {
   const filteredErrors = useMemo(() => {
-    if (!formContext?.touchedFields || formContext.isSubmitAttempted)
-      return errors;
-
-    const touchedFieldsArray = Array.from(formContext.touchedFields);
+    if (!formContext || formContext.showAllErrors) return errors;
 
     return errors.filter((e) =>
-      touchedFieldsArray.some((field) =>
+      formContext.touchedFields.some((field) =>
         e.property ? field.includes(e.property.replaceAll('.', '_')) : true
       )
     );
-  }, [errors, formContext?.isSubmitAttempted, formContext?.touchedFields]);
+  }, [errors, formContext]);
 
   return filteredErrors.length > 0 ? (
     <FlashMessage type={FlashMessageType.Danger}>

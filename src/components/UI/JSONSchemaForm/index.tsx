@@ -1,6 +1,6 @@
 import Form, { FormProps, IChangeEvent } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
-import React, { createContext, useState } from 'react';
+import React, { createContext, useReducer } from 'react';
 
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
@@ -27,50 +27,91 @@ const customTemplates = {
   ObjectFieldTemplate,
 };
 
-export interface IFormContext {
-  touchedFields: Set<string>;
-  setTouchedField: (id: string) => void;
-  isSubmitAttempted: boolean;
+interface IAddTouchedFieldAction {
+  type: 'addTouchedField';
+  value: string;
+}
+
+interface IAttemptSubmitAction {
+  type: 'attemptSubmitAction';
+}
+
+interface IFormState {
+  touchedFields: string[];
+  showAllErrors: boolean;
+}
+
+type FormAction = IAddTouchedFieldAction | IAttemptSubmitAction;
+
+const reducer: React.Reducer<IFormState, FormAction> = (state, action) => {
+  switch (action.type) {
+    case 'addTouchedField':
+      return {
+        ...state,
+        touchedFields: Array.from(
+          new Set([...state.touchedFields, action.value])
+        ),
+      };
+    case 'attemptSubmitAction':
+      return { ...state, showAllErrors: true };
+    default:
+      return { ...state };
+  }
+};
+
+function createInitalState(): IFormState {
+  return { touchedFields: [], showAllErrors: false };
+}
+
+export interface IFormContext extends IFormState {
+  addTouchedField: (id: string) => void;
 }
 
 export const FormContext = createContext<IFormContext | null>(null);
 
-const JSONSchemaForm: React.FC<FormProps> = ({ onChange, ...props }) => {
-  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
-  const [isSubmitAttempted, setIsSubmitAttempted] = useState<boolean>(false);
+const JSONSchemaForm: React.FC<FormProps> = ({
+  onChange,
+  onBlur,
+  ...props
+}) => {
+  const [state, dispatch] = useReducer(reducer, createInitalState());
 
-  const setTouchedField = (id?: string) => {
+  const addTouchedField = (id?: string) => {
     if (!id) return;
-    setTouchedFields((state) => new Set(state.add(id)));
+    dispatch({ type: 'addTouchedField', value: id });
   };
 
   const handleChange = (data: IChangeEvent<RJSFSchema>, id?: string) => {
-    setTouchedField(id);
+    addTouchedField(id);
     if (onChange) {
       onChange(data, id);
     }
   };
 
-  const handleBlur = (id?: string) => {
-    setTouchedField(id);
+  const handleBlur = (id: string, data: unknown) => {
+    addTouchedField(id);
+    if (onBlur) {
+      onBlur(id, data);
+    }
+  };
+
+  const handleSubmitAttempted = () => {
+    dispatch({ type: 'attemptSubmitAction' });
   };
 
   return (
-    <FormContext.Provider
-      value={{ touchedFields, setTouchedField, isSubmitAttempted }}
-    >
-      <Form
-        fields={customFields}
-        widgets={customWidgets}
-        templates={customTemplates}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        noHtml5Validate
-        liveValidate
-        onError={() => setIsSubmitAttempted(true)}
-        {...props}
-      />
-    </FormContext.Provider>
+    <Form
+      fields={customFields}
+      widgets={customWidgets}
+      templates={customTemplates}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      onError={handleSubmitAttempted}
+      formContext={{ ...state, addTouchedField }}
+      noHtml5Validate
+      liveValidate
+      {...props}
+    />
   );
 };
 
