@@ -101,7 +101,7 @@
     "react-transition-group": "4.4.5",
     "react-virtualized": "9.22.3",
     "react-window": "1.8.8",
-    "redux": "4.2.0",
+    "redux": "4.2.1",
     "redux-thunk": "2.4.2",
     "regenerator-runtime": "0.13.11",
     "remark-gfm": "3.0.1",
