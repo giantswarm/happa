@@ -11,10 +11,16 @@ const Icon = styled(Text)<{ isActive?: boolean }>`
   font-size: 28px;
 `;
 
+const StyledLabel = styled(Text).attrs({
+  forwardedAs: 'label',
+})`
+  cursor: pointer;
+`;
+
 const leftPadding = '35px';
 
 interface AccordionFormFieldProps {
-  label: string;
+  label: React.ReactNode;
   help?: string;
   error?: React.ReactNode;
 }
@@ -33,8 +39,8 @@ const AccordionFormField: React.FC<
     >
       <AccordionPanel
         header={
-          <Box direction='row' align='top' margin={{ vertical: 'small' }}>
-            <Box width={leftPadding}>
+          <Box direction='row' align='top'>
+            <Box width={leftPadding} margin={{ vertical: 'small' }}>
               <Icon
                 className='fa fa-chevron-down'
                 isActive={activeIndexes.includes(0)}
@@ -43,11 +49,11 @@ const AccordionFormField: React.FC<
               />
             </Box>
             <Box>
-              <Text size='large' weight='bold'>
+              <StyledLabel weight='bold' margin={{ vertical: 'small' }}>
                 {label}
-              </Text>
+              </StyledLabel>
               {help && isExpanded && (
-                <Text color='text-weak' margin={{ top: 'small' }}>
+                <Text color='text-weak' margin={{ bottom: 'small' }}>
                   {help}
                 </Text>
               )}

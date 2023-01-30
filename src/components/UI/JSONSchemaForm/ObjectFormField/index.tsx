@@ -2,7 +2,7 @@ import { Box, Text } from 'grommet';
 import React from 'react';
 
 interface ObjectFormFieldProps {
-  label: string;
+  label: React.ReactNode;
   isArrayItem: boolean;
   help?: string;
   error?: React.ReactNode;
@@ -13,7 +13,7 @@ const ObjectFormField: React.FC<
 > = ({ label, isArrayItem, help, error, children }) => {
   return (
     <Box margin={{ bottom: isArrayItem ? 'none' : 'small' }}>
-      <Text as='label' size='large' margin={{ vertical: 'small' }}>
+      <Text as='label' weight='bold' margin={{ vertical: 'small' }}>
         {label}
       </Text>
       {help && (
