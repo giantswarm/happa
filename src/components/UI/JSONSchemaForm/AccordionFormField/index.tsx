@@ -21,7 +21,7 @@ const leftPadding = '35px';
 
 interface AccordionFormFieldProps {
   label: React.ReactNode;
-  help?: string;
+  help?: React.ReactNode;
   error?: React.ReactNode;
 }
 
@@ -30,6 +30,9 @@ const AccordionFormField: React.FC<
 > = ({ label, help, error, children }) => {
   const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
   const isExpanded = activeIndexes.length !== 0;
+
+  const helpComponent =
+    typeof help === 'string' ? <Text color='text-weak'>{help}</Text> : help;
 
   return (
     <Accordion
@@ -53,9 +56,7 @@ const AccordionFormField: React.FC<
                 {label}
               </StyledLabel>
               {help && isExpanded && (
-                <Text color='text-weak' margin={{ bottom: 'small' }}>
-                  {help}
-                </Text>
+                <Box margin={{ bottom: 'small' }}>{helpComponent}</Box>
               )}
               {error && <Box margin={{ bottom: 'small' }}>{error}</Box>}
             </Box>

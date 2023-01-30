@@ -1,9 +1,9 @@
 import { FieldTemplateProps } from '@rjsf/utils';
-import { Text } from 'grommet';
 import React from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 
 import AccordionFormField from '../AccordionFormField';
+import FieldDescription from '../FieldDescription';
 import FieldLabel from '../FieldLabel';
 import ObjectFormField from '../ObjectFormField';
 
@@ -23,6 +23,8 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
     <FieldLabel label={label} id={id} required={required} />
   );
 
+  const descriptionComponent = <FieldDescription description={description} />;
+
   const isRootItem = id === 'root';
   const isArrayItem = /(_\d+)$/.test(id);
 
@@ -34,7 +36,7 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
     return (
       <ObjectFormField
         label={labelComponent}
-        help={description}
+        help={description && descriptionComponent}
         error={rawErrors ? errors : undefined}
         isArrayItem={isArrayItem}
       >
@@ -47,7 +49,7 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
     return (
       <AccordionFormField
         label={labelComponent}
-        help={description}
+        help={description && descriptionComponent}
         error={rawErrors ? errors : undefined}
       >
         {children}
@@ -58,10 +60,7 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
   return (
     <InputGroup
       label={displayLabel && labelComponent}
-      help={
-        displayLabel &&
-        description && <Text color='text-weak'>{description}</Text>
-      }
+      help={displayLabel && description && descriptionComponent}
       contentProps={{ width: { max: 'large' } }}
       error={rawErrors ? errors : undefined}
       htmlFor={id}
