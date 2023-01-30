@@ -43,7 +43,7 @@ const AccordionFormField: React.FC<
             <Box width={leftPadding} margin={{ vertical: 'small' }}>
               <Icon
                 className='fa fa-chevron-down'
-                isActive={activeIndexes.includes(0)}
+                isActive={isExpanded}
                 role='presentation'
                 aria-hidden='true'
               />
