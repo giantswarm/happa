@@ -59,7 +59,6 @@ const FieldTemplate: React.FC<
         label={displayLabel}
         help={description}
         error={rawErrors && showErrors ? errors : undefined}
-        onInactive={() => formContext?.addTouchedField(id)}
       >
         {children}
       </AccordionFormField>

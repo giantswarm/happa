@@ -11,6 +11,7 @@ import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
 import ToggleWidget from './ToggleWidget';
+import { transformErrors } from './utils';
 
 const customFields = {};
 const customWidgets = {
@@ -36,14 +37,14 @@ interface IAttemptSubmitAction {
   type: 'attemptSubmitAction';
 }
 
-interface IFormState {
+export interface IFormContext {
   touchedFields: string[];
   showAllErrors: boolean;
 }
 
 type FormAction = IAddTouchedFieldAction | IAttemptSubmitAction;
 
-const reducer: React.Reducer<IFormState, FormAction> = (state, action) => {
+const reducer: React.Reducer<IFormContext, FormAction> = (state, action) => {
   switch (action.type) {
     case 'addTouchedField':
       return {
@@ -59,12 +60,8 @@ const reducer: React.Reducer<IFormState, FormAction> = (state, action) => {
   }
 };
 
-function createInitalState(): IFormState {
+function createInitalState(): IFormContext {
   return { touchedFields: [], showAllErrors: false };
-}
-
-export interface IFormContext extends IFormState {
-  addTouchedField: (id: string) => void;
 }
 
 export const FormContext = createContext<IFormContext | null>(null);
@@ -107,7 +104,8 @@ const JSONSchemaForm: React.FC<FormProps> = ({
       onChange={handleChange}
       onBlur={handleBlur}
       onError={handleSubmitAttempted}
-      formContext={{ ...state, addTouchedField }}
+      formContext={state}
+      transformErrors={transformErrors}
       noHtml5Validate
       liveValidate
       {...props}

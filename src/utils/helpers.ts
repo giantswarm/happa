@@ -557,3 +557,12 @@ export function traverseJSONSchemaObject(
 
   return obj;
 }
+
+/**
+ * Pipes an inital input through a provided sequence of functions
+ * @param initialInput
+ * @param fns
+ */
+export function pipe<T>(initialInput: T, ...fns: ((input: T) => T)[]): T {
+  return fns.reduce((input, f) => f(input), initialInput);
+}

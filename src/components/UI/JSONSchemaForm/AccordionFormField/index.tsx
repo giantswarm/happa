@@ -22,17 +22,12 @@ interface AccordionFormFieldProps {
 
 const AccordionFormField: React.FC<
   React.PropsWithChildren<AccordionFormFieldProps>
-> = ({ label, help, error, onInactive, children }) => {
+> = ({ label, help, error, children }) => {
   const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
   const isExpanded = activeIndexes.length !== 0;
 
   const handleActive = (indices: number[]) => {
     setActiveIndexes(indices);
-
-    // trigger onInactive event when accordion is closed
-    if (indices.length === 0 && onInactive) {
-      onInactive();
-    }
   };
 
   return (
