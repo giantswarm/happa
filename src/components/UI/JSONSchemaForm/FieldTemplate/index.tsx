@@ -7,6 +7,10 @@ import { IFormContext } from '..';
 import AccordionFormField from '../AccordionFormField';
 import ObjectFormField from '../ObjectFormField';
 
+export function isTouchedField(id: string, touchedFields: string[]): boolean {
+  return touchedFields.some((field) => field.includes(id));
+}
+
 const FieldTemplate: React.FC<
   FieldTemplateProps<RJSFSchema, RJSFSchema, IFormContext>
 > = ({
@@ -29,7 +33,7 @@ const FieldTemplate: React.FC<
   const showErrors = useMemo(() => {
     if (!formContext || formContext.showAllErrors) return true;
 
-    return formContext.touchedFields.some((field) => field.includes(id));
+    return isTouchedField(id, formContext.touchedFields);
   }, [formContext, id]);
 
   if (isRootItem) {

@@ -1,10 +1,17 @@
-import { ErrorListProps, RJSFSchema } from '@rjsf/utils';
+import { ErrorListProps, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { Box, Paragraph } from 'grommet';
 import React, { useMemo } from 'react';
 import { FlashMessageType } from 'styles';
 import FlashMessage from 'UI/Display/FlashMessage';
 
 import { IFormContext } from '..';
+import { isTouchedField } from '../FieldTemplate';
+
+function mapErrorPropertyToField(e: RJSFValidationError): string {
+  if (!e.property) return '';
+
+  return e.property.replaceAll('.', '_');
+}
 
 const ErrorListTemplate: React.FC<
   ErrorListProps<RJSFSchema, RJSFSchema, IFormContext>
@@ -13,9 +20,7 @@ const ErrorListTemplate: React.FC<
     if (!formContext || formContext.showAllErrors) return errors;
 
     return errors.filter((e) =>
-      formContext.touchedFields.some((field) =>
-        e.property ? field.includes(e.property.replaceAll('.', '_')) : true
-      )
+      isTouchedField(mapErrorPropertyToField(e), formContext.touchedFields)
     );
   }, [errors, formContext]);
 
