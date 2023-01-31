@@ -38,3 +38,9 @@ export function transformErrors(errors: RJSFValidationError[]) {
     pipe(err, transformRequiredPropertyError, transformRequiredArrayItemError)
   );
 }
+
+export function mapErrorPropertyToField(e: RJSFValidationError): string {
+  if (!e.property) return '';
+
+  return `root${e.property.replaceAll('.', '_')}`;
+}

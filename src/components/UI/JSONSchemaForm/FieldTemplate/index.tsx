@@ -1,4 +1,8 @@
-import { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import {
+  FieldTemplateProps,
+  RJSFSchema,
+  RJSFValidationError,
+} from '@rjsf/utils';
 import { Text } from 'grommet';
 import React, { useMemo } from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
@@ -6,9 +10,28 @@ import InputGroup from 'UI/Inputs/InputGroup';
 import { IFormContext } from '..';
 import AccordionFormField from '../AccordionFormField';
 import ObjectFormField from '../ObjectFormField';
+import { mapErrorPropertyToField } from '../utils';
 
 export function isTouchedField(id: string, touchedFields: string[]): boolean {
   return touchedFields.some((field) => field.includes(id));
+}
+
+function getChildErrorsForField(
+  errors: RJSFValidationError[] | undefined,
+  touchedFields: string[] | undefined,
+  id: string
+) {
+  if (!errors || !touchedFields) return [];
+
+  return errors.filter((err) => {
+    const errorPropertyAsField = mapErrorPropertyToField(err);
+
+    return (
+      // the suffix on the ID is required to eliminate false partial matches
+      errorPropertyAsField.includes(`${id}_`) &&
+      isTouchedField(errorPropertyAsField, touchedFields)
+    );
+  });
 }
 
 const FieldTemplate: React.FC<
@@ -54,11 +77,19 @@ const FieldTemplate: React.FC<
   }
 
   if (type === 'array' || type === 'object') {
+    const hasChildErrors =
+      getChildErrorsForField(
+        formContext?.errors,
+        formContext?.touchedFields,
+        id
+      ).length > 0;
+
     return (
       <AccordionFormField
         label={displayLabel}
         help={description}
         error={rawErrors && showErrors ? errors : undefined}
+        hasChildErrors={showErrors && hasChildErrors}
       >
         {children}
       </AccordionFormField>

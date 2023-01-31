@@ -17,12 +17,12 @@ interface AccordionFormFieldProps {
   label: string;
   help?: string;
   error?: React.ReactNode;
-  onInactive?: () => void;
+  hasChildErrors?: boolean;
 }
 
 const AccordionFormField: React.FC<
   React.PropsWithChildren<AccordionFormFieldProps>
-> = ({ label, help, error, children }) => {
+> = ({ label, help, error, hasChildErrors, children }) => {
   const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
   const isExpanded = activeIndexes.length !== 0;
 
@@ -50,6 +50,19 @@ const AccordionFormField: React.FC<
             <Box>
               <Text size='large' weight='bold'>
                 {label}
+                {hasChildErrors && !isExpanded && (
+                  <Text
+                    size='large'
+                    color='status-danger'
+                    margin={{ left: 'small' }}
+                  >
+                    <i
+                      className='fa fa-warning'
+                      role='presentation'
+                      aria-hidden='true'
+                    />
+                  </Text>
+                )}
               </Text>
               {help && isExpanded && (
                 <Text color='text-weak' margin={{ top: 'small' }}>

@@ -1,6 +1,6 @@
 import Form, { FormProps, IChangeEvent } from '@rjsf/core';
-import { RJSFSchema } from '@rjsf/utils';
-import React, { createContext, useReducer } from 'react';
+import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
+import React, { useReducer, useRef } from 'react';
 
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
@@ -37,14 +37,14 @@ interface IAttemptSubmitAction {
   type: 'attemptSubmitAction';
 }
 
-export interface IFormContext {
+interface IFormState {
   touchedFields: string[];
   showAllErrors: boolean;
 }
 
 type FormAction = IAddTouchedFieldAction | IAttemptSubmitAction;
 
-const reducer: React.Reducer<IFormContext, FormAction> = (state, action) => {
+const reducer: React.Reducer<IFormState, FormAction> = (state, action) => {
   switch (action.type) {
     case 'addTouchedField':
       return {
@@ -60,11 +60,13 @@ const reducer: React.Reducer<IFormContext, FormAction> = (state, action) => {
   }
 };
 
-function createInitalState(): IFormContext {
+function createInitalState(): IFormState {
   return { touchedFields: [], showAllErrors: false };
 }
 
-export const FormContext = createContext<IFormContext | null>(null);
+export interface IFormContext extends IFormState {
+  errors: RJSFValidationError[] | undefined;
+}
 
 const JSONSchemaForm: React.FC<FormProps> = ({
   onChange,
@@ -96,6 +98,8 @@ const JSONSchemaForm: React.FC<FormProps> = ({
     dispatch({ type: 'attemptSubmitAction' });
   };
 
+  const ref = useRef<Form<RJSFSchema> | null>(null);
+
   return (
     <Form
       fields={customFields}
@@ -104,8 +108,12 @@ const JSONSchemaForm: React.FC<FormProps> = ({
       onChange={handleChange}
       onBlur={handleBlur}
       onError={handleSubmitAttempted}
-      formContext={state}
+      formContext={{
+        ...state,
+        errors: ref.current?.state.errors,
+      }}
       transformErrors={transformErrors}
+      ref={ref}
       noHtml5Validate
       liveValidate
       {...props}
