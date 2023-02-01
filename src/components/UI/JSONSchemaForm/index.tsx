@@ -9,13 +9,11 @@ import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
-import ToggleWidget from './ToggleWidget';
 import { ID_SEPARATOR } from './utils';
 
 const customFields = {};
 const customWidgets = {
   checkbox: CheckboxWidget,
-  toggle: ToggleWidget,
   select: SelectWidget,
 };
 const customTemplates = {
