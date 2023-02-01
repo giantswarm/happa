@@ -1,6 +1,7 @@
 import Form, { FormProps, IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import React, { useReducer, useRef } from 'react';
+import useDebounce from 'utils/hooks/useDebounce';
 
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
@@ -87,6 +88,8 @@ function createInitalState(): IFormState {
   return { touchedFields: [], showAllErrors: false };
 }
 
+const VALIDATION_ERROR_DEBOUNCE_RATE = 500;
+
 export interface IFormContext extends IFormState {
   errors: RJSFValidationError[] | undefined;
   toggleTouchedFields: (...ids: string[]) => void;
@@ -98,6 +101,7 @@ const JSONSchemaForm: React.FC<FormProps> = ({
   ...props
 }) => {
   const [state, dispatch] = useReducer(reducer, createInitalState());
+  const debouncedState = useDebounce(state, VALIDATION_ERROR_DEBOUNCE_RATE);
 
   const addTouchedField = (id?: string) => {
     if (!id) return;
@@ -137,7 +141,7 @@ const JSONSchemaForm: React.FC<FormProps> = ({
       onBlur={handleBlur}
       onError={handleSubmitAttempted}
       formContext={{
-        ...state,
+        ...debouncedState,
         errors: ref.current?.state.errors,
         toggleTouchedFields,
       }}
