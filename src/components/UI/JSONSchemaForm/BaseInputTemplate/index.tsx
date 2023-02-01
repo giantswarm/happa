@@ -21,9 +21,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   };
 
   const handleNumberChange = (patch: { value: number; valid: boolean }) => {
-    if (patch.valid) {
-      onChange(patch.value);
-    }
+    onChange(patch.value);
   };
 
   const handleBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +52,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
         width: { max: 'small' },
       }}
       onChange={handleNumberChange}
+      onBlur={handleBlur}
     />
   ) : (
     <TextInput
