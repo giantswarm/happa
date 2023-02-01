@@ -3,7 +3,7 @@ import {
   RJSFSchema,
   RJSFValidationError,
 } from '@rjsf/utils';
-import { Text } from 'grommet';
+import { Text, ThemeContext, ThemeType } from 'grommet';
 import React, { useMemo } from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 
@@ -12,6 +12,15 @@ import AccordionFormField from '../AccordionFormField';
 import ObjectFormField from '../ObjectFormField';
 import { mapErrorPropertyToField } from '../utils';
 
+function getCustomTheme(error: React.ReactElement | undefined): ThemeType {
+  return error
+    ? {
+        formField: {
+          border: { color: 'text-error' },
+        },
+      }
+    : {};
+}
 export function isTouchedField(id: string, touchedFields: string[]): boolean {
   return touchedFields.some((field) => field.includes(id));
 }
@@ -59,6 +68,8 @@ const FieldTemplate: React.FC<
     return isTouchedField(id, formContext.touchedFields);
   }, [formContext, id]);
 
+  const error = rawErrors && showErrors ? errors : undefined;
+
   if (isRootItem) {
     return children;
   }
@@ -68,7 +79,7 @@ const FieldTemplate: React.FC<
       <ObjectFormField
         label={displayLabel}
         help={description}
-        error={rawErrors && showErrors ? errors : undefined}
+        error={error}
         isArrayItem={isArrayItem}
       >
         {children}
@@ -88,7 +99,7 @@ const FieldTemplate: React.FC<
       <AccordionFormField
         label={displayLabel}
         help={description}
-        error={rawErrors && showErrors ? errors : undefined}
+        error={error}
         hasChildErrors={showErrors && hasChildErrors}
       >
         {children}
@@ -97,15 +108,17 @@ const FieldTemplate: React.FC<
   }
 
   return (
-    <InputGroup
-      label={displayLabel}
-      help={<Text color='text-weak'>{description}</Text>}
-      contentProps={{ width: { max: 'large' } }}
-      error={rawErrors && showErrors ? errors : undefined}
-      htmlFor={id}
-    >
-      {children}
-    </InputGroup>
+    <ThemeContext.Extend value={getCustomTheme(error)}>
+      <InputGroup
+        label={displayLabel}
+        help={<Text color='text-weak'>{description}</Text>}
+        contentProps={{ width: { max: 'large' } }}
+        error={error}
+        htmlFor={id}
+      >
+        {children}
+      </InputGroup>
+    </ThemeContext.Extend>
   );
 };
 
