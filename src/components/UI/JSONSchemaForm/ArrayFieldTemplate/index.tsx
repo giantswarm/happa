@@ -1,25 +1,100 @@
 import {
   ArrayFieldTemplateItemType,
   ArrayFieldTemplateProps,
+  RJSFSchema,
 } from '@rjsf/utils';
 import { Box } from 'grommet';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 
+import { IFormContext } from '..';
 import ArrayFieldItem from '../ArrayFieldItem';
 
-const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
-  items,
-  canAdd,
-  onAddClick,
-}) => {
+function getArrayItemFieldId(parentId: string, idx: number) {
+  return `${parentId}_${idx}`;
+}
+
+function shouldToggle(fields: string[], field1: string, field2: string) {
+  return fields.includes(field1) !== fields.includes(field2);
+}
+
+const ArrayFieldTemplate: React.FC<
+  ArrayFieldTemplateProps<RJSFSchema, RJSFSchema, IFormContext>
+> = ({ items, canAdd, onAddClick, idSchema, formContext }) => {
+  const reorderFields = (idx: number, newIdx: number) => {
+    if (!formContext) return;
+
+    const fieldAtIdx = getArrayItemFieldId(idSchema.$id, idx);
+    const fieldAtNewIdx = getArrayItemFieldId(idSchema.$id, newIdx);
+    if (shouldToggle(formContext.touchedFields, fieldAtIdx, fieldAtNewIdx)) {
+      formContext.toggleTouchedFields(fieldAtIdx, fieldAtNewIdx);
+    }
+  };
+
+  const removeField = (idx: number) => {
+    if (!formContext) return;
+
+    const fieldsToToggle = [];
+    for (let i = idx; i < items.length - 1; i++) {
+      const fieldAtIdx = getArrayItemFieldId(idSchema.$id, i);
+      const fieldAtNextIdx = getArrayItemFieldId(idSchema.$id, i + 1);
+
+      if (shouldToggle(formContext.touchedFields, fieldAtIdx, fieldAtNextIdx)) {
+        fieldsToToggle.push(fieldAtIdx);
+      }
+    }
+    formContext.toggleTouchedFields(...fieldsToToggle);
+    formContext.removeTouchedField(
+      getArrayItemFieldId(idSchema.$id, items.length - 1)
+    );
+  };
+
+  const handleDrop =
+    (
+      idx: number,
+      onDropidxClick: (event?: React.MouseEvent<HTMLElement>) => void
+    ) =>
+    (event?: React.MouseEvent<HTMLElement>) => {
+      removeField(idx);
+
+      return onDropidxClick(event);
+    };
+
+  const handleReorder =
+    (
+      idx: number,
+      newIdx: number,
+      onReorderClick: (event?: React.MouseEvent<HTMLElement>) => void
+    ) =>
+    (event?: React.MouseEvent<HTMLElement>) => {
+      reorderFields(idx, newIdx);
+
+      return onReorderClick(event);
+    };
+
   return (
     <>
       <Box>
         {items &&
-          items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType) => (
-            <ArrayFieldItem key={key} {...itemProps} />
-          ))}
+          items.map(
+            ({
+              key,
+              onDropIndexClick,
+              onReorderClick,
+              ...itemProps
+            }: ArrayFieldTemplateItemType) => (
+              <ArrayFieldItem
+                key={key}
+                onDropIndexClick={(idx) =>
+                  handleDrop(idx, onDropIndexClick(idx))
+                }
+                onReorderClick={(oldidx, newIdx) =>
+                  handleReorder(oldidx, newIdx, onReorderClick(oldidx, newIdx))
+                }
+                {...itemProps}
+              />
+            )
+          )}
       </Box>
       {canAdd && (
         <Button onClick={onAddClick} margin={{ vertical: 'small' }}>

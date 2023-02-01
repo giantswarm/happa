@@ -25,7 +25,7 @@ function transformRequiredArrayItemError(
   if (error.name === 'type' && error.params.type === 'string') {
     return {
       ...error,
-      message: `${error.property} must not be empty`,
+      message: 'must not be empty',
       stack: `${error.property} must not be empty`,
     };
   }

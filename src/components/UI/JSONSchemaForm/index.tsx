@@ -33,6 +33,16 @@ interface IAddTouchedFieldAction {
   value: string;
 }
 
+interface IRemoveTouchedFieldAction {
+  type: 'removeTouchedField';
+  value: string;
+}
+
+interface IToggleTouchedsFieldAction {
+  type: 'toggleTouchedFields';
+  value: string[];
+}
+
 interface IAttemptSubmitAction {
   type: 'attemptSubmitAction';
 }
@@ -42,7 +52,11 @@ interface IFormState {
   showAllErrors: boolean;
 }
 
-type FormAction = IAddTouchedFieldAction | IAttemptSubmitAction;
+type FormAction =
+  | IAddTouchedFieldAction
+  | IRemoveTouchedFieldAction
+  | IToggleTouchedsFieldAction
+  | IAttemptSubmitAction;
 
 const reducer: React.Reducer<IFormState, FormAction> = (state, action) => {
   switch (action.type) {
@@ -53,8 +67,31 @@ const reducer: React.Reducer<IFormState, FormAction> = (state, action) => {
           new Set([...state.touchedFields, action.value])
         ),
       };
+
+    case 'removeTouchedField':
+      return {
+        ...state,
+        touchedFields: state.touchedFields.filter(
+          (field) => field !== action.value
+        ),
+      };
+
+    case 'toggleTouchedFields': {
+      const newFields = new Set(state.touchedFields);
+      for (const id of action.value) {
+        if (newFields.has(id)) {
+          newFields.delete(id);
+        } else {
+          newFields.add(id);
+        }
+      }
+
+      return { ...state, touchedFields: Array.from(newFields) };
+    }
+
     case 'attemptSubmitAction':
       return { ...state, showAllErrors: true };
+
     default:
       return { ...state };
   }
@@ -66,6 +103,8 @@ function createInitalState(): IFormState {
 
 export interface IFormContext extends IFormState {
   errors: RJSFValidationError[] | undefined;
+  removeTouchedField: (id: string) => void;
+  toggleTouchedFields: (...ids: string[]) => void;
 }
 
 const JSONSchemaForm: React.FC<FormProps> = ({
@@ -78,6 +117,14 @@ const JSONSchemaForm: React.FC<FormProps> = ({
   const addTouchedField = (id?: string) => {
     if (!id) return;
     dispatch({ type: 'addTouchedField', value: id });
+  };
+
+  const removeTouchedField = (id: string) => {
+    dispatch({ type: 'removeTouchedField', value: id });
+  };
+
+  const toggleTouchedFields = (...ids: string[]) => {
+    dispatch({ type: 'toggleTouchedFields', value: [...ids] });
   };
 
   const handleChange = (data: IChangeEvent<RJSFSchema>, id?: string) => {
@@ -111,6 +158,8 @@ const JSONSchemaForm: React.FC<FormProps> = ({
       formContext={{
         ...state,
         errors: ref.current?.state.errors,
+        removeTouchedField,
+        toggleTouchedFields,
       }}
       transformErrors={transformErrors}
       ref={ref}
