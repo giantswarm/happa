@@ -261,7 +261,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   const appSchemaIsLoading =
     appSchema === undefined && providerSchemaError === undefined;
 
-  const [formData, setFormData] = useState<RJSFSchema>(
+  const [formData, setFormData] = useState<RJSFSchema | undefined>(
     getDefaultFormData(selectedSchema, organizationID)
   );
   const formDataKey = useRef<number | undefined>(undefined);
