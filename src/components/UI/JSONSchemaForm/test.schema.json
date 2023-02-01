@@ -98,7 +98,7 @@
                                     "type": "number"
                                 }
                             ],
-                            "description": "Only the first declared subschema (string, minLenght=3) should be visible.",
+                            "description": "Only the first declared subschema (string, minLength=3) should be visible.",
                             "title": "Property with two subschemas using 'anyOf'"
                         }
                     },
