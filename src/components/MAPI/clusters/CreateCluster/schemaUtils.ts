@@ -138,6 +138,23 @@ const uiSchemaTestSchema: Record<string, GenericObjectType> = {
         ],
       },
     },
+    booleanFields: {
+      'ui:options': {
+        order: ['active', 'toggle', 'enabled', 'disabled', '*'],
+      },
+      toggle: {
+        'ui:widget': 'toggle',
+        'ui:options': {
+          label: false,
+        },
+      },
+      disabled: {
+        'ui:widget': 'toggle',
+        'ui:options': {
+          label: false,
+        },
+      },
+    },
     arrayFields: {
       'ui:options': {
         order: [
@@ -202,7 +219,14 @@ export const getDefaultFormData = (
       };
 
     default:
-      return {};
+      return {
+        booleanFields: {
+          active: 'a',
+          toggle: 'b',
+          enabled: 'c',
+          disabled: 'd',
+        },
+      };
   }
 };
 

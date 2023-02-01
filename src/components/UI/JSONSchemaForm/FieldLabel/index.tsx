@@ -1,4 +1,4 @@
-import { Text } from 'grommet';
+import { Text, TextExtendedProps } from 'grommet';
 import React from 'react';
 
 import { ID_SEPARATOR } from '../utils';
@@ -7,6 +7,7 @@ interface FieldLabelProps {
   label: string;
   id: string;
   required?: boolean;
+  textProps?: TextExtendedProps;
 }
 
 const nameIndexRegExp = /(-\d+)$/;
@@ -21,11 +22,16 @@ function formatArrayItemLabel(label: string, id: string) {
   return `${label.replace(nameIndexRegExp, '')} No. ${index + 1}`;
 }
 
-const FieldLabel: React.FC<FieldLabelProps> = ({ label, id, required }) => {
+const FieldLabel: React.FC<FieldLabelProps> = ({
+  label,
+  id,
+  required,
+  textProps,
+}) => {
   const isArrayItem = idIndexRegExp.test(id);
 
   return (
-    <Text size='large' weight='bold'>
+    <Text {...textProps}>
       {isArrayItem ? formatArrayItemLabel(label, id) : label}
       {required && !isArrayItem && <span>*</span>}
     </Text>

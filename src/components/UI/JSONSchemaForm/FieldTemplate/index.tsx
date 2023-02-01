@@ -20,7 +20,12 @@ const FieldTemplate: React.FC<FieldTemplateProps> = ({
   const { type, description } = schema;
 
   const labelComponent = (
-    <FieldLabel label={label} id={id} required={required} />
+    <FieldLabel
+      label={label}
+      id={id}
+      required={required}
+      textProps={{ size: 'large', weight: 'bold' }}
+    />
   );
 
   const descriptionComponent = <FieldDescription description={description} />;
