@@ -67,6 +67,81 @@
             "title": "Boolean fields",
             "type": "object"
         },
+        "logic": {
+            "description": "Uses of 'anyOf', 'oneOf', and 'not'.",
+            "properties": {
+                "anyOf": {
+                    "properties": {
+                        "anyOfDeprecated": {
+                            "anyOf": [
+                                {
+                                    "deprecated": true,
+                                    "minLength": 3,
+                                    "type": "string"
+                                },
+                                {
+                                    "minimum": 3,
+                                    "type": "number"
+                                }
+                            ],
+                            "description": "Only the second declared subschema (number, minimum=3) should be visible.",
+                            "title": "Property with subschemas using 'anyOf' and 'deprecated'"
+                        },
+                        "anyOfSimple": {
+                            "anyOf": [
+                                {
+                                    "minLength": 3,
+                                    "type": "string"
+                                },
+                                {
+                                    "minimum": 3,
+                                    "type": "number"
+                                }
+                            ],
+                            "description": "Only the first declared subschema (string, minLength=3) should be visible.",
+                            "title": "Property with two subschemas using 'anyOf'"
+                        }
+                    },
+                    "title": "Subschema choice using 'anyOf'",
+                    "type": "object"
+                },
+                "not": {
+                    "properties": {
+                        "stringNot": {
+                            "description": "Value must not be 'forbidden'.",
+                            "not": {
+                                "const": "forbidden"
+                            },
+                            "title": "String with constraints defined via 'not'",
+                            "type": "string"
+                        }
+                    },
+                    "title": "Constraints defined via 'not'",
+                    "type": "object"
+                },
+                "oneOf": {
+                    "properties": {
+                        "stringPatternOrEmpty": {
+                            "description": "Value must either match a pattern ^[a-z]$ or be empty.",
+                            "oneOf": [
+                                {
+                                    "pattern": "^[a-z]$"
+                                },
+                                {
+                                    "const": ""
+                                }
+                            ],
+                            "title": "String matching pattern or empty",
+                            "type": "string"
+                        }
+                    },
+                    "title": "Subschema choice using 'oneOf'",
+                    "type": "object"
+                }
+            },
+            "title": "Logic and subschemas",
+            "type": "object"
+        },
         "numericFields": {
             "properties": {
                 "integer": {
