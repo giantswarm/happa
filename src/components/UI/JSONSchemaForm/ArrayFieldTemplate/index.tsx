@@ -14,7 +14,7 @@ function getArrayItemFieldId(parentId: string, idx: number) {
   return `${parentId}_${idx}`;
 }
 
-function shouldToggle(fields: string[], field1: string, field2: string) {
+function shouldReorder(fields: string[], field1: string, field2: string) {
   return fields.includes(field1) !== fields.includes(field2);
 }
 
@@ -26,7 +26,7 @@ const ArrayFieldTemplate: React.FC<
 
     const fieldAtIdx = getArrayItemFieldId(idSchema.$id, idx);
     const fieldAtNewIdx = getArrayItemFieldId(idSchema.$id, newIdx);
-    if (shouldToggle(formContext.touchedFields, fieldAtIdx, fieldAtNewIdx)) {
+    if (shouldReorder(formContext.touchedFields, fieldAtIdx, fieldAtNewIdx)) {
       formContext.toggleTouchedFields(fieldAtIdx, fieldAtNewIdx);
     }
   };
@@ -39,14 +39,19 @@ const ArrayFieldTemplate: React.FC<
       const fieldAtIdx = getArrayItemFieldId(idSchema.$id, i);
       const fieldAtNextIdx = getArrayItemFieldId(idSchema.$id, i + 1);
 
-      if (shouldToggle(formContext.touchedFields, fieldAtIdx, fieldAtNextIdx)) {
+      if (
+        shouldReorder(formContext.touchedFields, fieldAtIdx, fieldAtNextIdx)
+      ) {
         fieldsToToggle.push(fieldAtIdx);
       }
     }
+
+    const fieldAtLastIdx = getArrayItemFieldId(idSchema.$id, items.length - 1);
+    if (formContext.touchedFields.includes(fieldAtLastIdx)) {
+      fieldsToToggle.push(fieldAtLastIdx);
+    }
+
     formContext.toggleTouchedFields(...fieldsToToggle);
-    formContext.removeTouchedField(
-      getArrayItemFieldId(idSchema.$id, items.length - 1)
-    );
   };
 
   const handleDrop =
