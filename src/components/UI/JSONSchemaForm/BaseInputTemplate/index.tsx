@@ -20,9 +20,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   };
 
   const handleNumberChange = (patch: { value: number; valid: boolean }) => {
-    if (patch.valid) {
-      onChange(patch.value);
-    }
+    onChange(!patch.valid ? options.emptyValue : patch.value);
   };
 
   const handleSuggestionSelect = (e: { suggestion: string }) => {
