@@ -125,6 +125,11 @@ const uiSchemaTestSchema: Record<string, GenericObjectType> = {
         '*',
       ],
     },
+    numericFields: {
+      'ui:options': {
+        order: ['integer', 'integerLimit', '*'],
+      },
+    },
     stringFields: {
       'ui:options': {
         order: [

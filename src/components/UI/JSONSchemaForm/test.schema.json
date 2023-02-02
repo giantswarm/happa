@@ -171,6 +171,13 @@
                     "title": "Integer enum",
                     "type": "integer"
                 },
+                "integerLimit": {
+                    "description": "Integer field with minimum value 2 and maximum value 5.",
+                    "maximum": 5,
+                    "minimum": 2,
+                    "title": "Integer with min/max values",
+                    "type": "integer"
+                },
                 "number": {
                     "description": "Number field with title and description.",
                     "title": "Number",
