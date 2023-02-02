@@ -128,7 +128,7 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
     { value, min, max, step, readOnly, disabled, onChange, children, ...props },
     ref
   ) => {
-    const [currValue, setCurrValue] = useState<number>(value!);
+    const [currValue, setCurrValue] = useState<number>(value ?? NaN);
     const [validationError, setValidationError] = useState('');
 
     const inputValue = Number.isNaN(currValue) ? '' : currValue;
@@ -174,17 +174,23 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
     };
 
     const increment = () => {
-      const desiredValue =
-        typeof step === 'number' ? currValue + step : currValue + 1;
+      const currStep = typeof step === 'number' ? step : 1;
 
-      updateInput(desiredValue);
+      if (Number.isNaN(currValue)) {
+        updateInput(min || currStep);
+      } else {
+        updateInput(currValue + currStep);
+      }
     };
 
     const decrement = () => {
-      const desiredValue =
-        typeof step === 'number' ? currValue - step : currValue - 1;
+      const currStep = typeof step === 'number' ? step : 1;
 
-      updateInput(desiredValue);
+      if (Number.isNaN(currValue)) {
+        updateInput(min || -currStep);
+      } else {
+        updateInput(currValue - currStep);
+      }
     };
 
     const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -240,7 +246,6 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
 );
 
 NumberPicker.defaultProps = {
-  value: 0,
   step: 1,
 };
 

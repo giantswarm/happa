@@ -25,6 +25,7 @@ const ArrayFieldItemActionsWrapper = styled.div`
   flex-shrink: 0;
   width: 35px;
   padding-top: 10px;
+  padding-bottom: 10px;
 `;
 
 const ArrayFieldItem: React.FC<ArrayFieldTemplateItemType> = ({
