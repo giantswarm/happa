@@ -24,7 +24,7 @@ function getCustomTheme(error: React.ReactElement | undefined): ThemeType {
     : {};
 }
 export function isTouchedField(id: string, touchedFields: string[]): boolean {
-  return touchedFields.some((field) => field.includes(id));
+  return touchedFields.includes(id);
 }
 
 function getChildErrorsForField(
@@ -81,7 +81,7 @@ const FieldTemplate: React.FC<
   }, [formContext, id]);
 
   const error = rawErrors && showErrors ? errors : undefined;
-
+  console.log(id, rawErrors, formContext?.errors);
   if (isRootItem) {
     return children;
   }
