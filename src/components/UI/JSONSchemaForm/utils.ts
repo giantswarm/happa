@@ -24,5 +24,8 @@ export function transformErrors(errors: RJSFValidationError[]) {
 export function mapErrorPropertyToField(e: RJSFValidationError): string {
   if (!e.property) return '';
 
-  return `root${e.property.replaceAll('.', '_')}`;
+  return `root${(e.property[0] === '.'
+    ? e.property
+    : `.${e.property}`
+  ).replaceAll('.', '_')}`;
 }

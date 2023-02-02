@@ -80,7 +80,7 @@ const AccordionFormField: React.FC<
             </Box>
             <StyledLabel weight='bold' margin={{ vertical: 'small' }}>
               {label}
-              {hasChildErrors && !isExpanded && (
+              {(hasChildErrors || error) && !isExpanded && (
                 <Text
                   size='large'
                   color='status-danger'

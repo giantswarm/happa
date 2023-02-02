@@ -24,12 +24,13 @@ function getCustomTheme(error: React.ReactElement | undefined): ThemeType {
     : {};
 }
 export function isTouchedField(id: string, touchedFields: string[]): boolean {
-  return touchedFields.includes(id);
+  return touchedFields.some((field) => `${field}_`.includes(`${id}_`));
 }
 
 function getChildErrorsForField(
   errors: RJSFValidationError[] | undefined,
   touchedFields: string[] | undefined,
+  showErrors: boolean | undefined,
   id: string
 ) {
   if (!errors || !touchedFields) return [];
@@ -40,7 +41,7 @@ function getChildErrorsForField(
     return (
       // the suffix on the ID is required to eliminate false partial matches
       errorPropertyAsField.includes(`${id}_`) &&
-      isTouchedField(errorPropertyAsField, touchedFields)
+      (isTouchedField(errorPropertyAsField, touchedFields) || showErrors)
     );
   });
 }
@@ -104,6 +105,7 @@ const FieldTemplate: React.FC<
       getChildErrorsForField(
         formContext?.errors,
         formContext?.touchedFields,
+        formContext?.showAllErrors,
         id
       ).length > 0;
 
@@ -112,7 +114,7 @@ const FieldTemplate: React.FC<
         label={labelComponent}
         help={description && descriptionComponent}
         error={error}
-        hasChildErrors={showErrors && hasChildErrors}
+        hasChildErrors={hasChildErrors}
       >
         {children}
       </AccordionFormField>
