@@ -22,7 +22,10 @@ const ArrayFieldTemplate: React.FC<ArrayFieldTemplateProps> = ({
           ))}
       </Box>
       {canAdd && (
-        <Button onClick={onAddClick} margin={{ vertical: 'small' }}>
+        <Button
+          onClick={onAddClick}
+          wrapperProps={{ alignSelf: 'start', margin: { vertical: 'small' } }}
+        >
           Add
         </Button>
       )}

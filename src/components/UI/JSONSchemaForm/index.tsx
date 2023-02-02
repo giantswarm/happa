@@ -9,12 +9,11 @@ import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
-import ToggleWidget from './ToggleWidget';
+import { ID_SEPARATOR } from './utils';
 
 const customFields = {};
 const customWidgets = {
   checkbox: CheckboxWidget,
-  toggle: ToggleWidget,
   select: SelectWidget,
 };
 const customTemplates = {
@@ -26,13 +25,14 @@ const customTemplates = {
   ObjectFieldTemplate,
 };
 
-const JSONSchemaForm: React.FC<FormProps> = (props) => {
+const JSONSchemaForm: React.FC<Omit<FormProps, 'idSeparator'>> = (props) => {
   return (
     <Form
       fields={customFields}
       widgets={customWidgets}
       templates={customTemplates}
       noHtml5Validate
+      idSeparator={ID_SEPARATOR}
       {...props}
     />
   );
