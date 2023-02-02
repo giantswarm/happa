@@ -3,12 +3,14 @@ import {
   RJSFSchema,
   RJSFValidationError,
 } from '@rjsf/utils';
-import { Text, ThemeContext, ThemeType } from 'grommet';
+import { ThemeContext, ThemeType } from 'grommet';
 import React, { useMemo } from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 
 import { IFormContext } from '..';
 import AccordionFormField from '../AccordionFormField';
+import FieldDescription from '../FieldDescription';
+import FieldLabel from '../FieldLabel';
 import ObjectFormField from '../ObjectFormField';
 import { mapErrorPropertyToField } from '../utils';
 
@@ -47,6 +49,7 @@ const FieldTemplate: React.FC<
   FieldTemplateProps<RJSFSchema, RJSFSchema, IFormContext>
 > = ({
   id,
+  displayLabel,
   errors,
   rawErrors,
   children,
@@ -57,7 +60,16 @@ const FieldTemplate: React.FC<
 }) => {
   const { type, description } = schema;
 
-  const displayLabel = `${label}${required ? '*' : ''}`;
+  const labelComponent = (
+    <FieldLabel
+      label={label}
+      id={id}
+      required={required}
+      textProps={{ size: 'large', weight: 'bold' }}
+    />
+  );
+
+  const descriptionComponent = <FieldDescription description={description} />;
 
   const isRootItem = id === 'root';
   const isArrayItem = /(_\d+)$/.test(id);
@@ -77,8 +89,8 @@ const FieldTemplate: React.FC<
   if (type === 'object' && isArrayItem) {
     return (
       <ObjectFormField
-        label={displayLabel}
-        help={description}
+        label={labelComponent}
+        help={description && descriptionComponent}
         error={error}
         isArrayItem={isArrayItem}
       >
@@ -97,8 +109,8 @@ const FieldTemplate: React.FC<
 
     return (
       <AccordionFormField
-        label={displayLabel}
-        help={description}
+        label={labelComponent}
+        help={description && descriptionComponent}
         error={error}
         hasChildErrors={showErrors && hasChildErrors}
       >
@@ -110,8 +122,8 @@ const FieldTemplate: React.FC<
   return (
     <ThemeContext.Extend value={getCustomTheme(error)}>
       <InputGroup
-        label={displayLabel}
-        help={<Text color='text-weak'>{description}</Text>}
+        label={displayLabel && labelComponent}
+        help={displayLabel && description && descriptionComponent}
         contentProps={{ width: { max: 'large' } }}
         error={error}
         htmlFor={id}

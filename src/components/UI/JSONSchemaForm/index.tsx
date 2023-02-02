@@ -10,13 +10,11 @@ import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
-import ToggleWidget from './ToggleWidget';
-import { transformErrors } from './utils';
+import { ID_SEPARATOR, transformErrors } from './utils';
 
 const customFields = {};
 const customWidgets = {
   checkbox: CheckboxWidget,
-  toggle: ToggleWidget,
   select: SelectWidget,
 };
 const customTemplates = {
@@ -92,7 +90,7 @@ export interface IFormContext extends IFormState {
   toggleTouchedFields: (...ids: string[]) => void;
 }
 
-const JSONSchemaForm: React.FC<FormProps> = ({
+const JSONSchemaForm: React.FC<Omit<FormProps, 'idSeparator'>> = ({
   onChange,
   onBlur,
   ...props
@@ -142,6 +140,7 @@ const JSONSchemaForm: React.FC<FormProps> = ({
         toggleTouchedFields,
       }}
       transformErrors={transformErrors}
+      idSeparator={ID_SEPARATOR}
       ref={ref}
       noHtml5Validate
       liveValidate

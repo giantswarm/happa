@@ -58,9 +58,12 @@
         },
         "booleanFields": {
             "properties": {
-                "boolean": {
+                "active": {
+                    "type": "boolean"
+                },
+                "enabled": {
                     "description": "Boolean field with title and description.",
-                    "title": "Boolean",
+                    "title": "Enabled",
                     "type": "boolean"
                 }
             },
@@ -208,14 +211,18 @@
                 "objectRequired": {
                     "description": "Object where one property is required.",
                     "properties": {
+                        "active": {
+                            "type": "boolean"
+                        },
                         "age": {
-                            "type": "number"
+                            "type": "integer"
                         },
                         "name": {
                             "type": "string"
                         }
                     },
                     "required": [
+                        "active",
                         "name"
                     ],
                     "title": "Object with required",

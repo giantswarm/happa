@@ -1,21 +1,49 @@
 import { Accordion, AccordionPanel, Box, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const Icon = styled(Text)<{ isActive?: boolean }>`
   display: block;
   width: 28px;
   transform: rotate(${({ isActive }) => (isActive ? '0deg' : '-90deg')});
   transform-origin: center center;
-  transition: 0.15s ease-out;
+  transition: transform 0.15s ease-out;
   font-size: 28px;
+`;
+
+const StyledAccordion = styled(Accordion)`
+  /* Button wrapper around Accordion Panel header */
+  ${() => css`
+    > div > button[aria-expanded] {
+      align-self: flex-start;
+    }
+  `}
+`;
+
+const StyledHeader = styled(Box).attrs({
+  direction: 'row',
+  align: 'top',
+  pad: {
+    right: 'small',
+  },
+})`
+  &:hover {
+    color: ${({ theme }) => normalizeColor('text-strong', theme)};
+  }
+`;
+
+const StyledLabel = styled(Text).attrs({
+  forwardedAs: 'label',
+})`
+  cursor: pointer;
 `;
 
 const leftPadding = '35px';
 
 interface AccordionFormFieldProps {
-  label: string;
-  help?: string;
+  label: React.ReactNode;
+  help?: React.ReactNode;
   error?: React.ReactNode;
   hasChildErrors?: boolean;
 }
@@ -30,53 +58,52 @@ const AccordionFormField: React.FC<
     setActiveIndexes(indices);
   };
 
+  const helpComponent =
+    typeof help === 'string' ? <Text color='text-weak'>{help}</Text> : help;
+
   return (
-    <Accordion
+    <StyledAccordion
       activeIndex={activeIndexes}
       onActive={handleActive}
       animate={false}
     >
       <AccordionPanel
         header={
-          <Box direction='row' align='top' margin={{ vertical: 'small' }}>
-            <Box width={leftPadding}>
+          <StyledHeader>
+            <Box width={leftPadding} margin={{ vertical: 'small' }}>
               <Icon
                 className='fa fa-chevron-down'
-                isActive={activeIndexes.includes(0)}
+                isActive={isExpanded}
                 role='presentation'
                 aria-hidden='true'
               />
             </Box>
-            <Box>
-              <Text size='large' weight='bold'>
-                {label}
-                {hasChildErrors && !isExpanded && (
-                  <Text
-                    size='large'
-                    color='status-danger'
-                    margin={{ left: 'small' }}
-                  >
-                    <i
-                      className='fa fa-warning'
-                      role='presentation'
-                      aria-hidden='true'
-                    />
-                  </Text>
-                )}
-              </Text>
-              {help && isExpanded && (
-                <Text color='text-weak' margin={{ top: 'small' }}>
-                  {help}
+            <StyledLabel weight='bold' margin={{ vertical: 'small' }}>
+              {label}
+              {hasChildErrors && !isExpanded && (
+                <Text
+                  size='large'
+                  color='status-danger'
+                  margin={{ left: 'small' }}
+                >
+                  <i
+                    className='fa fa-warning'
+                    role='presentation'
+                    aria-hidden='true'
+                  />
                 </Text>
               )}
-              {error && <Box margin={{ bottom: 'small' }}>{error}</Box>}
-            </Box>
-          </Box>
+            </StyledLabel>
+          </StyledHeader>
         }
       >
-        <Box pad={{ left: leftPadding }}>{children}</Box>
+        <Box pad={{ left: leftPadding }}>
+          {help && <Box margin={{ bottom: 'small' }}>{helpComponent}</Box>}
+          {error && <Box margin={{ bottom: 'small' }}>{error}</Box>}
+          {children}
+        </Box>
       </AccordionPanel>
-    </Accordion>
+    </StyledAccordion>
   );
 };
 

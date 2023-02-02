@@ -1,6 +1,8 @@
 import { RJSFValidationError } from '@rjsf/utils';
 import { pipe } from 'utils/helpers';
 
+export const ID_SEPARATOR = '_';
+
 function transformRequiredPropertyError(
   error: RJSFValidationError
 ): RJSFValidationError {

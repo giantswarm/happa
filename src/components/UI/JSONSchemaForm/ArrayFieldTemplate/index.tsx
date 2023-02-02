@@ -102,7 +102,10 @@ const ArrayFieldTemplate: React.FC<
           )}
       </Box>
       {canAdd && (
-        <Button onClick={onAddClick} margin={{ vertical: 'small' }}>
+        <Button
+          onClick={onAddClick}
+          wrapperProps={{ alignSelf: 'start', margin: { vertical: 'small' } }}
+        >
           Add
         </Button>
       )}
