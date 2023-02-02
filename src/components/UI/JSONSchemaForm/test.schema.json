@@ -209,7 +209,7 @@
                     "type": "object"
                 },
                 "objectRequired": {
-                    "description": "Object where one property is required.",
+                    "description": "Object where properties are required.",
                     "properties": {
                         "active": {
                             "type": "boolean"

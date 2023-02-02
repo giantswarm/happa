@@ -81,7 +81,7 @@ const FieldTemplate: React.FC<
   }, [formContext, id]);
 
   const error = rawErrors && showErrors ? errors : undefined;
-  console.log(id, rawErrors, formContext?.errors);
+
   if (isRootItem) {
     return children;
   }
