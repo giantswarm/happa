@@ -5,8 +5,7 @@ import { FlashMessageType } from 'styles';
 import FlashMessage from 'UI/Display/FlashMessage';
 
 import { IFormContext } from '..';
-import { isTouchedField } from '../FieldTemplate';
-import { mapErrorPropertyToField } from '../utils';
+import { isTouchedField, mapErrorPropertyToField } from '../utils';
 
 const ErrorListTemplate: React.FC<
   ErrorListProps<RJSFSchema, RJSFSchema, IFormContext>
@@ -15,7 +14,10 @@ const ErrorListTemplate: React.FC<
     if (!formContext || formContext.showAllErrors) return errors;
 
     return errors.filter((e) =>
-      isTouchedField(mapErrorPropertyToField(e), formContext.touchedFields)
+      isTouchedField(
+        mapErrorPropertyToField(e, formContext.idConfigs),
+        formContext.touchedFields
+      )
     );
   }, [errors, formContext]);
 

@@ -4,16 +4,19 @@ import {
   RJSFSchema,
 } from '@rjsf/utils';
 import { Box } from 'grommet';
-import React from 'react';
+import React, { useMemo } from 'react';
 import Button from 'UI/Controls/Button';
 
 import { IFormContext } from '..';
 import ArrayFieldItem from '../ArrayFieldItem';
 
-function getArrayItemFieldId(parentId: string, idx: number) {
-  return `${parentId}_${idx}`;
+function getArrayItemFieldId(
+  parentId: string,
+  idx: number,
+  idSeparator: string
+) {
+  return `${parentId}${idSeparator}${idx}`;
 }
-
 function shouldReorder(fields: string[], field1: string, field2: string) {
   return fields.includes(field1) !== fields.includes(field2);
 }
@@ -21,11 +24,23 @@ function shouldReorder(fields: string[], field1: string, field2: string) {
 const ArrayFieldTemplate: React.FC<
   ArrayFieldTemplateProps<RJSFSchema, RJSFSchema, IFormContext>
 > = ({ items, canAdd, onAddClick, idSchema, formContext }) => {
+  const getArrayItemFieldIdFn = useMemo(() => {
+    return (idx: number) => {
+      if (!formContext) return '';
+
+      return getArrayItemFieldId(
+        idSchema.$id,
+        idx,
+        formContext.idConfigs.idSeparator
+      );
+    };
+  }, [formContext, idSchema.$id]);
+
   const reorderFields = (idx: number, newIdx: number) => {
     if (!formContext) return;
 
-    const fieldAtIdx = getArrayItemFieldId(idSchema.$id, idx);
-    const fieldAtNewIdx = getArrayItemFieldId(idSchema.$id, newIdx);
+    const fieldAtIdx = getArrayItemFieldIdFn(idx);
+    const fieldAtNewIdx = getArrayItemFieldIdFn(newIdx);
     if (shouldReorder(formContext.touchedFields, fieldAtIdx, fieldAtNewIdx)) {
       formContext.toggleTouchedFields(fieldAtIdx, fieldAtNewIdx);
     }
@@ -36,8 +51,8 @@ const ArrayFieldTemplate: React.FC<
 
     const fieldsToToggle = [];
     for (let i = idx; i < items.length - 1; i++) {
-      const fieldAtIdx = getArrayItemFieldId(idSchema.$id, i);
-      const fieldAtNextIdx = getArrayItemFieldId(idSchema.$id, i + 1);
+      const fieldAtIdx = getArrayItemFieldIdFn(i);
+      const fieldAtNextIdx = getArrayItemFieldIdFn(i + 1);
 
       if (
         shouldReorder(formContext.touchedFields, fieldAtIdx, fieldAtNextIdx)
@@ -46,7 +61,7 @@ const ArrayFieldTemplate: React.FC<
       }
     }
 
-    const fieldAtLastIdx = getArrayItemFieldId(idSchema.$id, items.length - 1);
+    const fieldAtLastIdx = getArrayItemFieldIdFn(items.length - 1);
     if (formContext.touchedFields.includes(fieldAtLastIdx)) {
       fieldsToToggle.push(fieldAtLastIdx);
     }

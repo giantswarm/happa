@@ -1,8 +1,4 @@
-import {
-  FieldTemplateProps,
-  RJSFSchema,
-  RJSFValidationError,
-} from '@rjsf/utils';
+import { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { ThemeContext, ThemeType } from 'grommet';
 import React, { useMemo } from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
@@ -12,7 +8,7 @@ import AccordionFormField from '../AccordionFormField';
 import FieldDescription from '../FieldDescription';
 import FieldLabel from '../FieldLabel';
 import ObjectFormField from '../ObjectFormField';
-import { mapErrorPropertyToField } from '../utils';
+import { isTouchedField, mapErrorPropertyToField } from '../utils';
 
 function getCustomTheme(error: React.ReactElement | undefined): ThemeType {
   return error
@@ -23,25 +19,26 @@ function getCustomTheme(error: React.ReactElement | undefined): ThemeType {
       }
     : {};
 }
-export function isTouchedField(id: string, touchedFields: string[]): boolean {
-  return touchedFields.some((field) => `${field}_`.includes(`${id}_`));
-}
 
 function getChildErrorsForField(
-  errors: RJSFValidationError[] | undefined,
-  touchedFields: string[] | undefined,
-  showErrors: boolean | undefined,
+  formContext: IFormContext | undefined,
   id: string
 ) {
-  if (!errors || !touchedFields) return [];
+  if (!formContext || !formContext.errors) return [];
 
-  return errors.filter((err) => {
-    const errorPropertyAsField = mapErrorPropertyToField(err);
+  return formContext.errors.filter((err) => {
+    const errorPropertyAsField = mapErrorPropertyToField(
+      err,
+      formContext.idConfigs
+    );
 
     return (
       // the suffix on the ID is required to eliminate false partial matches
-      errorPropertyAsField.includes(`${id}_`) &&
-      (isTouchedField(errorPropertyAsField, touchedFields) || showErrors)
+      errorPropertyAsField.includes(
+        `${id}${formContext.idConfigs.idSeparator}`
+      ) &&
+      (isTouchedField(errorPropertyAsField, formContext.touchedFields) ||
+        formContext.showAllErrors)
     );
   });
 }
@@ -72,7 +69,7 @@ const FieldTemplate: React.FC<
 
   const descriptionComponent = <FieldDescription description={description} />;
 
-  const isRootItem = id === 'root';
+  const isRootItem = id === formContext?.idConfigs.idPrefix;
   const isArrayItem = /(_\d+)$/.test(id);
 
   const showErrors = useMemo(() => {
@@ -101,13 +98,7 @@ const FieldTemplate: React.FC<
   }
 
   if (type === 'array' || type === 'object') {
-    const hasChildErrors =
-      getChildErrorsForField(
-        formContext?.errors,
-        formContext?.touchedFields,
-        formContext?.showAllErrors,
-        id
-      ).length > 0;
+    const hasChildErrors = getChildErrorsForField(formContext, id).length > 0;
 
     return (
       <AccordionFormField

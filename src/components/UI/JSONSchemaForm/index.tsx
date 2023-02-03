@@ -10,7 +10,7 @@ import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
-import { ID_SEPARATOR, transformErrors } from './utils';
+import { ID_PREFIX, ID_SEPARATOR, transformErrors } from './utils';
 
 const customFields = {};
 const customWidgets = {
@@ -24,6 +24,16 @@ const customTemplates = {
   FieldTemplate,
   FieldErrorTemplate,
   ObjectFieldTemplate,
+};
+
+export interface IIdConfigs {
+  idSeparator: string;
+  idPrefix: string;
+}
+
+const idConfigs: IIdConfigs = {
+  idSeparator: ID_SEPARATOR,
+  idPrefix: ID_PREFIX,
 };
 
 interface IAddTouchedFieldAction {
@@ -88,9 +98,10 @@ function createInitalState(): IFormState {
 export interface IFormContext extends IFormState {
   errors: RJSFValidationError[] | undefined;
   toggleTouchedFields: (...ids: string[]) => void;
+  idConfigs: IIdConfigs;
 }
 
-const JSONSchemaForm: React.FC<Omit<FormProps, 'idSeparator'>> = ({
+const JSONSchemaForm: React.FC<FormProps> = ({
   onChange,
   onBlur,
   ...props
@@ -138,9 +149,11 @@ const JSONSchemaForm: React.FC<Omit<FormProps, 'idSeparator'>> = ({
         ...state,
         errors: ref.current?.state.errors,
         toggleTouchedFields,
+        idConfigs,
       }}
       transformErrors={transformErrors}
-      idSeparator={ID_SEPARATOR}
+      idSeparator={idConfigs.idSeparator}
+      idPrefix={idConfigs.idPrefix}
       ref={ref}
       noHtml5Validate
       liveValidate
