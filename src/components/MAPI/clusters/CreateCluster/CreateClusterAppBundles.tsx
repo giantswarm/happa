@@ -55,12 +55,7 @@ const Wrapper = styled.div`
 `;
 
 function getAppRepoName(provider: PrototypeProviders): string {
-  switch (provider) {
-    case PrototypeProviders.OPENSTACK:
-      return 'cluster-openstack';
-    default:
-      return `cluster-${provider}`;
-  }
+  return `cluster-${provider}`;
 }
 
 function getAppCatalogEntrySchemaURL(
