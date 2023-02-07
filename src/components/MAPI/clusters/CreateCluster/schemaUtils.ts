@@ -76,25 +76,6 @@ const uiSchemaProviderGCP: Record<string, GenericObjectType> = {
   },
 };
 
-const uiSchemaProviderOpenStack: Record<string, GenericObjectType> = {
-  0: {
-    'ui:options': {
-      order: [
-        'clusterName',
-        'clusterDescription',
-        'organization',
-        'controlPlane',
-        '*',
-      ],
-    },
-    clusterName: {
-      'ui:options': {
-        widget: ClusterNameWidget,
-      },
-    },
-  },
-};
-
 const uiSchemaProviderVSphere: Record<string, GenericObjectType> = {
   0: {
     'ui:options': {
@@ -124,6 +105,11 @@ const uiSchemaTestSchema: Record<string, GenericObjectType> = {
         'arrayFields',
         '*',
       ],
+    },
+    numericFields: {
+      'ui:options': {
+        order: ['integer', 'integerLimit', '*'],
+      },
     },
     stringFields: {
       'ui:options': {
@@ -157,7 +143,6 @@ export enum PrototypeProviders {
   AZURE = 'azure',
   CLOUDDIRECTOR = 'cloud-director',
   GCP = 'gcp',
-  OPENSTACK = 'open-stack',
   VSPHERE = 'vsphere',
 }
 
@@ -182,7 +167,6 @@ export const getDefaultFormData = (
     case PrototypeProviders.AWS:
     case PrototypeProviders.AZURE:
     case PrototypeProviders.GCP:
-    case PrototypeProviders.OPENSTACK:
       return {
         clusterName: generateUID(5),
         organization,
@@ -211,7 +195,6 @@ const uiSchemaForSchema: Record<PrototypeSchemas, UiSchema> = {
   [PrototypeProviders.AZURE]: uiSchemaProviderAzure,
   [PrototypeProviders.CLOUDDIRECTOR]: uiSchemaProviderCloudDirector,
   [PrototypeProviders.GCP]: uiSchemaProviderGCP,
-  [PrototypeProviders.OPENSTACK]: uiSchemaProviderOpenStack,
   [PrototypeProviders.VSPHERE]: uiSchemaProviderVSphere,
   [TestSchema.TEST]: uiSchemaTestSchema,
 };

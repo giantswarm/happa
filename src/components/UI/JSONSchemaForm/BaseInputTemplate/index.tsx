@@ -21,7 +21,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   };
 
   const handleNumberChange = (patch: { value: number; valid: boolean }) => {
-    onChange(patch.value);
+    onChange(!patch.valid ? options.emptyValue : patch.value);
   };
 
   const handleBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
