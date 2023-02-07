@@ -45,13 +45,18 @@ interface AccordionFormFieldProps {
   label: React.ReactNode;
   help?: React.ReactNode;
   error?: React.ReactNode;
+  hasChildErrors?: boolean;
 }
 
 const AccordionFormField: React.FC<
   React.PropsWithChildren<AccordionFormFieldProps>
-> = ({ label, help, error, children }) => {
+> = ({ label, help, error, hasChildErrors, children }) => {
   const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
   const isExpanded = activeIndexes.length !== 0;
+
+  const handleActive = (indices: number[]) => {
+    setActiveIndexes(indices);
+  };
 
   const helpComponent =
     typeof help === 'string' ? <Text color='text-weak'>{help}</Text> : help;
@@ -59,7 +64,7 @@ const AccordionFormField: React.FC<
   return (
     <StyledAccordion
       activeIndex={activeIndexes}
-      onActive={setActiveIndexes}
+      onActive={handleActive}
       animate={false}
     >
       <AccordionPanel
@@ -75,6 +80,19 @@ const AccordionFormField: React.FC<
             </Box>
             <StyledLabel weight='bold' margin={{ vertical: 'small' }}>
               {label}
+              {(hasChildErrors || error) && !isExpanded && (
+                <Text
+                  size='large'
+                  color='status-danger'
+                  margin={{ left: 'small' }}
+                >
+                  <i
+                    className='fa fa-warning'
+                    role='presentation'
+                    aria-hidden='true'
+                  />
+                </Text>
+              )}
             </StyledLabel>
           </StyledHeader>
         }

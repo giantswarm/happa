@@ -152,6 +152,13 @@
                     "title": "Integer",
                     "type": "integer"
                 },
+                "integerLimit": {
+                    "description": "Integer field with minimum value 2 and maximum value 5.",
+                    "title": "Integer with min/max values",
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 2
+                },
                 "integerEnum": {
                     "description": "Integer field with enumerated values and custom labels.",
                     "oneOf": [
@@ -209,7 +216,7 @@
                     "type": "object"
                 },
                 "objectRequired": {
-                    "description": "Object where one property is required.",
+                    "description": "Object where properties are required.",
                     "properties": {
                         "active": {
                             "type": "boolean"

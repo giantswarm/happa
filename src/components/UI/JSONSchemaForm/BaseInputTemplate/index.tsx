@@ -14,6 +14,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   readonly,
   required,
   onChange,
+  onBlur,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value === '' ? options.emptyValue : e.target.value);
@@ -21,6 +22,10 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
 
   const handleNumberChange = (patch: { value: number; valid: boolean }) => {
     onChange(!patch.valid ? options.emptyValue : patch.value);
+  };
+
+  const handleBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onBlur(id, e.target.value === '' ? options.emptyValue : e.target.value);
   };
 
   const handleSuggestionSelect = (e: { suggestion: string }) => {
@@ -47,6 +52,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
         width: { max: 'small' },
       }}
       onChange={handleNumberChange}
+      onBlur={handleBlur}
     />
   ) : (
     <TextInput
@@ -58,6 +64,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
       readOnly={readonly}
       required={required}
       onChange={handleChange}
+      onBlur={handleBlur}
       onSuggestionSelect={handleSuggestionSelect}
       {...inputProps}
     />
