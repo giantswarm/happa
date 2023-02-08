@@ -8,7 +8,11 @@ import AccordionFormField from '../AccordionFormField';
 import FieldDescription from '../FieldDescription';
 import FieldLabel from '../FieldLabel';
 import ObjectFormField from '../ObjectFormField';
-import { isTouchedField, mapErrorPropertyToField } from '../utils';
+import {
+  isFieldArrayItem,
+  isTouchedField,
+  mapErrorPropertyToField,
+} from '../utils';
 
 function getCustomTheme(error: React.ReactElement | undefined): ThemeType {
   return error
@@ -37,7 +41,11 @@ function getChildErrorsForField(
       errorPropertyAsField.includes(
         `${id}${formContext.idConfigs.idSeparator}`
       ) &&
-      (isTouchedField(errorPropertyAsField, formContext.touchedFields) ||
+      (isTouchedField(
+        errorPropertyAsField,
+        formContext.touchedFields,
+        formContext.idConfigs.idSeparator
+      ) ||
         formContext.showAllErrors)
     );
   });
@@ -57,11 +65,14 @@ const FieldTemplate: React.FC<
   formContext,
 }) => {
   const { type, description } = schema;
+  const idPrefix = formContext?.idConfigs.idPrefix ?? '';
+  const idSeparator = formContext?.idConfigs.idSeparator ?? '';
 
   const labelComponent = (
     <FieldLabel
       label={label}
       id={id}
+      idSeparator={idSeparator}
       required={required}
       textProps={{ size: 'large', weight: 'bold' }}
     />
@@ -69,13 +80,17 @@ const FieldTemplate: React.FC<
 
   const descriptionComponent = <FieldDescription description={description} />;
 
-  const isRootItem = id === formContext?.idConfigs.idPrefix;
-  const isArrayItem = /(_\d+)$/.test(id);
+  const isRootItem = id === idPrefix;
+  const isArrayItem = isFieldArrayItem(id, idSeparator);
 
   const showErrors = useMemo(() => {
     if (!formContext || formContext.showAllErrors) return true;
 
-    return isTouchedField(id, formContext.touchedFields);
+    return isTouchedField(
+      id,
+      formContext.touchedFields,
+      formContext.idConfigs.idSeparator
+    );
   }, [formContext, id]);
 
   const error = rawErrors && showErrors ? errors : undefined;

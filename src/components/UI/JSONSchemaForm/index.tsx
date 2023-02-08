@@ -10,7 +10,7 @@ import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
-import { ID_PREFIX, ID_SEPARATOR, transformErrors } from './utils';
+import { transformErrors } from './utils';
 
 const customFields = {};
 const customWidgets = {
@@ -30,11 +30,6 @@ export interface IIdConfigs {
   idSeparator: string;
   idPrefix: string;
 }
-
-const idConfigs: IIdConfigs = {
-  idSeparator: ID_SEPARATOR,
-  idPrefix: ID_PREFIX,
-};
 
 interface IAddTouchedFieldAction {
   type: 'addTouchedField';
@@ -104,9 +99,13 @@ export interface IFormContext extends IFormState {
 const JSONSchemaForm: React.FC<FormProps> = ({
   onChange,
   onBlur,
+  idPrefix = 'root',
+  idSeparator = '_',
   ...props
 }) => {
   const [state, dispatch] = useReducer(reducer, createInitalState());
+
+  const idConfigs: IIdConfigs = { idPrefix, idSeparator };
 
   const addTouchedField = (id?: string) => {
     if (!id) return;

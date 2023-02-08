@@ -16,7 +16,8 @@ const ErrorListTemplate: React.FC<
     return errors.filter((e) =>
       isTouchedField(
         mapErrorPropertyToField(e, formContext.idConfigs),
-        formContext.touchedFields
+        formContext.touchedFields,
+        formContext.idConfigs.idSeparator
       )
     );
   }, [errors, formContext]);
