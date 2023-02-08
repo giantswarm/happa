@@ -1,6 +1,7 @@
 import { IChangeEvent } from '@rjsf/core';
 import { EnumOptionsType, RJSFSchema } from '@rjsf/utils';
-import validator from '@rjsf/validator-ajv8';
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import Ajv2020 from 'ajv/dist/2020';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import cleanDeep from 'clean-deep';
 import { push, replace } from 'connected-react-router';
@@ -47,6 +48,8 @@ import {
   PrototypeSchemas,
   prototypeSchemas,
 } from './schemaUtils';
+
+const validator = customizeValidator({ AjvClass: Ajv2020 });
 
 const Wrapper = styled.div`
   position: relative;
