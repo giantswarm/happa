@@ -26,7 +26,7 @@ export function transformErrors(errors: RJSFValidationError[]) {
 
 export function mapErrorPropertyToField(
   e: RJSFValidationError,
-  idConfigs: IIdConfigs
+  idConfigs: IIdConfigs = { idSeparator: ID_SEPARATOR, idPrefix: ID_PREFIX }
 ): string {
   if (!e.property) return '';
 

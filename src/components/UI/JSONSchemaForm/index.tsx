@@ -10,7 +10,12 @@ import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
-import { ID_PREFIX, ID_SEPARATOR, transformErrors } from './utils';
+import {
+  ID_PREFIX,
+  ID_SEPARATOR,
+  mapErrorPropertyToField,
+  transformErrors,
+} from './utils';
 
 const customFields = {};
 const customWidgets = {
@@ -48,11 +53,11 @@ interface IToggleTouchedsFieldAction {
 
 interface IAttemptSubmitAction {
   type: 'attemptSubmitAction';
+  value: RJSFValidationError[];
 }
 
 interface IFormState {
   touchedFields: string[];
-  showAllErrors: boolean;
 }
 
 type FormAction =
@@ -83,8 +88,14 @@ const reducer: React.Reducer<IFormState, FormAction> = (state, action) => {
       return { ...state, touchedFields: Array.from(newFields) };
     }
 
-    case 'attemptSubmitAction':
-      return { ...state, showAllErrors: true };
+    case 'attemptSubmitAction': {
+      const fields = action.value.map((e) => mapErrorPropertyToField(e));
+
+      return {
+        ...state,
+        touchedFields: Array.from(new Set([...state.touchedFields, ...fields])),
+      };
+    }
 
     default:
       return { ...state };
@@ -92,7 +103,7 @@ const reducer: React.Reducer<IFormState, FormAction> = (state, action) => {
 };
 
 function createInitalState(): IFormState {
-  return { touchedFields: [], showAllErrors: false };
+  return { touchedFields: [] };
 }
 
 export interface IFormContext extends IFormState {
@@ -131,8 +142,8 @@ const JSONSchemaForm: React.FC<FormProps> = ({
     }
   };
 
-  const handleSubmitAttempted = () => {
-    dispatch({ type: 'attemptSubmitAction' });
+  const handleSubmitAttempted = (errors: RJSFValidationError[]) => {
+    dispatch({ type: 'attemptSubmitAction', value: errors });
   };
 
   const ref = useRef<Form<RJSFSchema> | null>(null);

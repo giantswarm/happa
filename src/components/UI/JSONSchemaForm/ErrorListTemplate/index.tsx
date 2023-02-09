@@ -11,7 +11,7 @@ const ErrorListTemplate: React.FC<
   ErrorListProps<RJSFSchema, RJSFSchema, IFormContext>
 > = ({ errors, formContext }) => {
   const filteredErrors = useMemo(() => {
-    if (!formContext || formContext.showAllErrors) return errors;
+    if (!formContext) return errors;
 
     return errors.filter((e) =>
       isTouchedField(

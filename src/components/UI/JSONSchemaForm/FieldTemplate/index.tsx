@@ -36,9 +36,7 @@ function getChildErrorsForField(
       // the suffix on the ID is required to eliminate false partial matches
       errorPropertyAsField.includes(
         `${id}${formContext.idConfigs.idSeparator}`
-      ) &&
-      (isTouchedField(errorPropertyAsField, formContext.touchedFields) ||
-        formContext.showAllErrors)
+      ) && isTouchedField(errorPropertyAsField, formContext.touchedFields)
     );
   });
 }
@@ -73,7 +71,7 @@ const FieldTemplate: React.FC<
   const isArrayItem = /(_\d+)$/.test(id);
 
   const showErrors = useMemo(() => {
-    if (!formContext || formContext.showAllErrors) return true;
+    if (!formContext) return true;
 
     return isTouchedField(id, formContext.touchedFields);
   }, [formContext, id]);
