@@ -9,9 +9,9 @@ import { isTouchedField, mapErrorPropertyToField } from '../utils';
 
 const ErrorListTemplate: React.FC<
   ErrorListProps<RJSFSchema, RJSFSchema, IFormContext>
-> = ({ errors, formContext }) => {
+> = ({ errors, formContext = {} as IFormContext }) => {
   const filteredErrors = useMemo(() => {
-    if (!formContext || formContext.showAllErrors) return errors;
+    if (formContext.showAllErrors) return errors;
 
     return errors.filter((e) =>
       isTouchedField(

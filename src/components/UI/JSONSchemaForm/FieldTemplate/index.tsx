@@ -24,11 +24,8 @@ function getCustomTheme(error: React.ReactElement | undefined): ThemeType {
     : {};
 }
 
-function getChildErrorsForField(
-  formContext: IFormContext | undefined,
-  id: string
-) {
-  if (!formContext || !formContext.errors) return [];
+function getChildErrorsForField(formContext: IFormContext, id: string) {
+  if (!formContext.errors) return [];
 
   return formContext.errors.filter((err) => {
     const errorPropertyAsField = mapErrorPropertyToField(
@@ -62,11 +59,10 @@ const FieldTemplate: React.FC<
   label,
   schema,
   required,
-  formContext,
+  formContext = {} as IFormContext,
 }) => {
   const { type, description } = schema;
-  const idPrefix = formContext?.idConfigs.idPrefix ?? '';
-  const idSeparator = formContext?.idConfigs.idSeparator ?? '';
+  const { idPrefix, idSeparator } = formContext.idConfigs;
 
   const labelComponent = (
     <FieldLabel
@@ -84,7 +80,7 @@ const FieldTemplate: React.FC<
   const isArrayItem = isFieldArrayItem(id, idSeparator);
 
   const showErrors = useMemo(() => {
-    if (!formContext || formContext.showAllErrors) return true;
+    if (formContext.showAllErrors) return true;
 
     return isTouchedField(
       id,

@@ -8,7 +8,14 @@ import FieldLabel from '../FieldLabel';
 
 const CheckboxWidget: React.FC<
   WidgetProps<RJSFSchema, RJSFSchema, IFormContext>
-> = ({ id, label, schema, required, formContext, onChange }) => {
+> = ({
+  id,
+  label,
+  schema,
+  required,
+  formContext = {} as IFormContext,
+  onChange,
+}) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.checked);
   };
@@ -17,7 +24,7 @@ const CheckboxWidget: React.FC<
     <FieldLabel
       label={label}
       id={id}
-      idSeparator={formContext?.idConfigs.idSeparator ?? ''}
+      idSeparator={formContext.idConfigs.idSeparator}
       required={required}
     />
   );
