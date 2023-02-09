@@ -1,15 +1,19 @@
-import { WidgetProps } from '@rjsf/utils';
+import { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import React from 'react';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 
+import { IFormContext } from '..';
 import FieldDescription from '../FieldDescription';
 import FieldLabel from '../FieldLabel';
 
-const CheckboxWidget: React.FC<WidgetProps> = ({
+const CheckboxWidget: React.FC<
+  WidgetProps<RJSFSchema, RJSFSchema, IFormContext>
+> = ({
   id,
   label,
   schema,
   required,
+  formContext = {} as IFormContext,
   onChange,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,7 +21,12 @@ const CheckboxWidget: React.FC<WidgetProps> = ({
   };
 
   const labelComponent = (
-    <FieldLabel label={label} id={id} required={required} />
+    <FieldLabel
+      label={label}
+      id={id}
+      idSeparator={formContext.idConfigs.idSeparator}
+      required={required}
+    />
   );
 
   const { description } = schema;

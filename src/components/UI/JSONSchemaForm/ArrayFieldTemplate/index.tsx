@@ -23,11 +23,15 @@ function shouldReorder(fields: string[], field1: string, field2: string) {
 
 const ArrayFieldTemplate: React.FC<
   ArrayFieldTemplateProps<RJSFSchema, RJSFSchema, IFormContext>
-> = ({ items, canAdd, onAddClick, idSchema, formContext }) => {
+> = ({
+  items,
+  canAdd,
+  onAddClick,
+  idSchema,
+  formContext = {} as IFormContext,
+}) => {
   const getArrayItemFieldIdFn = useMemo(() => {
     return (idx: number) => {
-      if (!formContext) return '';
-
       return getArrayItemFieldId(
         idSchema.$id,
         idx,
@@ -37,8 +41,6 @@ const ArrayFieldTemplate: React.FC<
   }, [formContext, idSchema.$id]);
 
   const reorderFields = (idx: number, newIdx: number) => {
-    if (!formContext) return;
-
     const fieldAtIdx = getArrayItemFieldIdFn(idx);
     const fieldAtNewIdx = getArrayItemFieldIdFn(newIdx);
     if (shouldReorder(formContext.touchedFields, fieldAtIdx, fieldAtNewIdx)) {
@@ -47,8 +49,6 @@ const ArrayFieldTemplate: React.FC<
   };
 
   const removeField = (idx: number) => {
-    if (!formContext) return;
-
     const fieldsToToggle = [];
     for (let i = idx; i < items.length - 1; i++) {
       const fieldAtIdx = getArrayItemFieldIdFn(i);

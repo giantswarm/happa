@@ -3,9 +3,6 @@ import { pipe } from 'utils/helpers';
 
 import { IIdConfigs } from '.';
 
-export const ID_SEPARATOR = '_';
-export const ID_PREFIX = 'root';
-
 function transformRequiredArrayItemError(
   error: RJSFValidationError
 ): RJSFValidationError {
@@ -39,9 +36,28 @@ export function mapErrorPropertyToField(
 export function isTouchedField(
   id: string,
   touchedFields: string[],
-  idSeparator: string = ID_SEPARATOR
+  idSeparator: string
 ): boolean {
   return touchedFields.some((field) =>
     `${field}${idSeparator}`.includes(`${id}${idSeparator}`)
   );
+}
+
+const escapeRegExp = (string: string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+const idIndexRegExp = (idSeparator: string) =>
+  new RegExp(`(${escapeRegExp(idSeparator)}\\d+)$`, 'g');
+
+export function isFieldArrayItem(id: string, idSeparator: string) {
+  return idIndexRegExp(idSeparator).test(id);
+}
+
+export function getArrayItemIndex(id: string, idSeparator: string) {
+  const indexMatchArray = id.match(idIndexRegExp(idSeparator));
+
+  return indexMatchArray
+    ? parseInt(indexMatchArray[0].replace(idSeparator, ''))
+    : -1;
 }
