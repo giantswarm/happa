@@ -23,7 +23,7 @@ function shouldReorder(fields: string[], field1: string, field2: string) {
 
 const ArrayFieldTemplate: React.FC<
   ArrayFieldTemplateProps<RJSFSchema, RJSFSchema, IFormContext>
-> = ({ items, canAdd, onAddClick, idSchema, formContext }) => {
+> = ({ items, canAdd, onAddClick, idSchema, formContext, schema }) => {
   const getArrayItemFieldIdFn = useMemo(() => {
     return (idx: number) => {
       if (!formContext) return '';
@@ -101,6 +101,7 @@ const ArrayFieldTemplate: React.FC<
               key,
               onDropIndexClick,
               onReorderClick,
+              hasRemove,
               ...itemProps
             }: ArrayFieldTemplateItemType) => (
               <ArrayFieldItem
@@ -111,6 +112,7 @@ const ArrayFieldTemplate: React.FC<
                 onReorderClick={(oldidx, newIdx) =>
                   handleReorder(oldidx, newIdx, onReorderClick(oldidx, newIdx))
                 }
+                hasRemove={items.length > (schema?.minItems ?? 0)}
                 {...itemProps}
               />
             )
