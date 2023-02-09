@@ -1,4 +1,6 @@
 import { GenericObjectType, UiSchema } from '@rjsf/utils';
+import cleanDeep, { CleanOptions } from 'clean-deep';
+import { isEmpty, isPlainObject, transform } from 'lodash';
 import { generateUID } from 'MAPI/utils';
 import { compare } from 'utils/semver';
 import { VersionImpl } from 'utils/Version';
@@ -212,4 +214,48 @@ export function getUiSchema(
   // fallback to latest version if version specified by schema does
   // not have a corresponding ui schema
   return uiSchema[majorVersion] ?? uiSchema[latestVersion];
+}
+
+export function cleanDeepWithException<T>(
+  object: Iterable<T> | unknown,
+  options?: CleanOptions,
+  isException?: (value: unknown) => boolean
+): Iterable<T> | unknown {
+  const { emptyArrays = true, emptyObjects = true } = options ?? {};
+
+  return transform(
+    object as unknown[],
+    (result: Record<string | number, unknown>, value, key) => {
+      // if it matches the exception rule, don't continue to clean
+      if (isException && isException(value)) {
+        result[key] = value;
+
+        return;
+      }
+
+      let newValue = value;
+      if (Array.isArray(value) || isPlainObject(value)) {
+        newValue = cleanDeepWithException<unknown>(value, options, isException);
+        if (
+          ((isPlainObject(newValue) && emptyObjects) ||
+            (Array.isArray(newValue) && emptyArrays)) &&
+          isEmpty(newValue)
+        ) {
+          return;
+        }
+      } else {
+        newValue = value ?? cleanDeep(value, options);
+
+        if (isPlainObject(newValue) && isEmpty(newValue)) {
+          return;
+        }
+      }
+
+      if (Array.isArray(result)) {
+        result.push(newValue);
+      } else {
+        result[key] = newValue;
+      }
+    }
+  );
 }
