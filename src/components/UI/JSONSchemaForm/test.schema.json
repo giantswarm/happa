@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/schema#",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
         "arrayFields": {
             "properties": {
@@ -151,13 +151,6 @@
                     "description": "Integer field with title and description.",
                     "title": "Integer",
                     "type": "integer"
-                },
-                "integerLimit": {
-                    "description": "Integer field with minimum value 2 and maximum value 5.",
-                    "title": "Integer with min/max values",
-                    "type": "integer",
-                    "maximum": 5,
-                    "minimum": 2
                 },
                 "integerEnum": {
                     "description": "Integer field with enumerated values and custom labels.",
