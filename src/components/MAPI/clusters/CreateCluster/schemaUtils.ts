@@ -28,17 +28,46 @@ const uiSchemaProviderAzure: Record<string, GenericObjectType> = {
   0: {
     'ui:options': {
       order: [
-        'clusterName',
-        'clusterDescription',
-        'organization',
+        'metadata',
+        'providerSpecific',
         'controlPlane',
+        'connectivity',
+        'nodePools',
+        'machineDeployments',
+        'kubernetesVersion',
+        'includeClusterResourceSet',
         '*',
       ],
     },
-    clusterName: {
-      'ui:options': {
-        widget: ClusterNameWidget,
+    connectivity: {
+      'ui:order': ['sshSSOPublicKey', '*'],
+      network: {
+        'ui:order': ['hostCidr', 'podCidr', 'serviceCidr', 'mode', '*'],
       },
+    },
+    controlPlane: {
+      'ui:order': [
+        'instanceType',
+        'replicas',
+        'rootVolumeSizeGB',
+        'etcdVolumeSizeGB',
+        '*',
+      ],
+      oidc: {
+        'ui:order': ['issuerUrl', 'clientId', '*'],
+      },
+    },
+    metadata: {
+      'ui:order': ['name', 'description', '*'],
+      organization: {
+        'ui:widget': 'hidden',
+        'ui:options': {
+          label: false,
+        },
+      },
+    },
+    providerSpecific: {
+      'ui:order': ['location', 'subscriptionId', '*'],
     },
   },
 };
