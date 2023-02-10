@@ -59,6 +59,11 @@ const uiSchemaProviderAzure: Record<string, GenericObjectType> = {
     },
     metadata: {
       'ui:order': ['name', 'description', '*'],
+      name: {
+        'ui:options': {
+          widget: ClusterNameWidget,
+        },
+      },
       organization: {
         'ui:widget': 'hidden',
         'ui:options': {
@@ -193,8 +198,14 @@ export const getDefaultFormData = (
   organization: string
 ) => {
   switch (schema) {
-    case PrototypeProviders.AWS:
     case PrototypeProviders.AZURE:
+      return {
+        metadata: {
+          name: generateUID(5),
+          organization,
+        },
+      };
+    case PrototypeProviders.AWS:
     case PrototypeProviders.GCP:
       return {
         clusterName: generateUID(5),
