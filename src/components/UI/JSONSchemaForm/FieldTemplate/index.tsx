@@ -128,7 +128,7 @@ const FieldTemplate: React.FC<
       <InputGroup
         label={displayLabel && labelComponent}
         help={displayLabel && description && descriptionComponent}
-        contentProps={{ width: { max: 'large' } }}
+        width='large'
         error={error}
         htmlFor={id}
       >
