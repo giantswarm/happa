@@ -8,7 +8,11 @@ import AccordionFormField from '../AccordionFormField';
 import FieldDescription from '../FieldDescription';
 import FieldLabel from '../FieldLabel';
 import ObjectFormField from '../ObjectFormField';
-import { isTouchedField, mapErrorPropertyToField } from '../utils';
+import {
+  isFieldArrayItem,
+  isTouchedField,
+  mapErrorPropertyToField,
+} from '../utils';
 
 function getCustomTheme(error: React.ReactElement | undefined): ThemeType {
   return error
@@ -20,11 +24,8 @@ function getCustomTheme(error: React.ReactElement | undefined): ThemeType {
     : {};
 }
 
-function getChildErrorsForField(
-  formContext: IFormContext | undefined,
-  id: string
-) {
-  if (!formContext || !formContext.errors) return [];
+function getChildErrorsForField(formContext: IFormContext, id: string) {
+  if (!formContext.errors) return [];
 
   return formContext.errors.filter((err) => {
     const errorPropertyAsField = mapErrorPropertyToField(
@@ -36,7 +37,12 @@ function getChildErrorsForField(
       // the suffix on the ID is required to eliminate false partial matches
       errorPropertyAsField.includes(
         `${id}${formContext.idConfigs.idSeparator}`
-      ) && isTouchedField(errorPropertyAsField, formContext.touchedFields)
+      ) &&
+      isTouchedField(
+        errorPropertyAsField,
+        formContext.touchedFields,
+        formContext.idConfigs.idSeparator
+      )
     );
   });
 }
@@ -52,14 +58,16 @@ const FieldTemplate: React.FC<
   label,
   schema,
   required,
-  formContext,
+  formContext = {} as IFormContext,
 }) => {
   const { type, description } = schema;
+  const { idPrefix, idSeparator } = formContext.idConfigs;
 
   const labelComponent = (
     <FieldLabel
       label={label}
       id={id}
+      idSeparator={idSeparator}
       required={required}
       textProps={{ size: 'large', weight: 'bold' }}
     />
@@ -67,14 +75,18 @@ const FieldTemplate: React.FC<
 
   const descriptionComponent = <FieldDescription description={description} />;
 
-  const isRootItem = id === formContext?.idConfigs.idPrefix;
-  const isArrayItem = /(_\d+)$/.test(id);
+  const isRootItem = id === idPrefix;
+  const isArrayItem = isFieldArrayItem(id, idSeparator);
 
-  const showErrors = useMemo(() => {
-    if (!formContext) return true;
-
-    return isTouchedField(id, formContext.touchedFields);
-  }, [formContext, id]);
+  const showErrors = useMemo(
+    () =>
+      isTouchedField(
+        id,
+        formContext.touchedFields,
+        formContext.idConfigs.idSeparator
+      ),
+    [formContext, id]
+  );
 
   const error = rawErrors && showErrors ? errors : undefined;
 
