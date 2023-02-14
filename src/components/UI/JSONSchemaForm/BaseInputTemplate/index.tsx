@@ -1,7 +1,7 @@
 import { getInputProps, WidgetProps } from '@rjsf/utils';
 import React from 'react';
 import NumberPicker from 'UI/Inputs/NumberPicker';
-import TextInput from 'UI/Inputs/TextInput';
+import TextArea from 'UI/Inputs/TextArea';
 
 const BaseInputTemplate: React.FC<WidgetProps> = ({
   id,
@@ -16,7 +16,9 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   onChange,
   onBlur,
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     onChange(e.target.value === '' ? options.emptyValue : e.target.value);
   };
 
@@ -24,17 +26,13 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
     onChange(!patch.valid ? options.emptyValue : patch.value);
   };
 
-  const handleBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBlur = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     onBlur(id, e.target.value === '' ? options.emptyValue : e.target.value);
   };
 
-  const handleSuggestionSelect = (e: { suggestion: string }) => {
-    onChange(e.suggestion);
-  };
-
   const inputProps = getInputProps(schema, type as string, options);
-
-  const { examples } = schema;
 
   return schema.type === 'integer' ? (
     <NumberPicker
@@ -55,9 +53,8 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
       onBlur={handleBlur}
     />
   ) : (
-    <TextInput
+    <TextArea
       id={id}
-      suggestions={examples as string[]}
       value={value ?? ''}
       placeholder={placeholder}
       disabled={disabled}
@@ -65,7 +62,9 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
       required={required}
       onChange={handleChange}
       onBlur={handleBlur}
-      onSuggestionSelect={handleSuggestionSelect}
+      spellCheck={false}
+      resize={false}
+      autoResizeHeight={true}
       {...inputProps}
     />
   );
