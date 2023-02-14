@@ -453,6 +453,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                             {yaml.dump(cleanFormData, {
                               indent: 2,
                               quotingType: '"',
+                              lineWidth: -1,
                             })}
                           </Prompt>
                         )}
