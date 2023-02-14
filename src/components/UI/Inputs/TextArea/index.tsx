@@ -1,5 +1,27 @@
 import { FormField, FormFieldProps, TextArea as Input } from 'grommet';
 import * as React from 'react';
+import styled, { css } from 'styled-components';
+
+const MAX_ROWS = 10;
+
+const withAutoResizeHeight = css`
+  white-space: nowrap;
+`;
+
+const StyledInput = styled(Input)<{
+  autoResizeHeight?: boolean;
+}>`
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  ${({ autoResizeHeight }) => (autoResizeHeight ? withAutoResizeHeight : '')}
+`;
+
+function getNumberOfRows(value: string | undefined): number {
+  return value ? (value.match(/[\r\n]/gi) || []).length + 1 : 1;
+}
 
 interface ITextAreaProps extends React.ComponentPropsWithoutRef<typeof Input> {
   /**
@@ -39,6 +61,10 @@ interface ITextAreaProps extends React.ComponentPropsWithoutRef<typeof Input> {
    * Whether the input should have some extra padding or not.
    */
   pad?: FormFieldProps['pad'];
+  /**
+   * Whether the input should auto-resize in height
+   */
+  autoResizeHeight?: boolean;
 }
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, ITextAreaProps>(
@@ -56,6 +82,9 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, ITextAreaProps>(
       name,
       margin,
       pad,
+      value,
+      rows,
+      autoResizeHeight,
       ...props
     },
     ref
@@ -75,13 +104,18 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, ITextAreaProps>(
         pad={pad}
         {...formFieldProps}
       >
-        <Input
+        <StyledInput
           {...props}
           id={id}
           ref={ref}
           disabled={disabled}
           required={required}
           name={name}
+          autoResizeHeight={autoResizeHeight}
+          rows={Math.min(
+            autoResizeHeight ? getNumberOfRows(value) : rows!,
+            MAX_ROWS
+          )}
         />
       </FormField>
     );
@@ -92,6 +126,7 @@ TextArea.defaultProps = {
   size: 'medium',
   rows: 5,
   resize: 'vertical',
+  autoResizeHeight: false,
 };
 
 export default TextArea;
