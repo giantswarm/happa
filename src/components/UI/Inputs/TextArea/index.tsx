@@ -20,7 +20,7 @@ const StyledInput = styled(Input)<{
 `;
 
 function getNumberOfRows(value: string | undefined): number {
-  return value ? (value.match(/[\r\n]/gi) || []).length + 1 : 1;
+  return value ? (value.match(/\r\n|\r|\n/g) || []).length + 1 : 1;
 }
 
 interface ITextAreaProps extends React.ComponentPropsWithoutRef<typeof Input> {
