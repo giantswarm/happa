@@ -221,7 +221,11 @@ export function cleanDeepWithException<T>(
   options?: CleanOptions,
   isException?: (value: unknown) => boolean
 ): Iterable<T> | unknown {
-  const { emptyArrays = true, emptyObjects = true } = options ?? {};
+  const {
+    emptyArrays = true,
+    emptyObjects = true,
+    undefinedValues = true,
+  } = options ?? {};
 
   return transform(
     object as unknown[],
@@ -244,9 +248,12 @@ export function cleanDeepWithException<T>(
           return;
         }
       } else {
-        newValue = value ?? cleanDeep(value, options);
-
-        if (isPlainObject(newValue) && isEmpty(newValue)) {
+        newValue =
+          value !== 0 && !value ? cleanDeep({ value }, options).value : value;
+        if (
+          newValue === undefined &&
+          (value !== undefined || undefinedValues)
+        ) {
           return;
         }
       }
