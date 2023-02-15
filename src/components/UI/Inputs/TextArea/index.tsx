@@ -1,12 +1,29 @@
-import { FormField, FormFieldProps, TextArea as Input } from 'grommet';
+import {
+  FormField,
+  FormFieldProps,
+  TextArea as Input,
+  ThemeContext,
+  ThemeType,
+} from 'grommet';
 import * as React from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 
 const MAX_ROWS = 10;
 
 const withAutoResizeHeight = css`
   white-space: nowrap;
 `;
+
+const customTheme: ThemeType = {
+  textArea: {
+    extend: css`
+      border: none;
+      :focus {
+        box-shadow: none;
+      }
+    `,
+  },
+};
 
 const StyledInput = styled(Input)<{
   autoResizeHeight?: boolean;
@@ -89,35 +106,44 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, ITextAreaProps>(
     },
     ref
   ) => {
+    const theme = useTheme();
+    const patchedContentProps = Object.assign({}, contentProps);
+    if (!disabled) {
+      patchedContentProps.background = theme.formField.background.color;
+    }
+
     return (
-      <FormField
-        htmlFor={id}
-        label={label}
-        contentProps={contentProps}
-        disabled={disabled}
-        required={required}
-        name={name}
-        error={error}
-        info={info}
-        help={help}
-        margin={margin}
-        pad={pad}
-        {...formFieldProps}
-      >
-        <StyledInput
-          {...props}
-          id={id}
-          ref={ref}
+      <ThemeContext.Extend value={customTheme}>
+        <FormField
+          htmlFor={id}
+          label={label}
+          contentProps={patchedContentProps}
           disabled={disabled}
           required={required}
           name={name}
-          autoResizeHeight={autoResizeHeight}
-          rows={Math.min(
-            autoResizeHeight ? getNumberOfRows(value) : rows!,
-            MAX_ROWS
-          )}
-        />
-      </FormField>
+          error={error}
+          info={info}
+          help={help}
+          margin={margin}
+          pad={pad}
+          {...formFieldProps}
+        >
+          <StyledInput
+            {...props}
+            id={id}
+            ref={ref}
+            disabled={disabled}
+            required={required}
+            name={name}
+            focusIndicator={false}
+            autoResizeHeight={autoResizeHeight}
+            rows={Math.min(
+              autoResizeHeight ? getNumberOfRows(value) : rows!,
+              MAX_ROWS
+            )}
+          />
+        </FormField>
+      </ThemeContext.Extend>
     );
   }
 );
