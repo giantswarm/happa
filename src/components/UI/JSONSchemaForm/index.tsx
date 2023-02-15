@@ -10,7 +10,7 @@ import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
-import { transformErrors } from './utils';
+import { mapErrorPropertyToField, transformErrors } from './utils';
 
 const customFields = {};
 const customWidgets = {
@@ -43,11 +43,11 @@ interface IToggleTouchedsFieldAction {
 
 interface IAttemptSubmitAction {
   type: 'attemptSubmitAction';
+  value: RJSFValidationError[];
 }
 
 interface IFormState {
   touchedFields: string[];
-  showAllErrors: boolean;
 }
 
 type FormAction =
@@ -55,39 +55,51 @@ type FormAction =
   | IToggleTouchedsFieldAction
   | IAttemptSubmitAction;
 
-const reducer: React.Reducer<IFormState, FormAction> = (state, action) => {
-  switch (action.type) {
-    case 'addTouchedField':
-      return {
-        ...state,
-        touchedFields: Array.from(
-          new Set([...state.touchedFields, action.value])
-        ),
-      };
+const createReducer =
+  (idConfigs: IIdConfigs): React.Reducer<IFormState, FormAction> =>
+  (state, action) => {
+    switch (action.type) {
+      case 'addTouchedField':
+        return {
+          ...state,
+          touchedFields: Array.from(
+            new Set([...state.touchedFields, action.value])
+          ),
+        };
 
-    case 'toggleTouchedFields': {
-      const newFields = new Set(state.touchedFields);
-      for (const id of action.value) {
-        if (newFields.has(id)) {
-          newFields.delete(id);
-        } else {
-          newFields.add(id);
+      case 'toggleTouchedFields': {
+        const newFields = new Set(state.touchedFields);
+        for (const id of action.value) {
+          if (newFields.has(id)) {
+            newFields.delete(id);
+          } else {
+            newFields.add(id);
+          }
         }
+
+        return { ...state, touchedFields: Array.from(newFields) };
       }
 
-      return { ...state, touchedFields: Array.from(newFields) };
+      case 'attemptSubmitAction': {
+        const fields = action.value.map((e) =>
+          mapErrorPropertyToField(e, idConfigs)
+        );
+
+        return {
+          ...state,
+          touchedFields: Array.from(
+            new Set([...state.touchedFields, ...fields])
+          ),
+        };
+      }
+
+      default:
+        return { ...state };
     }
-
-    case 'attemptSubmitAction':
-      return { ...state, showAllErrors: true };
-
-    default:
-      return { ...state };
-  }
-};
+  };
 
 function createInitalState(): IFormState {
-  return { touchedFields: [], showAllErrors: false };
+  return { touchedFields: [] };
 }
 
 export interface IFormContext extends IFormState {
@@ -103,7 +115,10 @@ const JSONSchemaForm: React.FC<FormProps> = ({
   idSeparator = '_',
   ...props
 }) => {
-  const [state, dispatch] = useReducer(reducer, createInitalState());
+  const [state, dispatch] = useReducer(
+    createReducer({ idSeparator, idPrefix }),
+    createInitalState()
+  );
 
   const idConfigs: IIdConfigs = { idPrefix, idSeparator };
 
@@ -130,8 +145,8 @@ const JSONSchemaForm: React.FC<FormProps> = ({
     }
   };
 
-  const handleSubmitAttempted = () => {
-    dispatch({ type: 'attemptSubmitAction' });
+  const handleSubmitAttempted = (errors: RJSFValidationError[]) => {
+    dispatch({ type: 'attemptSubmitAction', value: errors });
   };
 
   const ref = useRef<Form<RJSFSchema> | null>(null);
