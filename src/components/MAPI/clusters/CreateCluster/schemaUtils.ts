@@ -30,17 +30,51 @@ const uiSchemaProviderAzure: Record<string, GenericObjectType> = {
   0: {
     'ui:options': {
       order: [
-        'clusterName',
-        'clusterDescription',
-        'organization',
+        'metadata',
+        'providerSpecific',
         'controlPlane',
+        'connectivity',
+        'nodePools',
+        'machineDeployments',
+        'kubernetesVersion',
+        'includeClusterResourceSet',
         '*',
       ],
     },
-    clusterName: {
-      'ui:options': {
-        widget: ClusterNameWidget,
+    connectivity: {
+      'ui:order': ['sshSSOPublicKey', '*'],
+      network: {
+        'ui:order': ['hostCidr', 'podCidr', 'serviceCidr', 'mode', '*'],
       },
+    },
+    controlPlane: {
+      'ui:order': [
+        'instanceType',
+        'replicas',
+        'rootVolumeSizeGB',
+        'etcdVolumeSizeGB',
+        '*',
+      ],
+      oidc: {
+        'ui:order': ['issuerUrl', 'clientId', '*'],
+      },
+    },
+    metadata: {
+      'ui:order': ['name', 'description', '*'],
+      name: {
+        'ui:options': {
+          widget: ClusterNameWidget,
+        },
+      },
+      organization: {
+        'ui:widget': 'hidden',
+        'ui:options': {
+          label: false,
+        },
+      },
+    },
+    providerSpecific: {
+      'ui:order': ['location', 'subscriptionId', '*'],
     },
   },
 };
@@ -166,8 +200,14 @@ export const getDefaultFormData = (
   organization: string
 ) => {
   switch (schema) {
-    case PrototypeProviders.AWS:
     case PrototypeProviders.AZURE:
+      return {
+        metadata: {
+          name: generateUID(5),
+          organization,
+        },
+      };
+    case PrototypeProviders.AWS:
     case PrototypeProviders.GCP:
       return {
         clusterName: generateUID(5),
