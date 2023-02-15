@@ -2,6 +2,7 @@ import { getInputProps, WidgetProps } from '@rjsf/utils';
 import React from 'react';
 import NumberPicker from 'UI/Inputs/NumberPicker';
 import TextArea from 'UI/Inputs/TextArea';
+import TextInput from 'UI/Inputs/TextInput';
 
 const BaseInputTemplate: React.FC<WidgetProps> = ({
   id,
@@ -52,7 +53,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
       onChange={handleNumberChange}
       onBlur={handleBlur}
     />
-  ) : (
+  ) : inputProps.type === 'text' ? (
     <TextArea
       id={id}
       value={value ?? ''}
@@ -65,6 +66,18 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
       spellCheck={false}
       resize={false}
       autoResizeHeight={true}
+      {...inputProps}
+    />
+  ) : (
+    <TextInput
+      id={id}
+      value={value ?? ''}
+      placeholder={placeholder}
+      disabled={disabled}
+      readOnly={readonly}
+      required={required}
+      onChange={handleChange}
+      onBlur={handleBlur}
       {...inputProps}
     />
   );
