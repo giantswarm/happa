@@ -8,14 +8,18 @@ import CheckboxWidget from './CheckboxWidget';
 import ErrorListTemplate from './ErrorListTemplate';
 import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
+import MultiSchemaField from './MultiSchemaField';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
 import { mapErrorPropertyToField, transformErrors } from './utils';
 
-const customFields = {};
+const customFields = {
+  OneOfField: MultiSchemaField,
+  AnyOfField: MultiSchemaField,
+};
 const customWidgets = {
-  checkbox: CheckboxWidget,
-  select: SelectWidget,
+  CheckboxWidget,
+  SelectWidget,
 };
 const customTemplates = {
   ArrayFieldTemplate,
