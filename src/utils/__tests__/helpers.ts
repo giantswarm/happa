@@ -1,3 +1,4 @@
+import { RJSFSchema } from '@rjsf/utils';
 import {
   clustersForOrg,
   compareDates,
@@ -11,6 +12,7 @@ import {
   isJwtExpired,
   makeKubeConfigTextFile,
   toTitleCase,
+  traverseJSONSchemaObject,
   truncate,
   validateOrRaise,
 } from 'utils/helpers';
@@ -691,6 +693,255 @@ token: can't be blank`)
           attempt.result
         );
       }
+    });
+  });
+
+  describe('traverseJSONSchemaObject', () => {
+    it('performs specified action for an object', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        title: 'object title',
+      };
+
+      const expected = {
+        type: 'object',
+        title: 'OBJECT TITLE',
+      };
+
+      expect(
+        traverseJSONSchemaObject(
+          schema,
+          (obj) => (obj.title = obj.title?.toUpperCase())
+        )
+      ).toStrictEqual(expected);
+    });
+
+    it('recursively performs specified action for each property of an object', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        title: 'object title',
+        properties: {
+          firstProp: {
+            type: 'object',
+            title: 'first prop title',
+          },
+          secondProp: {
+            type: 'object',
+            title: 'second prop title',
+            properties: {
+              firstProp: {
+                type: 'object',
+                title: 'first prop title',
+              },
+            },
+          },
+        },
+      };
+
+      const expected = {
+        type: 'object',
+        title: 'OBJECT TITLE',
+        properties: {
+          firstProp: {
+            type: 'object',
+            title: 'FIRST PROP TITLE',
+          },
+          secondProp: {
+            type: 'object',
+            title: 'SECOND PROP TITLE',
+            properties: {
+              firstProp: {
+                type: 'object',
+                title: 'FIRST PROP TITLE',
+              },
+            },
+          },
+        },
+      };
+
+      expect(
+        traverseJSONSchemaObject(
+          schema,
+          (obj) => (obj.title = obj.title?.toUpperCase())
+        )
+      ).toStrictEqual(expected);
+    });
+
+    it('performs specified action for an array', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        title: 'array title',
+      };
+
+      const expected = {
+        type: 'array',
+        title: 'ARRAY TITLE',
+      };
+
+      expect(
+        traverseJSONSchemaObject(
+          schema,
+          (obj) => (obj.title = obj.title?.toUpperCase())
+        )
+      ).toStrictEqual(expected);
+    });
+
+    it('performs specified action for array items object', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        title: 'array title',
+        items: {
+          type: 'object',
+          title: 'object title',
+          properties: {
+            firstProp: {
+              type: 'object',
+              title: 'first prop title',
+            },
+            secondProp: {
+              type: 'object',
+              title: 'second prop title',
+            },
+          },
+        },
+      };
+
+      const expected = {
+        type: 'array',
+        title: 'ARRAY TITLE',
+        items: {
+          type: 'object',
+          title: 'OBJECT TITLE',
+          properties: {
+            firstProp: {
+              type: 'object',
+              title: 'FIRST PROP TITLE',
+            },
+            secondProp: {
+              type: 'object',
+              title: 'SECOND PROP TITLE',
+            },
+          },
+        },
+      };
+
+      expect(
+        traverseJSONSchemaObject(
+          schema,
+          (obj) => (obj.title = obj.title?.toUpperCase())
+        )
+      ).toStrictEqual(expected);
+    });
+
+    it('performs specified action for each subschema of anyOf property', () => {
+      const schema: RJSFSchema = {
+        title: 'object title',
+        anyOf: [
+          {
+            type: 'string',
+            title: 'first subschema title',
+          },
+          {
+            type: 'integer',
+            title: 'second subschema title',
+          },
+        ],
+      };
+
+      const expected = {
+        title: 'OBJECT TITLE',
+        anyOf: [
+          {
+            type: 'string',
+            title: 'FIRST SUBSCHEMA TITLE',
+          },
+          {
+            type: 'integer',
+            title: 'SECOND SUBSCHEMA TITLE',
+          },
+        ],
+      };
+
+      expect(
+        traverseJSONSchemaObject(
+          schema,
+          (obj) => (obj.title = obj.title?.toUpperCase())
+        )
+      ).toStrictEqual(expected);
+    });
+
+    it('performs specified action for each subschema of oneOf property', () => {
+      const schema: RJSFSchema = {
+        title: 'object title',
+        oneOf: [
+          {
+            type: 'string',
+            title: 'first subschema title',
+          },
+          {
+            type: 'integer',
+            title: 'second subschema title',
+          },
+        ],
+      };
+
+      const expected = {
+        title: 'OBJECT TITLE',
+        oneOf: [
+          {
+            type: 'string',
+            title: 'FIRST SUBSCHEMA TITLE',
+          },
+          {
+            type: 'integer',
+            title: 'SECOND SUBSCHEMA TITLE',
+          },
+        ],
+      };
+
+      expect(
+        traverseJSONSchemaObject(
+          schema,
+          (obj) => (obj.title = obj.title?.toUpperCase())
+        )
+      ).toStrictEqual(expected);
+    });
+
+    it('performs specified action for each subschema of allOf property', () => {
+      const schema: RJSFSchema = {
+        title: 'object title',
+        allOf: [
+          {
+            type: 'string',
+            title: 'first subschema title',
+          },
+          {
+            type: 'integer',
+            title: 'second subschema title',
+          },
+        ],
+      };
+
+      const expected = {
+        title: 'OBJECT TITLE',
+        allOf: [
+          {
+            type: 'string',
+            title: 'FIRST SUBSCHEMA TITLE',
+          },
+          {
+            type: 'integer',
+            title: 'SECOND SUBSCHEMA TITLE',
+          },
+        ],
+      };
+
+      expect(
+        traverseJSONSchemaObject(
+          schema,
+          (obj) => (obj.title = obj.title?.toUpperCase())
+        )
+      ).toStrictEqual(expected);
     });
   });
 });
