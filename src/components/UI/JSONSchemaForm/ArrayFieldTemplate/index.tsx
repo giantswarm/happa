@@ -29,6 +29,7 @@ const ArrayFieldTemplate: React.FC<
   onAddClick,
   idSchema,
   formContext = {} as IFormContext,
+  schema,
 }) => {
   const getArrayItemFieldIdFn = useMemo(() => {
     return (idx: number) => {
@@ -101,6 +102,7 @@ const ArrayFieldTemplate: React.FC<
               key,
               onDropIndexClick,
               onReorderClick,
+              hasRemove,
               ...itemProps
             }: ArrayFieldTemplateItemType) => (
               <ArrayFieldItem
@@ -111,6 +113,7 @@ const ArrayFieldTemplate: React.FC<
                 onReorderClick={(oldidx, newIdx) =>
                   handleReorder(oldidx, newIdx, onReorderClick(oldidx, newIdx))
                 }
+                hasRemove={items.length > (schema?.minItems ?? 0)}
                 {...itemProps}
               />
             )

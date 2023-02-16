@@ -114,19 +114,17 @@ const ArrayFieldItemActions: React.FC<ArrayFieldItemActionsProps> = ({
                     )}
                   </li>
                 )}
-                {hasRemove && (
-                  <li>
-                    {disabled ? (
-                      <DisabledLink role='button' aria-disabled={true}>
-                        <Text>Delete item</Text>
-                      </DisabledLink>
-                    ) : (
-                      <Link href='#' onClick={onDropClick}>
-                        <Text color='status-critical'>Delete item</Text>
-                      </Link>
-                    )}
-                  </li>
-                )}
+                <li>
+                  {hasRemove ? (
+                    <Link href='#' onClick={onDropClick}>
+                      <Text color='status-critical'>Delete item</Text>
+                    </Link>
+                  ) : (
+                    <DisabledLink role='button' aria-disabled={true}>
+                      <Text>Delete item</Text>
+                    </DisabledLink>
+                  )}
+                </li>
               </StyledList>
             </Keyboard>
           )}

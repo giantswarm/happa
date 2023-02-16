@@ -1,4 +1,6 @@
 import { GenericObjectType, UiSchema } from '@rjsf/utils';
+import cleanDeep, { CleanOptions } from 'clean-deep';
+import { isEmpty, isPlainObject, transform } from 'lodash';
 import { generateUID } from 'MAPI/utils';
 import { compare } from 'utils/semver';
 import { VersionImpl } from 'utils/Version';
@@ -28,17 +30,51 @@ const uiSchemaProviderAzure: Record<string, GenericObjectType> = {
   0: {
     'ui:options': {
       order: [
-        'clusterName',
-        'clusterDescription',
-        'organization',
+        'metadata',
+        'providerSpecific',
         'controlPlane',
+        'connectivity',
+        'nodePools',
+        'machineDeployments',
+        'kubernetesVersion',
+        'includeClusterResourceSet',
         '*',
       ],
     },
-    clusterName: {
-      'ui:options': {
-        widget: ClusterNameWidget,
+    connectivity: {
+      'ui:order': ['sshSSOPublicKey', '*'],
+      network: {
+        'ui:order': ['hostCidr', 'podCidr', 'serviceCidr', 'mode', '*'],
       },
+    },
+    controlPlane: {
+      'ui:order': [
+        'instanceType',
+        'replicas',
+        'rootVolumeSizeGB',
+        'etcdVolumeSizeGB',
+        '*',
+      ],
+      oidc: {
+        'ui:order': ['issuerUrl', 'clientId', '*'],
+      },
+    },
+    metadata: {
+      'ui:order': ['name', 'description', '*'],
+      name: {
+        'ui:options': {
+          widget: ClusterNameWidget,
+        },
+      },
+      organization: {
+        'ui:widget': 'hidden',
+        'ui:options': {
+          label: false,
+        },
+      },
+    },
+    providerSpecific: {
+      'ui:order': ['location', 'subscriptionId', '*'],
     },
   },
 };
@@ -164,8 +200,14 @@ export const getDefaultFormData = (
   organization: string
 ) => {
   switch (schema) {
-    case PrototypeProviders.AWS:
     case PrototypeProviders.AZURE:
+      return {
+        metadata: {
+          name: generateUID(5),
+          organization,
+        },
+      };
+    case PrototypeProviders.AWS:
     case PrototypeProviders.GCP:
       return {
         clusterName: generateUID(5),
@@ -212,4 +254,55 @@ export function getUiSchema(
   // fallback to latest version if version specified by schema does
   // not have a corresponding ui schema
   return uiSchema[majorVersion] ?? uiSchema[latestVersion];
+}
+
+export function cleanDeepWithException<T>(
+  object: Iterable<T> | unknown,
+  options?: CleanOptions,
+  isException?: (value: unknown) => boolean
+): Iterable<T> | unknown {
+  const {
+    emptyArrays = true,
+    emptyObjects = true,
+    undefinedValues = true,
+  } = options ?? {};
+
+  return transform(
+    object as unknown[],
+    (result: Record<string | number, unknown>, value, key) => {
+      // if it matches the exception rule, don't continue to clean
+      if (isException && isException(value)) {
+        result[key] = value;
+
+        return;
+      }
+
+      let newValue = value;
+      if (Array.isArray(value) || isPlainObject(value)) {
+        newValue = cleanDeepWithException<unknown>(value, options, isException);
+        if (
+          ((isPlainObject(newValue) && emptyObjects) ||
+            (Array.isArray(newValue) && emptyArrays)) &&
+          isEmpty(newValue)
+        ) {
+          return;
+        }
+      } else {
+        newValue =
+          value !== 0 && !value ? cleanDeep({ value }, options).value : value;
+        if (
+          newValue === undefined &&
+          (value !== undefined || undefinedValues)
+        ) {
+          return;
+        }
+      }
+
+      if (Array.isArray(result)) {
+        result.push(newValue);
+      } else {
+        result[key] = newValue;
+      }
+    }
+  );
 }

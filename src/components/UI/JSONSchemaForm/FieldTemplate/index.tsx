@@ -38,12 +38,11 @@ function getChildErrorsForField(formContext: IFormContext, id: string) {
       errorPropertyAsField.includes(
         `${id}${formContext.idConfigs.idSeparator}`
       ) &&
-      (isTouchedField(
+      isTouchedField(
         errorPropertyAsField,
         formContext.touchedFields,
         formContext.idConfigs.idSeparator
-      ) ||
-        formContext.showAllErrors)
+      )
     );
   });
 }
@@ -79,15 +78,15 @@ const FieldTemplate: React.FC<
   const isRootItem = id === idPrefix;
   const isArrayItem = isFieldArrayItem(id, idSeparator);
 
-  const showErrors = useMemo(() => {
-    if (formContext.showAllErrors) return true;
-
-    return isTouchedField(
-      id,
-      formContext.touchedFields,
-      formContext.idConfigs.idSeparator
-    );
-  }, [formContext, id]);
+  const showErrors = useMemo(
+    () =>
+      isTouchedField(
+        id,
+        formContext.touchedFields,
+        formContext.idConfigs.idSeparator
+      ),
+    [formContext, id]
+  );
 
   const error = rawErrors && showErrors ? errors : undefined;
 

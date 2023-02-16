@@ -41,6 +41,7 @@ import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import RoutePath from 'utils/routePath';
 
 import {
+  cleanDeepWithException,
   getDefaultFormData,
   getUiSchema,
   PrototypeProviders,
@@ -290,7 +291,16 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   const handleFormDataChange = ({
     formData: data,
   }: IChangeEvent<RJSFSchema>) => {
-    setFormData(data);
+    if (!data) {
+      return;
+    }
+    setFormData(
+      cleanDeepWithException<RJSFSchema>(
+        data,
+        { emptyStrings: false },
+        (value) => Array.isArray(value) && value.length > 0
+      ) as RJSFSchema
+    );
   };
 
   const handleCreation = (
