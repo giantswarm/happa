@@ -239,6 +239,11 @@
                     "title": "String",
                     "type": "string"
                 },
+                "stringLong": {
+                    "description": "Here's a string field with a very long title and a very long description. Notice how long the title and the description for this string field is. The title and the description for this string field are both significantly longer than the title and the description for the other fields in this form.",
+                    "title": "String field with a very long title and a very long description that require special handling and treatment so that its display in the form is optimized",
+                    "type": "string"
+                },
                 "stringCustomLabels": {
                     "description": "String field with enumerated values and custom labels.",
                     "oneOf": [
