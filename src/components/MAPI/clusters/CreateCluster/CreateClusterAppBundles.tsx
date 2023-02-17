@@ -271,7 +271,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'>
   >(getFormProps(selectedSchema, version, organizationID));
 
-  const cleanFormData = cleanDeep(formProps?.formData, { emptyStrings: false });
+  const cleanFormData = cleanDeep(formProps.formData, { emptyStrings: false });
 
   const resetForm = (newSchema: PrototypeSchemas) => {
     setFormProps(getFormProps(newSchema, version, organizationID));
@@ -394,9 +394,9 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                 <>
                   <JSONSchemaForm
                     schema={appSchema}
-                    uiSchema={formProps?.uiSchema}
+                    uiSchema={formProps.uiSchema}
                     validator={validator}
-                    formData={formProps?.formData}
+                    formData={formProps.formData}
                     showErrorList='bottom'
                     onSubmit={handleCreation}
                     onChange={handleFormDataChange}
@@ -417,7 +417,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                       </Box>
                     </Box>
                   </JSONSchemaForm>
-                  {formProps?.formData !== undefined && (
+                  {formProps.formData !== undefined && (
                     <Box margin={{ top: 'large' }} width={{ max: 'large' }}>
                       <Text weight='bold'>Form data preview</Text>
                       <Box
