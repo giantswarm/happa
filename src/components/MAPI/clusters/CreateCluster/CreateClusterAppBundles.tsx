@@ -1,4 +1,4 @@
-import { IChangeEvent } from '@rjsf/core';
+import { FormProps, IChangeEvent } from '@rjsf/core';
 import { EnumOptionsType, RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Ajv2020 from 'ajv/dist/2020';
@@ -42,8 +42,7 @@ import RoutePath from 'utils/routePath';
 
 import {
   cleanDeepWithException,
-  getDefaultFormData,
-  getUiSchema,
+  getFormProps,
   preprocessSchema,
   PrototypeProviders,
   prototypeProviders,
@@ -262,15 +261,20 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   const appSchemaIsLoading =
     appSchema === undefined && providerSchemaError === undefined;
 
-  const [formData, setFormData] = useState<RJSFSchema | undefined>(
-    getDefaultFormData(selectedSchema, organizationID)
-  );
-  const formDataKey = useRef<number | undefined>(undefined);
-  const cleanFormData = cleanDeep(formData, { emptyStrings: false });
+  // TODO: replace when we use app version instead of branch name
+  const version =
+    selectedBranch && selectedBranch.startsWith('release-')
+      ? selectedBranch.replace('release-', '').replace('x', '0')
+      : 'v0.0.0';
 
-  const resetFormData = (newSchema: PrototypeSchemas) => {
-    setFormData(getDefaultFormData(newSchema, organizationID));
-    formDataKey.current = Date.now();
+  const [formProps, setFormProps] = useState<
+    Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'>
+  >(getFormProps(selectedSchema, version, organizationID));
+
+  const cleanFormData = cleanDeep(formProps?.formData, { emptyStrings: false });
+
+  const resetForm = (newSchema: PrototypeSchemas) => {
+    setFormProps(getFormProps(newSchema, version, organizationID));
   };
 
   const handleSelectedSchemaChange = (option: EnumOptionsType) => {
@@ -280,14 +284,14 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     setSelectedBranch(
       newProvider ? getDefaultRepoBranch(newProvider) : undefined
     );
-    resetFormData(newSchema);
+    resetForm(newSchema);
   };
 
   const handleSelectedBranchChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setSelectedBranch(e.target.value);
-    resetFormData(selectedSchema);
+    resetForm(selectedSchema);
   };
 
   const handleFormDataChange = ({
@@ -296,13 +300,16 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     if (!data) {
       return;
     }
-    setFormData(
-      cleanDeepWithException<RJSFSchema>(
-        data,
-        { emptyStrings: false },
-        (value) => Array.isArray(value) && value.length > 0
-      ) as RJSFSchema
-    );
+    setFormProps((prev) => {
+      return {
+        ...prev,
+        formData: cleanDeepWithException<RJSFSchema>(
+          data,
+          { emptyStrings: false },
+          (value) => Array.isArray(value) && value.length > 0
+        ) as RJSFSchema,
+      };
+    });
   };
 
   const handleCreation = (
@@ -321,17 +328,6 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
 
   const [formDataPreviewFormat, setFormDataPreviewFormat] =
     useState<FormDataPreviewFormat>(FormDataPreviewFormat.Json);
-
-  // TODO: replace when we use app version instead of branch name
-  const version =
-    selectedBranch && selectedBranch.startsWith('release-')
-      ? selectedBranch.replace('release-', '').replace('x', '0')
-      : 'v0.0.0';
-
-  const uiSchema = useMemo(
-    () => getUiSchema(selectedSchema, version),
-    [version, selectedSchema]
-  );
 
   return (
     <Breadcrumb
@@ -389,7 +385,6 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
               </Wrapper>
             )}
             {!appSchemaIsLoading &&
-              typeof providerSchemaError === 'undefined' &&
               (typeof appSchema === 'undefined' ? (
                 <Text>
                   No <code>values.schema.json</code> file found for the selected
@@ -399,13 +394,12 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                 <>
                   <JSONSchemaForm
                     schema={appSchema}
-                    uiSchema={uiSchema}
+                    uiSchema={formProps?.uiSchema}
                     validator={validator}
-                    formData={formData}
+                    formData={formProps?.formData}
                     showErrorList='bottom'
                     onSubmit={handleCreation}
                     onChange={handleFormDataChange}
-                    key={formDataKey.current}
                   >
                     <Box margin={{ vertical: 'medium' }}>
                       <Box direction='row' gap='small'>
@@ -423,7 +417,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                       </Box>
                     </Box>
                   </JSONSchemaForm>
-                  {formData !== undefined && (
+                  {formProps?.formData !== undefined && (
                     <Box margin={{ top: 'large' }} width={{ max: 'large' }}>
                       <Text weight='bold'>Form data preview</Text>
                       <Box
