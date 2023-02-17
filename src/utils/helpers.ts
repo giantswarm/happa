@@ -550,10 +550,9 @@ export function traverseJSONSchemaObject(
         }
       }
       break;
-
-    default:
-      processFn(obj);
   }
+
+  processFn(obj);
 
   return obj;
 }

@@ -44,6 +44,7 @@ import {
   cleanDeepWithException,
   getDefaultFormData,
   getUiSchema,
+  preprocessSchema,
   PrototypeProviders,
   prototypeProviders,
   PrototypeSchemas,
@@ -253,9 +254,10 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     }
   }, [providerSchemaError]);
 
-  const appSchema = selectedProvider
+  const rawSchema = selectedProvider
     ? providerSchema
     : (testSchema as RJSFSchema);
+  const appSchema = rawSchema && preprocessSchema(rawSchema);
 
   const appSchemaIsLoading =
     appSchema === undefined && providerSchemaError === undefined;

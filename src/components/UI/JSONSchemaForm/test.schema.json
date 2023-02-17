@@ -125,16 +125,16 @@
                 "oneOf": {
                     "properties": {
                         "stringPatternOrEmpty": {
-                            "description": "Value must either match a pattern ^[a-z]$ or be empty.",
+                            "description": "Value must match one of the patterns - ^[a-z]$ or ^[0-9]$.",
                             "oneOf": [
                                 {
                                     "pattern": "^[a-z]$"
                                 },
                                 {
-                                    "const": ""
+                                    "pattern": "^[0-9]$"
                                 }
                             ],
-                            "title": "String matching pattern or empty",
+                            "title": "String matching multiple patterns",
                             "type": "string"
                         }
                     },
