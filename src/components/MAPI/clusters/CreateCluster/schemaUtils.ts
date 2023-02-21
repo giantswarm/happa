@@ -300,8 +300,20 @@ export function cleanDeepWithException<T>(
   );
 }
 
-export function preprocessSchema(schema: RJSFSchema): RJSFSchema {
-  const processSubschemas = (obj: RJSFSchema) => {
+export function preprocessSchema(
+  schema: RJSFSchema,
+  fieldsToRemove: string[] = ['.internal']
+): RJSFSchema {
+  const processSubschemas = (obj: RJSFSchema, path?: string | null) => {
+    for (const field of fieldsToRemove) {
+      const fieldParentPath = field.slice(0, field.lastIndexOf('.'));
+      const fieldKey = field.slice(field.lastIndexOf('.') + 1);
+
+      if (fieldParentPath === path) {
+        delete obj.properties?.[fieldKey];
+      }
+    }
+
     // If the type is not defined and the schema uses 'anyOf' or 'oneOf',
     // use first not deprecated subschema from the list
     if (!obj.type && (obj.anyOf || obj.oneOf)) {
