@@ -1,4 +1,5 @@
-import { GenericObjectType, RJSFSchema, UiSchema } from '@rjsf/utils';
+import { FormProps } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import cleanDeep, { CleanOptions } from 'clean-deep';
 import { isEmpty, isPlainObject, transform } from 'lodash';
 import { generateUID } from 'MAPI/utils';
@@ -7,173 +8,6 @@ import { compare } from 'utils/semver';
 import { VersionImpl } from 'utils/Version';
 
 import ClusterNameWidget from './ClusterNameWidget';
-
-const uiSchemaProviderAWS: Record<string, GenericObjectType> = {
-  0: {
-    'ui:options': {
-      order: [
-        'clusterName',
-        'clusterDescription',
-        'organization',
-        'controlPlane',
-        '*',
-      ],
-    },
-    clusterName: {
-      'ui:options': {
-        widget: ClusterNameWidget,
-      },
-    },
-  },
-};
-
-const uiSchemaProviderAzure: Record<string, GenericObjectType> = {
-  0: {
-    'ui:options': {
-      order: [
-        'metadata',
-        'providerSpecific',
-        'controlPlane',
-        'connectivity',
-        'nodePools',
-        'machineDeployments',
-        'kubernetesVersion',
-        'includeClusterResourceSet',
-        '*',
-      ],
-    },
-    connectivity: {
-      'ui:order': ['sshSSOPublicKey', '*'],
-      network: {
-        'ui:order': ['hostCidr', 'podCidr', 'serviceCidr', 'mode', '*'],
-      },
-    },
-    controlPlane: {
-      'ui:order': [
-        'instanceType',
-        'replicas',
-        'rootVolumeSizeGB',
-        'etcdVolumeSizeGB',
-        '*',
-      ],
-      oidc: {
-        'ui:order': ['issuerUrl', 'clientId', '*'],
-      },
-    },
-    metadata: {
-      'ui:order': ['name', 'description', '*'],
-      name: {
-        'ui:options': {
-          widget: ClusterNameWidget,
-        },
-      },
-      organization: {
-        'ui:widget': 'hidden',
-        'ui:options': {
-          label: false,
-        },
-      },
-    },
-    providerSpecific: {
-      'ui:order': ['location', 'subscriptionId', '*'],
-    },
-  },
-};
-
-const uiSchemaProviderCloudDirector: Record<string, GenericObjectType> = {
-  0: {
-    'ui:options': {
-      order: [
-        'clusterDescription',
-        'cluster',
-        'organization',
-        'controlPlane',
-        '*',
-      ],
-    },
-  },
-};
-
-const uiSchemaProviderGCP: Record<string, GenericObjectType> = {
-  0: {
-    'ui:options': {
-      order: [
-        'clusterName',
-        'clusterDescription',
-        'organization',
-        'controlPlane',
-        '*',
-      ],
-    },
-    clusterName: {
-      'ui:options': {
-        widget: ClusterNameWidget,
-      },
-    },
-  },
-};
-
-const uiSchemaProviderVSphere: Record<string, GenericObjectType> = {
-  0: {
-    'ui:options': {
-      order: ['cluster', 'controlPlane', '*'],
-    },
-    cluster: {
-      'ui:options': {
-        order: ['name', 'organization', '*'],
-      },
-      name: {
-        'ui:options': {
-          widget: ClusterNameWidget,
-        },
-      },
-    },
-  },
-};
-
-const uiSchemaTestSchema: Record<string, GenericObjectType> = {
-  0: {
-    'ui:options': {
-      order: [
-        'stringFields',
-        'numericFields',
-        'booleanFields',
-        'objectFields',
-        'arrayFields',
-        '*',
-      ],
-    },
-    numericFields: {
-      'ui:options': {
-        order: ['integer', 'integerLimit', '*'],
-      },
-    },
-    stringFields: {
-      'ui:options': {
-        order: [
-          'string',
-          'stringEnum',
-          'stringCustomLabels',
-          'stringLength',
-          'stringFormat',
-          'stringPattern',
-          '*',
-        ],
-      },
-    },
-    arrayFields: {
-      'ui:options': {
-        order: [
-          'arrayOfStrings',
-          'arrayOfObjects',
-          'arrayOfObjectsWithTitle',
-          'arrayMinMaxItems',
-          '*',
-        ],
-      },
-    },
-  },
-};
 
 export enum PrototypeProviders {
   AWS = 'aws',
@@ -196,65 +30,223 @@ export const prototypeSchemas = [
   ...prototypeProviders,
 ];
 
-export const getDefaultFormData = (
-  schema: PrototypeSchemas,
-  organization: string
-) => {
-  switch (schema) {
-    case PrototypeProviders.AZURE:
+interface FormPropsPartial {
+  uiSchema: UiSchema;
+  formData: (organization: string) => RJSFSchema;
+}
+
+const formPropsProviderAWS: Record<string, FormPropsPartial> = {
+  0: {
+    uiSchema: {
+      'ui:order': [
+        'clusterName',
+        'clusterDescription',
+        'organization',
+        'controlPlane',
+        '*',
+      ],
+
+      clusterName: {
+        'ui:widget': ClusterNameWidget,
+      },
+    },
+    formData: (organization) => {
+      return {
+        clusterName: generateUID(5),
+        organization,
+      };
+    },
+  },
+};
+
+const formPropsProviderAzure: Record<string, FormPropsPartial> = {
+  0: {
+    uiSchema: {
+      'ui:order': [
+        'metadata',
+        'providerSpecific',
+        'controlPlane',
+        'connectivity',
+        'nodePools',
+        'machineDeployments',
+        'kubernetesVersion',
+        'includeClusterResourceSet',
+        '*',
+      ],
+      connectivity: {
+        'ui:order': ['sshSSOPublicKey', '*'],
+        network: {
+          'ui:order': ['hostCidr', 'podCidr', 'serviceCidr', 'mode', '*'],
+        },
+      },
+      controlPlane: {
+        'ui:order': [
+          'instanceType',
+          'replicas',
+          'rootVolumeSizeGB',
+          'etcdVolumeSizeGB',
+          '*',
+        ],
+        oidc: {
+          'ui:order': ['issuerUrl', 'clientId', '*'],
+        },
+      },
+      metadata: {
+        'ui:order': ['name', 'description', '*'],
+        name: {
+          'ui:widget': ClusterNameWidget,
+        },
+        organization: {
+          'ui:label': false,
+          'ui:widget': 'hidden',
+        },
+      },
+      providerSpecific: {
+        'ui:order': ['location', 'subscriptionId', '*'],
+      },
+    },
+    formData: (organization) => {
       return {
         metadata: {
           name: generateUID(5),
           organization,
         },
       };
-    case PrototypeProviders.AWS:
-    case PrototypeProviders.GCP:
+    },
+  },
+};
+
+const formPropsProviderCloudDirector: Record<string, FormPropsPartial> = {
+  0: {
+    uiSchema: {
+      'ui:order': [
+        'clusterDescription',
+        'cluster',
+        'organization',
+        'controlPlane',
+        '*',
+      ],
+    },
+    formData: (organization) => {
+      return {
+        organization,
+      };
+    },
+  },
+};
+
+const formPropsProviderGCP: Record<string, FormPropsPartial> = {
+  0: {
+    uiSchema: {
+      'ui:order': [
+        'clusterName',
+        'clusterDescription',
+        'organization',
+        'controlPlane',
+        '*',
+      ],
+      clusterName: {
+        'ui:widget': ClusterNameWidget,
+      },
+    },
+    formData: (organization) => {
       return {
         clusterName: generateUID(5),
         organization,
       };
+    },
+  },
+};
 
-    case PrototypeProviders.CLOUDDIRECTOR:
-      return {
-        organization,
-      };
-
-    case PrototypeProviders.VSPHERE:
+const formPropsProviderVSphere: Record<string, FormPropsPartial> = {
+  0: {
+    uiSchema: {
+      'ui:order': ['cluster', 'controlPlane', '*'],
+      cluster: {
+        'ui:order': ['name', 'organization', '*'],
+        name: {
+          'ui:widget': ClusterNameWidget,
+        },
+      },
+    },
+    formData: (organization: string) => {
       return {
         cluster: {
           name: generateUID(5),
           organization,
         },
       };
+    },
+  },
+};
 
-    default:
+const formPropsTest: Record<string, FormPropsPartial> = {
+  0: {
+    uiSchema: {
+      'ui:order': [
+        'stringFields',
+        'numericFields',
+        'booleanFields',
+        'objectFields',
+        'arrayFields',
+        '*',
+      ],
+      numericFields: {
+        'ui:order': ['integer', 'integerLimit', '*'],
+      },
+      stringFields: {
+        'ui:order': [
+          'string',
+          'stringEnum',
+          'stringCustomLabels',
+          'stringLength',
+          'stringFormat',
+          'stringPattern',
+          '*',
+        ],
+      },
+      arrayFields: {
+        'ui:order': [
+          'arrayOfStrings',
+          'arrayOfObjects',
+          'arrayOfObjectsWithTitle',
+          'arrayMinMaxItems',
+          '*',
+        ],
+      },
+    },
+    formData: (_organization) => {
       return {};
-  }
+    },
+  },
 };
 
-const uiSchemaForSchema: Record<PrototypeSchemas, UiSchema> = {
-  [PrototypeProviders.AWS]: uiSchemaProviderAWS,
-  [PrototypeProviders.AZURE]: uiSchemaProviderAzure,
-  [PrototypeProviders.CLOUDDIRECTOR]: uiSchemaProviderCloudDirector,
-  [PrototypeProviders.GCP]: uiSchemaProviderGCP,
-  [PrototypeProviders.VSPHERE]: uiSchemaProviderVSphere,
-  [TestSchema.TEST]: uiSchemaTestSchema,
+const formPropsByProvider: Record<
+  PrototypeSchemas,
+  Record<string, FormPropsPartial>
+> = {
+  [PrototypeProviders.AZURE]: formPropsProviderAzure,
+  [PrototypeProviders.AWS]: formPropsProviderAWS,
+  [PrototypeProviders.CLOUDDIRECTOR]: formPropsProviderCloudDirector,
+  [PrototypeProviders.GCP]: formPropsProviderGCP,
+  [PrototypeProviders.VSPHERE]: formPropsProviderVSphere,
+  [TestSchema.TEST]: formPropsTest,
 };
 
-export function getUiSchema(
+export function getFormProps(
   schema: PrototypeSchemas,
-  version: string
-): UiSchema {
+  version: string,
+  organization: string
+): Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'> {
+  const formPropsByVersions = formPropsByProvider[schema];
+
   const majorVersion = new VersionImpl(version.slice(1)).getMajor();
+  const latestVersion = Object.keys(formPropsByVersions).sort(compare)[0];
 
-  const uiSchema = uiSchemaForSchema[schema];
+  const props =
+    formPropsByVersions[majorVersion] ?? formPropsByVersions[latestVersion];
 
-  const latestVersion = Object.keys(uiSchema).sort(compare)[0];
-
-  // fallback to latest version if version specified by schema does
-  // not have a corresponding ui schema
-  return uiSchema[majorVersion] ?? uiSchema[latestVersion];
+  return { uiSchema: props.uiSchema, formData: props.formData(organization) };
 }
 
 export function cleanDeepWithException<T>(
