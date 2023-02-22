@@ -1,6 +1,16 @@
 import { BoundFunction, Queries, queries } from '@testing-library/react';
 
-type BoundQuery<Q extends Queries = typeof queries> = BoundFunction<Q[keyof Q]>;
+type BoundQuery<
+  Q extends Queries = Omit<
+    typeof queries,
+    | 'getByRole'
+    | 'getAllByRole'
+    | 'queryByRole'
+    | 'queryAllByRole'
+    | 'findByRole'
+    | 'findAllByRole'
+  >
+> = BoundFunction<Q[keyof Q]>;
 
 /**
  * Decorate an existing query to match text across multiple
