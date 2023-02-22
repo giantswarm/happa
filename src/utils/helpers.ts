@@ -497,32 +497,42 @@ export function isValidURL(str: string): boolean {
  * Traverses a JSON schema object recursively
  * @param obj
  * @param processFn
+ * @param path
  * @returns obj
  */
 // eslint-disable-next-line complexity
 export function traverseJSONSchemaObject(
   obj: RJSFSchema,
-  processFn: (obj: RJSFSchema) => void
+  processFn: (obj: RJSFSchema, path?: string | null) => void,
+  path: string = ''
 ): Record<string, unknown> {
   switch (true) {
     case obj.type === 'object' &&
       obj.properties &&
       typeof obj.properties === 'object':
-      for (const value of Object.values(
+      for (const [k, v] of Object.entries(
         obj.properties as Record<string, unknown>
       )) {
-        traverseJSONSchemaObject(value as Record<string, unknown>, processFn);
+        traverseJSONSchemaObject(
+          v as Record<string, unknown>,
+          processFn,
+          `${path}.${k}`
+        );
       }
       break;
 
     case obj.type === 'array' && obj.items && typeof obj.items === 'object':
-      traverseJSONSchemaObject(obj.items as Record<string, unknown>, processFn);
+      traverseJSONSchemaObject(
+        obj.items as Record<string, unknown>,
+        processFn,
+        `${path}.items`
+      );
       break;
 
     case obj.type === 'array' && Array.isArray(obj.items):
       for (const x of obj.items as Record<string, unknown>[]) {
         if (typeof x === 'object') {
-          traverseJSONSchemaObject(x, processFn);
+          traverseJSONSchemaObject(x, processFn, `${path}.items`);
         }
       }
       break;
@@ -530,7 +540,7 @@ export function traverseJSONSchemaObject(
     case obj.anyOf !== undefined:
       for (const x of obj.anyOf!) {
         if (typeof x === 'object') {
-          traverseJSONSchemaObject(x, processFn);
+          traverseJSONSchemaObject(x, processFn, path);
         }
       }
       break;
@@ -538,7 +548,7 @@ export function traverseJSONSchemaObject(
     case obj.allOf !== undefined:
       for (const x of obj.allOf!) {
         if (typeof x === 'object') {
-          traverseJSONSchemaObject(x, processFn);
+          traverseJSONSchemaObject(x, processFn, path);
         }
       }
       break;
@@ -546,13 +556,13 @@ export function traverseJSONSchemaObject(
     case obj.oneOf !== undefined:
       for (const x of obj.oneOf!) {
         if (typeof x === 'object') {
-          traverseJSONSchemaObject(x, processFn);
+          traverseJSONSchemaObject(x, processFn, path);
         }
       }
       break;
   }
 
-  processFn(obj);
+  processFn(obj, path);
 
   return obj;
 }

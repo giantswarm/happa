@@ -256,7 +256,11 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   const rawSchema = selectedProvider
     ? providerSchema
     : (testSchema as RJSFSchema);
-  const appSchema = rawSchema && preprocessSchema(rawSchema);
+  const appSchema = useMemo(() => {
+    if (!rawSchema) return undefined;
+
+    return preprocessSchema(rawSchema);
+  }, [rawSchema]);
 
   const appSchemaIsLoading =
     appSchema === undefined && providerSchemaError === undefined;
