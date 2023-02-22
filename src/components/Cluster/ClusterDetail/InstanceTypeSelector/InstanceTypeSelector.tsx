@@ -29,6 +29,8 @@ interface IInstanceTypeSelector {
   selectInstanceType(instanceType: string): void;
 
   selectedInstanceType: string;
+  allowEmptyValue?: boolean;
+  emptyValueName?: string;
 }
 
 const SelectedInstanceTypeItem = styled(SelectedItem)`
@@ -42,9 +44,19 @@ const SelectedInstanceType = styled(InstanceType)`
   line-height: unset;
 `;
 
-const InstanceTypeSelector: FC<
-  React.PropsWithChildren<IInstanceTypeSelector>
-> = ({ selectInstanceType, selectedInstanceType }) => {
+const EmptyValueWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacingPx * 2}px;
+  line-height: 28px;
+`;
+
+const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
+  selectInstanceType,
+  selectedInstanceType,
+  allowEmptyValue = false,
+  emptyValueName = 'None',
+}) => {
   const [collapsed, setCollapsed] = useState(true);
   const { singular, plural } = useInstanceTypeSelectionLabels();
   const { cpu, ram } = useInstanceTypeCapabilities(selectedInstanceType);
@@ -65,16 +77,22 @@ const InstanceTypeSelector: FC<
     setCollapsed(true);
   };
 
+  const emptyValueIsSelected = selectedInstanceType === emptyValueName;
+
   return (
     <>
-      <SelectedWrapper>
-        <SelectedInstanceTypeItem
-          aria-label={`The currently selected ${singular} is ${selectedInstanceType}`}
-        >
-          <SelectedInstanceType>{selectedInstanceType}</SelectedInstanceType>
-        </SelectedInstanceTypeItem>
-        <SelectedDescription>{`${cpu} CPU cores, ${ram} GB RAM each`}</SelectedDescription>
-      </SelectedWrapper>
+      {allowEmptyValue && emptyValueIsSelected ? (
+        <EmptyValueWrapper>{emptyValueName}</EmptyValueWrapper>
+      ) : (
+        <SelectedWrapper>
+          <SelectedInstanceTypeItem
+            aria-label={`The currently selected ${singular} is ${selectedInstanceType}`}
+          >
+            <SelectedInstanceType>{selectedInstanceType}</SelectedInstanceType>
+          </SelectedInstanceTypeItem>
+          <SelectedDescription>{`${cpu} CPU cores, ${ram} GB RAM each`}</SelectedDescription>
+        </SelectedWrapper>
+      )}
       <div>
         <RUMActionTarget
           name={
@@ -123,6 +141,13 @@ const InstanceTypeSelector: FC<
               tabIndex={-1}
               aria-labelledby='machine-type-selector__toggler'
             >
+              {allowEmptyValue && (
+                <InstanceTypeRow
+                  name={emptyValueName}
+                  isSelected={emptyValueIsSelected}
+                  selectInstanceType={selectInstanceType}
+                />
+              )}
               {allowedInstanceTypes.map((instanceType) => (
                 <InstanceTypeRow
                   key={instanceType.name}
