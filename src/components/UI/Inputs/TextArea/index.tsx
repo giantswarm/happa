@@ -137,6 +137,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, ITextAreaProps>(
             name={name}
             focusIndicator={false}
             autoResizeHeight={autoResizeHeight}
+            value={value}
             rows={Math.min(
               autoResizeHeight ? getNumberOfRows(value) : rows!,
               MAX_ROWS

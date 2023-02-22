@@ -17,7 +17,9 @@ exports[`TextArea renders a disabled input 1`] = `
           class="StyledTextArea-sc-17i3mwp-0 fZhFXE TextArea__StyledInput-sc-ixw2m3-0 sKZiD"
           disabled=""
           rows="5"
-        />
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
       </div>
     </div>
   </div>
@@ -41,7 +43,9 @@ exports[`TextArea renders a simple input 1`] = `
           class="StyledTextArea-sc-17i3mwp-0 dqvSYp TextArea__StyledInput-sc-ixw2m3-0 sKZiD"
           placeholder="Please write a story"
           rows="5"
-        />
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
       </div>
     </div>
   </div>
@@ -69,7 +73,9 @@ exports[`TextArea renders an input with a help message 1`] = `
         <textarea
           class="StyledTextArea-sc-17i3mwp-0 dqvSYp TextArea__StyledInput-sc-ixw2m3-0 sKZiD"
           rows="5"
-        />
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
       </div>
     </div>
   </div>
@@ -99,7 +105,9 @@ exports[`TextArea renders an input with a label 1`] = `
           class="StyledTextArea-sc-17i3mwp-0 dqvSYp TextArea__StyledInput-sc-ixw2m3-0 sKZiD"
           id="some-text"
           rows="5"
-        />
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
       </div>
     </div>
   </div>
@@ -122,7 +130,9 @@ exports[`TextArea renders an input with a validation error 1`] = `
         <textarea
           class="StyledTextArea-sc-17i3mwp-0 dqvSYp TextArea__StyledInput-sc-ixw2m3-0 sKZiD"
           rows="5"
-        />
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
       </div>
       <span
         class="StyledText-sc-1sadyjn-0 OmJsh"
@@ -150,7 +160,9 @@ exports[`TextArea renders an input with an info message 1`] = `
         <textarea
           class="StyledTextArea-sc-17i3mwp-0 dqvSYp TextArea__StyledInput-sc-ixw2m3-0 sKZiD"
           rows="5"
-        />
+        >
+          The quick brown fox jumps over the lazy dog
+        </textarea>
       </div>
       <span
         class="StyledText-sc-1sadyjn-0 fWPyPA"
