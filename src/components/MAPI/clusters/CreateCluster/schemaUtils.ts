@@ -7,7 +7,7 @@ import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
 import { compare } from 'utils/semver';
 import { VersionImpl } from 'utils/Version';
 
-import ClusterNameWidget from './ClusterNameWidget';
+import ClusterNameWidget from './custom-widgets/ClusterNameWidget';
 
 export enum PrototypeProviders {
   AWS = 'aws',
