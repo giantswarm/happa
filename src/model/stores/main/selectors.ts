@@ -25,6 +25,8 @@ export function getFirstNodePoolsRelease(_state: IState): string {
 export function getAllowedInstanceTypeNames(): string[] {
   switch (window.config.info.general.provider) {
     case Providers.AWS:
+    case Providers.CAPA:
+    case Providers.GCP:
       return window.config.info.workers.instanceType.options;
     case Providers.AZURE:
       return window.config.info.workers.vmSize.options;

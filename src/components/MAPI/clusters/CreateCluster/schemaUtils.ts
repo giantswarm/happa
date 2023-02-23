@@ -37,7 +37,8 @@ export const prototypeSchemasToProviders: Record<
   PropertiesOf<typeof Providers> | undefined
 > = {
   [TestSchema.TEST]: undefined,
-  [PrototypeProviders.AWS]: Providers.AWS,
+  [PrototypeProviders.AWS]: Providers.CAPA,
+  // TODO: Replace Providers.AZURE with Providers.CAPZ when it's implemented
   [PrototypeProviders.AZURE]: Providers.AZURE,
   [PrototypeProviders.CLOUDDIRECTOR]: undefined,
   [PrototypeProviders.GCP]: Providers.GCP,
