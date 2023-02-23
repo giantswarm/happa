@@ -8,10 +8,10 @@ import {
   fetchProviderClustersForClusters,
   fetchProviderClustersForClustersKey,
   IProviderClusterForClusterName,
-  isCAPIProvider,
   supportsReleases,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { ProviderFlavors } from 'model/constants';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { selectOrganizations } from 'model/stores/organization/selectors';
@@ -56,6 +56,7 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
 
   const namespace = selectedOrg?.namespace;
   const provider = window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   const {
     canList: canListClusters,
@@ -188,7 +189,7 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
     namespace ?? ''
   );
 
-  const isReadOnly = isCAPIProvider(provider);
+  const isReadOnly = providerFlavor === ProviderFlavors.CAPI;
 
   return (
     <DocumentTitle title={title}>

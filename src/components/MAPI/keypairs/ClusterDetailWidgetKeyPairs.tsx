@@ -41,6 +41,7 @@ const ClusterDetailWidgetKeyPairs: React.FC<
   const namespace = selectedOrg?.namespace;
 
   const provider = window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   const keyPairListClient = useHttpClient();
   const auth = useAuthProvider();
@@ -50,7 +51,7 @@ const ClusterDetailWidgetKeyPairs: React.FC<
     namespace ?? ''
   );
 
-  const isLegacyKeyPairsSupported = supportsLegacyKeyPairs(provider);
+  const isLegacyKeyPairsSupported = supportsLegacyKeyPairs(providerFlavor);
 
   const keyPairListKey =
     isLegacyKeyPairsSupported && canGet

@@ -27,15 +27,15 @@ const ClusterDetailWidgetKubernetesAPI: React.FC<
     clusterId: string;
     orgId: string;
   }>();
-
   const provider = window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   const organizations = useSelector(selectOrganizations());
   const selectedOrg = orgId ? organizations[orgId] : undefined;
   const namespace = selectedOrg?.namespace;
 
   const k8sAPIUrl = cluster
-    ? getClusterK8sAPIUrl(cluster, provider)
+    ? getClusterK8sAPIUrl(cluster, providerFlavor)
     : undefined;
 
   const gettingStartedPath = useMemo(() => {

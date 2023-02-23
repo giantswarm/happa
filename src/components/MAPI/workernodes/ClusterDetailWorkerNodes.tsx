@@ -15,14 +15,13 @@ import {
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
   IProviderNodePoolForNodePoolName,
-  isCAPIProvider,
   isNodePoolMngmtReadOnly,
   supportsNodePoolAutoscaling,
   supportsNonExpMachinePools,
   supportsReleases,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import { Providers } from 'model/constants';
+import { ProviderFlavors, Providers } from 'model/constants';
 import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
@@ -295,6 +294,7 @@ const ClusterDetailWorkerNodes: React.FC<
     const namespace = org?.status?.namespace;
 
     const provider = window.config.info.general.provider;
+    const providerFlavour = window.config.info.general.providerFlavor;
 
     const { canGet: canGetCluster } = usePermissionsForClusters(
       provider,
@@ -479,7 +479,7 @@ const ClusterDetailWorkerNodes: React.FC<
       return supportsNonExpMachinePools(cluster);
     }, [cluster]);
 
-    const displayCGroupsColumn = !isCAPIProvider(provider);
+    const displayCGroupsColumn = providerFlavour === ProviderFlavors.VINTAGE;
     const hideNodePoolAutoscalingColumns =
       cluster && !supportsNodePoolAutoscaling(cluster);
 
