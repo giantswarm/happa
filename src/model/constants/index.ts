@@ -4,11 +4,13 @@ import * as AppConstants from './apps';
 import * as AuthorizationTypes from './authorizationTypes';
 import { CSSBreakpoints } from './cssBreakpoints';
 import * as FallbackMessages from './fallbackMessages';
+import { ProviderFlavors } from './providerFlavors';
 import * as Providers from './providers';
 import * as StatusCodes from './statusCodes';
 
 export {
   Providers,
+  ProviderFlavors,
   AuthorizationTypes,
   StatusCodes,
   FallbackMessages,
