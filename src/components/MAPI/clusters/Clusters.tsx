@@ -164,7 +164,7 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
     provider,
     'default'
   );
-  const isReleasesSupportedByProvider = supportsReleases(provider);
+  const isReleasesSupportedByProvider = supportsReleases(providerFlavor);
 
   const releaseListKey =
     canListReleases && isReleasesSupportedByProvider

@@ -1531,17 +1531,8 @@ export function supportsClientCertificates(cluster: Cluster): boolean {
  * be the vintage providers.
  * @param provider
  */
-export function supportsReleases(
-  provider: PropertiesOf<typeof Providers>
-): boolean {
-  switch (provider) {
-    case Providers.AZURE:
-    case Providers.AWS:
-    case Providers.KVM:
-      return true;
-    default:
-      return false;
-  }
+export function supportsReleases(providerFlavor: ProviderFlavors): boolean {
+  return providerFlavor === ProviderFlavors.VINTAGE;
 }
 
 /**

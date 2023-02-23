@@ -294,7 +294,7 @@ const ClusterDetailWorkerNodes: React.FC<
     const namespace = org?.status?.namespace;
 
     const provider = window.config.info.general.provider;
-    const providerFlavour = window.config.info.general.providerFlavor;
+    const providerFlavor = window.config.info.general.providerFlavor;
 
     const { canGet: canGetCluster } = usePermissionsForClusters(
       provider,
@@ -407,7 +407,7 @@ const ClusterDetailWorkerNodes: React.FC<
       );
     }, [nodePoolList?.items, providerNodePools]);
 
-    const isReleasesSupportedByProvider = supportsReleases(provider);
+    const isReleasesSupportedByProvider = supportsReleases(providerFlavor);
     const clusterReleaseVersion =
       cluster && isReleasesSupportedByProvider
         ? capiv1beta1.getReleaseVersion(cluster)
@@ -479,7 +479,7 @@ const ClusterDetailWorkerNodes: React.FC<
       return supportsNonExpMachinePools(cluster);
     }, [cluster]);
 
-    const displayCGroupsColumn = providerFlavour === ProviderFlavors.VINTAGE;
+    const displayCGroupsColumn = providerFlavor === ProviderFlavors.VINTAGE;
     const hideNodePoolAutoscalingColumns =
       cluster && !supportsNodePoolAutoscaling(cluster);
 

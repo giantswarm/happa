@@ -59,6 +59,7 @@ const OrganizationDetailGeneral: React.FC<
   const dispatch = useDispatch<IAsynchronousDispatch<IState>>();
 
   const provider = window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   const clustersPermissions = usePermissionsForClusters(
     provider,
@@ -167,7 +168,7 @@ const OrganizationDetailGeneral: React.FC<
   }, [clustersSummaryError]);
 
   const releasesPermissions = usePermissionsForReleases(provider, 'default');
-  const isReleasesSupportedByProvider = supportsReleases(provider);
+  const isReleasesSupportedByProvider = supportsReleases(providerFlavor);
 
   const releasesSummaryKey =
     releasesPermissions.canGet && isReleasesSupportedByProvider

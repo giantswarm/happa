@@ -158,6 +158,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   }, [namespace, orgError, orgId, clusterId, dispatch]);
 
   const provider = window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   const { canGet: canGetCluster, canUpdate: canUpdateCluster } =
     usePermissionsForClusters(provider, namespace ?? '');
@@ -241,7 +242,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     provider,
     'default'
   );
-  const isReleasesSupportedByProvider = supportsReleases(provider);
+  const isReleasesSupportedByProvider = supportsReleases(providerFlavor);
 
   const releaseListKey =
     canListReleases && isReleasesSupportedByProvider
