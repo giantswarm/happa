@@ -10,9 +10,11 @@ const ObjectFieldTemplate: React.FC<ObjectFieldTemplateProps> = ({
 
   return (
     <Box gap={isArrayItem ? 'none' : 'small'}>
-      {properties.map((element) => (
-        <div key={element.name}>{element.content}</div>
-      ))}
+      {properties.map((element) => {
+        return element.hidden ? null : (
+          <div key={element.name}>{element.content}</div>
+        );
+      })}
     </Box>
   );
 };
