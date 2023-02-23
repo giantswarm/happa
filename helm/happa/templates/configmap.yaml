@@ -16,7 +16,6 @@ data:
     default-request-timeout-seconds: {{ .Values.happa.defaultRequestTimeoutSeconds }}
 
     # Provider-specific
-    provider: {{ .Values.managementCluster.provider.kind }}
     {{- if eq .Values.managementCluster.provider.kind "aws" }}
     aws-capabilities-json: '{{ .Values.aws.instance.capabilities | toJson }}'
     {{- end }}
@@ -61,6 +60,7 @@ data:
     info:
       general:
         provider: '{{ .Values.managementCluster.provider.kind }}'
+        providerFlavor: '{{ .Values.managementCluster.provider.flavor }}'
         installationName: '{{ .Values.managementCluster.name }}'
         availabilityZones:
           default: 1

@@ -34,6 +34,7 @@ export interface IConfigurationValues {
   info: {
     general: {
       provider: string;
+      providerFlavor: string;
       installationName: string;
       availabilityZones: {
         default: number;
@@ -154,6 +155,7 @@ export async function getConfigurationValues(
     info: {
       general: {
         provider: config.getString('info.general.provider'),
+        providerFlavor: config.getString('info.general.providerFlavor'),
         installationName: config.getString('info.general.installationName'),
         availabilityZones: {
           default: config.getNumber('info.general.availabilityZones.default'),
