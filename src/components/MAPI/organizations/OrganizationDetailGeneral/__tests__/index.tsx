@@ -11,7 +11,7 @@ import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissio
 import { usePermissionsForOrganizations } from 'MAPI/organizations/permissions/usePermissionsForOrganizations';
 import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
-import { Providers, StatusCodes } from 'model/constants';
+import { ProviderFlavors, Providers, StatusCodes } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
 import * as React from 'react';
@@ -371,9 +371,11 @@ describe('OrganizationDetailGeneral', () => {
 describe('OrganizationDetailGeneral on Azure', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.AZURE;
+    window.config.info.general.providerFlavor = ProviderFlavors.VINTAGE;
 
     (usePermissionsForClusters as jest.Mock).mockReturnValue(
       defaultPermissions
@@ -392,6 +394,7 @@ describe('OrganizationDetailGeneral on Azure', () => {
 
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('displays various stats about the resources that belong to the organization', async () => {
@@ -626,9 +629,11 @@ describe('OrganizationDetailGeneral on Azure', () => {
 describe('OrganizationDetailGeneral on AWS', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.AWS;
+    window.config.info.general.providerFlavor = ProviderFlavors.VINTAGE;
 
     (usePermissionsForClusters as jest.Mock).mockReturnValue(
       defaultPermissions
@@ -647,6 +652,7 @@ describe('OrganizationDetailGeneral on AWS', () => {
 
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('displays various stats about the resources that belong to the organization', async () => {
@@ -774,9 +780,11 @@ describe('OrganizationDetailGeneral on AWS', () => {
 describe('OrganizationDetailGeneral on GCP', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.GCP;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
 
     (usePermissionsForClusters as jest.Mock).mockReturnValue(
       defaultPermissions
@@ -795,6 +803,7 @@ describe('OrganizationDetailGeneral on GCP', () => {
 
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('displays various stats about the resources that belong to the organization', async () => {
@@ -907,9 +916,11 @@ describe('OrganizationDetailGeneral on GCP', () => {
 describe('OrganizationDetailGeneral on CAPA', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.CAPA;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
 
     (usePermissionsForClusters as jest.Mock).mockReturnValue(
       defaultPermissions
@@ -928,6 +939,7 @@ describe('OrganizationDetailGeneral on CAPA', () => {
 
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('displays various stats about the resources that belong to the organization', async () => {
