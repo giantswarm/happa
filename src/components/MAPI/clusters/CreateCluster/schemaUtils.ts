@@ -136,7 +136,6 @@ const formPropsProviderAzure: Record<string, FormPropsPartial> = {
           'ui:widget': ClusterNameWidget,
         },
         organization: {
-          'ui:label': false,
           'ui:widget': 'hidden',
         },
       },
