@@ -1,10 +1,13 @@
 import { EnumOptionsType, WidgetProps } from '@rjsf/utils';
-import React from 'react';
+import { Box } from 'grommet';
+import React, { useMemo } from 'react';
 import Select from 'UI/Inputs/Select';
 
 const SelectWidget: React.FC<WidgetProps> = ({
   id,
-  options,
+  disabled,
+  options: { emptyValue, enumOptions },
+  required,
   value,
   onChange,
 }) => {
@@ -12,24 +15,54 @@ const SelectWidget: React.FC<WidgetProps> = ({
     onChange(option.value);
   };
 
-  const enumOptions =
-    options.enumOptions?.map((option) => ({
-      label: option.label,
-      value: option.value,
-    })) || [];
+  const options = useMemo(() => {
+    const selectOptions = [
+      {
+        label: '',
+        value: emptyValue,
+      },
+    ];
 
-  const selectedOption = enumOptions.find((option) => option.value === value);
+    if (enumOptions) {
+      enumOptions.forEach((option: EnumOptionsType) =>
+        selectOptions.push({
+          label: option.label,
+          value: option.value,
+        })
+      );
+    }
+
+    return selectOptions;
+  }, [emptyValue, enumOptions]);
+
+  const selectedOption = options.find((option) => option.value === value);
+  const selectedIndex = selectedOption
+    ? options.indexOf(selectedOption)
+    : undefined;
 
   return (
     <Select
       id={id}
       value={selectedOption}
+      disabled={disabled}
+      required={required}
       onChange={(e) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         handleChange(e.option);
       }}
-      options={enumOptions}
-    />
+      options={options}
+      selected={selectedIndex ? [selectedIndex] : undefined}
+    >
+      {({ label }: EnumOptionsType) => (
+        <Box
+          pad='small'
+          height={{ min: '30px' }}
+          aria-label={label === '' ? 'empty value' : undefined}
+        >
+          {label}
+        </Box>
+      )}
+    </Select>
   );
 };
 
