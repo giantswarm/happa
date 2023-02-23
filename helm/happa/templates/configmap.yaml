@@ -75,9 +75,23 @@ data:
         countPerCluster:
           default: 3
           max: 100
+        {{- if eq .Values.managementCluster.provider.kind "aws" }}
         instanceType:
           options: '{{ .Values.aws.instance.allowed | join " " }}'
           default: '{{ .Values.aws.instance.default }}'
+        {{- end }}
+        {{- if eq .Values.managementCluster.provider.kind "azure" }}
         vmSize:
           options: '{{ .Values.azure.vm.vmSize.allowed | join " " }}'
           default: '{{ .Values.azure.vm.vmSize.default }}'
+        {{- end }}
+        {{- if eq .Values.managementCluster.provider.kind "capa" }}
+        instanceType:
+          options: '{{ .Values.capa.instance.allowed | join " " }}'
+          default: '{{ .Values.capa.instance.default }}'
+        {{- end }}
+        {{- if eq .Values.managementCluster.provider.kind "gcp" }}
+        instanceType:
+          options: '{{ .Values.gcp.machinetypes.allowed | join " " }}'
+          default: '{{ .Values.gcp.machinetypes.default }}'
+        {{- end }}

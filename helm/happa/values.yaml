@@ -29,7 +29,7 @@ azure:
 
 capa:
   availabilityZones: []
-  machinetypes:
+  instance:
     capabilities: {}
     allowed: []
     default: ""
