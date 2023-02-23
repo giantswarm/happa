@@ -3,7 +3,7 @@ import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import cleanDeep, { CleanOptions } from 'clean-deep';
 import { isEmpty, isPlainObject, transform } from 'lodash';
 import { generateUID } from 'MAPI/utils';
-import { traverseJSONSchemaObject } from 'utils/helpers';
+import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
 import { compare } from 'utils/semver';
 import { VersionImpl } from 'utils/Version';
 
@@ -299,8 +299,36 @@ export function cleanDeepWithException<T>(
   );
 }
 
-export function preprocessSchema(schema: RJSFSchema): RJSFSchema {
-  const processSubschemas = (obj: RJSFSchema) => {
+export function preprocessSchema(
+  schema: RJSFSchema,
+  fieldsToRemove: string[] = ['.internal']
+): RJSFSchema {
+  const removeFields = ({
+    obj,
+    path,
+  }: {
+    obj: RJSFSchema;
+    path?: string | null;
+  }) => {
+    for (const field of fieldsToRemove) {
+      const fieldParentPath = field.slice(0, field.lastIndexOf('.'));
+      const fieldKey = field.slice(field.lastIndexOf('.') + 1);
+
+      if (fieldParentPath === path) {
+        delete obj.properties?.[fieldKey];
+      }
+    }
+
+    return { obj, path };
+  };
+
+  const processSubschemas = ({
+    obj,
+    path,
+  }: {
+    obj: RJSFSchema;
+    path?: string | null;
+  }) => {
     // If the type is not defined and the schema uses 'anyOf' or 'oneOf',
     // use first not deprecated subschema from the list
     if (!obj.type && (obj.anyOf || obj.oneOf)) {
@@ -319,8 +347,10 @@ export function preprocessSchema(schema: RJSFSchema): RJSFSchema {
       delete obj.oneOf;
     }
 
-    return obj;
+    return { obj, path };
   };
 
-  return traverseJSONSchemaObject(schema, processSubschemas);
+  return traverseJSONSchemaObject(schema, (obj, path) =>
+    pipe({ obj, path }, removeFields, processSubschemas)
+  );
 }
