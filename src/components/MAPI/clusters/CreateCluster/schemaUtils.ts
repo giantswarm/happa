@@ -73,6 +73,9 @@ const formPropsProviderAzure: Record<string, FormPropsPartial> = {
         'includeClusterResourceSet',
         '*',
       ],
+      baseDomain: {
+        'ui:widget': 'hidden',
+      },
       connectivity: {
         'ui:order': ['sshSSOPublicKey', '*'],
         network: {
@@ -91,6 +94,15 @@ const formPropsProviderAzure: Record<string, FormPropsPartial> = {
           'ui:order': ['issuerUrl', 'clientId', '*'],
         },
       },
+      'cluster-shared': {
+        'ui:widget': 'hidden',
+      },
+      machinePools: {
+        'ui:widget': 'hidden',
+      },
+      managementCluster: {
+        'ui:widget': 'hidden',
+      },
       metadata: {
         'ui:order': ['name', 'description', '*'],
         name: {
@@ -99,6 +111,9 @@ const formPropsProviderAzure: Record<string, FormPropsPartial> = {
         organization: {
           'ui:widget': 'hidden',
         },
+      },
+      provider: {
+        'ui:widget': 'hidden',
       },
       providerSpecific: {
         'ui:order': ['location', 'subscriptionId', '*'],
