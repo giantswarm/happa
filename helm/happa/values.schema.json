@@ -73,7 +73,7 @@
                 "availabilityZones": {
                     "type": "array"
                 },
-                "machinetypes": {
+                "instance": {
                     "type": "object",
                     "properties": {
                         "allowed": {

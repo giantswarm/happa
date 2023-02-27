@@ -3,11 +3,13 @@ import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import cleanDeep, { CleanOptions } from 'clean-deep';
 import { isEmpty, isPlainObject, transform } from 'lodash';
 import { generateUID } from 'MAPI/utils';
+import { Providers } from 'model/constants';
 import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
 import { compare } from 'utils/semver';
 import { VersionImpl } from 'utils/Version';
 
-import ClusterNameWidget from './ClusterNameWidget';
+import ClusterNameWidget from './custom-widgets/ClusterNameWidget';
+import InstanceTypeWidget from './custom-widgets/InstanceTypeWidget';
 
 export enum PrototypeProviders {
   AWS = 'aws',
@@ -30,6 +32,19 @@ export const prototypeSchemas = [
   ...prototypeProviders,
 ];
 
+export const prototypeSchemasToProviders: Record<
+  PrototypeSchemas,
+  PropertiesOf<typeof Providers> | undefined
+> = {
+  [TestSchema.TEST]: undefined,
+  [PrototypeProviders.AWS]: Providers.CAPA,
+  // TODO: Replace Providers.AZURE with Providers.CAPZ when it's implemented
+  [PrototypeProviders.AZURE]: Providers.AZURE,
+  [PrototypeProviders.CLOUDDIRECTOR]: undefined,
+  [PrototypeProviders.GCP]: Providers.GCP,
+  [PrototypeProviders.VSPHERE]: undefined,
+};
+
 interface FormPropsPartial {
   uiSchema: UiSchema;
   formData: (organization: string) => RJSFSchema;
@@ -45,9 +60,18 @@ const formPropsProviderAWS: Record<string, FormPropsPartial> = {
         'controlPlane',
         '*',
       ],
-
+      bastion: {
+        instanceType: {
+          'ui:widget': InstanceTypeWidget,
+        },
+      },
       clusterName: {
         'ui:widget': ClusterNameWidget,
+      },
+      controlPlane: {
+        instanceType: {
+          'ui:widget': InstanceTypeWidget,
+        },
       },
     },
     formData: (organization) => {
@@ -78,6 +102,11 @@ const formPropsProviderAzure: Record<string, FormPropsPartial> = {
       },
       connectivity: {
         'ui:order': ['sshSSOPublicKey', '*'],
+        bastion: {
+          instanceType: {
+            'ui:widget': InstanceTypeWidget,
+          },
+        },
         network: {
           'ui:order': ['hostCidr', 'podCidr', 'serviceCidr', 'mode', '*'],
         },
@@ -90,12 +119,22 @@ const formPropsProviderAzure: Record<string, FormPropsPartial> = {
           'etcdVolumeSizeGB',
           '*',
         ],
+        instanceType: {
+          'ui:widget': InstanceTypeWidget,
+        },
         oidc: {
           'ui:order': ['issuerUrl', 'clientId', '*'],
         },
       },
       'cluster-shared': {
         'ui:widget': 'hidden',
+      },
+      machineDeployments: {
+        items: {
+          instanceType: {
+            'ui:widget': InstanceTypeWidget,
+          },
+        },
       },
       machinePools: {
         'ui:widget': 'hidden',
@@ -159,8 +198,25 @@ const formPropsProviderGCP: Record<string, FormPropsPartial> = {
         'controlPlane',
         '*',
       ],
+      bastion: {
+        instanceType: {
+          'ui:widget': InstanceTypeWidget,
+        },
+      },
       clusterName: {
         'ui:widget': ClusterNameWidget,
+      },
+      controlPlane: {
+        instanceType: {
+          'ui:widget': InstanceTypeWidget,
+        },
+      },
+      machineDeployments: {
+        items: {
+          instanceType: {
+            'ui:widget': InstanceTypeWidget,
+          },
+        },
       },
     },
     formData: (organization) => {

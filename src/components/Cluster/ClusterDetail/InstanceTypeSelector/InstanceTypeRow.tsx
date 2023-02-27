@@ -6,10 +6,7 @@ import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 import { TableCell, TableRow } from 'UI/Display/Table';
 import RadioInput from 'UI/Inputs/RadioInput';
-import {
-  IInstanceType,
-  useInstanceTypeSelectionLabels,
-} from 'utils/hooks/useInstanceTypeSelectionConfiguration';
+import { useInstanceTypeSelectionLabels } from 'utils/hooks/useInstanceTypeSelectionConfiguration';
 
 const StyledTableRow = styled(TableRow)`
   cursor: pointer;
@@ -31,8 +28,12 @@ const Name = styled(Text)`
   font-family: ${({ theme }) => theme.fontFamilies.console};
 `;
 
-interface IInstanceTypeRow extends IInstanceType {
+interface IInstanceTypeRow {
   isSelected: boolean;
+  name: string;
+  cpu?: string;
+  ram?: string;
+  description?: string;
 
   selectInstanceType(instanceType: string): void;
 }
@@ -83,11 +84,9 @@ const InstanceTypeRow: FC<React.PropsWithChildren<IInstanceTypeRow>> = ({
       <TableCell>
         <Name>{name}</Name>
       </TableCell>
-      <TableCell align='center'>
-        <Text>{cpu}</Text>
-      </TableCell>
+      <TableCell align='center'>{cpu && <Text>{cpu}</Text>}</TableCell>
       <TableCell width='xsmall' align='center'>
-        <Text>{ram} GB</Text>
+        {ram && <Text>{ram} GB</Text>}
       </TableCell>
       <TableCell>
         <Text>{description}</Text>
