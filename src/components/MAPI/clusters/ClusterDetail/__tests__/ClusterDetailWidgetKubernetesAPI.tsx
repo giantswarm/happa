@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react';
-import { Providers } from 'model/constants';
+import { ProviderFlavors, Providers } from 'model/constants';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import { renderWithStore } from 'test/renderUtils';
 
@@ -68,9 +68,11 @@ describe('ClusterDetailWidgetKubernetesAPI', () => {
 describe('ClusterDetailWidgetKubernetesAPI on Azure', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.AZURE;
+    window.config.info.general.providerFlavor = ProviderFlavors.VINTAGE;
 
     (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
       defaultPermissions
@@ -78,6 +80,7 @@ describe('ClusterDetailWidgetKubernetesAPI on Azure', () => {
   });
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('displays the kubernetes API endpoint URL for the cluster', () => {
@@ -94,10 +97,12 @@ describe('ClusterDetailWidgetKubernetesAPI on Azure', () => {
 describe('ClusterDetailWidgetKubernetesAPI on GCP', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
   const audience = window.config.audience;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.GCP;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
     window.config.audience = 'https://api.test.gigantic.io';
 
     (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
@@ -106,6 +111,7 @@ describe('ClusterDetailWidgetKubernetesAPI on GCP', () => {
   });
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
     window.config.audience = audience;
   });
 
@@ -123,9 +129,11 @@ describe('ClusterDetailWidgetKubernetesAPI on GCP', () => {
 describe('ClusterDetailWidgetKubernetesAPI on CAPA', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.CAPA;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
 
     (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
       defaultPermissions
@@ -133,6 +141,7 @@ describe('ClusterDetailWidgetKubernetesAPI on CAPA', () => {
   });
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('displays the kubernetes API endpoint URL for the cluster', () => {

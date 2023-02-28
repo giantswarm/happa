@@ -16,7 +16,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { IHttpClient } from 'model/clients/HttpClient';
-import { Constants, Providers } from 'model/constants';
+import { Constants, ProviderFlavors, Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import {
   getDefaultAppNameForProvider,
@@ -731,7 +731,7 @@ export function createIngressApp(
 
 export function getClusterK8sEndpoint(
   cluster: capiv1beta1.ICluster,
-  provider: PropertiesOf<typeof Providers>
+  providerFlavor: ProviderFlavors
 ) {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) {
@@ -749,7 +749,7 @@ export function getClusterK8sEndpoint(
       hostname = cluster.spec?.controlPlaneEndpoint?.host;
       break;
     default:
-      hostname = getClusterBaseUrl(cluster, provider).host;
+      hostname = getClusterBaseUrl(cluster, providerFlavor).host;
   }
 
   return hostname ? `https://${hostname}` : '';

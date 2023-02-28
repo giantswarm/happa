@@ -202,6 +202,7 @@ const AppInstallModal: React.FC<
   const { cache } = useSWRConfig();
 
   const provider = window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   const clustersPermissions = usePermissionsForClusters(
     provider,
@@ -279,7 +280,7 @@ const AppInstallModal: React.FC<
   const releaseListClient = useRef(clientFactory());
 
   const releasesPermissions = usePermissionsForReleases(provider, 'default');
-  const isReleasesSupportedByProvider = supportsReleases(provider);
+  const isReleasesSupportedByProvider = supportsReleases(providerFlavor);
   const releaseListKey =
     releasesPermissions.canList && isReleasesSupportedByProvider
       ? releasev1alpha1.getReleaseListKey()

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import { Providers, StatusCodes } from 'model/constants';
+import { ProviderFlavors, Providers, StatusCodes } from 'model/constants';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
@@ -76,15 +76,18 @@ describe('ClusterDetailWidgetWorkerNodes', () => {
 describe('ClusterDetailWidgetWorkerNodes on Azure', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.AZURE;
+    window.config.info.general.providerFlavor = ProviderFlavors.VINTAGE;
     (usePermissionsForNodePools as jest.Mock).mockReturnValue(
       defaultPermissions
     );
   });
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('displays a placeholder if there are no node pools', async () => {
@@ -280,9 +283,11 @@ describe('ClusterDetailWidgetWorkerNodes on Azure', () => {
 describe('ClusterDetailWidgetWorkerNodes when user cannot create node pools on Azure', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.AZURE;
+    window.config.info.general.providerFlavor = ProviderFlavors.VINTAGE;
     (usePermissionsForNodePools as jest.Mock).mockReturnValue({
       ...defaultPermissions,
       canCreate: false,
@@ -290,6 +295,7 @@ describe('ClusterDetailWidgetWorkerNodes when user cannot create node pools on A
   });
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('does not display the link button to add node pools if the user does not have permissions to do so', async () => {
@@ -320,15 +326,18 @@ describe('ClusterDetailWidgetWorkerNodes when user cannot create node pools on A
 describe('ClusterDetailWidgetWorkerNodes on AWS', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.AWS;
+    window.config.info.general.providerFlavor = ProviderFlavors.VINTAGE;
     (usePermissionsForNodePools as jest.Mock).mockReturnValue(
       defaultPermissions
     );
   });
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('displays stats about node pools', async () => {
@@ -474,15 +483,18 @@ describe('ClusterDetailWidgetWorkerNodes on AWS', () => {
 describe('ClusterDetailWidgetWorkerNodes on CAPA', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.CAPA;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
     (usePermissionsForNodePools as jest.Mock).mockReturnValue(
       defaultPermissions
     );
   });
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('displays stats about node pools', async () => {
@@ -597,15 +609,18 @@ describe('ClusterDetailWidgetWorkerNodes on CAPA', () => {
 describe('ClusterDetailWidgetWorkerNodes on GCP', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.GCP;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
     (usePermissionsForNodePools as jest.Mock).mockReturnValue(
       defaultPermissions
     );
   });
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('displays stats about node pools', async () => {

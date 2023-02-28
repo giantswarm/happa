@@ -1,5 +1,5 @@
 import { GenericResponse } from 'model/clients/GenericResponse';
-import { Constants, Providers } from 'model/constants';
+import { Constants, ProviderFlavors, Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
@@ -1412,7 +1412,7 @@ export function extractErrorMessage(
 
 export function getClusterK8sAPIUrl(
   cluster: capiv1beta1.ICluster,
-  provider: PropertiesOf<typeof Providers>
+  providerFlavor: ProviderFlavors
 ) {
   let hostname = cluster.spec?.controlPlaneEndpoint?.host;
   if (!hostname) return '';
@@ -1421,21 +1421,21 @@ export function getClusterK8sAPIUrl(
 
   // If the control plane host is an IP address then it is a CAPI cluster
   if (isIPAddress(hostname)) {
-    hostname = getClusterBaseUrl(cluster, provider).host;
+    hostname = getClusterBaseUrl(cluster, providerFlavor).host;
   }
 
   return `https://${hostname}${port ? `:${port}` : ''}`;
 }
 
-export function getK8sAPIUrl(provider: PropertiesOf<typeof Providers>): string {
-  return getInstallationBaseURL(provider).toString();
+export function getK8sAPIUrl(providerFlavor: ProviderFlavors): string {
+  return getInstallationBaseURL(providerFlavor).toString();
 }
 
 export function getClusterBaseUrl(
   cluster: capiv1beta1.ICluster,
-  provider: PropertiesOf<typeof Providers>
+  providerFlavor: ProviderFlavors
 ) {
-  const installationBaseURL = getInstallationBaseURL(provider);
+  const installationBaseURL = getInstallationBaseURL(providerFlavor);
 
   const clusterBaseUrl = new URL(installationBaseURL);
   clusterBaseUrl.host = clusterBaseUrl.host.replace(
@@ -1446,14 +1446,14 @@ export function getClusterBaseUrl(
   return clusterBaseUrl;
 }
 
-function getInstallationBaseURL(provider: PropertiesOf<typeof Providers>): URL {
+function getInstallationBaseURL(providerFlavor: ProviderFlavors): URL {
   const audienceURL = new URL(window.config.audience);
   // Remove all characters until the first `.`.
   audienceURL.host = audienceURL.host.substring(
     audienceURL.host.indexOf('.') + 1
   );
 
-  if (isCAPIProvider(provider)) {
+  if (providerFlavor === ProviderFlavors.CAPI) {
     audienceURL.host = `api.${audienceURL.host}`;
   }
 
@@ -1471,15 +1471,8 @@ export function isCAPZCluster(cluster: Cluster): boolean {
   return compare(releaseVersion, Constants.AZURE_CAPZ_VERSION) >= 0;
 }
 
-export function isCAPGCluster(cluster: Cluster): boolean {
+function isCAPGCluster(cluster: Cluster): boolean {
   return cluster.spec?.infrastructureRef?.kind === capgv1beta1.GCPCluster;
-}
-
-export function isCAPACluster(cluster: Cluster): boolean {
-  return (
-    cluster.spec?.infrastructureRef?.kind === capav1beta1.AWSCluster &&
-    cluster.spec?.infrastructureRef?.apiVersion === capav1beta1.ApiVersion
-  );
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
@@ -1538,17 +1531,8 @@ export function supportsClientCertificates(cluster: Cluster): boolean {
  * be the vintage providers.
  * @param provider
  */
-export function supportsReleases(
-  provider: PropertiesOf<typeof Providers>
-): boolean {
-  switch (provider) {
-    case Providers.AZURE:
-    case Providers.AWS:
-    case Providers.KVM:
-      return true;
-    default:
-      return false;
-  }
+export function supportsReleases(providerFlavor: ProviderFlavors): boolean {
+  return providerFlavor === ProviderFlavors.VINTAGE;
 }
 
 /**
@@ -1584,17 +1568,6 @@ export function getNamespaceFromOrgName(name: string): string {
   }
 
   return `org-${nameChars.join('')}`;
-}
-
-export function isCAPIProvider(provider: string): boolean {
-  switch (provider) {
-    case Providers.AZURE:
-    case Providers.AWS:
-    case Providers.KVM:
-      return false;
-    default:
-      return true;
-  }
 }
 
 /**

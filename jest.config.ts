@@ -72,6 +72,7 @@ const config: Config.InitialOptions = {
           },
           installationName: 'test',
           provider: 'aws',
+          providerFlavor: 'vintage',
           dataCenter: 'test',
           kubernetesVersions: {},
         },

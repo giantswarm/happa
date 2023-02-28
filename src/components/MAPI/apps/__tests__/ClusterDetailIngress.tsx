@@ -7,7 +7,12 @@ import { createMemoryHistory } from 'history';
 import { IAppsPermissions } from 'MAPI/apps/permissions/types';
 import { usePermissionsForApps } from 'MAPI/apps/permissions/usePermissionsForApps';
 import { getNamespaceFromOrgName } from 'MAPI/utils';
-import { Constants, Providers, StatusCodes } from 'model/constants';
+import {
+  Constants,
+  ProviderFlavors,
+  Providers,
+  StatusCodes,
+} from 'model/constants';
 import { IOrganizationState } from 'model/stores/organization/types';
 import { IState } from 'model/stores/state';
 import nock from 'nock';
@@ -77,19 +82,11 @@ jest.mock('react-router', () => ({
 jest.mock('MAPI/apps/permissions/usePermissionsForApps');
 
 describe('ClusterDetailIngress', () => {
-  const provider: PropertiesOf<typeof Providers> =
-    window.config.info.general.provider;
   const orgId = 'org1';
   const cluster = capiv1beta1Mocks.randomCluster1;
   const clusterId = cluster.metadata.name;
 
-  afterAll(() => {
-    window.config.info.general.provider = provider;
-  });
-
   beforeAll(() => {
-    window.config.info.general.provider = Providers.AZURE;
-
     (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
     (useParams as jest.Mock).mockReturnValue({
       orgId,
@@ -114,6 +111,7 @@ describe('ClusterDetailIngress', () => {
 describe('ClusterDetailIngress on Azure', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
   const orgId = 'org1';
   const cluster = capiv1beta1Mocks.randomCluster1;
   const clusterId = cluster.metadata.name;
@@ -121,6 +119,7 @@ describe('ClusterDetailIngress on Azure', () => {
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.AZURE;
+    window.config.info.general.providerFlavor = ProviderFlavors.VINTAGE;
 
     (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
     (useParams as jest.Mock).mockReturnValue({
@@ -131,6 +130,7 @@ describe('ClusterDetailIngress on Azure', () => {
 
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
   });
 
   it('displays instructions with correct API endpoints', async () => {
@@ -183,6 +183,7 @@ describe('ClusterDetailIngress on Azure', () => {
 describe('ClusterDetailIngress on GCP', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
   const audience = window.config.audience;
   const orgId = 'org1';
   const cluster = capiv1beta1Mocks.randomClusterGCP1;
@@ -191,6 +192,7 @@ describe('ClusterDetailIngress on GCP', () => {
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.GCP;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
     window.config.audience = 'https://api.test.gigantic.io';
 
     (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
@@ -202,6 +204,7 @@ describe('ClusterDetailIngress on GCP', () => {
 
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
     window.config.audience = audience;
   });
 
@@ -255,6 +258,7 @@ describe('ClusterDetailIngress on GCP', () => {
 describe('ClusterDetailIngress on CAPA', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
   const audience = window.config.audience;
   const orgId = 'org1';
   const cluster = capiv1beta1Mocks.randomClusterCAPA1;
@@ -263,6 +267,7 @@ describe('ClusterDetailIngress on CAPA', () => {
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.CAPA;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
     window.config.audience = 'https://api.test.gigantic.io';
 
     (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
@@ -274,6 +279,7 @@ describe('ClusterDetailIngress on CAPA', () => {
 
   afterAll(() => {
     window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
     window.config.audience = audience;
   });
 

@@ -30,6 +30,7 @@ interface IGlobalConfig {
   info: {
     general: {
       provider: PropertiesOf<typeof import('model/constants').Providers>;
+      providerFlavor: import('model/constants').ProviderFlavors;
       installationName: string;
       availabilityZones: {
         default: number;

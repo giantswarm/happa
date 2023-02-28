@@ -95,6 +95,7 @@ const ClusterDetailKeyPairs: React.FC<
   const namespace = selectedOrg?.namespace;
 
   const provider = window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -104,7 +105,7 @@ const ClusterDetailKeyPairs: React.FC<
   const { canGet: canGetKeyPairs, canCreate: canCreateKeyPairs } =
     usePermissionsForKeyPairs(provider, namespace ?? '');
 
-  const isLegacyKeyPairsSupported = supportsLegacyKeyPairs(provider);
+  const isLegacyKeyPairsSupported = supportsLegacyKeyPairs(providerFlavor);
 
   const keyPairListKey =
     isLegacyKeyPairsSupported && canGetKeyPairs

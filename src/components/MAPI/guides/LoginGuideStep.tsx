@@ -16,8 +16,8 @@ interface ILoginGuideStepProps
 const LoginGuideStep: React.FC<
   React.PropsWithChildren<ILoginGuideStepProps>
 > = (props) => {
-  const provider = window.config.info.general.provider;
-  const k8sAPIUrl = useRef(getK8sAPIUrl(provider));
+  const providerFlavor = window.config.info.general.providerFlavor;
+  const k8sAPIUrl = useRef(getK8sAPIUrl(providerFlavor));
 
   const isAdmin = useSelector(getUserIsAdmin);
   const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);

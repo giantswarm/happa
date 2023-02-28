@@ -18,8 +18,8 @@ const GettingStartedGetAccess: React.FC<
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { clusterId } = match.params;
 
-  const provider = window.config.info.general.provider;
-  const k8sAPIUrl = useRef(getK8sAPIUrl(provider));
+  const providerFlavor = window.config.info.general.providerFlavor;
+  const k8sAPIUrl = useRef(getK8sAPIUrl(providerFlavor));
 
   return (
     <Breadcrumb

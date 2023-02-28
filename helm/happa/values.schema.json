@@ -225,6 +225,9 @@
                         "kind": {
                             "type": "string"
                         },
+                        "flavor": {
+                            "type": "string"
+                        },
                         "region": {
                             "type": "string"
                         }

@@ -64,6 +64,7 @@ const ClusterDetailIngress: React.FC<
     orgId: string;
   }>();
   const provider = rest.provider ?? window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
   const organizations = useSelector(selectOrganizations());
 
   const appsNamespace =
@@ -128,8 +129,8 @@ const ClusterDetailIngress: React.FC<
       return rest.k8sEndpoint;
     }
 
-    return cluster ? getClusterK8sEndpoint(cluster, provider) : undefined;
-  }, [cluster, provider, rest.k8sEndpoint]);
+    return cluster ? getClusterK8sEndpoint(cluster, providerFlavor) : undefined;
+  }, [cluster, providerFlavor, rest.k8sEndpoint]);
 
   return (
     <DocumentTitle title={`Ingress | ${clusterId}`}>
