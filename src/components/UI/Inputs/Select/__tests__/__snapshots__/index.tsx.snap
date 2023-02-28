@@ -8,7 +8,7 @@ exports[`Select renders a disabled input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 hMcTQn FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"
@@ -39,7 +39,7 @@ exports[`Select renders a disabled input 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 hyplzw StyledSelect__SelectTextInput-sc-znp66n-4 fLRsZH"
+                  class="StyledTextInput-sc-1x30a0s-0 gIeVHr StyledSelect__SelectTextInput-sc-znp66n-4 fLRsZH"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -82,7 +82,7 @@ exports[`Select renders a simple input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 hMcTQn FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 hgSnoV FormField__FormFieldContentBox-sc-m9hood-1"
@@ -106,7 +106,7 @@ exports[`Select renders a simple input 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 hyplzw StyledSelect__SelectTextInput-sc-znp66n-4 HENwL"
+                  class="StyledTextInput-sc-1x30a0s-0 gIeVHr StyledSelect__SelectTextInput-sc-znp66n-4 HENwL"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -149,7 +149,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 hMcTQn FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 fOjCuh FormField__FormFieldContentBox-sc-m9hood-1"
@@ -174,7 +174,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 hyplzw StyledSelect__SelectTextInput-sc-znp66n-4 fLRsZH"
+                  class="StyledTextInput-sc-1x30a0s-0 gIeVHr StyledSelect__SelectTextInput-sc-znp66n-4 fLRsZH"
                   id="pet__input"
                   readonly=""
                   tabindex="-1"
@@ -216,7 +216,7 @@ exports[`Select renders an input with a help message 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 hMcTQn FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"
@@ -251,7 +251,7 @@ exports[`Select renders an input with a help message 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 hyplzw StyledSelect__SelectTextInput-sc-znp66n-4 HENwL"
+                  class="StyledTextInput-sc-1x30a0s-0 gIeVHr StyledSelect__SelectTextInput-sc-znp66n-4 HENwL"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -294,7 +294,7 @@ exports[`Select renders an input with a label 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 hMcTQn FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"
@@ -324,7 +324,7 @@ exports[`Select renders an input with a label 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 hyplzw StyledSelect__SelectTextInput-sc-znp66n-4 HENwL"
+                  class="StyledTextInput-sc-1x30a0s-0 gIeVHr StyledSelect__SelectTextInput-sc-znp66n-4 HENwL"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -367,7 +367,7 @@ exports[`Select renders an input with a validation error 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 hMcTQn FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"
@@ -397,7 +397,7 @@ exports[`Select renders an input with a validation error 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 hyplzw StyledSelect__SelectTextInput-sc-znp66n-4 HENwL"
+                  class="StyledTextInput-sc-1x30a0s-0 gIeVHr StyledSelect__SelectTextInput-sc-znp66n-4 HENwL"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -445,7 +445,7 @@ exports[`Select renders an input with an info message 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 hMcTQn FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"
@@ -475,7 +475,7 @@ exports[`Select renders an input with an info message 1`] = `
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 hyplzw StyledSelect__SelectTextInput-sc-znp66n-4 HENwL"
+                  class="StyledTextInput-sc-1x30a0s-0 gIeVHr StyledSelect__SelectTextInput-sc-znp66n-4 HENwL"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""

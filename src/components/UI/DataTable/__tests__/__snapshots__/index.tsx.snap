@@ -8,7 +8,7 @@ exports[`DataTable renders a simple table 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <table
-      class="StyledTable-sc-1m3u5g-6 jvdsQv StyledDataTable-sc-xrlyjm-0 CMHtZ"
+      class="StyledTable-sc-1m3u5g-6 jvdsQv StyledDataTable-sc-xrlyjm-0 gVAzcD"
     >
       <thead
         class="StyledTable__StyledTableHeader-sc-1m3u5g-4 StyledDataTable__StyledDataTableHeader-sc-xrlyjm-4"
