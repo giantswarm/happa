@@ -4,6 +4,7 @@ import DocumentTitle from 'components/shared/DocumentTitle';
 import GiantSwarm from 'giantswarm';
 import AppsMAPI from 'MAPI/apps/Apps';
 import Clusters from 'MAPI/clusters/Clusters';
+import ClusterAppSchemaTester from 'MAPI/clusters/CreateClusterAppBundles/ClusterAppSchemaTester';
 import Experiments from 'MAPI/Experiments';
 import Permissions from 'MAPI/permissions/Permissions';
 import { usePermissions } from 'MAPI/permissions/usePermissions';
@@ -147,11 +148,20 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
                   />
 
                   {user?.isAdmin && (
-                    <Route
-                      component={Experiments}
-                      exact
-                      path={AccountSettingsRoutes.Experiments}
-                    />
+                    <>
+                      <Route
+                        component={Experiments}
+                        exact
+                        path={AccountSettingsRoutes.Experiments.Home}
+                      />
+                      <Route
+                        component={ClusterAppSchemaTester}
+                        path={
+                          AccountSettingsRoutes.Experiments
+                            .ClusterAppSchemaTester
+                        }
+                      />
+                    </>
                   )}
 
                   {user?.type === LoggedInUserTypes.MAPI && (

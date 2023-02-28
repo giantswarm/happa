@@ -131,8 +131,8 @@ const UserDropdown: React.FC<React.PropsWithChildren<IUserDropdownProps>> = ({
                 {user.isAdmin && (
                   <li role='presentation'>
                     <MenuItem
-                      href={AccountSettingsRoutes.Experiments}
-                      to={AccountSettingsRoutes.Experiments}
+                      href={AccountSettingsRoutes.Experiments.Home}
+                      to={AccountSettingsRoutes.Experiments.Home}
                       onClick={onBlurHandler}
                     >
                       <i
