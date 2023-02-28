@@ -30,7 +30,6 @@ import Button from 'UI/Controls/Button';
 import { CodeBlock } from 'UI/Display/Documentation/CodeBlock';
 import Line from 'UI/Display/Documentation/Line';
 import InputGroup from 'UI/Inputs/InputGroup';
-import RadioInput from 'UI/Inputs/RadioInput';
 import Select from 'UI/Inputs/Select';
 import JSONSchemaForm, { IFormContext } from 'UI/JSONSchemaForm';
 import testSchema from 'UI/JSONSchemaForm/test.schema.json';
@@ -105,11 +104,6 @@ function fetchAppRepoBranchesKey(provider: PrototypeProviders) {
 
 function getDefaultRepoBranch(provider: PrototypeProviders) {
   return provider === PrototypeProviders.AWS ? 'master' : 'main';
-}
-
-enum FormDataPreviewFormat {
-  Json,
-  Yaml,
 }
 
 const testSchemaURL =
@@ -336,9 +330,6 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     dispatch(push(MainRoutes.Home));
   };
 
-  const [formDataPreviewFormat, setFormDataPreviewFormat] =
-    useState<FormDataPreviewFormat>(FormDataPreviewFormat.Json);
-
   return (
     <Breadcrumb
       data={{ title: 'CREATE CLUSTER APP BUNDLES', pathname: match.url }}
@@ -432,51 +423,20 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                     </Box>
                   </JSONSchemaForm>
                   {formProps.formData !== undefined && (
-                    <Box margin={{ top: 'large' }} width={{ max: 'large' }}>
+                    <Box
+                      margin={{ top: 'large' }}
+                      width={{ max: 'large' }}
+                      gap='small'
+                    >
                       <Text weight='bold'>Form data preview</Text>
-                      <Box
-                        direction='row'
-                        gap='medium'
-                        margin={{ top: 'small' }}
-                      >
-                        <RadioInput
-                          label='JSON'
-                          name='json'
-                          checked={
-                            formDataPreviewFormat === FormDataPreviewFormat.Json
-                          }
-                          onChange={() =>
-                            setFormDataPreviewFormat(FormDataPreviewFormat.Json)
-                          }
-                        />
-                        <RadioInput
-                          label='YAML'
-                          name='yaml'
-                          checked={
-                            formDataPreviewFormat === FormDataPreviewFormat.Yaml
-                          }
-                          onChange={() =>
-                            setFormDataPreviewFormat(FormDataPreviewFormat.Yaml)
-                          }
-                        />
-                      </Box>
                       <CodeBlock>
-                        {formDataPreviewFormat ===
-                          FormDataPreviewFormat.Json && (
-                          <Prompt>
-                            {JSON.stringify(cleanFormData, null, '\r  ')}
-                          </Prompt>
-                        )}
-                        {formDataPreviewFormat ===
-                          FormDataPreviewFormat.Yaml && (
-                          <Prompt>
-                            {yaml.dump(cleanFormData, {
-                              indent: 2,
-                              quotingType: '"',
-                              lineWidth: -1,
-                            })}
-                          </Prompt>
-                        )}
+                        <Prompt>
+                          {yaml.dump(cleanFormData, {
+                            indent: 2,
+                            quotingType: '"',
+                            lineWidth: -1,
+                          })}
+                        </Prompt>
                       </CodeBlock>
                     </Box>
                   )}
