@@ -8,7 +8,7 @@ exports[`InputGroup renders a simple input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ephmIG FormField__FormFieldBox-sc-m9hood-0 chvcoo"
+      class="StyledBox-sc-13pk1d4-0 caszNv FormField__FormFieldBox-sc-m9hood-0 chvcoo"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"

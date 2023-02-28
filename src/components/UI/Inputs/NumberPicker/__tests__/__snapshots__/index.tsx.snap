@@ -8,7 +8,7 @@ exports[`NumberPicker renders a simple input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 eHMrWS FormField__FormFieldBox-sc-m9hood-0 fTEjPl"
+      class="StyledBox-sc-13pk1d4-0 hMcTQn FormField__FormFieldBox-sc-m9hood-0 fTEjPl"
     >
       <label
         class="StyledText-sc-1sadyjn-0 gGKbiL"
@@ -29,7 +29,7 @@ exports[`NumberPicker renders a simple input 1`] = `
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 khwsYY NumberPicker__StyledTextInput-sc-h062ap-0 gAVRTt"
+            class="StyledTextInput-sc-1x30a0s-0 ePhuED NumberPicker__StyledTextInput-sc-h062ap-0 gAVRTt"
             id="money"
             step="1"
             type="number"
