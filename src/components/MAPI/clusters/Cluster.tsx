@@ -5,7 +5,7 @@ import Route from 'Route';
 
 import ClusterDetail from './ClusterDetail';
 import CreateCluster from './CreateCluster/CreateCluster';
-import CreateClusterAppBundles from './CreateCluster/CreateClusterAppBundles';
+import CreateClusterAppBundles from './CreateClusterAppBundles';
 import GettingStarted from './GettingStarted';
 
 const Cluster: React.FC<React.PropsWithChildren<{}>> = () => {
