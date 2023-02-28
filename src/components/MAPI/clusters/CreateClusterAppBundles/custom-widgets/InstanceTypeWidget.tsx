@@ -4,7 +4,7 @@ import { Box, Text } from 'grommet';
 import React from 'react';
 import BaseInputTemplate from 'UI/JSONSchemaForm/BaseInputTemplate';
 
-import { ICreateClusterFormContext } from '..';
+import { ICreateClusterFormContext } from '../CreateClusterAppBundlesForm';
 
 const EMPTY_VALUE_NAME = 'None';
 

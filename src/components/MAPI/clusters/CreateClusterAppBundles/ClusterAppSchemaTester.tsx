@@ -1,13 +1,8 @@
-import { FormProps, IChangeEvent } from '@rjsf/core';
 import { EnumOptionsType, RJSFSchema } from '@rjsf/utils';
-import { customizeValidator } from '@rjsf/validator-ajv8';
-import Ajv2020 from 'ajv/dist/2020';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import cleanDeep from 'clean-deep';
 import { replace } from 'connected-react-router';
 import { Box, Heading, Text } from 'grommet';
 import { spinner } from 'images';
-import yaml from 'js-yaml';
 import {
   fetchAppCatalogEntrySchema,
   fetchAppCatalogEntrySchemaKey,
@@ -28,11 +23,8 @@ import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
-import { CodeBlock } from 'UI/Display/Documentation/CodeBlock';
-import Line from 'UI/Display/Documentation/Line';
 import InputGroup from 'UI/Inputs/InputGroup';
 import Select from 'UI/Inputs/Select';
-import JSONSchemaForm, { IFormContext } from 'UI/JSONSchemaForm';
 import testSchema from 'UI/JSONSchemaForm/test.schema.json';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
@@ -41,18 +33,13 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import RoutePath from 'utils/routePath';
 
+import CreateClusterAppBundlesForm from './CreateClusterAppBundlesForm';
 import {
-  cleanDeepWithException,
-  getFormProps,
-  getProviderForPrototypeSchema,
-  preprocessSchema,
   PrototypeProviders,
   prototypeProviders,
   PrototypeSchemas,
   prototypeSchemas,
 } from './schemaUtils';
-
-const validator = customizeValidator({ AjvClass: Ajv2020 });
 
 const Wrapper = styled.div`
   position: relative;
@@ -117,12 +104,6 @@ function getDefaultRepoBranch(provider: PrototypeProviders) {
 const testSchemaURL =
   'https://raw.githubusercontent.com/giantswarm/happa/main/src/components/UI/JSONSchemaForm/test.schema.json';
 
-const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  return <Line prompt={false} text={children} />;
-};
-
-Prompt.displayName = 'Prompt';
-
 function formatSchemaSelectLabel(schema: PrototypeSchemas): string {
   switch (schema) {
     case Providers.CAPA:
@@ -169,14 +150,9 @@ function getPathForProvider(provider: PrototypeSchemas): string {
   }
 }
 
-export interface ICreateClusterFormContext extends IFormContext {
-  schemaProvider?: PropertiesOf<typeof Providers>;
-}
-
 interface IClusterAppSchemaTesterProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
-// eslint-disable-next-line complexity
 const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
   props
 ) => {
@@ -287,30 +263,9 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
   const rawSchema = selectedProvider
     ? providerSchema
     : (testSchema as RJSFSchema);
-  const appSchema = useMemo(() => {
-    if (!rawSchema) return undefined;
-
-    return preprocessSchema(rawSchema);
-  }, [rawSchema]);
 
   const appSchemaIsLoading =
-    appSchema === undefined && providerSchemaError === undefined;
-
-  // TODO: replace when we use app version instead of branch name
-  const version =
-    selectedBranch && selectedBranch.startsWith('release-')
-      ? selectedBranch.replace('release-', '').replace('x', '0')
-      : 'v0.0.0';
-
-  const [formProps, setFormProps] = useState<
-    Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'>
-  >(getFormProps(selectedSchema, version, organizationID));
-
-  const cleanFormData = cleanDeep(formProps.formData, { emptyStrings: false });
-
-  const resetForm = (newSchema: PrototypeSchemas) => {
-    setFormProps(getFormProps(newSchema, version, organizationID));
-  };
+    rawSchema === undefined && providerSchemaError === undefined;
 
   const handleSelectedSchemaChange = (option: EnumOptionsType) => {
     const newSchema = option.value as PrototypeSchemas;
@@ -319,43 +274,23 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
     setSelectedBranch(
       newProvider ? getDefaultRepoBranch(newProvider) : undefined
     );
-    resetForm(newSchema);
   };
 
   const handleSelectedBranchChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setSelectedBranch(e.target.value);
-    resetForm(selectedSchema);
   };
 
-  const handleFormDataChange = ({
-    formData: data,
-  }: IChangeEvent<RJSFSchema>) => {
-    if (!data) {
-      return;
-    }
-    setFormProps((prev) => {
-      return {
-        ...prev,
-        formData: cleanDeepWithException<RJSFSchema>(
-          data,
-          { emptyStrings: false },
-          (value) => Array.isArray(value) && value.length > 0
-        ) as RJSFSchema,
-      };
-    });
-  };
-
-  const handleFormSubmit = (
-    _: IChangeEvent<RJSFSchema>,
-    e: React.FormEvent<HTMLElement>
-  ) => {
-    e.preventDefault();
-
+  const handleFormSubmit = (data: RJSFSchema | undefined) => {
     // eslint-disable-next-line no-console
-    console.log(cleanFormData);
+    console.log(data);
   };
+
+  const version =
+    selectedBranch && selectedBranch.startsWith('release-')
+      ? selectedBranch.replace('release-', '').replace('x', '0')
+      : 'v0.0.0';
 
   return (
     <Breadcrumb
@@ -413,57 +348,40 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
               </Wrapper>
             )}
             {!appSchemaIsLoading &&
-              (typeof appSchema === 'undefined' ? (
+              (typeof rawSchema === 'undefined' ? (
                 <Text>
                   No <code>values.schema.json</code> file found for the selected
                   branch.
                 </Text>
               ) : (
-                <>
-                  <JSONSchemaForm
-                    schema={appSchema}
-                    uiSchema={formProps.uiSchema}
-                    formContext={{
-                      schemaProvider:
-                        getProviderForPrototypeSchema(selectedSchema),
-                    }}
-                    validator={validator}
-                    formData={formProps.formData}
-                    showErrorList='bottom'
-                    onSubmit={handleFormSubmit}
-                    onChange={handleFormDataChange}
-                  >
-                    <Box margin={{ vertical: 'medium' }}>
-                      <Box direction='row' gap='small'>
-                        <Button
-                          primary={true}
-                          type='submit'
-                          loading={isCreating}
-                        >
-                          Test form submit
-                        </Button>
+                <CreateClusterAppBundlesForm
+                  schema={rawSchema}
+                  provider={selectedSchema}
+                  organization={organizationID}
+                  appVersion={version}
+                  onSubmit={handleFormSubmit}
+                  key={`${selectedSchema}${version}`}
+                  render={({ formDataPreview }) => {
+                    return (
+                      <Box
+                        margin={{ top: 'large' }}
+                        width={{ max: 'large' }}
+                        gap='small'
+                      >
+                        <Text weight='bold'>Form data preview</Text>
+                        {formDataPreview}
                       </Box>
+                    );
+                  }}
+                >
+                  <Box margin={{ vertical: 'medium' }}>
+                    <Box direction='row' gap='small'>
+                      <Button primary={true} type='submit' loading={isCreating}>
+                        Test form submit
+                      </Button>
                     </Box>
-                  </JSONSchemaForm>
-                  {cleanFormData !== undefined && (
-                    <Box
-                      margin={{ top: 'large' }}
-                      width={{ max: 'large' }}
-                      gap='small'
-                    >
-                      <Text weight='bold'>Form data preview</Text>
-                      <CodeBlock>
-                        <Prompt>
-                          {yaml.dump(cleanFormData, {
-                            indent: 2,
-                            quotingType: '"',
-                            lineWidth: -1,
-                          })}
-                        </Prompt>
-                      </CodeBlock>
-                    </Box>
-                  )}
-                </>
+                  </Box>
+                </CreateClusterAppBundlesForm>
               ))}
           </Box>
         </Box>
