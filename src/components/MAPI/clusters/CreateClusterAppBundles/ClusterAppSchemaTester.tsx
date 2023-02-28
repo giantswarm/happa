@@ -147,6 +147,28 @@ function formatSchemaSelectOptions(
   return schema.map((s) => ({ label: formatSchemaSelectLabel(s), value: s }));
 }
 
+function getProviderFromPath(providerFromPath: string): PrototypeSchemas {
+  switch (providerFromPath) {
+    case 'aws':
+      return Providers.CAPA;
+    case 'azure':
+      return Providers.CAPZ;
+    default:
+      return decodeURIComponent(providerFromPath) as PrototypeSchemas;
+  }
+}
+
+function getPathForProvider(provider: PrototypeSchemas): string {
+  switch (provider) {
+    case Providers.CAPA:
+      return 'aws';
+    case Providers.CAPZ:
+      return 'azure';
+    default:
+      return encodeURIComponent(provider);
+  }
+}
+
 export interface ICreateClusterFormContext extends IFormContext {
   schemaProvider?: PropertiesOf<typeof Providers>;
 }
@@ -159,7 +181,7 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
   props
 ) => {
   const match = useRouteMatch<{
-    provider?: PrototypeSchemas;
+    provider?: string;
     branch?: string;
   }>();
   const { provider, branch } = match.params;
@@ -177,9 +199,7 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
   const [isCreating, _setIsCreating] = useState<boolean>(false);
 
   const [selectedSchema, setSelectedSchema] = useState<PrototypeSchemas>(
-    provider
-      ? (decodeURIComponent(provider) as PrototypeSchemas)
-      : prototypeSchemas[0]
+    provider ? getProviderFromPath(provider) : prototypeSchemas[0]
   );
   const selectedProvider = prototypeProviders.find((p) => p === selectedSchema);
   const [selectedBranch, setSelectedBranch] = useState<string | undefined>(
@@ -204,7 +224,7 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
       path = RoutePath.createUsablePath(
         AccountSettingsRoutes.Experiments.ClusterAppSchemaTesterProviderBranch,
         {
-          provider: encodeURIComponent(selectedSchema),
+          provider: getPathForProvider(selectedSchema),
           branch: encodeURIComponent(selectedBranch),
         }
       );
