@@ -117,6 +117,7 @@ const JSONSchemaForm: React.FC<FormProps> = ({
   onBlur,
   idPrefix = 'root',
   idSeparator = '_',
+  formContext,
   ...props
 }) => {
   const [state, dispatch] = useReducer(
@@ -164,6 +165,7 @@ const JSONSchemaForm: React.FC<FormProps> = ({
       onBlur={handleBlur}
       onError={handleSubmitAttempted}
       formContext={{
+        ...formContext,
         ...state,
         errors: ref.current?.state.errors,
         toggleTouchedFields,

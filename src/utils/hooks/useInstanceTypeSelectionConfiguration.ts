@@ -12,6 +12,8 @@ export function useInstanceTypeSelectionLabels(): {
   return useMemo(() => {
     switch (provider) {
       case Providers.AWS:
+      case Providers.CAPA:
+      case Providers.GCP:
         return {
           singular: 'Instance type',
           plural: 'Instance types',
@@ -42,6 +44,7 @@ function useNormalizedCapabilities(): Record<string, IInstanceType> {
     const normalizedCapabilities: Record<string, IInstanceType> = {};
     switch (provider) {
       case Providers.AWS:
+      case Providers.CAPA:
         rawCaps = JSON.parse(window.config.awsCapabilitiesJSON);
         for (const [instanceType, instanceProperties] of Object.entries(
           rawCaps as Record<string, IRawAWSInstanceType>
@@ -65,6 +68,22 @@ function useNormalizedCapabilities(): Record<string, IInstanceType> {
             cpu: instanceProperties.numberOfCores.toFixed(0),
             // eslint-disable-next-line no-magic-numbers
             ram: (instanceProperties.memoryInMb / 1000).toFixed(2),
+            description: instanceProperties.description,
+            name: instanceType,
+          };
+        }
+
+        break;
+
+      case Providers.GCP:
+        rawCaps = JSON.parse(window.config.gcpCapabilitiesJSON);
+        for (const [instanceType, instanceProperties] of Object.entries(
+          rawCaps as Record<string, IRawGCPInstanceType>
+        )) {
+          normalizedCapabilities[instanceType] = {
+            cpu: instanceProperties.guestCpus.toFixed(0),
+            // eslint-disable-next-line no-magic-numbers
+            ram: (instanceProperties.memoryMb / 1000).toFixed(2),
             description: instanceProperties.description,
             name: instanceType,
           };

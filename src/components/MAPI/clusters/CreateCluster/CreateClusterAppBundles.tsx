@@ -15,6 +15,7 @@ import {
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
+import { Providers } from 'model/constants';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -31,7 +32,7 @@ import Line from 'UI/Display/Documentation/Line';
 import InputGroup from 'UI/Inputs/InputGroup';
 import RadioInput from 'UI/Inputs/RadioInput';
 import Select from 'UI/Inputs/Select';
-import JSONSchemaForm from 'UI/JSONSchemaForm';
+import JSONSchemaForm, { IFormContext } from 'UI/JSONSchemaForm';
 import testSchema from 'UI/JSONSchemaForm/test.schema.json';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
@@ -48,6 +49,7 @@ import {
   prototypeProviders,
   PrototypeSchemas,
   prototypeSchemas,
+  prototypeSchemasToProviders,
 } from './schemaUtils';
 
 const validator = customizeValidator({ AjvClass: Ajv2020 });
@@ -140,6 +142,10 @@ function formatSchemaSelectOptions(
   schema: PrototypeSchemas[]
 ): { label: string; value: PrototypeSchemas }[] {
   return schema.map((s) => ({ label: formatSchemaSelectLabel(s), value: s }));
+}
+
+export interface ICreateClusterFormContext extends IFormContext {
+  schemaProvider?: PropertiesOf<typeof Providers>;
 }
 
 interface ICreateClusterAppBundlesProps
@@ -399,6 +405,10 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                   <JSONSchemaForm
                     schema={appSchema}
                     uiSchema={formProps.uiSchema}
+                    formContext={{
+                      schemaProvider:
+                        prototypeSchemasToProviders[selectedSchema],
+                    }}
                     validator={validator}
                     formData={formProps.formData}
                     showErrorList='bottom'
