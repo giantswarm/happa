@@ -24,7 +24,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   };
 
   const handleNumberChange = (patch: { value: number; valid: boolean }) => {
-    onChange(!patch.valid ? options.emptyValue : patch.value);
+    onChange(Number.isNaN(patch.value) ? options.emptyValue : patch.value);
   };
 
   const handleBlur = (
