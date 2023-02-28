@@ -11,15 +11,15 @@ import { VersionImpl } from 'utils/Version';
 import ClusterNameWidget from './custom-widgets/ClusterNameWidget';
 import InstanceTypeWidget from './custom-widgets/InstanceTypeWidget';
 
-export enum PrototypeProviders {
-  AWS = 'aws',
-  AZURE = 'azure',
-  CLOUDDIRECTOR = 'cloud-director',
-  GCP = 'gcp',
-  VSPHERE = 'vsphere',
-}
+export const prototypeProviders = [
+  Providers.CAPA,
+  Providers.CAPZ,
+  Providers.CLOUDDIRECTOR,
+  Providers.GCP,
+  Providers.VSPHERE,
+] as const;
 
-export const prototypeProviders = Object.values(PrototypeProviders);
+export type PrototypeProviders = (typeof prototypeProviders)[number];
 
 enum TestSchema {
   TEST = 'test',
@@ -32,25 +32,28 @@ export const prototypeSchemas = [
   ...prototypeProviders,
 ];
 
-export const prototypeSchemasToProviders: Record<
-  PrototypeSchemas,
-  PropertiesOf<typeof Providers> | undefined
-> = {
-  [TestSchema.TEST]: undefined,
-  [PrototypeProviders.AWS]: Providers.CAPA,
-  // TODO: Replace Providers.AZURE with Providers.CAPZ when it's implemented
-  [PrototypeProviders.AZURE]: Providers.AZURE,
-  [PrototypeProviders.CLOUDDIRECTOR]: undefined,
-  [PrototypeProviders.GCP]: Providers.GCP,
-  [PrototypeProviders.VSPHERE]: undefined,
-};
+export function getProviderForPrototypeSchema(
+  schema: PrototypeSchemas
+): PropertiesOf<typeof Providers> | undefined {
+  switch (schema) {
+    case TestSchema.TEST:
+    case Providers.CLOUDDIRECTOR:
+    case Providers.VSPHERE:
+      return undefined;
+    // TODO: Remove Providers.CAPZ mapping when support is implemented
+    case Providers.CAPZ:
+      return Providers.AZURE;
+    default:
+      return schema;
+  }
+}
 
 interface FormPropsPartial {
   uiSchema: UiSchema;
   formData: (organization: string) => RJSFSchema;
 }
 
-const formPropsProviderAWS: Record<string, FormPropsPartial> = {
+const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
   0: {
     uiSchema: {
       'ui:order': [
@@ -83,7 +86,7 @@ const formPropsProviderAWS: Record<string, FormPropsPartial> = {
   },
 };
 
-const formPropsProviderAzure: Record<string, FormPropsPartial> = {
+const formPropsProviderCAPZ: Record<string, FormPropsPartial> = {
   0: {
     uiSchema: {
       'ui:order': [
@@ -295,11 +298,11 @@ const formPropsByProvider: Record<
   PrototypeSchemas,
   Record<string, FormPropsPartial>
 > = {
-  [PrototypeProviders.AZURE]: formPropsProviderAzure,
-  [PrototypeProviders.AWS]: formPropsProviderAWS,
-  [PrototypeProviders.CLOUDDIRECTOR]: formPropsProviderCloudDirector,
-  [PrototypeProviders.GCP]: formPropsProviderGCP,
-  [PrototypeProviders.VSPHERE]: formPropsProviderVSphere,
+  [Providers.CAPZ]: formPropsProviderCAPZ,
+  [Providers.CAPA]: formPropsProviderCAPA,
+  [Providers.CLOUDDIRECTOR]: formPropsProviderCloudDirector,
+  [Providers.GCP]: formPropsProviderGCP,
+  [Providers.VSPHERE]: formPropsProviderVSphere,
   [TestSchema.TEST]: formPropsTest,
 };
 

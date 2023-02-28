@@ -43,12 +43,12 @@ import RoutePath from 'utils/routePath';
 import {
   cleanDeepWithException,
   getFormProps,
+  getProviderForPrototypeSchema,
   preprocessSchema,
   PrototypeProviders,
   prototypeProviders,
   PrototypeSchemas,
   prototypeSchemas,
-  prototypeSchemasToProviders,
 } from './schemaUtils';
 
 const validator = customizeValidator({ AjvClass: Ajv2020 });
@@ -60,7 +60,14 @@ const Wrapper = styled.div`
 `;
 
 function getAppRepoName(provider: PrototypeProviders): string {
-  return `cluster-${provider}`;
+  switch (provider) {
+    case Providers.CAPA:
+      return `cluster-aws`;
+    case Providers.CAPZ:
+      return `cluster-azure`;
+    default:
+      return `cluster-${provider}`;
+  }
 }
 
 function getAppCatalogEntrySchemaURL(
@@ -103,7 +110,7 @@ function fetchAppRepoBranchesKey(provider: PrototypeProviders) {
 }
 
 function getDefaultRepoBranch(provider: PrototypeProviders) {
-  return provider === PrototypeProviders.AWS ? 'master' : 'main';
+  return provider === Providers.CAPA ? 'master' : 'main';
 }
 
 const testSchemaURL =
@@ -117,13 +124,14 @@ Prompt.displayName = 'Prompt';
 
 function formatSchemaSelectLabel(schema: PrototypeSchemas): string {
   switch (schema) {
-    case PrototypeProviders.AWS:
-    case PrototypeProviders.GCP:
+    case Providers.CAPA:
+      return 'AWS';
+    case Providers.CAPZ:
+      return 'Azure';
+    case Providers.GCP:
       return schema.toLocaleUpperCase();
-
-    case PrototypeProviders.VSPHERE:
+    case Providers.VSPHERE:
       return 'VSphere';
-
     default:
       return `${schema
         .split('-')
@@ -398,7 +406,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                     uiSchema={formProps.uiSchema}
                     formContext={{
                       schemaProvider:
-                        prototypeSchemasToProviders[selectedSchema],
+                        getProviderForPrototypeSchema(selectedSchema),
                     }}
                     validator={validator}
                     formData={formProps.formData}
