@@ -304,9 +304,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     resetForm(selectedSchema);
   };
 
-  const handleFormDataChange = ({
-    formData: data,
-  }: IChangeEvent<RJSFSchema>) => {
+  const handleFormDataChange = (data?: RJSFSchema) => {
     if (!data) {
       return;
     }
