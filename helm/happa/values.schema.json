@@ -178,6 +178,9 @@
         "ingress": {
             "type": "object",
             "properties": {
+                "externalDNS": {
+                    "type": "boolean"
+                },
                 "tls": {
                     "type": "object",
                     "properties": {
