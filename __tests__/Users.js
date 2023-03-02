@@ -193,7 +193,9 @@ describe('Users', () => {
     const selectedEmailCell = (
       await findByText(new RegExp(desiredEmail, 'i'))
     ).closest('tr');
-    const expiryDate = within(selectedEmailCell).getByText(/in about 1 year/i);
+    const expiryDate = within(selectedEmailCell).getByText(
+      /^in (about 1 year|12 months)$/i
+    );
     expect(expiryDate).toBeInTheDocument();
 
     let unexpireButton =
