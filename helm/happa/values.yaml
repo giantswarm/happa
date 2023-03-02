@@ -42,6 +42,7 @@ gcp:
     default: ""
 
 ingress:
+  externalDNS: false
   tls:
     letsencrypt: false
     clusterIssuer: ""
