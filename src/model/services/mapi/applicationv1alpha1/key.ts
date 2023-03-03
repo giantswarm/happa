@@ -25,6 +25,7 @@ export const statusPendingUpgrade = 'pending-upgrade';
 export const statusPendingRollback = 'pending-rollback';
 
 export const annotationReadme = 'application.giantswarm.io/readme';
+export const annotationValuesSchema = 'application.giantswarm.io/values-schema';
 export const annotationAppType = 'application.giantswarm.io/app-type';
 export const annotationLogo = 'ui.giantswarm.io/logo';
 
@@ -44,6 +45,12 @@ export function getAppCatalogEntryReadmeURL(
   appCatalogEntry: IAppCatalogEntry
 ): string | undefined {
   return appCatalogEntry.metadata.annotations?.[annotationReadme];
+}
+
+export function getAppCatalogEntryValuesSchemaURL(
+  appCatalogEntry: IAppCatalogEntry
+): string | undefined {
+  return appCatalogEntry.metadata.annotations?.[annotationValuesSchema];
 }
 
 export function getAppCurrentVersion(app: IApp): string {
@@ -74,5 +81,18 @@ export function getDefaultAppNameForProvider(
       return 'default-apps-aws';
     default:
       return `default-apps-${provider}`;
+  }
+}
+
+export function getClusterAppNameForProvider(
+  provider: PropertiesOf<typeof Providers>
+): string {
+  switch (provider) {
+    case Providers.CAPA:
+      return `cluster-aws`;
+    case Providers.CAPZ:
+      return `cluster-azure`;
+    default:
+      return `cluster-${provider}`;
   }
 }
