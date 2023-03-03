@@ -147,6 +147,14 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
                     path={AccountSettingsRoutes.Home}
                   />
 
+                  {user?.type === LoggedInUserTypes.MAPI && (
+                    <Route
+                      component={Permissions}
+                      exact
+                      path={AccountSettingsRoutes.Permissions}
+                    />
+                  )}
+
                   {user?.isAdmin && (
                     <>
                       <Route
@@ -162,14 +170,6 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
                         }
                       />
                     </>
-                  )}
-
-                  {user?.type === LoggedInUserTypes.MAPI && (
-                    <Route
-                      component={Permissions}
-                      exact
-                      path={AccountSettingsRoutes.Permissions}
-                    />
                   )}
 
                   <Route
