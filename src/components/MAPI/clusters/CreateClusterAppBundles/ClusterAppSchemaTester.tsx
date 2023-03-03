@@ -12,6 +12,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { Providers } from 'model/constants';
 import { AccountSettingsRoutes } from 'model/constants/routes';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -47,22 +48,12 @@ const Wrapper = styled.div`
   text-align: center;
 `;
 
-function getAppRepoName(provider: PrototypeProviders): string {
-  switch (provider) {
-    case Providers.CAPA:
-      return `cluster-aws`;
-    case Providers.CAPZ:
-      return `cluster-azure`;
-    default:
-      return `cluster-${provider}`;
-  }
-}
-
 function getAppCatalogEntrySchemaURL(
   provider: PrototypeProviders,
   branch?: string
 ): string {
-  const appRepoName = getAppRepoName(provider);
+  const appRepoName =
+    applicationv1alpha1.getClusterAppNameForProvider(provider);
   const branchName = branch || getDefaultRepoBranch(provider);
 
   return `https://raw.githubusercontent.com/giantswarm/${appRepoName}/${branchName}/helm/${appRepoName}/values.schema.json`;
@@ -77,7 +68,8 @@ async function fetchAppRepoBranches(
   _auth: IOAuth2Provider,
   provider: PrototypeProviders
 ): Promise<IRepoBranchEntry[]> {
-  const appRepoName = getAppRepoName(provider);
+  const appRepoName =
+    applicationv1alpha1.getClusterAppNameForProvider(provider);
   const url = `https://api.github.com/repos/giantswarm/${appRepoName}/branches`;
 
   client.setRequestConfig({
@@ -92,7 +84,8 @@ async function fetchAppRepoBranches(
 }
 
 function fetchAppRepoBranchesKey(provider: PrototypeProviders) {
-  const appRepoName = getAppRepoName(provider);
+  const appRepoName =
+    applicationv1alpha1.getClusterAppNameForProvider(provider);
 
   return `https://api.github.com/repos/giantswarm/${appRepoName}/branches`;
 }
@@ -289,8 +282,8 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
 
   const version =
     selectedBranch && selectedBranch.startsWith('release-')
-      ? selectedBranch.replace('release-', '').replace('x', '0')
-      : 'v0.0.0';
+      ? selectedBranch.replace('release-v', '').replace('x', '0')
+      : '0.0.0';
 
   return (
     <Breadcrumb

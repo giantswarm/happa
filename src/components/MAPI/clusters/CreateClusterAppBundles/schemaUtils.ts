@@ -313,7 +313,7 @@ export function getFormProps(
 ): Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'> {
   const formPropsByVersions = formPropsByProvider[schema];
 
-  const majorVersion = new VersionImpl(version.slice(1)).getMajor();
+  const majorVersion = new VersionImpl(version).getMajor();
   const latestVersion = Object.keys(formPropsByVersions).sort(compare)[0];
 
   const props =
