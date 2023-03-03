@@ -79,6 +79,8 @@ export function getDefaultAppNameForProvider(
   switch (provider) {
     case Providers.CAPA:
       return 'default-apps-aws';
+    case Providers.CAPZ:
+      return 'default-apps-azure';
     default:
       return `default-apps-${provider}`;
   }

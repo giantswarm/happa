@@ -23,7 +23,6 @@ import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
-import Line from 'UI/Display/Documentation/Line';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
@@ -31,10 +30,7 @@ import { compare } from 'utils/semver';
 
 import CreateClusterAppBundlesForm from './CreateClusterAppBundlesForm';
 import { PrototypeSchemas } from './schemaUtils';
-import {
-  fetchClusterAppAppCatalogEntryList,
-  fetchClusterAppAppCatalogEntryListKey,
-} from './utils';
+import { fetchClusterAppACEList, fetchClusterAppACEListKey } from './utils';
 
 const Wrapper = styled.div`
   height: 320px;
@@ -43,11 +39,18 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
-const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  return <Line prompt={false} text={children} />;
-};
-
-Prompt.displayName = 'Prompt';
+function getLatestAppCatalogEntry(
+  entries: applicationv1alpha1.IAppCatalogEntry[]
+): applicationv1alpha1.IAppCatalogEntry {
+  return entries
+    .slice()
+    .sort((a, b) =>
+      compare(
+        normalizeAppVersion(b.spec.version),
+        normalizeAppVersion(a.spec.version)
+      )
+    )[0];
+}
 
 interface ICreateClusterAppBundlesProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
@@ -72,24 +75,42 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
 
   const [isCreating, _setIsCreating] = useState<boolean>(false);
 
+  const clusterDefaultAppsACEClient = useRef(clientFactory());
+  const {
+    data: clusterDefaultAppsACEList,
+    error: clusterDefaultAppsACEListError,
+    isLoading: clusterDefaultAppsACEIsLoading,
+  } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponseError>(
+    fetchClusterAppACEListKey,
+    () =>
+      fetchClusterAppACEList(
+        clusterDefaultAppsACEClient.current,
+        auth,
+        provider
+      )
+  );
+
+  const latestClusterDefaultAppsACE = useMemo(() => {
+    if (!clusterDefaultAppsACEList) return undefined;
+
+    return getLatestAppCatalogEntry(clusterDefaultAppsACEList.items);
+  }, [clusterDefaultAppsACEList]);
+
   const clusterAppACEClient = useRef(clientFactory());
   const {
     data: clusterAppACEList,
     error: clusterAppACEListError,
     isLoading: clusterAppACEIsLoading,
   } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponseError>(
-    fetchClusterAppAppCatalogEntryListKey,
-    () =>
-      fetchClusterAppAppCatalogEntryList(
-        clusterAppACEClient.current,
-        auth,
-        provider
-      )
+    fetchClusterAppACEListKey,
+    () => fetchClusterAppACEList(clusterAppACEClient.current, auth, provider)
   );
 
   useEffect(() => {
-    if (clusterAppACEListError) {
-      const errorMessage = extractErrorMessage(clusterAppACEListError);
+    if (clusterAppACEListError || clusterDefaultAppsACEListError) {
+      const errorMessage = extractErrorMessage(
+        clusterAppACEListError ?? clusterDefaultAppsACEListError
+      );
 
       new FlashMessage(
         'There was a problem loading app versions.',
@@ -98,21 +119,16 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
         errorMessage
       );
 
-      ErrorReporter.getInstance().notify(clusterAppACEListError);
+      ErrorReporter.getInstance().notify(
+        clusterAppACEListError ?? clusterDefaultAppsACEListError!
+      );
     }
-  }, [clusterAppACEListError]);
+  }, [clusterAppACEListError, clusterDefaultAppsACEListError]);
 
   const latestClusterAppACE = useMemo(() => {
     if (!clusterAppACEList) return undefined;
 
-    return clusterAppACEList.items
-      .slice()
-      .sort((a, b) =>
-        compare(
-          normalizeAppVersion(b.spec.version),
-          normalizeAppVersion(a.spec.version)
-        )
-      )[0];
+    return getLatestAppCatalogEntry(clusterAppACEList.items);
   }, [clusterAppACEList]);
 
   const schemaURL = latestClusterAppACE
@@ -152,7 +168,10 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     dispatch(push(MainRoutes.Home));
   };
 
-  const isLoading = clusterAppACEIsLoading || appSchemaIsLoading;
+  const isLoading =
+    clusterDefaultAppsACEIsLoading ||
+    clusterAppACEIsLoading ||
+    appSchemaIsLoading;
 
   return (
     <Breadcrumb
