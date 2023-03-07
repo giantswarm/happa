@@ -56,7 +56,7 @@ const SelectWidget: React.FC<WidgetProps> = ({
       {({ label }: EnumOptionsType) => (
         <Box
           pad='small'
-          height={{ min: '30px' }}
+          height={{ min: '35px' }}
           aria-label={label === '' ? 'empty value' : undefined}
         >
           {label}
