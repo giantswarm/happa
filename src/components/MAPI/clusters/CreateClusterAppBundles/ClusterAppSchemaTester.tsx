@@ -275,7 +275,10 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
     setSelectedBranch(e.target.value);
   };
 
-  const handleFormSubmit = (data: RJSFSchema | undefined) => {
+  const handleFormSubmit = (
+    _clusterName: string,
+    data: RJSFSchema | undefined
+  ) => {
     // eslint-disable-next-line no-console
     console.log(data);
   };
@@ -353,7 +356,7 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
                   organization={organizationID}
                   appVersion={version}
                   onSubmit={handleFormSubmit}
-                  key={`${selectedSchema}${version}`}
+                  key={`${selectedSchema}${selectedBranch}`}
                   render={({ formDataPreview }) => {
                     return (
                       <Box

@@ -2,7 +2,6 @@ import { FormProps } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import cleanDeep, { CleanOptions } from 'clean-deep';
 import { isEmpty, isPlainObject, transform } from 'lodash';
-import { generateUID } from 'MAPI/utils';
 import { Providers } from 'model/constants';
 import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
 import { compare } from 'utils/semver';
@@ -50,7 +49,7 @@ export function getProviderForPrototypeSchema(
 
 interface FormPropsPartial {
   uiSchema: UiSchema;
-  formData: (organization: string) => RJSFSchema;
+  formData: (clusterName: string, organization: string) => RJSFSchema;
 }
 
 const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
@@ -77,9 +76,9 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
         },
       },
     },
-    formData: (organization) => {
+    formData: (clusterName, organization) => {
       return {
-        clusterName: generateUID(5),
+        clusterName,
         organization,
       };
     },
@@ -161,10 +160,10 @@ const formPropsProviderCAPZ: Record<string, FormPropsPartial> = {
         'ui:order': ['location', 'subscriptionId', '*'],
       },
     },
-    formData: (organization) => {
+    formData: (clusterName, organization) => {
       return {
         metadata: {
-          name: generateUID(5),
+          name: clusterName,
           organization,
         },
       };
@@ -222,9 +221,9 @@ const formPropsProviderGCP: Record<string, FormPropsPartial> = {
         },
       },
     },
-    formData: (organization) => {
+    formData: (clusterName, organization) => {
       return {
-        clusterName: generateUID(5),
+        clusterName,
         organization,
       };
     },
@@ -242,10 +241,10 @@ const formPropsProviderVSphere: Record<string, FormPropsPartial> = {
         },
       },
     },
-    formData: (organization: string) => {
+    formData: (clusterName, organization) => {
       return {
         cluster: {
-          name: generateUID(5),
+          name: clusterName,
           organization,
         },
       };
@@ -309,6 +308,7 @@ const formPropsByProvider: Record<
 export function getFormProps(
   schema: PrototypeSchemas,
   version: string,
+  clusterName: string,
   organization: string
 ): Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'> {
   const formPropsByVersions = formPropsByProvider[schema];
@@ -319,7 +319,10 @@ export function getFormProps(
   const props =
     formPropsByVersions[majorVersion] ?? formPropsByVersions[latestVersion];
 
-  return { uiSchema: props.uiSchema, formData: props.formData(organization) };
+  return {
+    uiSchema: props.uiSchema,
+    formData: props.formData(clusterName, organization),
+  };
 }
 
 export function cleanDeepWithException<T>(

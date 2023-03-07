@@ -4,6 +4,7 @@ import { customizeValidator } from '@rjsf/validator-ajv8';
 import Ajv2020 from 'ajv/dist/2020';
 import cleanDeep from 'clean-deep';
 import yaml from 'js-yaml';
+import { generateUID } from 'MAPI/utils';
 import { Providers } from 'model/constants';
 import React, { useMemo, useState } from 'react';
 import { CodeBlock } from 'UI/Display/Documentation/CodeBlock';
@@ -35,7 +36,7 @@ interface ICreateClusterAppBundlesFormProps {
   provider: PrototypeSchemas;
   organization: string;
   appVersion: string;
-  onSubmit: (formData: RJSFSchema | undefined) => void;
+  onSubmit: (clusterName: string, formData: RJSFSchema | undefined) => void;
   onChange?: (args: {
     formData: RJSFSchema | undefined;
     cleanFormData: RJSFSchema | undefined;
@@ -54,9 +55,12 @@ const CreateClusterAppBundlesForm: React.FC<
   onChange,
   ...props
 }) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const clusterName = useMemo(() => generateUID(5), [provider, appVersion]);
+
   const [formProps, setFormProps] = useState<
     Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'>
-  >(getFormProps(provider, appVersion, organization));
+  >(getFormProps(provider, appVersion, clusterName, organization));
 
   const cleanFormData = cleanDeep(formProps.formData, { emptyStrings: false });
 
@@ -66,7 +70,7 @@ const CreateClusterAppBundlesForm: React.FC<
   ) => {
     e.preventDefault();
 
-    onSubmit(cleanFormData);
+    onSubmit(clusterName, cleanFormData);
   };
 
   const handleFormDataChange = (rawFormData: RJSFSchema | undefined) => {
