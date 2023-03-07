@@ -50,6 +50,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
       contentProps={{
         width: { max: 'small' },
       }}
+      controlledInput={true}
       onChange={handleNumberChange}
       onBlur={handleBlur}
     />
