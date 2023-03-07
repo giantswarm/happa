@@ -90,6 +90,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
       )
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const latestClusterDefaultAppsACE = useMemo(() => {
     if (!clusterDefaultAppsACEList) return undefined;
 

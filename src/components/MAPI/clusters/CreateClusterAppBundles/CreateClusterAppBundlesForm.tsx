@@ -69,9 +69,7 @@ const CreateClusterAppBundlesForm: React.FC<
     onSubmit(cleanFormData);
   };
 
-  const handleFormDataChange = ({
-    formData: rawFormData,
-  }: IChangeEvent<RJSFSchema>) => {
+  const handleFormDataChange = (rawFormData: RJSFSchema | undefined) => {
     if (!rawFormData) {
       return;
     }
