@@ -3,6 +3,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading, Text } from 'grommet';
 import { spinner } from 'images';
+import yaml from 'js-yaml';
 import {
   fetchAppCatalogEntrySchema,
   fetchAppCatalogEntrySchemaKey,
@@ -26,11 +27,18 @@ import Button from 'UI/Controls/Button';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
+import RoutePath from 'utils/routePath';
 import { compare } from 'utils/semver';
 
 import CreateClusterAppBundlesForm from './CreateClusterAppBundlesForm';
 import { PrototypeSchemas } from './schemaUtils';
-import { fetchClusterAppACEList, fetchClusterAppACEListKey } from './utils';
+import {
+  createClusterAppResources,
+  fetchClusterAppACEList,
+  fetchClusterAppACEListKey,
+  fetchClusterDefaultAppsACEList,
+  fetchClusterDefaultAppsACEListKey,
+} from './utils';
 
 const Wrapper = styled.div`
   height: 320px;
@@ -73,7 +81,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   const auth = useAuthProvider();
   const dispatch = useDispatch();
 
-  const [isCreating, _setIsCreating] = useState<boolean>(false);
+  const [isCreating, setIsCreating] = useState<boolean>(false);
 
   const clusterDefaultAppsACEClient = useRef(clientFactory());
   const {
@@ -81,16 +89,15 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     error: clusterDefaultAppsACEListError,
     isLoading: clusterDefaultAppsACEIsLoading,
   } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponseError>(
-    fetchClusterAppACEListKey,
+    fetchClusterDefaultAppsACEListKey(),
     () =>
-      fetchClusterAppACEList(
+      fetchClusterDefaultAppsACEList(
         clusterDefaultAppsACEClient.current,
         auth,
         provider
       )
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const latestClusterDefaultAppsACE = useMemo(() => {
     if (!clusterDefaultAppsACEList) return undefined;
 
@@ -161,8 +168,39 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     }
   }, [appSchemaError]);
 
-  const handleCreation = (_formData: RJSFSchema | undefined) => {
-    // TODO: handle
+  const handleCreation = async (
+    clusterName: string,
+    formData: RJSFSchema | undefined
+  ) => {
+    if (!formData) return;
+
+    setIsCreating(true);
+
+    try {
+      await createClusterAppResources(clientFactory, auth, {
+        clusterName,
+        organization: orgId,
+        clusterAppVersion: latestClusterAppACE!.spec.version,
+        defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
+        provider,
+        configMapContents: yaml.dump(formData),
+      });
+
+      setIsCreating(false);
+
+      const clusterListPath = RoutePath.createUsablePath(MainRoutes.Home);
+      dispatch(push(clusterListPath));
+    } catch (err) {
+      setIsCreating(false);
+
+      new FlashMessage(
+        <>Could not create cluster: {extractErrorMessage(err)}</>,
+        messageType.ERROR,
+        messageTTL.LONG
+      );
+
+      ErrorReporter.getInstance().notify(err as Error);
+    }
   };
 
   const handleCreationCancel = () => {
