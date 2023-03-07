@@ -1,7 +1,8 @@
 import { ThemeContext, ThemeType } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
-import React, { useMemo } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
+import usePrevious from 'utils/hooks/usePrevious';
 
 import TextInput from '../TextInput';
 
@@ -127,26 +128,30 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
     { value, min, max, step, readOnly, disabled, onChange, children, ...props },
     ref
   ) => {
-    const validationError = useMemo(() => {
-      return validateInput(
-        typeof value === 'undefined' ? NaN : value,
-        min,
-        max
-      );
-    }, [value, min, max]);
+    const [currValue, setCurrValue] = useState<number>(value ?? NaN);
+    const [validationError, setValidationError] = useState('');
 
-    const inputValue = typeof value === 'undefined' ? '' : value;
+    const inputValue = Number.isNaN(currValue) ? '' : currValue;
+
+    const prevMin = usePrevious(min);
+    const prevMax = usePrevious(max);
 
     const editable = !readOnly && !disabled;
 
-    const updateValue = (newValue: number, error: string = '') => {
-      const isValid = error.length < 1;
+    const updateValue = useCallback(
+      (newValue: number, error: string = '') => {
+        setCurrValue(newValue);
+        setValidationError(error);
 
-      onChange?.({
-        value: newValue,
-        valid: isValid,
-      });
-    };
+        const isValid = error.length < 1;
+
+        onChange?.({
+          value: newValue,
+          valid: isValid,
+        });
+      },
+      [onChange]
+    );
 
     const updateInput = (desiredValue: number, allowInvalidValues = false) => {
       const error = validateInput(desiredValue, min, max);
@@ -171,26 +176,33 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
     const increment = () => {
       const currStep = typeof step === 'number' ? step : 1;
 
-      if (typeof value === 'undefined') {
+      if (Number.isNaN(currValue)) {
         updateInput(min || currStep);
       } else {
-        updateInput(value + currStep);
+        updateInput(currValue + currStep);
       }
     };
 
     const decrement = () => {
       const currStep = typeof step === 'number' ? step : 1;
 
-      if (typeof value === 'undefined') {
+      if (Number.isNaN(currValue)) {
         updateInput(min || -currStep);
       } else {
-        updateInput(value - currStep);
+        updateInput(currValue - currStep);
       }
     };
 
     const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
       event.target.select();
     };
+
+    useEffect(() => {
+      if ((prevMax && prevMax !== max) || (prevMin && prevMin !== min)) {
+        const error = validateInput(currValue, min, max);
+        updateValue(currValue, error);
+      }
+    }, [min, max, prevMin, prevMax, currValue, updateValue]);
 
     return (
       <ThemeContext.Extend value={customTheme}>
@@ -209,7 +221,7 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
           {editable && (
             <Controls>
               <IncrementDecrementButton
-                className={value === min ? 'disabled' : undefined}
+                className={currValue === min ? 'disabled' : undefined}
                 onClick={decrement}
                 aria-label='Decrement'
                 role='button'
@@ -217,7 +229,7 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
                 &ndash;
               </IncrementDecrementButton>
               <IncrementDecrementButton
-                className={value === max ? 'disabled' : undefined}
+                className={currValue === max ? 'disabled' : undefined}
                 onClick={increment}
                 aria-label='Increment'
                 role='button'
