@@ -183,6 +183,18 @@ workflows:
             tags:
               only: /^v.*/
 
+      - architect/push-to-app-collection:
+          name: push-to-capz-app-collection
+          app_name: "happa"
+          app_collection_repo: "capz-app-collection"
+          requires:
+            - push-happa-to-control-plane-app-catalog
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
       - architect/run-tests-with-ats:
           name: execute chart tests
           app-test-suite_version: v0.2.9
