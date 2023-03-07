@@ -51,10 +51,10 @@ function getUserSecretName(appName: string): string {
   return `${appName}-user-secrets`;
 }
 
-function getClusterConfigMapName(
+export function getClusterConfigMapName(
   clusterID: string,
-  appName: string,
-  isClusterApp: boolean
+  appName?: string,
+  isClusterApp?: boolean
 ): string {
   if (appName === 'nginx-ingress-controller-app' && !isClusterApp) {
     return 'ingress-controller-values';
