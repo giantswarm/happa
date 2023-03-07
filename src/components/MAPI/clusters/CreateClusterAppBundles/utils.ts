@@ -1,10 +1,12 @@
 import yaml from 'js-yaml';
-import { getClusterConfigMapName } from 'MAPI/apps/utils';
+import {
+  ensureAppUserConfigMap,
+  getClusterConfigMapName,
+} from 'MAPI/apps/utils';
 import { getNamespaceFromOrgName } from 'MAPI/utils';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import * as corev1 from 'model/services/mapi/corev1';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
@@ -180,49 +182,6 @@ function createDefaultAppsCR(
   };
 }
 
-function createClusterAppUserConfigMapCR(
-  clusterName: string,
-  orgNamespace: string,
-  contents: string
-): corev1.IConfigMap {
-  return {
-    apiVersion: 'v1',
-    kind: 'ConfigMap',
-    metadata: {
-      name: getClusterAppUserConfigMapName(clusterName),
-      namespace: orgNamespace,
-      labels: {
-        [applicationv1alpha1.labelCluster]: clusterName,
-      },
-    },
-    data: {
-      values: contents,
-    },
-  };
-}
-
-function createDefaultAppsUserConfigMapCR(
-  defaultAppsAppName: string,
-  clusterName: string,
-  orgNamespace: string,
-  contents: string
-): corev1.IConfigMap {
-  return {
-    apiVersion: 'v1',
-    kind: 'ConfigMap',
-    metadata: {
-      name: getClusterAppUserConfigMapName(defaultAppsAppName),
-      namespace: orgNamespace,
-      labels: {
-        [applicationv1alpha1.labelCluster]: clusterName,
-      },
-    },
-    data: {
-      values: contents,
-    },
-  };
-}
-
 export async function createClusterAppResources(
   clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
@@ -234,28 +193,33 @@ export async function createClusterAppResources(
     clusterAppConfig.clusterName
   );
 
-  const clusterAppUserConfigMapCR = createClusterAppUserConfigMapCR(
-    clusterAppConfig.clusterName,
-    orgNamespace,
-    clusterAppConfig.configMapContents
-  );
-
-  const defaultAppsUserConfigMapCR = createDefaultAppsUserConfigMapCR(
-    defaultAppsAppName,
-    clusterAppConfig.clusterName,
-    orgNamespace,
-    yaml.dump(
-      templateDefaultAppsConfigMapContents(
-        clusterAppConfig.clusterName,
-        clusterAppConfig.organization
-      )
-    )
-  );
+  const configMapLabels = {
+    [applicationv1alpha1.labelCluster]: clusterAppConfig.clusterName,
+  };
 
   const [clusterAppUserConfigMap, defaultAppsUserConfigMap] = await Promise.all(
     [
-      corev1.createConfigMap(clientFactory(), auth, clusterAppUserConfigMapCR),
-      corev1.createConfigMap(clientFactory(), auth, defaultAppsUserConfigMapCR),
+      ensureAppUserConfigMap(
+        clientFactory(),
+        auth,
+        orgNamespace,
+        getClusterAppUserConfigMapName(clusterAppConfig.clusterName),
+        clusterAppConfig.configMapContents,
+        configMapLabels
+      ),
+      ensureAppUserConfigMap(
+        clientFactory(),
+        auth,
+        orgNamespace,
+        getClusterAppUserConfigMapName(defaultAppsAppName),
+        yaml.dump(
+          templateDefaultAppsConfigMapContents(
+            clusterAppConfig.clusterName,
+            clusterAppConfig.organization
+          )
+        ),
+        configMapLabels
+      ),
     ]
   );
 
