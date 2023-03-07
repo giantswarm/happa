@@ -26,6 +26,11 @@ metadata:
     {{- if .Values.security.restrictAccess.api }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ template "whitelistCIDR" . }}
     {{- end }}
+
+    {{- if .Values.ingress.externalDNS }}
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.happaapi.host }}
+    giantswarm.io/external-dns: managed
+    {{- end }}
 spec:
   ingressClassName: nginx
   rules:
