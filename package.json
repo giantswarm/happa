@@ -212,7 +212,7 @@
     "json-loader": "0.5.7",
     "json-schema-to-typescript": "11.0.5",
     "lint-staged": "13.1.2",
-    "mini-css-extract-plugin": "2.7.2",
+    "mini-css-extract-plugin": "2.7.3",
     "nock": "13.3.0",
     "node-sass": "8.0.0",
     "postinstall-postinstall": "2.1.0",
