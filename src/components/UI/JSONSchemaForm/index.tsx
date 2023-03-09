@@ -1,6 +1,11 @@
 import Form, { FormProps, IChangeEvent } from '@rjsf/core';
-import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
-import React, { useReducer, useRef } from 'react';
+import {
+  getDefaultFormState,
+  RJSFSchema,
+  RJSFValidationError,
+} from '@rjsf/utils';
+import cloneDeep from 'lodash/cloneDeep';
+import React, { useEffect, useMemo, useReducer, useRef } from 'react';
 
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
@@ -11,7 +16,11 @@ import FieldTemplate from './FieldTemplate';
 import MultiSchemaField from './MultiSchemaField';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import SelectWidget from './SelectWidget';
-import { mapErrorPropertyToField, transformErrors } from './utils';
+import {
+  mapErrorPropertyToField,
+  removeDefaultValues,
+  transformErrors,
+} from './utils';
 
 const customFields = {
   OneOfField: MultiSchemaField,
@@ -112,18 +121,43 @@ export interface IFormContext extends IFormState {
   idConfigs: IIdConfigs;
 }
 
-const JSONSchemaForm: React.FC<FormProps> = ({
+interface IJSONSchemaFormProps extends FormProps {
+  onChange: (data?: RJSFSchema) => void;
+}
+
+const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
   onChange,
   onBlur,
   idPrefix = 'root',
   idSeparator = '_',
   formContext,
+  formData,
+  schema,
+  validator,
   ...props
 }) => {
   const [state, dispatch] = useReducer(
     createReducer({ idSeparator, idPrefix }),
     createInitalState()
   );
+
+  const [preprocessedSchema, formDataWithDefaultValues] = useMemo(() => {
+    const defaultValues: RJSFSchema = getDefaultFormState(
+      validator,
+      schema,
+      formData,
+      schema
+    );
+    const patchedSchema = removeDefaultValues(cloneDeep(schema));
+
+    return [patchedSchema, defaultValues];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validator, schema]);
+
+  useEffect(() => {
+    onChange(formDataWithDefaultValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formDataWithDefaultValues]);
 
   const idConfigs: IIdConfigs = { idPrefix, idSeparator };
 
@@ -139,7 +173,7 @@ const JSONSchemaForm: React.FC<FormProps> = ({
   const handleChange = (data: IChangeEvent<RJSFSchema>, id?: string) => {
     addTouchedField(id);
     if (onChange) {
-      onChange(data, id);
+      onChange(data.formData);
     }
   };
 
@@ -177,6 +211,9 @@ const JSONSchemaForm: React.FC<FormProps> = ({
       ref={ref}
       noHtml5Validate
       liveValidate
+      formData={formData}
+      schema={preprocessedSchema}
+      validator={validator}
       {...props}
     />
   );
