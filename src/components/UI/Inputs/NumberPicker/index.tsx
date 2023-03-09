@@ -115,6 +115,7 @@ interface INumberPickerProps
   min?: number;
   max?: number;
   step?: number | 'any';
+  controlledInput?: boolean;
   onChange?: (patch: { value: number; valid: boolean }) => void;
 }
 
@@ -125,7 +126,18 @@ interface INumberPickerProps
  */
 const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
   (
-    { value, min, max, step, readOnly, disabled, onChange, children, ...props },
+    {
+      value,
+      min,
+      max,
+      step,
+      readOnly,
+      disabled,
+      onChange,
+      controlledInput,
+      children,
+      ...props
+    },
     ref
   ) => {
     const [currValue, setCurrValue] = useState<number>(value ?? NaN);
@@ -202,7 +214,22 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
         const error = validateInput(currValue, min, max);
         updateValue(currValue, error);
       }
-    }, [min, max, prevMin, prevMax, currValue, updateValue]);
+
+      if (controlledInput && currValue !== value) {
+        const newValue = value ?? NaN;
+        const error = validateInput(newValue, min, max);
+        updateValue(newValue, error);
+      }
+    }, [
+      min,
+      max,
+      prevMin,
+      prevMax,
+      currValue,
+      value,
+      controlledInput,
+      updateValue,
+    ]);
 
     return (
       <ThemeContext.Extend value={customTheme}>
@@ -247,6 +274,7 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
 
 NumberPicker.defaultProps = {
   step: 1,
+  controlledInput: false,
 };
 
 export default NumberPicker;
