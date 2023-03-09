@@ -51,10 +51,10 @@ function getUserSecretName(appName: string): string {
   return `${appName}-user-secrets`;
 }
 
-function getClusterConfigMapName(
+export function getClusterConfigMapName(
   clusterID: string,
-  appName: string,
-  isClusterApp: boolean
+  appName?: string,
+  isClusterApp?: boolean
 ): string {
   if (appName === 'nginx-ingress-controller-app' && !isClusterApp) {
     return 'ingress-controller-values';
@@ -79,12 +79,13 @@ function getKubeConfigSecretName(clusterID: string): string {
  * @param name
  * @param contents
  */
-async function ensureAppUserConfigMap(
+export async function ensureAppUserConfigMap(
   client: IHttpClient,
   auth: IOAuth2Provider,
   namespace: string,
   name: string,
-  contents: string
+  contents: string,
+  labels?: Record<string, string>
 ): Promise<corev1.IConfigMap | null> {
   try {
     const cr = await corev1.getConfigMap(client, auth, name, namespace);
@@ -112,6 +113,7 @@ async function ensureAppUserConfigMap(
     metadata: {
       name,
       namespace,
+      ...(labels && labels),
     },
     data: {
       values: contents,

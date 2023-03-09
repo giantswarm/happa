@@ -108,6 +108,11 @@ export const Constants = {
   // Namespace for the catalog containing the 'nginx-ingress-controller-app'
   INSTALL_INGRESS_TAB_CATALOG_NAMESPACE: 'default',
 
+  // App catalog name containing 'cluster-PROVIDER' and 'default-apps-PROVIDER' apps
+  CLUSTER_APPS_CATALOG_NAME: 'cluster',
+  // Namespace for the catalog containing 'cluster-PROVIDER' and 'default-apps-PROVIDER' apps
+  CLUSTER_APPS_CATALOG_NAMESPACE: 'giantswarm',
+
   APP_VERSION_EOL_SUFFIX: '(EOL)',
   K8s_VERSION_EOL_LABEL: 'EOL',
   K8s_VERSION_EOL_EXPLANATION: 'End of life',

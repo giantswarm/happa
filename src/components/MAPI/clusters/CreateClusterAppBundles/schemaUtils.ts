@@ -2,7 +2,6 @@ import { FormProps } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import cleanDeep, { CleanOptions } from 'clean-deep';
 import { isEmpty, isPlainObject, transform } from 'lodash';
-import { generateUID } from 'MAPI/utils';
 import { Providers } from 'model/constants';
 import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
 import { compare } from 'utils/semver';
@@ -11,15 +10,15 @@ import { VersionImpl } from 'utils/Version';
 import ClusterNameWidget from './custom-widgets/ClusterNameWidget';
 import InstanceTypeWidget from './custom-widgets/InstanceTypeWidget';
 
-export enum PrototypeProviders {
-  AWS = 'aws',
-  AZURE = 'azure',
-  CLOUDDIRECTOR = 'cloud-director',
-  GCP = 'gcp',
-  VSPHERE = 'vsphere',
-}
+export const prototypeProviders = [
+  Providers.CAPA,
+  Providers.CAPZ,
+  Providers.CLOUDDIRECTOR,
+  Providers.GCP,
+  Providers.VSPHERE,
+] as const;
 
-export const prototypeProviders = Object.values(PrototypeProviders);
+export type PrototypeProviders = (typeof prototypeProviders)[number];
 
 enum TestSchema {
   TEST = 'test',
@@ -32,25 +31,28 @@ export const prototypeSchemas = [
   ...prototypeProviders,
 ];
 
-export const prototypeSchemasToProviders: Record<
-  PrototypeSchemas,
-  PropertiesOf<typeof Providers> | undefined
-> = {
-  [TestSchema.TEST]: undefined,
-  [PrototypeProviders.AWS]: Providers.CAPA,
-  // TODO: Replace Providers.AZURE with Providers.CAPZ when it's implemented
-  [PrototypeProviders.AZURE]: Providers.AZURE,
-  [PrototypeProviders.CLOUDDIRECTOR]: undefined,
-  [PrototypeProviders.GCP]: Providers.GCP,
-  [PrototypeProviders.VSPHERE]: undefined,
-};
+export function getProviderForPrototypeSchema(
+  schema: PrototypeSchemas
+): PropertiesOf<typeof Providers> | undefined {
+  switch (schema) {
+    case TestSchema.TEST:
+    case Providers.CLOUDDIRECTOR:
+    case Providers.VSPHERE:
+      return undefined;
+    // TODO: Remove Providers.CAPZ mapping when support is implemented
+    case Providers.CAPZ:
+      return Providers.AZURE;
+    default:
+      return schema;
+  }
+}
 
 interface FormPropsPartial {
   uiSchema: UiSchema;
-  formData: (organization: string) => RJSFSchema;
+  formData: (clusterName: string, organization: string) => RJSFSchema;
 }
 
-const formPropsProviderAWS: Record<string, FormPropsPartial> = {
+const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
   0: {
     uiSchema: {
       'ui:order': [
@@ -74,16 +76,16 @@ const formPropsProviderAWS: Record<string, FormPropsPartial> = {
         },
       },
     },
-    formData: (organization) => {
+    formData: (clusterName, organization) => {
       return {
-        clusterName: generateUID(5),
+        clusterName,
         organization,
       };
     },
   },
 };
 
-const formPropsProviderAzure: Record<string, FormPropsPartial> = {
+const formPropsProviderCAPZ: Record<string, FormPropsPartial> = {
   0: {
     uiSchema: {
       'ui:order': [
@@ -158,10 +160,10 @@ const formPropsProviderAzure: Record<string, FormPropsPartial> = {
         'ui:order': ['location', 'subscriptionId', '*'],
       },
     },
-    formData: (organization) => {
+    formData: (clusterName, organization) => {
       return {
         metadata: {
-          name: generateUID(5),
+          name: clusterName,
           organization,
         },
       };
@@ -219,9 +221,9 @@ const formPropsProviderGCP: Record<string, FormPropsPartial> = {
         },
       },
     },
-    formData: (organization) => {
+    formData: (clusterName, organization) => {
       return {
-        clusterName: generateUID(5),
+        clusterName,
         organization,
       };
     },
@@ -239,10 +241,10 @@ const formPropsProviderVSphere: Record<string, FormPropsPartial> = {
         },
       },
     },
-    formData: (organization: string) => {
+    formData: (clusterName, organization) => {
       return {
         cluster: {
-          name: generateUID(5),
+          name: clusterName,
           organization,
         },
       };
@@ -295,28 +297,32 @@ const formPropsByProvider: Record<
   PrototypeSchemas,
   Record<string, FormPropsPartial>
 > = {
-  [PrototypeProviders.AZURE]: formPropsProviderAzure,
-  [PrototypeProviders.AWS]: formPropsProviderAWS,
-  [PrototypeProviders.CLOUDDIRECTOR]: formPropsProviderCloudDirector,
-  [PrototypeProviders.GCP]: formPropsProviderGCP,
-  [PrototypeProviders.VSPHERE]: formPropsProviderVSphere,
+  [Providers.CAPZ]: formPropsProviderCAPZ,
+  [Providers.CAPA]: formPropsProviderCAPA,
+  [Providers.CLOUDDIRECTOR]: formPropsProviderCloudDirector,
+  [Providers.GCP]: formPropsProviderGCP,
+  [Providers.VSPHERE]: formPropsProviderVSphere,
   [TestSchema.TEST]: formPropsTest,
 };
 
 export function getFormProps(
   schema: PrototypeSchemas,
   version: string,
+  clusterName: string,
   organization: string
 ): Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'> {
   const formPropsByVersions = formPropsByProvider[schema];
 
-  const majorVersion = new VersionImpl(version.slice(1)).getMajor();
+  const majorVersion = new VersionImpl(version).getMajor();
   const latestVersion = Object.keys(formPropsByVersions).sort(compare)[0];
 
   const props =
     formPropsByVersions[majorVersion] ?? formPropsByVersions[latestVersion];
 
-  return { uiSchema: props.uiSchema, formData: props.formData(organization) };
+  return {
+    uiSchema: props.uiSchema,
+    formData: props.formData(clusterName, organization),
+  };
 }
 
 export function cleanDeepWithException<T>(

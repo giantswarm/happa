@@ -14,6 +14,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { ProviderFlavors } from 'model/constants';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import { getUserIsAdmin } from 'model/stores/main/selectors';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -189,7 +190,8 @@ const Clusters: React.FC<React.PropsWithChildren<{}>> = () => {
     namespace ?? ''
   );
 
-  const isReadOnly = providerFlavor === ProviderFlavors.CAPI;
+  const isAdmin = useSelector(getUserIsAdmin);
+  const isReadOnly = providerFlavor === ProviderFlavors.CAPI && !isAdmin;
 
   return (
     <DocumentTitle title={title}>

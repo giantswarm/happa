@@ -20,7 +20,13 @@ const UsersRoutes = {
 
 const AccountSettingsRoutes = {
   Home: '/account-settings',
-  Experiments: '/account-settings/experiments',
+  Experiments: {
+    Home: '/account-settings/experiments',
+    ClusterAppSchemaTester:
+      '/account-settings/experiments/cluster-app-schema-tester',
+    ClusterAppSchemaTesterProviderBranch:
+      '/account-settings/experiments/cluster-app-schema-tester/:provider/:branch',
+  },
   Permissions: '/account-settings/permissions',
 };
 
@@ -36,9 +42,6 @@ const OrganizationsRoutes = {
   Clusters: {
     Home: '/organizations/:orgId/clusters',
     New: '/organizations/:orgId/clusters/new',
-    NewViaAppBundles: '/organizations/:orgId/clusters/new-via-app-bundles',
-    NewViaAppBundlesProviderBranch:
-      '/organizations/:orgId/clusters/new-via-app-bundles/:provider/:branch',
     Detail: {
       Home: '/organizations/:orgId/clusters/:clusterId',
       KeyPairs: '/organizations/:orgId/clusters/:clusterId/keypairs',

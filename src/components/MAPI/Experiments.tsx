@@ -1,10 +1,7 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { Box, Heading, Text } from 'grommet';
-import {
-  AccountSettingsRoutes,
-  OrganizationsRoutes,
-} from 'model/constants/routes';
+import { AccountSettingsRoutes } from 'model/constants/routes';
 import * as featureFlags from 'model/featureFlags';
 import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
 import {
@@ -12,7 +9,6 @@ import {
   setImpersonation,
 } from 'model/stores/main/actions';
 import { organizationsLoadMAPI } from 'model/stores/organization/actions';
-import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
@@ -125,28 +121,15 @@ const Experiments: React.FC<
     reloadOrganizations();
   };
 
-  const selectedOrgName = useSelector(
-    (state: IState) => state.main.selectedOrganization
+  const newClusterAppPath = RoutePath.createUsablePath(
+    AccountSettingsRoutes.Experiments.ClusterAppSchemaTester
   );
-  const organizations = useSelector(selectOrganizations());
-  const selectedOrg = selectedOrgName
-    ? organizations[selectedOrgName]
-    : undefined;
-
-  const newClusterAppPath = selectedOrg
-    ? RoutePath.createUsablePath(
-        OrganizationsRoutes.Clusters.NewViaAppBundles,
-        {
-          orgId: selectedOrg.id,
-        }
-      )
-    : '';
 
   return (
     <Breadcrumb
       data={{
         title: 'EXPERIMENTS',
-        pathname: AccountSettingsRoutes.Experiments,
+        pathname: AccountSettingsRoutes.Experiments.Home,
       }}
     >
       <DocumentTitle title='Experiments'>
@@ -191,10 +174,10 @@ const Experiments: React.FC<
                   </TableCell>
                 </TableRow>
               ))}
-              <TableRow key='CreateClusterApp'>
+              <TableRow key='ClusterAppSchemaTester'>
                 <TableCell>
                   <Link to={newClusterAppPath}>
-                    Create clusters via app bundles{' '}
+                    Cluster app schema tester{' '}
                     <i
                       className='fa fa-open-in-new'
                       role='presentation'
@@ -207,7 +190,7 @@ const Experiments: React.FC<
                     toggle={true}
                     margin='none'
                     defaultChecked={true}
-                    name='CreateClusterApp'
+                    name='ClusterAppSchemaTester'
                     onChange={handleChange}
                     disabled={true}
                   />
