@@ -1036,7 +1036,7 @@ export function getProviderNodePoolSpotInstances(
         const maxPriceQty =
           providerNodePool.spec?.template.spotVMOptions?.maxPrice;
         const maxPrice = maxPriceQty
-          ? metav1.quantityToScalar(maxPriceQty)
+          ? metav1.quantityToScalar(maxPriceQty.toString())
           : -1;
 
         return {
