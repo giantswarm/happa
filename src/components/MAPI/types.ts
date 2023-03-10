@@ -59,12 +59,13 @@ export type NodePoolList =
   | capiv1beta1.IMachinePoolList;
 
 export type ProviderNodePool =
+  | capav1beta1.IAWSMachinePool
+  | capgv1beta1.IGCPMachineTemplate
+  | capzv1beta1.IAzureMachineTemplate
   | capzexpv1alpha3.IAzureMachinePool
   | capzv1beta1.IAzureMachinePool
   | infrav1alpha2.IAWSMachineDeployment
   | infrav1alpha3.IAWSMachineDeployment
-  | capav1beta1.IAWSMachinePool
-  | capgv1beta1.IGCPMachineTemplate
   | undefined;
 
 export type ProviderNodePoolList =

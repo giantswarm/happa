@@ -175,6 +175,23 @@ export async function fetchNodePoolListForCluster(
 
       break;
 
+    case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster):
+      list = await capiv1beta1.getMachineDeploymentList(
+        httpClientFactory(),
+        auth,
+        {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [`${capiv1beta1.labelRole}!`]: 'bastion',
+            },
+          },
+          namespace,
+        }
+      );
+
+      break;
+
     case kind === capav1beta1.AWSCluster &&
       apiVersion === capav1beta1.ApiVersion:
     case kind === capzv1beta1.AzureCluster:
@@ -253,6 +270,17 @@ export function fetchNodePoolListForClusterKey(
         namespace,
       });
 
+    case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster):
+      return capiv1beta1.getMachineDeploymentListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelClusterName]: cluster.metadata.name,
+            [`${capiv1beta1.labelRole}!`]: 'bastion',
+          },
+        },
+        namespace,
+      });
+
     case kind === capav1beta1.AWSCluster &&
       apiVersion === capav1beta1.ApiVersion:
     case kind === capzv1beta1.AzureCluster:
@@ -309,6 +337,14 @@ export async function fetchProviderNodePoolForNodePool(
 
     case kind === capgv1beta1.GCPMachineTemplate:
       return capgv1beta1.getGCPMachineTemplate(
+        httpClientFactory(),
+        auth,
+        nodePool.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    case kind === capzv1beta1.AzureMachineTemplate:
+      return capzv1beta1.getAzureMachineTemplate(
         httpClientFactory(),
         auth,
         nodePool.metadata.namespace!,
@@ -1543,7 +1579,7 @@ export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {
 
 export function supportsNonExpMachinePools(cluster: Cluster): boolean {
   const releaseVersion = capiv1beta1.getReleaseVersion(cluster);
-  if (!releaseVersion) return false;
+  if (!releaseVersion) return true;
 
   return (
     compare(releaseVersion, Constants.AZURE_NON_EXP_MACHINE_POOLS_VERSION) >= 0
