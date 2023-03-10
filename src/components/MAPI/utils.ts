@@ -1460,7 +1460,7 @@ function getInstallationBaseURL(providerFlavor: ProviderFlavors): URL {
   return audienceURL;
 }
 
-export function isCAPZCluster(cluster: Cluster): boolean {
+export function isCAPZAlphaCluster(cluster: Cluster): boolean {
   if (cluster.spec?.infrastructureRef?.kind !== capzv1beta1.AzureCluster) {
     return false;
   }
@@ -1476,7 +1476,7 @@ function isCAPGCluster(cluster: Cluster): boolean {
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
-  return isCAPZCluster(cluster) || hasClusterAppLabel(cluster);
+  return isCAPZAlphaCluster(cluster) || hasClusterAppLabel(cluster);
 }
 
 export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {
