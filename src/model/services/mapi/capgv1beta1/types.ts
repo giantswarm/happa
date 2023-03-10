@@ -45,6 +45,19 @@ export interface IGCPCluster {
       port: number;
     };
     /**
+     * CredentialsRef is a reference to a Secret that contains the credentials to use for provisioning this cluster. If not supplied then the credentials of the controller will be used.
+     */
+    credentialsRef?: {
+      /**
+       * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+       */
+      name: string;
+      /**
+       * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+       */
+      namespace: string;
+    };
+    /**
      * FailureDomains is an optional field which is used to assign selected availability zones to a cluster FailureDomains if empty, defaults to all the zones in the selected region and if specified would override the default zones.
      */
     failureDomains?: string[];
@@ -285,6 +298,10 @@ export interface IGCPMachineTemplate {
          */
         additionalNetworkTags?: string[];
         /**
+         * ConfidentialCompute Defines whether the instance should have confidential compute enabled. If enabled OnHostMaintenance is required to be set to "Terminate". If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+         */
+        confidentialCompute?: 'Enabled' | 'Disabled';
+        /**
          * Image is the full reference to a valid image to be used for this machine. Takes precedence over ImageFamily.
          */
         image?: string;
@@ -300,6 +317,10 @@ export interface IGCPMachineTemplate {
          * IPForwarding Allows this instance to send and receive packets with non-matching destination or source IPs. This is required if you plan to use this instance to forward routes. Defaults to enabled.
          */
         ipForwarding?: 'Enabled' | 'Disabled';
+        /**
+         * OnHostMaintenance determines the behavior when a maintenance event occurs that might cause the instance to reboot. If omitted, the platform chooses a default, which is subject to change over time, currently that default is "Migrate".
+         */
+        onHostMaintenance?: 'Migrate' | 'Terminate';
         /**
          * Preemptible defines if instance is preemptible
          */
@@ -332,6 +353,23 @@ export interface IGCPMachineTemplate {
            * Scopes: The list of scopes to be made available for this service account.
            */
           scopes?: string[];
+        };
+        /**
+         * ShieldedInstanceConfig is the Shielded VM configuration for this machine
+         */
+        shieldedInstanceConfig?: {
+          /**
+           * IntegrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity. Compares the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.
+           */
+          integrityMonitoring?: 'Enabled' | 'Disabled';
+          /**
+           * SecureBoot Defines whether the instance should have secure boot enabled. Secure Boot verify the digital signature of all boot components, and halting the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.
+           */
+          secureBoot?: 'Enabled' | 'Disabled';
+          /**
+           * VirtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.
+           */
+          virtualizedTrustedPlatformModule?: 'Enabled' | 'Disabled';
         };
         /**
          * Subnet is a reference to the subnetwork to use for this instance. If not specified, the first subnetwork retrieved from the Cluster Region and Network is picked.
