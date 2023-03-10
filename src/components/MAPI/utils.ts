@@ -634,6 +634,53 @@ export async function fetchControlPlaneNodesForCluster(
       return cpNodes;
     }
 
+    case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster): {
+      const [capzCP, machineCP] = await Promise.allSettled([
+        capzv1beta1.getAzureMachineTemplateList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capiv1beta1.labelRole]: 'control-plane',
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }),
+        capiv1beta1.getMachineList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capzv1beta1.labelControlPlane]: '',
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }),
+      ]);
+
+      if (capzCP.status === 'rejected' && machineCP.status === 'rejected') {
+        return Promise.reject(capzCP.reason);
+      }
+
+      let cpNodes: ControlPlaneNode[] = [];
+      if (capzCP.status === 'fulfilled' && capzCP.value.items.length > 0) {
+        cpNodes = [
+          ...cpNodes,
+          capzCP.value.items.sort(
+            (a, b) =>
+              new Date(a.metadata.creationTimestamp ?? 0).getTime() -
+              new Date(b.metadata.creationTimestamp ?? 0).getTime()
+          )[0],
+        ];
+      }
+      if (
+        machineCP.status === 'fulfilled' &&
+        machineCP.value.items.length > 0
+      ) {
+        cpNodes = [...cpNodes, ...machineCP.value.items];
+      }
+
+      return cpNodes;
+    }
+
     case kind === capzv1beta1.AzureCluster: {
       const cpNodes = await capzv1beta1.getAzureMachineList(
         httpClientFactory(),
@@ -719,6 +766,17 @@ export function fetchControlPlaneNodesForClusterKey(
 
     case kind === capgv1beta1.GCPCluster:
       return capgv1beta1.getGCPMachineTemplateListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelCluster]: cluster.metadata.name,
+            [capiv1beta1.labelRole]: 'control-plane',
+          },
+        },
+        namespace: cluster.metadata.namespace,
+      });
+
+    case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster):
+      return capzv1beta1.getAzureMachineTemplateListKey({
         labelSelector: {
           matchingLabels: {
             [capiv1beta1.labelCluster]: cluster.metadata.name,
