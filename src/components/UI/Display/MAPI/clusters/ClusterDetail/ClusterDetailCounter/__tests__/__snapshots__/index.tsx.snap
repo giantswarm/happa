@@ -2,30 +2,30 @@
 
 exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
+  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gDYJsN"
+      class="StyledBox-sc-13pk1d4-0 eInMAj"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 cDUPOE"
+        class="StyledBox-sc-13pk1d4-0 jNgGNu"
       >
         <div
-          class="RefreshableLabel__Wrapper-sc-1joylxa-0 joMpxd OptionalValue__StyledRefreshableLabel-sc-8k6d37-0 XKKgn"
+          class="RefreshableLabel__Wrapper-sc-1joylxa-0 giBHsz OptionalValue__StyledRefreshableLabel-sc-8k6d37-0 jfDoQJ"
         >
           <span
             aria-label="35 dogs"
-            class="StyledText-sc-1sadyjn-0 ljNnTp"
+            class="StyledText-sc-1sadyjn-0 iMzgNb"
           >
             35
           </span>
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 eKNfcf ClusterDetailCounter__Label-sc-qai318-0 bdJGbv"
+        class="StyledText-sc-1sadyjn-0 dRrAqt ClusterDetailCounter__Label-sc-qai318-0 sdeWh"
       >
         dogs
       </span>
@@ -36,30 +36,30 @@ exports[`ClusterDetailCounter renders a counter with a pluralized label 1`] = `
 
 exports[`ClusterDetailCounter renders a simple counter 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 fZqRnx"
+  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bmLMm"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 gDYJsN"
+      class="StyledBox-sc-13pk1d4-0 eInMAj"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 cDUPOE"
+        class="StyledBox-sc-13pk1d4-0 jNgGNu"
       >
         <div
-          class="RefreshableLabel__Wrapper-sc-1joylxa-0 joMpxd OptionalValue__StyledRefreshableLabel-sc-8k6d37-0 XKKgn"
+          class="RefreshableLabel__Wrapper-sc-1joylxa-0 giBHsz OptionalValue__StyledRefreshableLabel-sc-8k6d37-0 jfDoQJ"
         >
           <span
             aria-label="1 dog"
-            class="StyledText-sc-1sadyjn-0 ljNnTp"
+            class="StyledText-sc-1sadyjn-0 iMzgNb"
           >
             1
           </span>
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 eKNfcf ClusterDetailCounter__Label-sc-qai318-0 bdJGbv"
+        class="StyledText-sc-1sadyjn-0 dRrAqt ClusterDetailCounter__Label-sc-qai318-0 sdeWh"
       >
         dog
       </span>
