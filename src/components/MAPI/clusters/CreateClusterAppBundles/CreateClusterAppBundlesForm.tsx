@@ -15,7 +15,6 @@ import {
   cleanDeepWithException,
   getFormProps,
   getProviderForPrototypeSchema,
-  preprocessSchema,
   PrototypeSchemas,
 } from './schemaUtils';
 
@@ -95,14 +94,10 @@ const CreateClusterAppBundlesForm: React.FC<
     }
   };
 
-  const processedSchema = useMemo(() => {
-    return preprocessSchema(schema);
-  }, [schema]);
-
   return (
     <>
       <JSONSchemaForm
-        schema={processedSchema}
+        schema={schema}
         uiSchema={formProps.uiSchema}
         formContext={{
           schemaProvider: getProviderForPrototypeSchema(provider),

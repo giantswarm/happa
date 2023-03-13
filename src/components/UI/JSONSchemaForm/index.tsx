@@ -5,6 +5,7 @@ import {
   RJSFValidationError,
 } from '@rjsf/utils';
 import cloneDeep from 'lodash/cloneDeep';
+import merge from 'lodash/merge';
 import React, { useEffect, useMemo, useReducer, useRef } from 'react';
 
 import ArrayFieldTemplate from './ArrayFieldTemplate';
@@ -15,12 +16,9 @@ import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import MultiSchemaField from './MultiSchemaField';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
+import { preprocessSchema, removeDefaultValues } from './schemaUtils';
 import SelectWidget from './SelectWidget';
-import {
-  mapErrorPropertyToField,
-  removeDefaultValues,
-  transformErrors,
-} from './utils';
+import { mapErrorPropertyToField, transformErrors } from './utils';
 
 const customFields = {
   OneOfField: MultiSchemaField,
@@ -122,6 +120,7 @@ export interface IFormContext extends IFormState {
 }
 
 interface IJSONSchemaFormProps extends FormProps {
+  fieldsToRemove?: string[];
   onChange: (data?: RJSFSchema) => void;
 }
 
@@ -130,6 +129,7 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
   onBlur,
   idPrefix = 'root',
   idSeparator = '_',
+  fieldsToRemove,
   formContext,
   formData,
   schema,
@@ -141,23 +141,29 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
     createInitalState()
   );
 
-  const [preprocessedSchema, formDataWithDefaultValues] = useMemo(() => {
-    const defaultValues: RJSFSchema = getDefaultFormState(
+  const [preprocessedSchema, defaultValues] = useMemo(() => {
+    let patchedSchema = preprocessSchema(cloneDeep(schema), fieldsToRemove);
+    const defaults: RJSFSchema = getDefaultFormState(
       validator,
-      schema,
-      formData,
-      schema
+      patchedSchema,
+      {},
+      patchedSchema
     );
-    const patchedSchema = removeDefaultValues(cloneDeep(schema));
+    patchedSchema = removeDefaultValues(patchedSchema);
 
-    return [patchedSchema, defaultValues];
+    return [patchedSchema, defaults];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [validator, schema]);
 
   useEffect(() => {
+    const formDataWithDefaultValues = merge(
+      {},
+      defaultValues,
+      formData as RJSFSchema
+    );
     onChange(formDataWithDefaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formDataWithDefaultValues]);
+  }, [defaultValues]);
 
   const idConfigs: IIdConfigs = { idPrefix, idSeparator };
 

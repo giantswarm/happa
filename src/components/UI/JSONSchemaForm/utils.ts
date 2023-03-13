@@ -1,5 +1,5 @@
-import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
-import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
+import { RJSFValidationError } from '@rjsf/utils';
+import { pipe } from 'utils/helpers';
 
 import { IIdConfigs } from '.';
 
@@ -60,16 +60,4 @@ export function getArrayItemIndex(id: string, idSeparator: string) {
   return indexMatchArray
     ? parseInt(indexMatchArray[0].replace(idSeparator, ''))
     : -1;
-}
-
-export function removeDefaultValues(schema: RJSFSchema): RJSFSchema {
-  const removeDefaults = (obj: RJSFSchema) => {
-    if (obj.default) {
-      delete obj.default;
-    }
-
-    return obj;
-  };
-
-  return traverseJSONSchemaObject(schema, removeDefaults);
 }
