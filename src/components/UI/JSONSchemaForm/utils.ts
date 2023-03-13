@@ -1,6 +1,7 @@
 import { RJSFValidationError } from '@rjsf/utils';
 import cleanDeep, { CleanOptions } from 'clean-deep';
 import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 import isPlainObject from 'lodash/isPlainObject';
 import transform from 'lodash/transform';
 import { pipe } from 'utils/helpers';
@@ -66,15 +67,34 @@ export function getArrayItemIndex(id: string, idSeparator: string) {
     : -1;
 }
 
-export function cleanDeepWithException<T>(
+function getImplicitDefaultValue(value: unknown) {
+  switch (typeof value) {
+    case 'string':
+      return '';
+    case 'boolean':
+      return false;
+    default:
+      return undefined;
+  }
+}
+
+export interface CleanPayloadOptions<T = {}> extends CleanOptions {
+  cleanDefaultValues?: boolean;
+  defaultValues?: Iterable<T> | unknown;
+  isException?: (value: unknown) => boolean;
+}
+
+export function cleanPayload<T = {}>(
   object: Iterable<T> | unknown,
-  options?: CleanOptions,
-  isException?: (value: unknown) => boolean
+  options?: CleanPayloadOptions<T>
 ): Iterable<T> | unknown {
   const {
     emptyArrays = true,
     emptyObjects = true,
     undefinedValues = true,
+    cleanDefaultValues = false,
+    defaultValues,
+    isException,
   } = options ?? {};
 
   return transform(
@@ -88,18 +108,37 @@ export function cleanDeepWithException<T>(
       }
 
       let newValue = value;
-      if (Array.isArray(value) || isPlainObject(value)) {
-        newValue = cleanDeepWithException<unknown>(value, options, isException);
-        if (
-          ((isPlainObject(newValue) && emptyObjects) ||
-            (Array.isArray(newValue) && emptyArrays)) &&
-          isEmpty(newValue)
-        ) {
+      const defaultValue = cleanDefaultValues
+        ? defaultValues?.[key as keyof typeof defaultValues] ??
+          getImplicitDefaultValue(value)
+        : undefined;
+
+      if (Array.isArray(value)) {
+        const isEqualToDefault = isEqual(value, defaultValue);
+        newValue = cleanPayload<unknown>(value, {
+          ...options,
+          cleanDefaultValues: isEqualToDefault ? cleanDefaultValues : false,
+          defaultValues: isEqualToDefault ? defaultValue : undefined,
+        });
+
+        if (emptyArrays && isEmpty(newValue)) {
+          return;
+        }
+      } else if (isPlainObject(value)) {
+        newValue = cleanPayload<unknown>(value, {
+          ...options,
+          defaultValues: defaultValue,
+        });
+
+        if (emptyObjects && isEmpty(newValue)) {
           return;
         }
       } else {
         newValue =
-          value !== 0 && !value ? cleanDeep({ value }, options).value : value;
+          cleanDefaultValues && value === defaultValue
+            ? undefined
+            : cleanDeep({ value }, options).value;
+
         if (
           newValue === undefined &&
           (value !== undefined || undefinedValues)

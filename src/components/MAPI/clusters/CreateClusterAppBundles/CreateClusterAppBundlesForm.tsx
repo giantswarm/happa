@@ -2,7 +2,6 @@ import { FormProps, IChangeEvent } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Ajv2020 from 'ajv/dist/2020';
-import cleanDeep from 'clean-deep';
 import yaml from 'js-yaml';
 import { generateUID } from 'MAPI/utils';
 import { Providers } from 'model/constants';
@@ -60,7 +59,7 @@ const CreateClusterAppBundlesForm: React.FC<
     Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'>
   >(getFormProps(provider, appVersion, clusterName, organization));
 
-  const cleanFormData = cleanDeep(formProps.formData, { emptyStrings: false });
+  const [cleanFormData, setCleanFormData] = useState<RJSFSchema>();
 
   const handleSubmit = (
     _: IChangeEvent<RJSFSchema>,
@@ -71,16 +70,17 @@ const CreateClusterAppBundlesForm: React.FC<
     onSubmit(clusterName, cleanFormData);
   };
 
-  const handleFormDataChange = (formData: RJSFSchema) => {
+  const handleFormDataChange = (data: RJSFSchema, cleanData: RJSFSchema) => {
     setFormProps((prev) => {
       return {
         ...prev,
-        formData,
+        formData: data,
       };
     });
+    setCleanFormData(cleanData);
 
     if (onChange) {
-      onChange({ formData, cleanFormData });
+      onChange({ formData: data, cleanFormData: cleanData });
     }
   };
 

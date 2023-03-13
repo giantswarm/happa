@@ -3,7 +3,7 @@ import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
 
 export function removeDefaultValues(schema: RJSFSchema): RJSFSchema {
   const removeDefaults = (obj: RJSFSchema) => {
-    if (obj.default) {
+    if (obj.hasOwnProperty('default')) {
       delete obj.default;
     }
 

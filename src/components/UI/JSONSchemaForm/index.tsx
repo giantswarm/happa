@@ -6,7 +6,13 @@ import {
 } from '@rjsf/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import merge from 'lodash/merge';
-import React, { useEffect, useMemo, useReducer, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+} from 'react';
 
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
@@ -19,7 +25,7 @@ import ObjectFieldTemplate from './ObjectFieldTemplate';
 import { preprocessSchema, removeDefaultValues } from './schemaUtils';
 import SelectWidget from './SelectWidget';
 import {
-  cleanDeepWithException,
+  cleanPayload,
   mapErrorPropertyToField,
   transformErrors,
 } from './utils';
@@ -123,9 +129,9 @@ export interface IFormContext extends IFormState {
   idConfigs: IIdConfigs;
 }
 
-interface IJSONSchemaFormProps extends FormProps {
+interface IJSONSchemaFormProps extends Omit<FormProps, 'onChange'> {
   fieldsToRemove?: string[];
-  onChange: (data: RJSFSchema) => void;
+  onChange: (data: RJSFSchema, cleanData: RJSFSchema) => void;
 }
 
 const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
@@ -159,13 +165,31 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [validator, schema]);
 
+  const onChangeCallback = useCallback(
+    (data: RJSFSchema) => {
+      const cleanData = cleanPayload<RJSFSchema>(data, {
+        emptyStrings: false,
+        isException: (value) => Array.isArray(value) && value.length > 0,
+      }) as RJSFSchema;
+
+      const cleanDataWithoutDefaultValues = cleanPayload<RJSFSchema>(data, {
+        emptyStrings: false,
+        cleanDefaultValues: true,
+        defaultValues,
+      }) as RJSFSchema;
+
+      onChange(cleanData, cleanDataWithoutDefaultValues);
+    },
+    [defaultValues, onChange]
+  );
+
   useEffect(() => {
     const formDataWithDefaultValues = merge(
       {},
       defaultValues,
       formData as RJSFSchema
     );
-    onChange(formDataWithDefaultValues);
+    onChangeCallback(formDataWithDefaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultValues]);
 
@@ -183,14 +207,8 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
   const handleChange = (data: IChangeEvent<RJSFSchema>, id?: string) => {
     addTouchedField(id);
 
-    if (onChange && data.formData) {
-      const cleanData = cleanDeepWithException<RJSFSchema>(
-        data.formData,
-        { emptyStrings: false },
-        (value) => Array.isArray(value) && value.length > 0
-      ) as RJSFSchema;
-
-      onChange(cleanData);
+    if (data.formData) {
+      onChangeCallback(data.formData);
     }
   };
 
