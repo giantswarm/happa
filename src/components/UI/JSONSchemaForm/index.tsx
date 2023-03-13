@@ -18,7 +18,11 @@ import MultiSchemaField from './MultiSchemaField';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import { preprocessSchema, removeDefaultValues } from './schemaUtils';
 import SelectWidget from './SelectWidget';
-import { mapErrorPropertyToField, transformErrors } from './utils';
+import {
+  cleanDeepWithException,
+  mapErrorPropertyToField,
+  transformErrors,
+} from './utils';
 
 const customFields = {
   OneOfField: MultiSchemaField,
@@ -121,7 +125,7 @@ export interface IFormContext extends IFormState {
 
 interface IJSONSchemaFormProps extends FormProps {
   fieldsToRemove?: string[];
-  onChange: (data?: RJSFSchema) => void;
+  onChange: (data: RJSFSchema) => void;
 }
 
 const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
@@ -178,8 +182,15 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
 
   const handleChange = (data: IChangeEvent<RJSFSchema>, id?: string) => {
     addTouchedField(id);
-    if (onChange) {
-      onChange(data.formData);
+
+    if (onChange && data.formData) {
+      const cleanData = cleanDeepWithException<RJSFSchema>(
+        data.formData,
+        { emptyStrings: false },
+        (value) => Array.isArray(value) && value.length > 0
+      ) as RJSFSchema;
+
+      onChange(cleanData);
     }
   };
 

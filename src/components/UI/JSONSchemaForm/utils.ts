@@ -1,4 +1,8 @@
 import { RJSFValidationError } from '@rjsf/utils';
+import cleanDeep, { CleanOptions } from 'clean-deep';
+import isEmpty from 'lodash/isEmpty';
+import isPlainObject from 'lodash/isPlainObject';
+import transform from 'lodash/transform';
 import { pipe } from 'utils/helpers';
 
 import { IIdConfigs } from '.';
@@ -60,4 +64,55 @@ export function getArrayItemIndex(id: string, idSeparator: string) {
   return indexMatchArray
     ? parseInt(indexMatchArray[0].replace(idSeparator, ''))
     : -1;
+}
+
+export function cleanDeepWithException<T>(
+  object: Iterable<T> | unknown,
+  options?: CleanOptions,
+  isException?: (value: unknown) => boolean
+): Iterable<T> | unknown {
+  const {
+    emptyArrays = true,
+    emptyObjects = true,
+    undefinedValues = true,
+  } = options ?? {};
+
+  return transform(
+    object as unknown[],
+    (result: Record<string | number, unknown>, value, key) => {
+      // if it matches the exception rule, don't continue to clean
+      if (isException && isException(value)) {
+        result[key] = value;
+
+        return;
+      }
+
+      let newValue = value;
+      if (Array.isArray(value) || isPlainObject(value)) {
+        newValue = cleanDeepWithException<unknown>(value, options, isException);
+        if (
+          ((isPlainObject(newValue) && emptyObjects) ||
+            (Array.isArray(newValue) && emptyArrays)) &&
+          isEmpty(newValue)
+        ) {
+          return;
+        }
+      } else {
+        newValue =
+          value !== 0 && !value ? cleanDeep({ value }, options).value : value;
+        if (
+          newValue === undefined &&
+          (value !== undefined || undefinedValues)
+        ) {
+          return;
+        }
+      }
+
+      if (Array.isArray(result)) {
+        result.push(newValue);
+      } else {
+        result[key] = newValue;
+      }
+    }
+  );
 }

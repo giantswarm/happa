@@ -12,7 +12,6 @@ import Line from 'UI/Display/Documentation/Line';
 import JSONSchemaForm, { IFormContext } from 'UI/JSONSchemaForm';
 
 import {
-  cleanDeepWithException,
   getFormProps,
   getProviderForPrototypeSchema,
   PrototypeSchemas,
@@ -72,16 +71,7 @@ const CreateClusterAppBundlesForm: React.FC<
     onSubmit(clusterName, cleanFormData);
   };
 
-  const handleFormDataChange = (rawFormData: RJSFSchema | undefined) => {
-    if (!rawFormData) {
-      return;
-    }
-    const formData = cleanDeepWithException<RJSFSchema>(
-      rawFormData,
-      { emptyStrings: false },
-      (value) => Array.isArray(value) && value.length > 0
-    ) as RJSFSchema;
-
+  const handleFormDataChange = (formData: RJSFSchema) => {
     setFormProps((prev) => {
       return {
         ...prev,

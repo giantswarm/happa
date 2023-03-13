@@ -1,8 +1,8 @@
 import cleanDeep, { CleanOptions } from 'clean-deep';
 
-import { cleanDeepWithException } from '../schemaUtils';
+import { cleanDeepWithException } from '../utils';
 
-describe('schemaUtils', () => {
+describe('JSONSchemaForm:utils', () => {
   describe('cleanDeepWithException', () => {
     it('cleans objects with cleanDeep with given options when not given any exceptions', () => {
       const options: CleanOptions[] = [

@@ -1,7 +1,5 @@
 import { FormProps } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
-import cleanDeep, { CleanOptions } from 'clean-deep';
-import { isEmpty, isPlainObject, transform } from 'lodash';
 import { Providers } from 'model/constants';
 import { compare } from 'utils/semver';
 import { VersionImpl } from 'utils/Version';
@@ -322,55 +320,4 @@ export function getFormProps(
     uiSchema: props.uiSchema,
     formData: props.formData(clusterName, organization),
   };
-}
-
-export function cleanDeepWithException<T>(
-  object: Iterable<T> | unknown,
-  options?: CleanOptions,
-  isException?: (value: unknown) => boolean
-): Iterable<T> | unknown {
-  const {
-    emptyArrays = true,
-    emptyObjects = true,
-    undefinedValues = true,
-  } = options ?? {};
-
-  return transform(
-    object as unknown[],
-    (result: Record<string | number, unknown>, value, key) => {
-      // if it matches the exception rule, don't continue to clean
-      if (isException && isException(value)) {
-        result[key] = value;
-
-        return;
-      }
-
-      let newValue = value;
-      if (Array.isArray(value) || isPlainObject(value)) {
-        newValue = cleanDeepWithException<unknown>(value, options, isException);
-        if (
-          ((isPlainObject(newValue) && emptyObjects) ||
-            (Array.isArray(newValue) && emptyArrays)) &&
-          isEmpty(newValue)
-        ) {
-          return;
-        }
-      } else {
-        newValue =
-          value !== 0 && !value ? cleanDeep({ value }, options).value : value;
-        if (
-          newValue === undefined &&
-          (value !== undefined || undefinedValues)
-        ) {
-          return;
-        }
-      }
-
-      if (Array.isArray(result)) {
-        result.push(newValue);
-      } else {
-        result[key] = newValue;
-      }
-    }
-  );
 }
