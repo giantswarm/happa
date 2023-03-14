@@ -6,3 +6,5 @@ export * from './createAzureMachine';
 export * from './getAzureMachineList';
 export * from './getAzureMachinePool';
 export * from './createAzureMachinePool';
+export * from './getAzureMachineTemplate';
+export * from './getAzureMachineTemplateList';

@@ -175,6 +175,23 @@ export async function fetchNodePoolListForCluster(
 
       break;
 
+    case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster):
+      list = await capiv1beta1.getMachineDeploymentList(
+        httpClientFactory(),
+        auth,
+        {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [`${capiv1beta1.labelRole}!`]: 'bastion',
+            },
+          },
+          namespace,
+        }
+      );
+
+      break;
+
     case kind === capav1beta1.AWSCluster &&
       apiVersion === capav1beta1.ApiVersion:
     case kind === capzv1beta1.AzureCluster:
@@ -253,6 +270,17 @@ export function fetchNodePoolListForClusterKey(
         namespace,
       });
 
+    case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster):
+      return capiv1beta1.getMachineDeploymentListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelClusterName]: cluster.metadata.name,
+            [`${capiv1beta1.labelRole}!`]: 'bastion',
+          },
+        },
+        namespace,
+      });
+
     case kind === capav1beta1.AWSCluster &&
       apiVersion === capav1beta1.ApiVersion:
     case kind === capzv1beta1.AzureCluster:
@@ -309,6 +337,14 @@ export async function fetchProviderNodePoolForNodePool(
 
     case kind === capgv1beta1.GCPMachineTemplate:
       return capgv1beta1.getGCPMachineTemplate(
+        httpClientFactory(),
+        auth,
+        nodePool.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    case kind === capzv1beta1.AzureMachineTemplate:
+      return capzv1beta1.getAzureMachineTemplate(
         httpClientFactory(),
         auth,
         nodePool.metadata.namespace!,
@@ -634,6 +670,53 @@ export async function fetchControlPlaneNodesForCluster(
       return cpNodes;
     }
 
+    case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster): {
+      const [capzCP, machineCP] = await Promise.allSettled([
+        capzv1beta1.getAzureMachineTemplateList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capiv1beta1.labelRole]: 'control-plane',
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }),
+        capiv1beta1.getMachineList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capzv1beta1.labelControlPlane]: '',
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }),
+      ]);
+
+      if (capzCP.status === 'rejected' && machineCP.status === 'rejected') {
+        return Promise.reject(capzCP.reason);
+      }
+
+      let cpNodes: ControlPlaneNode[] = [];
+      if (capzCP.status === 'fulfilled' && capzCP.value.items.length > 0) {
+        cpNodes = [
+          ...cpNodes,
+          capzCP.value.items.sort(
+            (a, b) =>
+              new Date(a.metadata.creationTimestamp ?? 0).getTime() -
+              new Date(b.metadata.creationTimestamp ?? 0).getTime()
+          )[0],
+        ];
+      }
+      if (
+        machineCP.status === 'fulfilled' &&
+        machineCP.value.items.length > 0
+      ) {
+        cpNodes = [...cpNodes, ...machineCP.value.items];
+      }
+
+      return cpNodes;
+    }
+
     case kind === capzv1beta1.AzureCluster: {
       const cpNodes = await capzv1beta1.getAzureMachineList(
         httpClientFactory(),
@@ -719,6 +802,17 @@ export function fetchControlPlaneNodesForClusterKey(
 
     case kind === capgv1beta1.GCPCluster:
       return capgv1beta1.getGCPMachineTemplateListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelCluster]: cluster.metadata.name,
+            [capiv1beta1.labelRole]: 'control-plane',
+          },
+        },
+        namespace: cluster.metadata.namespace,
+      });
+
+    case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster):
+      return capzv1beta1.getAzureMachineTemplateListKey({
         labelSelector: {
           matchingLabels: {
             [capiv1beta1.labelCluster]: cluster.metadata.name,
@@ -1036,7 +1130,7 @@ export function getProviderNodePoolSpotInstances(
         const maxPriceQty =
           providerNodePool.spec?.template.spotVMOptions?.maxPrice;
         const maxPrice = maxPriceQty
-          ? metav1.quantityToScalar(maxPriceQty)
+          ? metav1.quantityToScalar(maxPriceQty.toString())
           : -1;
 
         return {
@@ -1460,7 +1554,7 @@ function getInstallationBaseURL(providerFlavor: ProviderFlavors): URL {
   return audienceURL;
 }
 
-export function isCAPZCluster(cluster: Cluster): boolean {
+export function isCAPZAlphaCluster(cluster: Cluster): boolean {
   if (cluster.spec?.infrastructureRef?.kind !== capzv1beta1.AzureCluster) {
     return false;
   }
@@ -1476,7 +1570,7 @@ function isCAPGCluster(cluster: Cluster): boolean {
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
-  return isCAPZCluster(cluster) || hasClusterAppLabel(cluster);
+  return isCAPZAlphaCluster(cluster) || hasClusterAppLabel(cluster);
 }
 
 export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {
@@ -1485,7 +1579,7 @@ export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {
 
 export function supportsNonExpMachinePools(cluster: Cluster): boolean {
   const releaseVersion = capiv1beta1.getReleaseVersion(cluster);
-  if (!releaseVersion) return false;
+  if (!releaseVersion) return true;
 
   return (
     compare(releaseVersion, Constants.AZURE_NON_EXP_MACHINE_POOLS_VERSION) >= 0

@@ -31,3 +31,20 @@
     verbs:
     - get
     - list
+- apiVersionAlias: capzv1beta1
+  apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+  resources:
+  - name: AzureCluster
+    crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azureclusters.yaml
+    verbs:
+    - get
+  - name: AzureMachineTemplate
+    crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azuremachinetemplates.yaml
+    verbs:
+    - get
+    - list
+  - name: AzureMachine
+    crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azuremachines.yaml
+  - name: AzureMachinePool
+    crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azuremachinepools.yaml
+

@@ -85,7 +85,7 @@ const ClusterDetailWidgetProviderAzure: React.FC<
     ? undefined
     : credentials
     ? getCredentialsAccountID(credentials)
-    : providerCluster.spec.subscriptionID ?? '';
+    : providerCluster.spec?.subscriptionID ?? '';
   const tenantID = credentials ? getCredentialsAzureTenantID(credentials) : '';
 
   return (

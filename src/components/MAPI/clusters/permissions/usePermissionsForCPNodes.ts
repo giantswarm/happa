@@ -152,45 +152,6 @@ export function usePermissionsForCPNodes(
 
       break;
 
-    case Providers.GCP:
-      computed.canCreate = canCreateClusterApps;
-      computed.canDelete = canDeleteClusterApps;
-      computed.canUpdate = canUpdateClusterApps;
-
-      computed.canGet =
-        hasPermission(
-          permissions,
-          namespace,
-          'get',
-          'cluster.x-k8s.io',
-          'machines'
-        ) &&
-        hasPermission(
-          permissions,
-          namespace,
-          'get',
-          'infrastructure.cluster.x-k8s.io',
-          'gcpmachinetemplates'
-        );
-
-      computed.canList =
-        hasPermission(
-          permissions,
-          namespace,
-          'list',
-          'cluster.x-k8s.io',
-          'machines'
-        ) &&
-        hasPermission(
-          permissions,
-          namespace,
-          'list',
-          'infrastructure.cluster.x-k8s.io',
-          'gcpmachinetemplates'
-        );
-
-      break;
-
     case Providers.CAPA:
       computed.canCreate = canCreateClusterApps;
       computed.canDelete = canDeleteClusterApps;
@@ -226,6 +187,84 @@ export function usePermissionsForCPNodes(
           'list',
           'infrastructure.cluster.x-k8s.io',
           'awsmachinetemplates'
+        );
+
+      break;
+
+    case Providers.CAPZ:
+      computed.canCreate = canCreateClusterApps;
+      computed.canDelete = canDeleteClusterApps;
+      computed.canUpdate = canUpdateClusterApps;
+
+      computed.canGet =
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'infrastructure.cluster.x-k8s.io',
+          'azuremachines'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'infrastructure.cluster.x-k8s.io',
+          'azuremachinetemplates'
+        );
+
+      computed.canList =
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'infrastructure.cluster.x-k8s.io',
+          'azuremachines'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'infrastructure.cluster.x-k8s.io',
+          'azuremachinetemplates'
+        );
+
+      break;
+
+    case Providers.GCP:
+      computed.canCreate = canCreateClusterApps;
+      computed.canDelete = canDeleteClusterApps;
+      computed.canUpdate = canUpdateClusterApps;
+
+      computed.canGet =
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'cluster.x-k8s.io',
+          'machines'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'infrastructure.cluster.x-k8s.io',
+          'gcpmachinetemplates'
+        );
+
+      computed.canList =
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'cluster.x-k8s.io',
+          'machines'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'infrastructure.cluster.x-k8s.io',
+          'gcpmachinetemplates'
         );
 
       break;

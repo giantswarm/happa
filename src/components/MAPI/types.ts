@@ -9,14 +9,15 @@ import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 
 export type ControlPlaneNode =
+  | capav1beta1.IAWSMachineTemplate
+  | capgv1beta1.IGCPMachineTemplate
+  | capiv1beta1.IMachine
   | capzv1beta1.IAzureMachine
+  | capzv1beta1.IAzureMachineTemplate
   | infrav1alpha2.IAWSControlPlane
   | infrav1alpha2.IG8sControlPlane
   | infrav1alpha3.IAWSControlPlane
-  | infrav1alpha3.IG8sControlPlane
-  | capav1beta1.IAWSMachineTemplate
-  | capgv1beta1.IGCPMachineTemplate
-  | capiv1beta1.IMachine;
+  | infrav1alpha3.IG8sControlPlane;
 
 export type ControlPlaneNodeList =
   | capzv1beta1.IAzureMachineList
@@ -58,12 +59,13 @@ export type NodePoolList =
   | capiv1beta1.IMachinePoolList;
 
 export type ProviderNodePool =
+  | capav1beta1.IAWSMachinePool
+  | capgv1beta1.IGCPMachineTemplate
+  | capzv1beta1.IAzureMachineTemplate
   | capzexpv1alpha3.IAzureMachinePool
   | capzv1beta1.IAzureMachinePool
   | infrav1alpha2.IAWSMachineDeployment
   | infrav1alpha3.IAWSMachineDeployment
-  | capav1beta1.IAWSMachinePool
-  | capgv1beta1.IGCPMachineTemplate
   | undefined;
 
 export type ProviderNodePoolList =
