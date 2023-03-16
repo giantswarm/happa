@@ -1,39 +1,7 @@
 import * as capiv1beta1 from '../../capiv1beta1';
-import {
-  IDataDisk,
-  IImage,
-  IOSDisk,
-  ISecurityProfile,
-  ISpotVMOptions,
-  IUserAssignedIdentity,
-  Tags,
-} from '../../capzv1beta1';
-import * as metav1 from '../../metav1';
+import * as capzv1beta1 from '../../capzv1beta1';
 
 export const ApiVersion = 'exp.infrastructure.cluster.x-k8s.io/v1alpha3';
-
-export interface IAzureMachinePoolTemplate {
-  vmSize: string;
-  osDisk: IOSDisk;
-  image?: IImage;
-  dataDisks?: IDataDisk[];
-  sshPublicKey?: string;
-  acceleratedNetworking?: boolean;
-  terminateNotificationTimeout?: number;
-  securityProfile?: ISecurityProfile;
-  spotVMOptions?: ISpotVMOptions;
-}
-
-export interface IAzureMachinePoolSpec {
-  location: string;
-  template: IAzureMachinePoolTemplate;
-  additionalTags?: Tags;
-  providerID?: string;
-  providerIDList?: string[];
-  identity?: string;
-  roleAssignmentName?: string;
-  userAssignedIdentities?: IUserAssignedIdentity[];
-}
 
 export interface IAzureMachinePoolInstance {
   version?: string;
@@ -65,17 +33,14 @@ export interface IAzureMachinePoolStatus {
 
 export const AzureMachinePool = 'AzureMachinePool';
 
-export interface IAzureMachinePool {
+export interface IAzureMachinePool
+  extends Omit<capzv1beta1.IAzureMachinePool, 'apiVersion'> {
   apiVersion: typeof ApiVersion;
-  kind: typeof AzureMachinePool;
-  metadata: metav1.IObjectMeta;
-  spec?: IAzureMachinePoolSpec;
-  status?: IAzureMachinePoolStatus;
 }
-
 export const AzureMachinePoolList = 'AzureMachinePoolList';
 
-export interface IAzureMachinePoolList extends metav1.IList<IAzureMachinePool> {
+export interface IAzureMachinePoolList
+  extends Omit<capzv1beta1.IAzureMachinePoolList, 'apiVersion' | 'items'> {
   apiVersion: typeof ApiVersion;
-  kind: typeof AzureMachinePoolList;
+  items: IAzureMachinePool[];
 }

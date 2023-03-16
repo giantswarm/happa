@@ -87,14 +87,15 @@ export interface ICondition {
   /**
    * Severity provides an explicit classification of Reason code, so the users or machines can immediately understand the current situation and act accordingly. The Severity field MUST be set only when Status=False.
    */
-  severity?: 'Error' | 'Warning' | 'Info' | '';
+  severity?: 'Error' | 'Warning' | 'Info' | '' | string;
   /**
    * Status of the condition, one of True, False, Unknown.
    */
   status:
     | typeof corev1.conditionTrue
     | typeof corev1.conditionFalse
-    | typeof corev1.conditionUnknown;
+    | typeof corev1.conditionUnknown
+    | string;
   /**
    * Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.
    */
