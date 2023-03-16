@@ -8,3 +8,4 @@ export * from './getAzureMachinePool';
 export * from './createAzureMachinePool';
 export * from './getAzureMachineTemplate';
 export * from './getAzureMachineTemplateList';
+export * from './getAzureClusterIdentity';
