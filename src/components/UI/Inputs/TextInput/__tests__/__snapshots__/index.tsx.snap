@@ -2,28 +2,28 @@
 
 exports[`TextInput renders a disabled input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 icUwKR"
+        class="StyledText-sc-1sadyjn-0 cxWGoc"
       >
         Some input
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 higGFn FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 iAMDuy FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 iUHIDl"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 dAhNeU"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 dmieXA"
+            class="StyledTextInput-sc-1x30a0s-0 plFRd"
             disabled=""
             value="Hi people"
           />
@@ -36,23 +36,23 @@ exports[`TextInput renders a disabled input 1`] = `
 
 exports[`TextInput renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 kspzhV FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 jogsYI FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 iUHIDl"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 dAhNeU"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 kujBHx"
+            class="StyledTextInput-sc-1x30a0s-0 lbbOJE"
             value="Hi people"
           />
         </div>
@@ -64,33 +64,33 @@ exports[`TextInput renders a simple input 1`] = `
 
 exports[`TextInput renders an input with a help message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 icUwKR"
+        class="StyledText-sc-1sadyjn-0 cxWGoc"
       >
         Some input
       </label>
       <span
-        class="StyledText-sc-1sadyjn-0 eASVNJ"
+        class="StyledText-sc-1sadyjn-0 ccrOLA"
       >
         This is a very cool input
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 kspzhV FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 jogsYI FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 iUHIDl"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 dAhNeU"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 kujBHx"
+            class="StyledTextInput-sc-1x30a0s-0 lbbOJE"
             value="Hi people"
           />
         </div>
@@ -102,28 +102,28 @@ exports[`TextInput renders an input with a help message 1`] = `
 
 exports[`TextInput renders an input with a label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 icUwKR"
+        class="StyledText-sc-1sadyjn-0 cxWGoc"
       >
         Some input
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 kspzhV FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 jogsYI FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 iUHIDl"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 dAhNeU"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 kujBHx"
+            class="StyledTextInput-sc-1x30a0s-0 lbbOJE"
             value="Hi people"
           />
         </div>
@@ -135,34 +135,34 @@ exports[`TextInput renders an input with a label 1`] = `
 
 exports[`TextInput renders an input with a validation error 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 icUwKR"
+        class="StyledText-sc-1sadyjn-0 cxWGoc"
       >
         Some input
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 bOMnWB FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 flbrHM FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 iUHIDl"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 dAhNeU"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 kujBHx"
+            class="StyledTextInput-sc-1x30a0s-0 lbbOJE"
             value="Hi people"
           />
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 fbPnYz"
+        class="StyledText-sc-1sadyjn-0 glekGW"
       >
         You failed at this
       </span>
@@ -173,34 +173,34 @@ exports[`TextInput renders an input with a validation error 1`] = `
 
 exports[`TextInput renders an input with an info message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 icUwKR"
+        class="StyledText-sc-1sadyjn-0 cxWGoc"
       >
         Some input
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 kspzhV FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 jogsYI FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 iUHIDl"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 dAhNeU"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 kujBHx"
+            class="StyledTextInput-sc-1x30a0s-0 lbbOJE"
             value="Hi people"
           />
         </div>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 drMgMi"
+        class="StyledText-sc-1sadyjn-0 jNjjQj"
       >
         You can set a cool value
       </span>

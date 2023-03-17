@@ -2,25 +2,25 @@
 
 exports[`InputGroup renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 iwVdAN FormField__FormFieldBox-sc-m9hood-0 casIFC"
+      class="StyledBox-sc-13pk1d4-0 jrQlrA FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 icUwKR"
+        class="StyledText-sc-1sadyjn-0 cxWGoc"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 dOKTxZ"
+          class="StyledText-sc-1sadyjn-0 jBvepc"
         >
           A nice group of inputs
         </span>
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 imPlyD FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 knNRxW FormField__FormFieldContentBox-sc-m9hood-1"
       />
     </div>
   </div>
