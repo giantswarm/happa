@@ -2,36 +2,36 @@
 
 exports[`CheckBoxInput renders a disabled input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC CheckBoxInput__StyledFormField-sc-16fe619-0 jlzBsc"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP CheckBoxInput__StyledFormField-sc-16fe619-0 dTmIHh"
       tabindex="0"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 fzAqvK FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eCHmSz FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 gofNHd"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 idkAyM"
           disabled=""
           label="Some input"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kNcvZs StyledCheckBox-sc-1dbk5ju-6 bWiGFS"
+            class="StyledBox-sc-13pk1d4-0 dMeqVZ StyledCheckBox-sc-1dbk5ju-6 bjeWAX"
             disabled=""
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 dfUkHI"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 fdsPqh"
               disabled=""
               tabindex="-1"
               type="checkbox"
               value="Hi people"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 ceoxCm StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jjIPKl"
+              class="StyledBox-sc-13pk1d4-0 dryEaT StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jrHwNE"
               disabled=""
             />
           </div>
@@ -47,33 +47,33 @@ exports[`CheckBoxInput renders a disabled input 1`] = `
 
 exports[`CheckBoxInput renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC CheckBoxInput__StyledFormField-sc-16fe619-0 jlzBsc"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP CheckBoxInput__StyledFormField-sc-16fe619-0 dTmIHh"
       tabindex="0"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 fzAqvK FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eCHmSz FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 kmrNSU"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 nhaWp"
           label="Some input"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kNcvZs StyledCheckBox-sc-1dbk5ju-6 bWiGFS"
+            class="StyledBox-sc-13pk1d4-0 dMeqVZ StyledCheckBox-sc-1dbk5ju-6 bjeWAX"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hZdeBk"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 fgWFpR"
               tabindex="-1"
               type="checkbox"
               value="Hi people"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 ceoxCm StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jjIPKl"
+              class="StyledBox-sc-13pk1d4-0 dryEaT StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jrHwNE"
             />
           </div>
           <span>
@@ -88,45 +88,45 @@ exports[`CheckBoxInput renders a simple input 1`] = `
 
 exports[`CheckBoxInput renders a toggle input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC CheckBoxInput__StyledFormField-sc-16fe619-0 jlzBsc"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP CheckBoxInput__StyledFormField-sc-16fe619-0 dTmIHh"
       tabindex="0"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 icUwKR"
+        class="StyledText-sc-1sadyjn-0 cxWGoc"
       >
         A checkbox
       </label>
       <span
-        class="StyledText-sc-1sadyjn-0 eASVNJ"
+        class="StyledText-sc-1sadyjn-0 ccrOLA"
       >
         A helpful message
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 fzAqvK FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eCHmSz FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 kmrNSU"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 nhaWp"
           label="Hi friends"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kNcvZs StyledCheckBox-sc-1dbk5ju-6 bWiGFS"
+            class="StyledBox-sc-13pk1d4-0 dMeqVZ StyledCheckBox-sc-1dbk5ju-6 bjeWAX"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hZdeBk"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 fgWFpR"
               tabindex="-1"
               type="checkbox"
             />
             <span
-              class="StyledCheckBox__StyledCheckBoxToggle-sc-1dbk5ju-4 fOdePD"
+              class="StyledCheckBox__StyledCheckBoxToggle-sc-1dbk5ju-4 hUJcsi"
             >
               <span
-                class="StyledCheckBox__StyledCheckBoxKnob-sc-1dbk5ju-5 jOejkI"
+                class="StyledCheckBox__StyledCheckBoxKnob-sc-1dbk5ju-5 iJociB"
               />
             </span>
           </div>
@@ -136,7 +136,7 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
         </label>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 drMgMi"
+        class="StyledText-sc-1sadyjn-0 jNjjQj"
       >
         Some info
       </span>
@@ -147,38 +147,38 @@ exports[`CheckBoxInput renders a toggle input 1`] = `
 
 exports[`CheckBoxInput renders an input with a form field label 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC CheckBoxInput__StyledFormField-sc-16fe619-0 jlzBsc"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP CheckBoxInput__StyledFormField-sc-16fe619-0 dTmIHh"
       tabindex="0"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 icUwKR"
+        class="StyledText-sc-1sadyjn-0 cxWGoc"
       >
         A brilliant input
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 fzAqvK FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eCHmSz FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 kmrNSU"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 nhaWp"
           label="Some input"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kNcvZs StyledCheckBox-sc-1dbk5ju-6 bWiGFS"
+            class="StyledBox-sc-13pk1d4-0 dMeqVZ StyledCheckBox-sc-1dbk5ju-6 bjeWAX"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hZdeBk"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 fgWFpR"
               tabindex="-1"
               type="checkbox"
               value="Hi people"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 ceoxCm StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jjIPKl"
+              class="StyledBox-sc-13pk1d4-0 dryEaT StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jrHwNE"
             />
           </div>
           <span>
@@ -193,38 +193,38 @@ exports[`CheckBoxInput renders an input with a form field label 1`] = `
 
 exports[`CheckBoxInput renders an input with a help message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC CheckBoxInput__StyledFormField-sc-16fe619-0 jlzBsc"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP CheckBoxInput__StyledFormField-sc-16fe619-0 dTmIHh"
       tabindex="0"
     >
       <span
-        class="StyledText-sc-1sadyjn-0 eASVNJ"
+        class="StyledText-sc-1sadyjn-0 ccrOLA"
       >
         This is a very cool input
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 fzAqvK FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eCHmSz FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 kmrNSU"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 nhaWp"
           label="Some input"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kNcvZs StyledCheckBox-sc-1dbk5ju-6 bWiGFS"
+            class="StyledBox-sc-13pk1d4-0 dMeqVZ StyledCheckBox-sc-1dbk5ju-6 bjeWAX"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hZdeBk"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 fgWFpR"
               tabindex="-1"
               type="checkbox"
               value="Hi people"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 ceoxCm StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jjIPKl"
+              class="StyledBox-sc-13pk1d4-0 dryEaT StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jrHwNE"
             />
           </div>
           <span>
@@ -239,33 +239,33 @@ exports[`CheckBoxInput renders an input with a help message 1`] = `
 
 exports[`CheckBoxInput renders an input with a validation error 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC CheckBoxInput__StyledFormField-sc-16fe619-0 jlzBsc"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP CheckBoxInput__StyledFormField-sc-16fe619-0 dTmIHh"
       tabindex="0"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 fzAqvK FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eCHmSz FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 kmrNSU"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 nhaWp"
           label="Some input"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kNcvZs StyledCheckBox-sc-1dbk5ju-6 bWiGFS"
+            class="StyledBox-sc-13pk1d4-0 dMeqVZ StyledCheckBox-sc-1dbk5ju-6 bjeWAX"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hZdeBk"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 fgWFpR"
               tabindex="-1"
               type="checkbox"
               value="Hi people"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 ceoxCm StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jjIPKl"
+              class="StyledBox-sc-13pk1d4-0 dryEaT StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jrHwNE"
             />
           </div>
           <span>
@@ -274,7 +274,7 @@ exports[`CheckBoxInput renders an input with a validation error 1`] = `
         </label>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 fbPnYz"
+        class="StyledText-sc-1sadyjn-0 glekGW"
       >
         You failed at this
       </span>
@@ -285,33 +285,33 @@ exports[`CheckBoxInput renders an input with a validation error 1`] = `
 
 exports[`CheckBoxInput renders an input with an info message 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 erdTQn"
+  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 hYLvQc"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ctdetp FormField__FormFieldBox-sc-m9hood-0 casIFC CheckBoxInput__StyledFormField-sc-16fe619-0 jlzBsc"
+      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP CheckBoxInput__StyledFormField-sc-16fe619-0 dTmIHh"
       tabindex="0"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 fzAqvK FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eCHmSz FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <label
-          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 kmrNSU"
+          class="StyledCheckBox__StyledCheckBoxContainer-sc-1dbk5ju-1 nhaWp"
           label="Some input"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kNcvZs StyledCheckBox-sc-1dbk5ju-6 bWiGFS"
+            class="StyledBox-sc-13pk1d4-0 dMeqVZ StyledCheckBox-sc-1dbk5ju-6 bjeWAX"
           >
             <input
-              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 hZdeBk"
+              class="StyledCheckBox__StyledCheckBoxInput-sc-1dbk5ju-2 fgWFpR"
               tabindex="-1"
               type="checkbox"
               value="Hi people"
             />
             <div
-              class="StyledBox-sc-13pk1d4-0 ceoxCm StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jjIPKl"
+              class="StyledBox-sc-13pk1d4-0 dryEaT StyledCheckBox__StyledCheckBoxBox-sc-1dbk5ju-3 jrHwNE"
             />
           </div>
           <span>
@@ -320,7 +320,7 @@ exports[`CheckBoxInput renders an input with an info message 1`] = `
         </label>
       </div>
       <span
-        class="StyledText-sc-1sadyjn-0 drMgMi"
+        class="StyledText-sc-1sadyjn-0 jNjjQj"
       >
         You can set a cool value
       </span>
