@@ -20,7 +20,8 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    onChange(e.target.value === '' ? options.emptyValue : e.target.value);
+    const emptyValue = options.emptyValue ?? '';
+    onChange(e.target.value === '' ? emptyValue : e.target.value);
   };
 
   const handleNumberChange = (newValue: number) => {
@@ -28,6 +29,13 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   };
 
   const handleBlur = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const emptyValue = options.emptyValue ?? '';
+    onBlur(id, e.target.value === '' ? emptyValue : e.target.value);
+  };
+
+  const handleNumberBlur = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     onBlur(id, e.target.value === '' ? options.emptyValue : e.target.value);
@@ -51,7 +59,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
         width: { max: 'small' },
       }}
       onChange={handleNumberChange}
-      onBlur={handleBlur}
+      onBlur={handleNumberBlur}
     />
   ) : inputProps.type === 'text' ? (
     <TextArea
