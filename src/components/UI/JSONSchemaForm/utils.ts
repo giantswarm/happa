@@ -68,11 +68,13 @@ export function getArrayItemIndex(id: string, idSeparator: string) {
 }
 
 function getImplicitDefaultValue(value: unknown) {
-  switch (typeof value) {
-    case 'string':
+  switch (true) {
+    case typeof value === 'string':
       return '';
-    case 'boolean':
+    case typeof value === 'boolean':
       return false;
+    case Array.isArray(value):
+      return [];
     default:
       return undefined;
   }
@@ -99,6 +101,7 @@ export function cleanPayload<T = {}>(
 
   return transform(
     object as unknown[],
+    // eslint-disable-next-line complexity
     (result: Record<string | number, unknown>, value, key) => {
       // if it matches the exception rule, don't continue to clean
       if (isException && isException(value)) {
@@ -114,12 +117,18 @@ export function cleanPayload<T = {}>(
         : undefined;
 
       if (Array.isArray(value)) {
-        const isEqualToDefault = isEqual(value, defaultValue);
+        if (cleanDefaultValues && isEqual(value, defaultValue)) {
+          return;
+        }
+
         newValue = cleanPayload<unknown>(value, {
           ...options,
-          cleanDefaultValues: isEqualToDefault ? cleanDefaultValues : false,
-          defaultValues: isEqualToDefault ? defaultValue : undefined,
+          defaultValues: undefined,
         });
+
+        if (cleanDefaultValues && isEqual(newValue, defaultValue)) {
+          return;
+        }
 
         if (emptyArrays && isEmpty(newValue)) {
           return;

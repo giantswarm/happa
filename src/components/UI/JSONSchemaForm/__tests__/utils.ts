@@ -100,7 +100,11 @@ describe('JSONSchemaForm:utils', () => {
   });
 
   describe('cleanPayload with default values', () => {
-    const cleanOptions = { emptyStrings: false, cleanDefaultValues: true };
+    const cleanOptions = {
+      emptyStrings: false,
+      emptyArrays: false,
+      cleanDefaultValues: true,
+    };
 
     it('cleans string values correctly', () => {
       const examples = [
@@ -268,6 +272,63 @@ describe('JSONSchemaForm:utils', () => {
       }
     });
 
+    it('cleans arrays values correctly', () => {
+      const examples = [
+        {
+          defaultValues: { field: [] },
+          payload: { field: [] },
+          expected: {},
+        },
+        {
+          defaultValues: { field: [1, 2, 3] },
+          payload: { field: [1, 2, 3] },
+          expected: {},
+        },
+        {
+          defaultValues: { field: [] },
+          payload: { field: ['some string field'] },
+          expected: { field: ['some string field'] },
+        },
+        {
+          defaultValues: { field: ['some string field'] },
+          payload: { field: [] },
+          expected: { field: [] },
+        },
+        {
+          defaultValues: { field: ['some string field'] },
+          payload: { field: ['some string field', 'another string field'] },
+          expected: { field: ['some string field', 'another string field'] },
+        },
+      ];
+
+      for (const { defaultValues, payload, expected } of examples) {
+        expect(
+          cleanPayload(payload, { ...cleanOptions, defaultValues })
+        ).toEqual(expected);
+      }
+    });
+
+    it('implicitly uses empty array as default value for arrays', () => {
+      const examples = [
+        {
+          defaultValues: {},
+          payload: { field: [] },
+          expected: {},
+        },
+        {
+          defaultValues: {},
+          payload: { field: ['some string field'] },
+          expected: { field: ['some string field'] },
+        },
+      ];
+
+      for (const { defaultValues, payload, expected } of examples) {
+        expect(
+          cleanPayload(payload, { ...cleanOptions, defaultValues })
+        ).toEqual(expected);
+      }
+    });
+
     it('cleans inner objects', () => {
       const defaultValues = {
         stringField: 'some string field',
@@ -283,6 +344,20 @@ describe('JSONSchemaForm:utils', () => {
             innerObjectBooleanField: true,
           },
         },
+        array1: [
+          {
+            stringField: 'some string field',
+            numberField: 123,
+            booleanField: true,
+          },
+        ],
+        array2: [
+          {
+            stringField: 'some string field',
+            numberField: 123,
+            booleanField: true,
+          },
+        ],
       };
 
       const payload = {
@@ -299,6 +374,23 @@ describe('JSONSchemaForm:utils', () => {
             innerObjectBooleanField: true,
           },
         },
+        array1: [
+          {
+            stringField: 'some string field',
+            numberField: 123,
+            booleanField: true,
+          },
+        ],
+        array2: [
+          {
+            stringField: 'another string field',
+            emptyStringField: '',
+            numberField: 123,
+            booleanField: false,
+            innerArray: [1, 2, 3],
+            emptyInnerArray: [],
+          },
+        ],
       };
 
       const expected = {
@@ -309,6 +401,13 @@ describe('JSONSchemaForm:utils', () => {
             innerObjectNumberField: 0,
           },
         },
+        array2: [
+          {
+            stringField: 'another string field',
+            numberField: 123,
+            innerArray: [1, 2, 3],
+          },
+        ],
       };
 
       expect(cleanPayload(payload, { ...cleanOptions, defaultValues })).toEqual(
@@ -316,7 +415,7 @@ describe('JSONSchemaForm:utils', () => {
       );
     });
 
-    it('returns empty object if input object equals default values', () => {
+    it('returns empty object if input object equals to default value', () => {
       const defaultValues = {
         stringField: 'some string field',
         numberField: 123,
@@ -337,54 +436,6 @@ describe('JSONSchemaForm:utils', () => {
 
       expect(cleanPayload(payload, { ...cleanOptions, defaultValues })).toEqual(
         {}
-      );
-    });
-
-    it('does not cleen inner arrays', () => {
-      const defaultValues = {
-        stringField: 'some string field',
-        numberField: 123,
-        booleanField: true,
-        array: [
-          {
-            objectStringField: 'some object string field',
-            objectNumberField: 0,
-            objectBooleanField: false,
-          },
-        ],
-      };
-
-      const payload = {
-        stringField: 'some string field',
-        numberField: 123,
-        booleanField: true,
-        array: [
-          {
-            objectStringField: 'some object string field',
-            objectNumberField: 123,
-            objectBooleanField: false,
-          },
-          {
-            objectBooleanField: true,
-          },
-        ],
-      };
-
-      const expected = {
-        array: [
-          {
-            objectStringField: 'some object string field',
-            objectNumberField: 123,
-            objectBooleanField: false,
-          },
-          {
-            objectBooleanField: true,
-          },
-        ],
-      };
-
-      expect(cleanPayload(payload, { ...cleanOptions, defaultValues })).toEqual(
-        expected
       );
     });
   });
