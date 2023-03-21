@@ -16,7 +16,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClient } from 'utils/hooks/useHttpClient';
 
-import { usePermissionsForOrgCredentials } from '../permissions/usePermissionsForOrgCredentials';
+import { usePermissionsForProviderCredentials } from '../permissions/usePermissionsForProviderCredentials';
 import { getCredentialsAccountID } from './utils';
 
 const ValueWrapper = styled.div`
@@ -45,7 +45,7 @@ const ClusterDetailWidgetProviderAWS: React.FC<
 
   const provider = window.config.info.general.provider;
 
-  const { canList } = usePermissionsForOrgCredentials(
+  const { canList } = usePermissionsForProviderCredentials(
     provider,
     selectedOrg?.namespace ?? ''
   );

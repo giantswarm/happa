@@ -5,8 +5,7 @@ import {
   within,
 } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import { usePermissionsForAWSClusterRoleIdentities } from 'MAPI/clusters/permissions/usePermissionsForAWSClusterRoleIdentities';
-import { usePermissionsForOrgCredentials } from 'MAPI/clusters/permissions/usePermissionsForOrgCredentials';
+import { usePermissionsForProviderCredentials } from 'MAPI/clusters/permissions/usePermissionsForProviderCredentials';
 import { ProviderCluster } from 'MAPI/types';
 import { StatusCodes } from 'model/constants';
 import * as providers from 'model/constants/providers';
@@ -34,10 +33,8 @@ jest.mock('react-router', () => ({
   useParams: jest.fn(),
 }));
 
-jest.mock(
-  'MAPI/clusters/permissions/usePermissionsForAWSClusterRoleIdentities'
-);
-jest.mock('MAPI/clusters/permissions/usePermissionsForOrgCredentials');
+jest.mock('MAPI/clusters/permissions/usePermissionsForProviderCredentials');
+jest.mock('MAPI/clusters/permissions/usePermissionsForProviderCredentials');
 
 jest.mock('model/services/mapi/legacy/credentials', () => ({
   ...jest.requireActual('model/services/mapi/legacy/credentials'),
@@ -182,7 +179,7 @@ describe('ClusterDetailWidgetProvider when user can not list credentials on AWS'
   beforeAll(() => {
     window.config.info.general.provider = providers.AWS;
 
-    (usePermissionsForOrgCredentials as jest.Mock).mockReturnValue({
+    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue({
       canList: false,
     });
   });
@@ -214,7 +211,7 @@ describe('ClusterDetailWidgetProvider when user can list credentials on AWS', ()
   beforeAll(() => {
     window.config.info.general.provider = providers.AWS;
 
-    (usePermissionsForOrgCredentials as jest.Mock).mockReturnValue({
+    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue({
       canList: true,
     });
 
@@ -259,7 +256,7 @@ describe('ClusterDetailWidgetProvider when user can not list credentials on Azur
   beforeAll(() => {
     window.config.info.general.provider = providers.AZURE;
 
-    (usePermissionsForOrgCredentials as jest.Mock).mockReturnValue({
+    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue({
       canList: false,
     });
   });
@@ -297,7 +294,7 @@ describe('ClusterDetailWidgetProvider when user can list credentials on Azure', 
   beforeAll(() => {
     window.config.info.general.provider = providers.AZURE;
 
-    (usePermissionsForOrgCredentials as jest.Mock).mockReturnValue({
+    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue({
       canList: true,
     });
 
@@ -380,7 +377,7 @@ describe('ClusterDetailWidgetProvider when user can not get AWSClusterRoleIdenti
   beforeAll(() => {
     window.config.info.general.provider = providers.CAPA;
 
-    (usePermissionsForAWSClusterRoleIdentities as jest.Mock).mockReturnValue({
+    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue({
       canGet: false,
     });
   });
@@ -412,7 +409,7 @@ describe('ClusterDetailWidgetProvider when user can get AWSClusterRoleIdentity o
   beforeAll(() => {
     window.config.info.general.provider = providers.CAPA;
 
-    (usePermissionsForAWSClusterRoleIdentities as jest.Mock).mockReturnValue({
+    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue({
       canGet: true,
     });
   });
