@@ -56,17 +56,20 @@ const ClusterDetailWidgetProvider: React.FC<
       ? fetchProviderCredentialKey(cluster, providerCluster, selectedOrgID)
       : undefined;
 
-  const { data: providerCredential, error: providerCredentialError } = useSWR<
-    ProviderCredential,
-    GenericResponseError
-  >(providerCredentialKey, () =>
-    fetchProviderCredential(
-      clientFactory,
-      auth,
-      cluster!,
-      providerCluster,
-      selectedOrgID!
-    )
+  const {
+    data: providerCredential,
+    error: providerCredentialError,
+    isLoading: providerCredentialIsLoading,
+  } = useSWR<ProviderCredential, GenericResponseError>(
+    providerCredentialKey,
+    () =>
+      fetchProviderCredential(
+        clientFactory,
+        auth,
+        cluster!,
+        providerCluster,
+        selectedOrgID!
+      )
   );
 
   useEffect(() => {
@@ -85,7 +88,10 @@ const ClusterDetailWidgetProvider: React.FC<
   const infrastructureRef = cluster?.spec?.infrastructureRef;
   const { kind } = infrastructureRef || {};
 
-  const isLoading = cluster === undefined || providerCluster === undefined;
+  const isLoading =
+    cluster === undefined ||
+    providerCluster === undefined ||
+    providerCredentialIsLoading;
 
   return (
     <ClusterDetailWidget title='Provider' inline={true} {...props}>
