@@ -151,6 +151,7 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
       />
       <ClusterDetailWidgetKubernetesAPI cluster={cluster} basis='100%' />
       <ClusterDetailWidgetProvider
+        cluster={cluster}
         providerCluster={providerCluster}
         basis='100%'
       />

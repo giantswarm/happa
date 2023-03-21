@@ -1,23 +1,15 @@
-import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
-import { extractErrorMessage, getProviderClusterLocation } from 'MAPI/utils';
-import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { getProviderClusterLocation } from 'MAPI/utils';
+import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
-import { selectOrganizations } from 'model/stores/organization/selectors';
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import React from 'react';
 import styled from 'styled-components';
-import useSWR from 'swr';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
-import ErrorReporter from 'utils/errors/ErrorReporter';
-import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
-import { useHttpClient } from 'utils/hooks/useHttpClient';
 
-import { usePermissionsForProviderCredentials } from '../permissions/usePermissionsForProviderCredentials';
-import { getCredentialsAccountID } from './utils';
+import { getAWSCredentialAccountID } from './utils';
 
 const ValueWrapper = styled.div`
   display: inline-block;
@@ -29,69 +21,18 @@ const StyledLink = styled.a`
 `;
 
 interface IClusterDetailWidgetProviderAWSProps {
-  providerCluster: infrav1alpha3.IAWSCluster;
+  providerCluster:
+    | capav1beta1.IAWSCluster
+    | infrav1alpha2.IAWSCluster
+    | infrav1alpha3.IAWSCluster;
+  providerCredential?:
+    | capav1beta1.IAWSClusterRoleIdentity
+    | legacyCredentials.ICredential;
 }
 
 const ClusterDetailWidgetProviderAWS: React.FC<
   React.PropsWithChildren<IClusterDetailWidgetProviderAWSProps>
-> = ({ providerCluster }) => {
-  const { orgId } = useParams<{ clusterId: string; orgId: string }>();
-  const organizations = useSelector(selectOrganizations());
-  const selectedOrg = orgId ? organizations[orgId] : undefined;
-  const selectedOrgID = selectedOrg?.name ?? selectedOrg?.id;
-
-  const credentialListClient = useHttpClient();
-  const auth = useAuthProvider();
-
-  const provider = window.config.info.general.provider;
-
-  const { canList } = usePermissionsForProviderCredentials(
-    provider,
-    selectedOrg?.namespace ?? ''
-  );
-
-  const credentialListKey =
-    canList && selectedOrgID
-      ? legacyCredentials.getCredentialListKey(selectedOrgID)
-      : undefined;
-
-  const {
-    data: credentialList,
-    error: credentialListError,
-    isLoading: credentialListIsLoading,
-  } = useSWR<legacyCredentials.ICredentialList, GenericResponseError>(
-    credentialListKey,
-    () =>
-      legacyCredentials.getCredentialList(
-        credentialListClient,
-        auth,
-        selectedOrgID!
-      )
-  );
-
-  useEffect(() => {
-    if (credentialListError) {
-      new FlashMessage(
-        `Could not fetch provider-specific credentials for organization ${orgId}`,
-        messageType.ERROR,
-        messageTTL.LONG,
-        extractErrorMessage(credentialListError)
-      );
-
-      ErrorReporter.getInstance().notify(credentialListError);
-    }
-  }, [credentialListError, orgId]);
-
-  const credentials = credentialListIsLoading
-    ? undefined
-    : credentialList?.items;
-
-  const accountID = credentialListIsLoading
-    ? undefined
-    : credentials
-    ? getCredentialsAccountID(credentials)
-    : '';
-
+> = ({ providerCluster, providerCredential }) => {
   return (
     <>
       <Text>AWS region</Text>
@@ -100,7 +41,7 @@ const ClusterDetailWidgetProviderAWS: React.FC<
       </ValueWrapper>
 
       <Text>Account ID</Text>
-      <OptionalValue value={accountID}>
+      <OptionalValue value={getAWSCredentialAccountID(providerCredential)}>
         {(value) => (
           <StyledLink
             href={`https://${value}.signin.aws.amazon.com/console`}
