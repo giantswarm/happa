@@ -1,18 +1,6 @@
 import { RJSFSchema } from '@rjsf/utils';
 import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
 
-export function removeDefaultValues(schema: RJSFSchema): RJSFSchema {
-  const removeDefaults = (obj: RJSFSchema) => {
-    if (obj.hasOwnProperty('default')) {
-      delete obj.default;
-    }
-
-    return obj;
-  };
-
-  return traverseJSONSchemaObject(schema, removeDefaults);
-}
-
 export function preprocessSchema(
   schema: RJSFSchema,
   fieldsToRemove: string[] = ['.internal']

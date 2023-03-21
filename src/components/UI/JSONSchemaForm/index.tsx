@@ -22,7 +22,7 @@ import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import MultiSchemaField from './MultiSchemaField';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
-import { preprocessSchema, removeDefaultValues } from './schemaUtils';
+import { preprocessSchema } from './schemaUtils';
 import SelectWidget from './SelectWidget';
 import {
   cleanPayload,
@@ -152,14 +152,13 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
   );
 
   const [preprocessedSchema, defaultValues] = useMemo(() => {
-    let patchedSchema = preprocessSchema(cloneDeep(schema), fieldsToRemove);
+    const patchedSchema = preprocessSchema(cloneDeep(schema), fieldsToRemove);
     const defaults: RJSFSchema = getDefaultFormState(
       validator,
       patchedSchema,
       {},
       patchedSchema
     );
-    patchedSchema = removeDefaultValues(patchedSchema);
 
     return [patchedSchema, defaults];
     // eslint-disable-next-line react-hooks/exhaustive-deps
