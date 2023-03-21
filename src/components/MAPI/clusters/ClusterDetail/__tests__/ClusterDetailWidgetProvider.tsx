@@ -41,6 +41,11 @@ jest.mock('model/services/mapi/legacy/credentials', () => ({
   getCredentialList: jest.fn(),
 }));
 
+const defaultPermissions = {
+  canList: true,
+  canGet: true,
+};
+
 function getComponent(
   props: React.ComponentPropsWithoutRef<typeof ClusterDetailWidgetProvider>,
   state: IState
@@ -101,6 +106,7 @@ function setup(
   const utils = render(
     getComponent(
       {
+        cluster,
         providerCluster,
       },
       defaultState
@@ -172,6 +178,21 @@ async function setupCAPA() {
   };
 }
 
+async function setupCAPZ() {
+  const utils = setup(
+    capiv1beta1Mocks.randomClusterCAPZ1,
+    capzv1beta1Mocks.randomAzureClusterCAPZ1
+  );
+
+  if (screen.queryAllByText('Loading...').length > 0) {
+    await waitForElementToBeRemoved(() => screen.queryAllByText('Loading...'));
+  }
+
+  return {
+    ...utils,
+  };
+}
+
 describe('ClusterDetailWidgetProvider when user can not list credentials on AWS', () => {
   const provider: PropertiesOf<typeof providers> =
     window.config.info.general.provider;
@@ -211,9 +232,9 @@ describe('ClusterDetailWidgetProvider when user can list credentials on AWS', ()
   beforeAll(() => {
     window.config.info.general.provider = providers.AWS;
 
-    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue({
-      canList: true,
-    });
+    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     (legacyCredentials.getCredentialList as jest.Mock).mockReturnValue({
       items: [
@@ -240,7 +261,7 @@ describe('ClusterDetailWidgetProvider when user can list credentials on AWS', ()
     expect(within(providerInfo).getByText('eu-west-1')).toBeInTheDocument();
     expect(within(providerInfo).getByText('Account ID')).toBeInTheDocument();
     expect(
-      within(providerInfo).getByText('credential-account-id')
+      await within(providerInfo).findByText('credential-account-id')
     ).toBeInTheDocument();
     expect(within(providerInfo).getByRole('link')).toHaveAttribute(
       'href',
@@ -294,9 +315,9 @@ describe('ClusterDetailWidgetProvider when user can list credentials on Azure', 
   beforeAll(() => {
     window.config.info.general.provider = providers.AZURE;
 
-    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue({
-      canList: true,
-    });
+    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
 
     (legacyCredentials.getCredentialList as jest.Mock).mockReturnValue({
       items: [
@@ -326,7 +347,7 @@ describe('ClusterDetailWidgetProvider when user can list credentials on Azure', 
       within(providerInfo).getByText('Subscription ID')
     ).toBeInTheDocument();
     expect(
-      within(providerInfo).getByText('credential-subscription-id')
+      await within(providerInfo).findByText('credential-subscription-id')
     ).toBeInTheDocument();
     expect(within(providerInfo).queryByRole('link')).not.toBeInTheDocument();
     expect(within(providerInfo).getByText('Tenant ID')).toBeInTheDocument();
@@ -409,9 +430,9 @@ describe('ClusterDetailWidgetProvider when user can get AWSClusterRoleIdentity o
   beforeAll(() => {
     window.config.info.general.provider = providers.CAPA;
 
-    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue({
-      canGet: true,
-    });
+    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
   });
 
   afterAll(() => {
@@ -434,11 +455,95 @@ describe('ClusterDetailWidgetProvider when user can get AWSClusterRoleIdentity o
     expect(within(providerInfo).getByText('AWS region')).toBeInTheDocument();
     expect(within(providerInfo).getByText('eu-west-2')).toBeInTheDocument();
     expect(within(providerInfo).getByText('Account ID')).toBeInTheDocument();
-    expect(within(providerInfo).getByText('262033476510')).toBeInTheDocument();
+    expect(
+      await within(providerInfo).findByText('262033476510')
+    ).toBeInTheDocument();
     expect(within(providerInfo).queryByRole('link')).toBeInTheDocument();
     expect(within(providerInfo).getByRole('link')).toHaveAttribute(
       'href',
       'https://262033476510.signin.aws.amazon.com/console'
     );
+  });
+});
+
+describe('ClusterDetailWidgetProvider when user can not list credentials on CAPZ', () => {
+  const provider: PropertiesOf<typeof providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = providers.CAPZ;
+
+    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue({
+      canList: false,
+    });
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays loading animations if the cluster is still loading', () => {
+    setup();
+    expect(screen.getAllByLabelText('Loading...').length).toEqual(4);
+  });
+
+  it('displays cluster region, subscription ID and tenant ID', async () => {
+    await setupCAPZ();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('Azure region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('westeurope')).toBeInTheDocument();
+    expect(
+      within(providerInfo).getByText('Subscription ID')
+    ).toBeInTheDocument();
+    expect(
+      within(providerInfo).getByText('test-subscription')
+    ).toBeInTheDocument();
+    expect(within(providerInfo).getByText('Tenant ID')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('n/a')).toBeInTheDocument();
+  });
+});
+
+describe('ClusterDetailWidgetProvider when user can list credentials on CAPZ', () => {
+  const provider: PropertiesOf<typeof providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = providers.CAPZ;
+
+    (usePermissionsForProviderCredentials as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays loading animations if the cluster is still loading', () => {
+    setup();
+    expect(screen.getAllByLabelText('Loading...').length).toEqual(4);
+  });
+
+  it('displays cluster region, subscription ID and tenant ID', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        '/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azureclusteridentities/test-identity/'
+      )
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.defaultAzureClusterIdentity);
+
+    await setupCAPZ();
+    const providerInfo = screen.getByTestId('provider-info');
+    expect(within(providerInfo).getByText('Azure region')).toBeInTheDocument();
+    expect(within(providerInfo).getByText('westeurope')).toBeInTheDocument();
+    expect(
+      within(providerInfo).getByText('Subscription ID')
+    ).toBeInTheDocument();
+    expect(
+      await within(providerInfo).findByText('test-subscription')
+    ).toBeInTheDocument();
+    expect(within(providerInfo).getByText('Tenant ID')).toBeInTheDocument();
+    expect(
+      within(providerInfo).getByText('test-tenant-id')
+    ).toBeInTheDocument();
   });
 });
