@@ -7,6 +7,7 @@ import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
+import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 
 export type ControlPlaneNode =
   | capav1beta1.IAWSMachineTemplate
@@ -75,5 +76,16 @@ export type ProviderNodePoolList =
   | infrav1alpha3.IAWSMachineDeploymentList
   | capav1beta1.IAWSMachinePoolList
   | capgv1beta1.IGCPMachineTemplateList;
+
+export type ProviderCredential =
+  | legacyCredentials.ICredential
+  | capav1beta1.IAWSClusterRoleIdentity
+  | capzv1beta1.IAzureClusterIdentity
+  | undefined;
+
+export type ProviderCredentialList =
+  | legacyCredentials.ICredentialList
+  | capav1beta1.IAWSClusterRoleIdentityList
+  | capzv1beta1.IAzureClusterIdentityList;
 
 export type BootstrapConfig = gscorev1alpha1.ISpark | undefined;

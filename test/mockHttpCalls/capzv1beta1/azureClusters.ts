@@ -280,3 +280,251 @@ export const randomAzureClusterList: capzv1beta1.IAzureClusterList = {
   },
   items: [randomAzureCluster1, randomAzureCluster2, randomAzureCluster3],
 };
+
+export const randomAzureClusterCAPZ1: capzv1beta1.IAzureCluster = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+  kind: 'AzureCluster',
+  metadata: {
+    annotations: {
+      'meta.helm.sh/release-name': 'test12',
+      'meta.helm.sh/release-namespace': 'org-org1',
+    },
+    creationTimestamp: '2023-03-20T14:04:19Z',
+    finalizers: [],
+    generation: 5,
+    labels: {
+      app: 'cluster-azure',
+      'app.kubernetes.io/managed-by': 'Helm',
+      'app.kubernetes.io/version': '',
+      'application.giantswarm.io/team': 'team',
+      'cluster.x-k8s.io/cluster-name': 'test12',
+      'giantswarm.io/cluster': 'test12',
+      'giantswarm.io/organization': 'org1',
+      'helm.sh/chart': 'cluster-azure-0.0.15',
+    },
+    name: 'test12',
+    namespace: 'org-org1',
+    ownerReferences: [
+      {
+        apiVersion: 'cluster.x-k8s.io/v1beta1',
+        blockOwnerDeletion: true,
+        controller: true,
+        kind: 'Cluster',
+        name: 'test12',
+        uid: '',
+      },
+    ],
+  },
+  spec: {
+    azureEnvironment: 'AzurePublicCloud',
+    bastionSpec: {},
+    controlPlaneEndpoint: {
+      host: 'test12-9615ac82.westeurope.cloudapp.azure.com',
+      port: 6443,
+    },
+    identityRef: {
+      apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+      kind: 'AzureClusterIdentity',
+      name: 'test-identity',
+      namespace: 'org-org1',
+    },
+    location: 'westeurope',
+    networkSpec: {},
+    subscriptionID: 'test-subscription',
+  },
+  status: {
+    conditions: [
+      {
+        lastTransitionTime: '2023-03-20T14:05:54Z',
+        status: 'True',
+        type: 'Ready',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:54Z',
+        status: 'True',
+        type: 'LoadBalancersReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:43Z',
+        status: 'True',
+        type: 'NATGatewaysReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:54Z',
+        status: 'True',
+        type: 'NetworkInfrastructureReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:28Z',
+        status: 'True',
+        type: 'PublicIPsReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:04:29Z',
+        status: 'True',
+        type: 'ResourceGroupReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:15Z',
+        status: 'True',
+        type: 'RouteTablesReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:00Z',
+        status: 'True',
+        type: 'SecurityGroupsReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:54Z',
+        status: 'True',
+        type: 'SubnetsReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:04:47Z',
+        status: 'True',
+        type: 'VNetReady',
+      },
+    ],
+    failureDomains: {
+      '1': {
+        controlPlane: true,
+      },
+      '2': {
+        controlPlane: true,
+      },
+      '3': {
+        controlPlane: true,
+      },
+    },
+    ready: true,
+  },
+};
+
+export const randomAzureClusterCAPZ2: capzv1beta1.IAzureCluster = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+  kind: 'AzureCluster',
+  metadata: {
+    annotations: {
+      'meta.helm.sh/release-name': 'test34',
+      'meta.helm.sh/release-namespace': 'org-org1',
+    },
+    creationTimestamp: '2023-03-20T14:04:19Z',
+    finalizers: [],
+    generation: 5,
+    labels: {
+      app: 'cluster-azure',
+      'app.kubernetes.io/managed-by': 'Helm',
+      'app.kubernetes.io/version': '',
+      'application.giantswarm.io/team': 'team',
+      'cluster.x-k8s.io/cluster-name': 'test34',
+      'giantswarm.io/cluster': 'test34',
+      'giantswarm.io/organization': 'org1',
+      'helm.sh/chart': 'cluster-azure-0.0.15',
+    },
+    name: 'test34',
+    namespace: 'org-org1',
+    ownerReferences: [
+      {
+        apiVersion: 'cluster.x-k8s.io/v1beta1',
+        blockOwnerDeletion: true,
+        controller: true,
+        kind: 'Cluster',
+        name: 'test34',
+        uid: '',
+      },
+    ],
+  },
+  spec: {
+    azureEnvironment: 'AzurePublicCloud',
+    bastionSpec: {},
+    controlPlaneEndpoint: {
+      host: 'test34-9615ac82.westeurope.cloudapp.azure.com',
+      port: 6443,
+    },
+    identityRef: {
+      apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+      kind: 'AzureClusterIdentity',
+      name: 'test-identity',
+      namespace: 'org-org1',
+    },
+    location: 'westeurope',
+    networkSpec: {},
+    subscriptionID: 'test-subscription',
+  },
+  status: {
+    conditions: [
+      {
+        lastTransitionTime: '2023-03-20T14:05:54Z',
+        status: 'True',
+        type: 'Ready',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:54Z',
+        status: 'True',
+        type: 'LoadBalancersReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:43Z',
+        status: 'True',
+        type: 'NATGatewaysReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:54Z',
+        status: 'True',
+        type: 'NetworkInfrastructureReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:28Z',
+        status: 'True',
+        type: 'PublicIPsReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:04:29Z',
+        status: 'True',
+        type: 'ResourceGroupReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:15Z',
+        status: 'True',
+        type: 'RouteTablesReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:00Z',
+        status: 'True',
+        type: 'SecurityGroupsReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:54Z',
+        status: 'True',
+        type: 'SubnetsReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:04:47Z',
+        status: 'True',
+        type: 'VNetReady',
+      },
+    ],
+    failureDomains: {
+      '1': {
+        controlPlane: true,
+      },
+      '2': {
+        controlPlane: true,
+      },
+      '3': {
+        controlPlane: true,
+      },
+    },
+    ready: true,
+  },
+};
+
+export const randomAzureClusterListCAPZ: capzv1beta1.IAzureClusterList = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+  kind: 'AzureClusterList',
+  metadata: {
+    resourceVersion: '294659588',
+    selfLink: '/apis/infrastructure.cluster.x-k8s.io/v1beta1/azureclusters/',
+  },
+  items: [randomAzureClusterCAPZ1, randomAzureClusterCAPZ2],
+};

@@ -38,6 +38,10 @@
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azureclusters.yaml
     verbs:
     - get
+  - name: AzureClusterIdentity
+    crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azureclusteridentities.yaml
+    verbs:
+    - get
   - name: AzureMachineTemplate
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azuremachinetemplates.yaml
     verbs:

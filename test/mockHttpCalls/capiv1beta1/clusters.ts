@@ -259,6 +259,184 @@ export const randomClusterCAPA2: capiv1beta1.ICluster = {
   },
 };
 
+export const randomClusterCAPZ1: capiv1beta1.ICluster = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: 'Cluster',
+  metadata: {
+    annotations: {
+      'cluster.giantswarm.io/description': 'capz test cluster',
+      'meta.helm.sh/release-name': 'test12',
+      'meta.helm.sh/release-namespace': 'org-org1',
+    },
+    creationTimestamp: '2023-03-21T11:04:19Z',
+    finalizers: [],
+    generation: 2,
+    labels: {
+      app: 'cluster-azure',
+      'app.kubernetes.io/managed-by': 'Helm',
+      'app.kubernetes.io/version': '',
+      'application.giantswarm.io/team': 'team',
+      'cluster-apps-operator.giantswarm.io/watching': '',
+      'cluster.x-k8s.io/cluster-name': 'test12',
+      'giantswarm.io/cluster': 'test12',
+      'giantswarm.io/organization': 'org1',
+      'giantswarm.io/service-priority': 'highest',
+      'helm.sh/chart': 'cluster-azure-0.0.15',
+    },
+    name: 'test12',
+    namespace: 'org-org1',
+    resourceVersion: '',
+    uid: '',
+  },
+  spec: {
+    clusterNetwork: {},
+    controlPlaneEndpoint: {
+      host: 'test12-9615ac82.westeurope.cloudapp.azure.com',
+      port: 6443,
+    },
+    controlPlaneRef: {
+      apiVersion: 'controlplane.cluster.x-k8s.io/v1beta1',
+      kind: 'KubeadmControlPlane',
+      name: 'test12',
+      namespace: 'org-org1',
+    },
+    infrastructureRef: {
+      apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+      kind: 'AzureCluster',
+      name: 'test12',
+      namespace: 'org-org1',
+    },
+  },
+  status: {
+    conditions: [
+      {
+        lastTransitionTime: '2023-03-20T14:17:33Z',
+        status: 'True',
+        type: 'Ready',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:08:51Z',
+        status: 'True',
+        type: 'ControlPlaneInitialized',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:17:33Z',
+        status: 'True',
+        type: 'ControlPlaneReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:54Z',
+        status: 'True',
+        type: 'InfrastructureReady',
+      },
+    ],
+    controlPlaneReady: true,
+    failureDomains: {
+      '1': {
+        controlPlane: true,
+      },
+      '2': {
+        controlPlane: true,
+      },
+      '3': {
+        controlPlane: true,
+      },
+    },
+    infrastructureReady: true,
+    observedGeneration: 2,
+    phase: 'Provisioned',
+  },
+};
+
+export const randomClusterCAPZ2: capiv1beta1.ICluster = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: 'Cluster',
+  metadata: {
+    annotations: {
+      'cluster.giantswarm.io/description': 'capz test cluster 2',
+      'meta.helm.sh/release-name': 'test34',
+      'meta.helm.sh/release-namespace': 'org-org1',
+    },
+    creationTimestamp: '2023-03-21T11:04:19Z',
+    finalizers: [],
+    generation: 2,
+    labels: {
+      app: 'cluster-azure',
+      'app.kubernetes.io/managed-by': 'Helm',
+      'app.kubernetes.io/version': '',
+      'application.giantswarm.io/team': 'team',
+      'cluster-apps-operator.giantswarm.io/watching': '',
+      'cluster.x-k8s.io/cluster-name': 'test34',
+      'giantswarm.io/cluster': 'test34',
+      'giantswarm.io/organization': 'org1',
+      'giantswarm.io/service-priority': 'highest',
+      'helm.sh/chart': 'cluster-azure-0.0.15',
+    },
+    name: 'test34',
+    namespace: 'org-org1',
+    resourceVersion: '',
+    uid: '',
+  },
+  spec: {
+    clusterNetwork: {},
+    controlPlaneEndpoint: {
+      host: 'test34-9615ac82.westeurope.cloudapp.azure.com',
+      port: 6443,
+    },
+    controlPlaneRef: {
+      apiVersion: 'controlplane.cluster.x-k8s.io/v1beta1',
+      kind: 'KubeadmControlPlane',
+      name: 'test34',
+      namespace: 'org-org1',
+    },
+    infrastructureRef: {
+      apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+      kind: 'AzureCluster',
+      name: 'test34',
+      namespace: 'org-org1',
+    },
+  },
+  status: {
+    conditions: [
+      {
+        lastTransitionTime: '2023-03-20T14:17:33Z',
+        status: 'True',
+        type: 'Ready',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:08:51Z',
+        status: 'True',
+        type: 'ControlPlaneInitialized',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:17:33Z',
+        status: 'True',
+        type: 'ControlPlaneReady',
+      },
+      {
+        lastTransitionTime: '2023-03-20T14:05:54Z',
+        status: 'True',
+        type: 'InfrastructureReady',
+      },
+    ],
+    controlPlaneReady: true,
+    failureDomains: {
+      '1': {
+        controlPlane: true,
+      },
+      '2': {
+        controlPlane: true,
+      },
+      '3': {
+        controlPlane: true,
+      },
+    },
+    infrastructureReady: true,
+    observedGeneration: 2,
+    phase: 'Provisioned',
+  },
+};
+
 export const randomClusterGCP1: capiv1beta1.ICluster = {
   apiVersion: 'cluster.x-k8s.io/v1beta1',
   kind: 'Cluster',
@@ -633,6 +811,15 @@ export const randomClusterListCAPA: capiv1beta1.IClusterList = {
     selfLink: '/apis/cluster.x-k8s.io/v1beta1/clusters/',
   },
   items: [randomClusterCAPA1, randomClusterCAPA2],
+};
+
+export const randomClusterListCAPZ: capiv1beta1.IClusterList = {
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  kind: 'ClusterList',
+  metadata: {
+    selfLink: '/apis/cluster.x-k8s.io/v1beta1/clusters/',
+  },
+  items: [randomClusterCAPZ1, randomClusterCAPZ2],
 };
 
 export const randomClusterListGCP: capiv1beta1.IClusterList = {

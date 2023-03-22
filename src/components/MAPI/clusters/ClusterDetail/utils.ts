@@ -1,5 +1,10 @@
 import produce from 'immer';
-import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
+import {
+  Cluster,
+  ControlPlaneNode,
+  ProviderCluster,
+  ProviderCredential,
+} from 'MAPI/types';
 import {
   fetchCluster,
   fetchControlPlaneNodesForCluster,
@@ -11,11 +16,14 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, Providers } from 'model/constants';
+import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
+import { extractIDFromARN } from 'model/services/mapi/legacy/credentials';
 import * as metav1 from 'model/services/mapi/metav1';
 import { supportsHACPNodes } from 'model/stores/nodepool/utils';
 import { mutate } from 'swr';
@@ -28,7 +36,7 @@ import {
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
 
-import { getClusterConditions } from '../utils';
+import { getClusterConditions, hasClusterAppLabel } from '../utils';
 
 export async function updateClusterDescription(
   httpClientFactory: HttpClientFactory,
@@ -307,6 +315,136 @@ export async function updateClusterLabels(
   return capiv1beta1.updateCluster(httpClient, auth, cluster);
 }
 
+export async function fetchProviderCredential(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cluster: Cluster,
+  providerCluster: ProviderCluster,
+  organizationName: string
+): Promise<ProviderCredential> {
+  try {
+    const infrastructureRef = cluster.spec?.infrastructureRef;
+    if (!infrastructureRef) {
+      throw new Error('Unsupported provider.');
+    }
+    const { kind, apiVersion } = infrastructureRef;
+    switch (true) {
+      case kind === capav1beta1.AWSCluster &&
+        apiVersion === capav1beta1.ApiVersion: {
+        const identityRef = (providerCluster as capav1beta1.IAWSCluster).spec
+          ?.identityRef;
+
+        if (identityRef?.kind !== 'AWSClusterRoleIdentity') {
+          throw new Error('Unsupported AWS cluster role identity reference.');
+        }
+
+        return capav1beta1.getAWSClusterRoleIdentity(
+          httpClientFactory(),
+          auth,
+          identityRef.name
+        );
+      }
+
+      case kind === capgv1beta1.GCPCluster:
+        return undefined;
+
+      case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster): {
+        const identityRef = (providerCluster as capzv1beta1.IAzureCluster).spec
+          ?.identityRef;
+        const { namespace, name } = identityRef ?? {};
+
+        if (!namespace || !name) {
+          throw new Error('No Azure cluster identity reference found.');
+        }
+
+        return capzv1beta1.getAzureClusterIdentity(
+          httpClientFactory(),
+          auth,
+          namespace,
+          name
+        );
+      }
+
+      case kind === capzv1beta1.AzureCluster:
+      case (kind === infrav1alpha2.AWSCluster &&
+        apiVersion === infrav1alpha2.ApiVersion) ||
+        (kind === infrav1alpha3.AWSCluster &&
+          apiVersion === infrav1alpha3.ApiVersion): {
+        const credentials = await legacyCredentials.getCredentialList(
+          httpClientFactory(),
+          auth,
+          organizationName
+        );
+
+        return getMainCredential(credentials.items);
+      }
+
+      default:
+        throw new Error('Unsupported provider.');
+    }
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
+export function fetchProviderCredentialKey(
+  cluster?: Cluster,
+  providerCluster?: ProviderCluster,
+  organizationName?: string
+): string | null {
+  if (!cluster || !providerCluster || !organizationName) {
+    return null;
+  }
+
+  const infrastructureRef = cluster.spec?.infrastructureRef;
+  if (!infrastructureRef) {
+    return null;
+  }
+
+  const { kind, apiVersion } = infrastructureRef;
+  switch (true) {
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.ApiVersion: {
+      const identityRef = (providerCluster as capav1beta1.IAWSCluster).spec
+        ?.identityRef;
+
+      if (identityRef?.kind !== 'AWSClusterRoleIdentity') {
+        return null;
+      }
+
+      return capav1beta1.getAWSClusterRoleIdentityKey(identityRef.name);
+    }
+
+    case kind === capgv1beta1.GCPCluster:
+      return 'fetchProviderCredentialForGCP';
+
+    case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster): {
+      const identityRef = (providerCluster as capzv1beta1.IAzureCluster).spec
+        ?.identityRef;
+      const { namespace, name } = identityRef ?? {};
+
+      if (!namespace || !name) {
+        return null;
+      }
+
+      return capzv1beta1.getAzureClusterIdentityKey(namespace, name);
+    }
+
+    case kind === capzv1beta1.AzureCluster:
+    case (kind === infrav1alpha2.AWSCluster &&
+      apiVersion === infrav1alpha2.ApiVersion) ||
+      (kind === infrav1alpha3.AWSCluster &&
+        apiVersion === infrav1alpha3.ApiVersion): {
+      return `${legacyCredentials.getCredentialListKey(
+        organizationName
+      )}/mainCredential`;
+    }
+
+    default:
+      return null;
+  }
+}
+
 function getMainCredential(credentials: legacyCredentials.ICredential[]) {
   return credentials.find((credential, _, collection) => {
     // If only the default credential is present, display it.
@@ -317,35 +455,59 @@ function getMainCredential(credentials: legacyCredentials.ICredential[]) {
   });
 }
 
-export function getCredentialsAccountID(
-  credentials?: legacyCredentials.ICredential[]
+export function getAWSCredentialAccountID(
+  credential?:
+    | legacyCredentials.ICredential
+    | capav1beta1.IAWSClusterRoleIdentity
 ) {
-  if (!credentials) return undefined;
-  if (credentials.length < 1) return '';
-
-  const mainCredential = getMainCredential(credentials);
-  if (!mainCredential) return '';
+  if (!credential) return '';
 
   switch (true) {
-    case mainCredential.hasOwnProperty('azureSubscriptionID'):
-      return mainCredential.azureSubscriptionID;
-    case mainCredential.hasOwnProperty('awsOperatorRole'):
-      return mainCredential.awsOperatorRole;
+    case credential.hasOwnProperty('kind') &&
+      (credential as capav1beta1.IAWSClusterRoleIdentity).kind ===
+        'AWSClusterRoleIdentity':
+      return extractIDFromARN(
+        (credential as capav1beta1.IAWSClusterRoleIdentity).spec?.roleARN
+      );
+    case credential.hasOwnProperty('awsOperatorRole'):
+      return (credential as legacyCredentials.ICredential).awsOperatorRole;
     default:
       return '';
   }
 }
 
-export function getCredentialsAzureTenantID(
-  credentials?: legacyCredentials.ICredential[]
-) {
-  if (!credentials) return undefined;
-  if (credentials.length < 1) return '';
+interface IAzureCredentialDetails {
+  tenantID: string | undefined;
+  subscriptionID: string | undefined;
+}
 
-  const mainCredential = getMainCredential(credentials);
-  if (!mainCredential) return '';
+export function getAzureCredentialDetails(
+  providerCluster: capzv1beta1.IAzureCluster,
+  credential?: legacyCredentials.ICredential | capzv1beta1.IAzureClusterIdentity
+): IAzureCredentialDetails {
+  const details: IAzureCredentialDetails = {
+    tenantID: '',
+    subscriptionID: providerCluster.spec?.subscriptionID,
+  };
+  if (!credential) return details;
 
-  return mainCredential.azureTenantID || '';
+  switch (true) {
+    case credential.hasOwnProperty('kind') &&
+      (credential as capzv1beta1.IAzureClusterIdentity).kind ===
+        'AzureClusterIdentity':
+      details.tenantID =
+        (credential as capzv1beta1.IAzureClusterIdentity).spec?.tenantID ?? '';
+      break;
+
+    case credential.hasOwnProperty('azureTenantID'):
+      details.tenantID =
+        (credential as legacyCredentials.ICredential).azureTenantID ?? '';
+      details.subscriptionID =
+        (credential as legacyCredentials.ICredential).azureSubscriptionID ?? '';
+      break;
+  }
+
+  return details;
 }
 
 export interface IControlPlaneNodesStats {
