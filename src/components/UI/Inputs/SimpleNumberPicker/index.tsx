@@ -1,29 +1,9 @@
 import { ThemeContext, ThemeType } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
-import usePrevious from 'utils/hooks/usePrevious';
 
 import TextInput from '../TextInput';
-
-function validateInput(desiredValue: number, min?: number, max?: number) {
-  switch (true) {
-    case Number.isNaN(desiredValue):
-      return 'Field must not be empty';
-    case typeof max !== 'undefined' && desiredValue > max:
-      return `Value must not be larger than ${max}`;
-    case typeof min !== 'undefined' && desiredValue < min:
-      return `Value must not be smaller than ${min}`;
-    case !isWholeNumber(desiredValue):
-      return 'Value must be a whole number';
-    default:
-      return '';
-  }
-}
-
-function isWholeNumber(value: number) {
-  return value % 1 === 0;
-}
 
 const customTheme: ThemeType = {
   formField: {
@@ -109,52 +89,50 @@ const IncrementDecrementButton = styled.div`
   }
 `;
 
-interface INumberPickerProps
+interface ISimpleNumberPickerProps
   extends Omit<React.ComponentPropsWithoutRef<typeof TextInput>, 'onChange'> {
   value?: number;
   min?: number;
   max?: number;
   step?: number | 'any';
-  onChange?: (patch: { value: number; valid: boolean }) => void;
+  onChange?: (value: number) => void;
 }
 
 /**
  * A component that allows a user to pick a number by
  * incrementing / decrementing a value or typing it
  * straight into the input field.
+ *
+ * Unlike NumberPicker component, it doesn't perform
+ * value validation and doesn't manage it's own state.
  */
-const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
+export const SimpleNumberPicker = React.forwardRef<
+  HTMLInputElement,
+  ISimpleNumberPickerProps
+>(
   (
-    { value, min, max, step, readOnly, disabled, onChange, children, ...props },
+    {
+      value = NaN,
+      min,
+      max,
+      step,
+      readOnly,
+      disabled,
+      onChange,
+      children,
+      ...props
+    },
     ref
   ) => {
-    const [currValue, setCurrValue] = useState<number>(value ?? NaN);
-    const [validationError, setValidationError] = useState('');
-
-    const inputValue = Number.isNaN(currValue) ? '' : currValue;
-
-    const prevMin = usePrevious(min);
-    const prevMax = usePrevious(max);
+    const inputValue = Number.isNaN(value) ? '' : value;
 
     const editable = !readOnly && !disabled;
 
-    const updateValue = useCallback(
-      (newValue: number, error: string = '') => {
-        setCurrValue(newValue);
-        setValidationError(error);
-
-        const isValid = error.length < 1;
-
-        onChange?.({
-          value: newValue,
-          valid: isValid,
-        });
-      },
-      [onChange]
-    );
+    const updateValue = (newValue: number) => {
+      onChange?.(newValue);
+    };
 
     const updateInput = (desiredValue: number, allowInvalidValues = false) => {
-      const error = validateInput(desiredValue, min, max);
       let newValue = desiredValue;
 
       switch (true) {
@@ -170,39 +148,32 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
           break;
       }
 
-      updateValue(newValue, error);
+      updateValue(newValue);
     };
 
     const increment = () => {
       const currStep = typeof step === 'number' ? step : 1;
 
-      if (Number.isNaN(currValue)) {
+      if (Number.isNaN(value)) {
         updateInput(min || currStep);
       } else {
-        updateInput(currValue + currStep);
+        updateInput(value + currStep);
       }
     };
 
     const decrement = () => {
       const currStep = typeof step === 'number' ? step : 1;
 
-      if (Number.isNaN(currValue)) {
+      if (Number.isNaN(value)) {
         updateInput(min || -currStep);
       } else {
-        updateInput(currValue - currStep);
+        updateInput(value - currStep);
       }
     };
 
     const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
       event.target.select();
     };
-
-    useEffect(() => {
-      if ((prevMax && prevMax !== max) || (prevMin && prevMin !== min)) {
-        const error = validateInput(currValue, min, max);
-        updateValue(currValue, error);
-      }
-    }, [min, max, prevMin, prevMax, currValue, updateValue]);
 
     return (
       <ThemeContext.Extend value={customTheme}>
@@ -214,14 +185,13 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
           step={step}
           type='number'
           value={inputValue}
-          error={validationError}
           {...props}
           ref={ref}
         >
           {editable && (
             <Controls>
               <IncrementDecrementButton
-                className={currValue === min ? 'disabled' : undefined}
+                className={value === min ? 'disabled' : undefined}
                 onClick={decrement}
                 aria-label='Decrement'
                 role='button'
@@ -229,7 +199,7 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
                 &ndash;
               </IncrementDecrementButton>
               <IncrementDecrementButton
-                className={currValue === max ? 'disabled' : undefined}
+                className={value === max ? 'disabled' : undefined}
                 onClick={increment}
                 aria-label='Increment'
                 role='button'
@@ -245,8 +215,8 @@ const NumberPicker = React.forwardRef<HTMLInputElement, INumberPickerProps>(
   }
 );
 
-NumberPicker.defaultProps = {
+SimpleNumberPicker.defaultProps = {
   step: 1,
 };
 
-export default NumberPicker;
+export default SimpleNumberPicker;

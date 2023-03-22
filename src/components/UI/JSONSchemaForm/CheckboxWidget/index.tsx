@@ -13,6 +13,7 @@ const CheckboxWidget: React.FC<
   label,
   schema,
   required,
+  value,
   formContext = {} as IFormContext,
   onChange,
 }) => {
@@ -35,6 +36,7 @@ const CheckboxWidget: React.FC<
   return (
     <CheckBoxInput
       id={id}
+      checked={value}
       label={labelComponent}
       help={description && descriptionComponent}
       margin={{ vertical: 'small' }}
