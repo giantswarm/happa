@@ -2,7 +2,6 @@ import { FormProps, IChangeEvent } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Ajv2020 from 'ajv/dist/2020';
-import cleanDeep from 'clean-deep';
 import yaml from 'js-yaml';
 import { generateUID } from 'MAPI/utils';
 import { Providers } from 'model/constants';
@@ -12,10 +11,8 @@ import Line from 'UI/Display/Documentation/Line';
 import JSONSchemaForm, { IFormContext } from 'UI/JSONSchemaForm';
 
 import {
-  cleanDeepWithException,
   getFormProps,
   getProviderForPrototypeSchema,
-  preprocessSchema,
   PrototypeSchemas,
 } from './schemaUtils';
 
@@ -62,7 +59,7 @@ const CreateClusterAppBundlesForm: React.FC<
     Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'>
   >(getFormProps(provider, appVersion, clusterName, organization));
 
-  const cleanFormData = cleanDeep(formProps.formData, { emptyStrings: false });
+  const [cleanFormData, setCleanFormData] = useState<RJSFSchema>();
 
   const handleSubmit = (
     _: IChangeEvent<RJSFSchema>,
@@ -73,36 +70,24 @@ const CreateClusterAppBundlesForm: React.FC<
     onSubmit(clusterName, cleanFormData);
   };
 
-  const handleFormDataChange = (rawFormData: RJSFSchema | undefined) => {
-    if (!rawFormData) {
-      return;
-    }
-    const formData = cleanDeepWithException<RJSFSchema>(
-      rawFormData,
-      { emptyStrings: false },
-      (value) => Array.isArray(value) && value.length > 0
-    ) as RJSFSchema;
-
+  const handleFormDataChange = (data: RJSFSchema, cleanData: RJSFSchema) => {
     setFormProps((prev) => {
       return {
         ...prev,
-        formData,
+        formData: data,
       };
     });
+    setCleanFormData(cleanData);
 
     if (onChange) {
-      onChange({ formData, cleanFormData });
+      onChange({ formData: data, cleanFormData: cleanData });
     }
   };
-
-  const processedSchema = useMemo(() => {
-    return preprocessSchema(schema);
-  }, [schema]);
 
   return (
     <>
       <JSONSchemaForm
-        schema={processedSchema}
+        schema={schema}
         uiSchema={formProps.uiSchema}
         formContext={{
           schemaProvider: getProviderForPrototypeSchema(provider),

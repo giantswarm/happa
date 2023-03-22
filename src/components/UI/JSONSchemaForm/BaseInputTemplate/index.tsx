@@ -1,6 +1,6 @@
 import { getInputProps, WidgetProps } from '@rjsf/utils';
 import React from 'react';
-import NumberPicker from 'UI/Inputs/NumberPicker';
+import SimpleNumberPicker from 'UI/Inputs/SimpleNumberPicker';
 import TextArea from 'UI/Inputs/TextArea';
 import TextInput from 'UI/Inputs/TextInput';
 
@@ -20,14 +20,22 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    onChange(e.target.value === '' ? options.emptyValue : e.target.value);
+    const emptyValue = options.emptyValue ?? '';
+    onChange(e.target.value === '' ? emptyValue : e.target.value);
   };
 
-  const handleNumberChange = (patch: { value: number; valid: boolean }) => {
-    onChange(Number.isNaN(patch.value) ? options.emptyValue : patch.value);
+  const handleNumberChange = (newValue: number) => {
+    onChange(Number.isNaN(newValue) ? options.emptyValue : newValue);
   };
 
   const handleBlur = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const emptyValue = options.emptyValue ?? '';
+    onBlur(id, e.target.value === '' ? emptyValue : e.target.value);
+  };
+
+  const handleNumberBlur = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     onBlur(id, e.target.value === '' ? options.emptyValue : e.target.value);
@@ -36,7 +44,7 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   const inputProps = getInputProps(schema, type as string, options);
 
   return schema.type === 'integer' ? (
-    <NumberPicker
+    <SimpleNumberPicker
       id={id}
       error={null}
       value={value}
@@ -50,9 +58,8 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
       contentProps={{
         width: { max: 'small' },
       }}
-      controlledInput={true}
       onChange={handleNumberChange}
-      onBlur={handleBlur}
+      onBlur={handleNumberBlur}
     />
   ) : inputProps.type === 'text' ? (
     <TextArea
