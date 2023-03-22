@@ -330,7 +330,7 @@ jobs:
 
   test:
     <<: *defaults
-    resource_class: xlarge
+    resource_class: 2xlarge
 
     steps:
       - checkout
