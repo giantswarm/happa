@@ -1,5 +1,10 @@
-import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
-import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
+import { RJSFValidationError } from '@rjsf/utils';
+import cleanDeep, { CleanOptions } from 'clean-deep';
+import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
+import isPlainObject from 'lodash/isPlainObject';
+import transform from 'lodash/transform';
+import { pipe } from 'utils/helpers';
 
 import { IIdConfigs } from '.';
 
@@ -62,14 +67,100 @@ export function getArrayItemIndex(id: string, idSeparator: string) {
     : -1;
 }
 
-export function removeDefaultValues(schema: RJSFSchema): RJSFSchema {
-  const removeDefaults = (obj: RJSFSchema) => {
-    if (obj.default) {
-      delete obj.default;
+function getImplicitDefaultValue(value: unknown) {
+  switch (true) {
+    case typeof value === 'string':
+      return '';
+    case typeof value === 'boolean':
+      return false;
+    case Array.isArray(value):
+      return [];
+    default:
+      return undefined;
+  }
+}
+
+export interface CleanPayloadOptions<T = {}> extends CleanOptions {
+  cleanDefaultValues?: boolean;
+  defaultValues?: Iterable<T> | unknown;
+  isException?: (value: unknown) => boolean;
+}
+
+export function cleanPayload<T = {}>(
+  object: Iterable<T> | unknown,
+  options?: CleanPayloadOptions<T>
+): Iterable<T> | unknown {
+  const {
+    emptyArrays = true,
+    emptyObjects = true,
+    undefinedValues = true,
+    cleanDefaultValues = false,
+    defaultValues,
+    isException,
+  } = options ?? {};
+
+  return transform(
+    object as unknown[],
+    // eslint-disable-next-line complexity
+    (result: Record<string | number, unknown>, value, key) => {
+      // if it matches the exception rule, don't continue to clean
+      if (isException && isException(value)) {
+        result[key] = value;
+
+        return;
+      }
+
+      let newValue = value;
+      const defaultValue = cleanDefaultValues
+        ? defaultValues?.[key as keyof typeof defaultValues] ??
+          getImplicitDefaultValue(value)
+        : undefined;
+
+      if (Array.isArray(value)) {
+        if (cleanDefaultValues && isEqual(value, defaultValue)) {
+          return;
+        }
+
+        newValue = cleanPayload<unknown>(value, {
+          ...options,
+          defaultValues: undefined,
+        });
+
+        if (cleanDefaultValues && isEqual(newValue, defaultValue)) {
+          return;
+        }
+
+        if (emptyArrays && isEmpty(newValue)) {
+          return;
+        }
+      } else if (isPlainObject(value)) {
+        newValue = cleanPayload<unknown>(value, {
+          ...options,
+          defaultValues: defaultValue,
+        });
+
+        if (emptyObjects && isEmpty(newValue)) {
+          return;
+        }
+      } else {
+        newValue =
+          cleanDefaultValues && value === defaultValue
+            ? undefined
+            : cleanDeep({ value }, options).value;
+
+        if (
+          newValue === undefined &&
+          (value !== undefined || undefinedValues)
+        ) {
+          return;
+        }
+      }
+
+      if (Array.isArray(result)) {
+        result.push(newValue);
+      } else {
+        result[key] = newValue;
+      }
     }
-
-    return obj;
-  };
-
-  return traverseJSONSchemaObject(schema, removeDefaults);
+  );
 }
