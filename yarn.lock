@@ -11890,10 +11890,10 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
-grommet-icons@^4.8.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/grommet-icons/-/grommet-icons-4.8.0.tgz#3c9922b3662d0b9e22913ecbaa7b1101031b554b"
-  integrity sha512-8cS1zVib88SIyLfsWFFazMzYz/8k5MvXZqopUjN/Bnl8HvQBUe0Z87F+JXRb1AMMYkuqXQW9Pg6XfBB3Ro9VdQ==
+grommet-icons@^4.10.0:
+  version "4.10.0"
+  resolved "https://registry.yarnpkg.com/grommet-icons/-/grommet-icons-4.10.0.tgz#a56bc083f7d52502a12871c031a6746c61164cce"
+  integrity sha512-f3Re6jFRh93n2Cn2hyrJUANG7wOsv3wlEuyW/A1kIYzamDWnNfoZLgDQZXbAmMUMb1NdN7OU/0JrINxTCUOAEA==
   dependencies:
     grommet-styles "^0.2.0"
 
@@ -11902,14 +11902,14 @@ grommet-styles@^0.2.0:
   resolved "https://registry.yarnpkg.com/grommet-styles/-/grommet-styles-0.2.0.tgz#b2eac2b7e2747cb523434d21728ce5234f8ce4f4"
   integrity sha512-0OMSYuGeyifYKpg4Gv2HzL8rUdd0ddnJ5LbCBKgDuloC71XIwr9g/Fxa6rs737MbPV7OZ4pEm4wvrjH4epzf1A==
 
-grommet@2.30.0:
-  version "2.30.0"
-  resolved "https://registry.yarnpkg.com/grommet/-/grommet-2.30.0.tgz#aec75b4d8a7e5d3d686b3d79fd2072b9641a6e4e"
-  integrity sha512-sC5DIYZXGpkgvjYnDIsxK2KuDS8rDM7LwZmOeuad9wwPTJwg+K43wSy2DiBobj9e/Wn01IKEN3dwTQQDjE2jgg==
+grommet@2.31.0:
+  version "2.31.0"
+  resolved "https://registry.yarnpkg.com/grommet/-/grommet-2.31.0.tgz#eb74f1d983436eaec5d8fb023333387229ea6cf0"
+  integrity sha512-giWBFTCZpVushmEUJikWBL702k4y3qOE6TpnczIiNZAqQofu8N/u3v3m/ODXP/o+bxfMLnU/unUIDQoS2XQOkQ==
   dependencies:
-    grommet-icons "^4.8.0"
+    grommet-icons "^4.10.0"
     hoist-non-react-statics "^3.2.0"
-    markdown-to-jsx "^7.1.5"
+    markdown-to-jsx "^7.2.0"
     prop-types "^15.8.1"
 
 gzip-size@^6.0.0:
@@ -14598,15 +14598,15 @@ markdown-table@^3.0.0:
   resolved "https://registry.yarnpkg.com/markdown-table/-/markdown-table-3.0.2.tgz#9b59eb2c1b22fe71954a65ff512887065a7bb57c"
   integrity sha512-y8j3a5/DkJCmS5x4dMCQL+OR0+2EAq3DOtio1COSHsmW2BGXnNCK3v12hJt1LrUz5iZH5g0LmuYOjDdI+czghA==
 
-markdown-to-jsx@^7.1.5:
-  version "7.1.5"
-  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.1.5.tgz#caf72ad8a8c34a2bb692c4d17e44aabbe4eb19fd"
-  integrity sha512-YQEMMMCX3PYOWtUAQu8Fmz5/sH09s17eyQnDubwaAo8sWmnRTT1og96EFv1vL59l4nWfmtF3L91pqkuheVqRlA==
-
 markdown-to-jsx@^7.1.9:
   version "7.1.9"
   resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.1.9.tgz#1ffae0cda07c189163d273bd57a5b8f8f8745586"
   integrity sha512-x4STVIKIJR0mGgZIZ5RyAeQD7FEZd5tS8m/htbcVGlex32J+hlSLj+ExrHCxP6nRKF1EKbcO7i6WhC1GtOpBlA==
+
+markdown-to-jsx@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.2.0.tgz#e7b46b65955f6a04d48a753acd55874a14bdda4b"
+  integrity sha512-3l4/Bigjm4bEqjCR6Xr+d4DtM1X6vvtGsMGSjJYyep8RjjIvcWtrXBS8Wbfe1/P+atKNMccpsraESIaWVplzVg==
 
 math-random@^1.0.1:
   version "1.0.4"
