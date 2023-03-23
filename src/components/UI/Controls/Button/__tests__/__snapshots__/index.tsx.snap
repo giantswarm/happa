@@ -11,7 +11,7 @@ exports[`Button renders a button with a loading animation 1`] = `
       class="StyledBox-sc-13pk1d4-0 iPvFXd Button__StyledBox-sc-160jtek-0 fSjPFt"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 hZBoXn Button__StyledControl-sc-160jtek-2 fKLLcP"
+        class="StyledButtonKind-sc-1vhfpnt-0 iLskVu Button__StyledControl-sc-160jtek-2 fKLLcP"
         disabled=""
         type="button"
       >
@@ -47,7 +47,7 @@ exports[`Button renders a danger button 1`] = `
       class="StyledBox-sc-13pk1d4-0 iPvFXd Button__StyledBox-sc-160jtek-0 fSjPFt"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 dHpPVW Button__StyledControl-sc-160jtek-2 gMCsrq"
+        class="StyledButtonKind-sc-1vhfpnt-0 kcya-dX Button__StyledControl-sc-160jtek-2 gMCsrq"
         type="button"
       >
         Hi friends
@@ -76,7 +76,7 @@ exports[`Button renders a disabled button 1`] = `
       class="StyledBox-sc-13pk1d4-0 iPvFXd Button__StyledBox-sc-160jtek-0 fSjPFt"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 hZBoXn Button__StyledControl-sc-160jtek-2 fKLLcP"
+        class="StyledButtonKind-sc-1vhfpnt-0 iLskVu Button__StyledControl-sc-160jtek-2 fKLLcP"
         disabled=""
         type="button"
       >
@@ -106,7 +106,7 @@ exports[`Button renders a link button 1`] = `
       class="StyledBox-sc-13pk1d4-0 iPvFXd Button__StyledBox-sc-160jtek-0 fSjPFt"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 RkJRY Button__StyledControl-sc-160jtek-2 gMCsrq"
+        class="StyledButtonKind-sc-1vhfpnt-0 jNXWjl Button__StyledControl-sc-160jtek-2 gMCsrq"
         type="button"
       >
         Hi friends
@@ -135,7 +135,7 @@ exports[`Button renders a primary button 1`] = `
       class="StyledBox-sc-13pk1d4-0 iPvFXd Button__StyledBox-sc-160jtek-0 fSjPFt"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 esJXeQ Button__StyledControl-sc-160jtek-2 gMCsrq"
+        class="StyledButtonKind-sc-1vhfpnt-0 jLnCCB Button__StyledControl-sc-160jtek-2 gMCsrq"
         type="button"
       >
         Hi friends
@@ -164,7 +164,7 @@ exports[`Button renders a secondary button 1`] = `
       class="StyledBox-sc-13pk1d4-0 iPvFXd Button__StyledBox-sc-160jtek-0 fSjPFt"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 lkunbF Button__StyledControl-sc-160jtek-2 gMCsrq"
+        class="StyledButtonKind-sc-1vhfpnt-0 kfbcQA Button__StyledControl-sc-160jtek-2 gMCsrq"
         type="button"
       >
         Hi friends
@@ -193,7 +193,7 @@ exports[`Button renders a warning button 1`] = `
       class="StyledBox-sc-13pk1d4-0 iPvFXd Button__StyledBox-sc-160jtek-0 fSjPFt"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 hoxMhZ Button__StyledControl-sc-160jtek-2 gMCsrq"
+        class="StyledButtonKind-sc-1vhfpnt-0 oREtI Button__StyledControl-sc-160jtek-2 gMCsrq"
         type="button"
       >
         Hi friends
@@ -222,7 +222,7 @@ exports[`Button renders without crashing 1`] = `
       class="StyledBox-sc-13pk1d4-0 iPvFXd Button__StyledBox-sc-160jtek-0 fSjPFt"
     >
       <button
-        class="StyledButtonKind-sc-1vhfpnt-0 lkunbF Button__StyledControl-sc-160jtek-2 gMCsrq"
+        class="StyledButtonKind-sc-1vhfpnt-0 kfbcQA Button__StyledControl-sc-160jtek-2 gMCsrq"
         type="button"
       >
         Hi friends
