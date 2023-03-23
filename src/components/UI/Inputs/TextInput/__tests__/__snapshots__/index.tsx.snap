@@ -8,7 +8,7 @@ exports[`TextInput renders a disabled input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
+      class="StyledBox-sc-13pk1d4-0 ghsezF FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <label
         class="StyledText-sc-1sadyjn-0 cxWGoc"
@@ -42,7 +42,7 @@ exports[`TextInput renders a simple input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
+      class="StyledBox-sc-13pk1d4-0 ghsezF FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <div
         class="StyledBox-sc-13pk1d4-0 jogsYI FormField__FormFieldContentBox-sc-m9hood-1"
@@ -70,7 +70,7 @@ exports[`TextInput renders an input with a help message 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
+      class="StyledBox-sc-13pk1d4-0 ghsezF FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <label
         class="StyledText-sc-1sadyjn-0 cxWGoc"
@@ -108,7 +108,7 @@ exports[`TextInput renders an input with a label 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
+      class="StyledBox-sc-13pk1d4-0 ghsezF FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <label
         class="StyledText-sc-1sadyjn-0 cxWGoc"
@@ -141,7 +141,7 @@ exports[`TextInput renders an input with a validation error 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
+      class="StyledBox-sc-13pk1d4-0 ghsezF FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <label
         class="StyledText-sc-1sadyjn-0 cxWGoc"
@@ -179,7 +179,7 @@ exports[`TextInput renders an input with an info message 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dLjbpo FormField__FormFieldBox-sc-m9hood-0 geyDmP"
+      class="StyledBox-sc-13pk1d4-0 ghsezF FormField__FormFieldBox-sc-m9hood-0 geyDmP"
     >
       <label
         class="StyledText-sc-1sadyjn-0 cxWGoc"

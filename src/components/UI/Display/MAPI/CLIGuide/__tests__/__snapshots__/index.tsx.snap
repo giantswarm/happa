@@ -15,7 +15,7 @@ exports[`CLIGuide renders the contents when open 1`] = `
       >
         <button
           aria-expanded="true"
-          class="StyledButtonKind-sc-1vhfpnt-0 iZPaET"
+          class="StyledButtonKind-sc-1vhfpnt-0 bppbja"
           type="button"
         >
           <div
@@ -43,7 +43,7 @@ exports[`CLIGuide renders the contents when open 1`] = `
             >
               <svg
                 aria-label="FormUp"
-                class="StyledIcon-sc-ofa7kd-0 bFjClC"
+                class="StyledIcon-sc-ofa7kd-0 ihfCkr"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -95,7 +95,7 @@ exports[`CLIGuide renders without crashing 1`] = `
       >
         <button
           aria-expanded="false"
-          class="StyledButtonKind-sc-1vhfpnt-0 iZPaET"
+          class="StyledButtonKind-sc-1vhfpnt-0 bppbja"
           type="button"
         >
           <div
@@ -123,7 +123,7 @@ exports[`CLIGuide renders without crashing 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 bFjClC"
+                class="StyledIcon-sc-ofa7kd-0 ihfCkr"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -169,7 +169,7 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
         >
           <button
             aria-expanded="false"
-            class="StyledButtonKind-sc-1vhfpnt-0 iZPaET"
+            class="StyledButtonKind-sc-1vhfpnt-0 bppbja"
             type="button"
           >
             <div
@@ -197,7 +197,7 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
               >
                 <svg
                   aria-label="FormDown"
-                  class="StyledIcon-sc-ofa7kd-0 bFjClC"
+                  class="StyledIcon-sc-ofa7kd-0 ihfCkr"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -241,7 +241,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
       >
         <button
           aria-expanded="true"
-          class="StyledButtonKind-sc-1vhfpnt-0 iZPaET"
+          class="StyledButtonKind-sc-1vhfpnt-0 bppbja"
           type="button"
         >
           <div
@@ -269,7 +269,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
             >
               <svg
                 aria-label="FormUp"
-                class="StyledIcon-sc-ofa7kd-0 bFjClC"
+                class="StyledIcon-sc-ofa7kd-0 ihfCkr"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -304,7 +304,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                 >
                   <button
                     aria-expanded="false"
-                    class="StyledButtonKind-sc-1vhfpnt-0 iZPaET"
+                    class="StyledButtonKind-sc-1vhfpnt-0 bppbja"
                     type="button"
                   >
                     <div
@@ -332,7 +332,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                       >
                         <svg
                           aria-label="FormDown"
-                          class="StyledIcon-sc-ofa7kd-0 bFjClC"
+                          class="StyledIcon-sc-ofa7kd-0 ihfCkr"
                           viewBox="0 0 24 24"
                         >
                           <path
@@ -367,7 +367,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                 >
                   <button
                     aria-expanded="false"
-                    class="StyledButtonKind-sc-1vhfpnt-0 iZPaET"
+                    class="StyledButtonKind-sc-1vhfpnt-0 bppbja"
                     type="button"
                   >
                     <div
@@ -395,7 +395,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                       >
                         <svg
                           aria-label="FormDown"
-                          class="StyledIcon-sc-ofa7kd-0 bFjClC"
+                          class="StyledIcon-sc-ofa7kd-0 ihfCkr"
                           viewBox="0 0 24 24"
                         >
                           <path
