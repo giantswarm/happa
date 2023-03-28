@@ -231,7 +231,7 @@ useCases:
           - patch
           - update
   - name: "Inspect provider credentials"
-    description: "Read secrets used to store cloud provider credentials in an organization namespace"
+    description: "Read resources used to store cloud provider credentials in an organization namespace"
     category: "provider credentials"
     scope:
       namespaces:
@@ -239,6 +239,7 @@ useCases:
     providers:
       - aws
       - azure
+      - capz
     permissions:
       - apiGroups:
           - ""
@@ -247,12 +248,25 @@ useCases:
         verbs:
           - get
           - list
+        providers:
+        - aws
+        - azure
+      - apiGroups:
+          - "infrastructure.cluster.x-k8s.io"
+        resources:
+          - azureclusteridentities
+        verbs:
+          - get
+          - list
+        providers:
+          - capz
   - name: "Manage provider credentials"
-    description: "Create, modify, delete secrets used to store cloud provider credentials in an organization namespace"
+    description: "Create, modify, delete resources used to store cloud provider credentials in an organization namespace"
     category: "provider credentials"
     providers:
       - aws
       - azure
+      - capz
     scope:
       namespaces:
         - "*"
@@ -268,6 +282,22 @@ useCases:
           - list
           - patch
           - update
+        providers:
+        - aws
+        - azure
+      - apiGroups:
+          - "infrastructure.cluster.x-k8s.io"
+        resources:
+          - azureclusteridentities
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+        providers:
+          - capz
   - name: "Inspect provider credentials"
     description: "Read AWSClusterRoleIdentity CRs used to store cloud provider credentials"
     category: "provider credentials"
@@ -326,6 +356,7 @@ useCases:
           - list
         providers:
           - azure
+          - capz
       - apiGroups:
           - infrastructure.cluster.x-k8s.io
         resources:
@@ -387,6 +418,7 @@ useCases:
           - update
         providers:
           - azure
+          - capz
       - apiGroups:
           - infrastructure.cluster.x-k8s.io
         resources:
