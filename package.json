@@ -152,7 +152,7 @@
     "@types/mini-css-extract-plugin": "2.5.0",
     "@types/node": "18.15.11",
     "@types/platform": "1.3.4",
-    "@types/react": "18.0.30",
+    "@types/react": "18.0.31",
     "@types/react-breadcrumbs": "2.1.5",
     "@types/react-dom": "18.0.11",
     "@types/react-gravatar": "2.6.10",
@@ -237,7 +237,7 @@
   },
   "resolutions": {
     "@braintree/sanitize-url": "6.0.2",
-    "@types/react": "18.0.30",
+    "@types/react": "18.0.31",
     "kind-of": "6.0.3",
     "lodash": "4.17.21",
     "http-proxy": "1.18.1",
