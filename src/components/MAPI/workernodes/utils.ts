@@ -154,7 +154,7 @@ export async function updateNodePoolDescription(
       providerNodePool = await infrav1alpha3.updateAWSMachineDeployment(
         client,
         auth,
-        providerNodePool as infrav1alpha3.IAWSMachineDeployment
+        providerNodePool
       );
 
       mutate(
@@ -638,7 +638,7 @@ export async function updateNodePoolScaling(
       providerNodePool = await infrav1alpha3.updateAWSMachineDeployment(
         client,
         auth,
-        providerNodePool as infrav1alpha3.IAWSMachineDeployment
+        providerNodePool
       );
 
       mutate(
