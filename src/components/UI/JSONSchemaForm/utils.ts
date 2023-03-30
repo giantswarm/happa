@@ -14,10 +14,15 @@ function transformRequiredArrayItemError(
   error: RJSFValidationError
 ): RJSFValidationError {
   if (error.name === 'type' && error.params.type === 'string') {
+    const newMessage = 'must not be empty';
+    const newStack = error.message
+      ? error.stack.replace(error.message, newMessage)
+      : error.stack;
+
     return {
       ...error,
-      message: 'must not be empty',
-      stack: `${error.property} must not be empty`,
+      message: newMessage,
+      stack: newStack,
     };
   }
 
