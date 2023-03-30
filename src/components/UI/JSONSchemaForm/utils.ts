@@ -67,14 +67,19 @@ export function getArrayItemIndex(id: string, idSeparator: string) {
     : -1;
 }
 
+export const DEFAULT_STRING_VALUE = '';
+export const DEFAULT_BOOLEAN_VALUE = false;
+export const DEFAULT_NUMERIC_VALUE = 0;
+export const DEFAULT_ARRAY_VALUE = [];
+
 function getImplicitDefaultValue(value: unknown) {
   switch (true) {
     case typeof value === 'string':
-      return '';
+      return DEFAULT_STRING_VALUE;
     case typeof value === 'boolean':
-      return false;
+      return DEFAULT_BOOLEAN_VALUE;
     case Array.isArray(value):
-      return [];
+      return DEFAULT_ARRAY_VALUE;
     default:
       return undefined;
   }
@@ -83,7 +88,11 @@ function getImplicitDefaultValue(value: unknown) {
 export interface CleanPayloadOptions<T = {}> extends CleanOptions {
   cleanDefaultValues?: boolean;
   defaultValues?: Iterable<T> | unknown;
-  isException?: (value: unknown) => boolean;
+  isException?: (
+    value: unknown,
+    cleanValue: unknown,
+    isArrayItem: boolean
+  ) => boolean;
 }
 
 export function cleanPayload<T = {}>(
@@ -96,20 +105,15 @@ export function cleanPayload<T = {}>(
     undefinedValues = true,
     cleanDefaultValues = false,
     defaultValues,
-    isException,
+    isException = () => false,
   } = options ?? {};
+
+  const isArray = Array.isArray(object);
 
   return transform(
     object as unknown[],
     // eslint-disable-next-line complexity
     (result: Record<string | number, unknown>, value, key) => {
-      // if it matches the exception rule, don't continue to clean
-      if (isException && isException(value)) {
-        result[key] = value;
-
-        return;
-      }
-
       let newValue = value;
       const defaultValue = cleanDefaultValues
         ? defaultValues?.[key as keyof typeof defaultValues] ??
@@ -117,20 +121,17 @@ export function cleanPayload<T = {}>(
         : undefined;
 
       if (Array.isArray(value)) {
-        if (cleanDefaultValues && isEqual(value, defaultValue)) {
-          return;
-        }
-
         newValue = cleanPayload<unknown>(value, {
           ...options,
           defaultValues: undefined,
         });
 
-        if (cleanDefaultValues && isEqual(newValue, defaultValue)) {
-          return;
-        }
-
-        if (emptyArrays && isEmpty(newValue)) {
+        if (
+          ((cleanDefaultValues && isEqual(value, defaultValue)) ||
+            (cleanDefaultValues && isEqual(newValue, defaultValue)) ||
+            (emptyArrays && isEmpty(newValue))) &&
+          !isException(value, newValue, isArray)
+        ) {
           return;
         }
       } else if (isPlainObject(value)) {
@@ -139,18 +140,22 @@ export function cleanPayload<T = {}>(
           defaultValues: defaultValue,
         });
 
-        if (emptyObjects && isEmpty(newValue)) {
+        if (
+          emptyObjects &&
+          isEmpty(newValue) &&
+          !isException(value, newValue, isArray)
+        ) {
           return;
         }
       } else {
-        newValue =
-          cleanDefaultValues && value === defaultValue
-            ? undefined
-            : cleanDeep({ value }, options).value;
+        newValue = value;
+        const cleanValue = cleanDeep({ value: newValue }, options).value;
 
         if (
-          newValue === undefined &&
-          (value !== undefined || undefinedValues)
+          ((cleanDefaultValues && newValue === defaultValue) ||
+            (newValue !== undefined && cleanValue === undefined) ||
+            (undefinedValues && cleanValue === undefined)) &&
+          !isException(value, newValue, isArray)
         ) {
           return;
         }

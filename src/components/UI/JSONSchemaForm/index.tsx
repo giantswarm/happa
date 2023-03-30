@@ -212,7 +212,7 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
       const cleanData = cleanPayload<RJSFSchema>(data, {
         emptyStrings: false,
         emptyArrays: false,
-        isException: (value) => Array.isArray(value) && value.length > 0,
+        isException: (_value, _cleanValue, isArrayItem) => isArrayItem,
       }) as RJSFSchema;
 
       const cleanDataWithoutDefaultValues = cleanPayload<RJSFSchema>(data, {
