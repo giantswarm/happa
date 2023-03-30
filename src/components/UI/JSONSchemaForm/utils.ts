@@ -1,5 +1,7 @@
 import { RJSFValidationError } from '@rjsf/utils';
 import cleanDeep, { CleanOptions } from 'clean-deep';
+import flatten from 'lodash/flatten';
+import groupBy from 'lodash/groupBy';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import isPlainObject from 'lodash/isPlainObject';
@@ -23,7 +25,42 @@ function transformRequiredArrayItemError(
 }
 
 export function transformErrors(errors: RJSFValidationError[]) {
-  return errors.map((err) => pipe(err, transformRequiredArrayItemError));
+  // If property errors contain 'oneOf' error, filter out redundant 'const' errors
+  // and modify 'oneOf' error to be alligned with 'enum' errors
+  const errorsByProperty = Object.values(groupBy(errors, 'property')).map(
+    (propertyErrors) => {
+      const oneOfError = propertyErrors.find((error) => error.name === 'oneOf');
+      if (!oneOfError) {
+        return propertyErrors;
+      }
+
+      const allowedValues = propertyErrors
+        .filter((error) => error.name === 'const')
+        .map((error) => error.params.allowedValue);
+
+      const newMessage = 'must be equal to one of the allowed values';
+      const newStack = oneOfError.message
+        ? oneOfError.stack.replace(oneOfError.message, newMessage)
+        : oneOfError.stack;
+      const patchedOneOfError = {
+        ...oneOfError,
+        message: newMessage,
+        stack: newStack,
+        params: { allowedValues },
+      };
+
+      return [
+        patchedOneOfError,
+        ...propertyErrors.filter(
+          (error) => error.name !== 'const' && error.name !== 'oneOf'
+        ),
+      ];
+    }
+  );
+
+  return flatten(errorsByProperty).map((err) =>
+    pipe(err, transformRequiredArrayItemError)
+  );
 }
 
 export function mapErrorPropertyToField(
