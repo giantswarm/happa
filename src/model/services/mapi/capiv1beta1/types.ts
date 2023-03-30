@@ -2,7 +2,9 @@ import * as corev1 from '../corev1';
 import * as k8sUrl from '../k8sUrl';
 import * as metav1 from '../metav1';
 
-export const ApiVersion = 'cluster.x-k8s.io/v1beta1';
+export const ApiGroup = 'cluster.x-k8s.io';
+
+export const ApiVersion = `${ApiGroup}/v1beta1`;
 
 export interface IClusterNetworkNetworkRanges {
   cidrBlocks: string[] | null;

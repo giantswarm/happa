@@ -4,7 +4,9 @@
 
 import * as metav1 from 'model/services/mapi/metav1';
 
-export const ApiVersion = 'infrastructure.cluster.x-k8s.io/v1beta1';
+export const ApiGroup = 'infrastructure.cluster.x-k8s.io';
+
+export const ApiVersion = `${ApiGroup}/v1beta1`;
 
 export const AWSCluster = 'AWSCluster';
 
