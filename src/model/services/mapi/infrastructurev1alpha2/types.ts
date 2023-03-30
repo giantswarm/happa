@@ -1,6 +1,6 @@
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 
-export const ApiVersion = 'infrastructure.giantswarm.io/v1alpha2';
+export const ApiVersion = `${infrav1alpha3.ApiGroup}/v1alpha2`;
 
 export const AWSCluster = 'AWSCluster';
 

@@ -1,7 +1,9 @@
 import * as corev1 from '../corev1';
 import * as metav1 from '../metav1';
 
-export const ApiVersion = 'infrastructure.giantswarm.io/v1alpha3';
+export const ApiGroup = 'infrastructure.giantswarm.io';
+
+export const ApiVersion = `${ApiGroup}/v1alpha3`;
 
 export interface IAWSClusterSpecClusterDNS {
   domain: string;

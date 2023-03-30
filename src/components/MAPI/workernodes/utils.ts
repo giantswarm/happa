@@ -4,6 +4,7 @@ import {
   compareNodePools,
   fetchProviderNodePoolForNodePool,
   fetchProviderNodePoolsForNodePoolsKey,
+  getApiGroupFromApiVersion,
   IProviderNodePoolForNodePoolName,
 } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -30,12 +31,12 @@ export async function updateNodePoolDescription(
   newDescription: string
 ) {
   const kind = nodePool.kind;
-  const apiVersion = nodePool.apiVersion;
+  const apiGroup = getApiGroupFromApiVersion(nodePool.apiVersion);
 
   switch (true) {
     // Azure
     case kind === capiexpv1alpha3.MachinePool &&
-      apiVersion === capiexpv1alpha3.ApiVersion: {
+      apiGroup === capiexpv1alpha3.ApiGroup: {
       const client = httpClientFactory();
 
       let machinePool = await capiexpv1alpha3.getMachinePool(
@@ -86,7 +87,7 @@ export async function updateNodePoolDescription(
 
     // Azure (non-exp MachinePools)
     case kind === capiv1beta1.MachinePool &&
-      apiVersion === capiv1beta1.ApiVersion: {
+      apiGroup === capiv1beta1.ApiGroup: {
       const client = httpClientFactory();
 
       let machinePool = await capiv1beta1.getMachinePool(
@@ -153,7 +154,7 @@ export async function updateNodePoolDescription(
       providerNodePool = await infrav1alpha3.updateAWSMachineDeployment(
         client,
         auth,
-        providerNodePool as infrav1alpha3.IAWSMachineDeployment
+        providerNodePool
       );
 
       mutate(
@@ -208,13 +209,13 @@ export async function deleteNodePool(
   auth: IOAuth2Provider,
   nodePool: NodePool
 ) {
-  const apiVersion = nodePool.apiVersion;
   const kind = nodePool.kind;
+  const apiGroup = getApiGroupFromApiVersion(nodePool.apiVersion);
 
   switch (true) {
     // Azure
     case kind === capiexpv1alpha3.MachinePool &&
-      apiVersion === capiexpv1alpha3.ApiVersion: {
+      apiGroup === capiexpv1alpha3.ApiGroup: {
       const client = httpClientFactory();
 
       const machinePool = await capiexpv1alpha3.getMachinePool(
@@ -267,7 +268,7 @@ export async function deleteNodePool(
 
     // Azure (non-exp MachinePools)
     case kind === capiv1beta1.MachinePool &&
-      apiVersion === capiv1beta1.ApiVersion: {
+      apiGroup === capiv1beta1.ApiGroup: {
       const client = httpClientFactory();
 
       const machinePool = await capiv1beta1.getMachinePool(
@@ -459,12 +460,12 @@ export async function updateNodePoolScaling(
   max: number
 ): Promise<NodePool> {
   const kind = nodePool.kind;
-  const apiVersion = nodePool.apiVersion;
+  const apiGroup = getApiGroupFromApiVersion(nodePool.apiVersion);
 
   switch (true) {
     // Azure
     case kind === capiexpv1alpha3.MachinePool &&
-      apiVersion === capiexpv1alpha3.ApiVersion: {
+      apiGroup === capiexpv1alpha3.ApiGroup: {
       const client = httpClientFactory();
 
       let machinePool = await capiexpv1alpha3.getMachinePool(
@@ -538,7 +539,7 @@ export async function updateNodePoolScaling(
 
     // Azure (non-exp MachinePools)
     case kind === capiv1beta1.MachinePool &&
-      apiVersion === capiv1beta1.ApiVersion: {
+      apiGroup === capiv1beta1.ApiGroup: {
       const client = httpClientFactory();
 
       let machinePool = await capiv1beta1.getMachinePool(
@@ -637,7 +638,7 @@ export async function updateNodePoolScaling(
       providerNodePool = await infrav1alpha3.updateAWSMachineDeployment(
         client,
         auth,
-        providerNodePool as infrav1alpha3.IAWSMachineDeployment
+        providerNodePool
       );
 
       mutate(

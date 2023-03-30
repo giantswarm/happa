@@ -4,7 +4,9 @@
 
 import * as metav1 from 'model/services/mapi/metav1';
 
-export const ApiVersion = 'infrastructure.cluster.x-k8s.io/v1beta1';
+export const ApiGroup = 'infrastructure.cluster.x-k8s.io';
+
+export const ApiVersion = `${ApiGroup}/v1beta1`;
 
 export const AzureCluster = 'AzureCluster';
 
@@ -1312,7 +1314,10 @@ export interface IAzureMachineTemplate {
            */
           maxPrice?: number | string;
         };
-        sshPublicKey: string;
+        /**
+         * SSHPublicKey is the SSH public key string, base64-encoded to add to a Virtual Machine. Linux only. Refer to documentation on how to set up SSH access on Windows instances.
+         */
+        sshPublicKey?: string;
         /**
          * Deprecated: SubnetName should be set in the networkInterfaces field.
          */
@@ -1701,7 +1706,10 @@ export interface IAzureMachine {
        */
       maxPrice?: number | string;
     };
-    sshPublicKey: string;
+    /**
+     * SSHPublicKey is the SSH public key string, base64-encoded to add to a Virtual Machine. Linux only. Refer to documentation on how to set up SSH access on Windows instances.
+     */
+    sshPublicKey?: string;
     /**
      * Deprecated: SubnetName should be set in the networkInterfaces field.
      */
@@ -2218,9 +2226,9 @@ export interface IAzureMachinePool {
         maxPrice?: number | string;
       };
       /**
-       * SSHPublicKey is the SSH public key string base64 encoded to add to a Virtual Machine
+       * SSHPublicKey is the SSH public key string, base64-encoded to add to a Virtual Machine. Linux only. Refer to documentation on how to set up SSH access on Windows instances.
        */
-      sshPublicKey: string;
+      sshPublicKey?: string;
       /**
        * Deprecated: SubnetName should be set in the networkInterfaces field.
        */
