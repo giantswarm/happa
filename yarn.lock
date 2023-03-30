@@ -3703,21 +3703,21 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@rjsf/core@5.3.1":
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/@rjsf/core/-/core-5.3.1.tgz#a85d57d5b065d0b03a4e4146b33b6d192cec0dd7"
-  integrity sha512-AejBNI5XBmfirubZ2L/f7Hx9hga4E3w777UB4ZvzAPwNygxKS3p/4nUKuP4Ho53aktsArdva0mdmgdBNn8phCw==
+"@rjsf/core@5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@rjsf/core/-/core-5.4.0.tgz#d75e42a5b8fe9af7b62b04fd8b93629f4e1fa5a7"
+  integrity sha512-0DmEmTCkpnGYju3HycEJb0MoYCp7Swd/R1abllmUg0sqCeffdtYSI4pWL3M1gwyMFT+JWgZWDYQ2CqJUZ9n0NA==
   dependencies:
     lodash "^4.17.15"
     lodash-es "^4.17.15"
-    markdown-to-jsx "^7.1.9"
+    markdown-to-jsx "^7.2.0"
     nanoid "^3.3.4"
     prop-types "^15.7.2"
 
-"@rjsf/utils@5.3.1":
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/@rjsf/utils/-/utils-5.3.1.tgz#cfaf20899a4287b1b87d4eca7694d1d905097483"
-  integrity sha512-bpqq1c8nivNaynGgQa/ZOTxZaD8RYo1YYF/cHpmTqGGO+qwNhimJdFCxu6uOJ5dRP59nsJ3nYbhzK1cLtxFXfQ==
+"@rjsf/utils@5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@rjsf/utils/-/utils-5.4.0.tgz#ce9d54882e3214c0fdc9f278dfd8570f1743d50c"
+  integrity sha512-R9vgwqFrPV7+6JzTzHzYeULIH4FEdp10zixTxhgh4WSEbTP9L9leei9O4fa924EFGHuBFgtZeH2cwL20pr5cUw==
   dependencies:
     json-schema-merge-allof "^0.8.1"
     jsonpointer "^5.0.1"
@@ -3725,10 +3725,10 @@
     lodash-es "^4.17.15"
     react-is "^18.2.0"
 
-"@rjsf/validator-ajv8@5.3.1":
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/@rjsf/validator-ajv8/-/validator-ajv8-5.3.1.tgz#d10ce8ddc28559d0df122df47c1be55a86df7b43"
-  integrity sha512-nl0mcUqbCZWZsjrPy7n0rdJtc0QprIl35rfu6YltCQxFuiCpVzl3CVo99grUg9kO5X6i4be8JbXkuUMaE73DXg==
+"@rjsf/validator-ajv8@5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@rjsf/validator-ajv8/-/validator-ajv8-5.4.0.tgz#e26ac6f7dff47ae5ca00bd02b49e0fc1e78d54da"
+  integrity sha512-OjWPQGU2tu+KzOgZqqsyhdiamyZPLXsChgdIQJ2sz4gMuedL2LgfNfOc6STcf01kXMXft2MoDZ9lHGlAHlv2Vw==
   dependencies:
     ajv "^8.12.0"
     ajv-formats "^2.1.1"
@@ -14602,11 +14602,6 @@ markdown-table@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/markdown-table/-/markdown-table-3.0.2.tgz#9b59eb2c1b22fe71954a65ff512887065a7bb57c"
   integrity sha512-y8j3a5/DkJCmS5x4dMCQL+OR0+2EAq3DOtio1COSHsmW2BGXnNCK3v12hJt1LrUz5iZH5g0LmuYOjDdI+czghA==
-
-markdown-to-jsx@^7.1.9:
-  version "7.1.9"
-  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.1.9.tgz#1ffae0cda07c189163d273bd57a5b8f8f8745586"
-  integrity sha512-x4STVIKIJR0mGgZIZ5RyAeQD7FEZd5tS8m/htbcVGlex32J+hlSLj+ExrHCxP6nRKF1EKbcO7i6WhC1GtOpBlA==
 
 markdown-to-jsx@^7.2.0:
   version "7.2.0"
