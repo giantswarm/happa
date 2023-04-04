@@ -53,30 +53,79 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
   0: {
     uiSchema: {
       'ui:order': [
-        'clusterName',
-        'clusterDescription',
-        'organization',
+        'metadata',
+        'providerSpecific',
         'controlPlane',
+        'connectivity',
+        'nodePools',
         '*',
       ],
-      bastion: {
-        instanceType: {
-          'ui:widget': InstanceTypeWidget,
-        },
+      baseDomain: {
+        'ui:widget': 'hidden',
       },
-      clusterName: {
-        'ui:widget': ClusterNameWidget,
+      connectivity: {
+        'ui:order': ['sshSsoPublicKey', '*'],
+        bastion: {
+          instanceType: {
+            'ui:widget': InstanceTypeWidget,
+          },
+        },
       },
       controlPlane: {
+        'ui:order': [
+          'apiMode',
+          'instanceType',
+          'replicas',
+          'rootVolumeSizeGB',
+          'etcdVolumeSizeGB',
+          'kubeletVolumeSizeGB',
+          'containerdVolumeSizeGB',
+          'oidc',
+          '*',
+        ],
         instanceType: {
           'ui:widget': InstanceTypeWidget,
         },
+        oidc: {
+          'ui:order': ['issuerUrl', 'clientId', '*'],
+        },
+      },
+      'cluster-shared': {
+        'ui:widget': 'hidden',
+      },
+      defaultMachinePools: {
+        'ui:widget': 'hidden',
+      },
+      kubectlImage: {
+        'ui:widget': 'hidden',
+      },
+      managementCluster: {
+        'ui:widget': 'hidden',
+      },
+      metadata: {
+        'ui:order': ['name', 'description', '*'],
+        name: {
+          'ui:widget': ClusterNameWidget,
+        },
+      },
+      provider: {
+        'ui:widget': 'hidden',
+      },
+      providerSpecific: {
+        'ui:order': [
+          'region',
+          'flatcarAwsAccount',
+          'awsClusterRoleIdentityName',
+          '*',
+        ],
       },
     },
     formData: (clusterName, organization) => {
       return {
-        clusterName,
-        organization,
+        metadata: {
+          name: clusterName,
+          organization,
+        },
       };
     },
   },
