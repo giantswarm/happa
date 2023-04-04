@@ -105,8 +105,7 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
       metadata: {
         'ui:order': ['name', 'description', '*'],
         name: {
-          // TODO: fix crash
-          //'ui:widget': ClusterNameWidget,
+          'ui:widget': ClusterNameWidget,
         },
       },
       provider: {
@@ -123,8 +122,10 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
     },
     formData: (clusterName, organization) => {
       return {
-        clusterName,
-        organization,
+        metadata: {
+          name: clusterName,
+          organization,
+        },
       };
     },
   },
