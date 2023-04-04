@@ -1,8 +1,10 @@
-import { getInputProps, WidgetProps } from '@rjsf/utils';
+import { getInputProps, getSchemaType, WidgetProps } from '@rjsf/utils';
 import React from 'react';
 import SimpleNumberPicker from 'UI/Inputs/SimpleNumberPicker';
 import TextArea from 'UI/Inputs/TextArea';
 import TextInput from 'UI/Inputs/TextInput';
+
+import { DEFAULT_NUMERIC_VALUE, DEFAULT_STRING_VALUE } from '../utils';
 
 const BaseInputTemplate: React.FC<WidgetProps> = ({
   id,
@@ -17,37 +19,37 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
   onChange,
   onBlur,
 }) => {
+  const schemaType = getSchemaType(schema);
+  const implicitDefaultValue =
+    schemaType === 'string' ? DEFAULT_STRING_VALUE : DEFAULT_NUMERIC_VALUE;
+  const emptyValue =
+    schema.default !== undefined
+      ? options.emptyValue ?? implicitDefaultValue
+      : undefined;
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const emptyValue = options.emptyValue ?? '';
     onChange(e.target.value === '' ? emptyValue : e.target.value);
   };
 
   const handleNumberChange = (newValue: number) => {
-    onChange(Number.isNaN(newValue) ? options.emptyValue : newValue);
+    onChange(Number.isNaN(newValue) ? emptyValue : newValue);
   };
 
   const handleBlur = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const emptyValue = options.emptyValue ?? '';
     onBlur(id, e.target.value === '' ? emptyValue : e.target.value);
-  };
-
-  const handleNumberBlur = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    onBlur(id, e.target.value === '' ? options.emptyValue : e.target.value);
   };
 
   const inputProps = getInputProps(schema, type as string, options);
 
-  return schema.type === 'integer' ? (
+  return schemaType === 'integer' ? (
     <SimpleNumberPicker
       id={id}
       error={null}
-      value={value}
+      value={value ?? NaN}
       placeholder={placeholder}
       disabled={disabled}
       readOnly={readonly}
@@ -59,9 +61,21 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
         width: { max: 'small' },
       }}
       onChange={handleNumberChange}
-      onBlur={handleNumberBlur}
+      onBlur={handleBlur}
     />
-  ) : inputProps.type === 'text' ? (
+  ) : schemaType === 'number' ? (
+    <TextInput
+      id={id}
+      value={value ?? ''}
+      placeholder={placeholder}
+      disabled={disabled}
+      readOnly={readonly}
+      required={required}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      {...inputProps}
+    />
+  ) : (
     <TextArea
       id={id}
       value={value ?? ''}
@@ -74,18 +88,6 @@ const BaseInputTemplate: React.FC<WidgetProps> = ({
       spellCheck={false}
       resize={false}
       autoResizeHeight={true}
-      {...inputProps}
-    />
-  ) : (
-    <TextInput
-      id={id}
-      value={value ?? ''}
-      placeholder={placeholder}
-      disabled={disabled}
-      readOnly={readonly}
-      required={required}
-      onChange={handleChange}
-      onBlur={handleBlur}
       {...inputProps}
     />
   );

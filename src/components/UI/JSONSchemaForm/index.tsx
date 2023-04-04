@@ -5,6 +5,7 @@ import {
   RJSFValidationError,
 } from '@rjsf/utils';
 import cloneDeep from 'lodash/cloneDeep';
+import hasIn from 'lodash/hasIn';
 import merge from 'lodash/merge';
 import React, {
   useCallback,
@@ -57,7 +58,12 @@ interface IAddTouchedFieldAction {
   value: string;
 }
 
-interface IToggleTouchedsFieldAction {
+interface ISetTouchedFieldsAction {
+  type: 'setTouchedFields';
+  value: string[];
+}
+
+interface IToggleTouchedFieldsAction {
   type: 'toggleTouchedFields';
   value: string[];
 }
@@ -73,7 +79,8 @@ interface IFormState {
 
 type FormAction =
   | IAddTouchedFieldAction
-  | IToggleTouchedsFieldAction
+  | ISetTouchedFieldsAction
+  | IToggleTouchedFieldsAction
   | IAttemptSubmitAction;
 
 const createReducer =
@@ -86,6 +93,12 @@ const createReducer =
           touchedFields: Array.from(
             new Set([...state.touchedFields, action.value])
           ),
+        };
+
+      case 'setTouchedFields':
+        return {
+          ...state,
+          touchedFields: Array.from(new Set(action.value)),
         };
 
       case 'toggleTouchedFields': {
@@ -151,6 +164,36 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
     createInitalState()
   );
 
+  const addTouchedField = (id?: string) => {
+    if (!id) return;
+    dispatch({ type: 'addTouchedField', value: id });
+  };
+
+  const toggleTouchedFields = (...ids: string[]) => {
+    dispatch({ type: 'toggleTouchedFields', value: [...ids] });
+  };
+
+  const setTouchedFields = (...ids: string[]) => {
+    dispatch({ type: 'setTouchedFields', value: [...ids] });
+  };
+
+  const updateTouchedFields = useCallback(
+    (data: RJSFSchema, fieldId?: string) => {
+      const touchedFields = fieldId
+        ? Array.from(new Set([...state.touchedFields, fieldId]))
+        : state.touchedFields;
+
+      const newFields = touchedFields.filter((field) => {
+        const fieldPath = field.split(idSeparator).slice(1);
+
+        return hasIn(data, fieldPath);
+      });
+
+      setTouchedFields(...newFields);
+    },
+    [idSeparator, state.touchedFields]
+  );
+
   const [preprocessedSchema, defaultValues] = useMemo(() => {
     const patchedSchema = preprocessSchema(cloneDeep(schema), fieldsToRemove);
     const defaults: RJSFSchema = getDefaultFormState(
@@ -165,11 +208,11 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
   }, [validator, schema]);
 
   const onChangeCallback = useCallback(
-    (data: RJSFSchema) => {
+    (data: RJSFSchema, fieldId?: string) => {
       const cleanData = cleanPayload<RJSFSchema>(data, {
         emptyStrings: false,
         emptyArrays: false,
-        isException: (value) => Array.isArray(value) && value.length > 0,
+        isException: (_value, _cleanValue, isArrayItem) => isArrayItem,
       }) as RJSFSchema;
 
       const cleanDataWithoutDefaultValues = cleanPayload<RJSFSchema>(data, {
@@ -179,9 +222,10 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
         defaultValues,
       }) as RJSFSchema;
 
+      updateTouchedFields(cleanData, fieldId);
       onChange(cleanData, cleanDataWithoutDefaultValues);
     },
-    [defaultValues, onChange]
+    [defaultValues, onChange, updateTouchedFields]
   );
 
   useEffect(() => {
@@ -196,20 +240,11 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
 
   const idConfigs: IIdConfigs = { idPrefix, idSeparator };
 
-  const addTouchedField = (id?: string) => {
-    if (!id) return;
-    dispatch({ type: 'addTouchedField', value: id });
-  };
-
-  const toggleTouchedFields = (...ids: string[]) => {
-    dispatch({ type: 'toggleTouchedFields', value: [...ids] });
-  };
-
   const handleChange = (data: IChangeEvent<RJSFSchema>, id?: string) => {
     addTouchedField(id);
 
     if (data.formData) {
-      onChangeCallback(data.formData);
+      onChangeCallback(data.formData, id);
     }
   };
 

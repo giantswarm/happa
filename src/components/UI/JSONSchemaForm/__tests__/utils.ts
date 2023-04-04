@@ -21,7 +21,7 @@ describe('JSONSchemaForm:utils', () => {
       }
     });
 
-    it(`does not clean object values matching the given exception`, () => {
+    it('does not clean object values matching the given exception', () => {
       const cases: Array<{
         object: unknown;
         options: CleanPayloadOptions;
@@ -31,7 +31,7 @@ describe('JSONSchemaForm:utils', () => {
           object: createTestObject(),
           options: {
             emptyStrings: false,
-            isException: (value) => Array.isArray(value) && value.length > 0,
+            isException: (_value, _cleanValue, isArrayItem) => isArrayItem,
           },
           expected: {
             testObj1: {
@@ -47,7 +47,7 @@ describe('JSONSchemaForm:utils', () => {
               },
             },
 
-            testArrayObj: [{}, {}, { testNum: 1 }],
+            testArrayObj: [{}, {}, { testNum: 1 }, {}],
           },
         },
         {
@@ -68,7 +68,7 @@ describe('JSONSchemaForm:utils', () => {
                 testArrayNull: [null],
               },
             },
-            testArrayObj: [{ testNum: 1 }],
+            testArrayObj: [{ testNum: 1 }, { testNull: null }],
           },
         },
         {
@@ -88,7 +88,7 @@ describe('JSONSchemaForm:utils', () => {
               testArrayStr: ['', 'some string'],
               testObj3: {},
             },
-            testArrayObj: [{}, {}, { testNum: 1 }],
+            testArrayObj: [{}, {}, { testNum: 1 }, {}],
           },
         },
       ];
@@ -457,6 +457,6 @@ function createTestObject() {
         testArrayNull: [null],
       },
     },
-    testArrayObj: [{}, {}, { testNum: 1 }],
+    testArrayObj: [{}, {}, { testNum: 1 }, { testNull: null }],
   };
 }
