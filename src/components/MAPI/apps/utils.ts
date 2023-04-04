@@ -9,6 +9,7 @@ import {
 } from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
 import {
+  getApiGroupFromApiVersion,
   getClusterBaseUrl,
   getClusterDescription,
   getClusterReleaseVersion,
@@ -27,7 +28,6 @@ import * as authorizationv1 from 'model/services/mapi/authorizationv1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
-import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -741,13 +741,13 @@ export function getClusterK8sEndpoint(
   }
 
   const { kind, apiVersion } = infrastructureRef;
+  const apiGroup = getApiGroupFromApiVersion(apiVersion);
+
   let hostname = null;
   switch (true) {
     case kind === capzv1beta1.AzureCluster:
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
-      apiVersion === infrav1alpha3.ApiVersion:
+      apiGroup === infrav1alpha3.ApiGroup:
       hostname = cluster.spec?.controlPlaneEndpoint?.host;
       break;
     default:

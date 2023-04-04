@@ -1140,3 +1140,129 @@ describe('PermissionsOverview on CAPA', () => {
     ).toBeInTheDocument();
   });
 });
+
+describe('PermissionsOverview on CAPZ', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const useCases = window.config.permissionsUseCasesJSON;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPZ;
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  beforeEach(() => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: createDefaultPermissions(),
+    });
+  });
+  afterEach(() => {
+    window.config.permissionsUseCasesJSON = useCases;
+  });
+
+  it('displays permissions statuses for workload clusters use cases', async () => {
+    (usePermissions as jest.Mock).mockReturnValue({
+      data: {
+        'org-org1': {
+          'cluster.x-k8s.io:clusters:*': ['*'],
+          'infrastructure.cluster.x-k8s.io:azureclusters:*': ['*'],
+          'infrastructure.cluster.x-k8s.io:azuremachines:*': ['*'],
+        },
+      },
+    });
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Created,
+        authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
+      );
+
+    render(getComponent({}));
+
+    // Toggle 'For organizations' tab
+    fireEvent.click(screen.getByRole('tab', { name: 'For organizations' }));
+
+    expect(await screen.findByText('workload clusters')).toBeInTheDocument();
+
+    // Toggle clusters category
+    fireEvent.click(screen.getByLabelText('workload clusters'));
+    expect(await screen.findByText('Inspect clusters')).toBeInTheDocument();
+    expect(
+      within(
+        screen.getByLabelText(
+          'Inspect clusters for org1 organization permission status'
+        )
+      ).getByText('Yes')
+    ).toBeInTheDocument();
+  });
+
+  it('does not display permissions use cases for releases', async () => {
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Created,
+        authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
+      );
+
+    render(getComponent({}));
+
+    expect(await screen.findByText('access control')).toBeInTheDocument();
+    expect(screen.queryByText('releases')).not.toBeInTheDocument();
+  });
+
+  it('displays permission use case for provider credentials', async () => {
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            verb: 'list',
+            group: 'rbac.authorization.k8s.io',
+            resource: 'clusterrolebindings',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Created,
+        authorizationv1Mocks.selfSubjectAccessReviewCantListClusterRoleBindings
+      );
+
+    render(getComponent({}));
+
+    // Toggle 'For organizations' tab
+    fireEvent.click(screen.getByRole('tab', { name: 'For organizations' }));
+
+    expect(await screen.findByText('workload clusters')).toBeInTheDocument();
+
+    // Toggle provider credentials category
+    expect(await screen.findByText('provider credentials')).toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText('provider credentials'));
+    expect(
+      screen.getByText('Inspect provider credentials')
+    ).toBeInTheDocument();
+  });
+});

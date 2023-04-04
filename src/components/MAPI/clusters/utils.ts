@@ -10,6 +10,7 @@ import {
   fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForClusterKey,
   generateUID,
+  getApiGroupFromApiVersion,
   getClusterDescription,
   getProviderNodePoolMachineTypes,
   IMachineType,
@@ -926,6 +927,8 @@ export function getClusterConditions(
   }
 
   const { kind, apiVersion } = infrastructureRef;
+  const apiGroup = getApiGroupFromApiVersion(apiVersion);
+
   switch (true) {
     case kind === capzv1beta1.AzureCluster:
       statuses.isConditionUnknown =
@@ -935,10 +938,8 @@ export function getClusterConditions(
       statuses.isUpgrading = isClusterUpgrading(cluster);
       break;
 
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
-      apiVersion === infrav1alpha3.ApiVersion: {
+      apiGroup === infrav1alpha3.ApiGroup: {
       if (!providerCluster) break;
 
       statuses.isConditionUnknown = infrav1alpha3.isConditionUnknown(

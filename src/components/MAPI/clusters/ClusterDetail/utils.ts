@@ -11,6 +11,7 @@ import {
   fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
+  getApiGroupFromApiVersion,
   getClusterDescription,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -20,7 +21,6 @@ import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
-import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { extractIDFromARN } from 'model/services/mapi/legacy/credentials';
@@ -72,13 +72,13 @@ export async function updateClusterDescription(
 
   if (
     providerCluster &&
-    ((providerCluster.kind === infrav1alpha2.AWSCluster &&
-      providerCluster.apiVersion === infrav1alpha2.ApiVersion) ||
-      (providerCluster.kind === infrav1alpha3.AWSCluster &&
-        providerCluster.apiVersion === infrav1alpha3.ApiVersion)) &&
+    providerCluster.kind === infrav1alpha3.AWSCluster &&
+    getApiGroupFromApiVersion(providerCluster.apiVersion) ===
+      infrav1alpha3.ApiGroup &&
     typeof providerCluster.spec !== 'undefined'
   ) {
-    providerCluster.spec.cluster.description = newDescription;
+    (providerCluster as infrav1alpha3.IAWSCluster).spec!.cluster.description =
+      newDescription;
 
     const updatedProviderCluster = await infrav1alpha3.updateAWSCluster(
       httpClientFactory(),
@@ -169,11 +169,11 @@ export async function deleteProviderClusterForCluster(
   }
 
   const { kind, apiVersion } = providerCluster;
+  const apiGroup = getApiGroupFromApiVersion(apiVersion);
+
   switch (true) {
-    case kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion:
     case kind === infrav1alpha3.AWSCluster &&
-      apiVersion === infrav1alpha3.ApiVersion: {
+      apiGroup === infrav1alpha3.ApiGroup: {
       const client = httpClientFactory();
 
       await infrav1alpha3.deleteAWSCluster(
@@ -262,12 +262,12 @@ export async function deleteClusterResources(
     await deleteCluster(httpClientFactory, auth, cluster);
 
     const kind = cluster.spec?.infrastructureRef?.kind;
-    const apiVersion = cluster.spec?.infrastructureRef?.apiVersion;
+    const apiGroup = cluster.spec?.infrastructureRef?.apiVersion
+      ? getApiGroupFromApiVersion(cluster.spec.infrastructureRef.apiVersion)
+      : undefined;
     if (
-      (kind === infrav1alpha2.AWSCluster &&
-        apiVersion === infrav1alpha2.ApiVersion) ||
-      (kind === infrav1alpha3.AWSCluster &&
-        apiVersion === infrav1alpha3.ApiVersion)
+      kind === infrav1alpha3.AWSCluster &&
+      apiGroup === infrav1alpha3.ApiGroup
     ) {
       await deleteProviderClusterForCluster(httpClientFactory, auth, cluster);
       await deleteControlPlaneNodesForCluster(httpClientFactory, auth, cluster);
@@ -328,9 +328,11 @@ export async function fetchProviderCredential(
       throw new Error('Unsupported provider.');
     }
     const { kind, apiVersion } = infrastructureRef;
+    const apiGroup = getApiGroupFromApiVersion(apiVersion);
+
     switch (true) {
       case kind === capav1beta1.AWSCluster &&
-        apiVersion === capav1beta1.ApiVersion: {
+        apiGroup === capav1beta1.ApiGroup: {
         const identityRef = (providerCluster as capav1beta1.IAWSCluster).spec
           ?.identityRef;
 
@@ -366,10 +368,8 @@ export async function fetchProviderCredential(
       }
 
       case kind === capzv1beta1.AzureCluster:
-      case (kind === infrav1alpha2.AWSCluster &&
-        apiVersion === infrav1alpha2.ApiVersion) ||
-        (kind === infrav1alpha3.AWSCluster &&
-          apiVersion === infrav1alpha3.ApiVersion): {
+      case kind === infrav1alpha3.AWSCluster &&
+        apiGroup === infrav1alpha3.ApiGroup: {
         const credentials = await legacyCredentials.getCredentialList(
           httpClientFactory(),
           auth,
@@ -402,9 +402,10 @@ export function fetchProviderCredentialKey(
   }
 
   const { kind, apiVersion } = infrastructureRef;
+  const apiGroup = getApiGroupFromApiVersion(apiVersion);
+
   switch (true) {
-    case kind === capav1beta1.AWSCluster &&
-      apiVersion === capav1beta1.ApiVersion: {
+    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup: {
       const identityRef = (providerCluster as capav1beta1.IAWSCluster).spec
         ?.identityRef;
 
@@ -431,10 +432,8 @@ export function fetchProviderCredentialKey(
     }
 
     case kind === capzv1beta1.AzureCluster:
-    case (kind === infrav1alpha2.AWSCluster &&
-      apiVersion === infrav1alpha2.ApiVersion) ||
-      (kind === infrav1alpha3.AWSCluster &&
-        apiVersion === infrav1alpha3.ApiVersion): {
+    case kind === infrav1alpha3.AWSCluster &&
+      apiGroup === infrav1alpha3.ApiGroup: {
       return `${legacyCredentials.getCredentialListKey(
         organizationName
       )}/mainCredential`;
