@@ -259,8 +259,8 @@ jobs:
 
       - restore_cache:
           keys:
-          - v2-npm-deps-{{ checksum "yarn.lock" }}
-          - v2-npm-deps-
+          - v3-npm-deps-{{ checksum "yarn.lock" }}
+          - v3-npm-deps-
 
       - run:
           name: Print version information
@@ -275,7 +275,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v2-npm-deps-{{ checksum "yarn.lock" }}
+          key: v3-npm-deps-{{ checksum "yarn.lock" }}
 
       - persist_to_workspace:
           root: ~/happa
