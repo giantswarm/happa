@@ -87,18 +87,6 @@ workflows:
               only: /^v.*/
 
       - architect/push-to-app-collection:
-          name: push-happa-to-shared-app-collection
-          app_name: "happa"
-          app_collection_repo: "shared-app-collection"
-          requires:
-            - push-happa-to-control-plane-app-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-
-      - architect/push-to-app-collection:
           name: push-happa-to-aws-app-collection
           app_name: "happa"
           app_collection_repo: "aws-app-collection"
