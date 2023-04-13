@@ -274,7 +274,7 @@ export const randomClusterCAPZ1: capiv1beta1.ICluster = {
     labels: {
       app: 'cluster-azure',
       'app.kubernetes.io/managed-by': 'Helm',
-      'app.kubernetes.io/version': '',
+      'app.kubernetes.io/version': '0.0.15',
       'application.giantswarm.io/team': 'team',
       'cluster-apps-operator.giantswarm.io/watching': '',
       'cluster.x-k8s.io/cluster-name': 'test12',
@@ -363,7 +363,7 @@ export const randomClusterCAPZ2: capiv1beta1.ICluster = {
     labels: {
       app: 'cluster-azure',
       'app.kubernetes.io/managed-by': 'Helm',
-      'app.kubernetes.io/version': '',
+      'app.kubernetes.io/version': '0.0.15',
       'application.giantswarm.io/team': 'team',
       'cluster-apps-operator.giantswarm.io/watching': '',
       'cluster.x-k8s.io/cluster-name': 'test34',
