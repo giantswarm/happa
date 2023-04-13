@@ -1056,6 +1056,8 @@ export function getProviderNodePoolMachineTypes(
       };
     case capzv1beta1.AzureMachinePool:
       return { primary: providerNodePool.spec?.template.vmSize ?? '' };
+    case capzv1beta1.AzureMachineTemplate:
+      return { primary: providerNodePool?.spec?.template.spec.vmSize ?? '' };
     case infrav1alpha3.AWSMachineDeployment:
       return {
         primary: providerNodePool.spec.provider.worker.instanceType,

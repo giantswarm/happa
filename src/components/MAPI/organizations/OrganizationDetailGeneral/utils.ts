@@ -171,6 +171,14 @@ function appendControlPlaneNodeStats(
         break;
       }
 
+      case capzv1beta1.AzureMachineTemplate: {
+        if (cpNode.spec?.template?.spec.vmSize) {
+          instanceTypes.push(cpNode.spec.template.spec.vmSize);
+        }
+
+        break;
+      }
+
       case infrav1alpha3.AWSControlPlane: {
         if (cpNode.spec.instanceType) {
           instanceTypes.push(cpNode.spec.instanceType);
@@ -391,8 +399,6 @@ export async function fetchVersionsSummary(
 
   summary.clusterAppVersionsInUseCount = new Set(clusterAppVersions).size;
 
-  if (summary.clusterAppVersionsInUseCount < 1) return Promise.resolve(summary);
-
   summary.oldestClusterAppVersion = clusterAppVersions[0];
   summary.newestClusterAppVersion =
     clusterAppVersions[clusterAppVersions.length - 1];
@@ -430,8 +436,6 @@ export async function fetchVersionsSummary(
   k8sVersions = k8sVersions.sort(compare);
 
   summary.k8sVersionsInUseCount = new Set(k8sVersions).size;
-
-  if (summary.clusterAppVersionsInUseCount < 1) return Promise.resolve(summary);
 
   summary.oldestK8sVersion = k8sVersions[0];
   summary.newestK8sVersion = k8sVersions[k8sVersions.length - 1];
