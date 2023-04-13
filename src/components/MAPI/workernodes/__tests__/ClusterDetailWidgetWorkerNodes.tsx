@@ -601,8 +601,8 @@ describe('ClusterDetailWidgetWorkerNodes on CAPA', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
-      await screen.findByLabelText('GB RAM not available')
-    ).toBeInTheDocument();
+      await screen.findAllByLabelText('GB RAM not available')
+    ).not.toHaveLength(0);
   });
 });
 
