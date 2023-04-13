@@ -1,4 +1,9 @@
-import { getInputProps, getSchemaType, WidgetProps } from '@rjsf/utils';
+import {
+  getInputProps,
+  getSchemaType,
+  RJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import React from 'react';
 import SimpleNumberPicker from 'UI/Inputs/SimpleNumberPicker';
 import TextArea from 'UI/Inputs/TextArea';
@@ -6,7 +11,7 @@ import TextInput from 'UI/Inputs/TextInput';
 
 import { DEFAULT_NUMERIC_VALUE, DEFAULT_STRING_VALUE } from '../utils';
 
-const BaseInputTemplate: React.FC<WidgetProps> = ({
+const BaseInputTemplate: React.FC<WidgetProps<RJSFSchema>> = ({
   id,
   schema,
   options,
