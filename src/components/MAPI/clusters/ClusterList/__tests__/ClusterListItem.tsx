@@ -784,3 +784,64 @@ describe('ClusterListItem on CAPA', () => {
     expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
   });
 });
+
+describe('ClusterListItem on CAPZ', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPZ;
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays various information about the cluster', () => {
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPZ1,
+        providerCluster: capzv1beta1Mocks.randomAzureClusterCAPZ1,
+      })
+    );
+
+    expect(screen.getByLabelText('Name: test12')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Description: capz test cluster')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Cluster app version: 0.0.15')
+    ).toBeInTheDocument();
+  });
+
+  it('displays cluster status', async () => {
+    render(
+      getComponent({
+        cluster: {
+          ...capiv1beta1Mocks.randomClusterCAPZ1,
+          status: {
+            ...capiv1beta1Mocks.randomClusterCAPZ1.status,
+            conditions: [
+              {
+                status: 'False',
+                type: 'ControlPlaneInitialized',
+                lastTransitionTime: '2023-03-28T00:00:00Z',
+              },
+            ],
+          },
+        },
+        providerCluster: capzv1beta1Mocks.randomAzureClusterCAPZ1,
+      })
+    );
+
+    expect(await screen.findByText('Cluster creating…')).toBeInTheDocument();
+    expect(screen.queryByText('Upgrade in progress…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade available')).not.toBeInTheDocument();
+    expect(screen.queryByText('Upgrade scheduled')).not.toBeInTheDocument();
+  });
+});
