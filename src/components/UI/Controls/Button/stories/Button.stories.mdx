@@ -1,6 +1,6 @@
-import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { Meta, Story, Canvas, ArgsTable } from '@storybook/blocks';
 import { Box } from 'grommet';
-import Button from '../';
+import Button from '..';
 
 <Meta
   title='Inputs/Button'
@@ -41,7 +41,7 @@ The button can be disabled independent of other attributes. This shall not be co
 
 ### Multiple buttons
 
-<Preview>
+<Canvas>
   <Story name='Multiple'>
     <Box wrap={true} direction='row' gap='small'>
       <Button primary={true}>Primary</Button>
@@ -49,11 +49,11 @@ The button can be disabled independent of other attributes. This shall not be co
       <Button link={true}>Link</Button>
     </Box>
   </Story>
-</Preview>
+</Canvas>
 
 ### Icons and labels
 
-<Preview>
+<Canvas>
   <Story name='IconAndLabel'>
     <Box wrap={true} direction='row' gap='small'>
       <Button primary={true} icon={<i className='fa fa-add-circle' />}>
@@ -64,130 +64,130 @@ The button can be disabled independent of other attributes. This shall not be co
       </Button>
     </Box>
   </Story>
-</Preview>
+</Canvas>
 
 ### Secondary
 
-<Preview>
+<Canvas>
   <Story name='Secondary'>
     <Button>Secondary</Button>
   </Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
   <Story name='SecondarySmall'>
     <Button size='small'>Secondary small</Button>
   </Story>
-</Preview>
+</Canvas>
 
 ### Primary
 
-<Preview>
+<Canvas>
   <Story name='Primary'>
     <Button primary={true}>Primary</Button>
   </Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
   <Story name='PrimarySmall'>
     <Button primary={true} size='small'>
       Primary small
     </Button>
   </Story>
-</Preview>
+</Canvas>
 
 ### Danger
 
-<Preview>
+<Canvas>
   <Story name='Danger'>
     <Button danger={true}>Danger</Button>
   </Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
   <Story name='DangerSmall'>
     <Button danger={true} size='small'>
       Danger small
     </Button>
   </Story>
-</Preview>
+</Canvas>
 
 ### Link
 
-<Preview>
+<Canvas>
   <Story name='Link'>
     <Button link={true}>Link</Button>
   </Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
   <Story name='LinkSmall'>
     <Button link={true} size='small'>
       Link small
     </Button>
   </Story>
-</Preview>
+</Canvas>
 
 ### Loading
 
-<Preview>
+<Canvas>
   <Story name='Loading'>
     <Button loading={true}>Loading</Button>
   </Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
   <Story name='LoadingSmall'>
     <Button loading={true} size='small'>
       Loading small
     </Button>
   </Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
   <Story name='LoadingLeft'>
     <Button loading={true} loadignPosition='left'>
       Loading
     </Button>
   </Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
   <Story name='LoadingLeftSmall'>
     <Button loading={true} loadignPosition='left' size='small'>
       Loading small
     </Button>
   </Story>
-</Preview>
+</Canvas>
 
 ### Disabled
 
-<Preview>
+<Canvas>
   <Story name='Disabled'>
     <Button disabled={true}>Disabled</Button>
   </Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
   <Story name='DisabledSmall'>
     <Button disabled={true} size='small'>
       Disabled small
     </Button>
   </Story>
-</Preview>
+</Canvas>
 
 ### Unauthorized
 
-<Preview>
+<Canvas>
   <Story name='Unauthorized'>
     <Button disabled={true} unauthorized={true}>Unauthorized</Button>
   </Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
   <Story name='UnauthorizedSmall'>
     <Button disabled={true} unauthorized={true} size='small'>
       Unauthorized small
     </Button>
   </Story>
-</Preview>
+</Canvas>

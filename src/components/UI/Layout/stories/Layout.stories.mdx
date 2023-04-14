@@ -1,4 +1,4 @@
-import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { Meta, Story, Canvas } from '@storybook/blocks';
 import Well from '../Well';
 import Aside from '../Aside';
 import DetailList from '../DetailList';
@@ -10,7 +10,7 @@ import Section from '../Section';
 
 ## Aside
 
-<Preview>
+<Canvas>
   <Story name="Aside">
     <p>A paragraph of text before.</p>
     <Aside>
@@ -18,40 +18,40 @@ import Section from '../Section';
     </Aside>
     <p>A paragraph of text below.</p>
    </Story>
-</Preview>
+</Canvas>
 
 ## DetailList
 
-<Preview>
+<Canvas>
   <Story name="DetailList">
     <DetailList title="Title of the list">
         <p>Here is a first paragraph.</p>
         <p>Then comes another paragraph.</p>
     </DetailList>
    </Story>
-</Preview>
+</Canvas>
 
 ## Section
 
-<Preview>
+<Canvas>
   <Story name="Section">
     <Section title="The section title">
         <p>This is a paragraph of text inside our section. It should appear next to the section title.</p>
     </Section>
   </Story>
-</Preview>
+</Canvas>
 
-<Preview>
+<Canvas>
    <Story name="Section (flat)">
     <Section title="The section title" flat>
         <p>This is a paragraph of text inside our section. It should appear beneath the section title.</p>
     </Section>
    </Story>
-</Preview>
+</Canvas>
 
 ## Well
 
-<Preview>
+<Canvas>
   <Story name="Well">
     <p>A paragraph of text before.</p>
     <Well>
@@ -59,4 +59,4 @@ import Section from '../Section';
     </Well>
     <p>A paragraph of text below.</p>
    </Story>
-</Preview>
+</Canvas>
