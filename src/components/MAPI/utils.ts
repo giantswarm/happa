@@ -1259,7 +1259,7 @@ export function getNodePoolScaling(
       return status;
     }
 
-    // GCP
+    // CAPZ, GCP
     case kind === capiv1beta1.MachineDeployment:
       return status;
 
@@ -1582,12 +1582,16 @@ function isCAPGCluster(cluster: Cluster): boolean {
   return cluster.spec?.infrastructureRef?.kind === capgv1beta1.GCPCluster;
 }
 
+function isCAPZCluster(cluster: Cluster): boolean {
+  return cluster.spec?.infrastructureRef?.kind === capzv1beta1.AzureCluster;
+}
+
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
   return isCAPZAlphaCluster(cluster) || hasClusterAppLabel(cluster);
 }
 
 export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {
-  return !isCAPGCluster(cluster);
+  return !(isCAPGCluster(cluster) || isCAPZCluster(cluster));
 }
 
 export function supportsNonExpMachinePools(cluster: Cluster): boolean {
