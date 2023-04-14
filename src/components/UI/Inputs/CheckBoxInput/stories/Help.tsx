@@ -1,9 +1,9 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef, useEffect, useState } from 'react';
 
 import CheckBoxInput from '..';
 
-export const Help: Story<ComponentPropsWithoutRef<typeof CheckBoxInput>> = (
+export const Help: StoryFn<ComponentPropsWithoutRef<typeof CheckBoxInput>> = (
   args
 ) => {
   const [checked, setChecked] = useState(args.checked);

@@ -1,5 +1,4 @@
-// also exported from '@storybook/react' if you can deal with breaking changes in 6.1
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { Meta, StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef } from 'react';
 
 import FileBlock from './FileBlock';
@@ -10,7 +9,9 @@ export default {
   argTypes: {},
 } as Meta;
 
-const Template: Story<ComponentPropsWithoutRef<typeof FileBlock>> = (args) => (
+const Template: StoryFn<ComponentPropsWithoutRef<typeof FileBlock>> = (
+  args
+) => (
   <FileBlock {...args}>
     {`
 apiVersion: v1

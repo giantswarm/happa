@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
 
 import AppsListPage, { IAppsListPageProps } from './AppsListPage';
@@ -9,7 +9,7 @@ export default {
   component: AppsListPage,
 } as Meta;
 
-const Template: Story<IAppsListPageProps> = (args) => (
+const Template: StoryFn<IAppsListPageProps> = (args) => (
   <AppsListPage {...args} />
 );
 

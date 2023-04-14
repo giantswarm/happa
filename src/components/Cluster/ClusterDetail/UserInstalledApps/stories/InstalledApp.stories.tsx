@@ -1,9 +1,9 @@
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { Meta, StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef } from 'react';
 
 import InstalledApp from '../InstalledApp';
 
-const Template: Story<ComponentPropsWithoutRef<typeof InstalledApp>> = (
+const Template: StoryFn<ComponentPropsWithoutRef<typeof InstalledApp>> = (
   args
 ) => <InstalledApp {...args} />;
 

@@ -1,9 +1,9 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef } from 'react';
 
 import NumberPicker from '..';
 
-export const Simple: Story<ComponentPropsWithoutRef<typeof NumberPicker>> = (
+export const Simple: StoryFn<ComponentPropsWithoutRef<typeof NumberPicker>> = (
   args
 ) => {
   return <NumberPicker {...args} />;

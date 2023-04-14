@@ -1,11 +1,11 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
 
 import InputGroup from '..';
 
-export const Simple: Story<ComponentPropsWithoutRef<typeof InputGroup>> = (
+export const Simple: StoryFn<ComponentPropsWithoutRef<typeof InputGroup>> = (
   args
 ) => {
   const [someText, setSomeText] = useState('');

@@ -1,9 +1,9 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import DateInput from '..';
 
-export const Help: Story<ComponentPropsWithoutRef<typeof DateInput>> = (
+export const Help: StoryFn<ComponentPropsWithoutRef<typeof DateInput>> = (
   args
 ) => {
   const [value, setValue] = useState('');
