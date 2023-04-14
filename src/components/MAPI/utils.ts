@@ -1122,6 +1122,7 @@ export function getProviderNodePoolSpotInstances(
           onDemandPercentageAboveBaseCapacity,
       };
     }
+
     case capzexpv1alpha3.AzureMachinePool:
     case capzv1beta1.AzureMachinePool: {
       try {
@@ -1147,6 +1148,21 @@ export function getProviderNodePoolSpotInstances(
           maxPrice: -1,
         };
       }
+    }
+
+    case capzv1beta1.AzureMachineTemplate: {
+      const maxPriceQty =
+        providerNodePool.spec?.template.spec.spotVMOptions?.maxPrice;
+      const maxPrice = maxPriceQty
+        ? metav1.quantityToScalar(maxPriceQty.toString())
+        : -1;
+
+      return {
+        enabled:
+          typeof providerNodePool.spec?.template.spec.spotVMOptions !==
+          'undefined',
+        maxPrice: maxPrice as number,
+      };
     }
 
     case infrav1alpha3.AWSMachineDeployment: {
