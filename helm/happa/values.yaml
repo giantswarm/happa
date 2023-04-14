@@ -34,6 +34,14 @@ capa:
     allowed: []
     default: ""
 
+capz:
+  availabilityZones: []
+  vm:
+    vmSize:
+      capabilities: {}
+      allowed: []
+      default: ""
+
 gcp:
   availabilityZones: []
   machinetypes:
