@@ -1003,3 +1003,146 @@ describe('OrganizationDetailGeneral on CAPA', () => {
     );
   });
 });
+
+describe('OrganizationDetailGeneral on CAPZ', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPZ;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
+
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForReleases as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForOrganizations as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
+  });
+
+  it('displays various stats about the resources that belong to the organization', async () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterListCAPZ);
+
+    // Control plane resources
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPZ1.metadata.name}%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplateListCP
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machines/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPZ1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3D`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterCAPZ1MachineList);
+
+    // Node pool resources
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinedeployments/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPZ1.metadata.name}%2Ccluster.x-k8s.io%2Frole%21%3Dbastion`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterCAPZ1MachineDeploymentList
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinetemplates/${capiv1beta1Mocks.randomClusterCAPZ1MachineDeploymentList.items[0].metadata.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate
+      );
+
+    // k8s version resources
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPZ1.metadata.name}%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplateListCP
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machines/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPZ1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3D`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterCAPZ1MachineList);
+
+    render(
+      getComponent({
+        organizationName: 'org1',
+        organizationNamespace: 'org-org1',
+      })
+    );
+
+    // Clusters summary.
+    await waitFor(() =>
+      expect(screen.getByLabelText('Workload clusters')).toHaveTextContent('2')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Control plane nodes')).toHaveTextContent(
+        '1'
+      )
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Worker nodes')).toHaveTextContent('3')
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByLabelText('Memory in control plane nodes')
+      ).toHaveTextContent('16 GB')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
+        '49 GB'
+      )
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByLabelText('CPU in control plane nodes')
+      ).toHaveTextContent('4')
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('CPU in worker nodes')).toHaveTextContent(
+        '12'
+      )
+    );
+
+    // Releases.
+    expect(screen.queryByText('Releases')).not.toBeInTheDocument();
+
+    // Versions.
+    await waitFor(() =>
+      expect(screen.getByText('Versions')).toBeInTheDocument()
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Cluster app version')).toHaveTextContent(
+        '0.0.15'
+      )
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText('Kubernetes version')).toHaveTextContent(
+        '1.24'
+      )
+    );
+    // eslint-disable-next-line no-magic-numbers
+  }, 20000);
+});

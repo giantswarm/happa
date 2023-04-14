@@ -930,7 +930,7 @@ export function getClusterConditions(
   const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capzv1beta1.AzureCluster:
+    case kind === capzv1beta1.AzureCluster && !hasClusterAppLabel(cluster):
       statuses.isConditionUnknown =
         typeof cluster.status === 'undefined' ||
         typeof cluster.status.conditions === 'undefined';

@@ -601,6 +601,133 @@ describe('ClusterDetailWidgetWorkerNodes on CAPA', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
+      await screen.findAllByLabelText('GB RAM not available')
+    ).not.toHaveLength(0);
+  });
+});
+
+describe('ClusterDetailWidgetWorkerNodes on CAPZ', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPZ;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
+  });
+
+  it('displays stats about node pools', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinedeployments/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPZ1.metadata.name}%2Ccluster.x-k8s.io%2Frole%21%3Dbastion`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterCAPZ1MachineDeploymentList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinetemplates/${capiv1beta1Mocks.randomClusterCAPZ1MachineDeploymentList.items[0].spec?.template.spec.infrastructureRef.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate
+      );
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPZ1,
+      })
+    );
+
+    expect(await screen.findByLabelText('1 node pool')).toBeInTheDocument();
+    expect(await screen.findByLabelText('3 nodes')).toBeInTheDocument();
+    expect(await screen.findByLabelText('12 CPUs')).toBeInTheDocument();
+    expect(await screen.findByLabelText('49 GB RAM')).toBeInTheDocument();
+  });
+
+  it('only displays a part of the stats if provider-specific resources fail to load', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinedeployments/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPZ1.metadata.name}%2Ccluster.x-k8s.io%2Frole%21%3Dbastion`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterCAPZ1MachineDeploymentList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinetemplates/${capiv1beta1Mocks.randomClusterCAPZ1MachineDeploymentList.items[0].spec?.template.spec.infrastructureRef.name}/`
+      )
+      .reply(StatusCodes.NotFound, {});
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPZ1,
+      })
+    );
+
+    expect(await screen.findByLabelText('1 node pool')).toBeInTheDocument();
+    expect(await screen.findByLabelText('3 nodes')).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText('CPUs not available')
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText('GB RAM not available')
+    ).toBeInTheDocument();
+  });
+
+  it('only displays a part of the stats if one of the machine types is unknown', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinedeployments/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPZ1.metadata.name}%2Ccluster.x-k8s.io%2Frole%21%3Dbastion`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capiv1beta1Mocks.randomClusterCAPZ1MachineDeploymentList
+      );
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinetemplates/${capiv1beta1Mocks.randomClusterCAPZ1MachineDeploymentList.items[0].spec?.template.spec.infrastructureRef.name}/`
+      )
+      .reply(StatusCodes.Ok, {
+        ...capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate,
+        spec: {
+          ...capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate.spec,
+          template: {
+            ...capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate.spec!
+              .template,
+            spec: {
+              ...capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate.spec!
+                .template.spec,
+              vmSize: 'nonexistent size',
+            },
+          },
+        },
+      });
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPZ1,
+      })
+    );
+
+    expect(await screen.findByLabelText('1 node pool')).toBeInTheDocument();
+    expect(await screen.findByLabelText('3 nodes')).toBeInTheDocument();
+    expect(
+      await screen.findByLabelText('CPUs not available')
+    ).toBeInTheDocument();
+    expect(
       await screen.findByLabelText('GB RAM not available')
     ).toBeInTheDocument();
   });
