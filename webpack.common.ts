@@ -91,7 +91,7 @@ const config: webpack.Configuration = {
     ],
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.*', '.js', '.jsx', '.ts', '.tsx'],
     modules: [
       'node_modules',
       path.resolve(`${__dirname}/src`),
@@ -100,6 +100,7 @@ const config: webpack.Configuration = {
     fallback: {
       fs: false,
       path: false,
+      querystring: false,
     },
     symlinks: false,
     cacheWithContext: false,
