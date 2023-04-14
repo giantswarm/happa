@@ -1297,7 +1297,7 @@ export function getNodePoolAvailabilityZones(
       );
     }
 
-    // GCP
+    // CAPZ, GCP
     case kind === capiv1beta1.MachineDeployment: {
       const zone = nodePool.spec?.template.spec?.failureDomain;
 
