@@ -142,7 +142,7 @@ export interface IFormContext extends IFormState {
   idConfigs: IIdConfigs;
 }
 
-interface IJSONSchemaFormProps extends Omit<FormProps, 'onChange'> {
+interface IJSONSchemaFormProps extends Omit<FormProps<RJSFSchema>, 'onChange'> {
   fieldsToRemove?: string[];
   onChange: (data: RJSFSchema, cleanData: RJSFSchema) => void;
 }
@@ -196,7 +196,7 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
 
   const [preprocessedSchema, defaultValues] = useMemo(() => {
     const patchedSchema = preprocessSchema(cloneDeep(schema), fieldsToRemove);
-    const defaults: RJSFSchema = getDefaultFormState(
+    const defaults = getDefaultFormState(
       validator,
       patchedSchema,
       {},

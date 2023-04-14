@@ -45,7 +45,7 @@ export function getProviderForPrototypeSchema(
 }
 
 interface FormPropsPartial {
-  uiSchema: UiSchema;
+  uiSchema: UiSchema<RJSFSchema>;
   formData: (clusterName: string, organization: string) => RJSFSchema;
 }
 
