@@ -28,6 +28,7 @@ function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
   switch (providerNodePool?.kind) {
     case capzexpv1alpha3.AzureMachinePool:
     case capzv1beta1.AzureMachinePool:
+    case capzv1beta1.AzureMachineTemplate:
       return `VM size: ${machineTypes?.primary ?? 'n/a'}`;
 
     case capav1beta1.AWSMachinePool:

@@ -140,6 +140,7 @@ function formatMachineTypeColumnTitle(
     case Providers.GCP:
       return 'Instance type';
     case Providers.AZURE:
+    case Providers.CAPZ:
       return 'VM Size';
     default:
       return 'Machine type';
