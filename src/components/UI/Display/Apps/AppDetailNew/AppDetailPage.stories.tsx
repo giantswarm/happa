@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 
@@ -15,7 +15,7 @@ export default {
   },
 } as Meta;
 
-const Template: Story<IAppDetailPageProps> = (args) => (
+const Template: StoryFn<IAppDetailPageProps> = (args) => (
   <AppDetailPage {...args} />
 );
 

@@ -1,11 +1,11 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import format from 'date-fns/fp/format';
 import parseISO from 'date-fns/fp/parseISO';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import DateInput from '..';
 
-export const Button: Story<ComponentPropsWithoutRef<typeof DateInput>> = (
+export const Button: StoryFn<ComponentPropsWithoutRef<typeof DateInput>> = (
   args
 ) => {
   const [value, setValue] = useState('');

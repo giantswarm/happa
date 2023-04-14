@@ -25,6 +25,9 @@ data:
     {{- if eq .Values.managementCluster.provider.kind "capa" }}
     aws-capabilities-json: '{{ .Values.capa.instance.capabilities | toJson }}'
     {{- end }}
+    {{- if eq .Values.managementCluster.provider.kind "capz" }}
+    azure-capabilities-json: '{{ .Values.capz.vm.vmSize.capabilities | toJson }}'
+    {{- end }}
     {{- if eq .Values.managementCluster.provider.kind "gcp" }}
     gcp-capabilities-json: '{{ .Values.gcp.machinetypes.capabilities | toJson }}'
     {{- end }}

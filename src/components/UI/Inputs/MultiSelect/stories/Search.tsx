@@ -1,9 +1,9 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import MultiSelect from '..';
 
-export const Search: Story<ComponentPropsWithoutRef<typeof MultiSelect>> = (
+export const Search: StoryFn<ComponentPropsWithoutRef<typeof MultiSelect>> = (
   args
 ) => {
   const initialOptions = args.options;

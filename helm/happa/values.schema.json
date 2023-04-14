@@ -89,6 +89,33 @@
                 }
             }
         },
+        "capz": {
+            "type": "object",
+            "properties": {
+                "availabilityZones": {
+                    "type": "array"
+                },
+                "vm": {
+                    "type": "object",
+                    "properties": {
+                        "vmSize": {
+                            "type": "object",
+                            "properties": {
+                                "allowed": {
+                                    "type": "array"
+                                },
+                                "capabilities": {
+                                    "type": "object"
+                                },
+                                "default": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "gcp": {
             "type": "object",
             "properties": {

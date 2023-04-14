@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
 
 import ExpiryHoursPicker, {
@@ -10,7 +10,7 @@ export default {
   component: ExpiryHoursPicker,
 } as Meta;
 
-const Template: Story<IExpiryHoursPickerProps> = (args) => (
+const Template: StoryFn<IExpiryHoursPickerProps> = (args) => (
   <ExpiryHoursPicker {...args} />
 );
 

@@ -4,19 +4,25 @@ import path from 'path';
 process.env.DEBUG_PRINT_LIMIT = '10000';
 const esModules = [
   'bail',
+  'ccount',
+  'comma-separated-tokens',
   'decode-named-character-reference',
   'hast-util-whitespace',
+  'ip-regex',
   'is-plain-obj',
   'markdown-table',
   'mdast-util',
   'micromark',
+  'nanoid',
+  'property-information',
   'react-markdown',
   'remark',
+  'space-separated-tokens',
   'trough',
   'unified',
   'unist-util',
-  'ip-regex',
-  'nanoid',
+  'unist-builder',
+  'vfile',
 ].join('|');
 
 const config: Config.InitialOptions = {
