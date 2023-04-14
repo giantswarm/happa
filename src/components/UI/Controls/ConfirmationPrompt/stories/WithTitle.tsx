@@ -1,11 +1,11 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import { Box, Text } from 'grommet';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 import Button from 'UI/Controls/Button';
 
 import ConfirmationPrompt from '..';
 
-export const WithTitle: Story<
+export const WithTitle: StoryFn<
   ComponentPropsWithoutRef<typeof ConfirmationPrompt>
 > = (args) => {
   const [open, setIsOpen] = useState(false);

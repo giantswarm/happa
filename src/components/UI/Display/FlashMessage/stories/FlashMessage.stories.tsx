@@ -1,10 +1,10 @@
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { Meta, StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef } from 'react';
 import { FlashMessageType } from 'styles';
 
 import FlashMessage from '..';
 
-const Template: Story<ComponentPropsWithoutRef<typeof FlashMessage>> = (
+const Template: StoryFn<ComponentPropsWithoutRef<typeof FlashMessage>> = (
   args
 ) => <FlashMessage {...args}>Here is some text</FlashMessage>;
 

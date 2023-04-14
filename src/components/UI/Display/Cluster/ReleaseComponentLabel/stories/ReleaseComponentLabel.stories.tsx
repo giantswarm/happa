@@ -1,9 +1,9 @@
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { Meta, StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef } from 'react';
 
 import ReleaseComponentLabel from '..';
 
-const Template: Story<
+const Template: StoryFn<
   ComponentPropsWithoutRef<typeof ReleaseComponentLabel>
 > = (args) => <ReleaseComponentLabel name={args.name} {...args} />;
 

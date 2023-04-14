@@ -1,9 +1,9 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import TextArea from '..';
 
-export const Disabled: Story<ComponentPropsWithoutRef<typeof TextArea>> = (
+export const Disabled: StoryFn<ComponentPropsWithoutRef<typeof TextArea>> = (
   args
 ) => {
   const [value, setValue] = useState(args.value);

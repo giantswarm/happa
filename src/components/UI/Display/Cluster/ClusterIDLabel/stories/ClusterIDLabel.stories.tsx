@@ -1,9 +1,9 @@
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { Meta, StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef } from 'react';
 
 import ClusterIDLabel, { ClusterIDLabelType } from '..';
 
-const Template: Story<ComponentPropsWithoutRef<typeof ClusterIDLabel>> = (
+const Template: StoryFn<ComponentPropsWithoutRef<typeof ClusterIDLabel>> = (
   args
 ) => (
   <ClusterIDLabel

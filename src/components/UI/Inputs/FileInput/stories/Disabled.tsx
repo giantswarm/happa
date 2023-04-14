@@ -1,9 +1,9 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import FileInput from '..';
 
-export const Disabled: Story<ComponentPropsWithoutRef<typeof FileInput>> = (
+export const Disabled: StoryFn<ComponentPropsWithoutRef<typeof FileInput>> = (
   args
 ) => {
   const [value, setValue] = useState<FileList | null>(null);

@@ -1,9 +1,9 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import CurrencyInput from '..';
 
-export const Simple: Story<ComponentPropsWithoutRef<typeof CurrencyInput>> = (
+export const Simple: StoryFn<ComponentPropsWithoutRef<typeof CurrencyInput>> = (
   args
 ) => {
   const [value, setValue] = useState(args.value);

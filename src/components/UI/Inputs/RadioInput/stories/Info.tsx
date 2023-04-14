@@ -1,9 +1,9 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import RadioInput from '..';
 
-export const Info: Story<ComponentPropsWithoutRef<typeof RadioInput>> = (
+export const Info: StoryFn<ComponentPropsWithoutRef<typeof RadioInput>> = (
   args
 ) => {
   const [value, setValue] = useState('');

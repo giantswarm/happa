@@ -1,9 +1,9 @@
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { Meta, StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef } from 'react';
 
 import NotAvailable from '..';
 
-const Template: Story<ComponentPropsWithoutRef<typeof NotAvailable>> = (
+const Template: StoryFn<ComponentPropsWithoutRef<typeof NotAvailable>> = (
   args
 ) => <NotAvailable {...args} />;
 

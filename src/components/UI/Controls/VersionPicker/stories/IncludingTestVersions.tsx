@@ -1,10 +1,10 @@
 import { action } from '@storybook/addon-actions';
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef } from 'react';
 
 import VersionPicker from '../VersionPicker';
 
-export const IncludingTestVersions: Story<
+export const IncludingTestVersions: StoryFn<
   ComponentPropsWithoutRef<typeof VersionPicker>
 > = (args) => {
   return (
