@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import sub from 'date-fns/fp/sub';
 import { createMemoryHistory } from 'history';
-import { Providers, StatusCodes } from 'model/constants';
+import { ProviderFlavors, Providers, StatusCodes } from 'model/constants';
 import { Constants } from 'model/constants';
 import * as metav1 from 'model/services/mapi/metav1';
 import nock from 'nock';
@@ -977,6 +977,111 @@ describe('WorkerNodesNodePoolItem on CAPA', () => {
     expect(screen.getByText('On-demand base capacity: 0')).toBeInTheDocument();
     expect(
       screen.getByText('Spot instance percentage: 50')
+    ).toBeInTheDocument();
+  });
+});
+
+describe('WorkerNodesNodePoolItem on CAPZ', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPZ;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
+  });
+
+  it('displays various information about the node pool', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPZ1MachineDeployment1,
+        providerNodePool:
+          capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate,
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomCluster1
+        ),
+      })
+    );
+
+    expect(screen.getByLabelText('Name: test12-md00')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Description: test12-md00')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('VM size: Standard_D4s_v3')
+    ).toBeInTheDocument();
+
+    expect(screen.getByLabelText('Availability zones: 1')).toBeInTheDocument();
+  });
+
+  it('displays the autoscaler configuration', () => {
+    render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPZ1MachineDeployment1,
+        providerNodePool:
+          capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate,
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomCluster1
+        ),
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Autoscaler target node count: 3')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Autoscaler current node count: 3')
+    ).toBeInTheDocument();
+  });
+
+  it('displays if spot instances are used', () => {
+    const { rerender } = render(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPZ1MachineDeployment1,
+        providerNodePool:
+          capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate,
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomCluster1
+        ),
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Spot virtual machines disabled')
+    ).toBeInTheDocument();
+
+    rerender(
+      getComponent({
+        nodePool: capiv1beta1Mocks.randomClusterCAPZ1MachineDeployment1,
+        providerNodePool: {
+          ...capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate,
+          spec: {
+            ...capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate.spec!,
+            template: {
+              ...capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate.spec!
+                .template,
+              spec: {
+                ...capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate.spec!
+                  .template.spec,
+                spotVMOptions: {
+                  maxPrice: '2',
+                },
+              },
+            },
+          },
+        },
+        additionalColumns: getAdditionalColumns(
+          capiv1beta1Mocks.randomCluster1
+        ),
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Spot virtual machines enabled')
     ).toBeInTheDocument();
   });
 });

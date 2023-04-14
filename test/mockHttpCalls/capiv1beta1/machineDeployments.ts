@@ -395,6 +395,7 @@ export const randomClusterCAPZ1MachineDeployment1: capiv1beta1.IMachineDeploymen
             name: 'test12-md00',
           },
           version: 'v1.24.11',
+          failureDomain: '1',
         },
       },
     },

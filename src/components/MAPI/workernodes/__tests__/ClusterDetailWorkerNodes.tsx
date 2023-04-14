@@ -481,6 +481,63 @@ describe('ClusterDetailWorkerNodes on CAPA', () => {
   });
 });
 
+describe('ClusterDetailWorkerNodes on CAPZ', () => {
+  beforeAll(() => {
+    (usePermissionsForNodePools as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+    (usePermissionsForClusters as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+
+  beforeEach(() => {
+    useParamsMockFn.mockReturnValue({
+      orgId: 'org1',
+      clusterId: mockCapiv1beta1.randomClusterCAPZ1.metadata.name,
+    });
+  });
+
+  afterEach(() => {
+    useParamsMockFn.mockRestore();
+  });
+
+  it('displays a list of node pools', async () => {
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${mockCapiv1beta1.randomClusterCAPZ1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, mockCapiv1beta1.randomClusterCAPZ1);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinedeployments/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${mockCapiv1beta1.randomClusterCAPZ1.metadata.name}%2Ccluster.x-k8s.io%2Frole%21%3Dbastion`
+      )
+      .reply(
+        StatusCodes.Ok,
+        mockCapiv1beta1.randomClusterCAPZ1MachineDeploymentList
+      );
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinetemplates/${mockCapiv1beta1.randomClusterCAPZ1MachineDeploymentList.items[0].spec?.template.spec.infrastructureRef.name}/`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate
+      );
+
+    render(getComponent({}));
+
+    expect(
+      await screen.findByLabelText(
+        `Name: ${mockCapiv1beta1.randomClusterCAPZ1MachineDeploymentList.items[0].metadata.name}`
+      )
+    ).toBeInTheDocument();
+  });
+});
+
 describe('ClusterDetailWorkerNodes on GCP', () => {
   beforeAll(() => {
     (usePermissionsForNodePools as jest.Mock).mockReturnValue(
