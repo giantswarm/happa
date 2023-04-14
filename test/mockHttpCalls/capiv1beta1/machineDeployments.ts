@@ -313,3 +313,120 @@ export const randomClusterGCP1MachineDeploymentList: capiv1beta1.IMachineDeploym
     },
     items: [randomClusterGCP1MachineDeployment1],
   };
+
+// MachineDeployment1 for randomClusterCAPZ1
+export const randomClusterCAPZ1MachineDeployment1: capiv1beta1.IMachineDeployment =
+  {
+    apiVersion: 'cluster.x-k8s.io/v1beta1',
+    kind: 'MachineDeployment',
+    metadata: {
+      annotations: {
+        'machine-deployment.giantswarm.io/name': 'test12-md00',
+        'machinedeployment.clusters.x-k8s.io/revision': '4',
+        'meta.helm.sh/release-name': 'test12',
+        'meta.helm.sh/release-namespace': 'org-org1',
+      },
+      creationTimestamp: '2023-02-21T15:28:56Z',
+      generation: 7,
+      labels: {
+        app: 'cluster-azure',
+        'app.kubernetes.io/managed-by': 'Helm',
+        'app.kubernetes.io/version': '',
+        'application.giantswarm.io/team': 'team',
+        'cluster.x-k8s.io/cluster-name': 'test12',
+        'giantswarm.io/cluster': 'test12',
+        'giantswarm.io/machine-deployment': 'test12-md00',
+        'giantswarm.io/organization': 'org1',
+        'helm.sh/chart': 'cluster-azure-0.0.15',
+      },
+      name: 'test12-md00',
+      namespace: 'org-org1',
+      ownerReferences: [
+        {
+          apiVersion: 'cluster.x-k8s.io/v1beta1',
+          kind: 'Cluster',
+          name: 'test12',
+          uid: '',
+        },
+      ],
+      resourceVersion: '',
+      uid: '',
+    },
+    spec: {
+      clusterName: 'test12',
+      minReadySeconds: 0,
+      progressDeadlineSeconds: 600,
+      replicas: 3,
+      revisionHistoryLimit: 1,
+      strategy: {
+        rollingUpdate: {
+          maxSurge: 1,
+          maxUnavailable: 0,
+        },
+        type: 'RollingUpdate',
+      },
+      template: {
+        metadata: {
+          name: '',
+          labels: {
+            app: 'cluster-azure',
+            'app.kubernetes.io/managed-by': 'Helm',
+            'app.kubernetes.io/version': '',
+            'application.giantswarm.io/team': 'team',
+            'cluster.x-k8s.io/cluster-name': 'test12',
+            'cluster.x-k8s.io/deployment-name': 'test12-md00',
+            'giantswarm.io/cluster': 'test12',
+            'giantswarm.io/organization': 'org1',
+            'helm.sh/chart': 'cluster-azure-0.0.15',
+          },
+        },
+        spec: {
+          bootstrap: {
+            configRef: {
+              apiVersion: 'bootstrap.cluster.x-k8s.io/v1beta1',
+              kind: 'KubeadmConfigTemplate',
+              name: 'test12-md00',
+            },
+          },
+          clusterName: 'test12',
+          infrastructureRef: {
+            apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+            kind: 'AzureMachineTemplate',
+            name: 'test12-md00',
+          },
+          version: 'v1.24.11',
+        },
+      },
+    },
+    status: {
+      availableReplicas: 3,
+      conditions: [
+        {
+          lastTransitionTime: '2023-03-18T10:24:11Z',
+          status: 'True',
+          type: 'Ready',
+        },
+        {
+          lastTransitionTime: '2023-03-18T10:24:11Z',
+          status: 'True',
+          type: 'Available',
+        },
+      ],
+      observedGeneration: 7,
+      phase: 'Running',
+      readyReplicas: 3,
+      replicas: 3,
+      selector: '',
+      unavailableReplicas: 0,
+      updatedReplicas: 3,
+    },
+  };
+
+// MahcineDeploymentList for randomClusterCAPZ1
+export const randomClusterCAPZ1MachineDeploymentList: capiv1beta1.IMachineDeploymentList =
+  {
+    apiVersion: 'cluster.x-k8s.io/v1beta1',
+    kind: 'MachineDeploymentList',
+    items: [randomClusterCAPZ1MachineDeployment1],
+    metadata: {},
+  };

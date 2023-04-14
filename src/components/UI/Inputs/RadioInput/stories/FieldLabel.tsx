@@ -1,11 +1,11 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import RadioInput from '..';
 
-export const FieldLabel: Story<ComponentPropsWithoutRef<typeof RadioInput>> = (
-  args
-) => {
+export const FieldLabel: StoryFn<
+  ComponentPropsWithoutRef<typeof RadioInput>
+> = (args) => {
   const [value, setValue] = useState('');
 
   return (

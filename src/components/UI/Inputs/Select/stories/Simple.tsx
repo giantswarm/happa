@@ -1,9 +1,9 @@
-import { Story } from '@storybook/react/types-6-0';
+import { StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef, useState } from 'react';
 
 import Select from '..';
 
-export const Simple: Story<ComponentPropsWithoutRef<typeof Select>> = (
+export const Simple: StoryFn<ComponentPropsWithoutRef<typeof Select>> = (
   args
 ) => {
   const [value, setValue] = useState(args.value);

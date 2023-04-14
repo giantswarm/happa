@@ -1,9 +1,9 @@
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { Meta, StoryFn } from '@storybook/react';
 import React, { ComponentPropsWithoutRef } from 'react';
 
 import ComponentChangelog from '..';
 
-const Template: Story<ComponentPropsWithoutRef<typeof ComponentChangelog>> = (
+const Template: StoryFn<ComponentPropsWithoutRef<typeof ComponentChangelog>> = (
   args
 ) => <ComponentChangelog name={args.name} changes={args.changes} />;
 

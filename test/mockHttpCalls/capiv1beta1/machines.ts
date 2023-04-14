@@ -915,3 +915,124 @@ export const randomClusterCAPA1MachineList: capiv1beta1.IMachineList = {
     },
   ],
 };
+
+// MachineList for randomClusterCAPZ1's control plane
+export const randomClusterCAPZ1MachineList: capiv1beta1.IMachineList = {
+  kind: 'MachineList',
+  metadata: {
+    resourceVersion: '',
+  },
+  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  items: [
+    {
+      apiVersion: 'cluster.x-k8s.io/v1beta1',
+      kind: 'Machine',
+      metadata: {
+        creationTimestamp: '2023-03-15T12:57:15Z',
+        finalizers: [],
+        generation: 3,
+        labels: {
+          app: 'cluster-azure',
+          'app.kubernetes.io/managed-by': 'Helm',
+          'app.kubernetes.io/version': '',
+          'application.giantswarm.io/team': 'team',
+          'cluster.x-k8s.io/cluster-name': 'test12',
+          'cluster.x-k8s.io/control-plane': '',
+          'cluster.x-k8s.io/control-plane-name': 'test12',
+          'giantswarm.io/cluster': 'test12',
+          'giantswarm.io/organization': 'org1',
+          'helm.sh/chart': 'cluster-azure-0.0.15',
+        },
+        name: 'test12-test12',
+        namespace: 'org-org1',
+        ownerReferences: [
+          {
+            apiVersion: 'controlplane.cluster.x-k8s.io/v1beta1',
+            blockOwnerDeletion: true,
+            controller: true,
+            kind: 'KubeadmControlPlane',
+            name: 'test12',
+            uid: '',
+          },
+        ],
+        resourceVersion: '',
+        uid: '',
+      },
+      spec: {
+        bootstrap: {
+          configRef: {
+            apiVersion: 'bootstrap.cluster.x-k8s.io/v1beta1',
+            kind: 'KubeadmConfig',
+            name: 'test12-asdf2',
+            namespace: 'org-org1',
+            uid: '',
+          },
+        },
+        clusterName: 'test12',
+        failureDomain: '1',
+        infrastructureRef: {
+          apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+          kind: 'AzureMachine',
+          name: 'test12-control-plane-test12',
+          namespace: 'org-org1',
+          uid: '',
+        },
+        providerID: '',
+        version: 'v1.24.11',
+      },
+      status: {
+        bootstrapReady: true,
+        conditions: [
+          {
+            lastTransitionTime: '2023-04-04T02:57:59Z',
+            status: 'True',
+            type: 'Ready',
+          },
+          {
+            lastTransitionTime: '2023-03-13T14:11:04Z',
+            status: 'True',
+            type: 'APIServerPodHealthy',
+          },
+          {
+            lastTransitionTime: '2023-03-13T13:57:41Z',
+            status: 'True',
+            type: 'BootstrapReady',
+          },
+          {
+            lastTransitionTime: '2023-03-13T14:11:04Z',
+            status: 'True',
+            type: 'ControllerManagerPodHealthy',
+          },
+          {
+            lastTransitionTime: '2023-03-13T14:08:15Z',
+            status: 'True',
+            type: 'EtcdMemberHealthy',
+          },
+          {
+            lastTransitionTime: '2023-03-13T14:11:17Z',
+            status: 'True',
+            type: 'EtcdPodHealthy',
+          },
+          {
+            lastTransitionTime: '2023-04-04T02:57:59Z',
+            status: 'True',
+            type: 'InfrastructureReady',
+          },
+          {
+            lastTransitionTime: '2023-03-13T14:10:47Z',
+            status: 'True',
+            type: 'NodeHealthy',
+          },
+          {
+            lastTransitionTime: '2023-03-13T14:11:17Z',
+            status: 'True',
+            type: 'SchedulerPodHealthy',
+          },
+        ],
+        infrastructureReady: true,
+        observedGeneration: 3,
+        phase: 'Running',
+      },
+    },
+  ],
+};
