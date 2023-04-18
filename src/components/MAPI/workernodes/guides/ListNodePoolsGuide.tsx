@@ -14,6 +14,7 @@ function getProviderNodePoolResourceName(
 ) {
   switch (provider) {
     case Providers.AWS:
+    case Providers.CAPZ:
     case Providers.GCP:
       return 'MachineDeployment';
     default:
@@ -71,7 +72,7 @@ const ListNodePoolsGuide: React.FC<
                 get machinepools.cluster.x-k8s.io \\
                 --selector cluster.x-k8s.io/cluster-name=${clusterName} \\
                 --namespace ${clusterNamespace}`
-              : provider === Providers.GCP
+              : provider === Providers.CAPZ || provider === Providers.GCP
               ? `
               kubectl --context ${context} \\
                 get machinedeployments.cluster.x-k8s.io \\

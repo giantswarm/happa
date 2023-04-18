@@ -1122,6 +1122,7 @@ export function getProviderNodePoolSpotInstances(
           onDemandPercentageAboveBaseCapacity,
       };
     }
+
     case capzexpv1alpha3.AzureMachinePool:
     case capzv1beta1.AzureMachinePool: {
       try {
@@ -1147,6 +1148,21 @@ export function getProviderNodePoolSpotInstances(
           maxPrice: -1,
         };
       }
+    }
+
+    case capzv1beta1.AzureMachineTemplate: {
+      const maxPriceQty =
+        providerNodePool.spec?.template.spec.spotVMOptions?.maxPrice;
+      const maxPrice = maxPriceQty
+        ? metav1.quantityToScalar(maxPriceQty.toString())
+        : -1;
+
+      return {
+        enabled:
+          typeof providerNodePool.spec?.template.spec.spotVMOptions !==
+          'undefined',
+        maxPrice: maxPrice as number,
+      };
     }
 
     case infrav1alpha3.AWSMachineDeployment: {
@@ -1243,7 +1259,7 @@ export function getNodePoolScaling(
       return status;
     }
 
-    // GCP
+    // CAPZ, GCP
     case kind === capiv1beta1.MachineDeployment:
       return status;
 
@@ -1281,7 +1297,7 @@ export function getNodePoolAvailabilityZones(
       );
     }
 
-    // GCP
+    // CAPZ, GCP
     case kind === capiv1beta1.MachineDeployment: {
       const zone = nodePool.spec?.template.spec?.failureDomain;
 
@@ -1566,12 +1582,16 @@ function isCAPGCluster(cluster: Cluster): boolean {
   return cluster.spec?.infrastructureRef?.kind === capgv1beta1.GCPCluster;
 }
 
+function isCAPZCluster(cluster: Cluster): boolean {
+  return cluster.spec?.infrastructureRef?.kind === capzv1beta1.AzureCluster;
+}
+
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
   return isCAPZAlphaCluster(cluster) || hasClusterAppLabel(cluster);
 }
 
 export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {
-  return !isCAPGCluster(cluster);
+  return !(isCAPGCluster(cluster) || isCAPZCluster(cluster));
 }
 
 export function supportsNonExpMachinePools(cluster: Cluster): boolean {
