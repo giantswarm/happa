@@ -93,6 +93,11 @@ data:
           options: '{{ .Values.capa.instance.allowed | join " " }}'
           default: '{{ .Values.capa.instance.default }}'
         {{- end }}
+        {{- if eq .Values.managementCluster.provider.kind "capz" }}
+        vmSize:
+          options: '{{ .Values.capz.vm.vmSize.allowed | join " " }}'
+          default: '{{ .Values.capz.vm.vmSize.default }}'
+        {{- end }}
         {{- if eq .Values.managementCluster.provider.kind "gcp" }}
         instanceType:
           options: '{{ .Values.gcp.machinetypes.allowed | join " " }}'
