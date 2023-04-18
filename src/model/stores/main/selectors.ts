@@ -29,6 +29,7 @@ export function getAllowedInstanceTypeNames(): string[] {
     case Providers.GCP:
       return window.config.info.workers.instanceType.options;
     case Providers.AZURE:
+    case Providers.CAPZ:
       return window.config.info.workers.vmSize.options;
     default:
       return [];

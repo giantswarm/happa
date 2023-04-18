@@ -19,6 +19,7 @@ export function useInstanceTypeSelectionLabels(): {
           plural: 'Instance types',
         };
       case Providers.AZURE:
+      case Providers.CAPZ:
         return {
           singular: 'VM size',
           plural: 'VM sizes',
@@ -60,6 +61,7 @@ function useNormalizedCapabilities(): Record<string, IInstanceType> {
         break;
 
       case Providers.AZURE:
+      case Providers.CAPZ:
         rawCaps = JSON.parse(window.config.azureCapabilitiesJSON);
         for (const [instanceType, instanceProperties] of Object.entries(
           rawCaps as Record<string, IRawAzureInstanceType>
