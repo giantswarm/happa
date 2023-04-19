@@ -36,9 +36,6 @@ export function getProviderForPrototypeSchema(
     case Providers.CLOUDDIRECTOR:
     case Providers.VSPHERE:
       return undefined;
-    // TODO: Remove Providers.CAPZ mapping when support is implemented
-    case Providers.CAPZ:
-      return Providers.AZURE;
     default:
       return schema;
   }
