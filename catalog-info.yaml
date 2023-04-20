@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: Web UI (happa)
+  annotations:
+    github.com/project-slug: giantswarm/happa
+spec:
+  type: other
+  lifecycle: unknown
