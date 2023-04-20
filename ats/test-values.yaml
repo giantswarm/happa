@@ -50,8 +50,6 @@ guestCluster:
   base: ""
 
 kubernetes:
-  auth:
-    controlPlaneAdminTargetGroup: ""
   versions: {}
 
 happa:
