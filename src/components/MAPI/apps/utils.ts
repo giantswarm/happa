@@ -720,7 +720,11 @@ export function createIngressApp(
     appsNamespace,
     isClusterApp,
     {
-      name: ingressAppCatalogEntry.spec.appName,
+      name: generateAppResourceName(
+        ingressAppCatalogEntry.spec.appName,
+        clusterID,
+        isClusterApp
+      ),
       catalogName: ingressAppCatalogEntry.spec.catalog.name,
       chartName: ingressAppCatalogEntry.spec.appName,
       version: ingressAppCatalogEntry.spec.version,
