@@ -224,14 +224,6 @@
         "kubernetes": {
             "type": "object",
             "properties": {
-                "auth": {
-                    "type": "object",
-                    "properties": {
-                        "controlPlaneAdminTargetGroup": {
-                            "type": "string"
-                        }
-                    }
-                },
                 "versions": {
                     "type": "object"
                 }
