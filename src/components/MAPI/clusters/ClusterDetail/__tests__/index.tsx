@@ -488,6 +488,61 @@ describe('ClusterDetail', () => {
     ).toBeInTheDocument();
   });
 
+  it('displays a warning when cluster creation is in progress on CAPZ', async () => {
+    const cluster = {
+      ...capiv1beta1Mocks.randomClusterCAPZ1,
+      status: {
+        ...capiv1beta1Mocks.randomClusterCAPZ1.status,
+        conditions: [
+          {
+            status: 'False',
+            type: 'ControlPlaneInitialized',
+            lastTransitionTime: '2023-03-28T00:00:00Z',
+          },
+        ],
+      },
+    };
+    const providerCluster = capzv1beta1Mocks.randomAzureClusterCAPZ1;
+
+    (useRouteMatch as jest.Mock).mockReturnValue(
+      getRouteMatch(cluster.metadata.name)
+    );
+
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/${securityv1alpha1Mocks.getOrganizationByName.status.namespace}/clusters/${cluster.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, cluster);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${
+          cluster.metadata.namespace
+        }/azureclusters/${cluster.spec!.infrastructureRef!.name}/`
+      )
+      .reply(StatusCodes.Ok, providerCluster);
+
+    render(getComponent({}));
+
+    if (screen.queryAllByText('Loading...').length > 0) {
+      await waitForElementToBeRemoved(() =>
+        screen.queryAllByText('Loading...')
+      );
+    }
+
+    const clusterStatus = screen.getByTestId('cluster-status');
+    expect(clusterStatus).toBeInTheDocument();
+    expect(
+      within(clusterStatus).getByText(
+        'The cluster is currently being created. This step usually takes about 15 minutes.'
+      )
+    ).toBeInTheDocument();
+  });
+
   it('does not display a warning when cluster upgrade in progress', async () => {
     nock(window.config.mapiEndpoint)
       .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
