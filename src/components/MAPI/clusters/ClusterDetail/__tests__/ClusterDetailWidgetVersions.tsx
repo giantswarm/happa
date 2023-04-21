@@ -184,3 +184,63 @@ describe('ClusterDetailWidgetVersions on CAPA', () => {
     );
   });
 });
+
+describe('ClusterDetailWidgetVersions on CAPZ', () => {
+  const provider = window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPZ;
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  it('displays the cluster app version', () => {
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPZ1,
+      })
+    );
+
+    expect(
+      screen.getByLabelText('Cluster app version: 0.0.15')
+    ).toBeInTheDocument();
+  });
+
+  it(`displays a link to the cluster app version's release notes`, () => {
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPZ1,
+      })
+    );
+
+    const releaseNotesLink = screen.getByLabelText(
+      'Cluster app version 0.0.15 release notes'
+    );
+    expect(releaseNotesLink).toBeInTheDocument();
+
+    expect(releaseNotesLink).toHaveAttribute(
+      'href',
+      'https://github.com/giantswarm/cluster-azure/releases/tag/v0.0.15'
+    );
+  });
+
+  it('displays the Kubernetes version of the control plane', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machines/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPZ1.metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3D`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterCAPZ1MachineList);
+
+    render(
+      getComponent({
+        cluster: capiv1beta1Mocks.randomClusterCAPZ1,
+      })
+    );
+
+    expect(
+      await screen.findByLabelText('Kubernetes version: 1.24.11')
+    ).toBeInTheDocument();
+  });
+});
