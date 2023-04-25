@@ -156,3 +156,35 @@ describe('ClusterDetailWidgetKubernetesAPI on CAPA', () => {
     ).toBeInTheDocument();
   });
 });
+
+describe('ClusterDetailWidgetKubernetesAPI on CAPZ', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
+  const audience = window.config.audience;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPZ;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
+    window.config.audience = 'https://api.test.gigantic.io';
+
+    (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
+      defaultPermissions
+    );
+  });
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
+    window.config.audience = audience;
+  });
+
+  it('displays the kubernetes API endpoint URL for the cluster', () => {
+    renderWithStore(ClusterDetailWidgetKubernetesAPI, {
+      cluster: capiv1beta1Mocks.randomClusterCAPZ1,
+    });
+
+    expect(
+      screen.getByText(`https://api.test12.gigantic.io:6443`)
+    ).toBeInTheDocument();
+  });
+});
