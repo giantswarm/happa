@@ -696,7 +696,7 @@ token: can't be blank`)
     });
   });
 
-  describe('traverseJSONSchemaObject', () => {
+  describe.only('traverseJSONSchemaObject', () => {
     it('performs specified action for an object', () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -706,6 +706,31 @@ token: can't be blank`)
       const expected = {
         type: 'object',
         title: 'OBJECT TITLE',
+      };
+
+      expect(
+        traverseJSONSchemaObject(
+          schema,
+          (obj) => (obj.title = obj.title?.toUpperCase())
+        )
+      ).toStrictEqual(expected);
+    });
+
+    it('performs specified action for object $defs', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          title: { type: 'object', title: 'object title' },
+        },
+        title: 'object title',
+        type: 'object',
+      };
+
+      const expected = {
+        $defs: {
+          title: { type: 'object', title: 'OBJECT TITLE' },
+        },
+        title: 'OBJECT TITLE',
+        type: 'object',
       };
 
       expect(
@@ -942,6 +967,135 @@ token: can't be blank`)
           (obj) => (obj.title = obj.title?.toUpperCase())
         )
       ).toStrictEqual(expected);
+    });
+
+    it('calls specified action with the correct subschema path', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          firstProp: { type: 'object' },
+        },
+        properties: {
+          firstProp: {
+            type: 'object',
+          },
+          secondProp: {
+            type: 'object',
+            properties: {
+              firstProp: {
+                type: 'object',
+              },
+            },
+          },
+          arrayProp: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                firstProp: {
+                  type: 'object',
+                },
+                secondProp: {
+                  type: 'object',
+                },
+              },
+            },
+          },
+          anyOfProp: {
+            anyOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'object',
+                properties: {
+                  firstProp: {
+                    type: 'object',
+                  },
+                  secondProp: {
+                    type: 'object',
+                  },
+                },
+              },
+            ],
+          },
+          oneOfProp: {
+            oneOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'object',
+                properties: {
+                  firstProp: {
+                    type: 'object',
+                  },
+                  secondProp: {
+                    type: 'object',
+                  },
+                },
+              },
+            ],
+          },
+          allOfProp: {
+            allOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'object',
+                properties: {
+                  firstProp: {
+                    type: 'object',
+                  },
+                  secondProp: {
+                    type: 'object',
+                  },
+                },
+              },
+            ],
+          },
+        },
+        type: 'object',
+      };
+
+      const callback = jest.fn();
+      const paths = [
+        '$defs.firstProp',
+        'properties.firstProp',
+        'properties.secondProp.properties.firstProp',
+        'properties.secondProp',
+        'properties.arrayProp.items.properties.firstProp',
+        'properties.arrayProp.items.properties.secondProp',
+        'properties.arrayProp.items',
+        'properties.arrayProp',
+        'properties.anyOfProp.anyOf[0]',
+        'properties.anyOfProp.anyOf[1].properties.firstProp',
+        'properties.anyOfProp.anyOf[1].properties.secondProp',
+        'properties.anyOfProp.anyOf[1]',
+        'properties.anyOfProp',
+        'properties.oneOfProp.oneOf[0]',
+        'properties.oneOfProp.oneOf[1].properties.firstProp',
+        'properties.oneOfProp.oneOf[1].properties.secondProp',
+        'properties.oneOfProp.oneOf[1]',
+        'properties.oneOfProp',
+        'properties.allOfProp.allOf[0]',
+        'properties.allOfProp.allOf[1].properties.firstProp',
+        'properties.allOfProp.allOf[1].properties.secondProp',
+        'properties.allOfProp.allOf[1]',
+        'properties.allOfProp',
+        '',
+      ];
+
+      traverseJSONSchemaObject(schema, callback);
+
+      expect(callback).toHaveBeenCalledTimes(paths.length);
+      for (const [idx, path] of paths.entries()) {
+        expect(callback).toHaveBeenNthCalledWith(
+          idx + 1,
+          expect.anything(),
+          path
+        );
+      }
     });
   });
 });

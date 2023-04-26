@@ -1,28 +1,12 @@
 import { RJSFSchema } from '@rjsf/utils';
+import omit from 'lodash/omit';
 import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
 
 export function preprocessSchema(
   schema: RJSFSchema,
-  fieldsToRemove: string[] = ['.internal']
+  fieldsToRemove: string[] = ['properties.internal']
 ): RJSFSchema {
-  const removeFields = ({
-    obj,
-    path,
-  }: {
-    obj: RJSFSchema;
-    path?: string | null;
-  }) => {
-    for (const field of fieldsToRemove) {
-      const fieldParentPath = field.slice(0, field.lastIndexOf('.'));
-      const fieldKey = field.slice(field.lastIndexOf('.') + 1);
-
-      if (fieldParentPath === path) {
-        delete obj.properties?.[fieldKey];
-      }
-    }
-
-    return { obj, path };
-  };
+  const patchedSchema = omit(schema, fieldsToRemove);
 
   const processSubschemas = ({
     obj,
@@ -52,7 +36,7 @@ export function preprocessSchema(
     return { obj, path };
   };
 
-  return traverseJSONSchemaObject(schema, (obj, path) =>
-    pipe({ obj, path }, removeFields, processSubschemas)
+  return traverseJSONSchemaObject(patchedSchema, (obj, path) =>
+    pipe({ obj, path }, processSubschemas)
   );
 }

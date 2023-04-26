@@ -28,8 +28,8 @@ describe('JSONSchemaForm:schemaUtils', () => {
 
       expect(
         preprocessSchema(createTestSchema() as RJSFSchema, [
-          '.arrayFields',
-          '.logic',
+          'properties.arrayFields',
+          'properties.logic',
         ])
       ).toStrictEqual(expected);
     });
@@ -55,9 +55,9 @@ describe('JSONSchemaForm:schemaUtils', () => {
 
       expect(
         preprocessSchema(createTestSchema() as RJSFSchema, [
-          '.arrayFields',
-          '.logic',
-          '.booleanFields.active',
+          'properties.arrayFields',
+          'properties.logic',
+          'properties.booleanFields.properties.active',
         ])
       ).toStrictEqual(expected);
     });
@@ -90,9 +90,9 @@ describe('JSONSchemaForm:schemaUtils', () => {
 
       expect(
         preprocessSchema(createTestSchema() as RJSFSchema, [
-          '.logic',
-          '.booleanFields',
-          '.arrayFields.arrayOfObjects.items.age',
+          'properties.logic',
+          'properties.booleanFields',
+          'properties.arrayFields.properties.arrayOfObjects.items.properties.age',
         ])
       ).toStrictEqual(expected);
     });
@@ -134,10 +134,10 @@ describe('JSONSchemaForm:schemaUtils', () => {
 
       expect(
         preprocessSchema(createTestSchema() as RJSFSchema, [
-          '.booleanFields',
-          '.arrayFields',
-          '.logic.not',
-          '.logic.oneOf',
+          'properties.booleanFields',
+          'properties.arrayFields',
+          'properties.logic.properties.not',
+          'properties.logic.properties.oneOf',
         ])
       ).toStrictEqual(expected);
     });
