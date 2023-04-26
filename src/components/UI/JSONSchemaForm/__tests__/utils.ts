@@ -103,6 +103,7 @@ describe('JSONSchemaForm:utils', () => {
     const cleanOptions = {
       emptyStrings: false,
       emptyArrays: false,
+      emptyObjects: false,
       cleanDefaultValues: true,
     };
 
@@ -413,6 +414,27 @@ describe('JSONSchemaForm:utils', () => {
       expect(cleanPayload(payload, { ...cleanOptions, defaultValues })).toEqual(
         expected
       );
+    });
+
+    it('implicitly uses empty object as default value for objects', () => {
+      const examples = [
+        {
+          defaultValues: {},
+          payload: { field: {} },
+          expected: {},
+        },
+        {
+          defaultValues: {},
+          payload: { field: { stringField: 'some string field' } },
+          expected: { field: { stringField: 'some string field' } },
+        },
+      ];
+
+      for (const { defaultValues, payload, expected } of examples) {
+        expect(
+          cleanPayload(payload, { ...cleanOptions, defaultValues })
+        ).toEqual(expected);
+      }
     });
 
     it('returns empty object if input object equals to default value', () => {

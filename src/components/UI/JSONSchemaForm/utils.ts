@@ -113,6 +113,7 @@ export const DEFAULT_STRING_VALUE = '';
 export const DEFAULT_BOOLEAN_VALUE = false;
 export const DEFAULT_NUMERIC_VALUE = 0;
 export const DEFAULT_ARRAY_VALUE = [];
+export const DEFAULT_OBJECT_VALUE = {};
 
 function getImplicitDefaultValue(value: unknown) {
   switch (true) {
@@ -122,6 +123,8 @@ function getImplicitDefaultValue(value: unknown) {
       return DEFAULT_BOOLEAN_VALUE;
     case Array.isArray(value):
       return DEFAULT_ARRAY_VALUE;
+    case isPlainObject(value):
+      return DEFAULT_OBJECT_VALUE;
     default:
       return undefined;
   }
@@ -183,8 +186,9 @@ export function cleanPayload<T = {}>(
         });
 
         if (
-          emptyObjects &&
-          isEmpty(newValue) &&
+          ((cleanDefaultValues && isEqual(value, defaultValue)) ||
+            (cleanDefaultValues && isEqual(newValue, defaultValue)) ||
+            (emptyObjects && isEmpty(newValue))) &&
           !isException(value, newValue, isArray)
         ) {
           return;
