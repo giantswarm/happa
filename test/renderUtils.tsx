@@ -29,6 +29,7 @@ export const initialStorage = {
     },
     isAdmin: true,
     type: LoggedInUserTypes.GS,
+    groups: ['giantswarm:giantswarm:giantswarm'],
   }),
 };
 
