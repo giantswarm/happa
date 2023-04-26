@@ -4,7 +4,6 @@ import {
   RJSFSchema,
   RJSFValidationError,
 } from '@rjsf/utils';
-import cloneDeep from 'lodash/cloneDeep';
 import hasIn from 'lodash/hasIn';
 import merge from 'lodash/merge';
 import React, {
@@ -195,7 +194,7 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
   );
 
   const [preprocessedSchema, defaultValues] = useMemo(() => {
-    const patchedSchema = preprocessSchema(cloneDeep(schema), fieldsToRemove);
+    const patchedSchema = preprocessSchema(schema, fieldsToRemove);
     const defaults = getDefaultFormState(
       validator,
       patchedSchema,

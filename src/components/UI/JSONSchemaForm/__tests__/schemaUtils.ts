@@ -1,4 +1,5 @@
 import { RJSFSchema } from '@rjsf/utils';
+import pick from 'lodash/pick';
 
 import { preprocessSchema } from '../schemaUtils';
 
@@ -27,10 +28,14 @@ describe('JSONSchemaForm:schemaUtils', () => {
       };
 
       expect(
-        preprocessSchema(createTestSchema() as RJSFSchema, [
-          'properties.arrayFields',
-          'properties.logic',
-        ])
+        preprocessSchema(
+          createTestSchema([
+            'properties.arrayFields',
+            'properties.booleanFields',
+            'properties.logic',
+          ]) as RJSFSchema,
+          ['properties.arrayFields', 'properties.logic']
+        )
       ).toStrictEqual(expected);
     });
 
@@ -54,11 +59,18 @@ describe('JSONSchemaForm:schemaUtils', () => {
       };
 
       expect(
-        preprocessSchema(createTestSchema() as RJSFSchema, [
-          'properties.arrayFields',
-          'properties.logic',
-          'properties.booleanFields.properties.active',
-        ])
+        preprocessSchema(
+          createTestSchema([
+            'properties.arrayFields',
+            'properties.booleanFields',
+            'properties.logic',
+          ]) as RJSFSchema,
+          [
+            'properties.arrayFields',
+            'properties.logic',
+            'properties.booleanFields.properties.active',
+          ]
+        )
       ).toStrictEqual(expected);
     });
 
@@ -89,11 +101,18 @@ describe('JSONSchemaForm:schemaUtils', () => {
       };
 
       expect(
-        preprocessSchema(createTestSchema() as RJSFSchema, [
-          'properties.logic',
-          'properties.booleanFields',
-          'properties.arrayFields.properties.arrayOfObjects.items.properties.age',
-        ])
+        preprocessSchema(
+          createTestSchema([
+            'properties.arrayFields',
+            'properties.booleanFields',
+            'properties.logic',
+          ]) as RJSFSchema,
+          [
+            'properties.logic',
+            'properties.booleanFields',
+            'properties.arrayFields.properties.arrayOfObjects.items.properties.age',
+          ]
+        )
       ).toStrictEqual(expected);
     });
 
@@ -133,19 +152,332 @@ describe('JSONSchemaForm:schemaUtils', () => {
       };
 
       expect(
-        preprocessSchema(createTestSchema() as RJSFSchema, [
-          'properties.booleanFields',
-          'properties.arrayFields',
-          'properties.logic.properties.not',
-          'properties.logic.properties.oneOf',
-        ])
+        preprocessSchema(createTestSchema(['properties.logic']) as RJSFSchema)
       ).toStrictEqual(expected);
+    });
+
+    it('transforms additionalProperties into arrays', () => {
+      const expected = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        properties: {
+          objectsWithAdditionalProperties: {
+            type: 'object',
+            properties: {
+              objectOfStrings: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  required: [
+                    'transformedPropertyKey',
+                    'transformedPropertyValue',
+                  ],
+                  properties: {
+                    transformedPropertyKey: {
+                      type: 'string',
+                      title: 'Key',
+                    },
+                    transformedPropertyValue: {
+                      type: 'string',
+                      title: 'Value',
+                    },
+                  },
+                },
+              },
+              objectOfObjects: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  required: ['transformedPropertyKey'],
+                  properties: {
+                    transformedPropertyKey: {
+                      type: 'string',
+                      title: 'Key',
+                    },
+                    age: {
+                      type: 'number',
+                    },
+                    name: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+              objectOfStringsWithDefault: {
+                type: 'array',
+                default: [
+                  {
+                    transformedPropertyKey: 'label/name',
+                    transformedPropertyValue: 'abcde',
+                  },
+                  {
+                    transformedPropertyKey: 'label/priority',
+                    transformedPropertyValue: 'high',
+                  },
+                ],
+                items: {
+                  type: 'object',
+                  required: [
+                    'transformedPropertyKey',
+                    'transformedPropertyValue',
+                  ],
+                  properties: {
+                    transformedPropertyKey: {
+                      type: 'string',
+                      title: 'Key',
+                    },
+                    transformedPropertyValue: {
+                      type: 'string',
+                      title: 'Value',
+                    },
+                  },
+                },
+              },
+              objectOfObjectsWithDefault: {
+                type: 'array',
+                default: [
+                  {
+                    transformedPropertyKey: 'abcde',
+                    instanceType: 'm5.xlarge',
+                    minSize: 4,
+                  },
+                ],
+                items: {
+                  type: 'object',
+                  required: ['transformedPropertyKey'],
+                  properties: {
+                    transformedPropertyKey: {
+                      type: 'string',
+                      title: 'Key',
+                    },
+                    age: {
+                      type: 'number',
+                    },
+                    name: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      expect(
+        preprocessSchema(
+          createTestSchema([
+            'properties.objectsWithAdditionalProperties',
+          ]) as RJSFSchema
+        )
+      ).toEqual(expected);
+    });
+
+    it('transforms patternProperties into arrays', () => {
+      const expected = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        properties: {
+          objectsWithPatternProperties: {
+            type: 'object',
+            properties: {
+              objectOfStrings: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  required: [
+                    'transformedPropertyKey',
+                    'transformedPropertyValue',
+                  ],
+                  properties: {
+                    transformedPropertyKey: {
+                      type: 'string',
+                      title: 'Key',
+                      pattern: '^[a-z]{5,10}$',
+                    },
+                    transformedPropertyValue: {
+                      type: 'string',
+                      title: 'Value',
+                    },
+                  },
+                },
+              },
+              objectOfObjects: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  required: ['transformedPropertyKey'],
+                  properties: {
+                    transformedPropertyKey: {
+                      type: 'string',
+                      title: 'Key',
+                      pattern: '^[a-z]{5,10}$',
+                    },
+                    age: {
+                      type: 'number',
+                    },
+                    name: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+              objectOfStringsWithDefault: {
+                type: 'array',
+                default: [
+                  {
+                    transformedPropertyKey: 'label/name',
+                    transformedPropertyValue: 'abcde',
+                  },
+                  {
+                    transformedPropertyKey: 'label/priority',
+                    transformedPropertyValue: 'high',
+                  },
+                ],
+                items: {
+                  type: 'object',
+                  required: [
+                    'transformedPropertyKey',
+                    'transformedPropertyValue',
+                  ],
+                  properties: {
+                    transformedPropertyKey: {
+                      type: 'string',
+                      title: 'Key',
+                      pattern: '^[a-z]{5,10}$',
+                    },
+                    transformedPropertyValue: {
+                      type: 'string',
+                      title: 'Value',
+                    },
+                  },
+                },
+              },
+              objectOfObjectsWithDefault: {
+                type: 'array',
+                default: [
+                  {
+                    transformedPropertyKey: 'abcde',
+                    instanceType: 'm5.xlarge',
+                    minSize: 4,
+                  },
+                ],
+                items: {
+                  type: 'object',
+                  required: ['transformedPropertyKey'],
+                  properties: {
+                    transformedPropertyKey: {
+                      type: 'string',
+                      title: 'Key',
+                      pattern: '^[a-z]{5,10}$',
+                    },
+                    age: {
+                      type: 'number',
+                    },
+                    name: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      expect(
+        preprocessSchema(
+          createTestSchema([
+            'properties.objectsWithPatternProperties',
+          ]) as RJSFSchema
+        )
+      ).toEqual(expected);
+    });
+
+    it('looks for default values in properties.internal', () => {
+      const expected = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        properties: {
+          objectsWithDefaultsInInternals: {
+            type: 'object',
+            properties: {
+              objectOfStrings: {
+                type: 'array',
+                default: [
+                  {
+                    transformedPropertyKey: 'label/name',
+                    transformedPropertyValue: 'abcde',
+                  },
+                  {
+                    transformedPropertyKey: 'label/priority',
+                    transformedPropertyValue: 'high',
+                  },
+                ],
+                items: {
+                  type: 'object',
+                  required: [
+                    'transformedPropertyKey',
+                    'transformedPropertyValue',
+                  ],
+                  properties: {
+                    transformedPropertyKey: {
+                      type: 'string',
+                      title: 'Key',
+                    },
+                    transformedPropertyValue: {
+                      type: 'string',
+                      title: 'Value',
+                    },
+                  },
+                },
+              },
+              objectOfObjects: {
+                type: 'array',
+                default: [
+                  {
+                    transformedPropertyKey: 'abcde',
+                    instanceType: 'm5.xlarge',
+                    minSize: 4,
+                  },
+                ],
+                items: {
+                  type: 'object',
+                  required: ['transformedPropertyKey'],
+                  properties: {
+                    transformedPropertyKey: {
+                      type: 'string',
+                      title: 'Key',
+                      pattern: '^[a-z]{5,10}$',
+                    },
+                    age: {
+                      type: 'number',
+                    },
+                    name: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      expect(
+        preprocessSchema(
+          createTestSchema([
+            'properties.objectsWithDefaultsInInternals',
+            'properties.internal',
+          ]) as RJSFSchema
+        )
+      ).toEqual(expected);
     });
   });
 });
 
-function createTestSchema() {
-  return {
+function createTestSchema(fieldsToPick: string[] = []) {
+  const schema = {
     $schema: 'https://json-schema.org/draft/2020-12/schema',
     properties: {
       arrayFields: {
@@ -227,7 +559,180 @@ function createTestSchema() {
         title: 'Logic and subschemas',
         type: 'object',
       },
+      objectsWithAdditionalProperties: {
+        type: 'object',
+        properties: {
+          objectOfStrings: {
+            type: 'object',
+            additionalProperties: {
+              type: 'string',
+            },
+          },
+          objectOfObjects: {
+            type: 'object',
+            additionalProperties: {
+              type: 'object',
+              properties: {
+                age: {
+                  type: 'number',
+                },
+                name: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+          objectOfStringsWithDefault: {
+            type: 'object',
+            default: {
+              'label/name': 'abcde',
+              'label/priority': 'high',
+            },
+            additionalProperties: {
+              type: 'string',
+            },
+          },
+          objectOfObjectsWithDefault: {
+            type: 'object',
+            default: {
+              abcde: {
+                instanceType: 'm5.xlarge',
+                minSize: 4,
+              },
+            },
+            additionalProperties: {
+              type: 'object',
+              properties: {
+                age: {
+                  type: 'number',
+                },
+                name: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+      objectsWithPatternProperties: {
+        type: 'object',
+        properties: {
+          objectOfStrings: {
+            type: 'object',
+            patternProperties: {
+              '^[a-z]{5,10}$': {
+                type: 'string',
+              },
+            },
+          },
+          objectOfObjects: {
+            type: 'object',
+            patternProperties: {
+              '^[a-z]{5,10}$': {
+                type: 'object',
+                properties: {
+                  age: {
+                    type: 'number',
+                  },
+                  name: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+          objectOfStringsWithDefault: {
+            type: 'object',
+            default: {
+              'label/name': 'abcde',
+              'label/priority': 'high',
+            },
+            patternProperties: {
+              '^[a-z]{5,10}$': {
+                type: 'string',
+              },
+            },
+          },
+          objectOfObjectsWithDefault: {
+            type: 'object',
+            default: {
+              abcde: {
+                instanceType: 'm5.xlarge',
+                minSize: 4,
+              },
+            },
+            patternProperties: {
+              '^[a-z]{5,10}$': {
+                type: 'object',
+                properties: {
+                  age: {
+                    type: 'number',
+                  },
+                  name: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      objectsWithDefaultsInInternals: {
+        type: 'object',
+        properties: {
+          objectOfStrings: {
+            type: 'object',
+            additionalProperties: {
+              type: 'string',
+            },
+          },
+          objectOfObjects: {
+            type: 'object',
+            patternProperties: {
+              '^[a-z]{5,10}$': {
+                type: 'object',
+                properties: {
+                  age: {
+                    type: 'number',
+                  },
+                  name: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      internal: {
+        type: 'object',
+        properties: {
+          objectsWithDefaultsInInternals: {
+            type: 'object',
+            properties: {
+              objectOfStrings: {
+                default: {
+                  'label/name': 'abcde',
+                  'label/priority': 'high',
+                },
+              },
+              objectOfObjects: {
+                default: {
+                  abcde: {
+                    instanceType: 'm5.xlarge',
+                    minSize: 4,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
     type: 'object',
   };
+
+  return fieldsToPick.length === 0
+    ? schema
+    : pick(schema, ['$schema', 'type', ...fieldsToPick]);
 }
