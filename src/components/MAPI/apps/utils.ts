@@ -720,7 +720,11 @@ export function createIngressApp(
     appsNamespace,
     isClusterApp,
     {
-      name: ingressAppCatalogEntry.spec.appName,
+      name: generateAppResourceName(
+        ingressAppCatalogEntry.spec.appName,
+        clusterID,
+        isClusterApp
+      ),
       catalogName: ingressAppCatalogEntry.spec.catalog.name,
       chartName: ingressAppCatalogEntry.spec.appName,
       version: ingressAppCatalogEntry.spec.version,
@@ -1532,4 +1536,20 @@ export async function resolveExternalSchemaRef(
   } catch (e) {
     return Promise.reject(e);
   }
+}
+
+/**
+ * Generate name for an app resource to be installed.
+ * The name is prepended with the cluster ID to prevent name collision
+ * if it will be installed in the organization namespace.
+ * @param appName
+ * @param clusterID
+ * @param isInstalledInOrgNamespace
+ */
+export function generateAppResourceName(
+  appName: string,
+  clusterID: string,
+  isInstalledInOrgNamespace: boolean
+): string {
+  return isInstalledInOrgNamespace ? `${clusterID}-${appName}` : appName;
 }

@@ -323,6 +323,110 @@ describe('AppInstallModal', () => {
     ).toBeInTheDocument();
   });
 
+  it('can install an app on a CAPI cluster using the default values', async () => {
+    const clusterName = capiv1beta1Mocks.randomClusterGCP1.metadata.name;
+    const orgNamespace = capiv1beta1Mocks.randomClusterGCP1.metadata.namespace;
+    const appResourceName = `${clusterName}-${applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1.spec.appName}`;
+    const app = applicationv1alpha1Mocks.generateApp({
+      clusterId: clusterName,
+      namespace: orgNamespace!,
+      name: appResourceName,
+    });
+    const appCatalogEntry =
+      applicationv1alpha1Mocks.defaultCatalogAppCatalogEntry1;
+
+    nock(window.config.mapiEndpoint)
+      .post('/apis/authorization.k8s.io/v1/selfsubjectaccessreviews/', {
+        apiVersion: 'authorization.k8s.io/v1',
+        kind: 'SelfSubjectAccessReview',
+        spec: {
+          resourceAttributes: {
+            namespace: '',
+            verb: 'list',
+            group: 'cluster.x-k8s.io',
+            resource: 'clusters',
+          },
+        },
+      })
+      .reply(
+        StatusCodes.Ok,
+        authorizationv1Mocks.selfSubjectAccessReviewCanListClustersAtClusterScope
+      );
+    nock(window.config.mapiEndpoint)
+      .get('/apis/cluster.x-k8s.io/v1beta1/clusters/')
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterListGCP);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/api/v1/namespaces/${orgNamespace}/configmaps/${appResourceName}-user-values/`
+      )
+      .reply(StatusCodes.NotFound, {
+        apiVersion: 'v1',
+        kind: 'Status',
+        message: 'beep',
+        status: metav1.K8sStatuses.Failure,
+        reason: metav1.K8sStatusErrorReasons.NotFound,
+        code: StatusCodes.NotFound,
+      });
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/api/v1/namespaces/${orgNamespace}/secrets/${appResourceName}-user-secrets/`
+      )
+      .reply(StatusCodes.NotFound, {
+        apiVersion: 'v1',
+        kind: 'Status',
+        message: 'boop',
+        status: metav1.K8sStatuses.Failure,
+        reason: metav1.K8sStatusErrorReasons.NotFound,
+        code: StatusCodes.NotFound,
+      });
+
+    nock(window.config.mapiEndpoint)
+      .post(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${orgNamespace}/apps/`
+      )
+      .reply(StatusCodes.Ok, app);
+
+    render(
+      getComponent({
+        selectedAppCatalogEntry: appCatalogEntry,
+        catalogName: appCatalogEntry.spec.catalog.name,
+        versions: [
+          {
+            chartVersion: '1.0.0',
+            created: '',
+            includesVersion: '1.0.0',
+            test: false,
+          },
+        ],
+        selectVersion: () => {},
+        appsPermissions: defaultAppsPermissions,
+      })
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Install in cluster' }));
+
+    fireEvent.click(await screen.findByText(clusterName));
+
+    const input = screen.getByRole('textbox', {
+      name: /app resource name/gi,
+    });
+    expect(input).toHaveValue(appResourceName);
+
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'Install app',
+      })
+    );
+
+    expect(
+      await withMarkup(screen.findByText)(
+        `Your app ${appResourceName} is being installed on ${clusterName}`
+      )
+    ).toBeInTheDocument();
+  }, 10000);
+
   it('can pick a cluster if one is not already selected', async () => {
     const app = applicationv1alpha1Mocks.randomCluster1AppsList.items[4];
 
