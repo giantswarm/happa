@@ -420,3 +420,72 @@ describe('ClusterDetailWidgetControlPlaneNodes on CAPA', () => {
     expect(await screen.findByTitle('eu-west-2c'));
   });
 });
+
+describe('ClusterDetailWidgetControlPlaneNodes on CAPZ', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPZ;
+
+    (usePermissionsForCPNodes as jest.Mock).mockReturnValue(defaultPermissions);
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+  });
+
+  const cluster = capiv1beta1Mocks.randomClusterCAPZ1;
+  const clusterName = cluster.metadata.name;
+
+  it('displays if the control plane is ready', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machines/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${clusterName}%2Ccluster.x-k8s.io%2Fcontrol-plane%3D`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterCAPZ1MachineList);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${clusterName}%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplateListCP
+      );
+
+    render(
+      getComponent({
+        cluster,
+      })
+    );
+
+    expect(
+      await screen.findByLabelText('Control plane node ready')
+    ).toBeInTheDocument();
+  });
+
+  it(`displays the cluster's availability zones`, async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machines/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${clusterName}%2Ccluster.x-k8s.io%2Fcontrol-plane%3D`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterCAPZ1MachineList);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azuremachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${clusterName}%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
+      )
+      .reply(
+        StatusCodes.Ok,
+        capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplateListCP
+      );
+
+    render(
+      getComponent({
+        cluster,
+      })
+    );
+
+    expect(await screen.findByText('Availability zone'));
+    expect(await screen.findByText('1'));
+  });
+});

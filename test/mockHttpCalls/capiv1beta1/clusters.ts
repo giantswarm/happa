@@ -291,7 +291,7 @@ export const randomClusterCAPZ1: capiv1beta1.ICluster = {
   spec: {
     clusterNetwork: {},
     controlPlaneEndpoint: {
-      host: 'test12-9615ac82.westeurope.cloudapp.azure.com',
+      host: 'api.test12.gigantic.io',
       port: 6443,
     },
     controlPlaneRef: {
