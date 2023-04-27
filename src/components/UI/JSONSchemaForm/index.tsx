@@ -1,18 +1,7 @@
 import Form, { FormProps, IChangeEvent } from '@rjsf/core';
-import {
-  getDefaultFormState,
-  RJSFSchema,
-  RJSFValidationError,
-} from '@rjsf/utils';
+import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import hasIn from 'lodash/hasIn';
-import merge from 'lodash/merge';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-} from 'react';
+import React, { useCallback, useMemo, useReducer, useRef } from 'react';
 
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
@@ -193,51 +182,41 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
     [idSeparator, state.touchedFields]
   );
 
-  const [preprocessedSchema, defaultValues] = useMemo(() => {
-    const patchedSchema = preprocessSchema(schema, fieldsToRemove);
-    const defaults = getDefaultFormState(
-      validator,
-      patchedSchema,
-      {},
-      patchedSchema
-    );
-
-    return [patchedSchema, defaults];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [validator, schema]);
+  const preprocessedSchema = useMemo(() => {
+    return preprocessSchema(schema, fieldsToRemove);
+  }, [fieldsToRemove, schema]);
 
   const onChangeCallback = useCallback(
     (data: RJSFSchema, fieldId?: string) => {
-      const cleanData = cleanPayload<RJSFSchema>(data, {
-        emptyStrings: false,
-        emptyArrays: false,
-        emptyObjects: false,
-        isException: (_value, _cleanValue, isArrayItem) => isArrayItem,
-      }) as RJSFSchema;
+      const cleanData = cleanPayload<RJSFSchema>(
+        data,
+        preprocessedSchema,
+        preprocessedSchema,
+        {
+          emptyStrings: false,
+          emptyArrays: false,
+          emptyObjects: false,
+          isException: (_value, _cleanValue, isArrayItem) => isArrayItem,
+        }
+      ) as RJSFSchema;
 
-      const cleanDataWithoutDefaultValues = cleanPayload<RJSFSchema>(data, {
-        emptyStrings: false,
-        emptyArrays: false,
-        emptyObjects: false,
-        cleanDefaultValues: true,
-        defaultValues,
-      }) as RJSFSchema;
+      const cleanDataWithoutDefaultValues = cleanPayload<RJSFSchema>(
+        data,
+        preprocessedSchema,
+        preprocessedSchema,
+        {
+          emptyStrings: false,
+          emptyArrays: false,
+          emptyObjects: false,
+          cleanDefaultValues: true,
+        }
+      ) as RJSFSchema;
 
       updateTouchedFields(cleanData, fieldId);
       onChange(cleanData, cleanDataWithoutDefaultValues);
     },
-    [defaultValues, onChange, updateTouchedFields]
+    [preprocessedSchema, onChange, updateTouchedFields]
   );
-
-  useEffect(() => {
-    const formDataWithDefaultValues = merge(
-      {},
-      defaultValues,
-      formData as RJSFSchema
-    );
-    onChangeCallback(formDataWithDefaultValues);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultValues]);
 
   const idConfigs: IIdConfigs = { idPrefix, idSeparator };
 

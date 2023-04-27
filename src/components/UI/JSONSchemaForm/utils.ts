@@ -1,4 +1,8 @@
-import { RJSFValidationError } from '@rjsf/utils';
+import {
+  findSchemaDefinition,
+  RJSFSchema,
+  RJSFValidationError,
+} from '@rjsf/utils';
 import cleanDeep, { CleanOptions } from 'clean-deep';
 import flatten from 'lodash/flatten';
 import groupBy from 'lodash/groupBy';
@@ -130,6 +134,31 @@ function getImplicitDefaultValue(value: unknown) {
   }
 }
 
+function getValueSchema(
+  key: number,
+  schema: RJSFSchema,
+  rootSchema: RJSFSchema
+) {
+  const valueSchema =
+    schema.type === 'array'
+      ? schema.items && Array.isArray(schema.items)
+        ? schema.items[key]
+        : schema.items
+      : schema.properties
+      ? schema.properties[key]
+      : undefined;
+
+  if (
+    typeof valueSchema !== 'undefined' &&
+    typeof valueSchema !== 'boolean' &&
+    valueSchema.$ref
+  ) {
+    return findSchemaDefinition(valueSchema.$ref, rootSchema);
+  }
+
+  return valueSchema;
+}
+
 export interface CleanPayloadOptions<T = {}> extends CleanOptions {
   cleanDefaultValues?: boolean;
   defaultValues?: Iterable<T> | unknown;
@@ -142,6 +171,8 @@ export interface CleanPayloadOptions<T = {}> extends CleanOptions {
 
 export function cleanPayload<T = {}>(
   object: Iterable<T> | unknown,
+  objectSchema: RJSFSchema,
+  rootSchema: RJSFSchema,
   options?: CleanPayloadOptions<T>
 ): Iterable<T> | unknown {
   const {
@@ -159,14 +190,22 @@ export function cleanPayload<T = {}>(
     object as unknown[],
     // eslint-disable-next-line complexity
     (result: Record<string | number, unknown>, value, key) => {
+      const valueSchema = getValueSchema(key, objectSchema, rootSchema);
+      if (
+        typeof valueSchema === 'undefined' ||
+        typeof valueSchema === 'boolean'
+      ) {
+        return;
+      }
+
       let newValue = value;
-      const defaultValue = cleanDefaultValues
-        ? defaultValues?.[key as keyof typeof defaultValues] ??
-          getImplicitDefaultValue(value)
-        : undefined;
+      const defaultValue =
+        defaultValues?.[key as keyof typeof defaultValues] ??
+        valueSchema.default ??
+        getImplicitDefaultValue(value);
 
       if (Array.isArray(value)) {
-        newValue = cleanPayload<unknown>(value, {
+        newValue = cleanPayload<unknown>(value, valueSchema, rootSchema, {
           ...options,
           defaultValues: undefined,
         });
@@ -180,7 +219,7 @@ export function cleanPayload<T = {}>(
           return;
         }
       } else if (isPlainObject(value)) {
-        newValue = cleanPayload<unknown>(value, {
+        newValue = cleanPayload<unknown>(value, valueSchema, rootSchema, {
           ...options,
           defaultValues: defaultValue,
         });
