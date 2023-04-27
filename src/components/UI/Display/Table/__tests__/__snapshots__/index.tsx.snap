@@ -2,16 +2,16 @@
 
 exports[`Table renders a simple table 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 bhEuBi"
+  class="StyledGrommet-sc-19lkkz7-0 kQNwCm"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 bhQbbx"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 fmpnGZ"
   >
     <table
-      class="StyledTable-sc-1m3u5g-6 xyapg"
+      class="StyledTable-sc-1m3u5g-6 iySA-Dg"
     >
       <caption
-        class="StyledTable__StyledTableDataCaption-sc-1m3u5g-1 bbqkdz"
+        class="StyledTable__StyledTableDataCaption-sc-1m3u5g-1 cnHVzj"
       >
         Expenses
       </caption>
@@ -22,28 +22,28 @@ exports[`Table renders a simple table 1`] = `
           class="StyledTable__StyledTableRow-sc-1m3u5g-2"
         >
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 dqHLKo"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cgbvMU"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 kqmDKi"
+              class="StyledBox-sc-13pk1d4-0 jsevgO"
             >
               Name
             </div>
           </td>
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 dqHLKo"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cgbvMU"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 kqmDKi"
+              class="StyledBox-sc-13pk1d4-0 jsevgO"
             >
               Location
             </div>
           </td>
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 dqHLKo"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cgbvMU"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 kqmDKi"
+              class="StyledBox-sc-13pk1d4-0 jsevgO"
             >
               Amount
             </div>
@@ -57,17 +57,17 @@ exports[`Table renders a simple table 1`] = `
           class="StyledTable__StyledTableRow-sc-1m3u5g-2"
         >
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cEZRrg"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 TVGEA"
           >
             Food
           </td>
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cEZRrg"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 TVGEA"
           >
             Amazon
           </td>
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cEZRrg"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 TVGEA"
           >
             $25,36
           </td>
@@ -76,17 +76,17 @@ exports[`Table renders a simple table 1`] = `
           class="StyledTable__StyledTableRow-sc-1m3u5g-2"
         >
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cEZRrg"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 TVGEA"
           >
             Laptop
           </td>
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cEZRrg"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 TVGEA"
           >
             Apple
           </td>
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cEZRrg"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 TVGEA"
           >
             $1683,00
           </td>
@@ -95,17 +95,17 @@ exports[`Table renders a simple table 1`] = `
           class="StyledTable__StyledTableRow-sc-1m3u5g-2"
         >
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cEZRrg"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 TVGEA"
           >
             Phone
           </td>
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cEZRrg"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 TVGEA"
           >
             Apple
           </td>
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 cEZRrg"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 TVGEA"
           >
             $1037,73
           </td>
@@ -118,13 +118,13 @@ exports[`Table renders a simple table 1`] = `
           class="StyledTable__StyledTableRow-sc-1m3u5g-2"
         >
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 dmyGVd"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 hFDfah"
           />
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 dmyGVd"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 hFDfah"
           />
           <td
-            class="StyledTable__StyledTableCell-sc-1m3u5g-0 dmyGVd"
+            class="StyledTable__StyledTableCell-sc-1m3u5g-0 hFDfah"
           >
             $2746,09
           </td>
