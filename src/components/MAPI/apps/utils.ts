@@ -749,7 +749,7 @@ export function getClusterK8sEndpoint(
 
   let hostname = null;
   switch (true) {
-    case kind === capzv1beta1.AzureCluster:
+    case kind === capzv1beta1.AzureCluster && !hasClusterAppLabel(cluster):
     case kind === infrav1alpha3.AWSCluster &&
       apiGroup === infrav1alpha3.ApiGroup:
       hostname = cluster.spec?.controlPlaneEndpoint?.host;

@@ -1,5 +1,6 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
 import { push } from 'connected-react-router';
+import { Text } from 'grommet';
 import { MainRoutes, UsersRoutes } from 'model/constants/routes';
 import { getLoggedInUser } from 'model/stores/main/selectors';
 import { getOrganizationByID } from 'model/stores/organization/utils';
@@ -29,6 +30,10 @@ const UserModalTypes = {
   Invite: 'invite',
 };
 
+function canManageUsers(user, writeAllGroup) {
+  return user.groups.includes(writeAllGroup);
+}
+
 class Users extends React.Component {
   state = {
     selectedUser: null,
@@ -41,12 +46,14 @@ class Users extends React.Component {
   };
 
   componentDidMount() {
-    if (this.props.currentUser.isAdmin) {
+    if (!this.props.currentUser.isAdmin) {
+      this.props.dispatch(push(MainRoutes.Home));
+    }
+
+    if (canManageUsers(this.props.currentUser, this.props.write_all_group)) {
       this.props
         .dispatch(usersLoad())
         .then(this.props.dispatch(invitationsLoad()));
-    } else {
-      this.props.dispatch(push(MainRoutes.Home));
     }
   }
 
@@ -223,7 +230,13 @@ class Users extends React.Component {
   }
 
   render() {
-    const { users, invitations, installation_name } = this.props;
+    const {
+      users,
+      invitations,
+      installation_name,
+      currentUser,
+      write_all_group,
+    } = this.props;
 
     const installationNameLabel = installation_name || 'unknown installation';
 
@@ -232,24 +245,35 @@ class Users extends React.Component {
         <DocumentTitle title='Users'>
           <>
             <h1>Users</h1>
-            <Section title='Open invites'>
+            {canManageUsers(currentUser, write_all_group) ? (
               <>
-                <InvitesTable invitations={invitations} />
-                <Button
-                  onClick={this.inviteUser}
-                  icon={<i className='fa fa-add-circle' />}
-                >
-                  Invite user
-                </Button>
+                <Section title='Open invites'>
+                  <>
+                    <InvitesTable invitations={invitations} />
+                    <Button
+                      onClick={this.inviteUser}
+                      icon={<i className='fa fa-add-circle' />}
+                    >
+                      Invite user
+                    </Button>
+                  </>
+                </Section>
+                <Section title='User accounts'>
+                  <UsersTable
+                    users={users}
+                    onRemoveExpiration={this.removeExpiration}
+                    onDelete={this.deleteUser}
+                  />
+                </Section>
               </>
-            </Section>
-            <Section title='User accounts'>
-              <UsersTable
-                users={users}
-                onRemoveExpiration={this.removeExpiration}
-                onDelete={this.deleteUser}
-              />
-            </Section>
+            ) : (
+              <Text>
+                <i className='fa fa-warning' role='presentation' /> In order to
+                manage users, you must be a member of the{' '}
+                <code>{write_all_group}</code> group. Please log in with the
+                appropriate connector.
+              </Text>
+            )}
             <Section title='Additional information'>
               <>
                 <p>
@@ -284,6 +308,7 @@ function mapStateToProps(state) {
     organizations: state.entities.organizations,
     initialSelectedOrganizations: initiallySelectedOrganizations,
     installation_name: window.config.info.general.installationName,
+    write_all_group: window.config.mapiAuthAdminGroups[0],
   };
 }
 
