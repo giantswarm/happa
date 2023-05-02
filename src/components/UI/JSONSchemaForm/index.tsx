@@ -16,6 +16,7 @@ import SelectWidget from './SelectWidget';
 import {
   cleanPayload,
   mapErrorPropertyToField,
+  transformArraysIntoObjects,
   transformErrors,
 } from './utils';
 
@@ -213,7 +214,12 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
       ) as RJSFSchema;
 
       updateTouchedFields(cleanData, fieldId);
-      onChange(cleanData, cleanDataWithoutDefaultValues);
+      onChange(
+        cleanData,
+        transformArraysIntoObjects<RJSFSchema>(
+          cleanDataWithoutDefaultValues
+        ) as RJSFSchema
+      );
     },
     [preprocessedSchema, onChange, updateTouchedFields]
   );

@@ -1,7 +1,11 @@
 import { RJSFSchema } from '@rjsf/utils';
 import cleanDeep from 'clean-deep';
 
-import { cleanPayload, CleanPayloadOptions } from '../utils';
+import {
+  cleanPayload,
+  CleanPayloadOptions,
+  transformArraysIntoObjects,
+} from '../utils';
 
 describe('JSONSchemaForm:utils', () => {
   describe('cleanPayload', () => {
@@ -611,6 +615,90 @@ describe('JSONSchemaForm:utils', () => {
       expect(
         cleanPayload(payload, schema, schema, { ...cleanOptions })
       ).toEqual({});
+    });
+  });
+
+  describe('transformArraysIntoObjects', () => {
+    it('transforms inner arrays into objects', () => {
+      const testObject = {
+        arrayOfObjects: [
+          {
+            label: 'label/name',
+            value: 'abcde',
+          },
+          {
+            label: 'label/priority',
+            value: 'high',
+          },
+        ],
+        arrayOfTransformedObjects: [
+          {
+            transformedPropertyKey: 'label/name',
+            transformedPropertyValue: 'abcde',
+          },
+          {
+            transformedPropertyKey: 'label/priority',
+            transformedPropertyValue: 'high',
+          },
+        ],
+        arrayOfTransformedObjects2: [
+          {
+            transformedPropertyKey: 'abcde',
+            instanceType: 'm5.xlarge',
+            minSize: 4,
+          },
+          {
+            transformedPropertyKey: 'qwert',
+            instanceType: 'm5.8xlarge',
+          },
+        ],
+        innerObject: {
+          arrayOfTransformedObjects: [
+            {
+              transformedPropertyKey: 'label/name',
+              transformedPropertyValue: 'abcde',
+            },
+            {
+              transformedPropertyKey: 'label/priority',
+              transformedPropertyValue: 'high',
+            },
+          ],
+        },
+      };
+
+      const expected = {
+        arrayOfObjects: [
+          {
+            label: 'label/name',
+            value: 'abcde',
+          },
+          {
+            label: 'label/priority',
+            value: 'high',
+          },
+        ],
+        arrayOfTransformedObjects: {
+          'label/name': 'abcde',
+          'label/priority': 'high',
+        },
+        arrayOfTransformedObjects2: {
+          abcde: {
+            instanceType: 'm5.xlarge',
+            minSize: 4,
+          },
+          qwert: {
+            instanceType: 'm5.8xlarge',
+          },
+        },
+        innerObject: {
+          arrayOfTransformedObjects: {
+            'label/name': 'abcde',
+            'label/priority': 'high',
+          },
+        },
+      };
+
+      expect(transformArraysIntoObjects(testObject)).toEqual(expected);
     });
   });
 });

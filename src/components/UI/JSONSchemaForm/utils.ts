@@ -13,6 +13,10 @@ import transform from 'lodash/transform';
 import { pipe } from 'utils/helpers';
 
 import { IIdConfigs } from '.';
+import {
+  TRANSFORMED_PROPERTY_KEY,
+  TRANSFORMED_PROPERTY_VALUE,
+} from './schemaUtils';
 
 function transformRequiredArrayItemError(
   error: RJSFValidationError
@@ -244,6 +248,57 @@ export function cleanPayload<T = {}>(
         ) {
           return;
         }
+      }
+
+      if (Array.isArray(result)) {
+        result.push(newValue);
+      } else {
+        result[key] = newValue;
+      }
+    }
+  );
+}
+
+interface ITransformedObject {
+  [TRANSFORMED_PROPERTY_KEY]: string;
+  [TRANSFORMED_PROPERTY_VALUE]?: unknown;
+  [key: string]: unknown;
+}
+
+function shouldBeTransformedIntoObject(array: unknown[]) {
+  return array.some(
+    (item) =>
+      isPlainObject(item) &&
+      (item as {}).hasOwnProperty(TRANSFORMED_PROPERTY_KEY)
+  );
+}
+
+export function transformArraysIntoObjects<T = {}>(
+  object: Iterable<T> | unknown
+): Iterable<T> | unknown {
+  return transform(
+    object as unknown[],
+    (result: Record<string | number, unknown>, value, key) => {
+      let newValue = value;
+
+      if (Array.isArray(value)) {
+        newValue = transformArraysIntoObjects<T>(value);
+
+        if (shouldBeTransformedIntoObject(newValue as unknown[])) {
+          const entries = (newValue as ITransformedObject[]).map((item) => {
+            const {
+              [TRANSFORMED_PROPERTY_KEY]: itemKey,
+              [TRANSFORMED_PROPERTY_VALUE]: itemValue,
+              ...restItem
+            } = item;
+
+            return [itemKey, itemValue ?? restItem];
+          });
+
+          newValue = Object.fromEntries(entries);
+        }
+      } else if (isPlainObject(value)) {
+        newValue = transformArraysIntoObjects<T>(value);
       }
 
       if (Array.isArray(result)) {
