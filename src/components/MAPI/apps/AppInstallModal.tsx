@@ -67,6 +67,7 @@ import {
   fetchAppsForClustersKey,
   filterClusters,
   formatYAMLError,
+  generateAppResourceName,
 } from './utils';
 
 function mapClusterToClusterPickerInput(
@@ -159,21 +160,6 @@ const AppInstallModal: React.FC<
   const selectedClusterID = useSelector(
     (state: IState) => state.main.selectedClusterID
   );
-
-  const appName = selectedAppCatalogEntry.spec.appName;
-
-  const isAppBundle =
-    selectedAppCatalogEntry.metadata.annotations?.[
-      applicationv1alpha1.annotationAppType
-    ] === 'bundle';
-
-  useEffect(() => {
-    const n = isAppBundle ? `${selectedClusterID}-${appName}` : appName;
-    setName(n);
-    setNameError('');
-    setNamespace(n);
-    setNamespaceError('');
-  }, [isAppBundle, appName, selectedClusterID]);
 
   const openModal = () => {
     if (selectedClusterID) {
@@ -329,6 +315,26 @@ const AppInstallModal: React.FC<
       (cluster) => cluster.metadata.name === selectedClusterID
     );
   }, [clusterList?.items, selectedClusterID]);
+
+  const appName = selectedAppCatalogEntry.spec.appName;
+
+  const isAppBundle =
+    selectedAppCatalogEntry.metadata.annotations?.[
+      applicationv1alpha1.annotationAppType
+    ] === 'bundle';
+
+  useEffect(() => {
+    if (!selectedCluster || !selectedClusterID) return;
+    const n = generateAppResourceName(
+      appName,
+      selectedClusterID,
+      isAppBundle || hasClusterAppLabel(selectedCluster)
+    );
+    setName(n);
+    setNameError('');
+    setNamespace(n);
+    setNamespaceError('');
+  }, [isAppBundle, appName, selectedCluster, selectedClusterID]);
 
   const clustersWithAppInstalled = useMemo(() => {
     if (!appsForClusters) return [];
