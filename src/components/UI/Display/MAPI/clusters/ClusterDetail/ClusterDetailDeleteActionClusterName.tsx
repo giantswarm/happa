@@ -32,7 +32,7 @@ const ClusterDetailDeleteActionClusterName: React.FC<
       <Text>If yes, please enter the cluster {variant}:</Text>
       <Keyboard onEnter={handleFormSubmit}>
         <TextInput
-          width='xxsmall'
+          width='xsmall'
           autoFocus={true}
           onChange={handleChange}
           value={value}
