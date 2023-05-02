@@ -696,7 +696,7 @@ token: can't be blank`)
     });
   });
 
-  describe.only('traverseJSONSchemaObject', () => {
+  describe('traverseJSONSchemaObject', () => {
     it('performs specified action for an object', () => {
       const schema: RJSFSchema = {
         type: 'object',
