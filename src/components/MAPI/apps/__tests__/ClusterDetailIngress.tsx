@@ -329,3 +329,79 @@ describe('ClusterDetailIngress on CAPA', () => {
     );
   });
 });
+
+describe('ClusterDetailIngress on CAPZ', () => {
+  const provider: PropertiesOf<typeof Providers> =
+    window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
+  const audience = window.config.audience;
+  const cluster = capiv1beta1Mocks.randomClusterCAPZ1;
+  const clusterId = cluster.metadata.name;
+  const namespace = cluster.metadata.namespace;
+  const orgId = 'org1';
+
+  beforeAll(() => {
+    window.config.info.general.provider = Providers.CAPZ;
+    window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
+    window.config.audience = 'https://api.test.gigantic.io';
+
+    (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
+    (useParams as jest.Mock).mockReturnValue({
+      orgId,
+      clusterId,
+    });
+  });
+
+  afterAll(() => {
+    window.config.info.general.provider = provider;
+    window.config.info.general.providerFlavor = providerFlavor;
+    window.config.audience = audience;
+  });
+
+  it('displays instructions with correct API endpoints', async () => {
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/application.giantswarm.io/v1alpha1/namespaces/${namespace}/apps/?labelSelector=giantswarm.io%2Fcluster%3D${clusterId}`
+      )
+      .reply(StatusCodes.Ok, {
+        apiVersion: 'application.giantswarm.io/v1alpha1',
+        kind: 'AppList',
+        items: [
+          generateApp({
+            clusterId,
+            namespace: namespace!,
+            specName: Constants.INSTALL_INGRESS_TAB_APP_NAME,
+          }),
+        ],
+      });
+
+    render(
+      getComponent({
+        cluster,
+        isClusterApp: true,
+      })
+    );
+
+    if (screen.queryAllByText('Loading ingress information…').length > 0) {
+      await waitForElementToBeRemoved(() =>
+        screen.queryAllByText('Loading ingress information…')
+      );
+    }
+
+    if (screen.queryAllByText('Loading...').length > 0) {
+      await waitForElementToBeRemoved(() =>
+        screen.queryAllByText('Loading...')
+      );
+    }
+
+    expect(screen.getByLabelText('Base domain:')).toHaveTextContent(
+      '.test12.gigantic.io'
+    );
+    expect(screen.getByLabelText('Load balancer DNS name:')).toHaveTextContent(
+      'ingress.test12.gigantic.io'
+    );
+    expect(screen.getByLabelText('Hostname pattern:')).toHaveTextContent(
+      'YOUR_PREFIX.test12.gigantic.io'
+    );
+  });
+});
