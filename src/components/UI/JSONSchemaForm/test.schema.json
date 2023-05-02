@@ -1,20 +1,162 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
     "properties": {
+        "patternProperties": {
+            "type": "object",
+            "title": "Pattern properties",
+            "properties": {
+                "objectOfIntegers": {
+                    "type": "object",
+                    "title": "Object of integers",
+                    "patternProperties": {
+                        "^[a-z0-9]{5,10}$": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "objectOfObjects": {
+                    "type": "object",
+                    "title": "Object of objects",
+                    "patternProperties": {
+                        "^[a-z0-9]{5,10}$": {
+                            "type": "object",
+                            "title": "Node pool",
+                            "properties": {
+                                "instanceType": {
+                                    "type": "string",
+                                    "title": "Instance type"
+                                },
+                                "maxSize": {
+                                    "type": "integer",
+                                    "title": "Maximum number of nodes"
+                                },
+                                "minSize": {
+                                    "type": "integer",
+                                    "title": "Minimum number of nodes"
+                                }
+                            }
+                        }
+                    }
+                },
+                "objectOfObjectsWithDefault": {
+                    "type": "object",
+                    "title": "Object of objects with default value",
+                    "patternProperties": {
+                        "^[a-z0-9]{5,10}$": {
+                            "type": "object",
+                            "title": "Node pool",
+                            "properties": {
+                                "instanceType": {
+                                    "type": "string",
+                                    "title": "Instance type"
+                                },
+                                "maxSize": {
+                                    "type": "integer",
+                                    "title": "Maximum number of nodes"
+                                },
+                                "minSize": {
+                                    "type": "integer",
+                                    "title": "Minimum number of nodes"
+                                }
+                            }
+                        }
+                    }
+                },
+                "objectOfStrings": {
+                    "type": "object",
+                    "title": "Object of strings",
+                    "patternProperties": {
+                        "^[a-z0-9]{5,10}$": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "additionalProperties": {
+            "type": "object",
+            "title": "Additional properties",
+            "properties": {
+                "objectOfIntegers": {
+                    "type": "object",
+                    "title": "Object of integers",
+                    "additionalProperties": {
+                        "type": "integer"
+                    }
+                },
+                "objectOfObjects": {
+                    "type": "object",
+                    "title": "Object of objects",
+                    "additionalProperties": {
+                        "type": "object",
+                        "title": "Node pool",
+                        "properties": {
+                            "instanceType": {
+                                "type": "string",
+                                "title": "Instance type"
+                            },
+                            "maxSize": {
+                                "type": "integer",
+                                "title": "Maximum number of nodes"
+                            },
+                            "minSize": {
+                                "type": "integer",
+                                "title": "Minimum number of nodes"
+                            }
+                        }
+                    }
+                },
+                "objectOfObjectsWithDefault": {
+                    "type": "object",
+                    "title": "Object of objects with default value",
+                    "additionalProperties": {
+                        "type": "object",
+                        "title": "Node pool",
+                        "properties": {
+                            "instanceType": {
+                                "type": "string",
+                                "title": "Instance type"
+                            },
+                            "maxSize": {
+                                "type": "integer",
+                                "title": "Maximum number of nodes"
+                            },
+                            "minSize": {
+                                "type": "integer",
+                                "title": "Minimum number of nodes"
+                            }
+                        }
+                    }
+                },
+                "objectOfStrings": {
+                    "type": "object",
+                    "title": "Object of strings",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "arrayFields": {
+            "type": "object",
+            "title": "Array fields",
             "properties": {
                 "arrayMinMaxItems": {
+                    "type": "array",
+                    "title": "Array with min/max items",
                     "description": "Array with the minimum and maximum number of items",
                     "items": {
                         "type": "string"
                     },
                     "maxItems": 2,
-                    "minItems": 1,
-                    "title": "Array with min/max items",
-                    "type": "array"
+                    "minItems": 1
                 },
                 "arrayOfObjects": {
+                    "type": "array",
+                    "title": "Array of objects",
                     "items": {
+                        "type": "object",
                         "properties": {
                             "age": {
                                 "type": "number"
@@ -22,14 +164,15 @@
                             "name": {
                                 "type": "string"
                             }
-                        },
-                        "type": "object"
-                    },
-                    "title": "Array of objects",
-                    "type": "array"
+                        }
+                    }
                 },
                 "arrayOfObjectsWithTitle": {
+                    "type": "array",
+                    "title": "Array of objects with title",
                     "items": {
+                        "type": "object",
+                        "title": "Array item object",
                         "description": "Description of array item object",
                         "properties": {
                             "age": {
@@ -38,93 +181,126 @@
                             "name": {
                                 "type": "string"
                             }
-                        },
-                        "title": "Array item object",
-                        "type": "object"
-                    },
-                    "title": "Array of objects with title",
-                    "type": "array"
+                        }
+                    }
                 },
                 "arrayOfStrings": {
+                    "type": "array",
+                    "title": "Array of strings",
                     "items": {
                         "type": "string"
-                    },
-                    "title": "Array of strings",
-                    "type": "array"
+                    }
                 }
-            },
-            "title": "Array fields",
-            "type": "object"
+            }
         },
         "booleanFields": {
+            "type": "object",
+            "title": "Boolean fields",
             "properties": {
                 "active": {
                     "type": "boolean"
                 },
                 "enabled": {
-                    "description": "Boolean field with title and description.",
+                    "type": "boolean",
                     "title": "Enabled",
-                    "type": "boolean"
+                    "description": "Boolean field with title and description."
                 }
-            },
-            "title": "Boolean fields",
-            "type": "object"
+            }
+        },
+        "internal": {
+            "type": "object",
+            "properties": {
+                "patternProperties": {
+                    "type": "object",
+                    "properties": {
+                        "objectOfObjectsWithDefault": {
+                            "type": "object",
+                            "default": {
+                                "def00": {
+                                    "instanceType": "m5.xlarge",
+                                    "minSize": 3
+                                }
+                            }
+                        }
+                    }
+                },
+                "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                        "objectOfObjectsWithDefault": {
+                            "type": "object",
+                            "default": {
+                                "def00": {
+                                    "instanceType": "m5.xlarge",
+                                    "minSize": 3
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },
         "logic": {
+            "type": "object",
+            "title": "Logic and subschemas",
             "description": "Uses of 'anyOf', 'oneOf', and 'not'.",
             "properties": {
                 "anyOf": {
+                    "type": "object",
+                    "title": "Subschema choice using 'anyOf'",
                     "properties": {
                         "anyOfDeprecated": {
+                            "title": "Property with subschemas using 'anyOf' and 'deprecated'",
+                            "description": "Only the second declared subschema (number, minimum=3) should be visible.",
                             "anyOf": [
                                 {
+                                    "type": "string",
                                     "deprecated": true,
-                                    "minLength": 3,
-                                    "type": "string"
+                                    "minLength": 3
                                 },
                                 {
-                                    "minimum": 3,
-                                    "type": "number"
+                                    "type": "number",
+                                    "minimum": 3
                                 }
-                            ],
-                            "description": "Only the second declared subschema (number, minimum=3) should be visible.",
-                            "title": "Property with subschemas using 'anyOf' and 'deprecated'"
+                            ]
                         },
                         "anyOfSimple": {
+                            "title": "Property with two subschemas using 'anyOf'",
+                            "description": "Only the first declared subschema (string, minLength=3) should be visible.",
                             "anyOf": [
                                 {
-                                    "minLength": 3,
-                                    "type": "string"
+                                    "type": "string",
+                                    "minLength": 3
                                 },
                                 {
-                                    "minimum": 3,
-                                    "type": "number"
+                                    "type": "number",
+                                    "minimum": 3
                                 }
-                            ],
-                            "description": "Only the first declared subschema (string, minLength=3) should be visible.",
-                            "title": "Property with two subschemas using 'anyOf'"
+                            ]
                         }
-                    },
-                    "title": "Subschema choice using 'anyOf'",
-                    "type": "object"
+                    }
                 },
                 "not": {
+                    "type": "object",
+                    "title": "Constraints defined via 'not'",
                     "properties": {
                         "stringNot": {
+                            "type": "string",
+                            "title": "String with constraints defined via 'not'",
                             "description": "Value must not be 'forbidden'.",
                             "not": {
                                 "const": "forbidden"
-                            },
-                            "title": "String with constraints defined via 'not'",
-                            "type": "string"
+                            }
                         }
-                    },
-                    "title": "Constraints defined via 'not'",
-                    "type": "object"
+                    }
                 },
                 "oneOf": {
+                    "type": "object",
+                    "title": "Subschema choice using 'oneOf'",
                     "properties": {
                         "stringPatternOrEmpty": {
+                            "type": "string",
+                            "title": "String matching multiple patterns",
                             "description": "Value must match one of the patterns - ^[a-z]$ or ^[0-9]$.",
                             "oneOf": [
                                 {
@@ -133,70 +309,68 @@
                                 {
                                     "pattern": "^[0-9]$"
                                 }
-                            ],
-                            "title": "String matching multiple patterns",
-                            "type": "string"
+                            ]
                         }
-                    },
-                    "title": "Subschema choice using 'oneOf'",
-                    "type": "object"
+                    }
                 }
-            },
-            "title": "Logic and subschemas",
-            "type": "object"
+            }
         },
         "numericFields": {
+            "type": "object",
+            "title": "Numeric fields",
             "properties": {
                 "integer": {
-                    "description": "Integer field with title and description.",
+                    "type": "integer",
                     "title": "Integer",
-                    "type": "integer"
+                    "description": "Integer field with title and description."
                 },
                 "integerEnum": {
+                    "type": "integer",
+                    "title": "Integer enum",
                     "description": "Integer field with enumerated values and custom labels.",
                     "oneOf": [
                         {
-                            "const": 1,
-                            "title": "One"
+                            "title": "One",
+                            "const": 1
                         },
                         {
-                            "const": 2,
-                            "title": "Two"
+                            "title": "Two",
+                            "const": 2
                         },
                         {
-                            "const": 3,
-                            "title": "Three"
+                            "title": "Three",
+                            "const": 3
                         }
-                    ],
-                    "title": "Integer enum",
-                    "type": "integer"
+                    ]
                 },
                 "integerLimit": {
+                    "type": "integer",
+                    "title": "Integer with min/max values",
                     "description": "Integer field with minimum value 2 and maximum value 5.",
                     "maximum": 5,
-                    "minimum": 2,
-                    "title": "Integer with min/max values",
-                    "type": "integer"
+                    "minimum": 2
                 },
                 "number": {
-                    "description": "Number field with title and description.",
+                    "type": "number",
                     "title": "Number",
-                    "type": "number"
+                    "description": "Number field with title and description."
                 },
                 "numberLimit": {
+                    "type": "number",
+                    "title": "Number with min/max values",
                     "description": "Number field with minimum value 2 and maximum value 5.",
                     "maximum": 5,
-                    "minimum": 2,
-                    "title": "Number with min/max values",
-                    "type": "number"
+                    "minimum": 2
                 }
-            },
-            "title": "Numeric fields",
-            "type": "object"
+            }
         },
         "objectFields": {
+            "type": "object",
+            "title": "Object fields",
             "properties": {
                 "object": {
+                    "type": "object",
+                    "title": "Object",
                     "properties": {
                         "age": {
                             "type": "integer"
@@ -204,12 +378,16 @@
                         "name": {
                             "type": "string"
                         }
-                    },
-                    "title": "Object",
-                    "type": "object"
+                    }
                 },
                 "objectRequired": {
+                    "type": "object",
+                    "title": "Object with required",
                     "description": "Object where properties are required.",
+                    "required": [
+                        "active",
+                        "name"
+                    ],
                     "properties": {
                         "active": {
                             "type": "boolean"
@@ -220,82 +398,73 @@
                         "name": {
                             "type": "string"
                         }
-                    },
-                    "required": [
-                        "active",
-                        "name"
-                    ],
-                    "title": "Object with required",
-                    "type": "object"
+                    }
                 }
-            },
-            "title": "Object fields",
-            "type": "object"
+            }
         },
         "stringFields": {
+            "type": "object",
+            "title": "String fields",
             "properties": {
                 "string": {
-                    "description": "String field with title and description.",
+                    "type": "string",
                     "title": "String",
-                    "type": "string"
-                },
-                "stringLong": {
-                    "description": "Here's a string field with a very long title and a very long description. Notice how long the title and the description for this string field is. The title and the description for this string field are both significantly longer than the title and the description for the other fields in this form.",
-                    "title": "String field with a very long title and a very long description that require special handling and treatment so that its display in the form is optimized",
-                    "type": "string"
+                    "description": "String field with title and description."
                 },
                 "stringCustomLabels": {
+                    "type": "string",
+                    "title": "String enum with custom labels",
                     "description": "String field with enumerated values and custom labels.",
                     "oneOf": [
                         {
-                            "const": "firstValue",
-                            "title": "First Value"
+                            "title": "First Value",
+                            "const": "firstValue"
                         },
                         {
-                            "const": "secondValue",
-                            "title": "Second Value"
+                            "title": "Second Value",
+                            "const": "secondValue"
                         },
                         {
-                            "const": "thirdValue",
-                            "title": "Third Value"
+                            "title": "Third Value",
+                            "const": "thirdValue"
                         }
-                    ],
-                    "title": "String enum with custom labels",
-                    "type": "string"
+                    ]
                 },
                 "stringEnum": {
+                    "type": "string",
+                    "title": "String enum",
                     "description": "String field with enumerated values.",
                     "enum": [
                         "firstValue",
                         "secondValue",
                         "thirdValue"
-                    ],
-                    "title": "String enum",
-                    "type": "string"
+                    ]
                 },
                 "stringFormat": {
-                    "description": "String field with format 'ipv4'.",
-                    "format": "ipv4",
+                    "type": "string",
                     "title": "String with format",
-                    "type": "string"
+                    "description": "String field with format 'ipv4'.",
+                    "format": "ipv4"
                 },
                 "stringLength": {
+                    "type": "string",
+                    "title": "String with min/max length",
                     "description": "String field with minLength and maxLength validation. Submit the form to see validation errors.",
                     "maxLength": 5,
-                    "minLength": 2,
-                    "title": "String with min/max length",
-                    "type": "string"
+                    "minLength": 2
+                },
+                "stringLong": {
+                    "type": "string",
+                    "title": "String field with a very long title and a very long description that require special handling and treatment so that its display in the form is optimized",
+                    "description": "Here's a string field with a very long title and a very long description. Notice how long the title and the description for this string field is. The title and the description for this string field are both significantly longer than the title and the description for the other fields in this form."
                 },
                 "stringPattern": {
-                    "description": "String field with pattern validation for regular expression '^[a-z0-9]{10,20}$'.",
-                    "pattern": "^[a-z0-9]{10,20}$",
+                    "type": "string",
                     "title": "String with pattern",
-                    "type": "string"
+                    "description": "String field with pattern validation for regular expression '^[a-z0-9]{10,20}$'.",
+                    "pattern": "^[a-z0-9]{10,20}$"
                 }
-            },
-            "title": "String fields",
-            "type": "object"
+            }
         }
-    },
-    "type": "object"
+    }
 }
