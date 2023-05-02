@@ -164,6 +164,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
             type: 'object',
             properties: {
               objectOfStrings: {
+                $comment: 'transformedProperty',
                 type: 'array',
                 items: {
                   type: 'object',
@@ -184,6 +185,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                 },
               },
               objectOfObjects: {
+                $comment: 'transformedProperty',
                 type: 'array',
                 items: {
                   type: 'object',
@@ -203,6 +205,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                 },
               },
               objectOfStringsWithDefault: {
+                $comment: 'transformedProperty',
                 type: 'array',
                 default: [
                   {
@@ -233,6 +236,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                 },
               },
               objectOfObjectsWithDefault: {
+                $comment: 'transformedProperty',
                 type: 'array',
                 default: [
                   {
@@ -281,6 +285,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
             type: 'object',
             properties: {
               objectOfStrings: {
+                $comment: 'transformedProperty',
                 type: 'array',
                 items: {
                   type: 'object',
@@ -302,6 +307,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                 },
               },
               objectOfObjects: {
+                $comment: 'transformedProperty',
                 type: 'array',
                 items: {
                   type: 'object',
@@ -322,6 +328,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                 },
               },
               objectOfStringsWithDefault: {
+                $comment: 'transformedProperty',
                 type: 'array',
                 default: [
                   {
@@ -353,6 +360,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                 },
               },
               objectOfObjectsWithDefault: {
+                $comment: 'transformedProperty',
                 type: 'array',
                 default: [
                   {
@@ -402,6 +410,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
             type: 'object',
             properties: {
               objectOfStrings: {
+                $comment: 'transformedProperty',
                 type: 'array',
                 default: [
                   {
@@ -432,6 +441,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                 },
               },
               objectOfObjects: {
+                $comment: 'transformedProperty',
                 type: 'array',
                 default: [
                   {

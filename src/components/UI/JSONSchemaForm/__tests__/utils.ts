@@ -666,6 +666,61 @@ describe('JSONSchemaForm:utils', () => {
         },
       };
 
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          arrayOfObjects: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                label: { type: 'string' },
+                value: { type: 'string' },
+              },
+            },
+          },
+          arrayOfTransformedObjects: {
+            $comment: 'transformedProperty',
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                transformedPropertyKey: { type: 'string' },
+                transformedPropertyValue: { type: 'string' },
+              },
+            },
+          },
+          arrayOfTransformedObjects2: {
+            $comment: 'transformedProperty',
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                transformedPropertyKey: { type: 'string' },
+                instanceType: { type: 'string' },
+                minSize: { type: 'number' },
+              },
+            },
+          },
+          innerObject: {
+            type: 'object',
+            properties: {
+              arrayOfTransformedObjects: {
+                $comment: 'transformedProperty',
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    transformedPropertyKey: { type: 'string' },
+                    transformedPropertyValue: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+
       const expected = {
         arrayOfObjects: [
           {
@@ -698,7 +753,9 @@ describe('JSONSchemaForm:utils', () => {
         },
       };
 
-      expect(transformArraysIntoObjects(testObject)).toEqual(expected);
+      expect(transformArraysIntoObjects(testObject, schema, schema)).toEqual(
+        expected
+      );
     });
   });
 });

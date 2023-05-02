@@ -216,8 +216,10 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
       updateTouchedFields(cleanData, fieldId);
       onChange(
         cleanData,
-        transformArraysIntoObjects<RJSFSchema>(
-          cleanDataWithoutDefaultValues
+        transformArraysIntoObjects(
+          cleanDataWithoutDefaultValues,
+          preprocessedSchema,
+          preprocessedSchema
         ) as RJSFSchema
       );
     },

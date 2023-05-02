@@ -14,6 +14,7 @@ import { pipe } from 'utils/helpers';
 
 import { IIdConfigs } from '.';
 import {
+  isTransformedProperty,
   TRANSFORMED_PROPERTY_KEY,
   TRANSFORMED_PROPERTY_VALUE,
 } from './schemaUtils';
@@ -213,6 +214,7 @@ export function cleanPayload(
           ...options,
           defaultValues: shouldCleanInnerDefaultValues(
             value,
+            valueSchema,
             defaultValue as unknown[]
           )
             ? defaultValue
@@ -285,9 +287,10 @@ interface ITransformedObject {
 
 function shouldCleanInnerDefaultValues(
   value: unknown[],
+  valueSchema: RJSFSchema,
   defaultValue: unknown[]
 ) {
-  if (!containsTransformedObjects(value)) {
+  if (!isTransformedProperty(valueSchema)) {
     return false;
   }
 
@@ -302,26 +305,28 @@ function shouldCleanInnerDefaultValues(
   return isEqual(valueKeys, defaultValueKeys);
 }
 
-function containsTransformedObjects(array: unknown[]) {
-  return array.some(
-    (item) =>
-      isPlainObject(item) &&
-      (item as {}).hasOwnProperty(TRANSFORMED_PROPERTY_KEY)
-  );
-}
-
-export function transformArraysIntoObjects<T = {}>(
-  object: Iterable<T> | unknown
-): Iterable<T> | unknown {
+export function transformArraysIntoObjects(
+  object: unknown,
+  objectSchema: RJSFSchema,
+  rootSchema: RJSFSchema
+): unknown {
   return transform(
     object as unknown[],
     (result: Record<string | number, unknown>, value, key) => {
+      const valueSchema = getValueSchema(key, objectSchema, rootSchema);
+      if (
+        typeof valueSchema === 'undefined' ||
+        typeof valueSchema === 'boolean'
+      ) {
+        return;
+      }
+
       let newValue = value;
 
       if (Array.isArray(value)) {
-        newValue = transformArraysIntoObjects<T>(value);
+        newValue = transformArraysIntoObjects(value, valueSchema, rootSchema);
 
-        if (containsTransformedObjects(newValue as unknown[])) {
+        if (isTransformedProperty(valueSchema)) {
           const entries = (newValue as ITransformedObject[]).map((item) => {
             const {
               [TRANSFORMED_PROPERTY_KEY]: itemKey,
@@ -335,7 +340,7 @@ export function transformArraysIntoObjects<T = {}>(
           newValue = Object.fromEntries(entries);
         }
       } else if (isPlainObject(value)) {
-        newValue = transformArraysIntoObjects<T>(value);
+        newValue = transformArraysIntoObjects(value, valueSchema, rootSchema);
       }
 
       if (Array.isArray(result)) {

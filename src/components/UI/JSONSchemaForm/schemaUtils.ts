@@ -9,6 +9,11 @@ import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
 
 export const TRANSFORMED_PROPERTY_KEY = 'transformedPropertyKey';
 export const TRANSFORMED_PROPERTY_VALUE = 'transformedPropertyValue';
+const TRANSFORMED_PROPERTY_COMMENT = 'transformedProperty';
+
+export function isTransformedProperty(schema: RJSFSchema) {
+  return schema.$comment === TRANSFORMED_PROPERTY_COMMENT;
+}
 
 function addKeyProperty(schema: RJSFSchema, pattern?: string): RJSFSchema {
   return {
@@ -156,6 +161,7 @@ export function preprocessSchema(
         patchedSchema,
         pattern
       );
+      obj.$comment = TRANSFORMED_PROPERTY_COMMENT;
 
       const defaultValue =
         obj.default ?? getDefaultValueFromInternals(originalSchema, path);
