@@ -189,7 +189,7 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
 
   const onChangeCallback = useCallback(
     (data: RJSFSchema, fieldId?: string) => {
-      const cleanData = cleanPayload<RJSFSchema>(
+      const cleanData = cleanPayload(
         data,
         preprocessedSchema,
         preprocessedSchema,
@@ -201,7 +201,7 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
         }
       ) as RJSFSchema;
 
-      const cleanDataWithoutDefaultValues = cleanPayload<RJSFSchema>(
+      const cleanDataWithoutDefaultValues = cleanPayload(
         data,
         preprocessedSchema,
         preprocessedSchema,

@@ -163,9 +163,9 @@ function getValueSchema(
   return valueSchema;
 }
 
-export interface CleanPayloadOptions<T = {}> extends CleanOptions {
+export interface CleanPayloadOptions extends CleanOptions {
   cleanDefaultValues?: boolean;
-  defaultValues?: Iterable<T> | unknown;
+  defaultValues?: unknown;
   isException?: (
     value: unknown,
     cleanValue: unknown,
@@ -173,12 +173,12 @@ export interface CleanPayloadOptions<T = {}> extends CleanOptions {
   ) => boolean;
 }
 
-export function cleanPayload<T = {}>(
-  object: Iterable<T> | unknown,
+export function cleanPayload(
+  object: unknown,
   objectSchema: RJSFSchema,
   rootSchema: RJSFSchema,
-  options?: CleanPayloadOptions<T>
-): Iterable<T> | unknown {
+  options?: CleanPayloadOptions
+): unknown {
   const {
     emptyArrays = true,
     emptyObjects = true,
@@ -209,28 +209,33 @@ export function cleanPayload<T = {}>(
         getImplicitDefaultValue(value);
 
       if (Array.isArray(value)) {
-        newValue = cleanPayload<unknown>(value, valueSchema, rootSchema, {
+        newValue = cleanPayload(value, valueSchema, rootSchema, {
           ...options,
-          defaultValues: undefined,
+          defaultValues: shouldCleanInnerDefaultValues(
+            value,
+            defaultValue as unknown[]
+          )
+            ? defaultValue
+            : undefined,
         });
 
         if (
-          ((cleanDefaultValues && isEqual(value, defaultValue)) ||
-            (cleanDefaultValues && isEqual(newValue, defaultValue)) ||
+          ((cleanDefaultValues &&
+            isEqualToDefaultValue(value, newValue, key, defaultValue)) ||
             (emptyArrays && isEmpty(newValue))) &&
           !isException(value, newValue, isArray)
         ) {
           return;
         }
       } else if (isPlainObject(value)) {
-        newValue = cleanPayload<unknown>(value, valueSchema, rootSchema, {
+        newValue = cleanPayload(value, valueSchema, rootSchema, {
           ...options,
           defaultValues: defaultValue,
         });
 
         if (
-          ((cleanDefaultValues && isEqual(value, defaultValue)) ||
-            (cleanDefaultValues && isEqual(newValue, defaultValue)) ||
+          ((cleanDefaultValues &&
+            isEqualToDefaultValue(value, newValue, key, defaultValue)) ||
             (emptyObjects && isEmpty(newValue))) &&
           !isException(value, newValue, isArray)
         ) {
@@ -241,7 +246,8 @@ export function cleanPayload<T = {}>(
         const cleanValue = cleanDeep({ value: newValue }, options).value;
 
         if (
-          ((cleanDefaultValues && newValue === defaultValue) ||
+          ((cleanDefaultValues &&
+            isEqualToDefaultValue(value, newValue, key, defaultValue)) ||
             (newValue !== undefined && cleanValue === undefined) ||
             (undefinedValues && cleanValue === undefined)) &&
           !isException(value, newValue, isArray)
@@ -259,13 +265,44 @@ export function cleanPayload<T = {}>(
   );
 }
 
+function isEqualToDefaultValue(
+  value: unknown,
+  newValue: unknown,
+  key: number | string,
+  defaultValue: unknown
+) {
+  return (
+    key !== TRANSFORMED_PROPERTY_KEY &&
+    (isEqual(value, defaultValue) || isEqual(newValue, defaultValue))
+  );
+}
+
 interface ITransformedObject {
   [TRANSFORMED_PROPERTY_KEY]: string;
   [TRANSFORMED_PROPERTY_VALUE]?: unknown;
   [key: string]: unknown;
 }
 
-function shouldBeTransformedIntoObject(array: unknown[]) {
+function shouldCleanInnerDefaultValues(
+  value: unknown[],
+  defaultValue: unknown[]
+) {
+  if (!containsTransformedObjects(value)) {
+    return false;
+  }
+
+  const valueKeys = value
+    .map((item) => (item as ITransformedObject)[TRANSFORMED_PROPERTY_KEY])
+    .sort();
+
+  const defaultValueKeys = defaultValue
+    .map((item) => (item as ITransformedObject)[TRANSFORMED_PROPERTY_KEY])
+    .sort();
+
+  return isEqual(valueKeys, defaultValueKeys);
+}
+
+function containsTransformedObjects(array: unknown[]) {
   return array.some(
     (item) =>
       isPlainObject(item) &&
@@ -284,7 +321,7 @@ export function transformArraysIntoObjects<T = {}>(
       if (Array.isArray(value)) {
         newValue = transformArraysIntoObjects<T>(value);
 
-        if (shouldBeTransformedIntoObject(newValue as unknown[])) {
+        if (containsTransformedObjects(newValue as unknown[])) {
           const entries = (newValue as ITransformedObject[]).map((item) => {
             const {
               [TRANSFORMED_PROPERTY_KEY]: itemKey,
