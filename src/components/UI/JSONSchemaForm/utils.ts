@@ -1,4 +1,8 @@
-import { RJSFValidationError } from '@rjsf/utils';
+import {
+  findSchemaDefinition,
+  RJSFSchema,
+  RJSFValidationError,
+} from '@rjsf/utils';
 import cleanDeep, { CleanOptions } from 'clean-deep';
 import flatten from 'lodash/flatten';
 import groupBy from 'lodash/groupBy';
@@ -9,6 +13,11 @@ import transform from 'lodash/transform';
 import { pipe } from 'utils/helpers';
 
 import { IIdConfigs } from '.';
+import {
+  isTransformedProperty,
+  TRANSFORMED_PROPERTY_KEY,
+  TRANSFORMED_PROPERTY_VALUE,
+} from './schemaUtils';
 
 function transformRequiredArrayItemError(
   error: RJSFValidationError
@@ -111,25 +120,89 @@ export function getArrayItemIndex(id: string, idSeparator: string) {
 
 export const DEFAULT_STRING_VALUE = '';
 export const DEFAULT_BOOLEAN_VALUE = false;
-export const DEFAULT_NUMERIC_VALUE = 0;
+export const DEFAULT_NUMERIC_VALUE = null;
 export const DEFAULT_ARRAY_VALUE = [];
+export const DEFAULT_OBJECT_VALUE = {};
 
-function getImplicitDefaultValue(value: unknown) {
+function isNumeric(schema: RJSFSchema) {
+  return Boolean(
+    schema.type === 'integer' ||
+      schema.type?.includes('integer') ||
+      schema.type === 'number' ||
+      schema.type?.includes('number')
+  );
+}
+
+function getImplicitDefaultValue(schema: RJSFSchema) {
   switch (true) {
-    case typeof value === 'string':
+    case schema.type === 'string':
       return DEFAULT_STRING_VALUE;
-    case typeof value === 'boolean':
+    case isNumeric(schema):
+      return DEFAULT_NUMERIC_VALUE;
+    case schema.type === 'boolean':
       return DEFAULT_BOOLEAN_VALUE;
-    case Array.isArray(value):
+    case schema.type === 'array':
       return DEFAULT_ARRAY_VALUE;
+    case schema.type === 'object':
+      return DEFAULT_OBJECT_VALUE;
     default:
       return undefined;
   }
 }
 
-export interface CleanPayloadOptions<T = {}> extends CleanOptions {
+function getDefaultValueFromParent(
+  key: number,
+  value: unknown,
+  defaultValues: unknown,
+  schema: RJSFSchema
+) {
+  if (typeof defaultValues === 'undefined') {
+    return undefined;
+  }
+
+  if (isTransformedProperty(schema)) {
+    const transformedPropertyKey = (value as ITransformedObject)[
+      TRANSFORMED_PROPERTY_KEY
+    ];
+
+    return (defaultValues as unknown[]).find(
+      (item) =>
+        (item as ITransformedObject)[TRANSFORMED_PROPERTY_KEY] ===
+        transformedPropertyKey
+    );
+  }
+
+  return defaultValues?.[key as keyof typeof defaultValues];
+}
+
+function getValueSchema(
+  key: number,
+  schema: RJSFSchema,
+  rootSchema: RJSFSchema
+) {
+  const valueSchema =
+    schema.type === 'array'
+      ? schema.items && Array.isArray(schema.items)
+        ? schema.items[key]
+        : schema.items
+      : schema.properties
+      ? schema.properties[key]
+      : undefined;
+
+  if (
+    typeof valueSchema !== 'undefined' &&
+    typeof valueSchema !== 'boolean' &&
+    valueSchema.$ref
+  ) {
+    return findSchemaDefinition(valueSchema.$ref, rootSchema);
+  }
+
+  return valueSchema;
+}
+
+export interface CleanPayloadOptions extends CleanOptions {
   cleanDefaultValues?: boolean;
-  defaultValues?: Iterable<T> | unknown;
+  defaultValues?: unknown;
   isException?: (
     value: unknown,
     cleanValue: unknown,
@@ -137,10 +210,12 @@ export interface CleanPayloadOptions<T = {}> extends CleanOptions {
   ) => boolean;
 }
 
-export function cleanPayload<T = {}>(
-  object: Iterable<T> | unknown,
-  options?: CleanPayloadOptions<T>
-): Iterable<T> | unknown {
+export function cleanPayload(
+  object: unknown,
+  objectSchema: RJSFSchema,
+  rootSchema: RJSFSchema,
+  options?: CleanPayloadOptions
+): unknown {
   const {
     emptyArrays = true,
     emptyObjects = true,
@@ -156,51 +231,155 @@ export function cleanPayload<T = {}>(
     object as unknown[],
     // eslint-disable-next-line complexity
     (result: Record<string | number, unknown>, value, key) => {
+      const valueSchema = getValueSchema(key, objectSchema, rootSchema);
+      if (
+        typeof valueSchema === 'undefined' ||
+        typeof valueSchema === 'boolean'
+      ) {
+        return;
+      }
+
       let newValue = value;
-      const defaultValue = cleanDefaultValues
-        ? defaultValues?.[key as keyof typeof defaultValues] ??
-          getImplicitDefaultValue(value)
-        : undefined;
+      const defaultValue =
+        getDefaultValueFromParent(key, value, defaultValues, objectSchema) ??
+        valueSchema.default ??
+        getImplicitDefaultValue(valueSchema);
 
       if (Array.isArray(value)) {
-        newValue = cleanPayload<unknown>(value, {
+        newValue = cleanPayload(value, valueSchema, rootSchema, {
           ...options,
-          defaultValues: undefined,
+          defaultValues: shouldCleanInnerDefaultValues(
+            value,
+            valueSchema,
+            defaultValue as unknown[]
+          )
+            ? defaultValue
+            : undefined,
         });
 
         if (
-          ((cleanDefaultValues && isEqual(value, defaultValue)) ||
-            (cleanDefaultValues && isEqual(newValue, defaultValue)) ||
+          ((cleanDefaultValues &&
+            isEqualToDefaultValue(value, newValue, key, defaultValue)) ||
             (emptyArrays && isEmpty(newValue))) &&
           !isException(value, newValue, isArray)
         ) {
           return;
         }
       } else if (isPlainObject(value)) {
-        newValue = cleanPayload<unknown>(value, {
+        newValue = cleanPayload(value, valueSchema, rootSchema, {
           ...options,
           defaultValues: defaultValue,
         });
 
         if (
-          emptyObjects &&
-          isEmpty(newValue) &&
+          ((cleanDefaultValues &&
+            isEqualToDefaultValue(value, newValue, key, defaultValue)) ||
+            (emptyObjects && isEmpty(newValue))) &&
           !isException(value, newValue, isArray)
         ) {
           return;
         }
       } else {
-        newValue = value;
         const cleanValue = cleanDeep({ value: newValue }, options).value;
+        newValue = value;
+        if (isNumeric(valueSchema)) {
+          newValue = value === null && defaultValue !== null ? 0 : value;
+        }
 
         if (
-          ((cleanDefaultValues && newValue === defaultValue) ||
+          ((cleanDefaultValues &&
+            isEqualToDefaultValue(value, newValue, key, defaultValue)) ||
             (newValue !== undefined && cleanValue === undefined) ||
             (undefinedValues && cleanValue === undefined)) &&
           !isException(value, newValue, isArray)
         ) {
           return;
         }
+      }
+
+      if (Array.isArray(result)) {
+        result.push(newValue);
+      } else {
+        result[key] = newValue;
+      }
+    }
+  );
+}
+
+function isEqualToDefaultValue(
+  value: unknown,
+  newValue: unknown,
+  key: number | string,
+  defaultValue: unknown
+) {
+  return (
+    key !== TRANSFORMED_PROPERTY_KEY &&
+    (isEqual(value, defaultValue) || isEqual(newValue, defaultValue))
+  );
+}
+
+interface ITransformedObject {
+  [TRANSFORMED_PROPERTY_KEY]: string;
+  [TRANSFORMED_PROPERTY_VALUE]?: unknown;
+  [key: string]: unknown;
+}
+
+function shouldCleanInnerDefaultValues(
+  value: unknown[],
+  valueSchema: RJSFSchema,
+  defaultValue: unknown[]
+) {
+  if (!isTransformedProperty(valueSchema)) {
+    return false;
+  }
+
+  const valueKeys = value
+    .map((item) => (item as ITransformedObject)[TRANSFORMED_PROPERTY_KEY])
+    .sort();
+
+  const defaultValueKeys = defaultValue
+    .map((item) => (item as ITransformedObject)[TRANSFORMED_PROPERTY_KEY])
+    .sort();
+
+  return isEqual(valueKeys, defaultValueKeys);
+}
+
+export function transformArraysIntoObjects(
+  object: unknown,
+  objectSchema: RJSFSchema,
+  rootSchema: RJSFSchema
+): unknown {
+  return transform(
+    object as unknown[],
+    (result: Record<string | number, unknown>, value, key) => {
+      const valueSchema = getValueSchema(key, objectSchema, rootSchema);
+      if (
+        typeof valueSchema === 'undefined' ||
+        typeof valueSchema === 'boolean'
+      ) {
+        return;
+      }
+
+      let newValue = value;
+
+      if (Array.isArray(value)) {
+        newValue = transformArraysIntoObjects(value, valueSchema, rootSchema);
+
+        if (isTransformedProperty(valueSchema)) {
+          const entries = (newValue as ITransformedObject[]).map((item) => {
+            const {
+              [TRANSFORMED_PROPERTY_KEY]: itemKey,
+              [TRANSFORMED_PROPERTY_VALUE]: itemValue,
+              ...restItem
+            } = item;
+
+            return [itemKey, itemValue ?? restItem];
+          });
+
+          newValue = Object.fromEntries(entries);
+        }
+      } else if (isPlainObject(value)) {
+        newValue = transformArraysIntoObjects(value, valueSchema, rootSchema);
       }
 
       if (Array.isArray(result)) {
