@@ -27,10 +27,7 @@ const BaseInputTemplate: React.FC<WidgetProps<RJSFSchema>> = ({
   const schemaType = getSchemaType(schema);
   const implicitDefaultValue =
     schemaType === 'string' ? DEFAULT_STRING_VALUE : DEFAULT_NUMERIC_VALUE;
-  const emptyValue =
-    schema.default !== undefined
-      ? options.emptyValue ?? implicitDefaultValue
-      : undefined;
+  const emptyValue = options.emptyValue ?? implicitDefaultValue;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
