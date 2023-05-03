@@ -197,6 +197,7 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
           emptyStrings: false,
           emptyArrays: false,
           emptyObjects: false,
+          nullValues: false,
           isException: (_value, _cleanValue, isArrayItem) => isArrayItem,
         }
       ) as RJSFSchema;
@@ -209,6 +210,7 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
           emptyStrings: false,
           emptyArrays: false,
           emptyObjects: false,
+          nullValues: false,
           cleanDefaultValues: true,
         }
       ) as RJSFSchema;

@@ -20,10 +20,7 @@ const CheckboxWidget: React.FC<
   onChange,
 }) => {
   const implicitDefaultValue = DEFAULT_BOOLEAN_VALUE;
-  const emptyValue =
-    schema.default !== undefined
-      ? options.emptyValue ?? implicitDefaultValue
-      : undefined;
+  const emptyValue = options.emptyValue ?? implicitDefaultValue;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.checked === false ? emptyValue : e.target.checked);

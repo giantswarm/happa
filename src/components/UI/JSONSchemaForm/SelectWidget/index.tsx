@@ -22,11 +22,7 @@ const SelectWidget: React.FC<WidgetProps> = ({
     const schemaType = getSchemaType(schema);
     const implicitDefaultValue =
       schemaType === 'string' ? DEFAULT_STRING_VALUE : DEFAULT_NUMERIC_VALUE;
-    const emptyOptionValue =
-      schema.default !== undefined
-        ? emptyValue ?? implicitDefaultValue
-        : undefined;
-
+    const emptyOptionValue = emptyValue ?? implicitDefaultValue;
     const selectOptions = [
       {
         label: '',

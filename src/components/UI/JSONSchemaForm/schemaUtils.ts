@@ -5,7 +5,7 @@ import isPlainObject from 'lodash/isPlainObject';
 import omit from 'lodash/omit';
 import set from 'lodash/set';
 import { generateUID } from 'MAPI/utils';
-import { pipe, traverseJSONSchemaObject } from 'utils/helpers';
+import { traverseJSONSchemaObject } from 'utils/helpers';
 
 export const TRANSFORMED_PROPERTY_KEY = 'transformedPropertyKey';
 export const TRANSFORMED_PROPERTY_VALUE = 'transformedPropertyValue';
@@ -109,7 +109,7 @@ export function preprocessSchema(
   fieldsToRemove: string[] = ['properties.internal']
 ): RJSFSchema {
   const originalSchema = cloneDeep(schema);
-  const patchedSchema = omit(schema, fieldsToRemove);
+  let patchedSchema = omit(schema, fieldsToRemove);
 
   const processSubschemas = ({
     obj,
@@ -176,7 +176,29 @@ export function preprocessSchema(
     return { obj, path };
   };
 
-  return traverseJSONSchemaObject(patchedSchema, (obj, path) =>
-    pipe({ obj, path }, processSubschemas, transformAdditionalProperties)
+  const processNumericProperties = ({
+    obj,
+    path,
+  }: {
+    obj: RJSFSchema;
+    path?: string | null;
+  }) => {
+    if (obj.type === 'integer' || obj.type === 'number') {
+      obj.type = [obj.type, 'null'];
+    }
+
+    return { obj, path };
+  };
+
+  patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
+    processSubschemas({ obj, path })
   );
+  patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
+    transformAdditionalProperties({ obj, path })
+  );
+  patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
+    processNumericProperties({ obj, path })
+  );
+
+  return patchedSchema;
 }

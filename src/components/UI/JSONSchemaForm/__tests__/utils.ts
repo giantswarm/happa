@@ -109,6 +109,7 @@ describe('JSONSchemaForm:utils', () => {
       emptyStrings: false,
       emptyArrays: false,
       emptyObjects: false,
+      nullValues: false,
       cleanDefaultValues: true,
     };
 
@@ -284,6 +285,11 @@ describe('JSONSchemaForm:utils', () => {
           payload: { field: 321 },
           expected: { field: 321 },
         },
+        {
+          defaultValue: 123,
+          payload: { field: null },
+          expected: { field: 0 },
+        },
       ];
 
       for (const { defaultValue, payload, expected } of examples) {
@@ -303,11 +309,11 @@ describe('JSONSchemaForm:utils', () => {
       }
     });
 
-    it('does not use implicit default for numbers', () => {
+    it('implicitly uses null as default value for numbers', () => {
       const examples = [
         {
-          payload: { field: 0 },
-          expected: { field: 0 },
+          payload: { field: null },
+          expected: {},
         },
         {
           payload: { field: 123 },

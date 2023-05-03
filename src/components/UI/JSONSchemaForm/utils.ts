@@ -120,23 +120,59 @@ export function getArrayItemIndex(id: string, idSeparator: string) {
 
 export const DEFAULT_STRING_VALUE = '';
 export const DEFAULT_BOOLEAN_VALUE = false;
-export const DEFAULT_NUMERIC_VALUE = 0;
+export const DEFAULT_NUMERIC_VALUE = null;
 export const DEFAULT_ARRAY_VALUE = [];
 export const DEFAULT_OBJECT_VALUE = {};
 
-function getImplicitDefaultValue(value: unknown) {
+function isNumeric(schema: RJSFSchema) {
+  return Boolean(
+    schema.type === 'integer' ||
+      schema.type?.includes('integer') ||
+      schema.type === 'number' ||
+      schema.type?.includes('number')
+  );
+}
+
+function getImplicitDefaultValue(schema: RJSFSchema) {
   switch (true) {
-    case typeof value === 'string':
+    case schema.type === 'string':
       return DEFAULT_STRING_VALUE;
-    case typeof value === 'boolean':
+    case isNumeric(schema):
+      return DEFAULT_NUMERIC_VALUE;
+    case schema.type === 'boolean':
       return DEFAULT_BOOLEAN_VALUE;
-    case Array.isArray(value):
+    case schema.type === 'array':
       return DEFAULT_ARRAY_VALUE;
-    case isPlainObject(value):
+    case schema.type === 'object':
       return DEFAULT_OBJECT_VALUE;
     default:
       return undefined;
   }
+}
+
+function getDefaultValueFromParent(
+  key: number,
+  value: unknown,
+  defaultValues: unknown,
+  schema: RJSFSchema
+) {
+  if (typeof defaultValues === 'undefined') {
+    return undefined;
+  }
+
+  if (isTransformedProperty(schema)) {
+    const transformedPropertyKey = (value as ITransformedObject)[
+      TRANSFORMED_PROPERTY_KEY
+    ];
+
+    return (defaultValues as unknown[]).find(
+      (item) =>
+        (item as ITransformedObject)[TRANSFORMED_PROPERTY_KEY] ===
+        transformedPropertyKey
+    );
+  }
+
+  return defaultValues?.[key as keyof typeof defaultValues];
 }
 
 function getValueSchema(
@@ -205,9 +241,9 @@ export function cleanPayload(
 
       let newValue = value;
       const defaultValue =
-        defaultValues?.[key as keyof typeof defaultValues] ??
+        getDefaultValueFromParent(key, value, defaultValues, objectSchema) ??
         valueSchema.default ??
-        getImplicitDefaultValue(value);
+        getImplicitDefaultValue(valueSchema);
 
       if (Array.isArray(value)) {
         newValue = cleanPayload(value, valueSchema, rootSchema, {
@@ -244,8 +280,11 @@ export function cleanPayload(
           return;
         }
       } else {
-        newValue = value;
         const cleanValue = cleanDeep({ value: newValue }, options).value;
+        newValue = value;
+        if (isNumeric(valueSchema)) {
+          newValue = value === null && defaultValue !== null ? 0 : value;
+        }
 
         if (
           ((cleanDefaultValues &&
