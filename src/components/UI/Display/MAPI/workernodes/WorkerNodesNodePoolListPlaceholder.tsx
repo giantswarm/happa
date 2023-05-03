@@ -13,17 +13,11 @@ const WorkerNodesNodePoolListPlaceholder: React.FC<
   React.PropsWithChildren<IWorkerNodesNodePoolListPlaceholderProps>
 > = ({ onCreateButtonClick, readOnly, canCreateNodePools, ...props }) => {
   return (
-    <Box
-      background='background-back'
-      pad='large'
-      align='center'
-      gap='medium'
-      {...props}
-    >
+    <Box background='background-back' pad='large' {...props}>
       {readOnly ? (
         <Text color='text-weak'>No node pools.</Text>
       ) : (
-        <>
+        <Box align='center' gap='medium'>
           <Box>
             <Text color='text-weak'>
               {canCreateNodePools
@@ -44,7 +38,7 @@ const WorkerNodesNodePoolListPlaceholder: React.FC<
               Add node pool
             </Button>
           </Box>
-        </>
+        </Box>
       )}
     </Box>
   );
