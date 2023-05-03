@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/giantswarm/happa/tree/main.svg?style=shield&circle-token=6e98ba111259986b590f228cd20e20fcea3dd2e5)](https://circleci.com/gh/giantswarm/happa/tree/master)
+[![CircleCI](https://circleci.com/gh/giantswarm/happa/tree/main.svg?style=shield&circle-token=6e98ba111259986b590f228cd20e20fcea3dd2e5)](https://circleci.com/gh/giantswarm/happa/tree/main)
 [![Docker Repository on Quay](https://quay.io/repository/giantswarm/happa/status 'Docker Repository on Quay')](https://quay.io/repository/giantswarm/happa)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=shield)](https://github.com/prettier/prettier)
 [![Known Vulnerabilities](https://snyk.io/test/github/giantswarm/happa/badge.svg?targetFile=package.json)](https://snyk.io/test/github/giantswarm/happa?targetFile=package.json)
@@ -114,9 +114,7 @@ https://fortawesome.com/kits/d940f7eb/docs
 
 ## Updating dependencies
 
-Dependabot is configured to automatically create pull requests (PRs) that update our dependencies
-when they go stale. After approval and a `@dependabot merge` comment, dependabot
-automatically merges open PRs.
+Renovate is configured for this repository to automatically create pull requests (PRs) that update our dependencies and to request reviews from the relevant teams/individuals. Reviewers can be configured in the `CODEOWNERS` file, and more information regarding Renovate configurations can be found [here](https://intranet.giantswarm.io/docs/dev-and-releng/ci/tools/renovate/).
 
 ## Coding style
 
@@ -136,4 +134,4 @@ We use the following config params:
 
 To avoid pushing code that will fail the CI due to codestyle issues, we've added a pre-commit hook using [`husky`](https://github.com/typicode/husky/).
 
-This runs before every commit, and it will not let commits go through if the `prettier` check has not passed.
+This runs before every commit, and it will not let commits go through if the `tsc`, `eslint`, or `prettier` checks have not passed.
