@@ -17,7 +17,7 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-headers: DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Authorization, Impersonate-User, Impersonate-Group
     nginx.ingress.kubernetes.io/enable-cors: "true"
 
-    nginx.ingress.kubernetes.io/configuration-snippet: |
+    nginx.ingress.kubernetes.io/server-snippet: |
       large_client_header_buffers 4 32k;
 
     {{- if .Values.ingress.tls.letsencrypt }}
