@@ -217,7 +217,7 @@ export async function deleteControlPlaneNodesForCluster(
         await infrav1alpha3.deleteAWSControlPlane(
           client,
           auth,
-          controlPlaneNode as infrav1alpha3.IAWSControlPlane
+          controlPlaneNode
         );
 
         controlPlaneNode.metadata.deletionTimestamp = new Date().toISOString();
@@ -231,7 +231,7 @@ export async function deleteControlPlaneNodesForCluster(
         await infrav1alpha3.deleteG8sControlPlane(
           client,
           auth,
-          controlPlaneNode as infrav1alpha3.IG8sControlPlane
+          controlPlaneNode
         );
 
         controlPlaneNode.metadata.deletionTimestamp = new Date().toISOString();
@@ -646,11 +646,7 @@ export async function switchClusterToHACPNodes(
       controlPlaneNode.spec.replicas = Constants.AWS_HA_MASTERS_MAX_NODES;
 
       requests.push(
-        infrav1alpha3.updateG8sControlPlane(
-          client,
-          auth,
-          controlPlaneNode as infrav1alpha3.IG8sControlPlane
-        )
+        infrav1alpha3.updateG8sControlPlane(client, auth, controlPlaneNode)
       );
     }
   }
