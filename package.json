@@ -243,7 +243,7 @@
     "kind-of": "6.0.3",
     "lodash": "4.17.21",
     "http-proxy": "1.18.1",
-    "node-fetch": "2.6.9",
+    "node-fetch": "2.6.11",
     "trim": "1.0.1",
     "underscore": "1.13.6"
   },
