@@ -33,7 +33,6 @@ export const randomClusterCAPA1AWSMachineTemplateList: capav1beta1.IAWSMachineTe
             'giantswarm.io/cluster': 'asdf1',
             'giantswarm.io/organization': 'org1',
             'helm.sh/chart': 'cluster-aws-0.10.0',
-            'release.giantswarm.io/version': '20.0.0-alpha1',
           },
           name: 'asdf1-control-plane-a9317eaf',
           namespace: 'org-org1',
@@ -62,7 +61,6 @@ export const randomClusterCAPA1AWSMachineTemplateList: capav1beta1.IAWSMachineTe
                 'giantswarm.io/cluster': 'asdf1',
                 'giantswarm.io/organization': 'org1',
                 'helm.sh/chart': 'cluster-aws-0.10.0',
-                'release.giantswarm.io/version': '20.0.0-alpha1',
               },
             },
             spec: {

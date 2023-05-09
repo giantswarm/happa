@@ -139,7 +139,6 @@ export const randomClusterCAPA1MachinePool1: capiv1beta1.IMachinePool = {
       'giantswarm.io/machine-pool': 'asdf1-machine-pool0',
       'giantswarm.io/organization': 'org1',
       'helm.sh/chart': 'cluster-aws-0.9.2',
-      'release.giantswarm.io/version': '20.0.0-alpha1',
     },
     name: 'asdf1-machine-pool0',
     namespace: 'org-org1',
