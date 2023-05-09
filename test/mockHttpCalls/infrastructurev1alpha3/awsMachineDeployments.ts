@@ -144,11 +144,7 @@ export const randomClusterAWS2AWSMachineDeployment: infrav1alpha3.IAWSMachineDep
     apiVersion: 'infrastructure.giantswarm.io/v1alpha3',
     kind: 'AWSMachineDeployment',
     metadata: {
-      annotations: {
-        'kubectl.kubernetes.io/last-applied-configuration':
-          '{"apiVersion":"infrastructure.giantswarm.io/v1alpha2","kind":"AWSMachineDeployment","metadata":{"annotations":{},"labels":{"aws-operator.giantswarm.io/version":"8.4.0","giantswarm.io/cluster":"c7hm5","giantswarm.io/machine-deployment":"vud0a","giantswarm.io/organization":"org1","release.giantswarm.io/version":"11.2.1"},"name":"vud0a","namespace":"default"},"spec":{"nodePool":{"description":"Node pool 1","machine":{"dockerVolumeSizeGB":100,"kubeletVolumeSizeGB":100},"scaling":{"max":10,"min":3}},"provider":{"availabilityZones":["eu-central-1a","eu-central-1b"],"instanceDistribution":{"onDemandBaseCapacity":0,"onDemandPercentageAboveBaseCapacity":0},"worker":{"instanceType":"m4.xlarge","useAlikeInstanceTypes":false}}}}\n',
-        'machine-deployment.giantswarm.io/subnet': '10.1.39.0/24',
-      },
+      annotations: {},
       creationTimestamp: '2022-05-24T08:31:10Z',
       finalizers: [
         'operatorkit.giantswarm.io/aws-operator-machine-deployment-controller',
