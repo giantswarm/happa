@@ -686,7 +686,7 @@ export async function fetchControlPlaneNodesForCluster(
           labelSelector: {
             matchingLabels: {
               [capiv1beta1.labelClusterName]: cluster.metadata.name,
-              [capzv1beta1.labelControlPlane]: '',
+              [capiv1beta1.labelMachineControlPlane]: '',
             },
           },
           namespace: cluster.metadata.namespace,
@@ -726,7 +726,7 @@ export async function fetchControlPlaneNodesForCluster(
           labelSelector: {
             matchingLabels: {
               [capiv1beta1.labelCluster]: cluster.metadata.name,
-              [capzv1beta1.labelControlPlane]: 'true',
+              [capiv1beta1.labelMachineControlPlane]: 'true',
             },
           },
           namespace: cluster.metadata.namespace,
@@ -1203,9 +1203,6 @@ export function getNodePoolScaling(
   const kind = nodePool.kind;
   const providerNodePoolKind = providerNodePool?.kind;
 
-  const nodePoolReleaseVersion =
-    nodePool.metadata.labels?.[capiv1beta1.labelReleaseVersion];
-
   const status: INodesStatus = {
     min: -1,
     max: -1,
@@ -1214,18 +1211,6 @@ export function getNodePoolScaling(
   };
 
   switch (true) {
-    // CAPZ alpha
-    case nodePoolReleaseVersion &&
-      compare(nodePoolReleaseVersion, Constants.AZURE_CAPZ_VERSION) >= 0: {
-      if (providerNodePool) {
-        [status.min, status.max] = capzv1beta1.getAzureMachinePoolScaling(
-          providerNodePool as capzv1beta1.IAzureMachinePool
-        );
-      }
-
-      return status;
-    }
-
     // CAPA
     case kind === capiv1beta1.MachinePool &&
       providerNodePoolKind === capav1beta1.AWSMachinePool: {
@@ -1567,17 +1552,6 @@ function getInstallationBaseURL(providerFlavor: ProviderFlavors): URL {
   return audienceURL;
 }
 
-export function isCAPZAlphaCluster(cluster: Cluster): boolean {
-  if (cluster.spec?.infrastructureRef?.kind !== capzv1beta1.AzureCluster) {
-    return false;
-  }
-
-  const releaseVersion = capiv1beta1.getReleaseVersion(cluster);
-  if (!releaseVersion) return false;
-
-  return compare(releaseVersion, Constants.AZURE_CAPZ_VERSION) >= 0;
-}
-
 function isCAPGCluster(cluster: Cluster): boolean {
   return cluster.spec?.infrastructureRef?.kind === capgv1beta1.GCPCluster;
 }
@@ -1587,7 +1561,7 @@ function isCAPZCluster(cluster: Cluster): boolean {
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
-  return isCAPZAlphaCluster(cluster) || hasClusterAppLabel(cluster);
+  return hasClusterAppLabel(cluster);
 }
 
 export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {

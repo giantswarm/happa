@@ -602,7 +602,7 @@ export async function createCluster(
             labelSelector: {
               matchingLabels: {
                 [capiv1beta1.labelCluster]: config.cluster.metadata.name,
-                [capzv1beta1.labelControlPlane]: 'true',
+                [capiv1beta1.labelMachineControlPlane]: 'true',
               },
             },
             namespace: config.cluster.metadata.namespace,
