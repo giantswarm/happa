@@ -675,7 +675,7 @@ export const v17_1_0: releasev1alpha1.IRelease = {
   },
 };
 
-export const v20_0_0_alpha: releasev1alpha1.IRelease = {
+export const v20_0_0: releasev1alpha1.IRelease = {
   apiVersion: 'release.giantswarm.io/v1alpha1',
   kind: 'Release',
   metadata: {
@@ -683,7 +683,7 @@ export const v20_0_0_alpha: releasev1alpha1.IRelease = {
       'giantswarm.io/docs':
         'https://docs.giantswarm.io/reference/cp-k8s-api/releases.release.giantswarm.io/',
       'giantswarm.io/release-notes':
-        'https://github.com/giantswarm/releases/tree/master/azure/v20.0.0-alpha',
+        'https://github.com/giantswarm/releases/tree/master/azure/v20.0.0',
       'meta.helm.sh/release-name': 'releases-azure',
       'meta.helm.sh/release-namespace': 'giantswarm',
     },
@@ -693,9 +693,9 @@ export const v20_0_0_alpha: releasev1alpha1.IRelease = {
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
     },
-    name: 'v20.0.0-alpha',
+    name: 'v20.0.0',
     resourceVersion: '326011895',
-    selfLink: '/apis/release.giantswarm.io/v1alpha1/releases/v20.0.0-alpha',
+    selfLink: '/apis/release.giantswarm.io/v1alpha1/releases/v20.0.0',
     uid: 'e610a7dc-2fee-45f5-bc42-c4920a9910b8',
   },
   spec: {
@@ -816,5 +816,5 @@ export const releasesList: releasev1alpha1.IReleaseList = {
     resourceVersion: '294659579',
     selfLink: '/apis/release.giantswarm.io/v1alpha1/releases/',
   },
-  items: [v13_1_0, v14_0_1, v14_1_5, v15_0_0, v20_0_0_alpha],
+  items: [v13_1_0, v14_0_1, v14_1_5, v15_0_0, v20_0_0],
 };

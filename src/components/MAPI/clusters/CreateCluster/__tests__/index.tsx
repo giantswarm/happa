@@ -155,11 +155,9 @@ describe('ClusterCreate', () => {
     fireEvent.click(screen.getByText('Available releases'));
 
     // Shows preview releases in the list of releases, but don't allow selection
+    expect(screen.getByLabelText('Release version 20.0.0')).toBeInTheDocument();
     expect(
-      screen.getByLabelText('Release version 20.0.0-alpha')
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByLabelText('Select release 20.0.0-alpha')
+      screen.queryByLabelText('Select release 20.0.0')
     ).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByLabelText('Release version 14.1.5'));
