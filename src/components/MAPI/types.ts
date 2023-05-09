@@ -5,7 +5,6 @@ import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
-import * as infrav1alpha2 from 'model/services/mapi/infrastructurev1alpha2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 
@@ -15,15 +14,11 @@ export type ControlPlaneNode =
   | capiv1beta1.IMachine
   | capzv1beta1.IAzureMachine
   | capzv1beta1.IAzureMachineTemplate
-  | infrav1alpha2.IAWSControlPlane
-  | infrav1alpha2.IG8sControlPlane
   | infrav1alpha3.IAWSControlPlane
   | infrav1alpha3.IG8sControlPlane;
 
 export type ControlPlaneNodeList =
   | capzv1beta1.IAzureMachineList
-  | infrav1alpha2.IAWSControlPlaneList
-  | infrav1alpha2.IG8sControlPlaneList
   | infrav1alpha3.IAWSControlPlaneList
   | infrav1alpha3.IG8sControlPlaneList
   | capav1beta1.IAWSMachineTemplateList
@@ -36,7 +31,6 @@ export type ClusterList = capiv1beta1.IClusterList;
 
 export type ProviderCluster =
   | capzv1beta1.IAzureCluster
-  | infrav1alpha2.IAWSCluster
   | infrav1alpha3.IAWSCluster
   | capav1beta1.IAWSCluster
   | capgv1beta1.IGCPCluster
@@ -44,7 +38,6 @@ export type ProviderCluster =
 
 export type ProviderClusterList =
   | capzv1beta1.IAzureClusterList
-  | infrav1alpha2.IAWSClusterList
   | infrav1alpha3.IAWSClusterList
   | capav1beta1.IAWSClusterList
   | capgv1beta1.IGCPClusterList;
@@ -65,14 +58,12 @@ export type ProviderNodePool =
   | capzv1beta1.IAzureMachineTemplate
   | capzexpv1alpha3.IAzureMachinePool
   | capzv1beta1.IAzureMachinePool
-  | infrav1alpha2.IAWSMachineDeployment
   | infrav1alpha3.IAWSMachineDeployment
   | undefined;
 
 export type ProviderNodePoolList =
   | capzexpv1alpha3.IAzureMachinePoolList
   | capzv1beta1.IAzureMachinePoolList
-  | infrav1alpha2.IAWSMachineDeploymentList
   | infrav1alpha3.IAWSMachineDeploymentList
   | capav1beta1.IAWSMachinePoolList
   | capgv1beta1.IGCPMachineTemplateList;
