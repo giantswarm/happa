@@ -70,6 +70,7 @@ const statusState = () => ({
           'kubernetes.io/os': 'linux',
           'kubernetes.io/role': 'master',
           'node-role.kubernetes.io/control-plane': '',
+          'node-role.kubernetes.io/master': '',
           'node.kubernetes.io/master': '',
           role: 'master',
         },
