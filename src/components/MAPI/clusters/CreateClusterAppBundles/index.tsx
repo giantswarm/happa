@@ -245,8 +245,25 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                     id='create-cluster-form'
                     render={() => {
                       return (
-                        <Box margin={{ vertical: 'medium' }}>
-                          <Box direction='row' gap='small'>
+                        <Box
+                          margin={{ vertical: 'medium' }}
+                          gap='small'
+                          border={[{ side: 'top' }, { side: 'between' }]}
+                        >
+                          <Box gap='medium' pad={{ vertical: 'medium' }}>
+                            <Text>
+                              {`To create your cluster through GitOps, or using
+                              kubectl-gs, or to document this cluster's config,
+                              choose this option. You can still proceed to
+                              create the cluster next.`}
+                            </Text>
+                            <Button>Get config or manifest</Button>
+                          </Box>
+                          <Box
+                            direction='row'
+                            gap='small'
+                            pad={{ vertical: 'medium' }}
+                          >
                             <Button
                               primary={true}
                               type='submit'
