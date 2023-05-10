@@ -23,7 +23,7 @@ exports[`MultiSelect renders a simple input 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 gKnpPD StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
+          class="StyledButtonKind-sc-1vhfpnt-0 bfTfsO StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
           id="pet"
           type="button"
         >

@@ -15,7 +15,7 @@ exports[`CLIGuide renders the contents when open 1`] = `
       >
         <button
           aria-expanded="true"
-          class="StyledButtonKind-sc-1vhfpnt-0 gUiHYe"
+          class="StyledButtonKind-sc-1vhfpnt-0 NAMnz"
           type="button"
         >
           <div
@@ -95,7 +95,7 @@ exports[`CLIGuide renders without crashing 1`] = `
       >
         <button
           aria-expanded="false"
-          class="StyledButtonKind-sc-1vhfpnt-0 gUiHYe"
+          class="StyledButtonKind-sc-1vhfpnt-0 NAMnz"
           type="button"
         >
           <div
@@ -169,7 +169,7 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
         >
           <button
             aria-expanded="false"
-            class="StyledButtonKind-sc-1vhfpnt-0 gUiHYe"
+            class="StyledButtonKind-sc-1vhfpnt-0 NAMnz"
             type="button"
           >
             <div
@@ -241,7 +241,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
       >
         <button
           aria-expanded="true"
-          class="StyledButtonKind-sc-1vhfpnt-0 gUiHYe"
+          class="StyledButtonKind-sc-1vhfpnt-0 NAMnz"
           type="button"
         >
           <div
@@ -304,7 +304,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                 >
                   <button
                     aria-expanded="false"
-                    class="StyledButtonKind-sc-1vhfpnt-0 gUiHYe"
+                    class="StyledButtonKind-sc-1vhfpnt-0 NAMnz"
                     type="button"
                   >
                     <div
@@ -367,7 +367,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                 >
                   <button
                     aria-expanded="false"
-                    class="StyledButtonKind-sc-1vhfpnt-0 gUiHYe"
+                    class="StyledButtonKind-sc-1vhfpnt-0 NAMnz"
                     type="button"
                   >
                     <div
