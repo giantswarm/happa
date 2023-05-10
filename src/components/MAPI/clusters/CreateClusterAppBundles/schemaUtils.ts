@@ -352,7 +352,8 @@ export function getFormProps(
   schema: PrototypeSchemas,
   version: string,
   clusterName: string,
-  organization: string
+  organization: string,
+  existingFormData?: RJSFSchema
 ): Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'> {
   const formPropsByVersions = formPropsByProvider[schema];
 
@@ -364,6 +365,6 @@ export function getFormProps(
 
   return {
     uiSchema: props.uiSchema,
-    formData: props.formData(clusterName, organization),
+    formData: existingFormData ?? props.formData(clusterName, organization),
   };
 }

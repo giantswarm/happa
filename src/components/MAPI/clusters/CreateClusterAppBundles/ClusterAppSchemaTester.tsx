@@ -276,6 +276,7 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
   };
 
   const handleFormSubmit = (
+    _e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>,
     _clusterName: string,
     data: RJSFSchema | undefined
   ) => {

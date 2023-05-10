@@ -47,6 +47,18 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
+const Icon = styled(Text)`
+  display: block;
+  width: 28px;
+  font-size: 28px;
+`;
+
+const StyledText = styled(Text)`
+  &:hover {
+    text-decoration: 'underline';
+  }
+`;
+
 function getLatestAppCatalogEntry(
   entries: applicationv1alpha1.IAppCatalogEntry[]
 ): applicationv1alpha1.IAppCatalogEntry {
@@ -60,6 +72,17 @@ function getLatestAppCatalogEntry(
     )[0];
 }
 
+enum Pages {
+  CreationFormPage = 'CREATION_FORM_PAGE',
+  ConfigViewerPage = 'CONFIG_VIEWER_PAGE',
+}
+
+enum FormSubmitterID {
+  CreateCluster = 'create-cluster',
+  GetConfigValues = 'get-config-values',
+}
+
+const CREATE_CLUSTER_FORM_ID = 'create-cluster-form';
 interface ICreateClusterAppBundlesProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
@@ -81,6 +104,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   const auth = useAuthProvider();
   const dispatch = useDispatch();
 
+  const [page, setPage] = useState<Pages>(Pages.CreationFormPage);
   const [isCreating, setIsCreating] = useState<boolean>(false);
 
   const clusterDefaultAppsACEClient = useRef(clientFactory());
@@ -168,38 +192,54 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     }
   }, [appSchemaError]);
 
-  const handleCreation = async (
+  const [formPayload, setFormPayload] = useState<{
+    clusterName: string;
+    formData: RJSFSchema | undefined;
+  }>({ clusterName: '', formData: undefined });
+
+  const handleSubmit = async (
+    e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>,
     clusterName: string,
     formData: RJSFSchema | undefined
   ) => {
-    if (!formData) return;
+    if (formData) setFormPayload({ clusterName, formData });
 
-    setIsCreating(true);
+    const submitterID = e.nativeEvent.submitter?.id;
 
-    try {
-      await createClusterAppResources(clientFactory, auth, {
-        clusterName,
-        organization: orgId,
-        clusterAppVersion: latestClusterAppACE!.spec.version,
-        defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
-        provider,
-        configMapContents: yaml.dump(formData),
-      });
+    switch (submitterID) {
+      case FormSubmitterID.GetConfigValues: {
+        setPage(Pages.ConfigViewerPage);
 
-      setIsCreating(false);
+        return;
+      }
 
-      const clusterListPath = RoutePath.createUsablePath(MainRoutes.Home);
-      dispatch(push(clusterListPath));
-    } catch (err) {
-      setIsCreating(false);
+      case FormSubmitterID.CreateCluster: {
+        try {
+          await createClusterAppResources(clientFactory, auth, {
+            clusterName,
+            organization: orgId,
+            clusterAppVersion: latestClusterAppACE!.spec.version,
+            defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
+            provider,
+            configMapContents: yaml.dump(formData),
+          });
 
-      new FlashMessage(
-        <>Could not create cluster: {extractErrorMessage(err)}</>,
-        messageType.ERROR,
-        messageTTL.LONG
-      );
+          setIsCreating(false);
 
-      ErrorReporter.getInstance().notify(err as Error);
+          const clusterListPath = RoutePath.createUsablePath(MainRoutes.Home);
+          dispatch(push(clusterListPath));
+        } catch (err) {
+          setIsCreating(false);
+
+          new FlashMessage(
+            <>Could not create cluster: {extractErrorMessage(err)}</>,
+            messageType.ERROR,
+            messageTTL.LONG
+          );
+
+          ErrorReporter.getInstance().notify(err as Error);
+        }
+      }
     }
   };
 
@@ -213,24 +253,24 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     appSchemaIsLoading;
 
   return (
-    <Breadcrumb
-      data={{ title: 'CREATE CLUSTER APP BUNDLES', pathname: match.url }}
-    >
-      <DocumentTitle title={`Create Cluster App Bundles | ${orgId}`}>
-        <Box {...props}>
-          <Box
-            fill={true}
-            border={{ side: 'bottom' }}
-            margin={{ bottom: 'large' }}
-          >
-            <Heading level={1}>Create a cluster via app bundles</Heading>
+    <Breadcrumb data={{ title: 'CREATE NEW CLUSTER', pathname: match.url }}>
+      <DocumentTitle title={`Create new cluster | ${orgId}`}>
+        <Box {...props} gap='medium'>
+          <Box fill={true} border={{ side: 'bottom' }}>
+            <Heading level={1}>Create new cluster</Heading>
           </Box>
-          {isLoading ? (
+          {isLoading && (
             <Wrapper>
               <img className='loader' src={spinner} />
             </Wrapper>
-          ) : (
+          )}
+          {page === Pages.CreationFormPage && !isLoading && (
             <Box gap='medium'>
+              <Text>
+                Here you can create a new cluster interactively, or create a
+                cluster configuration which you can then use in a GitOps
+                context.
+              </Text>
               {!appSchemaIsLoading &&
                 (typeof appSchema === 'undefined' ? (
                   <Text>No schema found for the selected app version.</Text>
@@ -240,49 +280,75 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                     provider={provider as PrototypeSchemas}
                     organization={organizationID}
                     appVersion={latestClusterAppACE!.spec.version}
-                    onSubmit={handleCreation}
+                    onSubmit={handleSubmit}
+                    formData={formPayload.formData}
                     key={`${provider}${latestClusterAppACE!.spec.version}`}
-                    id='create-cluster-form'
+                    id={CREATE_CLUSTER_FORM_ID}
                     render={() => {
                       return (
                         <Box
-                          margin={{ vertical: 'medium' }}
-                          gap='small'
-                          border={[{ side: 'top' }, { side: 'between' }]}
+                          gap='medium'
+                          margin={{ top: 'medium' }}
+                          pad={{ top: 'medium' }}
+                          border='top'
                         >
-                          <Box gap='medium' pad={{ vertical: 'medium' }}>
-                            <Text>
-                              {`To create your cluster through GitOps, or using
+                          <Text>
+                            {`To create your cluster through GitOps, or using
                               kubectl-gs, or to document this cluster's config,
                               choose this option. You can still proceed to
                               create the cluster next.`}
-                            </Text>
-                            <Button>Get config or manifest</Button>
-                          </Box>
-                          <Box
-                            direction='row'
-                            gap='small'
-                            pad={{ vertical: 'medium' }}
+                          </Text>
+                          <Button
+                            type='submit'
+                            form={CREATE_CLUSTER_FORM_ID}
+                            id={FormSubmitterID.GetConfigValues}
                           >
-                            <Button
-                              primary={true}
-                              type='submit'
-                              form='create-cluster-form'
-                              loading={isCreating}
-                            >
-                              Create cluster now
-                            </Button>
-                            {!isCreating && (
-                              <Button onClick={handleCreationCancel}>
-                                Cancel
-                              </Button>
-                            )}
-                          </Box>
+                            Get config or manifest
+                          </Button>
                         </Box>
                       );
                     }}
                   />
                 ))}
+            </Box>
+          )}
+          {page === Pages.ConfigViewerPage && !isLoading && (
+            <Box gap='medium'>
+              <Box
+                direction='row'
+                width='max-content'
+                role='button'
+                focusIndicator={false}
+                onClick={() => setPage(Pages.CreationFormPage)}
+              >
+                <Icon
+                  className='fa fa-chevron-left'
+                  aria-hidden='true'
+                  role='presentation'
+                />
+                <StyledText>Change configuration</StyledText>
+              </Box>
+            </Box>
+          )}
+          {!isLoading && (
+            <Box
+              direction='row'
+              gap='small'
+              pad={{ top: 'medium' }}
+              border='top'
+            >
+              <Button
+                primary={true}
+                type='submit'
+                form={CREATE_CLUSTER_FORM_ID}
+                loading={isCreating}
+                id={FormSubmitterID.CreateCluster}
+              >
+                Create cluster now
+              </Button>
+              {!isCreating && (
+                <Button onClick={handleCreationCancel}>Cancel</Button>
+              )}
             </Box>
           )}
         </Box>
