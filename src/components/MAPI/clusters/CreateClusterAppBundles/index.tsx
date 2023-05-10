@@ -242,35 +242,29 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                     appVersion={latestClusterAppACE!.spec.version}
                     onSubmit={handleCreation}
                     key={`${provider}${latestClusterAppACE!.spec.version}`}
-                    render={({ formDataPreview }) => {
+                    id='create-cluster-form'
+                    render={() => {
                       return (
-                        <Box
-                          margin={{ top: 'large' }}
-                          width={{ max: 'large' }}
-                          gap='small'
-                        >
-                          <Text weight='bold'>Form data preview</Text>
-                          {formDataPreview}
+                        <Box margin={{ vertical: 'medium' }}>
+                          <Box direction='row' gap='small'>
+                            <Button
+                              primary={true}
+                              type='submit'
+                              form='create-cluster-form'
+                              loading={isCreating}
+                            >
+                              Create cluster now
+                            </Button>
+                            {!isCreating && (
+                              <Button onClick={handleCreationCancel}>
+                                Cancel
+                              </Button>
+                            )}
+                          </Box>
                         </Box>
                       );
                     }}
-                  >
-                    <Box margin={{ vertical: 'medium' }}>
-                      <Box direction='row' gap='small'>
-                        <Button
-                          primary={true}
-                          type='submit'
-                          loading={isCreating}
-                        >
-                          Create cluster
-                        </Button>
-
-                        {!isCreating && (
-                          <Button onClick={handleCreationCancel}>Cancel</Button>
-                        )}
-                      </Box>
-                    </Box>
-                  </CreateClusterAppBundlesForm>
+                  />
                 ))}
             </Box>
           )}

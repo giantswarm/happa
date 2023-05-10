@@ -38,6 +38,7 @@ interface ICreateClusterAppBundlesFormProps {
     formData: RJSFSchema | undefined;
     cleanFormData: RJSFSchema | undefined;
   }) => void;
+  id?: string;
   render: (args: { formDataPreview: React.ReactNode }) => React.ReactNode;
 }
 
@@ -50,6 +51,7 @@ const CreateClusterAppBundlesForm: React.FC<
   appVersion,
   onSubmit,
   onChange,
+  children,
   ...props
 }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,7 +100,12 @@ const CreateClusterAppBundlesForm: React.FC<
         onSubmit={handleSubmit}
         onChange={handleFormDataChange}
         {...props}
-      />
+      >
+        {
+          // eslint-disable-next-line react/jsx-no-useless-fragment
+          children ? children : <></>
+        }
+      </JSONSchemaForm>
       {props.render({
         formDataPreview:
           cleanFormData !== undefined ? (
