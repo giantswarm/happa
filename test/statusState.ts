@@ -69,6 +69,7 @@ const statusState = () => ({
             'ip-10-1-6-28.eu-central-1.compute.internal',
           'kubernetes.io/os': 'linux',
           'kubernetes.io/role': 'master',
+          'node-role.kubernetes.io/control-plane': '',
           'node-role.kubernetes.io/master': '',
           'node.kubernetes.io/master': '',
           role: 'master',
