@@ -5,4 +5,4 @@ home: https://github.com/giantswarm/happa
 version: ""
 appVersion: ""
 annotations:
-  application.giantswarm.io/team: team-rainbow
+  application.giantswarm.io/team: team-honeybadger
