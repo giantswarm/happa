@@ -23,7 +23,7 @@ exports[`Select renders a disabled input 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something...; Selected: A dog"
-          class="StyledButtonKind-sc-1vhfpnt-0 bYJqvm StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
+          class="StyledButtonKind-sc-1vhfpnt-0 emrcxL StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
           disabled=""
           id="pet"
           type="button"
@@ -91,7 +91,7 @@ exports[`Select renders a simple input 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 gKnpPD StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
+          class="StyledButtonKind-sc-1vhfpnt-0 bfTfsO StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
           id="pet"
           type="button"
         >
@@ -158,7 +158,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 bYJqvm StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
+          class="StyledButtonKind-sc-1vhfpnt-0 emrcxL StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
           disabled=""
           id="pet"
           type="button"
@@ -236,7 +236,7 @@ exports[`Select renders an input with a help message 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 gKnpPD StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
+          class="StyledButtonKind-sc-1vhfpnt-0 bfTfsO StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
           id="pet"
           type="button"
         >
@@ -309,7 +309,7 @@ exports[`Select renders an input with a label 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 gKnpPD StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
+          class="StyledButtonKind-sc-1vhfpnt-0 bfTfsO StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
           id="pet"
           type="button"
         >
@@ -382,7 +382,7 @@ exports[`Select renders an input with a validation error 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 gKnpPD StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
+          class="StyledButtonKind-sc-1vhfpnt-0 bfTfsO StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
           id="pet"
           type="button"
         >
@@ -460,7 +460,7 @@ exports[`Select renders an input with an info message 1`] = `
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 gKnpPD StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
+          class="StyledButtonKind-sc-1vhfpnt-0 bfTfsO StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
           id="pet"
           type="button"
         >
