@@ -2,9 +2,11 @@ import { Box, BoxProps, Text } from 'grommet';
 import React from 'react';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
+import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
 
 interface ICreateClusterConfigViewerConfigInspectorProps extends BoxProps {
   data: string;
+  filename: string;
 }
 
 const StyledCode = styled.pre`
@@ -19,7 +21,16 @@ const StyledCode = styled.pre`
 
 const CreateClusterConfigViewerConfigInspector: React.FC<
   ICreateClusterConfigViewerConfigInspectorProps
-> = ({ data, ...props }) => {
+> = ({ data, filename, ...props }) => {
+  const [_, setClipboardContent] = useCopyToClipboard();
+
+  const getFileContent = () =>
+    window.URL.createObjectURL(
+      new Blob([data], {
+        type: 'application/plain;charset=utf-8',
+      })
+    );
+
   return (
     <Box
       gap='medium'
@@ -38,9 +49,12 @@ const CreateClusterConfigViewerConfigInspector: React.FC<
           <StyledCode>{data}</StyledCode>
         </Text>
       </Box>
+
       <Box direction='row' gap='small'>
-        <Button>Copy</Button>
-        <Button>Download</Button>
+        <Button onClick={() => setClipboardContent(data)}>Copy</Button>
+        <a download={filename} href={getFileContent()}>
+          <Button>Download</Button>
+        </a>
       </Box>
     </Box>
   );

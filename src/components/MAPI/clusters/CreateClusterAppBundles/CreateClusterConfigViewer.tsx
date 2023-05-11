@@ -34,6 +34,7 @@ const CreateClusterConfigViewer: React.FC<ICreateClusterConfigViewerProps> = ({
               quotingType: '"',
               lineWidth: -1,
             })}
+            filename={`${clusterAppConfig.clusterName}-config-values.yaml`}
           />
         </Tab>
         <Tab title='Full manifest'>
@@ -45,6 +46,7 @@ const CreateClusterConfigViewer: React.FC<ICreateClusterConfigViewerProps> = ({
           </Box>
           <CreateClusterConfigViewerConfigInspector
             data={templateClusterCreationManifest(clusterAppConfig)}
+            filename={`${clusterAppConfig.clusterName}-manifests.yaml`}
           />
         </Tab>
       </Tabs>
