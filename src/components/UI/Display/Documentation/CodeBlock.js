@@ -7,24 +7,16 @@ import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
 import Line from './Line';
 import Styles from './Styles';
 
-export const Prompt: React.FC<React.PropsWithChildren> = ({ children }) => {
-  return (
-    <Line prompt={true} text={children ? dedent(children.toString()) : ''} />
-  );
+export const Prompt = ({ children }) => {
+  return <Line prompt={true} text={dedent(children)} />;
 };
 
 Prompt.displayName = 'Prompt';
 
 // eslint-disable-next-line react/no-multi-comp
-export const Output: React.FC<React.PropsWithChildren> = ({ children }) => {
-  return (
-    <Line prompt={false} text={children ? dedent(children.toString()) : ''} />
-  );
+export const Output = ({ children }) => {
+  return <Line prompt={false} text={dedent(children)} />;
 };
-
-interface ICodeBlockProps {
-  withCopy?: boolean;
-}
 
 /**
  * Use this to show some commands and output to the user.
@@ -50,24 +42,20 @@ interface ICodeBlockProps {
  * The copy to clipboard button will only take the content in the Prompt tags.
  */
 // eslint-disable-next-line react/no-multi-comp
-export const CodeBlock: React.FC<React.PropsWithChildren<ICodeBlockProps>> = ({
-  withCopy = true,
-  children,
-}) => {
+export const CodeBlock = ({ children }) => {
   const [isHovering, setHovering] = useState(false);
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const getPromptLinesAsString = () => {
     const string = React.Children.toArray(children)
-      // @ts-expect-error
       .filter((x) => x.type.displayName === 'Prompt')
-      .map((x) => (x as React.ReactElement).props.children)
+      .map((x) => x.props.children)
       .join('\n');
 
     return dedent(string);
   };
 
-  const copyCodeToClipboard = (e: React.MouseEvent) => {
+  const copyCodeToClipboard = (e) => {
     e.preventDefault();
 
     const contentToCopy = getPromptLinesAsString();
@@ -95,58 +83,54 @@ export const CodeBlock: React.FC<React.PropsWithChildren<ICodeBlockProps>> = ({
     return classNames.join(' ');
   };
 
-  const resetClipboard = (e: React.MouseEvent) => {
+  const resetClipboard = (e) => {
     e.preventDefault();
 
     setClipboardContent(null);
   };
 
-  const handleOnFocusKeyDown = (e: React.KeyboardEvent) => {
+  const handleOnFocusKeyDown = (e) => {
     e.preventDefault();
 
-    (e.target as HTMLElement).click();
+    e.target.click();
   };
 
   return (
     <Styles>
       <div className={getClassNames()}>
-        <pre className={!withCopy ? 'content__no-hover' : ''}>
+        <pre>
           <div className='content'>{children}</div>
-          {withCopy && (
-            <>
-              <div className='codeblock--buttons'>
-                <Keyboard
-                  onSpace={handleOnFocusKeyDown}
-                  onEnter={handleOnFocusKeyDown}
-                >
-                  <a
-                    href='#'
-                    onMouseOut={() => setHovering(false)}
-                    onMouseOver={() => setHovering(true)}
-                    onMouseLeave={resetClipboard}
-                    onClick={copyCodeToClipboard}
-                  >
-                    <i
-                      role='presentation'
-                      className='fa fa-content-copy'
-                      aria-label='Copy content to clipboard'
-                    />
-                  </a>
-                </Keyboard>
-              </div>
-              <BaseTransition
-                in={hasContentInClipboard}
-                timeout={{ enter: 1000, exit: 1000 }}
-                classNames='checkmark'
+          <div className='codeblock--buttons'>
+            <Keyboard
+              onSpace={handleOnFocusKeyDown}
+              onEnter={handleOnFocusKeyDown}
+            >
+              <a
+                href='#'
+                onMouseOut={() => setHovering(false)}
+                onMouseOver={() => setHovering(true)}
+                onMouseLeave={resetClipboard}
+                onClick={copyCodeToClipboard}
               >
                 <i
                   role='presentation'
-                  className='fa fa-done codeblock--checkmark'
-                  title='Content copied to clipboard'
+                  className='fa fa-content-copy'
+                  aria-label='Copy content to clipboard'
                 />
-              </BaseTransition>
-            </>
-          )}
+              </a>
+            </Keyboard>
+          </div>
+          <BaseTransition
+            in={hasContentInClipboard}
+            timeout={{ enter: 1000, exit: 1000 }}
+            classNames='checkmark'
+          >
+            <i
+              role='presentation'
+              className='fa fa-done codeblock--checkmark'
+              title='Content copied to clipboard'
+            />
+          </BaseTransition>
         </pre>
       </div>
     </Styles>
