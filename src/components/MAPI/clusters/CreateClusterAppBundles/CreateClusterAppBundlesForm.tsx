@@ -65,7 +65,10 @@ const CreateClusterAppBundlesForm: React.FC<
 
   const [formProps, setFormProps] = useState<
     Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'>
-  >(getFormProps(provider, appVersion, clusterName, organization, formData));
+  >({
+    ...getFormProps(provider, appVersion, clusterName, organization),
+    ...(formData && { formData }),
+  });
 
   const [cleanFormData, setCleanFormData] = useState<RJSFSchema>();
 
