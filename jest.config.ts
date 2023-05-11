@@ -22,6 +22,7 @@ const esModules = [
   'unified',
   'unist-util',
   'unist-builder',
+  '@rjsf/core/node_modules',
   'vfile',
 ].join('|');
 
