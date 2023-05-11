@@ -7,4 +7,4 @@ version: ""
 appVersion: ""
 annotations:
   config.giantswarm.io/version: 1.x.x
-  application.giantswarm.io/team: team-rainbow
+  application.giantswarm.io/team: team-honeybadger
