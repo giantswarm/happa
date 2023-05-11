@@ -31,6 +31,7 @@ import RoutePath from 'utils/routePath';
 import { compare } from 'utils/semver';
 
 import CreateClusterAppBundlesForm from './CreateClusterAppBundlesForm';
+import CreateClusterConfigViewer from './CreateClusterConfigViewer';
 import { PrototypeSchemas } from './schemaUtils';
 import {
   createClusterAppResources,
@@ -328,6 +329,16 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                 />
                 <StyledText>Change configuration</StyledText>
               </Box>
+              <CreateClusterConfigViewer
+                clusterAppConfig={{
+                  clusterName: formPayload.clusterName,
+                  organization: orgId,
+                  clusterAppVersion: latestClusterAppACE!.spec.version,
+                  defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
+                  provider,
+                  configMapContents: yaml.dump(formPayload.formData),
+                }}
+              />
             </Box>
           )}
           {!isLoading && (
