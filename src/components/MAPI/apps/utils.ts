@@ -107,7 +107,18 @@ export async function ensureAppUserConfigMap(
 
   if (contents.length < 1) return null;
 
-  const cr: corev1.IConfigMap = {
+  const cr = templateConfigMap(name, namespace, contents, labels);
+
+  return corev1.createConfigMap(client, auth, cr);
+}
+
+export function templateConfigMap(
+  name: string,
+  namespace: string,
+  contents: string,
+  labels?: Record<string, string>
+): corev1.IConfigMap {
+  return {
     apiVersion: 'v1',
     kind: 'ConfigMap',
     metadata: {
@@ -119,8 +130,6 @@ export async function ensureAppUserConfigMap(
       values: contents,
     },
   };
-
-  return corev1.createConfigMap(client, auth, cr);
 }
 
 /**
