@@ -1,5 +1,7 @@
 import { Box, BoxProps, Text } from 'grommet';
 import React from 'react';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import nnfxDark from 'react-syntax-highlighter/dist/esm/styles/hljs/nnfx-dark';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
@@ -9,14 +11,10 @@ interface ICreateClusterConfigViewerConfigInspectorProps extends BoxProps {
   filename: string;
 }
 
-const StyledCode = styled.pre`
-  background: transparent;
-  border: none;
-  color: inherit;
-  font-family: Inconsolata, monospace;
-  font-size: inherit;
-  margin: 0;
-  padding: 0;
+const StyledSyntaxHighlighter = styled(SyntaxHighlighter)`
+  code > span {
+    color: inherit !important;
+  }
 `;
 
 const CreateClusterConfigViewerConfigInspector: React.FC<
@@ -46,7 +44,21 @@ const CreateClusterConfigViewerConfigInspector: React.FC<
         overflow='scroll'
       >
         <Text>
-          <StyledCode>{data}</StyledCode>
+          <StyledSyntaxHighlighter
+            style={nnfxDark}
+            language='yaml'
+            customStyle={{
+              background: 'transparent',
+              border: 'none',
+              fontFamily: 'Inconsolata, monospace',
+              fontSize: 'inherit',
+              lineHeight: 'inherit',
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            {data}
+          </StyledSyntaxHighlighter>
         </Text>
       </Box>
 
