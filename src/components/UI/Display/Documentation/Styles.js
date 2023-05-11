@@ -46,6 +46,9 @@ const Styles = styled.div`
     background-color: #4a4a4a;
     border-radius: 5px;
   }
+  .codeblock--container .content__no-hover:hover {
+    background: #333333;
+  }
   .codeblock--container .codeblock--filename {
     font-family: 'Inconsolata';
     color: #189de9;
