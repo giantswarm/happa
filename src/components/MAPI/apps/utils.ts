@@ -124,7 +124,7 @@ export function templateConfigMap(
     metadata: {
       name,
       namespace,
-      ...(labels && labels),
+      ...(labels && { labels }),
     },
     data: {
       values: contents,

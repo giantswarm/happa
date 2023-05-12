@@ -321,6 +321,8 @@ export function templateClusterCreationManifest(
   );
 
   const resources = [
+    clusterAppUserConfigMap,
+    defaultAppsUserConfigMap,
     templateClusterAppCR(
       config.clusterName,
       orgNamespace,
@@ -328,7 +330,6 @@ export function templateClusterCreationManifest(
       config.clusterAppVersion,
       clusterAppUserConfigMap
     ),
-    clusterAppUserConfigMap,
     templateDefaultAppsCR(
       config.clusterName,
       orgNamespace,
@@ -336,7 +337,6 @@ export function templateClusterCreationManifest(
       config.defaultAppsVersion,
       defaultAppsUserConfigMap
     ),
-    defaultAppsUserConfigMap,
   ];
 
   return `---\n${resources
@@ -347,5 +347,5 @@ export function templateClusterCreationManifest(
         lineWidth: -1,
       })
     )
-    .join('---\n')}---`;
+    .join('---\n')}`;
 }
