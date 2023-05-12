@@ -3,13 +3,11 @@ import { normalizeColor } from 'grommet/utils';
 import React from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import hybrid from 'react-syntax-highlighter/dist/esm/styles/hljs/hybrid';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Button from 'UI/Controls/Button';
 import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
 
 import { CLUSTER_CREATION_FORM_MAX_WIDTH } from '.';
-
-const CLIPBOARD_STATE_TIMEOUT = 1000;
 
 const StyledSyntaxHighlighter = styled(SyntaxHighlighter)`
   code {
@@ -36,6 +34,28 @@ const StyledSyntaxHighlighter = styled(SyntaxHighlighter)`
   }
 `;
 
+const appear = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+`;
+
+const StyledIcon = styled.i`
+  display: inline-block;
+  font-size: 20px;
+  opacity: 0;
+
+  &.animate {
+    animation: 200ms ease-in ${appear} forwards;
+  }
+`;
+
 interface ICreateClusterConfigViewerConfigInspectorProps extends BoxProps {
   info: React.ReactNode;
   data: string;
@@ -52,9 +72,6 @@ const CreateClusterConfigViewerConfigInspector: React.FC<
       type: 'application/plain;charset=utf-8',
     })
   );
-
-  const handleMouseLeave = () =>
-    setTimeout(() => setClipboardContent(null), CLIPBOARD_STATE_TIMEOUT);
 
   return (
     <Box
@@ -94,16 +111,20 @@ const CreateClusterConfigViewerConfigInspector: React.FC<
       >
         {data}
       </StyledSyntaxHighlighter>
-      <Box direction='row' gap='small'>
-        <Button
-          onClick={() => setClipboardContent(data)}
-          onMouseLeave={handleMouseLeave}
-        >
-          {hasContentInClipboard ? 'Copied' : 'Copy'}
-        </Button>
+      <Box direction='row' gap='small' align='baseline'>
         <a download={filename} href={fileContents}>
           <Button>Download</Button>
         </a>
+        <Button
+          onClick={() => setClipboardContent(data)}
+          onMouseLeave={() => setClipboardContent(null)}
+        >
+          Copy
+        </Button>
+        <StyledIcon
+          role='presentation'
+          className={`fa fa-done ${hasContentInClipboard ? 'animate' : ''}`}
+        />
       </Box>
     </Box>
   );
