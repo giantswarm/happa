@@ -1,5 +1,6 @@
 import { Box, Heading } from 'grommet';
 import yaml from 'js-yaml';
+import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import React, { useState } from 'react';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 
@@ -25,7 +26,9 @@ const CreateClusterConfigViewer: React.FC<ICreateClusterConfigViewerProps> = ({
             <i className='fa fa-info' aria-hidden={true} role='presentation' />
             {`Config values is a pure YAML representation of the configuration you
             specified using the form. Default values are not included. To create
-            a cluster, you'll have to create an App resource for the cluster-aws
+            a cluster, you'll have to create an App resource for the ${applicationv1alpha1.getClusterAppNameForProvider(
+              clusterAppConfig.provider
+            )}
             app and provide these values via the user-values ConfigMap resource.`}
           </Box>
           <CreateClusterConfigViewerConfigInspector

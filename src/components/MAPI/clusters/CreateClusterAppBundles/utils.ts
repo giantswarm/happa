@@ -143,7 +143,6 @@ function templateClusterAppCR(
 }
 
 function templateDefaultAppsCR(
-  name: string,
   clusterName: string,
   orgNamespace: string,
   provider: PropertiesOf<typeof Providers>,
@@ -155,7 +154,7 @@ function templateDefaultAppsCR(
     apiVersion: 'application.giantswarm.io/v1alpha1',
     kind: 'App',
     metadata: {
-      name,
+      name: getDefaultAppsAppNameForCluster(clusterName),
       namespace: orgNamespace,
       labels: {
         [applicationv1alpha1.labelAppOperator]: '0.0.0',
@@ -280,7 +279,6 @@ export async function createClusterAppResources(
   );
 
   const defaultAppsCR = templateDefaultAppsCR(
-    defaultAppsAppName,
     clusterAppConfig.clusterName,
     orgNamespace,
     clusterAppConfig.provider,
@@ -332,7 +330,6 @@ export function templateClusterCreationManifest(
     ),
     clusterAppUserConfigMap,
     templateDefaultAppsCR(
-      getDefaultAppsAppNameForCluster(config.clusterName),
       config.clusterName,
       orgNamespace,
       config.provider,
