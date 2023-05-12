@@ -6,10 +6,7 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
 
-interface ICreateClusterConfigViewerConfigInspectorProps extends BoxProps {
-  data: string;
-  filename: string;
-}
+const CLIPBOARD_STATE_TIMEOUT = 1000;
 
 const StyledSyntaxHighlighter = styled(SyntaxHighlighter)`
   code > span {
@@ -17,17 +14,24 @@ const StyledSyntaxHighlighter = styled(SyntaxHighlighter)`
   }
 `;
 
+interface ICreateClusterConfigViewerConfigInspectorProps extends BoxProps {
+  data: string;
+  filename: string;
+}
+
 const CreateClusterConfigViewerConfigInspector: React.FC<
   ICreateClusterConfigViewerConfigInspectorProps
 > = ({ data, filename, ...props }) => {
-  const [_, setClipboardContent] = useCopyToClipboard();
+  const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
-  const getFileContent = () =>
-    window.URL.createObjectURL(
-      new Blob([data], {
-        type: 'application/plain;charset=utf-8',
-      })
-    );
+  const fileContents = window.URL.createObjectURL(
+    new Blob([data], {
+      type: 'application/plain;charset=utf-8',
+    })
+  );
+
+  const handleMouseLeave = () =>
+    setTimeout(() => setClipboardContent(null), CLIPBOARD_STATE_TIMEOUT);
 
   return (
     <Box
@@ -63,8 +67,13 @@ const CreateClusterConfigViewerConfigInspector: React.FC<
       </Box>
 
       <Box direction='row' gap='small'>
-        <Button onClick={() => setClipboardContent(data)}>Copy</Button>
-        <a download={filename} href={getFileContent()}>
+        <Button
+          onClick={() => setClipboardContent(data)}
+          onMouseLeave={handleMouseLeave}
+        >
+          {hasContentInClipboard ? 'Copied' : 'Copy'}
+        </Button>
+        <a download={filename} href={fileContents}>
           <Button>Download</Button>
         </a>
       </Box>
