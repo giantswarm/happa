@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
 
+import { CLUSTER_CREATION_FORM_MAX_WIDTH } from '.';
+
 const CLIPBOARD_STATE_TIMEOUT = 1000;
 
 const StyledSyntaxHighlighter = styled(SyntaxHighlighter)`
@@ -15,13 +17,14 @@ const StyledSyntaxHighlighter = styled(SyntaxHighlighter)`
 `;
 
 interface ICreateClusterConfigViewerConfigInspectorProps extends BoxProps {
+  info: React.ReactNode;
   data: string;
   filename: string;
 }
 
 const CreateClusterConfigViewerConfigInspector: React.FC<
   ICreateClusterConfigViewerConfigInspectorProps
-> = ({ data, filename, ...props }) => {
+> = ({ info, data, filename, ...props }) => {
   const [hasContentInClipboard, setClipboardContent] = useCopyToClipboard();
 
   const fileContents = window.URL.createObjectURL(
@@ -36,12 +39,20 @@ const CreateClusterConfigViewerConfigInspector: React.FC<
   return (
     <Box
       gap='medium'
-      margin={{ top: 'medium' }}
-      width={{ max: '700px' }}
+      width={{ max: CLUSTER_CREATION_FORM_MAX_WIDTH }}
       {...props}
     >
       <Box
-        height={{ max: '425px' }}
+        direction='row'
+        gap='xsmall'
+        align='baseline'
+        width={{ max: CLUSTER_CREATION_FORM_MAX_WIDTH }}
+      >
+        <i className='fa fa-info' aria-hidden={true} role='presentation' />
+        <Text>{info}</Text>
+      </Box>
+      <Box
+        height={{ max: 'medium' }}
         background='codeblock-background'
         pad={{ vertical: '15px', horizontal: 'medium' }}
         round='small'

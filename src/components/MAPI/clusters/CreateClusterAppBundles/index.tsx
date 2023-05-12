@@ -41,6 +41,8 @@ import {
   fetchClusterDefaultAppsACEListKey,
 } from './utils';
 
+export const CLUSTER_CREATION_FORM_MAX_WIDTH = '750px';
+
 const Wrapper = styled.div`
   height: 320px;
   display: flex;
@@ -293,12 +295,14 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                           pad={{ top: 'medium' }}
                           border='top'
                         >
-                          <Text>
-                            {`To create your cluster through GitOps, or using
+                          <Box width={{ max: CLUSTER_CREATION_FORM_MAX_WIDTH }}>
+                            <Text>
+                              {`To create your cluster through GitOps, or using
                               kubectl-gs, or to document this cluster's config,
                               choose this option. You can still proceed to
                               create the cluster next.`}
-                          </Text>
+                            </Text>
+                          </Box>
                           <Button
                             type='submit'
                             form={CREATE_CLUSTER_FORM_ID}

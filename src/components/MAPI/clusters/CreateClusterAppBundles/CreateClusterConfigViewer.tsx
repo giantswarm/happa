@@ -22,16 +22,13 @@ const CreateClusterConfigViewer: React.FC<ICreateClusterConfigViewerProps> = ({
       <Heading>Get configuration or manifest</Heading>
       <Tabs activeIndex={activeTab} onActive={setActiveTab}>
         <Tab title='Config values'>
-          <Box direction='row' gap='xsmall' align='baseline'>
-            <i className='fa fa-info' aria-hidden={true} role='presentation' />
-            {`Config values is a pure YAML representation of the configuration you
+          <CreateClusterConfigViewerConfigInspector
+            info={`Config values is a pure YAML representation of the configuration you
             specified using the form. Default values are not included. To create
             a cluster, you'll have to create an App resource for the ${applicationv1alpha1.getClusterAppNameForProvider(
               clusterAppConfig.provider
             )}
             app and provide these values via the user-values ConfigMap resource.`}
-          </Box>
-          <CreateClusterConfigViewerConfigInspector
             data={yaml.dump(yaml.load(clusterAppConfig.configMapContents), {
               indent: 2,
               quotingType: '"',
@@ -41,13 +38,14 @@ const CreateClusterConfigViewer: React.FC<ICreateClusterConfigViewerProps> = ({
           />
         </Tab>
         <Tab title='Full manifest'>
-          <Box direction='row' gap='xsmall' align='baseline'>
-            <i className='fa fa-info' aria-hidden={true} role='presentation' />
-            The following YAML manifest includes all resources needed to create
-            the cluster as configured via the Management API, using e.g.
-            <code>kubectl-gs apply</code>.
-          </Box>
           <CreateClusterConfigViewerConfigInspector
+            info={
+              <>
+                The following YAML manifest includes all resources needed to
+                create the cluster as configured via the Management API, using
+                e.g. <code>kubectl-gs apply</code>.
+              </>
+            }
             data={templateClusterCreationManifest(clusterAppConfig)}
             filename={`${clusterAppConfig.clusterName}-manifests.yaml`}
           />
