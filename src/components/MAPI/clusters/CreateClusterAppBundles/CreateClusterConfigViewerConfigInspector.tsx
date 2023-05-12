@@ -1,7 +1,8 @@
 import { Box, BoxProps, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import React from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import nnfxDark from 'react-syntax-highlighter/dist/esm/styles/hljs/nnfx-dark';
+import hybrid from 'react-syntax-highlighter/dist/esm/styles/hljs/hybrid';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import useCopyToClipboard from 'utils/hooks/useCopyToClipboard';
@@ -11,8 +12,27 @@ import { CLUSTER_CREATION_FORM_MAX_WIDTH } from '.';
 const CLIPBOARD_STATE_TIMEOUT = 1000;
 
 const StyledSyntaxHighlighter = styled(SyntaxHighlighter)`
-  code > span {
-    color: inherit !important;
+  code {
+    scroll-width: 'thin';
+    scrollbar-gutter: stable;
+    scrollbar-color: ${({ theme }) =>
+      `${normalizeColor('text-xxweak', theme)} transparent`};
+
+    ::-webkit-scrollbar {
+      background-color: ${({ theme }) => normalizeColor('text-xxweak', theme)};
+      border-radius: 5px;
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #4a4a4a;
+      border-radius: 5px;
+    }
+
+    span:last-child {
+      display: inline-block;
+      margin-bottom: 5px;
+    }
   }
 `;
 
@@ -51,32 +71,29 @@ const CreateClusterConfigViewerConfigInspector: React.FC<
         <i className='fa fa-info' aria-hidden={true} role='presentation' />
         <Text>{info}</Text>
       </Box>
-      <Box
-        height={{ max: 'medium' }}
-        background='codeblock-background'
-        pad={{ vertical: '15px', horizontal: 'medium' }}
-        round='small'
-        overflow='scroll'
+      <StyledSyntaxHighlighter
+        style={hybrid}
+        language='yaml'
+        customStyle={{
+          border: 'none',
+          borderRadius: '10px',
+          fontFamily: 'Inconsolata, monospace',
+          fontSize: 'inherit',
+          lineHeight: 'inherit',
+          padding: '0',
+        }}
+        codeTagProps={{
+          style: {
+            display: 'block',
+            maxHeight: '425px',
+            margin: '5px 5px 5px 15px',
+            overflow: 'auto',
+            scrollbarWidth: 'thin',
+          },
+        }}
       >
-        <Text>
-          <StyledSyntaxHighlighter
-            style={nnfxDark}
-            language='yaml'
-            customStyle={{
-              background: 'transparent',
-              border: 'none',
-              fontFamily: 'Inconsolata, monospace',
-              fontSize: 'inherit',
-              lineHeight: 'inherit',
-              margin: 0,
-              padding: 0,
-            }}
-          >
-            {data}
-          </StyledSyntaxHighlighter>
-        </Text>
-      </Box>
-
+        {data}
+      </StyledSyntaxHighlighter>
       <Box direction='row' gap='small'>
         <Button
           onClick={() => setClipboardContent(data)}
