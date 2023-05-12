@@ -47,7 +47,7 @@ const CreateClusterConfigViewer: React.FC<ICreateClusterConfigViewerProps> = ({
               </>
             }
             data={templateClusterCreationManifest(clusterAppConfig)}
-            filename={`${clusterAppConfig.clusterName}-manifests.yaml`}
+            filename={`${clusterAppConfig.clusterName}-manifest.yaml`}
           />
         </Tab>
       </Tabs>
