@@ -16,6 +16,7 @@ const esModules = [
   'nanoid',
   'property-information',
   'react-markdown',
+  'react-syntax-highlighter',
   'remark',
   'space-separated-tokens',
   'trough',
