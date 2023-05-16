@@ -27,6 +27,11 @@ const StyledSyntaxHighlighter = styled(SyntaxHighlighter)`
       border-radius: 5px;
     }
 
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #5b5b5b;
+      border-radius: 5px;
+    }
+
     span:last-child {
       display: inline-block;
       margin-bottom: 5px;
