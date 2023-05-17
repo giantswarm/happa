@@ -1,10 +1,12 @@
 import { RJSFValidationError } from '@rjsf/utils';
 import { Box, Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
+import { IFormContext } from '..';
+import { isTouchedField, mapErrorPropertyToField } from '../utils';
 import ErrorList from './ErrorList';
 
 const StyledStatusIcon = styled.i<{ color: string }>`
@@ -18,10 +20,22 @@ function formatErrorText(errors: RJSFValidationError[]) {
 }
 
 interface IValidationStatusProps {
-  errors: RJSFValidationError[];
+  formContext: IFormContext;
 }
 
-const ValidationStatus: React.FC<IValidationStatusProps> = ({ errors }) => {
+const ValidationStatus: React.FC<IValidationStatusProps> = ({
+  formContext,
+}) => {
+  const filteredErrors = useMemo(() => {
+    return formContext.errors?.filter((e) =>
+      isTouchedField(
+        mapErrorPropertyToField(e, formContext.idConfigs),
+        formContext.touchedFields,
+        formContext.idConfigs.idSeparator
+      )
+    );
+  }, [formContext]);
+
   return (
     <Box
       gap='small'
@@ -42,7 +56,7 @@ const ValidationStatus: React.FC<IValidationStatusProps> = ({ errors }) => {
             <i className='fa fa-info' aria-hidden={true} role='presentation' />
           </TooltipContainer>
         </Box>
-        {errors.length > 0 ? (
+        {filteredErrors && filteredErrors.length > 0 ? (
           <Box direction='row' align='center' gap='xsmall'>
             <StyledStatusIcon
               className='fa fa-close'
@@ -50,7 +64,7 @@ const ValidationStatus: React.FC<IValidationStatusProps> = ({ errors }) => {
               role='presentation'
               color='text-error'
             />
-            <Text color='text-error'>{formatErrorText(errors)}</Text>
+            <Text color='text-error'>{formatErrorText(filteredErrors)}</Text>
           </Box>
         ) : (
           <Box direction='row' align='center' gap='xsmall'>
@@ -64,7 +78,9 @@ const ValidationStatus: React.FC<IValidationStatusProps> = ({ errors }) => {
           </Box>
         )}
       </Box>
-      {errors.length > 0 && <ErrorList errors={errors} />}
+      {filteredErrors && filteredErrors.length > 0 && (
+        <ErrorList errors={filteredErrors} />
+      )}
     </Box>
   );
 };

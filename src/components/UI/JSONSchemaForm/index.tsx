@@ -288,7 +288,14 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
         showErrorList={false}
         {...props}
       />
-      <ValidationStatus errors={ref.current?.state.errors ?? []} />
+      <ValidationStatus
+        formContext={{
+          ...formContext,
+          ...state,
+          errors: ref.current?.state.errors,
+          idConfigs,
+        }}
+      />
     </>
   );
 };
