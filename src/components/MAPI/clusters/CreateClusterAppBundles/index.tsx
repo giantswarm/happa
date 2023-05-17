@@ -1,4 +1,4 @@
-import { RJSFSchema } from '@rjsf/utils';
+import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading, Text } from 'grommet';
@@ -109,6 +109,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
 
   const [page, setPage] = useState<Pages>(Pages.CreationFormPage);
   const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [hasErrors, setHasErrors] = useState<boolean>(false);
 
   const clusterDefaultAppsACEClient = useRef(clientFactory());
   const {
@@ -284,6 +285,9 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                     organization={organizationID}
                     appVersion={latestClusterAppACE!.spec.version}
                     onSubmit={handleSubmit}
+                    onError={(errors: RJSFValidationError[]) =>
+                      setHasErrors(errors.length > 0)
+                    }
                     formData={formPayload.formData}
                     key={`${provider}${latestClusterAppACE!.spec.version}`}
                     id={CREATE_CLUSTER_FORM_ID}
@@ -356,6 +360,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                 primary={true}
                 type='submit'
                 form={CREATE_CLUSTER_FORM_ID}
+                disabled={hasErrors}
                 loading={isCreating}
                 id={FormSubmitterID.CreateCluster}
               >
