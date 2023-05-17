@@ -1,11 +1,9 @@
 import { ErrorListProps, RJSFSchema } from '@rjsf/utils';
-import { Box, Paragraph } from 'grommet';
 import React, { useMemo } from 'react';
-import { FlashMessageType } from 'styles';
-import FlashMessage from 'UI/Display/FlashMessage';
 
 import { IFormContext } from '..';
 import { isTouchedField, mapErrorPropertyToField } from '../utils';
+import ErrorList from './ErrorList';
 
 const ErrorListTemplate: React.FC<
   ErrorListProps<RJSFSchema, RJSFSchema, IFormContext>
@@ -20,18 +18,7 @@ const ErrorListTemplate: React.FC<
     );
   }, [errors, formContext]);
 
-  return filteredErrors.length > 0 ? (
-    <FlashMessage type={FlashMessageType.Danger}>
-      <Paragraph size='xlarge'>Errors</Paragraph>
-      <Box>
-        {filteredErrors.map((error, idx) => (
-          <Paragraph key={idx} fill>
-            {error.stack}
-          </Paragraph>
-        ))}
-      </Box>
-    </FlashMessage>
-  ) : null;
+  return <ErrorList errors={filteredErrors} />;
 };
 
 export default ErrorListTemplate;

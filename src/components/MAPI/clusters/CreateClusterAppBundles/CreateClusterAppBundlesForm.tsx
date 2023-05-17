@@ -1,5 +1,5 @@
 import { FormProps, IChangeEvent } from '@rjsf/core';
-import { RJSFSchema } from '@rjsf/utils';
+import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Ajv2020 from 'ajv/dist/2020';
 import yaml from 'js-yaml';
@@ -43,6 +43,7 @@ interface ICreateClusterAppBundlesFormProps {
     formData: RJSFSchema | undefined;
     cleanFormData: RJSFSchema | undefined;
   }) => void;
+  onError?: (errors: RJSFValidationError[]) => void;
   formData?: RJSFSchema;
   id?: string;
 }
@@ -109,7 +110,6 @@ const CreateClusterAppBundlesForm: React.FC<
         }}
         validator={validator}
         formData={formProps.formData}
-        showErrorList='bottom'
         onSubmit={handleSubmit}
         onChange={handleFormDataChange}
         {...props}
