@@ -12,13 +12,13 @@ interface IErrorListProps {
 }
 
 const ErrorList: React.FC<IErrorListProps> = ({ errors }) => {
-  return errors.length > 0 ? (
+  return (
     <StyledList>
       {errors.map((error, idx) => (
         <li key={idx}>{error.stack}</li>
       ))}
     </StyledList>
-  ) : null;
+  );
 };
 
 export default ErrorList;

@@ -64,7 +64,7 @@ const ValidationStatus: React.FC<IValidationStatusProps> = ({ errors }) => {
           </Box>
         )}
       </Box>
-      <ErrorList errors={errors} />
+      {errors.length > 0 && <ErrorList errors={errors} />}
     </Box>
   );
 };
