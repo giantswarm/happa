@@ -80,12 +80,6 @@ enum Pages {
   ConfigViewerPage = 'CONFIG_VIEWER_PAGE',
 }
 
-enum FormSubmitterID {
-  CreateCluster = 'create-cluster',
-  GetConfigValues = 'get-config-values',
-}
-
-const CREATE_CLUSTER_FORM_ID = 'create-cluster-form';
 interface ICreateClusterAppBundlesProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
@@ -201,49 +195,47 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     formData: RJSFSchema | undefined;
   }>({ clusterName: '', formData: undefined });
 
+  const handleChange = ({
+    clusterName,
+    cleanFormData,
+  }: {
+    clusterName: string;
+    cleanFormData: RJSFSchema | undefined;
+  }) => {
+    if (cleanFormData) setFormPayload({ clusterName, formData: cleanFormData });
+  };
+
   const handleSubmit = async (
-    e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>,
+    _e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>,
     clusterName: string,
     formData: RJSFSchema | undefined
   ) => {
     if (formData) setFormPayload({ clusterName, formData });
 
-    const submitterID = e.nativeEvent.submitter?.id;
+    try {
+      await createClusterAppResources(clientFactory, auth, {
+        clusterName,
+        organization: orgId,
+        clusterAppVersion: latestClusterAppACE!.spec.version,
+        defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
+        provider,
+        configMapContents: yaml.dump(formData),
+      });
 
-    switch (submitterID) {
-      case FormSubmitterID.GetConfigValues: {
-        setPage(Pages.ConfigViewerPage);
+      setIsCreating(false);
 
-        return;
-      }
+      const clusterListPath = RoutePath.createUsablePath(MainRoutes.Home);
+      dispatch(push(clusterListPath));
+    } catch (err) {
+      setIsCreating(false);
 
-      case FormSubmitterID.CreateCluster: {
-        try {
-          await createClusterAppResources(clientFactory, auth, {
-            clusterName,
-            organization: orgId,
-            clusterAppVersion: latestClusterAppACE!.spec.version,
-            defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
-            provider,
-            configMapContents: yaml.dump(formData),
-          });
+      new FlashMessage(
+        <>Could not create cluster: {extractErrorMessage(err)}</>,
+        messageType.ERROR,
+        messageTTL.LONG
+      );
 
-          setIsCreating(false);
-
-          const clusterListPath = RoutePath.createUsablePath(MainRoutes.Home);
-          dispatch(push(clusterListPath));
-        } catch (err) {
-          setIsCreating(false);
-
-          new FlashMessage(
-            <>Could not create cluster: {extractErrorMessage(err)}</>,
-            messageType.ERROR,
-            messageTTL.LONG
-          );
-
-          ErrorReporter.getInstance().notify(err as Error);
-        }
-      }
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 
@@ -288,9 +280,10 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                     onError={(errors: RJSFValidationError[]) =>
                       setHasErrors(errors.length > 0)
                     }
+                    onChange={handleChange}
                     formData={formPayload.formData}
+                    clusterName={formPayload.clusterName}
                     key={`${provider}${latestClusterAppACE!.spec.version}`}
-                    id={CREATE_CLUSTER_FORM_ID}
                     render={() => {
                       return (
                         <Box
@@ -308,9 +301,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                             </Text>
                           </Box>
                           <Button
-                            type='submit'
-                            form={CREATE_CLUSTER_FORM_ID}
-                            id={FormSubmitterID.GetConfigValues}
+                            onClick={() => setPage(Pages.ConfigViewerPage)}
                           >
                             Get config or manifest
                           </Button>
@@ -359,10 +350,8 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
               <Button
                 primary={true}
                 type='submit'
-                form={CREATE_CLUSTER_FORM_ID}
                 disabled={hasErrors}
                 loading={isCreating}
-                id={FormSubmitterID.CreateCluster}
               >
                 Create cluster now
               </Button>

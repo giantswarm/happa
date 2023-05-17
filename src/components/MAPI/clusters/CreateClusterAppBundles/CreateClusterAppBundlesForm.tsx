@@ -42,9 +42,11 @@ interface ICreateClusterAppBundlesFormProps {
   onChange?: (args: {
     formData: RJSFSchema | undefined;
     cleanFormData: RJSFSchema | undefined;
+    clusterName: string;
   }) => void;
   onError?: (errors: RJSFValidationError[]) => void;
   formData?: RJSFSchema;
+  clusterName?: string;
   id?: string;
 }
 
@@ -61,8 +63,11 @@ const CreateClusterAppBundlesForm: React.FC<
   formData,
   ...props
 }) => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const clusterName = useMemo(() => generateUID(5), [provider, appVersion]);
+  const clusterName = useMemo(
+    () => props.clusterName || generateUID(5),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [provider, appVersion]
+  );
 
   const [formProps, setFormProps] = useState<
     Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'>
@@ -96,7 +101,7 @@ const CreateClusterAppBundlesForm: React.FC<
     setCleanFormData(cleanData);
 
     if (onChange) {
-      onChange({ formData: data, cleanFormData: cleanData });
+      onChange({ formData: data, cleanFormData: cleanData, clusterName });
     }
   };
 
