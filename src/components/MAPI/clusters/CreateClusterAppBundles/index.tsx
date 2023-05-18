@@ -2,6 +2,7 @@ import { RJSFSchema } from '@rjsf/utils';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading, Text } from 'grommet';
+import { normalizeColor } from 'grommet/utils';
 import { spinner } from 'images';
 import yaml from 'js-yaml';
 import {
@@ -11,6 +12,7 @@ import {
 } from 'MAPI/apps/utils';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { Providers } from 'model/constants';
 import { MainRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { getAppCatalogEntryValuesSchemaURL } from 'model/services/mapi/applicationv1alpha1';
@@ -24,6 +26,9 @@ import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
+import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
+import InputGroup from 'UI/Inputs/InputGroup';
+import Select from 'UI/Inputs/Select';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
@@ -62,6 +67,16 @@ const StyledText = styled(Text)`
   }
 `;
 
+const StyledInputGroup = styled(InputGroup)`
+  display: flex;
+  flex-direction: row;
+  algin-items: baseline;
+`;
+
+const StyledLink = styled.a`
+  color: ${({ theme }) => normalizeColor('input-highlight', theme)};
+`;
+
 function getLatestAppCatalogEntry(
   entries: applicationv1alpha1.IAppCatalogEntry[]
 ): applicationv1alpha1.IAppCatalogEntry {
@@ -73,6 +88,24 @@ function getLatestAppCatalogEntry(
         normalizeAppVersion(a.spec.version)
       )
     )[0];
+}
+
+function formatClusterAppVersionSelectorLabel(
+  clusterAppACE: applicationv1alpha1.IAppCatalogEntry,
+  latestClusterAppACE: applicationv1alpha1.IAppCatalogEntry
+) {
+  return `v${clusterAppACE.spec.version}${
+    clusterAppACE.spec.version === latestClusterAppACE.spec.version
+      ? ' (latest)'
+      : ''
+  }`;
+}
+
+function getAppReleasesURL(provider: PropertiesOf<typeof Providers>) {
+  const appRepoName =
+    applicationv1alpha1.getClusterAppNameForProvider(provider);
+
+  return `https://www.github.com/giantswarm/${appRepoName}/releases/`;
 }
 
 enum Pages {
@@ -166,13 +199,23 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     return getLatestAppCatalogEntry(clusterAppACEList.items);
   }, [clusterAppACEList]);
 
-  const schemaURL = latestClusterAppACE
-    ? getAppCatalogEntryValuesSchemaURL(latestClusterAppACE)
+  const [selectedClusterApp, setSelectedClusterApp] = useState<
+    applicationv1alpha1.IAppCatalogEntry | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (!latestClusterAppACE) return;
+
+    setSelectedClusterApp(latestClusterAppACE);
+  }, [latestClusterAppACE]);
+
+  const schemaURL = selectedClusterApp
+    ? getAppCatalogEntryValuesSchemaURL(selectedClusterApp)
     : undefined;
 
   const appSchemaClient = useRef(clientFactory());
 
-  const appSchemaKey = latestClusterAppACE
+  const appSchemaKey = selectedClusterApp
     ? fetchAppCatalogEntrySchemaKey(schemaURL)
     : null;
   const {
@@ -221,7 +264,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
           await createClusterAppResources(clientFactory, auth, {
             clusterName,
             organization: orgId,
-            clusterAppVersion: latestClusterAppACE!.spec.version,
+            clusterAppVersion: selectedClusterApp!.spec.version,
             defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
             provider,
             configMapContents: yaml.dump(formData),
@@ -253,7 +296,8 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   const isLoading =
     clusterDefaultAppsACEIsLoading ||
     clusterAppACEIsLoading ||
-    appSchemaIsLoading;
+    latestClusterAppACE === undefined ||
+    selectedClusterApp === undefined;
 
   return (
     <Breadcrumb data={{ title: 'CREATE NEW CLUSTER', pathname: match.url }}>
@@ -269,52 +313,111 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
           )}
           {page === Pages.CreationFormPage && !isLoading && (
             <Box gap='medium'>
-              <Text>
-                Here you can create a new cluster interactively, or create a
-                cluster configuration which you can then use in a GitOps
-                context.
-              </Text>
-              {!appSchemaIsLoading &&
-                (typeof appSchema === 'undefined' ? (
-                  <Text>No schema found for the selected app version.</Text>
-                ) : (
-                  <CreateClusterAppBundlesForm
-                    schema={appSchema}
-                    provider={provider as PrototypeSchemas}
-                    organization={organizationID}
-                    appVersion={latestClusterAppACE!.spec.version}
-                    onSubmit={handleSubmit}
-                    formData={formPayload.formData}
-                    key={`${provider}${latestClusterAppACE!.spec.version}`}
-                    id={CREATE_CLUSTER_FORM_ID}
-                    render={() => {
-                      return (
-                        <Box
-                          gap='medium'
-                          margin={{ top: 'medium' }}
-                          pad={{ top: 'medium' }}
-                          border='top'
-                        >
-                          <Box width={{ max: CLUSTER_CREATION_FORM_MAX_WIDTH }}>
-                            <Text>
-                              {`To create your cluster through GitOps, or using
+              <Box width={CLUSTER_CREATION_FORM_MAX_WIDTH}>
+                <Text>
+                  Here you can create a new cluster interactively, or create a
+                  cluster configuration which you can then use in a GitOps
+                  context.
+                </Text>
+              </Box>
+              <StyledInputGroup
+                label={
+                  <Box direction='row' align='baseline' gap='xsmall'>
+                    <Text weight='normal'>Cluster app version</Text>
+                    <TooltipContainer
+                      content={
+                        <Tooltip>
+                          The cluster app version specifies versions and
+                          configurations of cluster components, e.g. the
+                          Kubernetes version.
+                        </Tooltip>
+                      }
+                    >
+                      <i
+                        className='fa fa-info'
+                        aria-hidden={true}
+                        role='presentation'
+                      />
+                    </TooltipContainer>
+                  </Box>
+                }
+                contentProps={{ margin: { left: 'medium' } }}
+              >
+                <Box width='185px'>
+                  <Select
+                    value={selectedClusterApp}
+                    labelKey={(
+                      currentACE: applicationv1alpha1.IAppCatalogEntry
+                    ) =>
+                      formatClusterAppVersionSelectorLabel(
+                        currentACE,
+                        latestClusterAppACE
+                      )
+                    }
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                    onChange={(e) => setSelectedClusterApp(e.option)}
+                    options={clusterAppACEList!.items.sort((a, b) =>
+                      compare(b.spec.version, a.spec.version)
+                    )}
+                  />
+                </Box>
+                <Text>
+                  Details on all versions are available on{' '}
+                  <StyledLink
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    href={getAppReleasesURL(provider)}
+                  >
+                    GitHub <i className='fa fa-open-in-new' />
+                  </StyledLink>
+                  .
+                </Text>
+              </StyledInputGroup>
+              {appSchemaIsLoading && (
+                <Wrapper>
+                  <img className='loader' src={spinner} />
+                </Wrapper>
+              )}
+              {!appSchemaIsLoading && typeof appSchema !== 'undefined' ? (
+                <CreateClusterAppBundlesForm
+                  schema={appSchema}
+                  provider={provider as PrototypeSchemas}
+                  organization={organizationID}
+                  appVersion={selectedClusterApp.spec.version}
+                  onSubmit={handleSubmit}
+                  formData={formPayload.formData}
+                  key={`${provider}${selectedClusterApp.spec.version}`}
+                  id={CREATE_CLUSTER_FORM_ID}
+                  render={() => {
+                    return (
+                      <Box
+                        gap='medium'
+                        margin={{ top: 'medium' }}
+                        pad={{ top: 'medium' }}
+                        border='top'
+                      >
+                        <Box width={{ max: CLUSTER_CREATION_FORM_MAX_WIDTH }}>
+                          <Text>
+                            {`To create your cluster through GitOps, or using
                               kubectl-gs, or to document this cluster's config,
                               choose this option. You can still proceed to
                               create the cluster next.`}
-                            </Text>
-                          </Box>
-                          <Button
-                            type='submit'
-                            form={CREATE_CLUSTER_FORM_ID}
-                            id={FormSubmitterID.GetConfigValues}
-                          >
-                            Get config or manifest
-                          </Button>
+                          </Text>
                         </Box>
-                      );
-                    }}
-                  />
-                ))}
+                        <Button
+                          type='submit'
+                          form={CREATE_CLUSTER_FORM_ID}
+                          id={FormSubmitterID.GetConfigValues}
+                        >
+                          Get config or manifest
+                        </Button>
+                      </Box>
+                    );
+                  }}
+                />
+              ) : (
+                <Text>No schema found for the selected app version.</Text>
+              )}
             </Box>
           )}
           {page === Pages.ConfigViewerPage && !isLoading && (
@@ -337,7 +440,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                 clusterAppConfig={{
                   clusterName: formPayload.clusterName,
                   organization: orgId,
-                  clusterAppVersion: latestClusterAppACE!.spec.version,
+                  clusterAppVersion: selectedClusterApp.spec.version,
                   defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
                   provider,
                   configMapContents: yaml.dump(formPayload.formData),
@@ -345,7 +448,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
               />
             </Box>
           )}
-          {!isLoading && (
+          {!isLoading && !appSchemaIsLoading && (
             <Box
               direction='row'
               gap='small'
