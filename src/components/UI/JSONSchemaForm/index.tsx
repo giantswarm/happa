@@ -7,6 +7,7 @@ import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
 import CheckboxWidget from './CheckboxWidget';
 import ErrorListTemplate from './ErrorListTemplate';
+import ValidationStatus from './ErrorListTemplate/ValidationStatus';
 import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import MultiSchemaField from './MultiSchemaField';
@@ -138,6 +139,7 @@ interface IJSONSchemaFormProps extends Omit<FormProps<RJSFSchema>, 'onChange'> {
 
 const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
   onChange,
+  onError,
   onBlur,
   idPrefix = 'root',
   idSeparator = '_',
@@ -230,11 +232,17 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
 
   const idConfigs: IIdConfigs = { idPrefix, idSeparator };
 
+  const ref = useRef<Form<RJSFSchema> | null>(null);
+
   const handleChange = (data: IChangeEvent<RJSFSchema>, id?: string) => {
     addTouchedField(id);
 
     if (data.formData) {
       onChangeCallback(data.formData, id);
+    }
+
+    if (onError && ref.current?.state.errors) {
+      onError(ref.current.state.errors);
     }
   };
 
@@ -247,36 +255,48 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
 
   const handleSubmitAttempted = (errors: RJSFValidationError[]) => {
     dispatch({ type: 'attemptSubmitAction', value: errors });
+    if (onError) {
+      onError(errors);
+    }
   };
 
-  const ref = useRef<Form<RJSFSchema> | null>(null);
-
   return (
-    <Form
-      fields={customFields}
-      widgets={customWidgets}
-      templates={customTemplates}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      onError={handleSubmitAttempted}
-      formContext={{
-        ...formContext,
-        ...state,
-        errors: ref.current?.state.errors,
-        toggleTouchedFields,
-        idConfigs,
-      }}
-      transformErrors={transformErrors}
-      idSeparator={idConfigs.idSeparator}
-      idPrefix={idConfigs.idPrefix}
-      ref={ref}
-      noHtml5Validate
-      liveValidate
-      formData={formData}
-      schema={preprocessedSchema}
-      validator={validator}
-      {...props}
-    />
+    <>
+      <Form
+        fields={customFields}
+        widgets={customWidgets}
+        templates={customTemplates}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onError={handleSubmitAttempted}
+        formContext={{
+          ...formContext,
+          ...state,
+          errors: ref.current?.state.errors,
+          toggleTouchedFields,
+          idConfigs,
+        }}
+        transformErrors={transformErrors}
+        idSeparator={idConfigs.idSeparator}
+        idPrefix={idConfigs.idPrefix}
+        ref={ref}
+        noHtml5Validate
+        liveValidate
+        formData={formData}
+        schema={preprocessedSchema}
+        validator={validator}
+        showErrorList={false}
+        {...props}
+      />
+      <ValidationStatus
+        formContext={{
+          ...formContext,
+          ...state,
+          errors: ref.current?.state.errors,
+          idConfigs,
+        }}
+      />
+    </>
   );
 };
 

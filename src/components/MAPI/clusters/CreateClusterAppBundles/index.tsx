@@ -1,4 +1,4 @@
-import { RJSFSchema } from '@rjsf/utils';
+import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { push } from 'connected-react-router';
 import { Box, Heading, Text } from 'grommet';
@@ -113,12 +113,6 @@ enum Pages {
   ConfigViewerPage = 'CONFIG_VIEWER_PAGE',
 }
 
-enum FormSubmitterID {
-  CreateCluster = 'create-cluster',
-  GetConfigValues = 'get-config-values',
-}
-
-const CREATE_CLUSTER_FORM_ID = 'create-cluster-form';
 interface ICreateClusterAppBundlesProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
@@ -142,6 +136,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
 
   const [page, setPage] = useState<Pages>(Pages.CreationFormPage);
   const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [hasErrors, setHasErrors] = useState<boolean>(false);
 
   const clusterDefaultAppsACEClient = useRef(clientFactory());
   const {
@@ -243,49 +238,47 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     formData: RJSFSchema | undefined;
   }>({ clusterName: '', formData: undefined });
 
+  const handleChange = ({
+    clusterName,
+    cleanFormData,
+  }: {
+    clusterName: string;
+    cleanFormData: RJSFSchema | undefined;
+  }) => {
+    if (cleanFormData) setFormPayload({ clusterName, formData: cleanFormData });
+  };
+
   const handleSubmit = async (
-    e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>,
+    _e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>,
     clusterName: string,
     formData: RJSFSchema | undefined
   ) => {
     if (formData) setFormPayload({ clusterName, formData });
 
-    const submitterID = e.nativeEvent.submitter?.id;
+    try {
+      await createClusterAppResources(clientFactory, auth, {
+        clusterName,
+        organization: orgId,
+        clusterAppVersion: latestClusterAppACE!.spec.version,
+        defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
+        provider,
+        configMapContents: yaml.dump(formData),
+      });
 
-    switch (submitterID) {
-      case FormSubmitterID.GetConfigValues: {
-        setPage(Pages.ConfigViewerPage);
+      setIsCreating(false);
 
-        return;
-      }
+      const clusterListPath = RoutePath.createUsablePath(MainRoutes.Home);
+      dispatch(push(clusterListPath));
+    } catch (err) {
+      setIsCreating(false);
 
-      case FormSubmitterID.CreateCluster: {
-        try {
-          await createClusterAppResources(clientFactory, auth, {
-            clusterName,
-            organization: orgId,
-            clusterAppVersion: selectedClusterApp!.spec.version,
-            defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
-            provider,
-            configMapContents: yaml.dump(formData),
-          });
+      new FlashMessage(
+        <>Could not create cluster: {extractErrorMessage(err)}</>,
+        messageType.ERROR,
+        messageTTL.LONG
+      );
 
-          setIsCreating(false);
-
-          const clusterListPath = RoutePath.createUsablePath(MainRoutes.Home);
-          dispatch(push(clusterListPath));
-        } catch (err) {
-          setIsCreating(false);
-
-          new FlashMessage(
-            <>Could not create cluster: {extractErrorMessage(err)}</>,
-            messageType.ERROR,
-            messageTTL.LONG
-          );
-
-          ErrorReporter.getInstance().notify(err as Error);
-        }
-      }
+      ErrorReporter.getInstance().notify(err as Error);
     }
   };
 
@@ -385,9 +378,13 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                   organization={organizationID}
                   appVersion={selectedClusterApp.spec.version}
                   onSubmit={handleSubmit}
+                  onError={(errors: RJSFValidationError[]) =>
+                    setHasErrors(errors.length > 0)
+                  }
+                  onChange={handleChange}
                   formData={formPayload.formData}
                   key={`${provider}${selectedClusterApp.spec.version}`}
-                  id={CREATE_CLUSTER_FORM_ID}
+                  clusterName={formPayload.clusterName}
                   render={() => {
                     return (
                       <Box
@@ -404,11 +401,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                               create the cluster next.`}
                           </Text>
                         </Box>
-                        <Button
-                          type='submit'
-                          form={CREATE_CLUSTER_FORM_ID}
-                          id={FormSubmitterID.GetConfigValues}
-                        >
+                        <Button onClick={() => setPage(Pages.ConfigViewerPage)}>
                           Get config or manifest
                         </Button>
                       </Box>
@@ -458,9 +451,8 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
               <Button
                 primary={true}
                 type='submit'
-                form={CREATE_CLUSTER_FORM_ID}
+                disabled={hasErrors}
                 loading={isCreating}
-                id={FormSubmitterID.CreateCluster}
               >
                 Create cluster now
               </Button>
