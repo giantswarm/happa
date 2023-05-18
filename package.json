@@ -71,7 +71,7 @@
     "connected-react-router": "6.9.3",
     "copy-to-clipboard": "3.3.3",
     "core-js": "3.30.2",
-    "date-fns": "2.29.3",
+    "date-fns": "2.30.0",
     "date-fns-tz": "2.0.0",
     "deep-diff": "1.0.2",
     "dotenv": "16.0.3",
