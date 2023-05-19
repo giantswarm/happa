@@ -17,15 +17,19 @@ const Cluster: React.FC<React.PropsWithChildren<{}>> = () => {
 
   return (
     <Switch>
-      <Route
-        component={
-          isAdmin && providerFlavor === ProviderFlavors.CAPI
-            ? CreateClusterAppBundles
-            : CreateCluster
-        }
-        exact
-        path={OrganizationsRoutes.Clusters.New}
-      />
+      {isAdmin && providerFlavor === ProviderFlavors.CAPI ? (
+        <Route
+          component={CreateClusterAppBundles}
+          exact
+          path={OrganizationsRoutes.Clusters.NewStatus}
+        />
+      ) : (
+        <Route
+          component={CreateCluster}
+          exact
+          path={OrganizationsRoutes.Clusters.New}
+        />
+      )}
       <Route
         path={OrganizationsRoutes.Clusters.GettingStarted.Overview}
         component={GettingStarted}

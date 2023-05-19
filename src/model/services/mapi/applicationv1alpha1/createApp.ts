@@ -17,5 +17,12 @@ export function createApp(
     namespace: app.metadata.namespace!,
   });
 
-  return createResource<IApp>(client, auth, url.toString(), app);
+  return createResource<IApp>(client, auth, url.toString(), app).catch((err) =>
+    Promise.reject(
+      new Error(
+        `App resource named ${app.metadata.name} in namespace ${app.metadata.namespace}`,
+        { cause: err }
+      )
+    )
+  );
 }

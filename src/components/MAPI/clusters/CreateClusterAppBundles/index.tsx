@@ -13,7 +13,7 @@ import {
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
-import { MainRoutes } from 'model/constants/routes';
+import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { getAppCatalogEntryValuesSchemaURL } from 'model/services/mapi/applicationv1alpha1';
 import { selectOrganizations } from 'model/stores/organization/selectors';
@@ -26,6 +26,7 @@ import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';
+import ErrorMessage from 'UI/Display/ErrorMessage';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import InputGroup from 'UI/Inputs/InputGroup';
 import Select from 'UI/Inputs/Select';
@@ -37,6 +38,7 @@ import { compare } from 'utils/semver';
 
 import CreateClusterAppBundlesForm from './CreateClusterAppBundlesForm';
 import CreateClusterConfigViewer from './CreateClusterConfigViewer';
+import CreateClusterStatus from './CreateClusterStatus';
 import { PrototypeSchemas } from './schemaUtils';
 import {
   createClusterAppResources,
@@ -70,7 +72,7 @@ const StyledText = styled(Text)`
 const StyledInputGroup = styled(InputGroup)`
   display: flex;
   flex-direction: row;
-  algin-items: baseline;
+  align-items: baseline;
 `;
 
 const StyledLink = styled.a`
@@ -108,10 +110,19 @@ function getAppReleasesURL(provider: PropertiesOf<typeof Providers>) {
   return `https://www.github.com/giantswarm/${appRepoName}/releases/`;
 }
 
+function formatClusterAppResourcesError(error: string) {
+  return error
+    .replace(/resource named (\S+)/, 'resource named <code>$1</code>')
+    .replace(/in namespace (\S+)/, 'in namespace <code>$1</code>');
+}
+
 enum Pages {
   CreationFormPage = 'CREATION_FORM_PAGE',
   ConfigViewerPage = 'CONFIG_VIEWER_PAGE',
+  CreationStatus = 'CREATION_STATUS',
 }
+
+const CREATE_CLUSTER_FORM_ID = 'create-cluster-form';
 
 interface ICreateClusterAppBundlesProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
@@ -122,8 +133,9 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
 ) => {
   const match = useRouteMatch<{
     orgId: string;
+    clusterId: string;
   }>();
-  const { orgId } = match.params;
+  const { orgId, clusterId } = match.params;
   const organizations = useSelector(selectOrganizations());
   const selectedOrg = orgId ? organizations[orgId] : undefined;
   const organizationID = selectedOrg?.name ?? selectedOrg?.id ?? orgId;
@@ -134,7 +146,9 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   const auth = useAuthProvider();
   const dispatch = useDispatch();
 
-  const [page, setPage] = useState<Pages>(Pages.CreationFormPage);
+  const [page, setPage] = useState<Pages>(
+    clusterId ? Pages.CreationStatus : Pages.CreationFormPage
+  );
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [hasErrors, setHasErrors] = useState<boolean>(false);
 
@@ -165,7 +179,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     error: clusterAppACEListError,
     isLoading: clusterAppACEIsLoading,
   } = useSWR<applicationv1alpha1.IAppCatalogEntryList, GenericResponseError>(
-    fetchClusterAppACEListKey,
+    fetchClusterAppACEListKey(),
     () => fetchClusterAppACEList(clusterAppACEClient.current, auth, provider)
   );
 
@@ -234,9 +248,15 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   }, [appSchemaError]);
 
   const [formPayload, setFormPayload] = useState<{
-    clusterName: string;
+    clusterName: string | undefined;
     formData: RJSFSchema | undefined;
-  }>({ clusterName: '', formData: undefined });
+  }>({ clusterName: undefined, formData: undefined });
+
+  const [clusterAppResourcesError, setClusterAppResourcesError] = useState<
+    string | undefined
+  >();
+  const [clusterAppResourcesErrorDetails, setClusterAppResourcesErrorDetails] =
+    useState<string | undefined>();
 
   const handleChange = ({
     clusterName,
@@ -256,6 +276,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     if (formData) setFormPayload({ clusterName, formData });
 
     try {
+      setIsCreating(true);
       await createClusterAppResources(clientFactory, auth, {
         clusterName,
         organization: orgId,
@@ -267,16 +288,24 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
 
       setIsCreating(false);
 
-      const clusterListPath = RoutePath.createUsablePath(MainRoutes.Home);
-      dispatch(push(clusterListPath));
+      setPage(Pages.CreationStatus);
+      const clusterCreationStatusPath = RoutePath.createUsablePath(
+        OrganizationsRoutes.Clusters.NewStatus,
+        {
+          orgId,
+          clusterId: clusterName,
+        }
+      );
+
+      dispatch(push(clusterCreationStatusPath));
     } catch (err) {
       setIsCreating(false);
 
-      new FlashMessage(
-        <>Could not create cluster: {extractErrorMessage(err)}</>,
-        messageType.ERROR,
-        messageTTL.LONG
-      );
+      setClusterAppResourcesError(extractErrorMessage(err));
+      const cause = (err as Error).cause;
+      if (cause) {
+        setClusterAppResourcesErrorDetails(extractErrorMessage(cause));
+      }
 
       ErrorReporter.getInstance().notify(err as Error);
     }
@@ -385,6 +414,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                   formData={formPayload.formData}
                   key={`${provider}${selectedClusterApp.spec.version}`}
                   clusterName={formPayload.clusterName}
+                  id={CREATE_CLUSTER_FORM_ID}
                   render={() => {
                     return (
                       <Box
@@ -431,7 +461,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
               </Box>
               <CreateClusterConfigViewer
                 clusterAppConfig={{
-                  clusterName: formPayload.clusterName,
+                  clusterName: formPayload.clusterName!,
                   organization: orgId,
                   clusterAppVersion: selectedClusterApp.spec.version,
                   defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
@@ -441,25 +471,69 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
               />
             </Box>
           )}
-          {!isLoading && !appSchemaIsLoading && (
-            <Box
-              direction='row'
-              gap='small'
-              pad={{ top: 'medium' }}
-              border='top'
-            >
-              <Button
-                primary={true}
-                type='submit'
-                disabled={hasErrors}
-                loading={isCreating}
+          {!isLoading &&
+            page !== Pages.CreationStatus &&
+            clusterAppResourcesError && (
+              <Box
+                border={{ side: 'top' }}
+                margin={{ top: 'medium' }}
+                pad={{ top: 'medium' }}
               >
-                Create cluster now
-              </Button>
-              {!isCreating && (
-                <Button onClick={handleCreationCancel}>Cancel</Button>
-              )}
-            </Box>
+                <ErrorMessage
+                  width={{ max: CLUSTER_CREATION_FORM_MAX_WIDTH }}
+                  error={formatClusterAppResourcesError(
+                    clusterAppResourcesError
+                  )}
+                  details={clusterAppResourcesErrorDetails}
+                >
+                  {page === Pages.CreationFormPage ? (
+                    <Text>
+                      An error occurred when attempting to create the cluster
+                      app resources. Please check the details below. You can
+                      adjust the configuration and retry. Otherwise, you can use{' '}
+                      <strong>Get config or manifest</strong> to save the full
+                      manifest and contact Giant Swarm support for help. Please
+                      also provide the full error message in that case.
+                    </Text>
+                  ) : (
+                    <Text>
+                      An error occurred when attempting to create the cluster
+                      app resources. Please check the details below. If you want
+                      to adjust the configuration and retry, click{' '}
+                      <strong>Change configuration</strong> above. Otherwise,
+                      you can save the full manifest and contact Giant Swarm
+                      support for help. Please also provide the full error
+                      message in that case.
+                    </Text>
+                  )}
+                </ErrorMessage>
+              </Box>
+            )}
+          {!isLoading &&
+            !appSchemaIsLoading &&
+            page !== Pages.CreationStatus && (
+              <Box
+                direction='row'
+                gap='small'
+                pad={{ top: 'medium' }}
+                border='top'
+              >
+                <Button
+                  primary={true}
+                  type='submit'
+                  form={CREATE_CLUSTER_FORM_ID}
+                  disabled={hasErrors}
+                  loading={isCreating}
+                >
+                  Create cluster now
+                </Button>
+                {!isCreating && (
+                  <Button onClick={handleCreationCancel}>Cancel</Button>
+                )}
+              </Box>
+            )}
+          {!isLoading && page === Pages.CreationStatus && (
+            <CreateClusterStatus />
           )}
         </Box>
       </DocumentTitle>
