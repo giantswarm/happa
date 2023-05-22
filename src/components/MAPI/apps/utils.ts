@@ -101,7 +101,12 @@ export async function ensureAppUserConfigMap(
         metav1.K8sStatusErrorReasons.NotFound
       )
     ) {
-      return Promise.reject(err);
+      return Promise.reject(
+        new Error(
+          `ConfigMap resource named ${name} in namespace ${namespace}`,
+          { cause: err }
+        )
+      );
     }
   }
 
@@ -109,7 +114,16 @@ export async function ensureAppUserConfigMap(
 
   const cr = templateConfigMap(name, namespace, contents, labels);
 
-  return corev1.createConfigMap(client, auth, cr);
+  return corev1
+    .createConfigMap(client, auth, cr)
+    .catch((err) =>
+      Promise.reject(
+        new Error(
+          `ConfigMap resource named ${name} in namespace ${namespace}`,
+          { cause: err }
+        )
+      )
+    );
 }
 
 export function templateConfigMap(
@@ -661,6 +675,36 @@ export function removeChildApps(apps: applicationv1alpha1.IApp[]) {
     return (
       typeof managedBy === 'undefined' || appNames.indexOf(managedBy) === -1
     );
+  });
+}
+
+export function getChildApps(
+  apps: applicationv1alpha1.IApp[],
+  parentApp: applicationv1alpha1.IApp
+) {
+  return apps.filter((app) => {
+    const managedBy = app.metadata.labels?.[applicationv1alpha1.labelManagedBy];
+
+    return managedBy === parentApp.metadata.name;
+  });
+}
+
+export function isAppBundle(app: applicationv1alpha1.IApp) {
+  return (
+    app.metadata.labels?.['app-operator.giantswarm.io/version'] === '0.0.0'
+  );
+}
+
+export function findDefaultAppsBundle(
+  apps: applicationv1alpha1.IApp[],
+  provider: PropertiesOf<typeof Providers>
+) {
+  const defaultAppName = getDefaultAppNameForProvider(provider);
+
+  return apps.find((app) => {
+    const appName = app.metadata.labels?.[applicationv1alpha1.labelAppName];
+
+    return appName === defaultAppName && isAppBundle(app);
   });
 }
 
