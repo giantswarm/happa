@@ -3,7 +3,6 @@
   "dependencyDashboard": true,
   "labels": ["dependencies"],
   "reviewers": [
-    "kuosandys",
     "gusevda"
   ],
   "packageRules": [
