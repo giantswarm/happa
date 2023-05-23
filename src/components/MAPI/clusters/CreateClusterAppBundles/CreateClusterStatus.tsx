@@ -325,20 +325,36 @@ const CreateClusterAppBundlesStatus: React.FC<
         margin={{ bottom: 'medium' }}
       >
         <StatusList>
-          <StatusListItem status={clusterAppCreated}>
+          <StatusListItem
+            status={clusterAppCreated}
+            info='When done, all App and ConfigMap resources for this workload are created in the management cluster.'
+          >
             Cluster app resources created
           </StatusListItem>
-          <StatusListItem status={clusterCreated}>
+          <StatusListItem
+            status={clusterCreated}
+            info='When done, the main Cluster API resource defining this cluster is available.'
+          >
             Cluster resource created
           </StatusListItem>
-          <StatusListItem status={controlPlaneReady}>
-            Control plane ready
+          <StatusListItem
+            status={clusterAppDeployed}
+            info='When done, the App defining this cluster is deployed successfully by the app platform.'
+          >
+            Cluster app deployed
           </StatusListItem>
-          <StatusListItem status={clusterAppDeployed}>
-            Cluster app bundle deployed
+          <StatusListItem
+            status={controlPlaneReady}
+            info='Tracks the control plane node(s) becoming available ("Ready" state). The Kubernetes API of the cluster should be reachable shortly after the first node is ready.'
+          >
+            Control plane nodes ready
           </StatusListItem>
-          <StatusListItem status={defaultAppsDeployed}>
-            Default apps bundle deployed
+
+          <StatusListItem
+            status={defaultAppsDeployed}
+            info='Counts up the deployment of all apps that are installed via the default apps bundle.'
+          >
+            Default apps deployed
           </StatusListItem>
         </StatusList>
       </Box>
