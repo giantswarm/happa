@@ -8,11 +8,13 @@
   "packageRules": [
     {
       "matchPackagePrefixes": ["@types/jest", "jest"],
-      "groupName": "jest packages"
+      "groupName": "jest packages",
+      "schedule": ["every weekend"]
     },
     {
       "matchPackagePrefixes": ["eslint", "@typescript-eslint"],
-      "groupName": "eslint packages"
+      "groupName": "eslint packages",
+      "schedule": ["every weekend"]
     },
     {
       "matchPackagePrefixes": ["date-fns"],
@@ -20,15 +22,18 @@
     },
     {
       "matchPackagePrefixes": ["@storybook"],
-      "groupName": "storybook packages"
+      "groupName": "storybook packages",
+      "schedule": ["every weekend"]
     },
     {
       "matchPackagePrefixes": ["@babel", "babel"],
-      "groupName": "babel packages"
+      "groupName": "babel packages",
+      "schedule": ["every weekend"]
     },
     {
       "matchPackagePrefixes": ["@sentry"],
-      "groupName": "sentry packages"
+      "groupName": "sentry packages",
+      "schedule": ["every weekend"]
     },
     {
       "matchPackagePrefixes": ["@testing-library"],
@@ -70,11 +75,17 @@
         "@types/webpack-bundle-analyzer",
         "@pmmmwh/react-refresh-webpack-plugin"
       ],
-      "groupName": "webpack packages"
+      "groupName": "webpack packages",
+      "schedule": ["every weekend"]
     },
     {
       "matchPackagePrefixes": ["@rjsf"],
       "groupName": "react-jsonschema-form packages"
+    },
+    {
+      "matchPackagePrefixes": ["@types/node"],
+      "groupName": "node packages",
+      "schedule": ["every weekend"]
     },
     {
       "matchPackageNames": [
