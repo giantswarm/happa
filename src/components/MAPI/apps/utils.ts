@@ -678,6 +678,9 @@ export function removeChildApps(apps: applicationv1alpha1.IApp[]) {
   });
 }
 
+/**
+ * Returns direct child apps of a parent app
+ */
 export function getChildApps(
   apps: applicationv1alpha1.IApp[],
   parentApp: applicationv1alpha1.IApp
@@ -687,6 +690,22 @@ export function getChildApps(
 
     return managedBy === parentApp.metadata.name;
   });
+}
+
+/**
+ * Returns all child apps of a parent app, including child apps of inner app bundles
+ */
+export function getAllChildApps(
+  apps: applicationv1alpha1.IApp[],
+  parentApp: applicationv1alpha1.IApp
+): applicationv1alpha1.IApp[] {
+  const childApps = getChildApps(apps, parentApp);
+  const appBundles = childApps.filter(isAppBundle);
+  const appBundlesChildApps = appBundles.flatMap((appBundle) =>
+    getAllChildApps(apps, appBundle)
+  );
+
+  return [...childApps, ...appBundlesChildApps];
 }
 
 export function isAppBundle(app: applicationv1alpha1.IApp) {

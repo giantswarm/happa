@@ -1,7 +1,11 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box } from 'grommet';
 import { usePermissionsForApps } from 'MAPI/apps/permissions/usePermissionsForApps';
-import { findDefaultAppsBundle, getChildApps } from 'MAPI/apps/utils';
+import {
+  findDefaultAppsBundle,
+  getAllChildApps,
+  isAppBundle,
+} from 'MAPI/apps/utils';
 import { Cluster, ControlPlaneNode } from 'MAPI/types';
 import {
   extractErrorMessage,
@@ -118,7 +122,14 @@ function getDefaultAppsDeployedStatus(appList?: applicationv1alpha1.IAppList) {
     return getStatusComponent(ClusterCreationStatus.Waiting);
   }
 
-  const childApps = getChildApps(appList.items, defaultAppsBundle);
+  const childApps = getAllChildApps(appList.items, defaultAppsBundle).filter(
+    (app) => !isAppBundle(app)
+  );
+
+  if (childApps.length === 0) {
+    return getStatusComponent(ClusterCreationStatus.InProgress);
+  }
+
   const deployedApps = childApps.filter((app) => {
     const appStatus = applicationv1alpha1.getAppStatus(app);
 
@@ -129,15 +140,11 @@ function getDefaultAppsDeployedStatus(appList?: applicationv1alpha1.IAppList) {
     return getStatusComponent(ClusterCreationStatus.Ok);
   }
 
-  if (deployedApps.length > 0) {
-    return getStatusComponent(
-      ClusterCreationStatus.InProgress,
-      childApps.length,
-      deployedApps.length
-    );
-  }
-
-  return getStatusComponent(ClusterCreationStatus.InProgress);
+  return getStatusComponent(
+    ClusterCreationStatus.InProgress,
+    childApps.length,
+    deployedApps.length
+  );
 }
 
 interface ICreateClusterAppBundlesStatusProps {}
