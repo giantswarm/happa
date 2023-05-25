@@ -6,17 +6,21 @@ import {
   getAllChildApps,
   isAppBundle,
 } from 'MAPI/apps/utils';
-import { Cluster, ControlPlaneNode } from 'MAPI/types';
+import { Cluster, ControlPlaneNode, NodePoolList } from 'MAPI/types';
 import {
   extractErrorMessage,
   fetchCluster,
   fetchClusterKey,
   fetchControlPlaneNodesForCluster,
   fetchControlPlaneNodesForClusterKey,
+  fetchNodePoolListForCluster,
+  fetchNodePoolListForClusterKey,
 } from 'MAPI/utils';
+import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import React, { useMemo, useRef } from 'react';
@@ -145,6 +149,24 @@ function getDefaultAppsDeployedStatus(appList?: applicationv1alpha1.IAppList) {
     childApps.length,
     deployedApps.length
   );
+}
+
+function getNodePoolsAvailableStatus(nodePools?: NodePoolList) {
+  if (typeof nodePools === 'undefined' || nodePools.items.length === 0) {
+    return getStatusComponent(ClusterCreationStatus.Waiting);
+  }
+
+  return getStatusComponent(ClusterCreationStatus.Ok);
+}
+
+function getNodePoolInfrastructureReadyStatus(
+  nodePool: capiv1beta1.IMachinePool
+) {
+  if (!nodePool.status?.infrastructureReady) {
+    return getStatusComponent(ClusterCreationStatus.Waiting);
+  }
+
+  return getStatusComponent(ClusterCreationStatus.Ok);
 }
 
 interface ICreateClusterAppBundlesStatusProps {}
@@ -291,6 +313,51 @@ const CreateClusterAppBundlesStatus: React.FC<
     }
   );
 
+  const nodePoolsPermissions = usePermissionsForNodePools(
+    provider,
+    cluster?.metadata.namespace ?? ''
+  );
+
+  const nodePoolListForClusterKey =
+    cluster && nodePoolsPermissions.canList && nodePoolsPermissions.canGet
+      ? fetchNodePoolListForClusterKey(cluster, cluster.metadata.namespace)
+      : null;
+
+  const { data: nodePoolList, error: nodePoolListError } = useSWR<
+    NodePoolList,
+    GenericResponseError
+  >(
+    nodePoolListForClusterKey,
+    () =>
+      fetchNodePoolListForCluster(
+        clientFactory,
+        auth,
+        cluster,
+        cluster!.metadata.namespace
+      ),
+    {
+      refreshInterval: (latestData) => {
+        if (
+          typeof latestData === 'undefined' ||
+          typeof latestData.items === 'undefined'
+        ) {
+          return REFRESH_INTERVAL;
+        }
+
+        if (
+          latestData.items.some(
+            (item) =>
+              item.kind === 'MachinePool' && !item.status?.infrastructureReady
+          )
+        ) {
+          return REFRESH_INTERVAL;
+        }
+
+        return 0;
+      },
+    }
+  );
+
   const clusterAppCreated = getClusterAppCreatedStatus(clusterApp);
   const clusterCreated = getClusterCreatedStatus(cluster, clusterApp);
   const controlPlaneReady = getControlPlaneReadyStatus(
@@ -299,6 +366,7 @@ const CreateClusterAppBundlesStatus: React.FC<
   );
   const clusterAppDeployed = getClusterAppDeployedStatus(clusterApp);
   const defaultAppsDeployed = getDefaultAppsDeployedStatus(appList);
+  const nodePoolsAvailable = getNodePoolsAvailableStatus(nodePoolList);
 
   const clusterPath = useMemo(() => {
     if (!orgId || !clusterId) return '';
@@ -315,6 +383,7 @@ const CreateClusterAppBundlesStatus: React.FC<
       clusterError,
       controlPlaneNodesError,
       appListError,
+      nodePoolListError,
     ].filter((err) => {
       return (
         err &&
@@ -323,7 +392,13 @@ const CreateClusterAppBundlesStatus: React.FC<
     });
 
     return errors.length > 0 ? errors[0] : undefined;
-  }, [clusterAppError, clusterError, controlPlaneNodesError, appListError]);
+  }, [
+    clusterAppError,
+    clusterError,
+    controlPlaneNodesError,
+    appListError,
+    nodePoolListError,
+  ]);
 
   return (
     <Box {...props}>
@@ -363,6 +438,41 @@ const CreateClusterAppBundlesStatus: React.FC<
           >
             Default apps deployed
           </StatusListItem>
+        </StatusList>
+
+        <StatusList title='Node pools' margin={{ top: 'large' }}>
+          <StatusListItem
+            status={nodePoolsAvailable}
+            info='We look for node pool related resources.'
+          >
+            Node pool information is available
+          </StatusListItem>
+          {nodePoolList && nodePoolList.items.length > 0
+            ? nodePoolList.items.map((nodePool) => (
+                <StatusList key={nodePool.metadata.name}>
+                  <StatusListItem
+                    status={getStatusComponent(ClusterCreationStatus.Ok)}
+                    info={`When done, the main Cluster API resource for this particular node pool got created.${
+                      nodePool.kind !== 'MachinePool'
+                        ? ' After that it will still take time until node become available.'
+                        : ''
+                    }`}
+                  >
+                    Node pool <code>{nodePool.metadata.name}</code>{' '}
+                    {nodePool.kind} resource created
+                  </StatusListItem>
+                  {nodePool.kind === 'MachinePool' ? (
+                    <StatusListItem
+                      status={getNodePoolInfrastructureReadyStatus(nodePool)}
+                      info='When done, the infrastructure provider reports this node pool as ready.'
+                    >
+                      Node pool <code>{nodePool.metadata.name}</code>{' '}
+                      {nodePool.kind} reports infrastructure ready
+                    </StatusListItem>
+                  ) : null}
+                </StatusList>
+              ))
+            : null}
         </StatusList>
       </Box>
 

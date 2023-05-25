@@ -17,7 +17,7 @@ const StatusList: React.FC<
   return (
     <Box {...props}>
       {title ? (
-        <Title level='4' fill margin={{ top: 'none', bottom: '28px' }}>
+        <Title level='4' fill margin={{ top: 'none', bottom: 'medium' }}>
           {title}
         </Title>
       ) : null}
