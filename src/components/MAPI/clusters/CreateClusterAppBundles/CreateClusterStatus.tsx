@@ -86,16 +86,17 @@ function getControlPlaneReadyStatus(
   cluster?: Cluster,
   controlPlaneNodes: ControlPlaneNode[] = []
 ) {
+  if (typeof cluster === 'undefined') {
+    return getStatusComponent(ClusterCreationStatus.Waiting);
+  }
+
   const stats = computeControlPlaneNodesStats(controlPlaneNodes);
 
-  const status =
-    stats.readyCount > 0
-      ? ClusterCreationStatus.Ok
-      : cluster
-      ? ClusterCreationStatus.InProgress
-      : ClusterCreationStatus.Waiting;
+  if (stats.totalCount > 0 && stats.readyCount === stats.totalCount) {
+    return getStatusComponent(ClusterCreationStatus.Ok);
+  }
 
-  return getStatusComponent(status);
+  return getStatusComponent(ClusterCreationStatus.InProgress);
 }
 
 function getClusterAppDeployedStatus(clusterApp?: applicationv1alpha1.IApp) {
@@ -261,7 +262,9 @@ const CreateClusterAppBundlesStatus: React.FC<
           return REFRESH_INTERVAL;
         }
 
-        return cluster?.status?.controlPlaneReady === true
+        const stats = computeControlPlaneNodesStats(latestData);
+
+        return stats.totalCount > 0 && stats.readyCount === stats.totalCount
           ? 0
           : REFRESH_INTERVAL;
       },
