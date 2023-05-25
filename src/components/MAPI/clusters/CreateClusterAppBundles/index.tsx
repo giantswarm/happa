@@ -57,6 +57,10 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
+const FormPageWrapper = styled(Box)`
+  display: ${({ hidden }) => (hidden ? 'none' : 'flex')};
+`;
+
 const Icon = styled(Text)`
   display: block;
   width: 28px;
@@ -333,8 +337,11 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
               <img className='loader' src={spinner} />
             </Wrapper>
           )}
-          {page === Pages.CreationFormPage && !isLoading && (
-            <Box gap='medium'>
+          {!isLoading && (
+            <FormPageWrapper
+              gap='medium'
+              hidden={page !== Pages.CreationFormPage}
+            >
               <Box width={CLUSTER_CREATION_FORM_MAX_WIDTH}>
                 <Text>
                   Here you can create a new cluster interactively, or create a
@@ -441,7 +448,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
               ) : (
                 <Text>No schema found for the selected app version.</Text>
               )}
-            </Box>
+            </FormPageWrapper>
           )}
           {page === Pages.ConfigViewerPage && !isLoading && (
             <Box gap='medium'>
