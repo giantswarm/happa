@@ -2,30 +2,30 @@
 
 exports[`Modal renders a closed modal 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 kQNwCm"
+  class="StyledGrommet-sc-19lkkz7-0 hRVLan"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 fmpnGZ"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   />
 </div>
 `;
 
 exports[`Modal renders a modal with a footer 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 kQNwCm"
+  class="StyledGrommet-sc-19lkkz7-0 hRVLan"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 fmpnGZ"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   />
 </div>
 `;
 
 exports[`Modal renders an opened modal 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 kQNwCm"
+  class="StyledGrommet-sc-19lkkz7-0 hRVLan"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 fmpnGZ"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   />
 </div>
 `;

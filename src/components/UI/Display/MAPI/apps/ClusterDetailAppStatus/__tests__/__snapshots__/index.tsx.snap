@@ -2,17 +2,17 @@
 
 exports[`ClusterDetailAppStatus renders an app status 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 kQNwCm"
+  class="StyledGrommet-sc-19lkkz7-0 hRVLan"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 fmpnGZ"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dEwcnG"
+      class="StyledBox-sc-13pk1d4-0 hvhSlj"
     >
       <span
         aria-label="App status: some status"
-        class="StyledText-sc-1sadyjn-0 gqqUFB ClusterDetailAppStatus__Title-sc-kfzx37-0 icerTK"
+        class="StyledText-sc-1sadyjn-0 kVGHUE ClusterDetailAppStatus__Title-sc-kfzx37-0 vIUmP"
       >
         some status
       </span>

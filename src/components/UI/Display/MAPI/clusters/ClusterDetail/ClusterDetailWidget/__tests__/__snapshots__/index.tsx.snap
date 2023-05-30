@@ -2,29 +2,29 @@
 
 exports[`ClusterDetailWidget renders a inline widget 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 kQNwCm"
+  class="StyledGrommet-sc-19lkkz7-0 hRVLan"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 fmpnGZ"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
       aria-label="Some widget"
-      class="StyledBox-sc-13pk1d4-0 hYMihr"
+      class="StyledBox-sc-13pk1d4-0 cbsDha"
     >
       <header
-        class="StyledBox-sc-13pk1d4-0 juMuHX ClusterDetailWidget__StyledCardHeader-sc-15uj98x-0 jsmTtF"
+        class="StyledBox-sc-13pk1d4-0 jfjxly ClusterDetailWidget__StyledCardHeader-sc-15uj98x-0 dcKEWQ"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 ksyYGh"
+          class="StyledText-sc-1sadyjn-0 julYLc"
         >
           Some widget
         </span>
       </header>
       <div
-        class="StyledBox-sc-13pk1d4-0 ctsObP"
+        class="StyledBox-sc-13pk1d4-0 kbMGSm"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 cqmDvK"
+          class="StyledText-sc-1sadyjn-0 kUTnPv"
         >
           Some content
         </span>
@@ -36,29 +36,29 @@ exports[`ClusterDetailWidget renders a inline widget 1`] = `
 
 exports[`ClusterDetailWidget renders a simple widget 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 kQNwCm"
+  class="StyledGrommet-sc-19lkkz7-0 hRVLan"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 fmpnGZ"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
       aria-label="Some widget"
-      class="StyledBox-sc-13pk1d4-0 hYMihr"
+      class="StyledBox-sc-13pk1d4-0 cbsDha"
     >
       <header
-        class="StyledBox-sc-13pk1d4-0 izHFCl ClusterDetailWidget__StyledCardHeader-sc-15uj98x-0 jsmTtF"
+        class="StyledBox-sc-13pk1d4-0 ctVqIc ClusterDetailWidget__StyledCardHeader-sc-15uj98x-0 dcKEWQ"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 ksyYGh"
+          class="StyledText-sc-1sadyjn-0 julYLc"
         >
           Some widget
         </span>
       </header>
       <div
-        class="StyledBox-sc-13pk1d4-0 ctsObP"
+        class="StyledBox-sc-13pk1d4-0 kbMGSm"
       >
         <span
-          class="StyledText-sc-1sadyjn-0 cqmDvK"
+          class="StyledText-sc-1sadyjn-0 kUTnPv"
         >
           Some content
         </span>

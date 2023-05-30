@@ -2,43 +2,43 @@
 
 exports[`MultiSelect renders a simple input 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 kQNwCm"
+  class="StyledGrommet-sc-19lkkz7-0 hRVLan"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 fmpnGZ"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 waIbx FormField__FormFieldBox-sc-m9hood-0 bhAVGb"
+      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <label
-        class="StyledText-sc-1sadyjn-0 eeOkGI"
+        class="StyledText-sc-1sadyjn-0 julVzF"
         for="pet"
       >
         Pets I want to get
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 cEaRAi FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 dHuYZL FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <button
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-label="Just select something..."
-          class="StyledButtonKind-sc-1vhfpnt-0 bfTfsO StyledSelect__StyledSelectDropButton-sc-znp66n-5 kDHCDy"
+          class="StyledButtonKind-sc-1vhfpnt-0 kRMJXD StyledSelect__StyledSelectDropButton-sc-znp66n-5 fzPXHz"
           id="pet"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 eoABDz"
+            class="StyledBox-sc-13pk1d4-0 fQaWIe"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 iCJxY"
+              class="StyledBox-sc-13pk1d4-0 IxTtJ"
             >
               <div
-                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 cmVLrY"
+                class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 esbWVR"
               >
                 <input
                   autocomplete="off"
-                  class="StyledTextInput-sc-1x30a0s-0 dITuqI StyledSelect__SelectTextInput-sc-znp66n-4 fLDbPw"
+                  class="StyledTextInput-sc-1x30a0s-0 dbCPUB StyledSelect__SelectTextInput-sc-znp66n-4 ldRtXx"
                   id="pet__input"
                   placeholder="Just select something..."
                   readonly=""
@@ -49,12 +49,12 @@ exports[`MultiSelect renders a simple input 1`] = `
               </div>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 cLymxa"
+              class="StyledBox-sc-13pk1d4-0 eACIxH"
               style="min-width: auto;"
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 efcJxE"
+                class="StyledIcon-sc-ofa7kd-0 gwztcJ"
                 viewBox="0 0 24 24"
               >
                 <path
