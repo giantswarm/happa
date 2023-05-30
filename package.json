@@ -228,7 +228,7 @@
     "style-loader": "3.3.3",
     "terser-webpack-plugin": "5.3.9",
     "ts-node": "10.9.1",
-    "type-fest": "3.11.0",
+    "type-fest": "3.11.1",
     "typescript": "5.0.4",
     "url-loader": "4.1.1",
     "webpack": "5.83.1",
