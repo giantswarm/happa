@@ -2,32 +2,32 @@
 
 exports[`CurrencyInput renders without crashing 1`] = `
 <div
-  class="StyledGrommet-sc-19lkkz7-0 kQNwCm"
+  class="StyledGrommet-sc-19lkkz7-0 hRVLan"
 >
   <div
-    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 fmpnGZ"
+    class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 waIbx FormField__FormFieldBox-sc-m9hood-0 bhAVGb"
+      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 kBmGck FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 lmnuvp FormField__FormFieldContentBox-sc-m9hood-1"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 cmVLrY"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 esbWVR"
         >
           <div
-            class="StyledTextInput__StyledIcon-sc-1x30a0s-3 fvyEPs"
+            class="StyledTextInput__StyledIcon-sc-1x30a0s-3 hfkrnZ"
           >
             <span
-              class="StyledText-sc-1sadyjn-0 ksyYGh"
+              class="StyledText-sc-1sadyjn-0 julYLc"
             >
               $
             </span>
           </div>
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 fYEwpC"
+            class="StyledTextInput-sc-1x30a0s-0 iAFsor"
             step="1"
             type="number"
             value="0"
