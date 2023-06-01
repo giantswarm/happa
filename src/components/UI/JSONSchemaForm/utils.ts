@@ -1,5 +1,6 @@
 import {
   findSchemaDefinition,
+  mergeObjects,
   RJSFSchema,
   RJSFValidationError,
 } from '@rjsf/utils';
@@ -216,7 +217,9 @@ function getValueSchema(
     typeof valueSchema !== 'boolean' &&
     valueSchema.$ref
   ) {
-    return findSchemaDefinition(valueSchema.$ref, rootSchema);
+    const refSchema = findSchemaDefinition(valueSchema.$ref, rootSchema);
+
+    return mergeObjects(refSchema, valueSchema);
   }
 
   return valueSchema;
