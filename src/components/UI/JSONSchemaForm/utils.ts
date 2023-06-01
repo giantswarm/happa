@@ -176,28 +176,6 @@ function getDefaultValueFromParent(
   return defaultValues?.[key as keyof typeof defaultValues];
 }
 
-function getDefaultValueFromSchema(schema: RJSFSchema, rootSchema: RJSFSchema) {
-  if (typeof schema.default === 'undefined') {
-    return undefined;
-  }
-
-  if (Array.isArray(schema.default) || isPlainObject(schema.default)) {
-    return cleanPayload(
-      schema.default,
-      {
-        ...schema,
-        default: undefined,
-      },
-      rootSchema,
-      {
-        cleanDefaultValues: true,
-      }
-    );
-  }
-
-  return schema.default;
-}
-
 function getValueSchema(
   key: number,
   schema: RJSFSchema,
@@ -271,10 +249,7 @@ export function cleanPayload(
         defaultValues,
         objectSchema
       );
-      const defaultValueFromSchema = getDefaultValueFromSchema(
-        valueSchema,
-        rootSchema
-      );
+      const defaultValueFromSchema = valueSchema.default;
       const implicitDefaultValue = getImplicitDefaultValue(valueSchema);
 
       const defaultValue =
