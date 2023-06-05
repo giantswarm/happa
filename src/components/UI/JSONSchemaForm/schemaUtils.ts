@@ -7,6 +7,8 @@ import set from 'lodash/set';
 import { generateUID } from 'MAPI/utils';
 import { traverseJSONSchemaObject } from 'utils/helpers';
 
+import { cleanPayload } from './utils';
+
 export const TRANSFORMED_PROPERTY_KEY = 'transformedPropertyKey';
 export const TRANSFORMED_PROPERTY_VALUE = 'transformedPropertyValue';
 const TRANSFORMED_PROPERTY_COMMENT = 'transformedProperty';
@@ -190,6 +192,24 @@ export function preprocessSchema(
     return { obj, path };
   };
 
+  const processDefaultValues = ({
+    obj,
+    path,
+  }: {
+    obj: RJSFSchema;
+    path?: string | null;
+  }) => {
+    // Clean out implicit default values from objects and arrays
+    if ((obj.type === 'array' || obj.type === 'object') && obj.default) {
+      const { default: defaultValue, ...objSchema } = obj;
+      obj.default = cleanPayload(defaultValue, objSchema, patchedSchema, {
+        cleanDefaultValues: true,
+      }) as typeof defaultValue;
+    }
+
+    return { obj, path };
+  };
+
   patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
     processSubschemas({ obj, path })
   );
@@ -198,6 +218,9 @@ export function preprocessSchema(
   );
   patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
     processNumericProperties({ obj, path })
+  );
+  patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
+    processDefaultValues({ obj, path })
   );
 
   return patchedSchema;
