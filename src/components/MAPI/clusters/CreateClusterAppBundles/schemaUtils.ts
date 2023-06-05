@@ -90,9 +90,6 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
       'cluster-shared': {
         'ui:widget': 'hidden',
       },
-      defaultMachinePools: {
-        'ui:widget': 'hidden',
-      },
       kubectlImage: {
         'ui:widget': 'hidden',
       },
@@ -103,6 +100,13 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
         'ui:order': ['name', 'description', '*'],
         name: {
           'ui:widget': ClusterNameWidget,
+        },
+      },
+      nodePools: {
+        items: {
+          instanceType: {
+            'ui:widget': InstanceTypeWidget,
+          },
         },
       },
       provider: {
@@ -194,6 +198,13 @@ const formPropsProviderCAPZ: Record<string, FormPropsPartial> = {
         },
         organization: {
           'ui:widget': 'hidden',
+        },
+      },
+      nodePools: {
+        items: {
+          instanceType: {
+            'ui:widget': InstanceTypeWidget,
+          },
         },
       },
       provider: {
