@@ -236,7 +236,7 @@ const formPropsProviderCloudDirector: Record<string, FormPropsPartial> = {
         '*',
       ],
     },
-    formData: (organization) => {
+    formData: (_clusterName, organization) => {
       return {
         organization,
       };
@@ -341,7 +341,7 @@ const formPropsTest: Record<string, FormPropsPartial> = {
         ],
       },
     },
-    formData: (_organization) => {
+    formData: (_clusterName, _organization) => {
       return {};
     },
   },

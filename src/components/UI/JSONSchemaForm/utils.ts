@@ -125,7 +125,7 @@ export const DEFAULT_NUMERIC_VALUE = null;
 export const DEFAULT_ARRAY_VALUE = [];
 export const DEFAULT_OBJECT_VALUE = {};
 
-function isNumeric(schema: RJSFSchema) {
+function isNumericSchema(schema: RJSFSchema) {
   return Boolean(
     schema.type === 'integer' ||
       schema.type?.includes('integer') ||
@@ -134,17 +134,33 @@ function isNumeric(schema: RJSFSchema) {
   );
 }
 
+function isStringSchema(schema: RJSFSchema) {
+  return Boolean(schema.type === 'string' || schema.type?.includes('string'));
+}
+
+function isBooleanSchema(schema: RJSFSchema) {
+  return Boolean(schema.type === 'boolean' || schema.type?.includes('boolean'));
+}
+
+function isObjectSchema(schema: RJSFSchema) {
+  return Boolean(schema.type === 'object' || schema.type?.includes('object'));
+}
+
+function isArraySchema(schema: RJSFSchema) {
+  return Boolean(schema.type === 'array' || schema.type?.includes('array'));
+}
+
 function getImplicitDefaultValue(schema: RJSFSchema) {
   switch (true) {
-    case schema.type === 'string':
+    case isStringSchema(schema):
       return DEFAULT_STRING_VALUE;
-    case isNumeric(schema):
+    case isNumericSchema(schema):
       return DEFAULT_NUMERIC_VALUE;
-    case schema.type === 'boolean':
+    case isBooleanSchema(schema):
       return DEFAULT_BOOLEAN_VALUE;
-    case schema.type === 'array':
+    case isArraySchema(schema):
       return DEFAULT_ARRAY_VALUE;
-    case schema.type === 'object':
+    case isObjectSchema(schema):
       return DEFAULT_OBJECT_VALUE;
     default:
       return undefined;
@@ -305,7 +321,7 @@ export function cleanPayload(
       } else {
         const cleanValue = cleanDeep({ value: newValue }, options).value;
         newValue = value;
-        if (isNumeric(valueSchema)) {
+        if (isNumericSchema(valueSchema)) {
           newValue = value === null && defaultValue !== null ? 0 : value;
         }
 
