@@ -3546,10 +3546,10 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@rjsf/core@5.8.0":
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/@rjsf/core/-/core-5.8.0.tgz#9f66c2bab3dcbcb9986f96907b052b31999d7695"
-  integrity sha512-G4yAYQ+OKbQO4ql25nPaHS7s9eEmx4NgV5gAssIO9rEHsHdJXQ11YA/TmKwI8rVTjevEzLepLg2hYaMnKP8Ytw==
+"@rjsf/core@5.8.1":
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/@rjsf/core/-/core-5.8.1.tgz#9071ba570cb748658148ed1f5f02a9d5611f0bae"
+  integrity sha512-+lJKK/fdVO+DqKhSzSY8bjyAv5weoLw44d/DnCn2U8/l9qY0nqfNSvG6gyZIC9kCNnzLS/76XFAltWXgtjjzFQ==
   dependencies:
     lodash "^4.17.21"
     lodash-es "^4.17.21"
@@ -3557,10 +3557,10 @@
     nanoid "^3.3.6"
     prop-types "^15.8.1"
 
-"@rjsf/utils@5.8.0":
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/@rjsf/utils/-/utils-5.8.0.tgz#681726af73b747c25d056aff23730cadd46f193c"
-  integrity sha512-Wo4zNaoocv1VK+ohIDtcS1SoIXK9mER6wXu+W/ZgKzHPb5AHcY4BpUR2rRaipzkHDIQ7X8kqGQrinCDf1JgLww==
+"@rjsf/utils@5.8.1":
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/@rjsf/utils/-/utils-5.8.1.tgz#65a8ce45740fd62c0e17188685ee963396c8bea0"
+  integrity sha512-kzWVNAW417ADG0nSEPxpqYzLrtzi9tKCCn5rOuwt6FIvSrtkatISBekyKNeycGPUfQR9VkROGrcG8cz10xUs6g==
   dependencies:
     json-schema-merge-allof "^0.8.1"
     jsonpointer "^5.0.1"
@@ -3568,10 +3568,10 @@
     lodash-es "^4.17.21"
     react-is "^18.2.0"
 
-"@rjsf/validator-ajv8@5.8.0":
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/@rjsf/validator-ajv8/-/validator-ajv8-5.8.0.tgz#c360ef9e6f5a29742441e14bf6cc491a56a2fca3"
-  integrity sha512-M3l0F584Bt74dvMovpJpaZAtbKmc62NNxEKs78L0IqJ06WlnfAQ8dttQejuM3X0zNOl/QrBW87/pEtT3lyULuQ==
+"@rjsf/validator-ajv8@5.8.1":
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/@rjsf/validator-ajv8/-/validator-ajv8-5.8.1.tgz#d9ce5c02975415fb062d02d4abed09811b15c084"
+  integrity sha512-ImMd8nZeQzgt26y90yqEmiD7XPtDCX4LYGfniCr/PeAOk79OKhcdv8OMsdGTh9pGPtHy1qOJvntALKOpHGAeYg==
   dependencies:
     ajv "^8.12.0"
     ajv-formats "^2.1.1"
