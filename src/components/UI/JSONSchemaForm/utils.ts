@@ -1,5 +1,6 @@
 import {
   findSchemaDefinition,
+  mergeObjects,
   RJSFSchema,
   RJSFValidationError,
 } from '@rjsf/utils';
@@ -194,7 +195,9 @@ function getValueSchema(
     typeof valueSchema !== 'boolean' &&
     valueSchema.$ref
   ) {
-    return findSchemaDefinition(valueSchema.$ref, rootSchema);
+    const refSchema = findSchemaDefinition(valueSchema.$ref, rootSchema);
+
+    return mergeObjects(refSchema, valueSchema);
   }
 
   return valueSchema;
@@ -240,12 +243,32 @@ export function cleanPayload(
       }
 
       let newValue = value;
+      const defaultValueFromParent = getDefaultValueFromParent(
+        key,
+        value,
+        defaultValues,
+        objectSchema
+      );
+      const defaultValueFromSchema = valueSchema.default;
+      const implicitDefaultValue = getImplicitDefaultValue(valueSchema);
+
       const defaultValue =
-        getDefaultValueFromParent(key, value, defaultValues, objectSchema) ??
-        valueSchema.default ??
-        getImplicitDefaultValue(valueSchema);
+        defaultValueFromParent ??
+        defaultValueFromSchema ??
+        implicitDefaultValue;
 
       if (Array.isArray(value)) {
+        if (cleanDefaultValues && defaultValueFromSchema) {
+          const cleanValue = cleanPayload(value, valueSchema, rootSchema, {
+            ...options,
+            defaultValues: undefined,
+          });
+
+          if (isEqual(cleanValue, defaultValueFromSchema)) {
+            return;
+          }
+        }
+
         newValue = cleanPayload(value, valueSchema, rootSchema, {
           ...options,
           defaultValues: shouldCleanInnerDefaultValues(

@@ -253,11 +253,11 @@ describe('JSONSchemaForm:schemaUtils', () => {
                       type: 'string',
                       title: 'Key',
                     },
-                    age: {
-                      type: ['number', 'null'],
-                    },
-                    name: {
+                    instanceType: {
                       type: 'string',
+                    },
+                    minSize: {
+                      type: ['number', 'null'],
                     },
                   },
                 },
@@ -378,11 +378,11 @@ describe('JSONSchemaForm:schemaUtils', () => {
                       title: 'Key',
                       pattern: '^[a-z]{5,10}$',
                     },
-                    age: {
-                      type: ['number', 'null'],
-                    },
-                    name: {
+                    instanceType: {
                       type: 'string',
+                    },
+                    minSize: {
+                      type: ['number', 'null'],
                     },
                   },
                 },
@@ -459,11 +459,11 @@ describe('JSONSchemaForm:schemaUtils', () => {
                       title: 'Key',
                       pattern: '^[a-z]{5,10}$',
                     },
-                    age: {
-                      type: ['number', 'null'],
-                    },
-                    name: {
+                    instanceType: {
                       type: 'string',
+                    },
+                    minSize: {
+                      type: ['number', 'null'],
                     },
                   },
                 },
@@ -652,11 +652,11 @@ function createTestSchema(fieldsToPick: string[] = []) {
             additionalProperties: {
               type: 'object',
               properties: {
-                age: {
-                  type: 'number',
-                },
-                name: {
+                instanceType: {
                   type: 'string',
+                },
+                minSize: {
+                  type: 'number',
                 },
               },
             },
@@ -714,11 +714,11 @@ function createTestSchema(fieldsToPick: string[] = []) {
               '^[a-z]{5,10}$': {
                 type: 'object',
                 properties: {
-                  age: {
-                    type: 'number',
-                  },
-                  name: {
+                  instanceType: {
                     type: 'string',
+                  },
+                  minSize: {
+                    type: 'number',
                   },
                 },
               },
@@ -741,11 +741,11 @@ function createTestSchema(fieldsToPick: string[] = []) {
               '^[a-z]{5,10}$': {
                 type: 'object',
                 properties: {
-                  age: {
-                    type: 'number',
-                  },
-                  name: {
+                  instanceType: {
                     type: 'string',
+                  },
+                  minSize: {
+                    type: 'number',
                   },
                 },
               },

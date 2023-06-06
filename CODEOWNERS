@@ -1,7 +1,7 @@
 # Teams:
-* @giantswarm/team-rainbow-engineers
+* @giantswarm/team-honeybadger
 
 # Individuals:
-package.json @kuosandys @gusevda
-yarn.lock @kuosandys @gusevda
-/.circleci/config.yml @kuosandys @gusevda
+package.json @gusevda
+yarn.lock @gusevda
+/.circleci/config.yml @gusevda
