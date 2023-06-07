@@ -17,13 +17,11 @@ const StyledFlashMessage = styled(FlashMessage)`
 `;
 
 interface IErrorMessageProps extends BoxProps {
-  title?: string;
   error?: string;
   details?: string;
 }
 
 const ErrorMessage: React.FC<React.PropsWithChildren<IErrorMessageProps>> = ({
-  title,
   error,
   details,
   children,

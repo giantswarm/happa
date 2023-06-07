@@ -80,9 +80,9 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
           'oidc',
           '*',
         ],
-        instanceType: {
-          'ui:widget': InstanceTypeWidget,
-        },
+        // instanceType: {
+        //   'ui:widget': InstanceTypeWidget,
+        // },
         oidc: {
           'ui:order': ['issuerUrl', 'clientId', '*'],
         },
@@ -164,9 +164,9 @@ const formPropsProviderCAPZ: Record<string, FormPropsPartial> = {
           'etcdVolumeSizeGB',
           '*',
         ],
-        instanceType: {
-          'ui:widget': InstanceTypeWidget,
-        },
+        // instanceType: {
+        //   'ui:widget': InstanceTypeWidget,
+        // },
         oidc: {
           'ui:order': ['issuerUrl', 'clientId', '*'],
         },
@@ -174,13 +174,13 @@ const formPropsProviderCAPZ: Record<string, FormPropsPartial> = {
       'cluster-shared': {
         'ui:widget': 'hidden',
       },
-      machineDeployments: {
-        items: {
-          instanceType: {
-            'ui:widget': InstanceTypeWidget,
-          },
-        },
-      },
+      // machineDeployments: {
+      //   items: {
+      //     instanceType: {
+      //       'ui:widget': InstanceTypeWidget,
+      //     },
+      //   },
+      // },
       machinePools: {
         'ui:widget': 'hidden',
       },

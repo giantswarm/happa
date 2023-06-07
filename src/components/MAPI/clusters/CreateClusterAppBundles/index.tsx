@@ -46,6 +46,7 @@ import {
   fetchClusterAppACEListKey,
   fetchClusterDefaultAppsACEList,
   fetchClusterDefaultAppsACEListKey,
+  formatClusterAppResourcesError,
 } from './utils';
 
 export const CLUSTER_CREATION_FORM_MAX_WIDTH = '750px';
@@ -112,12 +113,6 @@ function getAppReleasesURL(provider: PropertiesOf<typeof Providers>) {
     applicationv1alpha1.getClusterAppNameForProvider(provider);
 
   return `https://www.github.com/giantswarm/${appRepoName}/releases/`;
-}
-
-function formatClusterAppResourcesError(error: string) {
-  return error
-    .replace(/resource named (\S+)/, 'resource named <code>$1</code>')
-    .replace(/in namespace (\S+)/, 'in namespace <code>$1</code>');
 }
 
 enum Pages {

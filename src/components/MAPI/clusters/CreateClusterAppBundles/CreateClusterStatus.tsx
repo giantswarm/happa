@@ -41,6 +41,11 @@ import { computeControlPlaneNodesStats } from '../ClusterDetail/utils';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import { usePermissionsForCPNodes } from '../permissions/usePermissionsForCPNodes';
 import { CLUSTER_CREATION_FORM_MAX_WIDTH } from '.';
+import {
+  formatClusterAppResourcesError,
+  getControlPlaneNodesErrors,
+  getNodePoolsErrors,
+} from './utils';
 
 const CLUSTER_CREATION_PROGRESS_MAX_WIDTH = '650px';
 
@@ -84,10 +89,15 @@ function getClusterCreatedStatus(
 
 function getControlPlaneReadyStatus(
   cluster?: Cluster,
-  controlPlaneNodes: ControlPlaneNode[] = []
+  controlPlaneNodes: ControlPlaneNode[] = [],
+  errors: boolean = false
 ) {
   if (typeof cluster === 'undefined') {
     return getStatusComponent(ClusterCreationStatus.Waiting);
+  }
+
+  if (errors) {
+    return getStatusComponent(ClusterCreationStatus.Failed);
   }
 
   const stats = computeControlPlaneNodesStats(controlPlaneNodes);
@@ -163,11 +173,24 @@ function getNodePoolsAvailableStatus(nodePools?: NodePoolList) {
 function getNodePoolInfrastructureReadyStatus(
   nodePool: capiv1beta1.IMachinePool
 ) {
+  const infrastructureReadyCondition = capiv1beta1.getCondition(
+    nodePool,
+    'InfrastructureReady'
+  );
+  if (infrastructureReadyCondition?.severity === 'Error') {
+    return getStatusComponent(ClusterCreationStatus.Failed);
+  }
+
   if (!nodePool.status?.infrastructureReady) {
     return getStatusComponent(ClusterCreationStatus.Waiting);
   }
 
   return getStatusComponent(ClusterCreationStatus.Ok);
+}
+
+interface StatusError {
+  error?: string;
+  details?: string;
 }
 
 interface ICreateClusterAppBundlesStatusProps {}
@@ -271,6 +294,14 @@ const CreateClusterAppBundlesStatus: React.FC<
     }
   );
 
+  const controlPlaneNodesErrors = useMemo(() => {
+    if (typeof controlPlaneNodes === 'undefined') {
+      return [];
+    }
+
+    return getControlPlaneNodesErrors(controlPlaneNodes, provider);
+  }, [controlPlaneNodes, provider]);
+
   const appListClient = useRef(clientFactory());
   const appListGetOptions = {
     namespace,
@@ -361,11 +392,20 @@ const CreateClusterAppBundlesStatus: React.FC<
     }
   );
 
+  const nodePoolsErrors = useMemo(() => {
+    if (typeof nodePoolList === 'undefined') {
+      return [];
+    }
+
+    return getNodePoolsErrors(nodePoolList, provider);
+  }, [nodePoolList, provider]);
+
   const clusterAppCreated = getClusterAppCreatedStatus(clusterApp);
   const clusterCreated = getClusterCreatedStatus(cluster, clusterApp);
   const controlPlaneReady = getControlPlaneReadyStatus(
     cluster,
-    controlPlaneNodes
+    controlPlaneNodes,
+    controlPlaneNodesErrors.length > 0
   );
   const clusterAppDeployed = getClusterAppDeployedStatus(clusterApp);
   const defaultAppsDeployed = getDefaultAppsDeployedStatus(appList);
@@ -380,28 +420,43 @@ const CreateClusterAppBundlesStatus: React.FC<
     );
   }, [orgId, clusterId]);
 
-  const error = useMemo(() => {
-    const errors = [
+  const errors = useMemo(() => {
+    const requestErrors = [
       clusterAppError,
       clusterError,
       controlPlaneNodesError,
       appListError,
       nodePoolListError,
-    ].filter((err) => {
-      return (
-        err &&
-        !metav1.isStatusError(err.data, metav1.K8sStatusErrorReasons.NotFound)
+    ]
+      .filter((err): err is GenericResponseError => {
+        return Boolean(
+          err &&
+            !metav1.isStatusError(
+              err.data,
+              metav1.K8sStatusErrorReasons.NotFound
+            )
+        );
+      })
+      .map(
+        (error): StatusError => ({
+          details: extractErrorMessage(error),
+        })
       );
-    });
 
-    return errors.length > 0 ? errors[0] : undefined;
+    return [...requestErrors, ...nodePoolsErrors, ...controlPlaneNodesErrors];
   }, [
     clusterAppError,
     clusterError,
     controlPlaneNodesError,
     appListError,
     nodePoolListError,
+    nodePoolsErrors,
+    controlPlaneNodesErrors,
   ]);
+
+  console.log('cluster', cluster);
+  console.log('control plane nodes', controlPlaneNodes);
+  console.log('node pools', nodePoolList);
 
   return (
     <Box {...props}>
@@ -479,22 +534,29 @@ const CreateClusterAppBundlesStatus: React.FC<
         </StatusList>
       </Box>
 
-      {error && (
-        <Box
-          border={{ side: 'top' }}
-          margin={{ top: 'medium' }}
-          pad={{ top: 'medium' }}
-        >
-          <ErrorMessage
-            width={{ max: CLUSTER_CREATION_FORM_MAX_WIDTH }}
-            details={extractErrorMessage(error)}
+      {errors &&
+        errors.map((error, idx) => (
+          <Box
+            key={idx}
+            border={{ side: 'top' }}
+            margin={{ top: 'medium' }}
+            pad={{ top: 'medium' }}
           >
-            An error occurred during creation of the cluster. If you want to
-            contact Giant Swarm support for assistance, please provide the
-            details given below.
-          </ErrorMessage>
-        </Box>
-      )}
+            <ErrorMessage
+              width={{ max: CLUSTER_CREATION_FORM_MAX_WIDTH }}
+              error={
+                error.error
+                  ? formatClusterAppResourcesError(error.error)
+                  : undefined
+              }
+              details={error.details}
+            >
+              An error occurred during creation of the cluster. If you want to
+              contact Giant Swarm support for assistance, please provide the
+              details given below.
+            </ErrorMessage>
+          </Box>
+        ))}
 
       <Box
         border={{ side: 'top' }}

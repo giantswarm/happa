@@ -4,10 +4,12 @@ import {
   getClusterConfigMapName,
   templateConfigMap,
 } from 'MAPI/apps/utils';
+import { ControlPlaneNode, NodePoolList } from 'MAPI/types';
 import { getNamespaceFromOrgName } from 'MAPI/utils';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
+import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
@@ -348,4 +350,79 @@ export function templateClusterCreationManifest(
       })
     )
     .join('---\n')}`;
+}
+
+export function formatClusterAppResourcesError(error: string) {
+  return error
+    .replace(/resource named (\S+)/, 'resource named <code>$1</code>')
+    .replace(/in namespace (\S+)/, 'in namespace <code>$1</code>');
+}
+
+export function getControlPlaneNodesErrors(
+  nodes: ControlPlaneNode[],
+  provider: PropertiesOf<typeof Providers>
+) {
+  if (provider === Providers.CAPA) {
+    const machines = nodes.filter(
+      (node): node is capiv1beta1.IMachine => node.kind === capiv1beta1.Machine
+    );
+
+    return machines.flatMap((node) => {
+      if (typeof node.status?.conditions === 'undefined') {
+        return [];
+      }
+
+      return node.status.conditions
+        .filter(
+          (condition) =>
+            condition.type === 'InfrastructureReady' &&
+            condition.severity === 'Error'
+        )
+        .map((condition) => ({
+          error: `${node.kind} resource named ${node.metadata.name} in namespace ${node.metadata.namespace}`,
+          details: `${condition.reason}: ${condition.message}`,
+        }));
+    });
+  }
+
+  if (provider === Providers.CAPZ) {
+    const machines = nodes.filter(
+      (node): node is capiv1beta1.IMachine => node.kind === capiv1beta1.Machine
+    );
+
+    return machines
+      .filter((node) => node.status?.phase === 'Failed')
+      .map((node) => ({
+        error: `${node.kind} resource named ${node.metadata.name} in namespace ${node.metadata.namespace}`,
+        details: `${node.status?.failureReason}: ${node.status?.failureMessage}`,
+      }));
+  }
+
+  return [];
+}
+
+export function getNodePoolsErrors(
+  nodePoolList: NodePoolList,
+  provider: PropertiesOf<typeof Providers>
+) {
+  if (provider === Providers.CAPA) {
+    return nodePoolList.items.flatMap((nodePool) => {
+      if (typeof nodePool.status?.conditions === 'undefined') {
+        return [];
+      }
+
+      return nodePool.status.conditions
+        .filter(
+          (condition) =>
+            condition.type === 'InfrastructureReady' &&
+            condition.severity === 'Error'
+        )
+        .map((condition) => ({
+          error: `${nodePool.kind} resource named ${nodePool.metadata.name} in namespace ${nodePool.metadata.namespace}`,
+          details: `${condition.reason}: ${condition.message}`,
+        }));
+    });
+  }
+
+  return [];
 }
