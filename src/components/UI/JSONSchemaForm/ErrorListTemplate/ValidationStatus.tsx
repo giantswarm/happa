@@ -1,12 +1,11 @@
 import { RJSFValidationError } from '@rjsf/utils';
 import { Box, Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 import { IFormContext } from '..';
-import { isTouchedField, mapErrorPropertyToField } from '../utils';
 import ErrorList from './ErrorList';
 
 const StyledStatusIcon = styled.i<{ color: string }>`
@@ -26,15 +25,7 @@ interface IValidationStatusProps {
 const ValidationStatus: React.FC<IValidationStatusProps> = ({
   formContext,
 }) => {
-  const filteredErrors = useMemo(() => {
-    return formContext.errors?.filter((e) =>
-      isTouchedField(
-        mapErrorPropertyToField(e, formContext.idConfigs),
-        formContext.touchedFields,
-        formContext.idConfigs.idSeparator
-      )
-    );
-  }, [formContext]);
+  const errors = formContext.errors;
 
   return (
     <Box
@@ -56,7 +47,7 @@ const ValidationStatus: React.FC<IValidationStatusProps> = ({
             <i className='fa fa-info' aria-hidden={true} role='presentation' />
           </TooltipContainer>
         </Box>
-        {filteredErrors && filteredErrors.length > 0 ? (
+        {errors && errors.length > 0 ? (
           <Box direction='row' align='center' gap='xsmall'>
             <StyledStatusIcon
               className='fa fa-close'
@@ -64,7 +55,7 @@ const ValidationStatus: React.FC<IValidationStatusProps> = ({
               role='presentation'
               color='text-error'
             />
-            <Text color='text-error'>{formatErrorText(filteredErrors)}</Text>
+            <Text color='text-error'>{formatErrorText(errors)}</Text>
           </Box>
         ) : (
           <Box direction='row' align='center' gap='xsmall'>
@@ -78,9 +69,7 @@ const ValidationStatus: React.FC<IValidationStatusProps> = ({
           </Box>
         )}
       </Box>
-      {filteredErrors && filteredErrors.length > 0 && (
-        <ErrorList errors={filteredErrors} />
-      )}
+      {errors && errors.length > 0 && <ErrorList errors={errors} />}
     </Box>
   );
 };
