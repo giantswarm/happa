@@ -43,7 +43,7 @@ const CreateClusterConfigViewer: React.FC<ICreateClusterConfigViewerProps> = ({
               <>
                 The following YAML manifest includes all resources needed to
                 create the cluster as configured via the Management API, using
-                e.g. <code>kubectl-gs apply</code>.
+                e.g. <code>kubectl apply</code>.
               </>
             }
             data={templateClusterCreationManifest(clusterAppConfig)}
