@@ -16,6 +16,7 @@ import { preprocessSchema } from './schemaUtils';
 import SelectWidget from './SelectWidget';
 import {
   cleanPayload,
+  cleanPayloadFromDefaults,
   mapErrorPropertyToField,
   transformArraysIntoObjects,
   transformErrors,
@@ -197,24 +198,14 @@ const JSONSchemaForm: React.FC<IJSONSchemaFormProps> = ({
         preprocessedSchema,
         {
           emptyStrings: false,
-          emptyArrays: false,
-          emptyObjects: false,
-          nullValues: false,
           isException: (_value, _cleanValue, isArrayItem) => isArrayItem,
         }
       ) as RJSFSchema;
 
-      const cleanDataWithoutDefaultValues = cleanPayload(
-        data,
+      const cleanDataWithoutDefaultValues = cleanPayloadFromDefaults(
+        cleanData,
         preprocessedSchema,
-        preprocessedSchema,
-        {
-          emptyStrings: false,
-          emptyArrays: false,
-          emptyObjects: false,
-          nullValues: false,
-          cleanDefaultValues: true,
-        }
+        preprocessedSchema
       ) as RJSFSchema;
 
       updateTouchedFields(cleanData, fieldId);

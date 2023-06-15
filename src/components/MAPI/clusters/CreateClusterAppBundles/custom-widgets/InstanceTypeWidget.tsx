@@ -44,7 +44,9 @@ const InstanceTypeWidget: React.FC<
         allowEmptyValue
         emptyValueName={EMPTY_VALUE_NAME}
         selectedInstanceType={
-          value === options.emptyValue ? EMPTY_VALUE_NAME : value
+          value === options.emptyValue || value === ''
+            ? EMPTY_VALUE_NAME
+            : value
         }
         selectInstanceType={handleChange}
       />

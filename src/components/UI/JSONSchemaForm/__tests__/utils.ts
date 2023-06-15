@@ -3,6 +3,7 @@ import cleanDeep from 'clean-deep';
 
 import {
   cleanPayload,
+  cleanPayloadFromDefaults,
   CleanPayloadOptions,
   transformArraysIntoObjects,
 } from '../utils';
@@ -104,15 +105,7 @@ describe('JSONSchemaForm:utils', () => {
     });
   });
 
-  describe('cleanPayload with default values', () => {
-    const cleanOptions = {
-      emptyStrings: false,
-      emptyArrays: false,
-      emptyObjects: false,
-      nullValues: false,
-      cleanDefaultValues: true,
-    };
-
+  describe('cleanPayloadFromDefaults', () => {
     it('cleans string values correctly', () => {
       const examples = [
         {
@@ -153,39 +146,9 @@ describe('JSONSchemaForm:utils', () => {
           },
         };
 
-        expect(
-          cleanPayload(payload, schema, schema, {
-            ...cleanOptions,
-          })
-        ).toEqual(expected);
-      }
-    });
-
-    it('implicitly uses empty string as default value for strings', () => {
-      const examples = [
-        {
-          payload: { field: '' },
-          expected: {},
-        },
-        {
-          payload: { field: 'some string field' },
-          expected: { field: 'some string field' },
-        },
-      ];
-
-      const schema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          field: {
-            type: 'string',
-          },
-        },
-      };
-
-      for (const { payload, expected } of examples) {
-        expect(
-          cleanPayload(payload, schema, schema, { ...cleanOptions })
-        ).toEqual(expected);
+        expect(cleanPayloadFromDefaults(payload, schema, schema)).toEqual(
+          expected
+        );
       }
     });
 
@@ -224,37 +187,9 @@ describe('JSONSchemaForm:utils', () => {
           },
         };
 
-        expect(
-          cleanPayload(payload, schema, schema, { ...cleanOptions })
-        ).toEqual(expected);
-      }
-    });
-
-    it('implicitly uses false as default value for booleans', () => {
-      const examples = [
-        {
-          payload: { field: false },
-          expected: {},
-        },
-        {
-          payload: { field: true },
-          expected: { field: true },
-        },
-      ];
-
-      const schema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          field: {
-            type: 'boolean',
-          },
-        },
-      };
-
-      for (const { payload, expected } of examples) {
-        expect(
-          cleanPayload(payload, schema, schema, { ...cleanOptions })
-        ).toEqual(expected);
+        expect(cleanPayloadFromDefaults(payload, schema, schema)).toEqual(
+          expected
+        );
       }
     });
 
@@ -287,7 +222,7 @@ describe('JSONSchemaForm:utils', () => {
         },
         {
           defaultValue: 123,
-          payload: { field: null },
+          payload: { field: 0 },
           expected: { field: 0 },
         },
       ];
@@ -303,37 +238,9 @@ describe('JSONSchemaForm:utils', () => {
           },
         };
 
-        expect(
-          cleanPayload(payload, schema, schema, { ...cleanOptions })
-        ).toEqual(expected);
-      }
-    });
-
-    it('implicitly uses null as default value for numbers', () => {
-      const examples = [
-        {
-          payload: { field: null },
-          expected: {},
-        },
-        {
-          payload: { field: 123 },
-          expected: { field: 123 },
-        },
-      ];
-
-      const schema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          field: {
-            type: 'number',
-          },
-        },
-      };
-
-      for (const { payload, expected } of examples) {
-        expect(
-          cleanPayload(payload, schema, schema, { ...cleanOptions })
-        ).toEqual(expected);
+        expect(cleanPayloadFromDefaults(payload, schema, schema)).toEqual(
+          expected
+        );
       }
     });
 
@@ -380,40 +287,9 @@ describe('JSONSchemaForm:utils', () => {
           },
         };
 
-        expect(
-          cleanPayload(payload, schema, schema, { ...cleanOptions })
-        ).toEqual(expected);
-      }
-    });
-
-    it('implicitly uses empty array as default value for arrays', () => {
-      const examples = [
-        {
-          payload: { field: [] },
-          expected: {},
-        },
-        {
-          payload: { field: ['some string field'] },
-          expected: { field: ['some string field'] },
-        },
-      ];
-
-      const schema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          field: {
-            type: 'array',
-            items: {
-              type: 'string',
-            },
-          },
-        },
-      };
-
-      for (const { payload, expected } of examples) {
-        expect(
-          cleanPayload(payload, schema, schema, { ...cleanOptions })
-        ).toEqual(expected);
+        expect(cleanPayloadFromDefaults(payload, schema, schema)).toEqual(
+          expected
+        );
       }
     });
 
@@ -514,6 +390,7 @@ describe('JSONSchemaForm:utils', () => {
             booleanField: false,
             innerArray: [1, 2, 3],
             emptyInnerArray: [],
+            emptyInnerObject: {},
           },
         ],
       };
@@ -529,48 +406,17 @@ describe('JSONSchemaForm:utils', () => {
         array2: [
           {
             stringField: 'another string field',
+            emptyStringField: '',
             numberField: 123,
+            booleanField: false,
             innerArray: [1, 2, 3],
           },
         ],
       };
 
-      expect(
-        cleanPayload(payload, schema, schema, { ...cleanOptions })
-      ).toEqual(expected);
-    });
-
-    it('implicitly uses empty object as default value for objects', () => {
-      const examples = [
-        {
-          payload: { field: {} },
-          expected: {},
-        },
-        {
-          payload: { field: { stringField: 'some string field' } },
-          expected: { field: { stringField: 'some string field' } },
-        },
-      ];
-
-      const schema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          field: {
-            type: 'object',
-            properties: {
-              stringField: {
-                type: 'string',
-              },
-            },
-          },
-        },
-      };
-
-      for (const { payload, expected } of examples) {
-        expect(
-          cleanPayload(payload, schema, schema, { ...cleanOptions })
-        ).toEqual(expected);
-      }
+      expect(cleanPayloadFromDefaults(payload, schema, schema)).toEqual(
+        expected
+      );
     });
 
     it('returns empty object if input object equals to default value', () => {
@@ -618,9 +464,7 @@ describe('JSONSchemaForm:utils', () => {
         },
       };
 
-      expect(
-        cleanPayload(payload, schema, schema, { ...cleanOptions })
-      ).toEqual({});
+      expect(cleanPayloadFromDefaults(payload, schema, schema)).toEqual({});
     });
   });
 

@@ -5,7 +5,6 @@ import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import { IFormContext } from '..';
 import FieldDescription from '../FieldDescription';
 import FieldLabel from '../FieldLabel';
-import { DEFAULT_BOOLEAN_VALUE } from '../utils';
 
 const CheckboxWidget: React.FC<
   WidgetProps<RJSFSchema, RJSFSchema, IFormContext>
@@ -19,8 +18,7 @@ const CheckboxWidget: React.FC<
   formContext = {} as IFormContext,
   onChange,
 }) => {
-  const implicitDefaultValue = DEFAULT_BOOLEAN_VALUE;
-  const emptyValue = options.emptyValue ?? implicitDefaultValue;
+  const emptyValue = options.emptyValue;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.checked === false ? emptyValue : e.target.checked);

@@ -121,7 +121,7 @@ export function getArrayItemIndex(id: string, idSeparator: string) {
 
 export const DEFAULT_STRING_VALUE = '';
 export const DEFAULT_BOOLEAN_VALUE = false;
-export const DEFAULT_NUMERIC_VALUE = null;
+export const DEFAULT_NUMERIC_VALUE = 0;
 export const DEFAULT_ARRAY_VALUE = [];
 export const DEFAULT_OBJECT_VALUE = {};
 
@@ -220,8 +220,6 @@ function getValueSchema(
 }
 
 export interface CleanPayloadOptions extends CleanOptions {
-  cleanDefaultValues?: boolean;
-  defaultValues?: unknown;
   isException?: (
     value: unknown,
     cleanValue: unknown,
@@ -233,14 +231,13 @@ export function cleanPayload(
   object: unknown,
   objectSchema: RJSFSchema,
   rootSchema: RJSFSchema,
-  options?: CleanPayloadOptions
+  options?: CleanPayloadOptions,
+  defaultValues?: unknown
 ): unknown {
   const {
     emptyArrays = true,
     emptyObjects = true,
     undefinedValues = true,
-    cleanDefaultValues = false,
-    defaultValues,
     isException = () => false,
   } = options ?? {};
 
@@ -268,70 +265,158 @@ export function cleanPayload(
       const defaultValueFromSchema = valueSchema.default;
       const implicitDefaultValue = getImplicitDefaultValue(valueSchema);
 
-      const defaultValue =
-        defaultValueFromParent ??
-        defaultValueFromSchema ??
-        implicitDefaultValue;
+      const defaultValue = defaultValueFromParent ?? defaultValueFromSchema;
 
       if (Array.isArray(value)) {
-        if (cleanDefaultValues && defaultValueFromSchema) {
-          const cleanValue = cleanPayload(value, valueSchema, rootSchema, {
-            ...options,
-            defaultValues: undefined,
-          });
+        newValue =
+          defaultValue &&
+          shouldCleanInnerDefaultValues(
+            value,
+            valueSchema,
+            defaultValue as unknown[]
+          )
+            ? cleanPayload(
+                value,
+                valueSchema,
+                rootSchema,
+                options,
+                defaultValue
+              )
+            : cleanPayload(value, valueSchema, rootSchema, options);
+
+        if (
+          emptyArrays &&
+          isEmpty(newValue) &&
+          defaultValue === undefined &&
+          !isException(value, newValue, isArray)
+        ) {
+          return;
+        }
+      } else if (isPlainObject(value)) {
+        newValue = cleanPayload(
+          value,
+          valueSchema,
+          rootSchema,
+          options,
+          defaultValue
+        );
+
+        if (
+          emptyObjects &&
+          isEmpty(newValue) &&
+          defaultValue === undefined &&
+          !isException(value, newValue, isArray)
+        ) {
+          return;
+        }
+      } else {
+        newValue =
+          value === undefined &&
+          defaultValue &&
+          defaultValue !== implicitDefaultValue
+            ? implicitDefaultValue
+            : value;
+        const cleanValue = cleanDeep({ value: newValue }, options).value;
+
+        if (
+          ((cleanValue === undefined && newValue !== undefined) ||
+            (newValue === undefined && undefinedValues)) &&
+          !isException(value, newValue, isArray)
+        ) {
+          return;
+        }
+      }
+
+      if (Array.isArray(result)) {
+        result.push(newValue);
+      } else {
+        result[key] = newValue;
+      }
+    }
+  );
+}
+
+export function cleanPayloadFromDefaults(
+  object: unknown,
+  objectSchema: RJSFSchema,
+  rootSchema: RJSFSchema,
+  defaultValues?: unknown
+): unknown {
+  return transform(
+    object as unknown[],
+    // eslint-disable-next-line complexity
+    (result: Record<string | number, unknown>, value, key) => {
+      const valueSchema = getValueSchema(key, objectSchema, rootSchema);
+      if (
+        typeof valueSchema === 'undefined' ||
+        typeof valueSchema === 'boolean'
+      ) {
+        return;
+      }
+
+      let newValue = value;
+      const defaultValueFromParent = getDefaultValueFromParent(
+        key,
+        value,
+        defaultValues,
+        objectSchema
+      );
+      const defaultValueFromSchema = valueSchema.default;
+
+      const defaultValue = defaultValueFromParent ?? defaultValueFromSchema;
+
+      if (Array.isArray(value)) {
+        if (defaultValueFromSchema) {
+          const cleanValue = cleanPayloadFromDefaults(
+            value,
+            valueSchema,
+            rootSchema
+          );
 
           if (isEqual(cleanValue, defaultValueFromSchema)) {
             return;
           }
         }
 
-        newValue = cleanPayload(value, valueSchema, rootSchema, {
-          ...options,
-          defaultValues: shouldCleanInnerDefaultValues(
+        newValue =
+          defaultValue &&
+          shouldCleanInnerDefaultValues(
             value,
             valueSchema,
             defaultValue as unknown[]
           )
-            ? defaultValue
-            : undefined,
-        });
+            ? cleanPayloadFromDefaults(
+                value,
+                valueSchema,
+                rootSchema,
+                defaultValue
+              )
+            : cleanPayloadFromDefaults(value, valueSchema, rootSchema);
 
         if (
-          ((cleanDefaultValues &&
-            isEqualToDefaultValue(value, newValue, key, defaultValue)) ||
-            (emptyArrays && isEmpty(newValue))) &&
-          !isException(value, newValue, isArray)
+          isEqualToDefaultValue(value, newValue, key, defaultValue) ||
+          (isEmpty(newValue) && defaultValue === undefined)
         ) {
           return;
         }
       } else if (isPlainObject(value)) {
-        newValue = cleanPayload(value, valueSchema, rootSchema, {
-          ...options,
-          defaultValues: defaultValue,
-        });
+        newValue = cleanPayloadFromDefaults(
+          value,
+          valueSchema,
+          rootSchema,
+          defaultValue
+        );
 
         if (
-          ((cleanDefaultValues &&
-            isEqualToDefaultValue(value, newValue, key, defaultValue)) ||
-            (emptyObjects && isEmpty(newValue))) &&
-          !isException(value, newValue, isArray)
+          isEqualToDefaultValue(value, newValue, key, defaultValue) ||
+          (isEmpty(newValue) && defaultValue === undefined)
         ) {
           return;
         }
       } else {
-        const cleanValue = cleanDeep({ value: newValue }, options).value;
         newValue = value;
-        if (isNumericSchema(valueSchema)) {
-          newValue = value === null && defaultValue !== null ? 0 : value;
-        }
 
-        if (
-          ((cleanDefaultValues &&
-            isEqualToDefaultValue(value, newValue, key, defaultValue)) ||
-            (newValue !== undefined && cleanValue === undefined) ||
-            (undefinedValues && cleanValue === undefined)) &&
-          !isException(value, newValue, isArray)
-        ) {
+        if (isEqualToDefaultValue(value, newValue, key, defaultValue)) {
           return;
         }
       }

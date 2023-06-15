@@ -130,7 +130,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                       'Only the second declared subschema (number, minimum=3) should be visible.',
                     minimum: 3,
                     title: `Property with subschemas using 'anyOf' and 'deprecated'`,
-                    type: ['number', 'null'],
+                    type: 'number',
                   },
                   anyOfSimple: {
                     description:
@@ -196,7 +196,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                       title: 'Key',
                     },
                     age: {
-                      type: ['number', 'null'],
+                      type: 'number',
                     },
                     name: {
                       type: 'string',
@@ -257,7 +257,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                       type: 'string',
                     },
                     minSize: {
-                      type: ['number', 'null'],
+                      type: 'number',
                     },
                   },
                 },
@@ -319,7 +319,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                       pattern: '^[a-z]{5,10}$',
                     },
                     age: {
-                      type: ['number', 'null'],
+                      type: 'number',
                     },
                     name: {
                       type: 'string',
@@ -382,7 +382,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                       type: 'string',
                     },
                     minSize: {
-                      type: ['number', 'null'],
+                      type: 'number',
                     },
                   },
                 },
@@ -463,7 +463,7 @@ describe('JSONSchemaForm:schemaUtils', () => {
                       type: 'string',
                     },
                     minSize: {
-                      type: ['number', 'null'],
+                      type: 'number',
                     },
                   },
                 },
@@ -480,33 +480,6 @@ describe('JSONSchemaForm:schemaUtils', () => {
             'properties.objectsWithDefaultsInInternals',
             'properties.internal',
           ]) as RJSFSchema
-        )
-      ).toEqual(expected);
-    });
-
-    it('adds null type for numeric properties', () => {
-      const expected = {
-        $schema: 'https://json-schema.org/draft/2020-12/schema',
-        properties: {
-          numericFields: {
-            type: 'object',
-            properties: {
-              integerField: {
-                type: ['integer', 'null'],
-              },
-              numberField: {
-                type: ['number', 'null'],
-              },
-            },
-            title: 'Numeric fields',
-          },
-        },
-        type: 'object',
-      };
-
-      expect(
-        preprocessSchema(
-          createTestSchema(['properties.numericFields']) as RJSFSchema
         )
       ).toEqual(expected);
     });

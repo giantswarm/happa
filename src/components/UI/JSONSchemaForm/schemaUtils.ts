@@ -178,20 +178,6 @@ export function preprocessSchema(
     return { obj, path };
   };
 
-  const processNumericProperties = ({
-    obj,
-    path,
-  }: {
-    obj: RJSFSchema;
-    path?: string | null;
-  }) => {
-    if (obj.type === 'integer' || obj.type === 'number') {
-      obj.type = [obj.type, 'null'];
-    }
-
-    return { obj, path };
-  };
-
   const processDefaultValues = ({
     obj,
     path,
@@ -202,9 +188,11 @@ export function preprocessSchema(
     // Clean out implicit default values from objects and arrays
     if ((obj.type === 'array' || obj.type === 'object') && obj.default) {
       const { default: defaultValue, ...objSchema } = obj;
-      obj.default = cleanPayload(defaultValue, objSchema, patchedSchema, {
-        cleanDefaultValues: true,
-      }) as typeof defaultValue;
+      obj.default = cleanPayload(
+        defaultValue,
+        objSchema,
+        patchedSchema
+      ) as typeof defaultValue;
     }
 
     return { obj, path };
@@ -215,9 +203,6 @@ export function preprocessSchema(
   );
   patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
     transformAdditionalProperties({ obj, path })
-  );
-  patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
-    processNumericProperties({ obj, path })
   );
   patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
     processDefaultValues({ obj, path })

@@ -1,9 +1,7 @@
-import { EnumOptionsType, getSchemaType, WidgetProps } from '@rjsf/utils';
+import { EnumOptionsType, WidgetProps } from '@rjsf/utils';
 import { Box } from 'grommet';
 import React, { useMemo } from 'react';
 import Select from 'UI/Inputs/Select';
-
-import { DEFAULT_NUMERIC_VALUE, DEFAULT_STRING_VALUE } from '../utils';
 
 const SelectWidget: React.FC<WidgetProps> = ({
   id,
@@ -11,7 +9,6 @@ const SelectWidget: React.FC<WidgetProps> = ({
   options: { emptyValue, enumOptions },
   required,
   value,
-  schema,
   onChange,
 }) => {
   const handleChange = (option: EnumOptionsType) => {
@@ -19,14 +16,10 @@ const SelectWidget: React.FC<WidgetProps> = ({
   };
 
   const options = useMemo(() => {
-    const schemaType = getSchemaType(schema);
-    const implicitDefaultValue =
-      schemaType === 'string' ? DEFAULT_STRING_VALUE : DEFAULT_NUMERIC_VALUE;
-    const emptyOptionValue = emptyValue ?? implicitDefaultValue;
     const selectOptions = [
       {
         label: '',
-        value: emptyOptionValue,
+        value: emptyValue,
       },
     ];
 
@@ -40,7 +33,7 @@ const SelectWidget: React.FC<WidgetProps> = ({
     }
 
     return selectOptions;
-  }, [emptyValue, enumOptions, schema]);
+  }, [emptyValue, enumOptions]);
 
   const selectedOption = options.find((option) => option.value === value);
   const selectedIndex = selectedOption
