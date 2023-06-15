@@ -97,8 +97,6 @@ passage:
 
 registry:
   domain: quay.io
-  pullSecret:
-    dockerConfigJSON: ""
 
 security:
   restrictAccess:
