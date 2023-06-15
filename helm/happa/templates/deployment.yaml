@@ -71,8 +71,6 @@ spec:
         - name: "{{ .Values.name }}-configmap"
           mountPath: /var/run/{{ .Values.name }}/configmap/
           readOnly: true
-      imagePullSecrets:
-      - name: happa-pull-secret
       volumes:
       - name: nginx-tmpfs
         emptyDir:
