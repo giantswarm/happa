@@ -101,26 +101,49 @@ export async function ensureAppUserConfigMap(
         metav1.K8sStatusErrorReasons.NotFound
       )
     ) {
-      return Promise.reject(err);
+      return Promise.reject(
+        new Error(
+          `ConfigMap resource named ${name} in namespace ${namespace}`,
+          { cause: err }
+        )
+      );
     }
   }
 
   if (contents.length < 1) return null;
 
-  const cr: corev1.IConfigMap = {
+  const cr = templateConfigMap(name, namespace, contents, labels);
+
+  return corev1
+    .createConfigMap(client, auth, cr)
+    .catch((err) =>
+      Promise.reject(
+        new Error(
+          `ConfigMap resource named ${name} in namespace ${namespace}`,
+          { cause: err }
+        )
+      )
+    );
+}
+
+export function templateConfigMap(
+  name: string,
+  namespace: string,
+  contents: string,
+  labels?: Record<string, string>
+): corev1.IConfigMap {
+  return {
     apiVersion: 'v1',
     kind: 'ConfigMap',
     metadata: {
       name,
       namespace,
-      ...(labels && labels),
+      ...(labels && { labels }),
     },
     data: {
       values: contents,
     },
   };
-
-  return corev1.createConfigMap(client, auth, cr);
 }
 
 /**
@@ -652,6 +675,55 @@ export function removeChildApps(apps: applicationv1alpha1.IApp[]) {
     return (
       typeof managedBy === 'undefined' || appNames.indexOf(managedBy) === -1
     );
+  });
+}
+
+/**
+ * Returns direct child apps of a parent app
+ */
+export function getChildApps(
+  apps: applicationv1alpha1.IApp[],
+  parentApp: applicationv1alpha1.IApp
+) {
+  return apps.filter((app) => {
+    const managedBy = app.metadata.labels?.[applicationv1alpha1.labelManagedBy];
+
+    return managedBy === parentApp.metadata.name;
+  });
+}
+
+/**
+ * Returns all child apps of a parent app, including child apps of inner app bundles
+ */
+export function getAllChildApps(
+  apps: applicationv1alpha1.IApp[],
+  parentApp: applicationv1alpha1.IApp
+): applicationv1alpha1.IApp[] {
+  const childApps = getChildApps(apps, parentApp);
+  const appBundles = childApps.filter(isAppBundle);
+  const appBundlesChildApps = appBundles.flatMap((appBundle) =>
+    getAllChildApps(apps, appBundle)
+  );
+
+  return [...childApps, ...appBundlesChildApps];
+}
+
+export function isAppBundle(app: applicationv1alpha1.IApp) {
+  return (
+    app.metadata.labels?.['app-operator.giantswarm.io/version'] === '0.0.0'
+  );
+}
+
+export function findDefaultAppsBundle(
+  apps: applicationv1alpha1.IApp[],
+  provider: PropertiesOf<typeof Providers>
+) {
+  const defaultAppName = getDefaultAppNameForProvider(provider);
+
+  return apps.find((app) => {
+    const appName = app.metadata.labels?.[applicationv1alpha1.labelAppName];
+
+    return appName === defaultAppName && isAppBundle(app);
   });
 }
 

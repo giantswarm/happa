@@ -1,6 +1,6 @@
 import { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { ThemeContext, ThemeType } from 'grommet';
-import React, { useMemo } from 'react';
+import React from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 
 import { IFormContext } from '..';
@@ -8,11 +8,7 @@ import AccordionFormField from '../AccordionFormField';
 import FieldDescription from '../FieldDescription';
 import FieldLabel from '../FieldLabel';
 import ObjectFormField from '../ObjectFormField';
-import {
-  isFieldArrayItem,
-  isTouchedField,
-  mapErrorPropertyToField,
-} from '../utils';
+import { isFieldArrayItem, mapErrorPropertyToField } from '../utils';
 
 function getCustomTheme(error: React.ReactElement | undefined): ThemeType {
   return error
@@ -35,14 +31,7 @@ function getChildErrorsForField(formContext: IFormContext, id: string) {
 
     return (
       // the suffix on the ID is required to eliminate false partial matches
-      errorPropertyAsField.includes(
-        `${id}${formContext.idConfigs.idSeparator}`
-      ) &&
-      isTouchedField(
-        errorPropertyAsField,
-        formContext.touchedFields,
-        formContext.idConfigs.idSeparator
-      )
+      errorPropertyAsField.includes(`${id}${formContext.idConfigs.idSeparator}`)
     );
   });
 }
@@ -78,17 +67,7 @@ const FieldTemplate: React.FC<
   const isRootItem = id === idPrefix;
   const isArrayItem = isFieldArrayItem(id, idSeparator);
 
-  const showErrors = useMemo(
-    () =>
-      isTouchedField(
-        id,
-        formContext.touchedFields,
-        formContext.idConfigs.idSeparator
-      ),
-    [formContext, id]
-  );
-
-  const error = rawErrors && showErrors ? errors : undefined;
+  const error = rawErrors ? errors : undefined;
 
   if (isRootItem) {
     return children;

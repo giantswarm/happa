@@ -276,6 +276,7 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
   };
 
   const handleFormSubmit = (
+    _e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>,
     _clusterName: string,
     data: RJSFSchema | undefined
   ) => {
@@ -360,8 +361,10 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
                   render={({ formDataPreview }) => {
                     return (
                       <Box
-                        margin={{ top: 'large' }}
                         width={{ max: 'large' }}
+                        margin={{ top: 'medium' }}
+                        pad={{ top: 'medium' }}
+                        border='top'
                         gap='small'
                       >
                         <Text weight='bold'>Form data preview</Text>

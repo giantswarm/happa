@@ -9,8 +9,6 @@ import SimpleNumberPicker from 'UI/Inputs/SimpleNumberPicker';
 import TextArea from 'UI/Inputs/TextArea';
 import TextInput from 'UI/Inputs/TextInput';
 
-import { DEFAULT_NUMERIC_VALUE, DEFAULT_STRING_VALUE } from '../utils';
-
 const BaseInputTemplate: React.FC<WidgetProps<RJSFSchema>> = ({
   id,
   schema,
@@ -25,9 +23,7 @@ const BaseInputTemplate: React.FC<WidgetProps<RJSFSchema>> = ({
   onBlur,
 }) => {
   const schemaType = getSchemaType(schema);
-  const implicitDefaultValue =
-    schemaType === 'string' ? DEFAULT_STRING_VALUE : DEFAULT_NUMERIC_VALUE;
-  const emptyValue = options.emptyValue ?? implicitDefaultValue;
+  const emptyValue = options.emptyValue;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

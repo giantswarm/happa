@@ -282,6 +282,7 @@ const theme = deepMerge(generate(16), {
       'service-priority-highest': COLORS.red2,
       'service-priority-medium': COLORS.yellow2,
       'service-priority-lowest': COLORS.darkBlueLighter2,
+      'codeblock-background': '#333333',
 
       focus: {
         light: 'text-strong',

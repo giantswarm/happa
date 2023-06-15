@@ -42,6 +42,7 @@ const OrganizationsRoutes = {
   Clusters: {
     Home: '/organizations/:orgId/clusters',
     New: '/organizations/:orgId/clusters/new',
+    NewStatus: '/organizations/:orgId/clusters/new/:clusterId?',
     Detail: {
       Home: '/organizations/:orgId/clusters/:clusterId',
       KeyPairs: '/organizations/:orgId/clusters/:clusterId/keypairs',
