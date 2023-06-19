@@ -118,7 +118,7 @@ export const labellingWorkloadClustersURL =
 
 // GitOps restrictions in the web UI
 export const gitopsRestrictions =
-  'https://docs.giantswarm.io/advanced/gitops/#web-ui-restrictions';
+  'https://docs.giantswarm.io/advanced/gitops/manage-workload-clusters/#web-ui-restrictions';
 
 // CRD names we expect to find a docs schema page for,
 // grouped by publisher domain.
