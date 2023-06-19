@@ -51,15 +51,7 @@ function getUserSecretName(appName: string): string {
   return `${appName}-user-secrets`;
 }
 
-export function getClusterConfigMapName(
-  clusterID: string,
-  appName?: string,
-  isClusterApp?: boolean
-): string {
-  if (appName === 'nginx-ingress-controller-app' && !isClusterApp) {
-    return 'ingress-controller-values';
-  }
-
+export function getClusterConfigMapName(clusterID: string): string {
   return `${clusterID}-cluster-values`;
 }
 
@@ -225,15 +217,9 @@ export async function createApp(
   auth: IOAuth2Provider,
   clusterID: string,
   appsNamespace: string,
-  isClusterApp: boolean,
   appConfig: IAppConfig
 ): Promise<applicationv1alpha1.IApp> {
-  const clusterConfigMapName = getClusterConfigMapName(
-    clusterID,
-    appConfig.chartName,
-    isClusterApp
-  );
-
+  const clusterConfigMapName = getClusterConfigMapName(clusterID);
   const kubeConfigSecretName = getKubeConfigSecretName(clusterID);
 
   const app: applicationv1alpha1.IApp = {
@@ -785,26 +771,19 @@ export function createIngressApp(
   isClusterApp: boolean,
   ingressAppCatalogEntry: applicationv1alpha1.IAppCatalogEntry
 ) {
-  return createApp(
-    clientFactory,
-    auth,
-    clusterID,
-    appsNamespace,
-    isClusterApp,
-    {
-      name: generateAppResourceName(
-        ingressAppCatalogEntry.spec.appName,
-        clusterID,
-        isClusterApp
-      ),
-      catalogName: ingressAppCatalogEntry.spec.catalog.name,
-      chartName: ingressAppCatalogEntry.spec.appName,
-      version: ingressAppCatalogEntry.spec.version,
-      namespace: 'kube-system',
-      configMapContents: '',
-      secretContents: '',
-    }
-  );
+  return createApp(clientFactory, auth, clusterID, appsNamespace, {
+    name: generateAppResourceName(
+      ingressAppCatalogEntry.spec.appName,
+      clusterID,
+      isClusterApp
+    ),
+    catalogName: ingressAppCatalogEntry.spec.catalog.name,
+    chartName: ingressAppCatalogEntry.spec.appName,
+    version: ingressAppCatalogEntry.spec.version,
+    namespace: 'kube-system',
+    configMapContents: '',
+    secretContents: '',
+  });
 }
 
 export function getClusterK8sEndpoint(

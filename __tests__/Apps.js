@@ -230,8 +230,6 @@ describe('Apps and App Catalog', () => {
     });
 
     it('installs an app in a cluster, with custom settings', async () => {
-      const testApp = 'nginx-ingress-controller-app';
-
       const installAppResponse = {
         code: 'RESOURCE_CREATED',
         message: `We're installing your app called 'test-app' on ${V4_CLUSTER.id}`,
@@ -241,7 +239,7 @@ describe('Apps and App Catalog', () => {
           spec: {
             catalog: 'giantswarm-incubator',
             name: 'nginx-ingress-controller-app',
-            namespace: 'kube-system',
+            namespace: 'test-app',
             version: '1.1.1',
           },
         })
@@ -273,7 +271,7 @@ describe('Apps and App Catalog', () => {
         AppsRoutes.AppDetail,
         {
           catalogName: 'giantswarm-incubator',
-          app: testApp,
+          app: 'nginx-ingress-controller-app',
           version: '1.1.1',
         }
       );
