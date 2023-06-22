@@ -507,7 +507,6 @@ const AppInstallModal: React.FC<
         auth,
         selectedClusterID,
         selectedClusterNamespace,
-        isClusterApp,
         {
           name: name,
           catalogName: catalogName,
@@ -704,7 +703,6 @@ const AppInstallModal: React.FC<
                 visible={visible}
               >
                 <InstallAppForm
-                  appName={appName}
                   name={name}
                   nameError={nameError}
                   namespace={namespace}

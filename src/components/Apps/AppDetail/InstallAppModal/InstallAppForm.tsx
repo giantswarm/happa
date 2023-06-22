@@ -1,12 +1,11 @@
 import { Box, FormField } from 'grommet';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import VersionPicker from 'UI/Controls/VersionPicker/VersionPicker';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import FileInput from 'UI/Inputs/FileInput';
 import TextInput from 'UI/Inputs/TextInput';
 
 interface IInstallAppFormProps {
-  appName: string;
   name: string;
   nameError: string;
   namespace: string;
@@ -31,7 +30,6 @@ const InstallAppForm: React.FC<
   onChangeValuesYAML,
   onChangeSecretsYAML,
   onChangeVersion,
-  appName,
   name,
   nameError,
   version,
@@ -77,26 +75,6 @@ const InstallAppForm: React.FC<
     [onChangeNamespace]
   );
 
-  const [formAbilities, setFormAbilities] = useState({
-    hasFixedNamespace: false,
-    appNamespace: '',
-  });
-
-  useEffect(() => {
-    let appNamespace = '';
-
-    // Some apps have special rules about what namespace they are allowed to be in.
-    if (appName === 'nginx-ingress-controller-app') {
-      appNamespace = 'kube-system';
-      updateNamespace(appNamespace);
-    }
-
-    setFormAbilities({
-      hasFixedNamespace: false,
-      appNamespace,
-    });
-  }, [appName, updateNamespace]);
-
   return (
     <Box direction='column' gap='small' height={{ min: 'fit-content' }}>
       <TextInput
@@ -127,17 +105,7 @@ const InstallAppForm: React.FC<
         />
       </FormField>
 
-      {isAppBundle ? null : formAbilities.hasFixedNamespace ? (
-        <TextInput
-          help={`This app must be installed in the ${formAbilities.appNamespace} namespace`}
-          key='fixed-namespace'
-          label='Namespace'
-          id='fixed-namespace'
-          readOnly={true}
-          value={formAbilities.appNamespace}
-          margin={{ bottom: 'large' }}
-        />
-      ) : (
+      {isAppBundle ? null : (
         <TextInput
           help='We recommend that you create a dedicated namespace. The namespace will be created if it does not exist yet.'
           key='dedicated-namespace'

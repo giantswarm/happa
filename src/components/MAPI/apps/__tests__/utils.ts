@@ -131,7 +131,6 @@ describe('utils', () => {
         authProvider,
         'some-cluster',
         'some-cluster',
-        false,
         {
           name: 'cool-app',
           namespace: 'cool-app-ns',
@@ -200,7 +199,6 @@ describe('utils', () => {
         authProvider,
         'some-cluster',
         'some-cluster',
-        false,
         {
           name: 'cool-app',
           namespace: 'cool-app-ns',
@@ -253,7 +251,6 @@ describe('utils', () => {
         authProvider,
         'some-cluster',
         'some-cluster',
-        false,
         {
           name: 'cool-app',
           namespace: 'cool-app-ns',

@@ -355,7 +355,6 @@ const InstallAppModal: React.FC<
                 visible={visible}
               >
                 <InstallAppForm
-                  appName={props.app.name}
                   name={name}
                   nameError={nameError}
                   namespace={namespace}
