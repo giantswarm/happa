@@ -5,7 +5,7 @@ verify_ssl = true
 
 [packages]
 pytest-helm-charts = "==1.1.1"
-pytest = "==7.3.2"
+pytest = "==7.4.0"
 pykube-ng = "==22.9.0"
 pytest-rerunfailures = "==11.1.2"
 
