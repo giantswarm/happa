@@ -214,7 +214,7 @@
     "jest-environment-jsdom": "29.5.0",
     "json-loader": "0.5.7",
     "json-schema-to-typescript": "13.0.2",
-    "lint-staged": "13.2.2",
+    "lint-staged": "13.2.3",
     "mini-css-extract-plugin": "2.7.6",
     "nock": "13.3.1",
     "node-sass": "9.0.0",
