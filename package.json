@@ -119,8 +119,8 @@
     "web-vitals": "3.3.2"
   },
   "devDependencies": {
-    "@babel/core": "7.22.6",
-    "@babel/preset-env": "7.22.6",
+    "@babel/core": "7.22.7",
+    "@babel/preset-env": "7.22.7",
     "@babel/preset-react": "7.22.5",
     "@babel/preset-typescript": "7.22.5",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.10",
@@ -180,7 +180,7 @@
     "@typescript-eslint/eslint-plugin": "5.60.1",
     "@typescript-eslint/parser": "5.60.1",
     "babel-cli": "6.26.0",
-    "babel-jest": "29.5.0",
+    "babel-jest": "29.6.0",
     "babel-loader": "9.1.2",
     "babel-plugin-date-fns": "2.0.0",
     "babel-plugin-styled-components": "2.1.4",
