@@ -280,9 +280,9 @@ describe('appcatalog::actions', () => {
 
   describe('updateClusterApp', () => {
     it('correctly composes the request payload', async () => {
-      const appName = 'nginx-ingress-controller-app';
+      const appName = 'ingress-nginx';
       const clusterId = V5_CLUSTER.id;
-      const version = '1.9.2';
+      const version = '3.0.0';
 
       const request = nock(API_ENDPOINT)
         .patch(`/v5/clusters/${clusterId}/apps/${appName}/`, {

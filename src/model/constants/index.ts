@@ -101,11 +101,11 @@ export const Constants = {
   AZURE_SPOT_INSTANCES_MAX_PRICE_MAX: 5,
   AZURE_SPOT_INSTANCES_MAX_PRICE_PRECISION: 5,
 
-  // App name of the 'nginx-ingress-controller-app'
-  INSTALL_INGRESS_TAB_APP_NAME: 'nginx-ingress-controller-app',
-  // App catalog name containing the 'nginx-ingress-controller-app'
+  // Name of the 'ingress-nginx' app.
+  INSTALL_INGRESS_TAB_APP_NAME: 'ingress-nginx',
+  // Name of the catalog containing the 'ingress-nginx' app.
   INSTALL_INGRESS_TAB_APP_CATALOG_NAME: 'giantswarm',
-  // Namespace for the catalog containing the 'nginx-ingress-controller-app'
+  // Namespace of the catalog containing the 'ingress-nginx' app.
   INSTALL_INGRESS_TAB_CATALOG_NAMESPACE: 'default',
 
   // App catalog name containing 'cluster-PROVIDER' and 'default-apps-PROVIDER' apps

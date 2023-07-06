@@ -59,16 +59,16 @@ const InstallIngress = (props) => {
 
         <h3>Using the Giant Swarm App Platform</h3>
         <p>
-          You can use our app platform to install the popular nginx ingress
-          controller. We provide a tuned implementation in the &quot;Giant Swarm
+          You can use our app platform to install the popular Ingress NGINX
+          Controller. We provide a tuned implementation in the &quot;Giant Swarm
           Catalog&quot;, which you can browse by clicking &quot;App
           Catalogs&quot; in the navigation above.
         </p>
 
         <p>
           For convenience however, you can click on the &apos;Install Ingress
-          Controller&apos; button below to immediately install the nginx ingress
-          controller on your cluster.
+          Controller&apos; button below to immediately install the Ingress NGINX
+          Controller on your cluster.
         </p>
 
         <InstallIngressButtonWrapper>

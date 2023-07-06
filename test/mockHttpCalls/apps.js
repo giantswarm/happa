@@ -2,13 +2,13 @@ export const appResponseWithCustomConfig = {
   metadata: { name: 'my app', labels: {} },
   spec: {
     catalog: 'giantswarm',
-    name: 'nginx-ingress-controller-app',
+    name: 'ingress-nginx',
     namespace: 'giantswarm',
     user_config: {
       configmap: { name: 'test app', namespace: 'giantswarm' },
       secret: { name: 'secret test', namespace: 'giantswarm' },
     },
-    version: '0.0.1',
+    version: '3.0.0',
   },
   status: {
     app_version: '',

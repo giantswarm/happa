@@ -101,7 +101,7 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appsTab);
 
       // Click on app to open the editing modal
-      const appLabel = getByText(/chart version: 0.0.1/i);
+      const appLabel = getByText(/chart version: 3.0.0/i);
       fireEvent.click(appLabel);
 
       // Delete the existing file
@@ -151,7 +151,7 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appsTab);
 
       // Click on app to open the editing modal
-      const appLabel = getByText(/chart version: 0.0.1/i);
+      const appLabel = getByText(/chart version: 3.0.0/i);
       fireEvent.click(appLabel);
 
       // Upload a configmap file
@@ -196,7 +196,7 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appsTab);
 
       // Click on app to open the editing modal
-      const appLabel = getByText(/chart version: 0.0.1/i);
+      const appLabel = getByText(/chart version: 3.0.0/i);
       fireEvent.click(appLabel);
 
       // Upload a secrets file
@@ -254,7 +254,7 @@ describe('Installed app detail pane', () => {
       fireEvent.click(appsTab);
 
       // Click on app to open the editing modal
-      const appLabel = getByText(/chart version: 0.0.1/i);
+      const appLabel = getByText(/chart version: 3.0.0/i);
       fireEvent.click(appLabel);
 
       // Delete the existing file
@@ -373,16 +373,16 @@ describe('Installed app detail pane', () => {
     fireEvent.click(appsTab);
 
     // Click on app to open the editing modal.
-    const appLabel = getByText(/chart version: 0.0.1/i);
+    const appLabel = getByText(/chart version: 3.0.0/i);
     fireEvent.click(appLabel);
 
     // Wait for the version picker to load.
     const modal = await screen.findByLabelText('App details');
-    const versionDropdown = await within(modal).findByText(/0.0.1/i);
+    const versionDropdown = await within(modal).findByText(/3.0.0/i);
     fireEvent.click(versionDropdown);
 
     // Set the version.
-    const desiredVersion = within(modal).getByText(/1.1.1/i);
+    const desiredVersion = within(modal).getByText(/3.1.1/i);
     fireEvent.click(desiredVersion);
 
     const confirmButton = getByText('Update chart version');

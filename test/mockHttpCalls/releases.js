@@ -73,10 +73,6 @@ export const disabledRelease = {
       version: '0.3.1',
     },
     {
-      name: 'nginx-ingress-controller',
-      version: '0.25.1',
-    },
-    {
       name: 'node-exporter',
       version: '0.18.0',
     },
@@ -188,10 +184,6 @@ export const preNodePoolRelease = {
     {
       name: 'metrics-server',
       version: '0.3.1',
-    },
-    {
-      name: 'nginx-ingress-controller',
-      version: '0.25.1',
     },
     {
       name: 'node-exporter',
@@ -312,10 +304,6 @@ export const nodePoolRelease = {
     {
       name: 'metrics-server',
       version: '0.4.1',
-    },
-    {
-      name: 'nginx-ingress-controller',
-      version: '0.26.1',
     },
     {
       name: 'node-exporter',

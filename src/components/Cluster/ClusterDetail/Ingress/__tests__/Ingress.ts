@@ -121,7 +121,7 @@ describe('Ingress', () => {
 
     expect(await screen.findByText(/this will install/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/nginx ingress controller app \d\.\d\.\d/i)
+      screen.getByText(/Ingress NGINX Controller app \d\.\d\.\d/i)
     ).toBeInTheDocument();
   });
 });

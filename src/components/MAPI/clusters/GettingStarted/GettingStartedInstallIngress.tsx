@@ -114,15 +114,15 @@ const GettingStartedInstallIngress: React.FC<
         </Paragraph>
         <Heading level={2}>Using the Giant Swarm App Platform</Heading>
         <Paragraph fill={true}>
-          You can use our app platform to install the popular nginx ingress
-          controller. We provide a tuned implementation in the &quot;Giant Swarm
+          You can use our app platform to install the popular Ingress NGINX
+          Controller. We provide a tuned implementation in the &quot;Giant Swarm
           Catalog&quot;, which you can browse by clicking on &quot;Apps&quot; in
           the navigation above.
         </Paragraph>
         <Paragraph fill={true}>
           For convenience however, you can click on the &apos;Install ingress
-          controller&apos; button below to immediately install the nginx ingress
-          controller on your cluster.
+          controller&apos; button below to immediately install the Ingress NGINX
+          Controller on your cluster.
         </Paragraph>
         {!isLoadingResources && !hasError && (
           <InstallIngressButton
