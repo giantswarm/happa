@@ -280,7 +280,7 @@ const InstallIngressButton: React.FC<
           <Text margin={{ left: 'small' }}>
             This will install the{' '}
             <StyledLink to={appDetailPath} href={appDetailPath}>
-              NGINX Ingress Controller app {ingressAppToInstall.spec.version}
+              Ingress NGINX Controller app {ingressAppToInstall.spec.version}
             </StyledLink>{' '}
             on cluster <ClusterIDLabel clusterID={clusterID} />
           </Text>

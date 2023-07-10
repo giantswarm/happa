@@ -132,7 +132,7 @@ describe('Apps and App Catalog', () => {
       const app1 = await findByText('cert-manager-app');
       expect(app1).toBeInTheDocument();
 
-      const app2 = await findByText('nginx-ingress-controller-app');
+      const app2 = await findByText('ingress-nginx');
       expect(app2).toBeInTheDocument();
     });
 
@@ -153,21 +153,21 @@ describe('Apps and App Catalog', () => {
 
       const appDetailPath = RoutePath.createUsablePath(AppsRoutes.AppDetail, {
         catalogName: 'giantswarm-incubator',
-        app: 'nginx-ingress-controller-app',
-        version: '1.1.1',
+        app: 'ingress-nginx',
+        version: '3.0.0',
       });
       const { findByText, findByTestId } = renderRouteWithStore(appDetailPath);
 
       // The app's description should be there.
       // This comes from parsing the index.yaml, which is mocked in catalogIndexResponse.
       const appDescription = await findByText(
-        'A Helm chart for the nginx ingress-controller v1.1.1'
+        'A Helm chart for the Ingress NGINX Controller v3.0.0'
       );
       expect(appDescription).toBeInTheDocument();
 
       const breadCrumbs = await findByTestId('breadcrumbs');
       const appBreadCrumb = await within(breadCrumbs).findByText(
-        'NGINX-INGRESS-CONTROLLER-APP'
+        'INGRESS-NGINX'
       );
 
       expect(appBreadCrumb).toBeInTheDocument();
@@ -176,7 +176,7 @@ describe('Apps and App Catalog', () => {
     it('installs an app in a cluster, with default settings', async () => {
       nock(API_ENDPOINT)
         .intercept(
-          `/v4/clusters/${V4_CLUSTER.id}/apps/nginx-ingress-controller-app/`,
+          `/v4/clusters/${V4_CLUSTER.id}/apps/ingress-nginx/`,
           'PUT'
         )
         .reply(StatusCodes.Ok);
@@ -205,8 +205,8 @@ describe('Apps and App Catalog', () => {
 
       const appDetailPath = RoutePath.createUsablePath(AppsRoutes.AppDetail, {
         catalogName: 'giantswarm-incubator',
-        app: 'nginx-ingress-controller-app',
-        version: '1.1.1',
+        app: 'ingress-nginx',
+        version: '3.0.0',
       });
       const { findByText, getByText } = renderRouteWithStore(appDetailPath);
 
@@ -238,9 +238,9 @@ describe('Apps and App Catalog', () => {
         .intercept(`/v4/clusters/${V4_CLUSTER.id}/apps/test-app/`, 'PUT', {
           spec: {
             catalog: 'giantswarm-incubator',
-            name: 'nginx-ingress-controller-app',
+            name: 'ingress-nginx',
             namespace: 'test-app',
-            version: '1.1.1',
+            version: '3.0.0',
           },
         })
         .reply(StatusCodes.Ok, installAppResponse);
@@ -271,8 +271,8 @@ describe('Apps and App Catalog', () => {
         AppsRoutes.AppDetail,
         {
           catalogName: 'giantswarm-incubator',
-          app: 'nginx-ingress-controller-app',
-          version: '1.1.1',
+          app: 'ingress-nginx',
+          version: '3.0.0',
         }
       );
       const { findByText, getByText, getByLabelText } =

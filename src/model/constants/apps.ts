@@ -94,9 +94,9 @@ export const appMetas: Record<
     logoUrl: '/images/app_icons/node_exporter@2x.png',
     category: 'management',
   },
-  'nginx-ingress-controller': {
-    name: 'nginx-ingress-controller',
-    logoUrl: '/images/app_icons/nginx_ingress_controller@2x.png',
+  'ingress-nginx': {
+    name: 'ingress-nginx',
+    logoUrl: '/images/app_icons/ingress_nginx@2x.png',
     category: 'ingress',
   },
   kiam: {

@@ -159,7 +159,7 @@ const ClusterDetailIngress: React.FC<
                 <Text>
                   In order to expose services via Ingress, you must have{' '}
                   <code>external-dns</code> and an Ingress controller installed.
-                  Giant Swarm provides the NGINX Ingress Controller as a managed
+                  Giant Swarm provides the Ingress NGINX Controller as a managed
                   app.
                 </Text>
               )}

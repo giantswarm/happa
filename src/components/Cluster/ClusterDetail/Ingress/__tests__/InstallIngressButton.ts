@@ -19,14 +19,14 @@ const defaultCluster = {
 
 const icApp: IInstalledApp = {
   metadata: {
-    name: 'nginx-ingress-controller-app',
+    name: 'ingress-nginx',
     labels: {},
   },
   spec: {
     catalog: 'giantswarm',
     namespace: 'kube-system',
-    name: 'nginx-ingress-controller-app',
-    version: '1.6.9',
+    name: 'ingress-nginx',
+    version: '3.0.0',
     user_config: {
       configmap: {
         name: '',
@@ -74,7 +74,7 @@ describe('InstallIngressButton', () => {
 
     expect(await screen.findByText(/this will install/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/nginx ingress controller app \d\.\d\.\d/i)
+      screen.getByText(/Ingress NGINX Controller app \d\.\d\.\d/i)
     ).toBeInTheDocument();
 
     const button = screen.getByRole('button', {
@@ -128,7 +128,7 @@ describe('InstallIngressButton', () => {
       screen.queryByText(/ingress controller installed/i)
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByText(/this will install the nginx ingress controller app/i)
+      screen.queryByText(/this will install the Ingress NGINX Controller app/i)
     ).not.toBeInTheDocument();
 
     const button = screen.getByRole('button', {
@@ -143,7 +143,7 @@ describe('InstallIngressButton', () => {
 
     expect(await screen.findByText(/this will install/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/nginx ingress controller app \d\.\d\.\d/i)
+      screen.getByText(/Ingress NGINX Controller app \d\.\d\.\d/i)
     ).toBeInTheDocument();
     expect(
       screen.getByRole('progressbar', {
