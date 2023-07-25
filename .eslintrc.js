@@ -172,7 +172,7 @@ module.exports = {
     'react/no-unsafe': 0,
     'react/no-unused-state': 0,
     'react/no-unused-prop-types': 0,
-    'react/prefer-read-only-props': 2,
+    'react/prefer-read-only-props': 0,
     'react/prefer-stateless-function': 0,
     'react/prop-types': 0,
     'react/react-in-jsx-scope': 2,
