@@ -112,7 +112,7 @@
     "stacktrace-js": "2.0.2",
     "styled-components": "5.3.11",
     "superagent": "8.0.9",
-    "swr": "2.1.5",
+    "swr": "2.2.0",
     "underscore": "1.13.6",
     "uuid": "9.0.0",
     "validate.js": "0.13.1",
