@@ -1,7 +1,5 @@
-[![CircleCI](https://circleci.com/gh/giantswarm/happa/tree/main.svg?style=shield&circle-token=6e98ba111259986b590f228cd20e20fcea3dd2e5)](https://circleci.com/gh/giantswarm/happa/tree/main)
-[![Docker Repository on Quay](https://quay.io/repository/giantswarm/happa/status 'Docker Repository on Quay')](https://quay.io/repository/giantswarm/happa)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/giantswarm/happa/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/giantswarm/happa/tree/main)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=shield)](https://github.com/prettier/prettier)
-[![Known Vulnerabilities](https://snyk.io/test/github/giantswarm/happa/badge.svg?targetFile=package.json)](https://snyk.io/test/github/giantswarm/happa?targetFile=package.json)
 
 # Happa
 
