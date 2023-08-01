@@ -226,7 +226,7 @@
     "redux-mock-store": "1.5.4",
     "request": "2.88.2",
     "sass-loader": "13.3.2",
-    "storybook": "7.1.1",
+    "storybook": "7.2.0",
     "style-loader": "3.3.3",
     "terser-webpack-plugin": "5.3.9",
     "ts-node": "10.9.1",
