@@ -6031,10 +6031,10 @@
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-4.0.1.tgz#8f80dd965ad81f3e1bc26d6f5c727e132721ff40"
   integrity sha512-Y0K95ThC3esLEYD6ZuqNek29lNX2EM1qxV8y2FTLUB0ff5wWrk7az+mLrnNFUnaXcgKye22+sFBRXOgpPILZNg==
 
-"@types/underscore@1.11.6":
-  version "1.11.6"
-  resolved "https://registry.yarnpkg.com/@types/underscore/-/underscore-1.11.6.tgz#266f210e8a1bf8fa714d3c86f3abdc07a8942b96"
-  integrity sha512-G2oC64I/sR817KDL2b2Mc7+diXyxcibyUeLMyexU4K/sG8hyt/YMlbBK0TVhx/YQ1ehfzgXhLuq2YQHIL4bXUQ==
+"@types/underscore@1.11.9":
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/@types/underscore/-/underscore-1.11.9.tgz#76a071d27e544e422dbf00f956818b1057f377b2"
+  integrity sha512-M63wKUdsjDFUfyFt1TCUZHGFk9KDAa5JP0adNUErbm0U45Lr06HtANdYRP+GyleEopEoZ4UyBcdAC5TnW4Uz2w==
 
 "@types/unist@*", "@types/unist@^2.0.0":
   version "2.0.3"
