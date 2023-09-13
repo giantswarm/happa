@@ -175,7 +175,7 @@
     "@types/terser-webpack-plugin": "5.0.4",
     "@types/underscore": "1.11.9",
     "@types/uuid": "9.0.2",
-    "@types/webpack": "5.28.1",
+    "@types/webpack": "5.28.2",
     "@types/webpack-bundle-analyzer": "4.6.0",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
