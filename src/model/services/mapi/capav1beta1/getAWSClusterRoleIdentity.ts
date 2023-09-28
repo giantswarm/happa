@@ -12,12 +12,14 @@ import { IAWSClusterRoleIdentity } from '.';
 export function getAWSClusterRoleIdentity(
   client: IHttpClient,
   auth: IOAuth2Provider,
+
   name: string
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
     apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
     kind: 'awsclusterroleidentities',
+
     name,
   });
 
