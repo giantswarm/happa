@@ -19,6 +19,10 @@ export interface IResourceInfo {
    */
   name: string;
   /**
+   * apiVersion is the resource's apiVersion, e.g. `cluster.x-k8s.io/v1beta1`.
+   */
+  apiVersion: string;
+  /**
    * crdURL is the URL at which the .yaml file of the CRD can be found.
    */
   crdURL: string;

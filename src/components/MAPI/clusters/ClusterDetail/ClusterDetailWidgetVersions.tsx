@@ -1,13 +1,16 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { Box, Text } from 'grommet';
+import { Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { Dot } from 'styles';
 import useSWR from 'swr';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
+import {
+  DotSeparatedList,
+  DotSeparatedListItem,
+} from 'UI/Display/DotSeparatedList/DotSeparatedList';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
@@ -19,11 +22,8 @@ import { usePermissionsForCPNodes } from '../permissions/usePermissionsForCPNode
 import {
   fetchControlPlaneNodesK8sVersions,
   fetchControlPlaneNodesK8sVersionsKey,
+  formatK8sVersion,
 } from '../utils';
-
-const StyledDot = styled(Dot)`
-  padding: 0;
-`;
 
 const StyledLink = styled.a`
   i {
@@ -94,76 +94,80 @@ const ClusterDetailWidgetVersions: React.FC<
     if (k8sVersions.length === 0 || k8sVersionsError || !canListCPNodes)
       return '';
 
-    // Remove the `v` prefix.
-    return k8sVersions[0].slice(1);
+    return formatK8sVersion(k8sVersions[0]);
   }, [canListCPNodes, k8sVersions, k8sVersionsError]);
 
   return (
     <ClusterDetailWidget title='Versions' inline={true} {...props}>
-      <Box direction='row' gap='xsmall' wrap={true} align='center'>
-        <OptionalValue
-          value={clusterAppVersion}
-          replaceEmptyValue={false}
-          loaderWidth={150}
-        >
-          {(value) => (
-            <>
-              <Text
-                aria-label={`Cluster app version: ${
-                  value || 'no information available'
-                } `}
-              >
-                <i
-                  className='fa fa-version-tag'
-                  role='presentation'
-                  aria-hidden='true'
-                />{' '}
-                Cluster app
-              </Text>{' '}
-              {clusterAppReleaseNotesURL === '' ? (
-                <Text>{value || <NotAvailable />}</Text>
-              ) : (
-                <StyledLink
-                  href={clusterAppReleaseNotesURL ?? '#'}
-                  rel='noopener noreferrer'
-                  target='_blank'
-                  aria-label={`Cluster app version ${value} release notes`}
-                >
-                  <Text>
-                    {value ? (
-                      <Truncated numStart={8} numEnd={3}>
-                        {value}
-                      </Truncated>
-                    ) : (
-                      <NotAvailable />
-                    )}
-                  </Text>
-                  <i
-                    className='fa fa-open-in-new'
-                    aria-hidden={true}
-                    role='presentation'
-                  />
-                </StyledLink>
+      <DotSeparatedList>
+        {clusterAppVersion && (
+          <DotSeparatedListItem>
+            <OptionalValue
+              value={clusterAppVersion}
+              replaceEmptyValue={false}
+              loaderWidth={150}
+            >
+              {(value) => (
+                <>
+                  <Text
+                    aria-label={`Cluster app version: ${
+                      value || 'no information available'
+                    } `}
+                  >
+                    <i
+                      className='fa fa-version-tag'
+                      role='presentation'
+                      aria-hidden='true'
+                    />{' '}
+                    Cluster app
+                  </Text>{' '}
+                  {clusterAppReleaseNotesURL === '' ? (
+                    <Text>{value || <NotAvailable />}</Text>
+                  ) : (
+                    <StyledLink
+                      href={clusterAppReleaseNotesURL ?? '#'}
+                      rel='noopener noreferrer'
+                      target='_blank'
+                      aria-label={`Cluster app version ${value} release notes`}
+                    >
+                      <Text>
+                        {value ? (
+                          <Truncated numStart={8} numEnd={3}>
+                            {value}
+                          </Truncated>
+                        ) : (
+                          <NotAvailable />
+                        )}
+                      </Text>
+                      <i
+                        className='fa fa-open-in-new'
+                        aria-hidden={true}
+                        role='presentation'
+                      />
+                    </StyledLink>
+                  )}
+                </>
               )}
-            </>
-          )}
-        </OptionalValue>
-        <StyledDot />
-        <OptionalValue
-          value={k8sVersion}
-          replaceEmptyValue={false}
-          loaderWidth={150}
-        >
-          {(value) => (
-            <KubernetesVersionLabel
-              hidePatchVersion={false}
-              hideLabel={false}
-              version={value}
-              eolDate={getK8sVersionEOLDate(value) ?? undefined}
-            />
-          )}
-        </OptionalValue>
-      </Box>
+            </OptionalValue>
+          </DotSeparatedListItem>
+        )}
+        <DotSeparatedListItem>
+          <OptionalValue
+            value={k8sVersion}
+            replaceEmptyValue={false}
+            loaderWidth={150}
+          >
+            {(value) => (
+              <KubernetesVersionLabel
+                hidePatchVersion={false}
+                hideLabel={false}
+                version={value}
+                eolDate={getK8sVersionEOLDate(value) ?? undefined}
+              />
+            )}
+          </OptionalValue>
+        </DotSeparatedListItem>
+      </DotSeparatedList>
 
       {clusterAppVersion && null}
     </ClusterDetailWidget>

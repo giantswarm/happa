@@ -6,7 +6,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 
 export const ApiGroup = 'infrastructure.cluster.x-k8s.io';
 
-export const ApiVersion = `${ApiGroup}/v1beta1`;
+export const ApiVersion = 'infrastructure.cluster.x-k8s.io/v1beta1';
 
 export const AzureCluster = 'AzureCluster';
 
@@ -17,7 +17,7 @@ export interface IAzureCluster {
   /**
    * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
    * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
@@ -881,7 +881,7 @@ export interface IAzureCluster {
 export const AzureClusterList = 'AzureClusterList';
 
 export interface IAzureClusterList extends metav1.IList<IAzureCluster> {
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof AzureClusterList;
 }
 
@@ -894,7 +894,7 @@ export interface IAzureClusterIdentity {
   /**
    * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
    * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
@@ -1017,7 +1017,7 @@ export const AzureClusterIdentityList = 'AzureClusterIdentityList';
 
 export interface IAzureClusterIdentityList
   extends metav1.IList<IAzureClusterIdentity> {
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof AzureClusterIdentityList;
 }
 
@@ -1030,7 +1030,7 @@ export interface IAzureMachineTemplate {
   /**
    * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
    * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
@@ -1495,7 +1495,7 @@ export const AzureMachineTemplateList = 'AzureMachineTemplateList';
 
 export interface IAzureMachineTemplateList
   extends metav1.IList<IAzureMachineTemplate> {
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof AzureMachineTemplateList;
 }
 
@@ -1508,7 +1508,7 @@ export interface IAzureMachine {
   /**
    * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
    * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
@@ -2029,7 +2029,7 @@ export interface IAzureMachine {
 export const AzureMachineList = 'AzureMachineList';
 
 export interface IAzureMachineList extends metav1.IList<IAzureMachine> {
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof AzureMachineList;
 }
 
@@ -2042,7 +2042,7 @@ export interface IAzureMachinePool {
   /**
    * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
    * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
@@ -2733,6 +2733,6 @@ export interface IAzureMachinePool {
 export const AzureMachinePoolList = 'AzureMachinePoolList';
 
 export interface IAzureMachinePoolList extends metav1.IList<IAzureMachinePool> {
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof AzureMachinePoolList;
 }

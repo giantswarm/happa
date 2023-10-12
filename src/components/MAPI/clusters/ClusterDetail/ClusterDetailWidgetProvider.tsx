@@ -1,9 +1,15 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Grid } from 'grommet';
-import { Cluster, ProviderCluster, ProviderCredential } from 'MAPI/types';
+import {
+  Cluster,
+  ControlPlaneNode,
+  ProviderCluster,
+  ProviderCredential,
+} from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
@@ -19,6 +25,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { usePermissionsForProviderCredentials } from '../permissions/usePermissionsForProviderCredentials';
 import ClusterDetailWidgetProviderAWS from './ClusterDetailWidgetProviderAWS';
+import ClusterDetailWidgetProviderAWSManaged from './ClusterDetailWidgetProviderAWSManaged';
 import ClusterDetailWidgetProviderAzure from './ClusterDetailWidgetProviderAzure';
 import ClusterDetailWidgetProviderCAPG from './ClusterDetailWidgetProviderCAPG';
 import ClusterDetailWidgetProviderLoader from './ClusterDetailWidgetProviderLoader';
@@ -31,11 +38,12 @@ interface IClusterDetailWidgetProviderProps
   > {
   cluster?: Cluster;
   providerCluster?: ProviderCluster;
+  controlPlaneNodes?: ControlPlaneNode[];
 }
 
 const ClusterDetailWidgetProvider: React.FC<
   React.PropsWithChildren<IClusterDetailWidgetProviderProps>
-> = ({ cluster, providerCluster, ...props }) => {
+> = ({ cluster, providerCluster, controlPlaneNodes, ...props }) => {
   const { orgId } = useParams<{ clusterId: string; orgId: string }>();
   const organizations = useSelector(selectOrganizations());
   const selectedOrg = orgId ? organizations[orgId] : undefined;
@@ -53,7 +61,12 @@ const ClusterDetailWidgetProvider: React.FC<
 
   const providerCredentialKey =
     canList && canGet
-      ? fetchProviderCredentialKey(cluster, providerCluster, selectedOrgID)
+      ? fetchProviderCredentialKey(
+          cluster,
+          providerCluster,
+          controlPlaneNodes,
+          selectedOrgID
+        )
       : undefined;
 
   const {
@@ -68,6 +81,7 @@ const ClusterDetailWidgetProvider: React.FC<
         auth,
         cluster!,
         providerCluster,
+        controlPlaneNodes!,
         selectedOrgID!
       )
   );
@@ -91,6 +105,7 @@ const ClusterDetailWidgetProvider: React.FC<
   const isLoading =
     cluster === undefined ||
     providerCluster === undefined ||
+    controlPlaneNodes === undefined ||
     providerCredentialIsLoading;
 
   return (
@@ -108,6 +123,15 @@ const ClusterDetailWidgetProvider: React.FC<
             providerCluster={providerCluster as capav1beta1.IAWSCluster}
             providerCredential={
               providerCredential as capav1beta1.IAWSClusterRoleIdentity
+            }
+          />
+        ) : kind === capav1beta2.AWSManagedCluster ? (
+          <ClusterDetailWidgetProviderAWSManaged
+            controlPlaneNode={
+              controlPlaneNodes?.[0] as capav1beta2.IAWSManagedControlPlane
+            }
+            providerCredential={
+              providerCredential as capav1beta2.IAWSClusterRoleIdentity
             }
           />
         ) : kind === capgv1beta1.GCPCluster ? (

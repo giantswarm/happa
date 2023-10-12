@@ -5,7 +5,7 @@ import { Box, Card, CardBody, ResponsiveContext, Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
 import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
 import { ProviderCluster } from 'MAPI/types';
-import { getClusterDescription } from 'MAPI/utils';
+import { getClusterDescription, supportsReleases } from 'MAPI/utils';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -31,7 +31,6 @@ import { useClusterStatus } from '../hooks/useClusterStatus';
 import {
   getClusterLabelsWithDisplayInfo,
   getClusterOrganization,
-  hasClusterAppLabel,
 } from '../utils';
 import ClusterListItemNodeInfo from './ClusterListItemNodeInfo';
 import ClusterListItemReleaseInfo from './ClusterListItemReleaseInfo';
@@ -122,6 +121,7 @@ const ClusterListItem: React.FC<
   }, [orgId, name]);
 
   const provider = window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   const isDeleting = Boolean(deletionDate);
   const isLoading = typeof cluster === 'undefined';
@@ -183,7 +183,7 @@ const ClusterListItem: React.FC<
     return getClusterLabelsWithDisplayInfo(existingLabels);
   }, [cluster]);
 
-  const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
+  const isReleasesSupportedByProvider = supportsReleases(providerFlavor);
 
   const dispatch = useDispatch();
 
@@ -273,17 +273,17 @@ const ClusterListItem: React.FC<
               <>
                 <DotSeparatedList wrap={true}>
                   <DotSeparatedListItem>
-                    {isClusterApp ? (
-                      <ClusterListItemVersionsInfo
-                        cluster={cluster}
-                        canListCPNodes={canListCPNodes}
-                      />
-                    ) : (
+                    {isReleasesSupportedByProvider ? (
                       <ClusterListItemReleaseInfo
                         cluster={cluster}
                         releases={releases}
                         canListReleases={canListReleases}
                         handleIsPreviewRelease={setIsPreviewRelease}
+                      />
+                    ) : (
+                      <ClusterListItemVersionsInfo
+                        cluster={cluster}
+                        canListCPNodes={canListCPNodes}
                       />
                     )}
                   </DotSeparatedListItem>

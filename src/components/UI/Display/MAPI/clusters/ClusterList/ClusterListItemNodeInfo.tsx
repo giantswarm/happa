@@ -30,7 +30,7 @@ function formatMemory(value?: number) {
   if (typeof value === 'undefined') return undefined;
   const formattedMemory = getHumanReadableMemory(value, 1);
 
-  return `${formattedMemory.value} ${formattedMemory.unit} RAM`;
+  return `${formattedMemory.value} ${formattedMemory.unit}`;
 }
 
 function formatCPU(value?: number) {
@@ -96,7 +96,9 @@ const ClusterListItemNodeInfo: React.FC<
       <StyledDot />
       <OptionalValue value={workerNodesMemory} replaceEmptyValue={false}>
         {(value) => (
-          <Text>{value === -1 ? <NotAvailable /> : formatMemory(value)}</Text>
+          <Text>
+            {value === -1 ? <NotAvailable /> : formatMemory(value)} RAM
+          </Text>
         )}
       </OptionalValue>
     </Box>

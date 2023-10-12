@@ -10,7 +10,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
-import { hasClusterAppLabel } from '../utils';
+import { hasClusterAppLabel, isImportedCluster } from '../utils';
 import { updateClusterLabels } from './utils';
 
 interface IClusterDetailWidgetLabelsProps
@@ -92,7 +92,9 @@ const ClusterDetailWidgetLabels: React.FC<
 
   const isReadOnly =
     cluster &&
-    (hasClusterAppLabel(cluster) || isResourceManagedByGitOps(cluster));
+    (hasClusterAppLabel(cluster) ||
+      isResourceManagedByGitOps(cluster) ||
+      isImportedCluster(cluster));
 
   return (
     <ClusterDetailWidget title='Labels' inline={true} {...props}>
