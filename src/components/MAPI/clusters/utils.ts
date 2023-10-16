@@ -15,6 +15,7 @@ import {
   getProviderNodePoolMachineTypes,
   IMachineType,
   IProviderClusterForClusterName,
+  isResourceManagedByGitOps,
 } from 'MAPI/utils';
 import { IProviderNodePoolForNodePool } from 'MAPI/workernodes/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -1111,11 +1112,23 @@ export function hasClusterAppLabel(cluster: capiv1beta1.ICluster): boolean {
 }
 
 /**
- * Determines whether the cluster has an `app` label that starts with the `cluster-` prefix.
+ * Determines whether the cluster is an imported cluster.
  * @param cluster
  */
 export function isImportedCluster(cluster: capiv1beta1.ICluster): boolean {
   return capiv1beta1.getClusterAppName(cluster) === 'crossplane-capi-import';
+}
+
+/**
+ * Determines whether the cluster is read only.
+ * @param cluster
+ */
+export function isReadOnlyCluster(cluster: capiv1beta1.ICluster): boolean {
+  return (
+    hasClusterAppLabel(cluster) ||
+    isResourceManagedByGitOps(cluster) ||
+    isImportedCluster(cluster)
+  );
 }
 
 /**

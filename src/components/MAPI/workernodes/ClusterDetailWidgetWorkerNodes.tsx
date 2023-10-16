@@ -185,11 +185,11 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
         >
           <Box>
             <Text margin={{ bottom: 'small' }}>No node pools</Text>
-            {canCreate && !isReadOnly && (
+            {canCreate && cluster && !isReadOnly && (
               <Text size='small'>Create node pools to run workloads.</Text>
             )}
           </Box>
-          {canCreate && !isReadOnly && (
+          {canCreate && cluster && !isReadOnly && (
             <StyledLink
               to={{
                 pathname: workerNodesPath,

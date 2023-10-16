@@ -406,13 +406,14 @@ export async function fetchProviderCredential(
   }
 }
 
+// eslint-disable-next-line complexity
 export function fetchProviderCredentialKey(
   cluster?: Cluster,
   providerCluster?: ProviderCluster,
   controlPlaneNodes?: ControlPlaneNode[],
   organizationName?: string
 ): string | null {
-  if (!cluster || !providerCluster || !organizationName) {
+  if (!cluster || !providerCluster || !organizationName || !controlPlaneNodes) {
     return null;
   }
 

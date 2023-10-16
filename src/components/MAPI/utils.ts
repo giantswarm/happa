@@ -1420,10 +1420,16 @@ export function getClusterDescription(
   const { kind, apiVersion } = infrastructureRef;
   const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
+  if (isImportedCluster(cluster)) {
+    switch (true) {
+      case kind === capav1beta2.AWSManagedCluster:
+        return 'Imported EKS cluster';
+      default:
+        return 'Imported cluster';
+    }
+  }
+
   switch (true) {
-    case kind === capav1beta2.AWSManagedCluster &&
-      apiGroup === capav1beta2.ApiGroup:
-      return 'Imported EKS cluster';
     case kind === infrav1alpha3.AWSCluster &&
       apiGroup === infrav1alpha3.ApiGroup:
       return (

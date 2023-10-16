@@ -11,7 +11,6 @@ import {
   fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
-  isResourceManagedByGitOps,
   supportsReleases,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -33,7 +32,7 @@ import SetClusterLabelsGuide from '../guides/SetClusterLabelsGuide';
 import UpgradeClusterGuide from '../guides/UpgradeClusterGuide';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import { usePermissionsForCPNodes } from '../permissions/usePermissionsForCPNodes';
-import { hasClusterAppLabel, isImportedCluster } from '../utils';
+import { hasClusterAppLabel, isReadOnlyCluster } from '../utils';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -136,11 +135,7 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
 
   const [targetReleaseVersion, setTargetReleaseVersion] = useState('');
 
-  const isReadOnly =
-    cluster &&
-    (isClusterApp ||
-      isResourceManagedByGitOps(cluster) ||
-      isImportedCluster(cluster));
+  const isReadOnly = cluster && isReadOnlyCluster(cluster);
 
   return (
     <StyledBox wrap={true} direction='row'>
@@ -221,7 +216,7 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
               canUpdateCluster={canUpdateCluster}
             />
           )}
-          {!isReadOnly && (
+          {cluster && !isReadOnly && (
             <SetClusterLabelsGuide
               clusterName={cluster.metadata.name}
               clusterNamespace={cluster.metadata.namespace!}
