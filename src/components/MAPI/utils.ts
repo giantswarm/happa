@@ -1373,6 +1373,14 @@ export function getNodePoolAvailabilityZones(
           ?.availabilityZones ?? []
       );
 
+    // EKS
+    case kind === capiv1beta1.MachinePool &&
+      providerNodePoolKind === capav1beta2.AWSManagedMachinePool:
+      return (
+        (providerNodePool as capav1beta2.IAWSManagedMachinePool).spec
+          ?.availabilityZones ?? []
+      );
+
     // Azure
     case kind === capiv1beta1.MachinePool:
       return (nodePool as capiv1beta1.IMachinePool).spec?.failureDomains ?? [];
