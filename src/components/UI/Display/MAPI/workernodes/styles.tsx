@@ -3,13 +3,14 @@ import { css } from 'styled-components';
 export const NodePoolGridRow = (
   extraColumnCount: number = 0,
   nameColumnWidth: number = 0,
+  displayDescriptionColumn: boolean = true,
   displayMenuColumn: boolean = true
 ) => css`
   display: grid;
   grid-gap: 0 ${({ theme }) => theme.global.edgeSize.small};
   grid-template-columns:
     minmax(80px, ${nameColumnWidth}px)
-    minmax(50px, 4fr)
+    ${displayDescriptionColumn ? 'minmax(50px, 4fr)' : ''}
     4fr
     3fr
     repeat(2, 2fr)
