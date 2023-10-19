@@ -19,6 +19,7 @@ import {
 } from 'MAPI/utils';
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { ProviderFlavors } from 'model/constants';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -415,7 +416,12 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
           <Tabs useRoutes={true} margin={{ top: 'medium' }}>
             <Tab path={paths.Home} title='Overview' />
             <Tab path={paths.WorkerNodes} title='Worker nodes' />
-            <Tab path={paths.ClientCertificates} title='Client certificates' />
+            {providerFlavor === ProviderFlavors.VINTAGE && (
+              <Tab
+                path={paths.ClientCertificates}
+                title='Client certificates'
+              />
+            )}
             <Tab path={paths.Apps} title='Apps' />
             <Tab path={paths.Ingress} title='Ingress' />
             {cluster && !isReadOnly && (
@@ -440,10 +446,12 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
                 )
               }
             />
-            <Route
-              path={OrganizationsRoutes.Clusters.Detail.ClientCertificates}
-              component={ClusterDetailKeyPairs}
-            />
+            {providerFlavor === ProviderFlavors.VINTAGE && (
+              <Route
+                path={OrganizationsRoutes.Clusters.Detail.ClientCertificates}
+                component={ClusterDetailKeyPairs}
+              />
+            )}
             <Route
               path={OrganizationsRoutes.Clusters.Detail.Ingress}
               render={() =>
