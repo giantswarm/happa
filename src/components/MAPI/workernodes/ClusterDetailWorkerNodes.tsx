@@ -533,7 +533,7 @@ const ClusterDetailWorkerNodes: React.FC<
           }}
         >
           <Box>
-            <Box>
+            <Box width={{ max: '900px' }}>
               <Heading level={2}>Node pools</Heading>
               <Text>
                 A node pool is a set of nodes within a Kubernetes cluster that
