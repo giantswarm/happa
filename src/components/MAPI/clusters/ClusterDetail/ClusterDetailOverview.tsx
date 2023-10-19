@@ -11,7 +11,6 @@ import {
   fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
-  supportsReleases,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
@@ -32,7 +31,11 @@ import SetClusterLabelsGuide from '../guides/SetClusterLabelsGuide';
 import UpgradeClusterGuide from '../guides/UpgradeClusterGuide';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import { usePermissionsForCPNodes } from '../permissions/usePermissionsForCPNodes';
-import { hasClusterAppLabel, isReadOnlyCluster } from '../utils';
+import {
+  hasClusterAppLabel,
+  isImportedCluster,
+  isReadOnlyCluster,
+} from '../utils';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -45,12 +48,12 @@ const StyledBox = styled(Box)`
   gap: ${({ theme }) => theme.global.edgeSize.small};
 `;
 
+// eslint-disable-next-line complexity
 const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { orgId, clusterId } = match.params;
 
   const provider = window.config.info.general.provider;
-  const providerFlavor = window.config.info.general.providerFlavor;
 
   const clientFactory = useHttpClientFactory();
 
@@ -121,9 +124,8 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
     }
   }, [controlPlaneNodesError]);
 
-  const isReleasesSupportedByProvider = supportsReleases(providerFlavor);
-
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
+  const isClusterImported = cluster ? isImportedCluster(cluster) : undefined;
 
   const clusterVersion = useMemo(() => {
     if (!cluster) return undefined;
@@ -159,7 +161,9 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
       />
       {typeof cluster === 'undefined' ? (
         <ClusterDetailWidgetVersionsLoader basis='100%' />
-      ) : isReleasesSupportedByProvider ? (
+      ) : isClusterApp || isClusterImported ? (
+        <ClusterDetailWidgetVersions cluster={cluster} basis='100%' />
+      ) : (
         <ClusterDetailWidgetRelease
           cluster={cluster}
           providerCluster={providerCluster}
@@ -167,8 +171,6 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
           onTargetReleaseVersionChange={setTargetReleaseVersion}
           basis='100%'
         />
-      ) : (
-        <ClusterDetailWidgetVersions cluster={cluster} basis='100%' />
       )}
       <ClusterDetailWidgetLabels
         cluster={cluster}

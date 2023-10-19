@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
-import { ProviderFlavors, Providers, StatusCodes } from 'model/constants';
+import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
 import { useRouteMatch } from 'react-router';
@@ -90,39 +90,22 @@ describe('ClusterDetailOverview', () => {
     expect(await screen.findByText('Release')).toBeInTheDocument();
   });
 
-  describe('if the provider does not support releases', () => {
-    const provider: PropertiesOf<typeof Providers> =
-      window.config.info.general.provider;
-    const providerFlavor: ProviderFlavors =
-      window.config.info.general.providerFlavor;
+  it('displays the Versions widget if the cluster is a cluster app', async () => {
+    (useRouteMatch as jest.Mock).mockReturnValue(
+      getRouteMatch(capiv1beta1Mocks.randomClusterGCP1.metadata.name)
+    );
 
-    beforeAll(() => {
-      window.config.info.general.provider = Providers.GCP;
-      window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
-    });
+    nock(window.config.mapiEndpoint)
+      .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
+      .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/${capiv1beta1Mocks.randomClusterGCP1.metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterGCP1);
 
-    afterAll(() => {
-      window.config.info.general.provider = provider;
-      window.config.info.general.providerFlavor = providerFlavor;
-    });
+    render(getComponent({}));
 
-    it('displays the Versions widget', async () => {
-      (useRouteMatch as jest.Mock).mockReturnValue(
-        getRouteMatch(capiv1beta1Mocks.randomClusterGCP1.metadata.name)
-      );
-
-      nock(window.config.mapiEndpoint)
-        .get('/apis/security.giantswarm.io/v1alpha1/organizations/org1/')
-        .reply(StatusCodes.Ok, securityv1alpha1Mocks.getOrganizationByName);
-      nock(window.config.mapiEndpoint)
-        .get(
-          `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/${capiv1beta1Mocks.randomClusterGCP1.metadata.name}/`
-        )
-        .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterGCP1);
-
-      render(getComponent({}));
-
-      expect(await screen.findByLabelText('Versions')).toBeInTheDocument();
-    });
+    expect(await screen.findByLabelText('Versions')).toBeInTheDocument();
   });
 });
