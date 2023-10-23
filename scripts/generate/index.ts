@@ -2,10 +2,7 @@ import { error, log } from '../utils';
 import { fetchCRD, ICRDForResource } from './getCRD';
 import { getMapiResourcesList, IApiGroupInfo } from './getMapiResourcesList';
 import { getTypesForResource } from './getTypes';
-import {
-  formatListResourceExport,
-  formatResourceKindExport,
-} from './templates';
+import { formatListResourceExport, formatResourceExport } from './templates';
 import {
   writeTypes,
   ensureApiVersionFolder,
@@ -64,14 +61,13 @@ async function fetchCRDs(group: IApiGroupInfo): Promise<ICRDForResource[]> {
 }
 
 async function generateTypes(
-  apiVersion: string,
   crdsForResources: ICRDForResource[]
 ): Promise<{ resourceNamesGenerated: string[]; data: string }> {
   log(`  Generating TS types...`, false);
 
   const responses = await Promise.allSettled(
     crdsForResources.map((r) =>
-      getTypesForResource(apiVersion, r.resource.name, r.crd)
+      getTypesForResource(r.resource.apiVersion, r.resource.name, r.crd)
     )
   );
 
@@ -89,10 +85,16 @@ async function generateTypes(
       continue;
     }
 
-    data +=
-      `\n${formatResourceKindExport(crdForResource.resource.name)}` +
-      `\n${response.value}\n` +
-      formatListResourceExport(getResourceNames(crdForResource));
+    data += `
+${formatResourceExport(
+  getResourceNames(crdForResource),
+  crdForResource.resource.apiVersion,
+  response.value
+)}
+${formatListResourceExport(
+  getResourceNames(crdForResource),
+  crdForResource.resource.apiVersion
+)}`;
 
     resourceNamesGenerated.push(crdForResource.resource.name);
   }
@@ -104,7 +106,6 @@ async function generateTypes(
 
 async function writeClientFunctions(
   apiVersionDirPath: string,
-  apiGroup: string,
   crdsForTypedResources: ICRDForResource[]
 ) {
   const requests = getWriteClientFunctionRequests(crdsForTypedResources);
@@ -113,7 +114,7 @@ async function writeClientFunctions(
     requests.map((r) =>
       writeClientFunction(
         apiVersionDirPath,
-        apiGroup,
+        r.resourceApiVersion,
         r.resourceNames,
         r.namespaced,
         r.verb
@@ -151,7 +152,6 @@ async function generate(group: IApiGroupInfo): Promise<void> {
     const crdsForResources = await fetchCRDs(group);
 
     const { resourceNamesGenerated, data: typesData } = await generateTypes(
-      group.apiVersion,
       crdsForResources
     );
 
@@ -166,11 +166,7 @@ async function generate(group: IApiGroupInfo): Promise<void> {
     );
 
     const { clientFunctionsWritten, data: clientFnData } =
-      await writeClientFunctions(
-        apiVersionDirPath,
-        group.apiVersion,
-        crdsForTypedResources
-      );
+      await writeClientFunctions(apiVersionDirPath, crdsForTypedResources);
 
     for (const [resourceName, verbs] of Object.entries(
       clientFunctionsWritten

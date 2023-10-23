@@ -86,6 +86,7 @@ export function getWriteClientFunctionRequests(
 ) {
   return crdsForTypedResources.reduce<
     {
+      resourceApiVersion: string;
       resourceNames: IResourceNames;
       namespaced: boolean;
       verb: ClientFunctionVerbs;
@@ -95,6 +96,7 @@ export function getWriteClientFunctionRequests(
     return [
       ...prev,
       ...curr.resource.verbs.map((v) => ({
+        resourceApiVersion: curr.resource.apiVersion,
         resourceNames: getResourceNames(curr),
         namespaced: getResourceScope(curr),
         verb: v,

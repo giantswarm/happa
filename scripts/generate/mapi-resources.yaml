@@ -2,19 +2,23 @@
   apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
   resources:
   - name: AWSCluster
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsclusters.yaml
     verbs:
     - get
   - name: AWSClusterRoleIdentity
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsclusterroleidentities.yaml
     verbs:
     - get
   - name: AWSMachinePool
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsmachinepools.yaml
     verbs:
     - get
     - list
   - name: AWSMachineTemplate
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsmachinetemplates.yaml
     verbs:
     - get
@@ -23,10 +27,12 @@
   apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
   resources:
   - name: GCPCluster
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-gcp/main/config/crd/bases/infrastructure.cluster.x-k8s.io_gcpclusters.yaml
     verbs:
     - get
   - name: GCPMachineTemplate
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-gcp/main/config/crd/bases/infrastructure.cluster.x-k8s.io_gcpmachinetemplates.yaml
     verbs:
     - get
@@ -35,20 +41,25 @@
   apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
   resources:
   - name: AzureCluster
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azureclusters.yaml
     verbs:
     - get
   - name: AzureClusterIdentity
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azureclusteridentities.yaml
     verbs:
     - get
   - name: AzureMachineTemplate
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azuremachinetemplates.yaml
     verbs:
     - get
     - list
   - name: AzureMachine
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azuremachines.yaml
   - name: AzureMachinePool
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azuremachinepools.yaml
 
