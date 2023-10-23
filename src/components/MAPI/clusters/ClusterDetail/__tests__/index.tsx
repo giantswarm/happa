@@ -488,6 +488,8 @@ describe('ClusterDetail', () => {
     ).toBeInTheDocument();
   });
 
+  it('displays a warning when cluster creation is in progress on CAPA EKS', async () => {});
+
   it('displays a warning when cluster creation is in progress on CAPZ', async () => {
     const cluster = {
       ...capiv1beta1Mocks.randomClusterCAPZ1,

@@ -185,6 +185,8 @@ describe('ClusterDetailWidgetVersions on CAPA', () => {
   });
 });
 
+describe('ClusterDetailWidgetVersions on CAPA EKS', () => {});
+
 describe('ClusterDetailWidgetVersions on CAPZ', () => {
   const provider = window.config.info.general.provider;
 

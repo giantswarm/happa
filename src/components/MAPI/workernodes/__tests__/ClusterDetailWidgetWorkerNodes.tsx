@@ -606,6 +606,8 @@ describe('ClusterDetailWidgetWorkerNodes on CAPA', () => {
   });
 });
 
+describe('ClusterDetailWidgetWorkerNodes on CAPA EKS', () => {});
+
 describe('ClusterDetailWidgetWorkerNodes on CAPZ', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;

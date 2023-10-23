@@ -421,6 +421,8 @@ describe('ClusterDetailWidgetControlPlaneNodes on CAPA', () => {
   });
 });
 
+describe('ClusterDetailWidgetControlPlaneNodes on CAPA EKS', () => {});
+
 describe('ClusterDetailWidgetControlPlaneNodes on CAPZ', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;

@@ -486,3 +486,5 @@ describe('ClusterDetailWidgetApps on CAPA', () => {
     ).toBeInTheDocument();
   });
 });
+
+describe('ClusterDetailWidgetApps on CAPA EKS', () => {});
