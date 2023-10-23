@@ -47,6 +47,8 @@ export const conditionReasonUpgradeCompleted = 'UpgradeCompleted';
 export const conditionReasonUpgradeNotStarted = 'UpgradeNotStarted';
 export const conditionReasonUpgradePending = 'UpgradePending';
 
+export const CAPI_IMPORTER_APP_NAME = 'crossplane-capi-import';
+
 export function getClusterDescription(cluster: ICluster): string {
   let name = cluster.metadata.annotations?.[annotationClusterDescription];
   name ||= Constants.DEFAULT_CLUSTER_DESCRIPTION;

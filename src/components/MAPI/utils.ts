@@ -1834,3 +1834,15 @@ export function isResourceManagedByGitOps(
     label.startsWith(Constants.FLUX_LABELS_PREFIX as string)
   );
 }
+
+function getResourceAppName(resource: Cluster | NodePool): string | undefined {
+  return resource.metadata.labels?.[capiv1beta1.labelApp];
+}
+
+/**
+ * Determines whether a resource is imported.
+ * @param resource
+ */
+export function isResourceImported(resource: Cluster | NodePool) {
+  return getResourceAppName(resource) === capiv1beta1.CAPI_IMPORTER_APP_NAME;
+}

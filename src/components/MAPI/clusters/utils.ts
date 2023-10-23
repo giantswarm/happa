@@ -15,6 +15,7 @@ import {
   getProviderNodePoolMachineTypes,
   IMachineType,
   IProviderClusterForClusterName,
+  isResourceImported,
   isResourceManagedByGitOps,
 } from 'MAPI/utils';
 import { IProviderNodePoolForNodePool } from 'MAPI/workernodes/utils';
@@ -59,7 +60,7 @@ export function getWorkerNodesCPU(
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
-    if (!providerNodePool) return -1;
+    if (isResourceImported(nodePool) || !providerNodePool) return -1;
 
     const instanceType =
       getProviderNodePoolMachineTypes(providerNodePool)?.primary ?? '';
@@ -84,7 +85,7 @@ export function getWorkerNodesMemory(
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
-    if (!providerNodePool) return -1;
+    if (isResourceImported(nodePool) || !providerNodePool) return -1;
 
     const instanceType =
       getProviderNodePoolMachineTypes(providerNodePool)?.primary ?? '';
