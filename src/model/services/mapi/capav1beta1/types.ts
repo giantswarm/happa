@@ -292,7 +292,7 @@ export interface IAWSCluster {
          */
         address: string;
         /**
-         * Machine address type, one of Hostname, ExternalIP or InternalIP.
+         * Machine address type, one of Hostname, ExternalIP, InternalIP, ExternalDNS or InternalDNS.
          */
         type: string;
       }[];

@@ -192,6 +192,10 @@ export interface IAzureCluster {
              */
             securityRules?: {
               /**
+               * Action specifies whether network traffic is allowed or denied. Can either be "Allow" or "Deny". Defaults to "Allow".
+               */
+              action?: 'Allow' | 'Deny';
+              /**
                * A description for this rule. Restricted to 140 chars.
                */
               description: string;
@@ -246,7 +250,7 @@ export interface IAzureCluster {
       };
     };
     /**
-     * CloudProviderConfigOverrides is an optional set of configuration values that can be overridden in azure cloud provider config. This is only a subset of options that are available in azure cloud provider config. Some values for the cloud provider config are inferred from other parts of cluster api provider azure spec, and may not be available for overrides. See: https://kubernetes-sigs.github.io/cloud-provider-azure/install/configs Note: All cloud provider config values can be customized by creating the secret beforehand. CloudProviderConfigOverrides is only used when the secret is managed by the Azure Provider.
+     * CloudProviderConfigOverrides is an optional set of configuration values that can be overridden in azure cloud provider config. This is only a subset of options that are available in azure cloud provider config. Some values for the cloud provider config are inferred from other parts of cluster api provider azure spec, and may not be available for overrides. See: https://cloud-provider-azure.sigs.k8s.io/install/configs Note: All cloud provider config values can be customized by creating the secret beforehand. CloudProviderConfigOverrides is only used when the secret is managed by the Azure Provider.
      */
     cloudProviderConfigOverrides?: {
       /**
@@ -648,6 +652,10 @@ export interface IAzureCluster {
            */
           securityRules?: {
             /**
+             * Action specifies whether network traffic is allowed or denied. Can either be "Allow" or "Deny". Defaults to "Allow".
+             */
+            action?: 'Allow' | 'Deny';
+            /**
              * A description for this rule. Restricted to 140 chars.
              */
             description: string;
@@ -720,6 +728,27 @@ export interface IAzureCluster {
          */
         peerings?: {
           /**
+           * ForwardPeeringProperties specifies VnetPeeringProperties for peering from the cluster's virtual network to the remote virtual network.
+           */
+          forwardPeeringProperties?: {
+            /**
+             * AllowForwardedTraffic specifies whether the forwarded traffic from the VMs in the local virtual network will be allowed/disallowed in remote virtual network.
+             */
+            allowForwardedTraffic?: boolean;
+            /**
+             * AllowGatewayTransit specifies if gateway links can be used in remote virtual networking to link to this virtual network.
+             */
+            allowGatewayTransit?: boolean;
+            /**
+             * AllowVirtualNetworkAccess specifies whether the VMs in the local virtual network space would be able to access the VMs in remote virtual network space.
+             */
+            allowVirtualNetworkAccess?: boolean;
+            /**
+             * UseRemoteGateways specifies if remote gateways can be used on this virtual network. If the flag is set to true, and allowGatewayTransit on remote peering is also set to true, the virtual network will use the gateways of the remote virtual network for transit. Only one peering can have this flag set to true. This flag cannot be set if virtual network already has a gateway.
+             */
+            useRemoteGateways?: boolean;
+          };
+          /**
            * RemoteVnetName defines name of the remote virtual network.
            */
           remoteVnetName: string;
@@ -727,6 +756,27 @@ export interface IAzureCluster {
            * ResourceGroup is the resource group name of the remote virtual network.
            */
           resourceGroup?: string;
+          /**
+           * ReversePeeringProperties specifies VnetPeeringProperties for peering from the remote virtual network to the cluster's virtual network.
+           */
+          reversePeeringProperties?: {
+            /**
+             * AllowForwardedTraffic specifies whether the forwarded traffic from the VMs in the local virtual network will be allowed/disallowed in remote virtual network.
+             */
+            allowForwardedTraffic?: boolean;
+            /**
+             * AllowGatewayTransit specifies if gateway links can be used in remote virtual networking to link to this virtual network.
+             */
+            allowGatewayTransit?: boolean;
+            /**
+             * AllowVirtualNetworkAccess specifies whether the VMs in the local virtual network space would be able to access the VMs in remote virtual network space.
+             */
+            allowVirtualNetworkAccess?: boolean;
+            /**
+             * UseRemoteGateways specifies if remote gateways can be used on this virtual network. If the flag is set to true, and allowGatewayTransit on remote peering is also set to true, the virtual network will use the gateways of the remote virtual network for transit. Only one peering can have this flag set to true. This flag cannot be set if virtual network already has a gateway.
+             */
+            useRemoteGateways?: boolean;
+          };
         }[];
         /**
          * ResourceGroup is the name of the resource group of the existing virtual network or the resource group where a managed virtual network should be created.
@@ -918,13 +968,14 @@ export interface IAzureClusterIdentity {
      */
     tenantID: string;
     /**
-     * Type is the type of Azure Identity used. ServicePrincipal, ServicePrincipalCertificate, UserAssignedMSI or ManualServicePrincipal.
+     * Type is the type of Azure Identity used. ServicePrincipal, ServicePrincipalCertificate, UserAssignedMSI, ManualServicePrincipal or WorkloadIdentity.
      */
     type:
       | 'ServicePrincipal'
       | 'UserAssignedMSI'
       | 'ManualServicePrincipal'
-      | 'ServicePrincipalCertificate';
+      | 'ServicePrincipalCertificate'
+      | 'WorkloadIdentity';
   };
   /**
    * AzureClusterIdentityStatus defines the observed state of AzureClusterIdentity.
@@ -1062,13 +1113,33 @@ export interface IAzureMachineTemplate {
            */
           managedDisk?: {
             /**
-             * DiskEncryptionSetParameters defines disk encryption options.
+             * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk.
              */
             diskEncryptionSet?: {
               /**
                * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
                */
               id?: string;
+            };
+            /**
+             * SecurityProfile specifies the security profile for the managed disk.
+             */
+            securityProfile?: {
+              /**
+               * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+               */
+              diskEncryptionSet?: {
+                /**
+                 * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
+                 */
+                id?: string;
+              };
+              /**
+               * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+               */
+              securityEncryptionType?:
+                | 'VMGuestStateOnly'
+                | 'DiskWithVMGuestState';
             };
             storageAccountType?: string;
           };
@@ -1259,7 +1330,7 @@ export interface IAzureMachineTemplate {
            */
           diffDiskSettings?: {
             /**
-             * Option enables ephemeral OS when set to "Local" See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details
+             * Option enables ephemeral OS when set to "Local" See https://learn.microsoft.com/azure/virtual-machines/ephemeral-os-disks for full details
              */
             option: 'Local';
           };
@@ -1272,13 +1343,33 @@ export interface IAzureMachineTemplate {
            */
           managedDisk?: {
             /**
-             * DiskEncryptionSetParameters defines disk encryption options.
+             * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk.
              */
             diskEncryptionSet?: {
               /**
                * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
                */
               id?: string;
+            };
+            /**
+             * SecurityProfile specifies the security profile for the managed disk.
+             */
+            securityProfile?: {
+              /**
+               * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+               */
+              diskEncryptionSet?: {
+                /**
+                 * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
+                 */
+                id?: string;
+              };
+              /**
+               * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+               */
+              securityEncryptionType?:
+                | 'VMGuestStateOnly'
+                | 'DiskWithVMGuestState';
             };
             storageAccountType?: string;
           };
@@ -1297,9 +1388,26 @@ export interface IAzureMachineTemplate {
          */
         securityProfile?: {
           /**
-           * This field indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. Default is disabled.
+           * This field indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. This should be disabled when SecurityEncryptionType is set to DiskWithVMGuestState. Default is disabled.
            */
           encryptionAtHost?: boolean;
+          /**
+           * SecurityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UefiSettings. The default behavior is: UefiSettings will not be enabled unless this property is set.
+           */
+          securityType?: 'ConfidentialVM' | 'TrustedLaunch';
+          /**
+           * UefiSettings specifies the security settings like secure boot and vTPM used while creating the virtual machine.
+           */
+          uefiSettings?: {
+            /**
+             * SecureBootEnabled specifies whether secure boot should be enabled on the virtual machine. Secure Boot verifies the digital signature of all boot components and halts the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+             */
+            secureBootEnabled?: boolean;
+            /**
+             * VTpmEnabled specifies whether vTPM should be enabled on the virtual machine. When true it enables the virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to Enabled if SecurityEncryptionType is defined. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+             */
+            vTpmEnabled?: boolean;
+          };
         };
         /**
          * SpotVMOptions allows the ability to specify the Machine should use a Spot VM
@@ -1340,7 +1448,7 @@ export interface IAzureMachineTemplate {
           scope?: string;
         };
         /**
-         * UserAssignedIdentities is a list of standalone Azure identities provided by the user The lifecycle of a user-assigned identity is managed separately from the lifecycle of the AzureMachine. See https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
+         * UserAssignedIdentities is a list of standalone Azure identities provided by the user The lifecycle of a user-assigned identity is managed separately from the lifecycle of the AzureMachine. See https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
          */
         userAssignedIdentities?: {
           /**
@@ -1454,13 +1562,31 @@ export interface IAzureMachine {
        */
       managedDisk?: {
         /**
-         * DiskEncryptionSetParameters defines disk encryption options.
+         * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk.
          */
         diskEncryptionSet?: {
           /**
            * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
            */
           id?: string;
+        };
+        /**
+         * SecurityProfile specifies the security profile for the managed disk.
+         */
+        securityProfile?: {
+          /**
+           * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+           */
+          diskEncryptionSet?: {
+            /**
+             * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
+             */
+            id?: string;
+          };
+          /**
+           * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+           */
+          securityEncryptionType?: 'VMGuestStateOnly' | 'DiskWithVMGuestState';
         };
         storageAccountType?: string;
       };
@@ -1651,7 +1777,7 @@ export interface IAzureMachine {
        */
       diffDiskSettings?: {
         /**
-         * Option enables ephemeral OS when set to "Local" See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details
+         * Option enables ephemeral OS when set to "Local" See https://learn.microsoft.com/azure/virtual-machines/ephemeral-os-disks for full details
          */
         option: 'Local';
       };
@@ -1664,13 +1790,31 @@ export interface IAzureMachine {
        */
       managedDisk?: {
         /**
-         * DiskEncryptionSetParameters defines disk encryption options.
+         * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk.
          */
         diskEncryptionSet?: {
           /**
            * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
            */
           id?: string;
+        };
+        /**
+         * SecurityProfile specifies the security profile for the managed disk.
+         */
+        securityProfile?: {
+          /**
+           * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+           */
+          diskEncryptionSet?: {
+            /**
+             * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
+             */
+            id?: string;
+          };
+          /**
+           * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+           */
+          securityEncryptionType?: 'VMGuestStateOnly' | 'DiskWithVMGuestState';
         };
         storageAccountType?: string;
       };
@@ -1689,9 +1833,26 @@ export interface IAzureMachine {
      */
     securityProfile?: {
       /**
-       * This field indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. Default is disabled.
+       * This field indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. This should be disabled when SecurityEncryptionType is set to DiskWithVMGuestState. Default is disabled.
        */
       encryptionAtHost?: boolean;
+      /**
+       * SecurityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UefiSettings. The default behavior is: UefiSettings will not be enabled unless this property is set.
+       */
+      securityType?: 'ConfidentialVM' | 'TrustedLaunch';
+      /**
+       * UefiSettings specifies the security settings like secure boot and vTPM used while creating the virtual machine.
+       */
+      uefiSettings?: {
+        /**
+         * SecureBootEnabled specifies whether secure boot should be enabled on the virtual machine. Secure Boot verifies the digital signature of all boot components and halts the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+         */
+        secureBootEnabled?: boolean;
+        /**
+         * VTpmEnabled specifies whether vTPM should be enabled on the virtual machine. When true it enables the virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to Enabled if SecurityEncryptionType is defined. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+         */
+        vTpmEnabled?: boolean;
+      };
     };
     /**
      * SpotVMOptions allows the ability to specify the Machine should use a Spot VM
@@ -1732,7 +1893,7 @@ export interface IAzureMachine {
       scope?: string;
     };
     /**
-     * UserAssignedIdentities is a list of standalone Azure identities provided by the user The lifecycle of a user-assigned identity is managed separately from the lifecycle of the AzureMachine. See https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
+     * UserAssignedIdentities is a list of standalone Azure identities provided by the user The lifecycle of a user-assigned identity is managed separately from the lifecycle of the AzureMachine. See https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
      */
     userAssignedIdentities?: {
       /**
@@ -1997,13 +2158,33 @@ export interface IAzureMachinePool {
          */
         managedDisk?: {
           /**
-           * DiskEncryptionSetParameters defines disk encryption options.
+           * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk.
            */
           diskEncryptionSet?: {
             /**
              * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
              */
             id?: string;
+          };
+          /**
+           * SecurityProfile specifies the security profile for the managed disk.
+           */
+          securityProfile?: {
+            /**
+             * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+             */
+            diskEncryptionSet?: {
+              /**
+               * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
+               */
+              id?: string;
+            };
+            /**
+             * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+             */
+            securityEncryptionType?:
+              | 'VMGuestStateOnly'
+              | 'DiskWithVMGuestState';
           };
           storageAccountType?: string;
         };
@@ -2178,7 +2359,7 @@ export interface IAzureMachinePool {
          */
         diffDiskSettings?: {
           /**
-           * Option enables ephemeral OS when set to "Local" See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details
+           * Option enables ephemeral OS when set to "Local" See https://learn.microsoft.com/azure/virtual-machines/ephemeral-os-disks for full details
            */
           option: 'Local';
         };
@@ -2191,13 +2372,33 @@ export interface IAzureMachinePool {
          */
         managedDisk?: {
           /**
-           * DiskEncryptionSetParameters defines disk encryption options.
+           * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk.
            */
           diskEncryptionSet?: {
             /**
              * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
              */
             id?: string;
+          };
+          /**
+           * SecurityProfile specifies the security profile for the managed disk.
+           */
+          securityProfile?: {
+            /**
+             * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+             */
+            diskEncryptionSet?: {
+              /**
+               * ID defines resourceID for diskEncryptionSet resource. It must be in the same subscription
+               */
+              id?: string;
+            };
+            /**
+             * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+             */
+            securityEncryptionType?:
+              | 'VMGuestStateOnly'
+              | 'DiskWithVMGuestState';
           };
           storageAccountType?: string;
         };
@@ -2208,9 +2409,26 @@ export interface IAzureMachinePool {
        */
       securityProfile?: {
         /**
-         * This field indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. Default is disabled.
+         * This field indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. This should be disabled when SecurityEncryptionType is set to DiskWithVMGuestState. Default is disabled.
          */
         encryptionAtHost?: boolean;
+        /**
+         * SecurityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UefiSettings. The default behavior is: UefiSettings will not be enabled unless this property is set.
+         */
+        securityType?: 'ConfidentialVM' | 'TrustedLaunch';
+        /**
+         * UefiSettings specifies the security settings like secure boot and vTPM used while creating the virtual machine.
+         */
+        uefiSettings?: {
+          /**
+           * SecureBootEnabled specifies whether secure boot should be enabled on the virtual machine. Secure Boot verifies the digital signature of all boot components and halts the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+           */
+          secureBootEnabled?: boolean;
+          /**
+           * VTpmEnabled specifies whether vTPM should be enabled on the virtual machine. When true it enables the virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to Enabled if SecurityEncryptionType is defined. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+           */
+          vTpmEnabled?: boolean;
+        };
       };
       /**
        * SpotVMOptions allows the ability to specify the Machine should use a Spot VM
@@ -2267,12 +2485,12 @@ export interface IAzureMachinePool {
         version: string;
       }[];
       /**
-       * VMSize is the size of the Virtual Machine to build. See https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/createorupdate#virtualmachinesizetypes
+       * VMSize is the size of the Virtual Machine to build. See https://learn.microsoft.com/rest/api/compute/virtualmachines/createorupdate#virtualmachinesizetypes
        */
       vmSize: string;
     };
     /**
-     * UserAssignedIdentities is a list of standalone Azure identities provided by the user The lifecycle of a user-assigned identity is managed separately from the lifecycle of the AzureMachinePool. See https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
+     * UserAssignedIdentities is a list of standalone Azure identities provided by the user The lifecycle of a user-assigned identity is managed separately from the lifecycle of the AzureMachinePool. See https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
      */
     userAssignedIdentities?: {
       /**
