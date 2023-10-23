@@ -3,7 +3,7 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { getListResource } from '../generic/getListResource';
-import { ApiVersion, IG8sControlPlaneList } from './';
+import { G8sControlPlaneListApiVersion, IG8sControlPlaneList } from './';
 
 export interface IGetG8sControlPlaneListOptions {
   namespace?: string;
@@ -17,7 +17,7 @@ export function getG8sControlPlaneList(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: ApiVersion,
+    apiVersion: G8sControlPlaneListApiVersion,
     kind: 'g8scontrolplanes',
     ...options,
   });
@@ -30,7 +30,7 @@ export function getG8sControlPlaneListKey(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: ApiVersion,
+    apiVersion: G8sControlPlaneListApiVersion,
     kind: 'g8scontrolplanes',
     ...options,
   });

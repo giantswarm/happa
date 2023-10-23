@@ -10,7 +10,6 @@ import {
   fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForClusterKey,
   generateUID,
-  getApiGroupFromApiVersion,
   getClusterDescription,
   getProviderNodePoolMachineTypes,
   IMachineType,
@@ -251,7 +250,7 @@ function createDefaultAWSCluster(config: {
   releaseVersion: string;
 }): infrav1alpha3.IAWSCluster {
   return {
-    apiVersion: infrav1alpha3.ApiVersion,
+    apiVersion: infrav1alpha3.AWSClusterApiVersion,
     kind: infrav1alpha3.AWSCluster,
     metadata: {
       namespace: config.namespace,
@@ -311,10 +310,11 @@ export function createDefaultCluster(config: {
   }
 
   const { kind, apiVersion } = config.providerCluster;
+
   switch (true) {
     case kind === capzv1beta1.AzureCluster:
     case kind === infrav1alpha3.AWSCluster &&
-      apiVersion === infrav1alpha3.ApiVersion:
+      apiVersion === infrav1alpha3.AWSClusterApiVersion:
       return createDefaultV1Alpha3Cluster(config);
 
     default:
@@ -373,7 +373,7 @@ export function createDefaultControlPlaneNodes(config: {
     case kind === capzv1beta1.AzureCluster:
       return [createDefaultAzureMachine(config)];
     case kind === infrav1alpha3.AWSCluster &&
-      apiVersion === infrav1alpha3.ApiVersion: {
+      apiVersion === infrav1alpha3.AWSClusterApiVersion: {
       const name = generateUID(5);
       const awsCP = createDefaultAWSControlPlane({ ...config, name });
       const g8sCP = createDefaultG8sControlPlane({
@@ -450,7 +450,7 @@ function createDefaultAWSControlPlane(config: {
     config.providerCluster!.metadata.labels![infrav1alpha3.labelReleaseVersion];
 
   return {
-    apiVersion: infrav1alpha3.ApiVersion,
+    apiVersion: infrav1alpha3.AWSControlPlaneApiVersion,
     kind: infrav1alpha3.AWSControlPlane,
     metadata: {
       namespace,
@@ -483,7 +483,7 @@ function createDefaultG8sControlPlane(config: {
   const name = config.awsControlPlane.metadata.name;
 
   return {
-    apiVersion: infrav1alpha3.ApiVersion,
+    apiVersion: infrav1alpha3.G8sControlPlaneApiVersion,
     kind: infrav1alpha3.G8sControlPlane,
     metadata: {
       namespace,
@@ -658,7 +658,7 @@ export async function createCluster(
     }
 
     case kind === infrav1alpha3.AWSCluster &&
-      apiVersion === infrav1alpha3.ApiVersion: {
+      apiVersion === infrav1alpha3.AWSClusterApiVersion: {
       // AWS cluster
       try {
         providerCluster = await infrav1alpha3.createAWSCluster(
@@ -920,7 +920,6 @@ export function getClusterConditions(
   }
 
   const { kind, apiVersion } = infrastructureRef;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
     case kind === capzv1beta1.AzureCluster && !hasClusterAppLabel(cluster):
@@ -932,7 +931,7 @@ export function getClusterConditions(
       break;
 
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup: {
+      apiVersion === infrav1alpha3.AWSClusterApiVersion: {
       if (!providerCluster) break;
 
       statuses.isConditionUnknown = infrav1alpha3.isConditionUnknown(

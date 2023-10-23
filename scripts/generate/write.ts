@@ -68,12 +68,8 @@ function getResourceScope(crdForResource: ICRDForResource): boolean {
   return (crdForResource.crd.spec?.scope ?? 'Namespaced') === 'Namespaced';
 }
 
-export async function writeTypes(
-  apiVersionDirPath: string,
-  apiVersion: string,
-  data: string
-) {
-  const header = formatTypesFileHeader(apiVersion);
+export async function writeTypes(apiVersionDirPath: string, data: string) {
+  const header = formatTypesFileHeader();
 
   return fs.writeFile(
     path.resolve(apiVersionDirPath, `${typesFileName}.ts`),

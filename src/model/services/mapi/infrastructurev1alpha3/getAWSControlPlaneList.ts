@@ -3,7 +3,7 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { getListResource } from '../generic/getListResource';
-import { ApiVersion, IAWSControlPlaneList } from './';
+import { AWSControlPlaneListApiVersion, IAWSControlPlaneList } from './';
 
 export interface IGetAWSControlPlaneListOptions {
   namespace?: string;
@@ -17,7 +17,7 @@ export function getAWSControlPlaneList(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: ApiVersion,
+    apiVersion: AWSControlPlaneListApiVersion,
     kind: 'awscontrolplanes',
     ...options,
   });
@@ -30,7 +30,7 @@ export function getAWSControlPlaneListKey(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: ApiVersion,
+    apiVersion: AWSControlPlaneListApiVersion,
     kind: 'awscontrolplanes',
     ...options,
   });

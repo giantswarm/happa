@@ -44,7 +44,7 @@ export function withClusterReleaseVersion(
     const hasNonNamespacedResources =
       providerCluster &&
       providerCluster.kind === infrav1alpha3.AWSCluster &&
-      providerCluster.apiVersion === infrav1alpha3.ApiVersion &&
+      providerCluster.apiVersion === infrav1alpha3.AWSClusterApiVersion &&
       compare(newVersion, Constants.AWS_NAMESPACED_CLUSTERS_VERSION) < 0;
     const defaultNamespace = 'default';
 
@@ -112,11 +112,10 @@ export function withClusterDescription(newDescription: string): ClusterPatch {
     if (
       providerCluster &&
       providerCluster.kind === infrav1alpha3.AWSCluster &&
-      providerCluster.apiVersion === infrav1alpha3.ApiVersion &&
+      providerCluster.apiVersion === infrav1alpha3.AWSClusterApiVersion &&
       providerCluster.spec
     ) {
-      (providerCluster as infrav1alpha3.IAWSCluster).spec!.cluster.description =
-        newDescription;
+      providerCluster.spec.cluster.description = newDescription;
     }
   };
 }
@@ -145,24 +144,26 @@ export function withClusterControlPlaneNodesCount(count: number): ClusterPatch {
     const supportedAZs = getSupportedAvailabilityZones().all;
 
     for (const controlPlaneNode of controlPlaneNodes) {
-      if (controlPlaneNode.apiVersion !== infrav1alpha3.ApiVersion) {
-        continue;
+      const { kind, apiVersion } = controlPlaneNode;
+
+      if (
+        kind === infrav1alpha3.G8sControlPlane &&
+        apiVersion === infrav1alpha3.G8sControlPlaneApiVersion
+      ) {
+        controlPlaneNode.spec.replicas = count;
       }
 
-      switch (controlPlaneNode.kind) {
-        case infrav1alpha3.G8sControlPlane:
-          controlPlaneNode.spec.replicas = count;
-          break;
-        case infrav1alpha3.AWSControlPlane: {
-          if (count === 1) {
-            controlPlaneNode.spec.availabilityZones = determineRandomAZs(
-              count,
-              supportedAZs
-            );
-          } else {
-            delete controlPlaneNode.spec.availabilityZones;
-          }
-          break;
+      if (
+        kind === infrav1alpha3.AWSControlPlane &&
+        apiVersion === infrav1alpha3.AWSControlPlaneApiVersion
+      ) {
+        if (count === 1) {
+          controlPlaneNode.spec.availabilityZones = determineRandomAZs(
+            count,
+            supportedAZs
+          );
+        } else {
+          delete controlPlaneNode.spec.availabilityZones;
         }
       }
     }

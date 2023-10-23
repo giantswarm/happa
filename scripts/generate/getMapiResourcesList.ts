@@ -39,10 +39,6 @@ export interface IApiGroupInfo {
    */
   apiVersionAlias: string;
   /**
-   * apiVersion is the resources' apiVersion, e.g. `cluster.x-k8s.io/v1beta1`.
-   */
-  apiVersion: string;
-  /**
    * resources specifies a list of resources for this API group and version.
    */
   resources: IResourceInfo[];

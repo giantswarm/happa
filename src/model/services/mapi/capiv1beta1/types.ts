@@ -2,9 +2,7 @@ import * as corev1 from '../corev1';
 import * as k8sUrl from '../k8sUrl';
 import * as metav1 from '../metav1';
 
-export const ApiGroup = 'cluster.x-k8s.io';
-
-export const ApiVersion = `${ApiGroup}/v1beta1`;
+const ApiVersion = 'cluster.x-k8s.io/v1beta1';
 
 export interface IClusterNetworkNetworkRanges {
   cidrBlocks: string[] | null;
@@ -137,6 +135,8 @@ export interface IClusterStatus {
 }
 
 export const Cluster = 'Cluster';
+
+export const ClusterApiVersion = ApiVersion;
 
 /**
  * ICluster is the Schema for the clusters API.
@@ -330,6 +330,8 @@ export interface IMachineDeploymentStatus {
 
 export const MachineDeployment = 'MachineDeployment';
 
+export const MachineDeploymentApiVersion = ApiVersion;
+
 /**
  * IMachineDeployment is the Schema for the machinedeployments API.
  */
@@ -490,6 +492,8 @@ export interface IMachinePoolStatus {
 }
 
 export const MachinePool = 'MachinePool';
+
+export const MachinePoolApiVersion = ApiVersion;
 
 /**
  * MachinePool is the Schema for the machinepools API.

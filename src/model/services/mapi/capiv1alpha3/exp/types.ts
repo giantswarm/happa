@@ -6,9 +6,7 @@ import {
 import * as corev1 from '../../corev1';
 import * as metav1 from '../../metav1';
 
-export const ApiGroup = 'exp.cluster.x-k8s.io';
-
-export const ApiVersion = `${ApiGroup}/v1alpha3`;
+const ApiVersion = 'exp.cluster.x-k8s.io/v1alpha3';
 
 export interface IMachinePoolSpec {
   clusterName: string;
@@ -36,6 +34,8 @@ export interface IMachinePoolStatus {
 }
 
 export const MachinePool = 'MachinePool';
+
+export const MachinePoolApiVersion = ApiVersion;
 
 export interface IMachinePool {
   apiVersion: typeof ApiVersion;

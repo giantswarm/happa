@@ -1,9 +1,7 @@
 import * as corev1 from '../corev1';
 import * as metav1 from '../metav1';
 
-export const ApiGroup = 'infrastructure.giantswarm.io';
-
-export const ApiVersion = `${ApiGroup}/v1alpha3`;
+const ApiVersion = 'infrastructure.giantswarm.io/v1alpha3';
 
 export interface IAWSClusterSpecClusterDNS {
   domain: string;
@@ -95,6 +93,8 @@ export interface IAWSClusterStatus {
 
 export const AWSCluster = 'AWSCluster';
 
+export const AWSClusterApiVersion = ApiVersion;
+
 export interface IAWSCluster {
   apiVersion: typeof ApiVersion;
   kind: typeof AWSCluster;
@@ -104,6 +104,8 @@ export interface IAWSCluster {
 }
 
 export const AWSClusterList = 'AWSClusterList';
+
+export const AWSClusterListApiVersion = ApiVersion;
 
 export interface IAWSClusterList extends metav1.IList<IAWSCluster> {
   apiVersion: typeof ApiVersion;
@@ -117,6 +119,8 @@ export interface IAWSControlPlaneSpec {
 
 export const AWSControlPlane = 'AWSControlPlane';
 
+export const AWSControlPlaneApiVersion = ApiVersion;
+
 export interface IAWSControlPlane {
   apiVersion: typeof ApiVersion;
   kind: typeof AWSControlPlane;
@@ -125,6 +129,8 @@ export interface IAWSControlPlane {
 }
 
 export const AWSControlPlaneList = 'AWSControlPlaneList';
+
+export const AWSControlPlaneListApiVersion = ApiVersion;
 
 export interface IAWSControlPlaneList extends metav1.IList<IAWSControlPlane> {
   apiVersion: typeof ApiVersion;
@@ -143,6 +149,8 @@ export interface IG8sControlPlaneStatus {
 
 export const G8sControlPlane = 'G8sControlPlane';
 
+export const G8sControlPlaneApiVersion = ApiVersion;
+
 export interface IG8sControlPlane {
   apiVersion: typeof ApiVersion;
   kind: typeof G8sControlPlane;
@@ -152,6 +160,8 @@ export interface IG8sControlPlane {
 }
 
 export const G8sControlPlaneList = 'G8sControlPlaneList';
+
+export const G8sControlPlaneListApiVersion = ApiVersion;
 
 export interface IG8sControlPlaneList extends metav1.IList<IG8sControlPlane> {
   apiVersion: typeof ApiVersion;
@@ -209,6 +219,8 @@ export interface IAWSMachineDeploymentStatus {
 }
 
 export const AWSMachineDeployment = 'AWSMachineDeployment';
+
+export const AWSMachineDeploymentApiVersion = ApiVersion;
 
 export interface IAWSMachineDeployment {
   apiVersion: typeof ApiVersion;

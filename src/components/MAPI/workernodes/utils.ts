@@ -4,7 +4,6 @@ import {
   compareNodePools,
   fetchProviderNodePoolForNodePool,
   fetchProviderNodePoolsForNodePoolsKey,
-  getApiGroupFromApiVersion,
   IProviderNodePoolForNodePoolName,
 } from 'MAPI/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
@@ -30,13 +29,12 @@ export async function updateNodePoolDescription(
   nodePool: NodePool,
   newDescription: string
 ) {
-  const kind = nodePool.kind;
-  const apiGroup = getApiGroupFromApiVersion(nodePool.apiVersion);
+  const { kind, apiVersion } = nodePool;
 
   switch (true) {
     // Azure
     case kind === capiexpv1alpha3.MachinePool &&
-      apiGroup === capiexpv1alpha3.ApiGroup: {
+      apiVersion === capiexpv1alpha3.MachinePoolApiVersion: {
       const client = httpClientFactory();
 
       let machinePool = await capiexpv1alpha3.getMachinePool(
@@ -87,7 +85,7 @@ export async function updateNodePoolDescription(
 
     // Azure (non-exp MachinePools)
     case kind === capiv1beta1.MachinePool &&
-      apiGroup === capiv1beta1.ApiGroup: {
+      apiVersion === capiv1beta1.MachinePoolApiVersion: {
       const client = httpClientFactory();
 
       let machinePool = await capiv1beta1.getMachinePool(
@@ -209,13 +207,12 @@ export async function deleteNodePool(
   auth: IOAuth2Provider,
   nodePool: NodePool
 ) {
-  const kind = nodePool.kind;
-  const apiGroup = getApiGroupFromApiVersion(nodePool.apiVersion);
+  const { kind, apiVersion } = nodePool;
 
   switch (true) {
     // Azure
     case kind === capiexpv1alpha3.MachinePool &&
-      apiGroup === capiexpv1alpha3.ApiGroup: {
+      apiVersion === capiexpv1alpha3.MachinePoolApiVersion: {
       const client = httpClientFactory();
 
       const machinePool = await capiexpv1alpha3.getMachinePool(
@@ -268,7 +265,7 @@ export async function deleteNodePool(
 
     // Azure (non-exp MachinePools)
     case kind === capiv1beta1.MachinePool &&
-      apiGroup === capiv1beta1.ApiGroup: {
+      apiVersion === capiv1beta1.MachinePoolApiVersion: {
       const client = httpClientFactory();
 
       const machinePool = await capiv1beta1.getMachinePool(
@@ -459,13 +456,12 @@ export async function updateNodePoolScaling(
   min: number,
   max: number
 ): Promise<NodePool> {
-  const kind = nodePool.kind;
-  const apiGroup = getApiGroupFromApiVersion(nodePool.apiVersion);
+  const { kind, apiVersion } = nodePool;
 
   switch (true) {
     // Azure
     case kind === capiexpv1alpha3.MachinePool &&
-      apiGroup === capiexpv1alpha3.ApiGroup: {
+      apiVersion === capiexpv1alpha3.MachinePoolApiVersion: {
       const client = httpClientFactory();
 
       let machinePool = await capiexpv1alpha3.getMachinePool(
@@ -539,7 +535,7 @@ export async function updateNodePoolScaling(
 
     // Azure (non-exp MachinePools)
     case kind === capiv1beta1.MachinePool &&
-      apiGroup === capiv1beta1.ApiGroup: {
+      apiVersion === capiv1beta1.MachinePoolApiVersion: {
       const client = httpClientFactory();
 
       let machinePool = await capiv1beta1.getMachinePool(
@@ -765,7 +761,7 @@ export function createDefaultExpAzureMachinePool(config: {
   azureOperatorVersion: string;
 }): capzexpv1alpha3.IAzureMachinePool {
   return {
-    apiVersion: capzexpv1alpha3.ApiVersion,
+    apiVersion: capzexpv1alpha3.AzureMachinePoolApiVersion,
     kind: capzexpv1alpha3.AzureMachinePool,
     metadata: {
       namespace: config.namespace,
@@ -807,7 +803,7 @@ export function createDefaultAzureMachinePool(config: {
   azureOperatorVersion: string;
 }): capzv1beta1.IAzureMachinePool {
   return {
-    apiVersion: capzv1beta1.ApiVersion,
+    apiVersion: capzv1beta1.AzureMachinePoolApiVersion,
     kind: capzv1beta1.AzureMachinePool,
     metadata: {
       namespace: config.namespace,
@@ -846,7 +842,7 @@ export function createDefaultAWSMachineDeployment(config: {
   location: string;
 }): infrav1alpha3.IAWSMachineDeployment {
   return {
-    apiVersion: infrav1alpha3.ApiVersion,
+    apiVersion: infrav1alpha3.AWSMachineDeploymentApiVersion,
     kind: infrav1alpha3.AWSMachineDeployment,
     metadata: {
       namespace: config.namespace,
@@ -894,12 +890,12 @@ export function createDefaultNodePool(config: {
   switch (true) {
     // Azure
     case kind === capzexpv1alpha3.AzureMachinePool &&
-      apiVersion === capzexpv1alpha3.ApiVersion:
+      apiVersion === capzexpv1alpha3.AzureMachinePoolApiVersion:
       return createDefaultExpMachinePool(config);
 
     // Azure (non-exp MachinePools)
     case kind === capzv1beta1.AzureMachinePool &&
-      apiVersion === capzv1beta1.ApiVersion:
+      apiVersion === capzv1beta1.AzureMachinePoolApiVersion:
       return createDefaultMachinePool(config);
 
     // AWS
@@ -928,7 +924,7 @@ function createDefaultExpMachinePool(config: {
     ];
 
   return {
-    apiVersion: capiexpv1alpha3.ApiVersion,
+    apiVersion: capiexpv1alpha3.MachinePoolApiVersion,
     kind: capiexpv1alpha3.MachinePool,
     metadata: {
       name,
@@ -989,7 +985,7 @@ function createDefaultMachinePool(config: {
     ];
 
   return {
-    apiVersion: capiv1beta1.ApiVersion,
+    apiVersion: capiv1beta1.MachinePoolApiVersion,
     kind: capiv1beta1.MachinePool,
     metadata: {
       name,
@@ -1044,7 +1040,7 @@ function createDefaultMachineDeployment(config: {
     config.providerNodePool!.metadata.labels![capiv1beta1.labelCluster];
 
   return {
-    apiVersion: capiv1beta1.ApiVersion,
+    apiVersion: capiv1beta1.MachineDeploymentApiVersion,
     kind: capiv1beta1.MachineDeployment,
     metadata: {
       name,
@@ -1107,7 +1103,7 @@ export async function createNodePool(
   switch (true) {
     // Azure
     case kind === capzexpv1alpha3.AzureMachinePool &&
-      apiVersion === capzexpv1alpha3.ApiVersion: {
+      apiVersion === capzexpv1alpha3.AzureMachinePoolApiVersion: {
       if (config.bootstrapConfig) {
         try {
           bootstrapConfig = await gscorev1alpha1.createSpark(
@@ -1218,7 +1214,7 @@ export async function createNodePool(
 
     // Azure (non-exp MachinePools)
     case kind === capzv1beta1.AzureMachinePool &&
-      apiVersion === capzv1beta1.ApiVersion: {
+      apiVersion === capzv1beta1.AzureMachinePoolApiVersion: {
       if (config.bootstrapConfig) {
         try {
           bootstrapConfig = await gscorev1alpha1.createSpark(

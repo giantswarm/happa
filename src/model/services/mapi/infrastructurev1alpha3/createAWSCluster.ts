@@ -3,7 +3,7 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { createResource } from '../generic/createResource';
-import { ApiVersion, IAWSCluster } from './';
+import { AWSClusterApiVersion, IAWSCluster } from './';
 
 export function createAWSCluster(
   client: IHttpClient,
@@ -12,7 +12,7 @@ export function createAWSCluster(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: ApiVersion,
+    apiVersion: AWSClusterApiVersion,
     kind: 'awsclusters',
     namespace: awsCluster.metadata.namespace!,
     name: awsCluster.metadata.name,

@@ -90,17 +90,16 @@ export function compareNodePools(a: NodePool, b: NodePool) {
     return -1;
   }
 
-  const apiGroup = getApiGroupFromApiVersion(a.apiVersion);
-
-  if (apiGroup === capiexpv1alpha3.ApiGroup && a.apiVersion === b.apiVersion) {
+  if (
+    a.kind === capiexpv1alpha3.MachinePool &&
+    a.kind === b.kind &&
+    a.apiVersion === capiexpv1alpha3.MachinePoolApiVersion &&
+    a.apiVersion === b.apiVersion
+  ) {
     // Sort by description.
     const descriptionComparison = capiexpv1alpha3
-      .getMachinePoolDescription(a as capiexpv1alpha3.IMachinePool)
-      .localeCompare(
-        capiexpv1alpha3.getMachinePoolDescription(
-          b as capiexpv1alpha3.IMachinePool
-        )
-      );
+      .getMachinePoolDescription(a)
+      .localeCompare(capiexpv1alpha3.getMachinePoolDescription(b));
     if (descriptionComparison !== 0) {
       return descriptionComparison;
     }
@@ -109,7 +108,7 @@ export function compareNodePools(a: NodePool, b: NodePool) {
   if (
     a.kind === capiv1beta1.MachinePool &&
     a.kind === b.kind &&
-    apiGroup === capiv1beta1.ApiGroup &&
+    a.apiVersion === capiv1beta1.MachinePoolApiVersion &&
     a.apiVersion === b.apiVersion
   ) {
     // Sort by description.
@@ -142,7 +141,6 @@ export async function fetchNodePoolListForCluster(
   let list: NodePoolList;
 
   const { kind, apiVersion } = infrastructureRef;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
     case kind === capgv1beta1.GCPCluster:
@@ -196,7 +194,8 @@ export async function fetchNodePoolListForCluster(
 
       break;
 
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.AWSClusterApiVersion:
     case kind === capzv1beta1.AzureCluster:
       list = await capiv1beta1.getMachinePoolList(httpClientFactory(), auth, {
         labelSelector: {
@@ -210,7 +209,7 @@ export async function fetchNodePoolListForCluster(
       break;
 
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup:
+      apiVersion === infrav1alpha3.AWSClusterApiVersion:
       list = await capiv1beta1.getMachineDeploymentList(
         httpClientFactory(),
         auth,
@@ -248,7 +247,6 @@ export function fetchNodePoolListForClusterKey(
   }
 
   const { kind, apiVersion } = infrastructureRef;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
     case kind === capgv1beta1.GCPCluster:
@@ -284,7 +282,8 @@ export function fetchNodePoolListForClusterKey(
         namespace,
       });
 
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.AWSClusterApiVersion:
     case kind === capzv1beta1.AzureCluster:
       return capiv1beta1.getMachinePoolListKey({
         labelSelector: {
@@ -296,7 +295,7 @@ export function fetchNodePoolListForClusterKey(
       });
 
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup:
+      apiVersion === infrav1alpha3.AWSClusterApiVersion:
       return capiv1beta1.getMachineDeploymentListKey({
         labelSelector: {
           matchingLabels: {
@@ -323,8 +322,7 @@ export async function fetchProviderNodePoolForNodePool(
     );
   }
 
-  const apiGroup = getApiGroupFromApiVersion(infrastructureRef.apiVersion);
-  const kind = infrastructureRef.kind;
+  const { kind, apiVersion } = infrastructureRef;
 
   switch (true) {
     case kind === capav1beta1.AWSMachinePool:
@@ -352,7 +350,7 @@ export async function fetchProviderNodePoolForNodePool(
       );
 
     case kind === capzexpv1alpha3.AzureMachinePool &&
-      apiGroup === capzexpv1alpha3.ApiGroup:
+      apiVersion === capzexpv1alpha3.AzureMachinePoolApiVersion:
       return capzexpv1alpha3.getAzureMachinePool(
         httpClientFactory(),
         auth,
@@ -361,7 +359,7 @@ export async function fetchProviderNodePoolForNodePool(
       );
 
     case kind === capzv1beta1.AzureMachinePool &&
-      apiGroup === capzv1beta1.ApiGroup:
+      apiVersion === capzv1beta1.AzureMachinePoolApiVersion:
       return capzv1beta1.getAzureMachinePool(
         httpClientFactory(),
         auth,
@@ -574,10 +572,10 @@ export async function fetchControlPlaneNodesForCluster(
   }
 
   const { kind, apiVersion } = infrastructureRef;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup: {
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.AWSClusterApiVersion: {
       const [capaCP, machineCP] = await Promise.allSettled([
         capav1beta1.getAWSMachineTemplateList(httpClientFactory(), auth, {
           labelSelector: {
@@ -737,7 +735,7 @@ export async function fetchControlPlaneNodesForCluster(
     }
 
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup: {
+      apiVersion === infrav1alpha3.AWSClusterApiVersion: {
       const [awsCP, g8sCP] = await Promise.allSettled([
         infrav1alpha3.getAWSControlPlaneList(httpClientFactory(), auth, {
           labelSelector: {
@@ -786,10 +784,10 @@ export function fetchControlPlaneNodesForClusterKey(
   }
 
   const { kind, apiVersion } = infrastructureRef;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.AWSClusterApiVersion:
       return capav1beta1.getAWSMachineTemplateListKey({
         labelSelector: {
           matchingLabels: {
@@ -833,7 +831,7 @@ export function fetchControlPlaneNodesForClusterKey(
       });
 
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup:
+      apiVersion === infrav1alpha3.AWSClusterApiVersion:
       return infrav1alpha3.getAWSControlPlaneListKey({
         labelSelector: {
           matchingLabels: {
@@ -861,10 +859,10 @@ export async function fetchProviderClusterForCluster(
   }
 
   const { kind, apiVersion } = infrastructureRef;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.AWSClusterApiVersion:
       return capav1beta1.getAWSCluster(
         httpClientFactory(),
         auth,
@@ -889,7 +887,7 @@ export async function fetchProviderClusterForCluster(
       );
 
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup:
+      apiVersion === infrav1alpha3.AWSClusterApiVersion:
       return infrav1alpha3.getAWSCluster(
         httpClientFactory(),
         auth,
@@ -907,10 +905,10 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
   if (!infrastructureRef) return null;
 
   const { kind, apiVersion } = infrastructureRef;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.AWSClusterApiVersion:
       return capav1beta1.getAWSClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
@@ -929,7 +927,7 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
       );
 
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup:
+      apiVersion === infrav1alpha3.AWSClusterApiVersion:
       return infrav1alpha3.getAWSClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
@@ -1295,8 +1293,8 @@ export function getNodePoolAvailabilityZones(
 }
 
 export function getClusterReleaseVersion(cluster: Cluster) {
-  switch (getApiGroupFromApiVersion(cluster.apiVersion)) {
-    case capiv1beta1.ApiGroup:
+  switch (cluster.apiVersion) {
+    case capiv1beta1.ClusterApiVersion:
       return capiv1beta1.getReleaseVersion(cluster);
     default:
       return undefined;
@@ -1314,11 +1312,10 @@ export function getClusterDescription(
   }
 
   const { kind, apiVersion } = infrastructureRef;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup:
+      apiVersion === infrav1alpha3.AWSClusterApiVersion:
       return (
         (providerCluster as infrav1alpha3.IAWSCluster)?.spec?.cluster
           .description ||
@@ -1344,10 +1341,10 @@ export function getProviderClusterLocation(
   }
 
   const { kind, apiVersion } = providerCluster;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.AWSClusterApiVersion:
       return (providerCluster as capav1beta1.IAWSCluster).spec?.region ?? '';
 
     case kind === capgv1beta1.GCPCluster:
@@ -1359,7 +1356,7 @@ export function getProviderClusterLocation(
       );
 
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup: {
+      apiVersion === infrav1alpha3.AWSClusterApiVersion: {
       const region = (providerCluster as infrav1alpha3.IAWSCluster).spec
         ?.provider.region;
       if (typeof region === 'undefined') return '';
@@ -1584,14 +1581,13 @@ export function supportsClientCertificates(cluster: Cluster): boolean {
   }
 
   const { kind, apiVersion } = infrastructureRef;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
     case kind === capzv1beta1.AzureCluster:
       return true;
 
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup: {
+      apiVersion === infrav1alpha3.AWSClusterApiVersion: {
       const releaseVersion = getClusterReleaseVersion(cluster);
       if (!releaseVersion) return false;
 
@@ -1653,10 +1649,6 @@ export function getNamespaceFromOrgName(name: string): string {
   }
 
   return `org-${nameChars.join('')}`;
-}
-
-export function getApiGroupFromApiVersion(apiVersion: string): string {
-  return apiVersion.split('/')[0];
 }
 
 /**

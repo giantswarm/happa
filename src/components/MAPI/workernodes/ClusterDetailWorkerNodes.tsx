@@ -14,7 +14,6 @@ import {
   fetchProviderClusterForClusterKey,
   fetchProviderNodePoolsForNodePools,
   fetchProviderNodePoolsForNodePoolsKey,
-  getApiGroupFromApiVersion,
   IProviderNodePoolForNodePoolName,
   isNodePoolMngmtReadOnly,
   supportsNodePoolAutoscaling,
@@ -72,10 +71,10 @@ export function getAdditionalColumns(
   if (!infrastructureRef) return [];
 
   const { kind, apiVersion } = infrastructureRef;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta1.AWSCluster &&
+      apiVersion === capav1beta1.AWSClusterApiVersion:
       return [
         {
           title: 'Spot instances',
@@ -110,7 +109,7 @@ export function getAdditionalColumns(
       ];
 
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup:
+      apiVersion === infrav1alpha3.AWSClusterApiVersion:
       return [
         {
           title: 'Spot count',

@@ -3,7 +3,7 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { getListResource } from '../generic/getListResource';
-import { ApiVersion, IAWSClusterList } from './';
+import { AWSClusterListApiVersion, IAWSClusterList } from './';
 
 export interface IGetAWSClusterListOptions {
   namespace?: string;
@@ -17,7 +17,7 @@ export function getAWSClusterList(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: ApiVersion,
+    apiVersion: AWSClusterListApiVersion,
     kind: 'awsclusters',
     ...options,
   });
@@ -28,7 +28,7 @@ export function getAWSClusterList(
 export function getAWSClusterListKey(options?: IGetAWSClusterListOptions) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: ApiVersion,
+    apiVersion: AWSClusterListApiVersion,
     kind: 'awsclusters',
     ...options,
   });

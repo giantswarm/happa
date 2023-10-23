@@ -147,7 +147,7 @@ async function writeClientFunctions(
 
 async function generate(group: IApiGroupInfo): Promise<void> {
   try {
-    log(`${group.apiVersionAlias} (${group.apiVersion}):`);
+    log(`${group.apiVersionAlias}:`);
 
     const crdsForResources = await fetchCRDs(group);
 
@@ -159,7 +159,7 @@ async function generate(group: IApiGroupInfo): Promise<void> {
 
     log(`  Writing TS types and client functions...`);
 
-    await writeTypes(apiVersionDirPath, group.apiVersion, typesData);
+    await writeTypes(apiVersionDirPath, typesData);
 
     const crdsForTypedResources = crdsForResources.filter((r) =>
       resourceNamesGenerated.includes(r.resource.name)

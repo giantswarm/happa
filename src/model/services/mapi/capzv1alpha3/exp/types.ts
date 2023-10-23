@@ -1,9 +1,7 @@
 import * as capiv1beta1 from '../../capiv1beta1';
 import * as capzv1beta1 from '../../capzv1beta1';
 
-export const ApiGroup = 'exp.infrastructure.cluster.x-k8s.io';
-
-export const ApiVersion = `${ApiGroup}/v1alpha3`;
+const ApiVersion = 'exp.infrastructure.cluster.x-k8s.io/v1alpha3';
 
 export interface IAzureMachinePoolInstance {
   version?: string;
@@ -34,6 +32,8 @@ export interface IAzureMachinePoolStatus {
 }
 
 export const AzureMachinePool = 'AzureMachinePool';
+
+export const AzureMachinePoolApiVersion = ApiVersion;
 
 export interface IAzureMachinePool
   extends Omit<capzv1beta1.IAzureMachinePool, 'apiVersion'> {

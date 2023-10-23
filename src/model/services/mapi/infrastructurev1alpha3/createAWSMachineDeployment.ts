@@ -3,7 +3,7 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { createResource } from '../generic/createResource';
-import { ApiVersion, IAWSMachineDeployment } from './';
+import { AWSMachineDeploymentApiVersion, IAWSMachineDeployment } from './';
 
 export function createAWSMachineDeployment(
   client: IHttpClient,
@@ -12,7 +12,7 @@ export function createAWSMachineDeployment(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: ApiVersion,
+    apiVersion: AWSMachineDeploymentApiVersion,
     kind: 'awsmachinedeployments',
     namespace: awsMachineDeployment.metadata.namespace!,
     name: awsMachineDeployment.metadata.name,

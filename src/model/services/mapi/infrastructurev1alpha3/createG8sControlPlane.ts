@@ -3,7 +3,7 @@ import * as k8sUrl from 'model/services/mapi/k8sUrl';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 
 import { createResource } from '../generic/createResource';
-import { ApiVersion, IG8sControlPlane } from './';
+import { G8sControlPlaneApiVersion, IG8sControlPlane } from './';
 
 export function createG8sControlPlane(
   client: IHttpClient,
@@ -12,7 +12,7 @@ export function createG8sControlPlane(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: ApiVersion,
+    apiVersion: G8sControlPlaneApiVersion,
     kind: 'g8scontrolplanes',
     namespace: g8sControlPlane.metadata.namespace!,
     name: g8sControlPlane.metadata.name,

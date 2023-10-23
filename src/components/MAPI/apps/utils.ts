@@ -9,7 +9,6 @@ import {
 } from 'MAPI/clusters/utils';
 import * as releasesUtils from 'MAPI/releases/utils';
 import {
-  getApiGroupFromApiVersion,
   getClusterBaseUrl,
   getClusterDescription,
   getClusterReleaseVersion,
@@ -796,13 +795,12 @@ export function getClusterK8sEndpoint(
   }
 
   const { kind, apiVersion } = infrastructureRef;
-  const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   let hostname = null;
   switch (true) {
     case kind === capzv1beta1.AzureCluster && !hasClusterAppLabel(cluster):
     case kind === infrav1alpha3.AWSCluster &&
-      apiGroup === infrav1alpha3.ApiGroup:
+      apiVersion === infrav1alpha3.AWSClusterApiVersion:
       hostname = cluster.spec?.controlPlaneEndpoint?.host;
       break;
     default:
