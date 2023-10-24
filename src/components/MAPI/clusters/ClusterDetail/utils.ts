@@ -17,6 +17,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, Providers } from 'model/constants';
 import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
@@ -315,6 +316,7 @@ export async function fetchProviderCredential(
   auth: IOAuth2Provider,
   cluster: Cluster,
   providerCluster: ProviderCluster,
+  controlPlaneNodes: ControlPlaneNode[],
   organizationName: string
 ): Promise<ProviderCredential> {
   try {
@@ -335,6 +337,23 @@ export async function fetchProviderCredential(
         }
 
         return capav1beta1.getAWSClusterRoleIdentity(
+          httpClientFactory(),
+          auth,
+          identityRef.name
+        );
+      }
+
+      case kind === capav1beta2.AWSManagedCluster &&
+        apiVersion === capav1beta2.AWSManagedClusterApiVersion: {
+        const identityRef = (
+          controlPlaneNodes?.[0] as capav1beta2.IAWSManagedControlPlane
+        ).spec?.identityRef;
+
+        if (identityRef?.kind !== 'AWSClusterRoleIdentity') {
+          throw new Error('Unsupported AWS cluster role identity reference.');
+        }
+
+        return capav1beta2.getAWSClusterRoleIdentity(
           httpClientFactory(),
           auth,
           identityRef.name
@@ -381,12 +400,14 @@ export async function fetchProviderCredential(
   }
 }
 
+// eslint-disable-next-line complexity
 export function fetchProviderCredentialKey(
   cluster?: Cluster,
   providerCluster?: ProviderCluster,
+  controlPlaneNodes?: ControlPlaneNode[],
   organizationName?: string
 ): string | null {
-  if (!cluster || !providerCluster || !organizationName) {
+  if (!cluster || !providerCluster || !organizationName || !controlPlaneNodes) {
     return null;
   }
 
@@ -408,6 +429,19 @@ export function fetchProviderCredentialKey(
       }
 
       return capav1beta1.getAWSClusterRoleIdentityKey(identityRef.name);
+    }
+
+    case kind === capav1beta2.AWSManagedCluster &&
+      apiVersion === capav1beta2.AWSManagedClusterApiVersion: {
+      const identityRef = (
+        controlPlaneNodes?.[0] as capav1beta2.IAWSManagedControlPlane
+      ).spec?.identityRef;
+
+      if (identityRef?.kind !== 'AWSClusterRoleIdentity') {
+        return null;
+      }
+
+      return capav1beta2.getAWSClusterRoleIdentityKey(cluster.metadata.name);
     }
 
     case kind === capgv1beta1.GCPCluster:
@@ -452,6 +486,7 @@ export function getAWSCredentialAccountID(
   credential?:
     | legacyCredentials.ICredential
     | capav1beta1.IAWSClusterRoleIdentity
+    | capav1beta2.IAWSClusterRoleIdentity
 ) {
   if (!credential) return '';
 
@@ -520,6 +555,23 @@ export function computeControlPlaneNodesStats(
 
   for (const node of nodes) {
     switch (node.kind) {
+      case capav1beta2.AWSManagedControlPlane:
+        stats.totalCount++;
+
+        if (capiv1beta1.isConditionTrue(node, capiv1beta1.conditionTypeReady)) {
+          stats.readyCount++;
+        }
+
+        if (node.status?.failureDomains) {
+          for (const failureDomain in node.status.failureDomains) {
+            if (node.status.failureDomains[failureDomain].controlPlane) {
+              stats.availabilityZones.push(failureDomain);
+            }
+          }
+        }
+
+        break;
+
       case capiv1beta1.Machine:
       case capzv1beta1.AzureMachine:
         stats.totalCount++;

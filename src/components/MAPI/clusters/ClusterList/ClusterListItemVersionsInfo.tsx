@@ -12,6 +12,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import {
   fetchControlPlaneNodesK8sVersions,
   fetchControlPlaneNodesK8sVersionsKey,
+  formatK8sVersion,
 } from '../utils';
 
 interface IClusterListItemVersionsInfoProps {
@@ -46,8 +47,7 @@ const ClusterListItemVersionsInfo: React.FC<
     if (k8sVersions.length === 0 || k8sVersionsError || !canListCPNodes)
       return '';
 
-    // Remove the `v` prefix.
-    return k8sVersions[0].slice(1);
+    return formatK8sVersion(k8sVersions[0]);
   }, [k8sVersions, k8sVersionsError, canListCPNodes]);
 
   const isManagedByGitOps = cluster

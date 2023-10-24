@@ -3,13 +3,14 @@ import { Box } from 'grommet';
 import ClusterDetailWidgetApps from 'MAPI/apps/ClusterDetailWidgetApps';
 import ClusterDetailWidgetAppsLoader from 'MAPI/apps/ClusterDetailWidgetAppsLoader';
 import ClusterDetailWidgetRelease from 'MAPI/releases/ClusterDetailWidgetRelease';
-import { Cluster, ProviderCluster } from 'MAPI/types';
+import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import {
   fetchCluster,
   fetchClusterKey,
+  fetchControlPlaneNodesForCluster,
+  fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
-  isResourceManagedByGitOps,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
@@ -29,7 +30,8 @@ import InspectClusterReleaseGuide from '../guides/InspectClusterReleaseGuide';
 import SetClusterLabelsGuide from '../guides/SetClusterLabelsGuide';
 import UpgradeClusterGuide from '../guides/UpgradeClusterGuide';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
-import { hasClusterAppLabel } from '../utils';
+import { usePermissionsForCPNodes } from '../permissions/usePermissionsForCPNodes';
+import { hasClusterAppLabel, isReadOnlyCluster } from '../utils';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -94,6 +96,29 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
     }
   }, [providerClusterError]);
 
+  const { canList: canListCPNodes } = usePermissionsForCPNodes(
+    provider,
+    cluster?.metadata.namespace ?? ''
+  );
+
+  const controlPlaneNodesKey =
+    cluster && canListCPNodes
+      ? fetchControlPlaneNodesForClusterKey(cluster)
+      : null;
+
+  const { data: controlPlaneNodes, error: controlPlaneNodesError } = useSWR<
+    ControlPlaneNode[],
+    GenericResponseError
+  >(controlPlaneNodesKey, () =>
+    fetchControlPlaneNodesForCluster(clientFactory, auth, cluster!)
+  );
+
+  useEffect(() => {
+    if (controlPlaneNodesError) {
+      ErrorReporter.getInstance().notify(controlPlaneNodesError);
+    }
+  }, [controlPlaneNodesError]);
+
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
 
   const clusterVersion = useMemo(() => {
@@ -105,6 +130,8 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
   }, [cluster, isClusterApp]);
 
   const [targetReleaseVersion, setTargetReleaseVersion] = useState('');
+
+  const isReadOnly = cluster && isReadOnlyCluster(cluster);
 
   return (
     <StyledBox wrap={true} direction='row'>
@@ -153,12 +180,14 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
       <ClusterDetailWidgetProvider
         cluster={cluster}
         providerCluster={providerCluster}
+        controlPlaneNodes={controlPlaneNodes}
         basis='100%'
       />
       <ClusterDetailWidgetCreated cluster={cluster} basis='100%' />
 
       {cluster && (
         <CLIGuideList
+          fill
           margin={{ top: 'large' }}
           animation={{ type: 'fadeIn', duration: 300 }}
         >
@@ -183,7 +212,7 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
               canUpdateCluster={canUpdateCluster}
             />
           )}
-          {!isResourceManagedByGitOps(cluster) && (
+          {cluster && !isReadOnly && (
             <SetClusterLabelsGuide
               clusterName={cluster.metadata.name}
               clusterNamespace={cluster.metadata.namespace!}

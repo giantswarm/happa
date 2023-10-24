@@ -14,10 +14,12 @@ import {
   getProviderNodePoolMachineTypes,
   IMachineType,
   IProviderClusterForClusterName,
+  isResourceManagedByGitOps,
 } from 'MAPI/utils';
 import { IProviderNodePoolForNodePool } from 'MAPI/workernodes/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { Constants, Providers } from 'model/constants';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
@@ -1109,6 +1111,14 @@ export function hasClusterAppLabel(cluster: capiv1beta1.ICluster): boolean {
 }
 
 /**
+ * Determines whether the cluster is read only.
+ * @param cluster
+ */
+export function isReadOnlyCluster(cluster: Cluster): boolean {
+  return hasClusterAppLabel(cluster) || isResourceManagedByGitOps(cluster);
+}
+
+/**
  * Determine the Kubernetes versions specified on the Machines
  * that make up the control plane.
  * @param httpClientFactory
@@ -1136,6 +1146,12 @@ export async function fetchControlPlaneNodesK8sVersions(
           versions.push(version);
         }
       }
+      if (node.kind === capav1beta2.AWSManagedControlPlane) {
+        const version = node.spec?.version;
+        if (version) {
+          versions.push(version);
+        }
+      }
     }
   } catch (err) {
     ErrorReporter.getInstance().notify(err as Error);
@@ -1156,4 +1172,9 @@ export function getClusterCreationDuration(cluster: Cluster): string {
   }
 
   return '15 minutes';
+}
+
+export function formatK8sVersion(version: string) {
+  // Remove the `v` prefix if it's present.
+  return version.startsWith('v') ? version.slice(1) : version;
 }

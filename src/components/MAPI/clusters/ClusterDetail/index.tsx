@@ -51,7 +51,7 @@ import RoutePath from 'utils/routePath';
 import ClusterStatusComponent from '../ClusterStatus/ClusterStatus';
 import { useClusterStatus } from '../hooks/useClusterStatus';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
-import { ClusterStatus, hasClusterAppLabel } from '../utils';
+import { ClusterStatus, hasClusterAppLabel, isReadOnlyCluster } from '../utils';
 import ClusterDetailActions from './ClusterDetailActions';
 import ClusterDetailOverview from './ClusterDetailOverview';
 import { updateClusterDescription } from './utils';
@@ -358,11 +358,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     }
   };
 
-  const isReadOnly = useMemo(() => {
-    if (!cluster) return true;
-
-    return hasClusterAppLabel(cluster) || isResourceManagedByGitOps(cluster);
-  }, [cluster]);
+  const isReadOnly = cluster && isReadOnlyCluster(cluster);
 
   return (
     <DocumentTitle title={`Cluster Details | ${clusterId}`}>
@@ -422,7 +418,9 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
             <Tab path={paths.ClientCertificates} title='Client certificates' />
             <Tab path={paths.Apps} title='Apps' />
             <Tab path={paths.Ingress} title='Ingress' />
-            {!isReadOnly && <Tab path={paths.Actions} title='Actions' />}
+            {cluster && !isReadOnly && (
+              <Tab path={paths.Actions} title='Actions' />
+            )}
           </Tabs>
           <Switch>
             <Route
@@ -458,7 +456,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
                 )
               }
             />
-            {!isReadOnly && (
+            {cluster && !isReadOnly && (
               <Route
                 path={OrganizationsRoutes.Clusters.Detail.Actions}
                 component={ClusterDetailActions}
