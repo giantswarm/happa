@@ -21,6 +21,7 @@ import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
+import { getResourceByRefKey } from 'model/services/mapi/generic/getResourceByRef';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { extractIDFromARN } from 'model/services/mapi/legacy/credentials';
@@ -54,28 +55,37 @@ export async function updateClusterDescription(
     name
   );
 
-  // eslint-disable-next-line @typescript-eslint/init-declarations
-  let providerCluster: ProviderCluster;
-
-  if (provider === Providers.AWS) {
-    providerCluster = await fetchProviderClusterForCluster(
-      httpClientFactory,
-      auth,
-      cluster
+  const infrastructureRef = cluster.spec?.infrastructureRef;
+  if (!infrastructureRef) {
+    return Promise.reject(
+      new Error('There is no infrastructure reference defined.')
     );
   }
 
-  const description = getClusterDescription(cluster, providerCluster);
-  if (description === newDescription) {
-    return cluster;
-  }
+  const { kind, apiVersion } = infrastructureRef;
 
   if (
-    providerCluster &&
-    providerCluster.kind === infrav1alpha3.AWSCluster &&
-    providerCluster.apiVersion === infrav1alpha3.AWSClusterApiVersion &&
-    typeof providerCluster.spec !== 'undefined'
+    kind === infrav1alpha3.AWSCluster &&
+    apiVersion === infrav1alpha3.AWSClusterApiVersion
   ) {
+    const providerCluster = (await fetchProviderClusterForCluster(
+      httpClientFactory,
+      auth,
+      cluster
+    )) as infrav1alpha3.IAWSCluster;
+
+    if (
+      typeof providerCluster === 'undefined' ||
+      typeof providerCluster.spec === 'undefined'
+    ) {
+      return cluster;
+    }
+
+    const description = getClusterDescription(cluster, null);
+    if (description === newDescription) {
+      return cluster;
+    }
+
     providerCluster.spec.cluster.description = newDescription;
 
     const updatedProviderCluster = await infrav1alpha3.updateAWSCluster(
@@ -85,13 +95,17 @@ export async function updateClusterDescription(
     );
 
     mutate(
-      infrav1alpha3.getAWSClusterKey(
-        cluster.metadata.namespace!,
-        cluster.metadata.name
-      ),
+      getResourceByRefKey(infrastructureRef),
       updatedProviderCluster,
       false
     );
+
+    return cluster;
+  }
+
+  const description = getClusterDescription(cluster, null);
+  if (description === newDescription) {
+    return cluster;
   }
 
   cluster.metadata.annotations ??= {};

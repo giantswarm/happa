@@ -8,6 +8,10 @@ import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
+import {
+  getResourceByRef,
+  getResourceByRefKey,
+} from 'model/services/mapi/generic/getResourceByRef';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
@@ -929,100 +933,18 @@ export async function fetchProviderClusterForCluster(
     );
   }
 
-  const { kind, apiVersion } = infrastructureRef;
-
-  switch (true) {
-    case kind === capav1beta1.AWSCluster &&
-      apiVersion === capav1beta1.AWSClusterApiVersion:
-      return capav1beta1.getAWSCluster(
-        httpClientFactory(),
-        auth,
-        cluster.metadata.namespace!,
-        infrastructureRef.name
-      );
-
-    case kind === capav1beta2.AWSManagedCluster &&
-      apiVersion === capav1beta2.AWSManagedClusterApiVersion:
-      return capav1beta2.getAWSManagedCluster(
-        httpClientFactory(),
-        auth,
-        cluster.metadata.namespace!,
-        infrastructureRef.name
-      );
-
-    case kind === capgv1beta1.GCPCluster:
-      return capgv1beta1.getGCPCluster(
-        httpClientFactory(),
-        auth,
-        cluster.metadata.namespace!,
-        infrastructureRef.name
-      );
-
-    case kind === capzv1beta1.AzureCluster:
-      return capzv1beta1.getAzureCluster(
-        httpClientFactory(),
-        auth,
-        cluster.metadata.namespace!,
-        infrastructureRef.name
-      );
-
-    case kind === infrav1alpha3.AWSCluster &&
-      apiVersion === infrav1alpha3.AWSClusterApiVersion:
-      return infrav1alpha3.getAWSCluster(
-        httpClientFactory(),
-        auth,
-        cluster.metadata.namespace!,
-        infrastructureRef.name
-      );
-
-    default:
-      return Promise.reject(new Error('Unsupported provider.'));
-  }
+  return getResourceByRef<ProviderCluster>(
+    httpClientFactory(),
+    auth,
+    infrastructureRef
+  );
 }
 
 export function fetchProviderClusterForClusterKey(cluster: Cluster) {
   const infrastructureRef = cluster.spec?.infrastructureRef;
   if (!infrastructureRef) return null;
 
-  const { kind, apiVersion } = infrastructureRef;
-
-  switch (true) {
-    case kind === capav1beta1.AWSCluster &&
-      apiVersion === capav1beta1.AWSClusterApiVersion:
-      return capav1beta1.getAWSClusterKey(
-        cluster.metadata.namespace!,
-        infrastructureRef.name
-      );
-
-    case kind === capav1beta2.AWSManagedCluster &&
-      apiVersion === capav1beta2.AWSManagedClusterApiVersion:
-      return capav1beta2.getAWSManagedClusterKey(
-        cluster.metadata.namespace!,
-        infrastructureRef.name
-      );
-
-    case kind === capgv1beta1.GCPCluster:
-      return capgv1beta1.getGCPClusterKey(
-        cluster.metadata.namespace!,
-        infrastructureRef.name
-      );
-
-    case kind === capzv1beta1.AzureCluster:
-      return capzv1beta1.getAzureClusterKey(
-        cluster.metadata.namespace!,
-        infrastructureRef.name
-      );
-
-    case kind === infrav1alpha3.AWSCluster &&
-      apiVersion === infrav1alpha3.AWSClusterApiVersion:
-      return infrav1alpha3.getAWSClusterKey(
-        cluster.metadata.namespace!,
-        infrastructureRef.name
-      );
-
-    default:
-      return null;
-  }
+  return getResourceByRefKey(infrastructureRef);
 }
 
 export interface IProviderClusterForClusterName {

@@ -3,8 +3,6 @@
   - name: AWSCluster
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsclusters.yaml
-    verbs:
-    - get
   - name: AWSClusterRoleIdentity
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsclusterroleidentities.yaml
@@ -27,8 +25,6 @@
   - name: AWSManagedCluster
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsmanagedclusters.yaml
-    verbs:
-    - get
   - name: AWSManagedMachinePool
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsmanagedmachinepools.yaml
@@ -51,8 +47,6 @@
   - name: GCPCluster
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-gcp/main/config/crd/bases/infrastructure.cluster.x-k8s.io_gcpclusters.yaml
-    verbs:
-    - get
   - name: GCPMachineTemplate
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-gcp/main/config/crd/bases/infrastructure.cluster.x-k8s.io_gcpmachinetemplates.yaml
@@ -64,8 +58,6 @@
   - name: AzureCluster
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azureclusters.yaml
-    verbs:
-    - get
   - name: AzureClusterIdentity
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azureclusteridentities.yaml

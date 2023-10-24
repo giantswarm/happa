@@ -24,6 +24,7 @@ import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
+import { getResourceByRef } from 'model/services/mapi/generic/getResourceByRef';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -558,12 +559,12 @@ export async function createCluster(
         ) {
           return Promise.reject(err);
         }
-        providerCluster = await capzv1beta1.getAzureCluster(
-          httpClientFactory(),
-          auth,
-          config.providerCluster.metadata.namespace!,
-          config.providerCluster.metadata.name
-        );
+        providerCluster = await getResourceByRef(httpClientFactory(), auth, {
+          kind: capzv1beta1.AzureCluster,
+          apiVersion: capzv1beta1.AzureClusterApiVersion,
+          name: config.providerCluster.metadata.name,
+          namespace: config.providerCluster.metadata.namespace,
+        });
       }
 
       // Control plane nodes
@@ -683,12 +684,12 @@ export async function createCluster(
         ) {
           return Promise.reject(err);
         }
-        providerCluster = await infrav1alpha3.getAWSCluster(
-          httpClientFactory(),
-          auth,
-          config.providerCluster.metadata.namespace!,
-          config.providerCluster.metadata.name
-        );
+        providerCluster = await getResourceByRef(httpClientFactory(), auth, {
+          kind: infrav1alpha3.AWSCluster,
+          apiVersion: infrav1alpha3.AWSClusterApiVersion,
+          name: config.providerCluster.metadata.name,
+          namespace: config.providerCluster.metadata.namespace,
+        });
       }
 
       // Cluster
