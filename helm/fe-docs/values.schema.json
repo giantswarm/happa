@@ -1,49 +1,57 @@
 {
-    "$schema": "http://json-schema.org/schema#",
-    "type": "object",
-    "properties": {
-        "groupID": {
-            "type": "integer"
-        },
-        "hostnames": {
-            "type": "array"
-        },
-        "image": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "repository": {
-                    "type": "string"
-                },
-                "sha": {
-                    "type": "string"
-                },
-                "tag": {
-                    "type": "string"
-                }
-            }
-        },
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "groupID": {
+      "type": "integer"
+    },
+    "hostnames": {
+      "type": "array"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
         "name": {
-            "type": "string"
+          "type": "string"
         },
-        "namespace": {
-            "type": "string"
+        "repository": {
+          "type": "string"
         },
-        "port": {
-            "type": "integer"
+        "sha": {
+          "type": "string"
         },
-        "registry": {
-            "type": "object",
-            "properties": {
-                "domain": {
-                    "type": "string"
-                }
-            }
-        },
-        "userID": {
-            "type": "integer"
+        "tag": {
+          "type": "string"
         }
+      }
+    },
+    "name": {
+      "type": "string"
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "port": {
+      "type": "integer"
+    },
+    "registry": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string"
+        }
+      }
+    },
+    "userID": {
+      "type": "integer"
+    },
+    "podSecurityStandards": {
+      "type": "object",
+      "properties": {
+        "enforced": {
+          "type": "boolean"
+        }
+      }
     }
+  }
 }
