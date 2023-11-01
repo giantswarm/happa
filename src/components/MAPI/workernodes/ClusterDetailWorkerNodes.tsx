@@ -2,7 +2,6 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Heading, Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
-import { isImportedCluster } from 'MAPI/clusters/utils';
 import { NodePoolList, ProviderCluster } from 'MAPI/types';
 import { Cluster } from 'MAPI/types';
 import {
@@ -18,6 +17,7 @@ import {
   getApiGroupFromApiVersion,
   IProviderNodePoolForNodePoolName,
   isNodePoolMngmtReadOnly,
+  isResourceImported,
   isResourceManagedByGitOps,
   supportsNodePoolAutoscaling,
   supportsNonExpMachinePools,
@@ -476,7 +476,7 @@ const ClusterDetailWorkerNodes: React.FC<
       0
     );
     const displayDescriptionColumn =
-      cluster && isImportedCluster(cluster) ? false : true;
+      cluster && isResourceImported(cluster) ? false : true;
     const maxNameLength =
       cluster && displayDescriptionColumn
         ? MAX_NAME_LENGTH

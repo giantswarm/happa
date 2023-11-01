@@ -11,6 +11,7 @@ import {
   fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
+  isResourceImported,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
@@ -31,11 +32,7 @@ import SetClusterLabelsGuide from '../guides/SetClusterLabelsGuide';
 import UpgradeClusterGuide from '../guides/UpgradeClusterGuide';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import { usePermissionsForCPNodes } from '../permissions/usePermissionsForCPNodes';
-import {
-  hasClusterAppLabel,
-  isImportedCluster,
-  isReadOnlyCluster,
-} from '../utils';
+import { hasClusterAppLabel, isReadOnlyCluster } from '../utils';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -125,7 +122,7 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
   }, [controlPlaneNodesError]);
 
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
-  const isClusterImported = cluster ? isImportedCluster(cluster) : undefined;
+  const isClusterImported = cluster ? isResourceImported(cluster) : undefined;
 
   const clusterVersion = useMemo(() => {
     if (!cluster) return undefined;

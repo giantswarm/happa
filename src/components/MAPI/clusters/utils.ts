@@ -60,7 +60,7 @@ export function getWorkerNodesCPU(
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
-    if (isResourceImported(nodePool) || !providerNodePool) return -1;
+    if (!providerNodePool) return -1;
 
     const instanceType =
       getProviderNodePoolMachineTypes(providerNodePool)?.primary ?? '';
@@ -85,7 +85,7 @@ export function getWorkerNodesMemory(
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
-    if (isResourceImported(nodePool) || !providerNodePool) return -1;
+    if (!providerNodePool) return -1;
 
     const instanceType =
       getProviderNodePoolMachineTypes(providerNodePool)?.primary ?? '';
@@ -1113,14 +1113,6 @@ export function hasClusterAppLabel(cluster: capiv1beta1.ICluster): boolean {
 }
 
 /**
- * Determines whether the cluster is an imported cluster.
- * @param cluster
- */
-export function isImportedCluster(cluster: capiv1beta1.ICluster): boolean {
-  return capiv1beta1.getClusterAppName(cluster) === 'crossplane-capi-import';
-}
-
-/**
  * Determines whether the cluster is read only.
  * @param cluster
  */
@@ -1128,7 +1120,7 @@ export function isReadOnlyCluster(cluster: capiv1beta1.ICluster): boolean {
   return (
     hasClusterAppLabel(cluster) ||
     isResourceManagedByGitOps(cluster) ||
-    isImportedCluster(cluster)
+    isResourceImported(cluster)
   );
 }
 

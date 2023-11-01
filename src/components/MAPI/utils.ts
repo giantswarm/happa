@@ -17,7 +17,7 @@ import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
 
-import { hasClusterAppLabel, isImportedCluster } from './clusters/utils';
+import { hasClusterAppLabel } from './clusters/utils';
 import {
   Cluster,
   ClusterList,
@@ -1428,7 +1428,7 @@ export function getClusterDescription(
   const { kind, apiVersion } = infrastructureRef;
   const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
-  if (isImportedCluster(cluster)) {
+  if (isResourceImported(cluster)) {
     switch (true) {
       case kind === capav1beta2.AWSManagedCluster:
         return 'Imported EKS cluster';
@@ -1703,7 +1703,7 @@ function isCAPZCluster(cluster: Cluster): boolean {
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
-  return hasClusterAppLabel(cluster) || isImportedCluster(cluster);
+  return hasClusterAppLabel(cluster) || isResourceImported(cluster);
 }
 
 export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {
