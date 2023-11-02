@@ -98,7 +98,11 @@ const ClusterDetailWidgetVersions: React.FC<
   }, [canListCPNodes, k8sVersions, k8sVersionsError]);
 
   return (
-    <ClusterDetailWidget title='Versions' inline={true} {...props}>
+    <ClusterDetailWidget
+      title={clusterAppVersion ? 'Versions' : 'Kubernetes'}
+      inline={true}
+      {...props}
+    >
       <DotSeparatedList>
         {clusterAppVersion && (
           <DotSeparatedListItem>
@@ -160,7 +164,7 @@ const ClusterDetailWidgetVersions: React.FC<
             {(value) => (
               <KubernetesVersionLabel
                 hidePatchVersion={false}
-                hideLabel={false}
+                hideLabel={clusterAppVersion ? false : true}
                 version={value}
                 eolDate={getK8sVersionEOLDate(value) ?? undefined}
               />
