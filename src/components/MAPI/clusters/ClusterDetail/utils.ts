@@ -413,7 +413,7 @@ export function fetchProviderCredentialKey(
   controlPlaneNodes?: ControlPlaneNode[],
   organizationName?: string
 ): string | null {
-  if (!cluster || !providerCluster || !organizationName || !controlPlaneNodes) {
+  if (!cluster || !providerCluster || !organizationName) {
     return null;
   }
 

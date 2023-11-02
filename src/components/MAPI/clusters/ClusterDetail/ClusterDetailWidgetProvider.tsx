@@ -105,7 +105,6 @@ const ClusterDetailWidgetProvider: React.FC<
   const isLoading =
     cluster === undefined ||
     providerCluster === undefined ||
-    controlPlaneNodes === undefined ||
     providerCredentialIsLoading;
 
   return (
