@@ -157,8 +157,6 @@ describe('ClusterDetailWidgetKubernetesAPI on CAPA', () => {
   });
 });
 
-describe('ClusterDetailWidgetKubernetesAPI on CAPA EKS', () => {});
-
 describe('ClusterDetailWidgetKubernetesAPI on CAPZ', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;

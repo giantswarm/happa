@@ -481,8 +481,6 @@ describe('ClusterDetailWorkerNodes on CAPA', () => {
   });
 });
 
-describe('ClusterDetailWorkerNodes on CAPA EKS', () => {});
-
 describe('ClusterDetailWorkerNodes on CAPZ', () => {
   beforeAll(() => {
     (usePermissionsForNodePools as jest.Mock).mockReturnValue(

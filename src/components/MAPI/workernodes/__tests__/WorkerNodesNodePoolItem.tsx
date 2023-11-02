@@ -981,8 +981,6 @@ describe('WorkerNodesNodePoolItem on CAPA', () => {
   });
 });
 
-describe('WorkerNodesNodePoolItem on CAPA EKS', () => {});
-
 describe('WorkerNodesNodePoolItem on CAPZ', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;

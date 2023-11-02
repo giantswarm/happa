@@ -327,5 +327,3 @@ describe('ClusterDetailApps on CAPA', () => {
     ).not.toBeInTheDocument();
   });
 });
-
-describe('ClusterDetailApps on CAPA EKS', () => {});

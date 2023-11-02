@@ -785,8 +785,6 @@ describe('ClusterListItem on CAPA', () => {
   });
 });
 
-describe('ClusterListItem on CAPA EKS', () => {});
-
 describe('ClusterListItem on CAPZ', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;

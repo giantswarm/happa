@@ -1004,8 +1004,6 @@ describe('OrganizationDetailGeneral on CAPA', () => {
   });
 });
 
-describe('OrganizationDetailGeneral on CAPA EKS', () => {});
-
 describe('OrganizationDetailGeneral on CAPZ', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;

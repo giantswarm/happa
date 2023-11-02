@@ -1141,8 +1141,6 @@ describe('PermissionsOverview on CAPA', () => {
   });
 });
 
-describe('PermissionsOverview on CAPA EKS', () => {});
-
 describe('PermissionsOverview on CAPZ', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;

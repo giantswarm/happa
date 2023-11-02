@@ -466,10 +466,6 @@ describe('ClusterDetailWidgetProvider when user can get AWSClusterRoleIdentity o
   });
 });
 
-describe('ClusterDetailWidgetProvider when user can not get AWSClusterRoleIdentity on CAPA EKS', () => {});
-
-describe('ClusterDetailWidgetProvider when user can get AWSClusterRoleIdentity on CAPA EKS', () => {});
-
 describe('ClusterDetailWidgetProvider when user can not list credentials on CAPZ', () => {
   const provider: PropertiesOf<typeof providers> =
     window.config.info.general.provider;

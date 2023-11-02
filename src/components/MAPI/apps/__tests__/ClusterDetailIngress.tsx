@@ -330,8 +330,6 @@ describe('ClusterDetailIngress on CAPA', () => {
   });
 });
 
-describe('ClusterDetailIngress on CAPA EKS', () => {});
-
 describe('ClusterDetailIngress on CAPZ', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
