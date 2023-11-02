@@ -521,7 +521,15 @@ const ClusterDetailWorkerNodes: React.FC<
           isResourceManagedByGitOps(nodePool)
         );
 
-      return someNodePoolsAreManagedByGitOps || !isReadOnly;
+      const someNodePoolsAreImported = nodePoolsWithProviderNodePools.some(
+        ({ nodePool }) => isResourceImported(nodePool)
+      );
+
+      return (
+        someNodePoolsAreManagedByGitOps ||
+        someNodePoolsAreImported ||
+        !isReadOnly
+      );
     }, [isReadOnly, nodePoolsWithProviderNodePools]);
 
     return (

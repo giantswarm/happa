@@ -1,4 +1,5 @@
 import { Box, Text } from 'grommet';
+import { Cluster } from 'MAPI/types';
 import * as React from 'react';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import {
@@ -10,6 +11,7 @@ import Truncated from 'UI/Util/Truncated';
 import { getK8sVersionEOLDate } from 'utils/config';
 
 import GitOpsManagedNote from '../../GitOpsManaged/GitOpsManagedNote';
+import ImportedResourceNote from '../../ImportedResourceNote/ImportedResourceNote';
 import ReleaseStateLabel from '../../releases/ReleaseStateLabel';
 
 export enum ClusterListItemMainInfoVariant {
@@ -24,6 +26,8 @@ interface IClusterListItemMainInfoProps
   isPreviewRelease?: boolean;
   k8sVersion?: string;
   isManagedByGitOps?: boolean;
+  isImported?: boolean;
+  cluster?: Cluster;
 }
 
 const ClusterListItemMainInfo: React.FC<
@@ -34,6 +38,8 @@ const ClusterListItemMainInfo: React.FC<
   isPreviewRelease,
   k8sVersion,
   isManagedByGitOps,
+  isImported,
+  cluster,
   ...props
 }) => {
   return (
@@ -80,10 +86,13 @@ const ClusterListItemMainInfo: React.FC<
         </OptionalValue>
       </DotSeparatedListItem>
 
-      {isManagedByGitOps && (
+      {cluster && isManagedByGitOps && (
         <DotSeparatedListItem>
           <GitOpsManagedNote displayNote={false} />
         </DotSeparatedListItem>
+      )}
+      {cluster && isImported && (
+        <ImportedResourceNote res={cluster} displayNote={false} />
       )}
     </DotSeparatedList>
   );

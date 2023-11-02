@@ -1,5 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { isResourceManagedByGitOps } from 'MAPI/utils';
+import { isResourceImported, isResourceManagedByGitOps } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React, { useMemo } from 'react';
@@ -54,12 +54,16 @@ const ClusterListItemVersionsInfo: React.FC<
     ? isResourceManagedByGitOps(cluster)
     : false;
 
+  const isImported = cluster ? isResourceImported(cluster) : false;
+
   return (
     <ClusterListItemMainInfo
       releaseVersion={clusterAppVersion}
       k8sVersion={k8sVersion}
       variant={ClusterListItemMainInfoVariant.ClusterApp}
       isManagedByGitOps={isManagedByGitOps}
+      isImported={isImported}
+      cluster={cluster}
     />
   );
 };

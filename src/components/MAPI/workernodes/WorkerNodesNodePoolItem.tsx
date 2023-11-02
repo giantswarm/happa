@@ -6,6 +6,7 @@ import {
   getNodePoolAvailabilityZones,
   getNodePoolDescription,
   getNodePoolScaling,
+  isResourceImported,
   isResourceManagedByGitOps,
 } from 'MAPI/utils';
 import { Providers } from 'model/constants';
@@ -17,6 +18,7 @@ import { AvailabilityZonesLabelVariant } from 'UI/Display/Cluster/AvailabilityZo
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import Date from 'UI/Display/Date';
 import GitOpsManagedNote from 'UI/Display/MAPI/GitOpsManaged/GitOpsManagedNote';
+import ImportedResourceNote from 'UI/Display/MAPI/ImportedResourceNote/ImportedResourceNote';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolActions from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolActions';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
@@ -257,6 +259,8 @@ const WorkerNodesNodePoolItem: React.FC<
     ? isResourceManagedByGitOps(nodePool)
     : false;
 
+  const isImported = nodePool ? isResourceImported(nodePool) : false;
+
   return (
     <Box {...props}>
       <Row
@@ -463,7 +467,12 @@ const WorkerNodesNodePoolItem: React.FC<
                   />
                 )}
 
-                {isManagedByGitOps && <GitOpsManagedNote displayNote={false} />}
+                {nodePool && isManagedByGitOps && (
+                  <GitOpsManagedNote displayNote={false} />
+                )}
+                {nodePool && isImported && (
+                  <ImportedResourceNote res={nodePool} displayNote={false} />
+                )}
               </Box>
             )}
           </>

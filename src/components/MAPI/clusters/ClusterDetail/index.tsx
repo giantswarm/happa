@@ -14,6 +14,7 @@ import {
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
   getClusterDescription,
+  isResourceImported,
   isResourceManagedByGitOps,
   supportsReleases,
 } from 'MAPI/utils';
@@ -39,6 +40,7 @@ import ClusterIDLabel, {
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import GitOpsManagedNote from 'UI/Display/MAPI/GitOpsManaged/GitOpsManagedNote';
+import ImportedResourceNote from 'UI/Display/MAPI/ImportedResourceNote/ImportedResourceNote';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 import ViewAndEditName, {
@@ -398,6 +400,9 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
           </Heading>
           {cluster && isResourceManagedByGitOps(cluster) && (
             <GitOpsManagedNote margin={{ bottom: 'medium' }} />
+          )}
+          {cluster && isResourceImported(cluster) && (
+            <ImportedResourceNote res={cluster} margin={{ bottom: 'medium' }} />
           )}
           {clusterStatus === ClusterStatus.CreationInProgress && (
             <StyledFlashMessage
