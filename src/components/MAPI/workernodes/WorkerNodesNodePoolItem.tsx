@@ -32,6 +32,7 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { getTruncationParams } from 'utils/helpers';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
+import { MAX_NAME_LENGTH } from './ClusterDetailWorkerNodes';
 import { IWorkerNodesAdditionalColumn } from './types';
 import {
   deleteNodePoolResources,
@@ -122,7 +123,7 @@ const WorkerNodesNodePoolItem: React.FC<
   canUpdateNodePools,
   canDeleteNodePools,
   nameColumnWidth,
-  maxNameLength,
+  maxNameLength = MAX_NAME_LENGTH,
   displayDescription = true,
   displayCGroupsVersion = true,
   displayMenuColumn = true,

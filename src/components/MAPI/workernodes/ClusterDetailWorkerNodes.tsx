@@ -65,8 +65,8 @@ import WorkerNodesSpotInstancesCAPA from './WorkerNodesSpotInstancesCAPA';
 
 const LOADING_COMPONENTS = new Array(4).fill(0);
 
-const MAX_NAME_LENGTH = 10;
-const MAX_NAME_LENGTH_LONG = 20;
+export const MAX_NAME_LENGTH = 10;
+export const MAX_NAME_LENGTH_LONG = 20;
 
 export function getAdditionalColumns(
   cluster: Cluster
