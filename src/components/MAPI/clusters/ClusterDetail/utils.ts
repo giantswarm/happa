@@ -353,7 +353,7 @@ export async function fetchProviderCredential(
         apiGroup === capav1beta2.ApiGroup: {
         const identityRef = (
           controlPlaneNodes?.[0] as capav1beta2.IAWSManagedControlPlane
-        ).spec?.identityRef;
+        )?.spec?.identityRef;
 
         if (identityRef?.kind !== 'AWSClusterRoleIdentity') {
           throw new Error('Unsupported AWS cluster role identity reference.');
@@ -441,7 +441,7 @@ export function fetchProviderCredentialKey(
       apiGroup === capav1beta2.ApiGroup: {
       const identityRef = (
         controlPlaneNodes?.[0] as capav1beta2.IAWSManagedControlPlane
-      ).spec?.identityRef;
+      )?.spec?.identityRef;
 
       if (identityRef?.kind !== 'AWSClusterRoleIdentity') {
         return null;

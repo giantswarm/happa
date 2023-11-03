@@ -77,7 +77,7 @@ describe('ClusterListItem', () => {
     expect(
       screen.getByRole('link', { name: 'Loading cluster...' })
     ).toBeInTheDocument();
-    expect(screen.getAllByLabelText('Loading...')).toHaveLength(8);
+    expect(screen.getAllByLabelText('Loading...')).toHaveLength(7);
   });
 });
 
