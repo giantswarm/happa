@@ -147,7 +147,7 @@
     "@types/isomorphic-fetch": "0.0.36",
     "@types/jest": "29.5.3",
     "@types/js-yaml": "4.0.5",
-    "@types/lunr": "2.3.5",
+    "@types/lunr": "2.3.7",
     "@types/mermaid": "9.1.0",
     "@types/mini-css-extract-plugin": "2.5.0",
     "@types/node": "18.17.15",
