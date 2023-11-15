@@ -212,8 +212,8 @@ const ClusterDetailActions: React.FC<
       return undefined;
     }
 
-    return filterUserInstalledApps(appList.items, isClusterApp, provider);
-  }, [appList, isClusterApp, provider]);
+    return filterUserInstalledApps(appList.items, isClusterApp);
+  }, [appList, isClusterApp]);
 
   const hasError =
     typeof orgError !== 'undefined' ||

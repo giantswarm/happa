@@ -35,6 +35,8 @@ export const annotationMachinePoolMinSize =
 export const annotationMachinePoolMaxSize =
   'cluster.k8s.io/cluster-api-autoscaler-node-group-max-size';
 export const annotationCGroupV1 = 'node.giantswarm.io/cgroupv1';
+export const annotationImportedClusterCreationTimestamp =
+  'giantswarm.io/external-cluster-created';
 
 export const conditionTypeReady = 'Ready';
 export const conditionTypeCreating = 'Creating';

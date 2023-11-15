@@ -9,6 +9,7 @@ import {
   fetchNodePoolListForCluster,
   fetchProviderNodePoolsForNodePools,
   getMachineTypes,
+  getNodePoolReadyReplicas,
   getProviderNodePoolMachineTypes,
   IMachineType,
 } from 'MAPI/utils';
@@ -215,10 +216,8 @@ function appendNodePoolsStats(
   summary: ui.IOrganizationDetailClustersSummary
 ) {
   for (const nodePool of nodePools) {
-    if (typeof nodePool.status?.readyReplicas !== 'undefined') {
-      summary.workerNodesCount ??= 0;
-      summary.workerNodesCount += nodePool.status.readyReplicas;
-    }
+    summary.workerNodesCount ??= 0;
+    summary.workerNodesCount += getNodePoolReadyReplicas(nodePool);
   }
 }
 
@@ -228,7 +227,7 @@ function appendProviderNodePoolsStats(
   summary: ui.IOrganizationDetailClustersSummary
 ) {
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
-    const readyReplicas = nodePool.status?.readyReplicas;
+    const readyReplicas = getNodePoolReadyReplicas(nodePool);
     if (!readyReplicas || !providerNodePool) continue;
 
     const instanceType =

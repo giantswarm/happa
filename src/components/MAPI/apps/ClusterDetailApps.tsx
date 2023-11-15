@@ -140,12 +140,11 @@ const ClusterDetailApps: React.FC<
 
     const apps = filterUserInstalledApps(
       removeChildApps(appList.items),
-      isClusterApp,
-      provider
+      isClusterApp
     );
 
     return apps.sort(compareApps);
-  }, [appList, isClusterApp, provider]);
+  }, [appList, isClusterApp]);
 
   const defaultApps = useMemo(() => {
     if (typeof appList === 'undefined' || typeof isClusterApp === 'undefined') {
@@ -154,12 +153,11 @@ const ClusterDetailApps: React.FC<
 
     const apps = filterDefaultApps(
       removeChildApps(appList.items),
-      isClusterApp,
-      provider
+      isClusterApp
     );
 
     return apps.sort(compareApps);
-  }, [appList, isClusterApp, provider]);
+  }, [appList, isClusterApp]);
 
   return (
     <DocumentTitle title={`Apps | ${clusterId}`}>

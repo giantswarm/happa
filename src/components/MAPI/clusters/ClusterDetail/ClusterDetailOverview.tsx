@@ -14,6 +14,7 @@ import {
   isResourceImported,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { ProviderFlavors } from 'model/constants';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -51,6 +52,7 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
   const { orgId, clusterId } = match.params;
 
   const provider = window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   const clientFactory = useHttpClientFactory();
 
@@ -144,7 +146,10 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
         flex={{ grow: 1, shrink: 1 }}
       />
       {typeof isClusterApp === 'undefined' ? (
-        <ClusterDetailWidgetAppsLoader />
+        <ClusterDetailWidgetAppsLoader
+          basis='425px'
+          flex={{ grow: 1, shrink: 1 }}
+        />
       ) : (
         <ClusterDetailWidgetApps
           basis='425px'
@@ -152,10 +157,12 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
           isClusterApp={isClusterApp}
         />
       )}
-      <ClusterDetailWidgetKeyPairs
-        basis='200px'
-        flex={{ grow: 1, shrink: 1 }}
-      />
+      {providerFlavor === ProviderFlavors.VINTAGE && (
+        <ClusterDetailWidgetKeyPairs
+          basis='200px'
+          flex={{ grow: 1, shrink: 1 }}
+        />
+      )}
       {typeof cluster === 'undefined' ? (
         <ClusterDetailWidgetVersionsLoader basis='100%' />
       ) : isClusterApp || isClusterImported ? (
@@ -174,11 +181,13 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
         canUpdateCluster={canUpdateCluster}
         basis='100%'
       />
-      <ClusterDetailWidgetControlPlaneNodes
-        cluster={cluster}
-        providerCluster={providerCluster}
-        basis='100%'
-      />
+      {cluster && !isClusterImported && (
+        <ClusterDetailWidgetControlPlaneNodes
+          cluster={cluster}
+          providerCluster={providerCluster}
+          basis='100%'
+        />
+      )}
       <ClusterDetailWidgetKubernetesAPI cluster={cluster} basis='100%' />
       <ClusterDetailWidgetProvider
         cluster={cluster}

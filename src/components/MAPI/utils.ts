@@ -1137,10 +1137,16 @@ export function getProviderNodePoolMachineTypes(
       return {
         primary: providerNodePool.spec?.awsLaunchTemplate.instanceType ?? '',
       };
+
+    // EKS
     case capav1beta2.AWSManagedMachinePool:
       return {
-        primary: providerNodePool.spec?.instanceType ?? '',
+        primary:
+          providerNodePool.spec?.instanceType ||
+          providerNodePool.spec?.awsLaunchTemplate?.instanceType ||
+          '',
       };
+
     case capgv1beta1.GCPMachineTemplate:
       return {
         primary: providerNodePool.spec?.template.spec.instanceType ?? '',
@@ -1287,6 +1293,18 @@ interface INodesStatus {
   current: number;
 }
 
+export function getNodePoolReadyReplicas(nodePool: NodePool) {
+  const infrastructureRef = nodePool.spec?.template.spec?.infrastructureRef;
+  if (
+    infrastructureRef &&
+    infrastructureRef.kind === capav1beta2.AWSManagedMachinePool
+  ) {
+    return nodePool.spec?.replicas ?? 0;
+  }
+
+  return nodePool.status?.readyReplicas ?? 0;
+}
+
 export function getNodePoolScaling(
   nodePool: NodePool,
   providerNodePool: ProviderNodePool | null
@@ -1322,6 +1340,8 @@ export function getNodePoolScaling(
       status.max =
         (providerNodePool as capav1beta2.IAWSManagedMachinePool).spec?.scaling
           ?.maxSize ?? -1;
+      status.desired = nodePool.spec?.replicas ?? -1;
+      status.current = nodePool.spec?.replicas ?? -1;
 
       return status;
     }
@@ -1373,7 +1393,7 @@ export function getNodePoolAvailabilityZones(
           ?.availabilityZones ?? []
       );
 
-    // EKS
+    // EKS Imported
     case kind === capiv1beta1.MachinePool &&
       providerNodePoolKind === capav1beta2.AWSManagedMachinePool:
       return (

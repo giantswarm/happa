@@ -12,6 +12,7 @@ import {
   generateUID,
   getApiGroupFromApiVersion,
   getClusterDescription,
+  getNodePoolReadyReplicas,
   getProviderNodePoolMachineTypes,
   IMachineType,
   IProviderClusterForClusterName,
@@ -43,9 +44,9 @@ export function getWorkerNodesCount(nodePools?: NodePool[]) {
 
   let count = 0;
   for (const nodePool of nodePools) {
-    if (typeof nodePool.status?.readyReplicas !== 'undefined') {
-      count += nodePool.status.readyReplicas;
-    }
+    const readyReplicas = getNodePoolReadyReplicas(nodePool);
+
+    count += readyReplicas;
   }
 
   return count;
@@ -67,8 +68,7 @@ export function getWorkerNodesCPU(
     const machineTypeProperties = machineTypes[instanceType];
     if (!machineTypeProperties) return -1;
 
-    const readyReplicas = nodePool.status?.readyReplicas;
-    if (!readyReplicas) continue;
+    const readyReplicas = getNodePoolReadyReplicas(nodePool);
 
     count += machineTypeProperties.cpu * readyReplicas;
   }
@@ -92,8 +92,7 @@ export function getWorkerNodesMemory(
     const machineTypeProperties = machineTypes[instanceType];
     if (!machineTypeProperties) return -1;
 
-    const readyReplicas = nodePool.status?.readyReplicas;
-    if (!readyReplicas) continue;
+    const readyReplicas = getNodePoolReadyReplicas(nodePool);
 
     count += machineTypeProperties.memory * readyReplicas;
   }
