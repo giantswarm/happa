@@ -106,3 +106,6 @@ security:
     customer:
       public: ""
       private: ""
+
+podSecurityStandards:
+  enforced: false
