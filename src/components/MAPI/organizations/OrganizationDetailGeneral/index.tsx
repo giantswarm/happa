@@ -8,6 +8,7 @@ import {
   extractErrorMessage,
   fetchClusterList,
   fetchClusterListKey,
+  isResourceImported,
   supportsReleases,
 } from 'MAPI/utils';
 import { usePermissionsForNodePools } from 'MAPI/workernodes/permissions/usePermissionsForNodePools';
@@ -190,10 +191,13 @@ const OrganizationDetailGeneral: React.FC<
     }
   }, [releasesSummaryError]);
 
-  const hasClusterApp = useMemo(() => {
-    if (!clusterList) return undefined;
+  const [hasClusterApp, hasImportedClusters] = useMemo(() => {
+    if (!clusterList) return [undefined, undefined];
 
-    return clusterList.items.some((cluster) => hasClusterAppLabel(cluster));
+    return [
+      clusterList.items.some((cluster) => hasClusterAppLabel(cluster)),
+      clusterList.items.some((cluster) => isResourceImported(cluster)),
+    ];
   }, [clusterList]);
 
   const versionsSummaryKey = hasClusterApp
@@ -233,6 +237,7 @@ const OrganizationDetailGeneral: React.FC<
         versionsSummary={versionsSummary}
         versionsSummaryLoading={versionsSummaryIsLoading}
         hasClusterApp={hasClusterApp}
+        hasImportedClusters={hasImportedClusters}
       />
       <CLIGuidesList margin={{ top: 'large' }}>
         <GetOrganizationDetailsGuide organizationName={organizationName} />

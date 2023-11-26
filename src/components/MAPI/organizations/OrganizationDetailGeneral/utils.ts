@@ -1,5 +1,6 @@
 import {
   fetchControlPlaneNodesK8sVersions,
+  formatK8sVersion,
   hasClusterAppLabel,
 } from 'MAPI/clusters/utils';
 import { IPermissions } from 'MAPI/permissions/types';
@@ -427,7 +428,7 @@ export async function fetchVersionsSummary(
 
     if (response.status === 'fulfilled' && response.value.length > 0) {
       for (const version of response.value) {
-        k8sVersions.push(version.slice(1));
+        k8sVersions.push(formatK8sVersion(version));
       }
     }
   }
