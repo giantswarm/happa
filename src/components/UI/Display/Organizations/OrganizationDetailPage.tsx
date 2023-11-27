@@ -271,9 +271,8 @@ const OrganizationDetailPage: React.FC<
                   role='presentation'
                   aria-hidden='true'
                 />{' '}
-                Note: Some workload clusters are &quot;externally-managed&quot;
-                and were not taken into account in control plane nodes data
-                calculation.
+                Note: Some workload clusters are externally-managed and were not
+                taken into account in control plane nodes data calculation.
               </Text>
             </Box>
           )}
