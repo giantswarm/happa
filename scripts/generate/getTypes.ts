@@ -9,11 +9,14 @@ import { ICRD } from './getCRD';
  * Provide custom TS types for specified fields
  * @param config
  */
-function getTsTypesConfig(config: { kind: string }): JSONSchema4 {
+function getTsTypesConfig(config: {
+  kind: string;
+  apiVersion: string;
+}): JSONSchema4 {
   return {
     properties: {
       apiVersion: {
-        tsType: 'typeof ApiVersion',
+        tsType: `'${config.apiVersion}'`,
       },
       metadata: {
         tsType: 'metav1.IObjectMeta',
@@ -66,7 +69,10 @@ export async function getTypesForResource(
   try {
     const schema = getCRDSchemaForVersion(version, resourceName, CRD);
 
-    const config = getTsTypesConfig({ kind: resourceName });
+    const config = getTsTypesConfig({
+      kind: resourceName,
+      apiVersion: version,
+    });
 
     const output = await compile(
       merge(schema, config),

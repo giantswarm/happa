@@ -73,6 +73,18 @@ export function isAppManagedByFlux(app: IApp): boolean {
   return app.metadata.labels?.[labelManagedBy] === 'flux';
 }
 
+export function findDefaultAppName(apps: IApp[]) {
+  const defaultApp = apps.find((app) =>
+    app.metadata.labels?.[labelAppName]?.startsWith('default-apps-')
+  );
+
+  if (typeof defaultApp === 'undefined') {
+    return undefined;
+  }
+
+  return defaultApp.metadata.labels?.[labelAppName];
+}
+
 export function getDefaultAppNameForProvider(
   provider: PropertiesOf<typeof Providers>
 ) {

@@ -110,10 +110,9 @@ const ClusterDetailWidgetApps: React.FC<
 
     return filterUserInstalledApps(
       removeChildApps(appList.items),
-      isClusterApp,
-      provider
+      isClusterApp
     );
-  }, [appList, isClusterApp, provider]);
+  }, [appList, isClusterApp]);
 
   const insufficientPermissionsForApps = canListApps === false;
 

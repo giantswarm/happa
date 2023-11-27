@@ -14,11 +14,13 @@ import {
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
   getClusterDescription,
+  isResourceImported,
   isResourceManagedByGitOps,
   supportsReleases,
 } from 'MAPI/utils';
 import ClusterDetailWorkerNodes from 'MAPI/workernodes/ClusterDetailWorkerNodes';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { ProviderFlavors } from 'model/constants';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as metav1 from 'model/services/mapi/metav1';
@@ -38,6 +40,7 @@ import ClusterIDLabel, {
 } from 'UI/Display/Cluster/ClusterIDLabel';
 import FlashMessageComponent from 'UI/Display/FlashMessage';
 import GitOpsManagedNote from 'UI/Display/MAPI/GitOpsManaged/GitOpsManagedNote';
+import ImportedResourceNote from 'UI/Display/MAPI/ImportedResourceNote/ImportedResourceNote';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { Tab, Tabs } from 'UI/Display/Tabs';
 import ViewAndEditName, {
@@ -51,7 +54,7 @@ import RoutePath from 'utils/routePath';
 import ClusterStatusComponent from '../ClusterStatus/ClusterStatus';
 import { useClusterStatus } from '../hooks/useClusterStatus';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
-import { ClusterStatus, hasClusterAppLabel } from '../utils';
+import { ClusterStatus, hasClusterAppLabel, isReadOnlyCluster } from '../utils';
 import ClusterDetailActions from './ClusterDetailActions';
 import ClusterDetailOverview from './ClusterDetailOverview';
 import { updateClusterDescription } from './utils';
@@ -358,11 +361,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     }
   };
 
-  const isReadOnly = useMemo(() => {
-    if (!cluster) return true;
-
-    return hasClusterAppLabel(cluster) || isResourceManagedByGitOps(cluster);
-  }, [cluster]);
+  const isReadOnly = cluster && isReadOnlyCluster(cluster);
 
   return (
     <DocumentTitle title={`Cluster Details | ${clusterId}`}>
@@ -402,6 +401,9 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
           {cluster && isResourceManagedByGitOps(cluster) && (
             <GitOpsManagedNote margin={{ bottom: 'medium' }} />
           )}
+          {cluster && isResourceImported(cluster) && (
+            <ImportedResourceNote res={cluster} margin={{ bottom: 'medium' }} />
+          )}
           {clusterStatus === ClusterStatus.CreationInProgress && (
             <StyledFlashMessage
               type={FlashMessageType.Info}
@@ -419,16 +421,29 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
           <Tabs useRoutes={true} margin={{ top: 'medium' }}>
             <Tab path={paths.Home} title='Overview' />
             <Tab path={paths.WorkerNodes} title='Worker nodes' />
-            <Tab path={paths.ClientCertificates} title='Client certificates' />
             <Tab path={paths.Apps} title='Apps' />
             <Tab path={paths.Ingress} title='Ingress' />
-            {!isReadOnly && <Tab path={paths.Actions} title='Actions' />}
+            {providerFlavor === ProviderFlavors.VINTAGE && (
+              <Tab
+                path={paths.ClientCertificates}
+                title='Client certificates'
+              />
+            )}
+            {cluster && !isReadOnly && (
+              <Tab path={paths.Actions} title='Actions' />
+            )}
           </Tabs>
           <Switch>
             <Route
               path={OrganizationsRoutes.Clusters.Detail.WorkerNodes}
               component={ClusterDetailWorkerNodes}
             />
+            {providerFlavor === ProviderFlavors.VINTAGE && (
+              <Route
+                path={OrganizationsRoutes.Clusters.Detail.ClientCertificates}
+                component={ClusterDetailKeyPairs}
+              />
+            )}
             <Route
               path={OrganizationsRoutes.Clusters.Detail.Apps}
               render={() =>
@@ -443,10 +458,6 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
               }
             />
             <Route
-              path={OrganizationsRoutes.Clusters.Detail.ClientCertificates}
-              component={ClusterDetailKeyPairs}
-            />
-            <Route
               path={OrganizationsRoutes.Clusters.Detail.Ingress}
               render={() =>
                 cluster && (
@@ -458,7 +469,7 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
                 )
               }
             />
-            {!isReadOnly && (
+            {cluster && !isReadOnly && (
               <Route
                 path={OrganizationsRoutes.Clusters.Detail.Actions}
                 component={ClusterDetailActions}

@@ -1,5 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { isResourceManagedByGitOps } from 'MAPI/utils';
+import { isResourceImported, isResourceManagedByGitOps } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React, { useMemo } from 'react';
@@ -12,6 +12,7 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import {
   fetchControlPlaneNodesK8sVersions,
   fetchControlPlaneNodesK8sVersionsKey,
+  formatK8sVersion,
 } from '../utils';
 
 interface IClusterListItemVersionsInfoProps {
@@ -46,13 +47,14 @@ const ClusterListItemVersionsInfo: React.FC<
     if (k8sVersions.length === 0 || k8sVersionsError || !canListCPNodes)
       return '';
 
-    // Remove the `v` prefix.
-    return k8sVersions[0].slice(1);
+    return formatK8sVersion(k8sVersions[0]);
   }, [k8sVersions, k8sVersionsError, canListCPNodes]);
 
   const isManagedByGitOps = cluster
     ? isResourceManagedByGitOps(cluster)
     : false;
+
+  const isImported = cluster ? isResourceImported(cluster) : false;
 
   return (
     <ClusterListItemMainInfo
@@ -60,6 +62,8 @@ const ClusterListItemVersionsInfo: React.FC<
       k8sVersion={k8sVersion}
       variant={ClusterListItemMainInfoVariant.ClusterApp}
       isManagedByGitOps={isManagedByGitOps}
+      isImported={isImported}
+      cluster={cluster}
     />
   );
 };

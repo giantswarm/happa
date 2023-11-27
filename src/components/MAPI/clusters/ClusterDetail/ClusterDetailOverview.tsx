@@ -3,15 +3,18 @@ import { Box } from 'grommet';
 import ClusterDetailWidgetApps from 'MAPI/apps/ClusterDetailWidgetApps';
 import ClusterDetailWidgetAppsLoader from 'MAPI/apps/ClusterDetailWidgetAppsLoader';
 import ClusterDetailWidgetRelease from 'MAPI/releases/ClusterDetailWidgetRelease';
-import { Cluster, ProviderCluster } from 'MAPI/types';
+import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import {
   fetchCluster,
   fetchClusterKey,
+  fetchControlPlaneNodesForCluster,
+  fetchControlPlaneNodesForClusterKey,
   fetchProviderClusterForCluster,
   fetchProviderClusterForClusterKey,
-  isResourceManagedByGitOps,
+  isResourceImported,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
+import { ProviderFlavors } from 'model/constants';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -29,7 +32,8 @@ import InspectClusterReleaseGuide from '../guides/InspectClusterReleaseGuide';
 import SetClusterLabelsGuide from '../guides/SetClusterLabelsGuide';
 import UpgradeClusterGuide from '../guides/UpgradeClusterGuide';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
-import { hasClusterAppLabel } from '../utils';
+import { usePermissionsForCPNodes } from '../permissions/usePermissionsForCPNodes';
+import { hasClusterAppLabel, isReadOnlyCluster } from '../utils';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -42,11 +46,13 @@ const StyledBox = styled(Box)`
   gap: ${({ theme }) => theme.global.edgeSize.small};
 `;
 
+// eslint-disable-next-line complexity
 const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
   const match = useRouteMatch<{ orgId: string; clusterId: string }>();
   const { orgId, clusterId } = match.params;
 
   const provider = window.config.info.general.provider;
+  const providerFlavor = window.config.info.general.providerFlavor;
 
   const clientFactory = useHttpClientFactory();
 
@@ -94,7 +100,31 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
     }
   }, [providerClusterError]);
 
+  const { canList: canListCPNodes } = usePermissionsForCPNodes(
+    provider,
+    cluster?.metadata.namespace ?? ''
+  );
+
+  const controlPlaneNodesKey =
+    cluster && canListCPNodes
+      ? fetchControlPlaneNodesForClusterKey(cluster)
+      : null;
+
+  const { data: controlPlaneNodes, error: controlPlaneNodesError } = useSWR<
+    ControlPlaneNode[],
+    GenericResponseError
+  >(controlPlaneNodesKey, () =>
+    fetchControlPlaneNodesForCluster(clientFactory, auth, cluster!)
+  );
+
+  useEffect(() => {
+    if (controlPlaneNodesError) {
+      ErrorReporter.getInstance().notify(controlPlaneNodesError);
+    }
+  }, [controlPlaneNodesError]);
+
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
+  const isClusterImported = cluster ? isResourceImported(cluster) : undefined;
 
   const clusterVersion = useMemo(() => {
     if (!cluster) return undefined;
@@ -106,6 +136,8 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
 
   const [targetReleaseVersion, setTargetReleaseVersion] = useState('');
 
+  const isReadOnly = cluster && isReadOnlyCluster(cluster);
+
   return (
     <StyledBox wrap={true} direction='row'>
       <ClusterDetailWidgetWorkerNodes
@@ -114,7 +146,10 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
         flex={{ grow: 1, shrink: 1 }}
       />
       {typeof isClusterApp === 'undefined' ? (
-        <ClusterDetailWidgetAppsLoader />
+        <ClusterDetailWidgetAppsLoader
+          basis='425px'
+          flex={{ grow: 1, shrink: 1 }}
+        />
       ) : (
         <ClusterDetailWidgetApps
           basis='425px'
@@ -122,13 +157,15 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
           isClusterApp={isClusterApp}
         />
       )}
-      <ClusterDetailWidgetKeyPairs
-        basis='200px'
-        flex={{ grow: 1, shrink: 1 }}
-      />
-      {typeof isClusterApp === 'undefined' ? (
+      {providerFlavor === ProviderFlavors.VINTAGE && (
+        <ClusterDetailWidgetKeyPairs
+          basis='200px'
+          flex={{ grow: 1, shrink: 1 }}
+        />
+      )}
+      {typeof cluster === 'undefined' ? (
         <ClusterDetailWidgetVersionsLoader basis='100%' />
-      ) : isClusterApp ? (
+      ) : isClusterApp || isClusterImported ? (
         <ClusterDetailWidgetVersions cluster={cluster} basis='100%' />
       ) : (
         <ClusterDetailWidgetRelease
@@ -144,21 +181,25 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
         canUpdateCluster={canUpdateCluster}
         basis='100%'
       />
-      <ClusterDetailWidgetControlPlaneNodes
-        cluster={cluster}
-        providerCluster={providerCluster}
-        basis='100%'
-      />
+      {cluster && !isClusterImported && (
+        <ClusterDetailWidgetControlPlaneNodes
+          cluster={cluster}
+          providerCluster={providerCluster}
+          basis='100%'
+        />
+      )}
       <ClusterDetailWidgetKubernetesAPI cluster={cluster} basis='100%' />
       <ClusterDetailWidgetProvider
         cluster={cluster}
         providerCluster={providerCluster}
+        controlPlaneNodes={controlPlaneNodes}
         basis='100%'
       />
       <ClusterDetailWidgetCreated cluster={cluster} basis='100%' />
 
       {cluster && (
         <CLIGuideList
+          fill
           margin={{ top: 'large' }}
           animation={{ type: 'fadeIn', duration: 300 }}
         >
@@ -183,7 +224,7 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
               canUpdateCluster={canUpdateCluster}
             />
           )}
-          {!isResourceManagedByGitOps(cluster) && (
+          {cluster && !isReadOnly && (
             <SetClusterLabelsGuide
               clusterName={cluster.metadata.name}
               clusterNamespace={cluster.metadata.namespace!}

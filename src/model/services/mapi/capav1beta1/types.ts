@@ -6,7 +6,7 @@ import * as metav1 from 'model/services/mapi/metav1';
 
 export const ApiGroup = 'infrastructure.cluster.x-k8s.io';
 
-export const ApiVersion = `${ApiGroup}/v1beta1`;
+export const ApiVersion = 'infrastructure.cluster.x-k8s.io/v1beta1';
 
 export const AWSCluster = 'AWSCluster';
 
@@ -17,7 +17,7 @@ export interface IAWSCluster {
   /**
    * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
    * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
@@ -292,7 +292,7 @@ export interface IAWSCluster {
          */
         address: string;
         /**
-         * Machine address type, one of Hostname, ExternalIP or InternalIP.
+         * Machine address type, one of Hostname, ExternalIP, InternalIP, ExternalDNS or InternalDNS.
          */
         type: string;
       }[];
@@ -631,7 +631,7 @@ export interface IAWSCluster {
 export const AWSClusterList = 'AWSClusterList';
 
 export interface IAWSClusterList extends metav1.IList<IAWSCluster> {
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof AWSClusterList;
 }
 
@@ -644,7 +644,7 @@ export interface IAWSClusterRoleIdentity {
   /**
    * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
    * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
@@ -738,7 +738,7 @@ export const AWSClusterRoleIdentityList = 'AWSClusterRoleIdentityList';
 
 export interface IAWSClusterRoleIdentityList
   extends metav1.IList<IAWSClusterRoleIdentity> {
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof AWSClusterRoleIdentityList;
 }
 
@@ -751,7 +751,7 @@ export interface IAWSMachinePool {
   /**
    * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
    * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
@@ -1056,7 +1056,7 @@ export interface IAWSMachinePool {
 export const AWSMachinePoolList = 'AWSMachinePoolList';
 
 export interface IAWSMachinePoolList extends metav1.IList<IAWSMachinePool> {
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof AWSMachinePoolList;
 }
 
@@ -1069,7 +1069,7 @@ export interface IAWSMachineTemplate {
   /**
    * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
    * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
@@ -1354,6 +1354,6 @@ export const AWSMachineTemplateList = 'AWSMachineTemplateList';
 
 export interface IAWSMachineTemplateList
   extends metav1.IList<IAWSMachineTemplate> {
-  apiVersion: typeof ApiVersion;
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof AWSMachineTemplateList;
 }

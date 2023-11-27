@@ -6,6 +6,7 @@ import {
   getNodePoolAvailabilityZones,
   getNodePoolDescription,
   getNodePoolScaling,
+  isResourceImported,
   isResourceManagedByGitOps,
 } from 'MAPI/utils';
 import { Providers } from 'model/constants';
@@ -17,6 +18,7 @@ import { AvailabilityZonesLabelVariant } from 'UI/Display/Cluster/AvailabilityZo
 import AvailabilityZonesLabels from 'UI/Display/Cluster/AvailabilityZones/AvailabilityZonesLabels';
 import Date from 'UI/Display/Date';
 import GitOpsManagedNote from 'UI/Display/MAPI/GitOpsManaged/GitOpsManagedNote';
+import ImportedResourceNote from 'UI/Display/MAPI/ImportedResourceNote/ImportedResourceNote';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolActions from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolActions';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
@@ -30,6 +32,7 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { getTruncationParams } from 'utils/helpers';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
+import { MAX_NAME_LENGTH } from './ClusterDetailWorkerNodes';
 import { IWorkerNodesAdditionalColumn } from './types';
 import {
   deleteNodePoolResources,
@@ -57,10 +60,21 @@ function formatAvailabilityZonesLabel(
 const Row = styled(Box)<{
   additionalColumnsCount?: number;
   nameColumnWidth?: number;
+  displayDescriptionColumn?: boolean;
   displayMenuColumn?: boolean;
 }>`
-  ${({ additionalColumnsCount, nameColumnWidth, displayMenuColumn }) =>
-    NodePoolGridRow(additionalColumnsCount, nameColumnWidth, displayMenuColumn)}
+  ${({
+    additionalColumnsCount,
+    nameColumnWidth,
+    displayDescriptionColumn,
+    displayMenuColumn,
+  }) =>
+    NodePoolGridRow(
+      additionalColumnsCount,
+      nameColumnWidth,
+      displayDescriptionColumn,
+      displayMenuColumn
+    )}
 `;
 
 const StyledViewAndEditName = styled(ViewAndEditName)`
@@ -81,10 +95,9 @@ const StyledDescriptionWrapper = styled(Box)<{ full?: boolean }>`
   ${({ full }) => (full ? 'grid-column: 2 / fit-content' : undefined)}
 `;
 
-export const MAX_NAME_LENGTH = 10;
-
 interface IWorkerNodesNodePoolItemProps
   extends React.ComponentPropsWithoutRef<typeof Box> {
+  maxNameLength?: number;
   nodePool?: NodePool;
   providerNodePool?: ProviderNodePool | null;
   additionalColumns?: IWorkerNodesAdditionalColumn[];
@@ -92,7 +105,9 @@ interface IWorkerNodesNodePoolItemProps
   canUpdateNodePools?: boolean;
   canDeleteNodePools?: boolean;
   nameColumnWidth?: number;
+  displayDescription?: boolean;
   displayCGroupsVersion?: boolean;
+  displayMenuColumn?: boolean;
   flatcarContainerLinuxVersion?: string;
   hideNodePoolAutoscaling?: boolean;
 }
@@ -108,7 +123,10 @@ const WorkerNodesNodePoolItem: React.FC<
   canUpdateNodePools,
   canDeleteNodePools,
   nameColumnWidth,
+  maxNameLength = MAX_NAME_LENGTH,
+  displayDescription = true,
   displayCGroupsVersion = true,
+  displayMenuColumn = true,
   flatcarContainerLinuxVersion,
   hideNodePoolAutoscaling = false,
   ...props
@@ -242,6 +260,8 @@ const WorkerNodesNodePoolItem: React.FC<
     ? isResourceManagedByGitOps(nodePool)
     : false;
 
+  const isImported = nodePool ? isResourceImported(nodePool) : false;
+
   return (
     <Box {...props}>
       <Row
@@ -253,7 +273,8 @@ const WorkerNodesNodePoolItem: React.FC<
           (hideNodePoolAutoscaling ? 0 : 2)
         }
         nameColumnWidth={nameColumnWidth}
-        displayMenuColumn={!readOnly}
+        displayDescriptionColumn={displayDescription}
+        displayMenuColumn={displayMenuColumn}
       >
         <Box align='flex-start'>
           <OptionalValue
@@ -263,47 +284,53 @@ const WorkerNodesNodePoolItem: React.FC<
           >
             {(value) => (
               <Copyable copyText={value}>
-                <Truncated
-                  as={Code}
-                  aria-label={`Name: ${value}`}
-                  {...getTruncationParams(MAX_NAME_LENGTH)}
-                >
-                  {value}
-                </Truncated>
+                {maxNameLength ? (
+                  <Truncated
+                    as={Code}
+                    aria-label={`Name: ${value}`}
+                    {...getTruncationParams(maxNameLength)}
+                  >
+                    {value}
+                  </Truncated>
+                ) : (
+                  value
+                )}
               </Copyable>
             )}
           </OptionalValue>
         </Box>
-        <StyledDescriptionWrapper full={isDeleting}>
-          <OptionalValue value={description} loaderWidth={150}>
-            {(value) =>
-              isDeleting ? (
-                <Box direction='row' gap='medium' align='baseline'>
-                  <Text>{value}</Text>
-                  <Text size='small' color='text-xweak'>
-                    Deleted{' '}
-                    <Date
-                      relative={true}
-                      value={nodePool.metadata.deletionTimestamp}
-                    />
-                  </Text>
-                </Box>
-              ) : (
-                <StyledViewAndEditName
-                  value={value}
-                  typeLabel='node pool'
-                  onToggleEditingState={setIsEditingDescription}
-                  aria-label={`Description: ${value}`}
-                  onSave={updateDescription}
-                  ref={viewAndEditNameRef}
-                  variant={ViewAndEditNameVariant.Description}
-                  readOnly={readOnly}
-                  unauthorized={!canUpdateNodePools}
-                />
-              )
-            }
-          </OptionalValue>
-        </StyledDescriptionWrapper>
+        {displayDescription && (
+          <StyledDescriptionWrapper full={isDeleting}>
+            <OptionalValue value={description} loaderWidth={150}>
+              {(value) =>
+                isDeleting ? (
+                  <Box direction='row' gap='medium' align='baseline'>
+                    <Text>{value}</Text>
+                    <Text size='small' color='text-xweak'>
+                      Deleted{' '}
+                      <Date
+                        relative={true}
+                        value={nodePool.metadata.deletionTimestamp}
+                      />
+                    </Text>
+                  </Box>
+                ) : (
+                  <StyledViewAndEditName
+                    value={value}
+                    typeLabel='node pool'
+                    onToggleEditingState={setIsEditingDescription}
+                    aria-label={`Description: ${value}`}
+                    onSave={updateDescription}
+                    ref={viewAndEditNameRef}
+                    variant={ViewAndEditNameVariant.Description}
+                    readOnly={readOnly}
+                    unauthorized={!canUpdateNodePools}
+                  />
+                )
+              }
+            </OptionalValue>
+          </StyledDescriptionWrapper>
+        )}
         {!isDeleting && !isEditingDescription && (
           <>
             <WorkerNodesNodePoolItemMachineType
@@ -429,21 +456,24 @@ const WorkerNodesNodePoolItem: React.FC<
               </Box>
             ))}
 
-            {!readOnly && !isManagedByGitOps && (
+            {displayMenuColumn && (
               <Box align='center'>
-                <WorkerNodesNodePoolActions
-                  onDeleteClick={onDelete}
-                  onScaleClick={onScale}
-                  disabled={readOnly}
-                  canUpdateNodePools={canUpdateNodePools}
-                  canDeleteNodePools={canDeleteNodePools}
-                />
-              </Box>
-            )}
+                {!readOnly && !isManagedByGitOps && (
+                  <WorkerNodesNodePoolActions
+                    onDeleteClick={onDelete}
+                    onScaleClick={onScale}
+                    disabled={readOnly}
+                    canUpdateNodePools={canUpdateNodePools}
+                    canDeleteNodePools={canDeleteNodePools}
+                  />
+                )}
 
-            {isManagedByGitOps && (
-              <Box align='center'>
-                <GitOpsManagedNote displayNote={false} />
+                {nodePool && isManagedByGitOps && (
+                  <GitOpsManagedNote displayNote={false} />
+                )}
+                {nodePool && isImported && (
+                  <ImportedResourceNote res={nodePool} displayNote={false} />
+                )}
               </Box>
             )}
           </>

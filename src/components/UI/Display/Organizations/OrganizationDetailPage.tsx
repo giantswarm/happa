@@ -167,6 +167,7 @@ interface IOrganizationDetailPageProps {
   versionsSummary?: IOrganizationDetailVersionsSummary;
   versionsSummaryLoading?: boolean;
   hasClusterApp?: boolean;
+  hasImportedClusters?: boolean;
 }
 
 const OrganizationDetailPage: React.FC<
@@ -187,6 +188,7 @@ const OrganizationDetailPage: React.FC<
   versionsSummary,
   versionsSummaryLoading,
   hasClusterApp,
+  hasImportedClusters,
 }) => {
   const { oldestReleaseK8sVersion, newestReleaseK8sVersion } =
     releasesSummary ?? {};
@@ -205,60 +207,75 @@ const OrganizationDetailPage: React.FC<
             Clusters summary
           </Text>
         </Box>
-        <Box direction='row' gap='small'>
-          <Box width='medium' direction='column' gap='xsmall'>
-            <Text>Workload clusters</Text>
-            <Text>Control plane nodes</Text>
-            <Text>Worker nodes</Text>
-            <Text>Memory in control plane nodes</Text>
-            <Text>Memory in worker nodes</Text>
-            <Text>CPU in control plane nodes</Text>
-            <Text>CPU in worker nodes</Text>
+        <Box gap='small'>
+          <Box direction='row' gap='small'>
+            <Box width='medium' direction='column' gap='xsmall'>
+              <Text>Workload clusters</Text>
+              <Text>Control plane nodes</Text>
+              <Text>Worker nodes</Text>
+              <Text>Memory in control plane nodes</Text>
+              <Text>Memory in worker nodes</Text>
+              <Text>CPU in control plane nodes</Text>
+              <Text>CPU in worker nodes</Text>
+            </Box>
+            <Box direction='column' gap='xsmall'>
+              <OrganizationDetailStatistic
+                isLoading={clusterCountLoading}
+                aria-label='Workload clusters'
+              >
+                {clusterCount}
+              </OrganizationDetailStatistic>
+              <OrganizationDetailStatistic
+                isLoading={clustersSummaryLoading}
+                aria-label='Control plane nodes'
+              >
+                {clustersSummary?.nodesCount}
+              </OrganizationDetailStatistic>
+              <OrganizationDetailStatistic
+                isLoading={clustersSummaryLoading}
+                aria-label='Worker nodes'
+              >
+                {clustersSummary?.workerNodesCount}
+              </OrganizationDetailStatistic>
+              <OrganizationDetailStatistic
+                isLoading={clustersSummaryLoading}
+                aria-label='Memory in control plane nodes'
+              >
+                {formatMemory(clustersSummary?.nodesMemory)}
+              </OrganizationDetailStatistic>
+              <OrganizationDetailStatistic
+                isLoading={clustersSummaryLoading}
+                aria-label='Memory in worker nodes'
+              >
+                {formatMemory(clustersSummary?.workerNodesMemory)}
+              </OrganizationDetailStatistic>
+              <OrganizationDetailStatistic
+                isLoading={clustersSummaryLoading}
+                aria-label='CPU in control plane nodes'
+              >
+                {formatCPU(clustersSummary?.nodesCPU)}
+              </OrganizationDetailStatistic>
+              <OrganizationDetailStatistic
+                isLoading={clustersSummaryLoading}
+                aria-label='CPU in worker nodes'
+              >
+                {formatCPU(clustersSummary?.workerNodesCPU)}
+              </OrganizationDetailStatistic>
+            </Box>
           </Box>
-          <Box direction='column' gap='xsmall'>
-            <OrganizationDetailStatistic
-              isLoading={clusterCountLoading}
-              aria-label='Workload clusters'
-            >
-              {clusterCount}
-            </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic
-              isLoading={clustersSummaryLoading}
-              aria-label='Control plane nodes'
-            >
-              {clustersSummary?.nodesCount}
-            </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic
-              isLoading={clustersSummaryLoading}
-              aria-label='Worker nodes'
-            >
-              {clustersSummary?.workerNodesCount}
-            </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic
-              isLoading={clustersSummaryLoading}
-              aria-label='Memory in control plane nodes'
-            >
-              {formatMemory(clustersSummary?.nodesMemory)}
-            </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic
-              isLoading={clustersSummaryLoading}
-              aria-label='Memory in worker nodes'
-            >
-              {formatMemory(clustersSummary?.workerNodesMemory)}
-            </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic
-              isLoading={clustersSummaryLoading}
-              aria-label='CPU in control plane nodes'
-            >
-              {formatCPU(clustersSummary?.nodesCPU)}
-            </OrganizationDetailStatistic>
-            <OrganizationDetailStatistic
-              isLoading={clustersSummaryLoading}
-              aria-label='CPU in worker nodes'
-            >
-              {formatCPU(clustersSummary?.workerNodesCPU)}
-            </OrganizationDetailStatistic>
-          </Box>
+          {hasImportedClusters && (
+            <Box width={{ max: '400px' }}>
+              <Text color='status-warning' size='xsmall'>
+                <i
+                  className='fa fa-warning'
+                  role='presentation'
+                  aria-hidden='true'
+                />{' '}
+                Note: Some workload clusters are externally-managed and were not
+                taken into account in control plane nodes data calculation.
+              </Text>
+            </Box>
+          )}
         </Box>
       </Box>
       {hasClusterApp && (

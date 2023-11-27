@@ -1,6 +1,6 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import ClusterLabels from 'Cluster/ClusterDetail/ClusterLabels/ClusterLabels';
-import { extractErrorMessage, isResourceManagedByGitOps } from 'MAPI/utils';
+import { extractErrorMessage } from 'MAPI/utils';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React, { useMemo, useState } from 'react';
 import { mutate } from 'swr';
@@ -10,7 +10,7 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
-import { hasClusterAppLabel } from '../utils';
+import { isReadOnlyCluster } from '../utils';
 import { updateClusterLabels } from './utils';
 
 interface IClusterDetailWidgetLabelsProps
@@ -90,9 +90,7 @@ const ClusterDetailWidgetLabels: React.FC<
     }
   };
 
-  const isReadOnly =
-    cluster &&
-    (hasClusterAppLabel(cluster) || isResourceManagedByGitOps(cluster));
+  const isReadOnly = cluster && isReadOnlyCluster(cluster);
 
   return (
     <ClusterDetailWidget title='Labels' inline={true} {...props}>

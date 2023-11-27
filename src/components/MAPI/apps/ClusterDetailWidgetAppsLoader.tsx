@@ -13,11 +13,7 @@ const ClusterDetailWidgetAppsLoader: React.FC<
   IClusterDetailWidgetAppsLoaderProps
 > = ({ ...props }) => {
   return (
-    <ClusterDetailWidget
-      title={<LoadingPlaceholder margin={{ vertical: 'xsmall' }} width={80} />}
-      inline={true}
-      {...props}
-    >
+    <ClusterDetailWidget title='Apps' {...props}>
       <Box direction='row' gap='xsmall' wrap={true} align='center'>
         <LoadingPlaceholder margin={{ vertical: 'xsmall' }} width={300} />
       </Box>

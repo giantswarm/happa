@@ -5,7 +5,7 @@ import { Box, Card, CardBody, ResponsiveContext, Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
 import { usePermissionsForKeyPairs } from 'MAPI/keypairs/permissions/usePermissionsForKeyPairs';
 import { ProviderCluster } from 'MAPI/types';
-import { getClusterDescription } from 'MAPI/utils';
+import { getClusterDescription, isResourceImported } from 'MAPI/utils';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
@@ -184,6 +184,7 @@ const ClusterListItem: React.FC<
   }, [cluster]);
 
   const isClusterApp = cluster ? hasClusterAppLabel(cluster) : undefined;
+  const isImported = cluster ? isResourceImported(cluster) : false;
 
   const dispatch = useDispatch();
 
@@ -273,7 +274,7 @@ const ClusterListItem: React.FC<
               <>
                 <DotSeparatedList wrap={true}>
                   <DotSeparatedListItem>
-                    {isClusterApp ? (
+                    {isClusterApp || isImported ? (
                       <ClusterListItemVersionsInfo
                         cluster={cluster}
                         canListCPNodes={canListCPNodes}

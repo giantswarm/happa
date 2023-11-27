@@ -1,3 +1,4 @@
+import { isResourceImported } from 'MAPI/utils';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React from 'react';
 import styled from 'styled-components';
@@ -27,7 +28,12 @@ interface IClusterDetailWidgetCreatedProps
 const ClusterDetailWidgetCreated: React.FC<
   React.PropsWithChildren<IClusterDetailWidgetCreatedProps>
 > = ({ cluster, ...props }) => {
-  const creationDate = cluster?.metadata.creationTimestamp;
+  const creationDate =
+    cluster && isResourceImported(cluster)
+      ? cluster.metadata.annotations?.[
+          capiv1beta1.annotationImportedClusterCreationTimestamp
+        ]
+      : cluster?.metadata.creationTimestamp;
 
   return (
     <ClusterDetailWidget

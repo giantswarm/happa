@@ -17,7 +17,7 @@ export function getAWSClusterRoleIdentity(
 ) {
   const url = k8sUrl.create({
     baseUrl: window.config.mapiEndpoint,
-    apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+    apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2',
     kind: 'awsclusterroleidentities',
 
     name,

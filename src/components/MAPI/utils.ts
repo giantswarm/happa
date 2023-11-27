@@ -2,6 +2,7 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import { Constants, ProviderFlavors, Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
@@ -197,6 +198,8 @@ export async function fetchNodePoolListForCluster(
       break;
 
     case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta2.AWSManagedCluster &&
+      apiGroup === capav1beta2.ApiGroup:
     case kind === capzv1beta1.AzureCluster:
       list = await capiv1beta1.getMachinePoolList(httpClientFactory(), auth, {
         labelSelector: {
@@ -285,6 +288,8 @@ export function fetchNodePoolListForClusterKey(
       });
 
     case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta2.AWSManagedCluster &&
+      apiGroup === capav1beta2.ApiGroup:
     case kind === capzv1beta1.AzureCluster:
       return capiv1beta1.getMachinePoolListKey({
         labelSelector: {
@@ -329,6 +334,14 @@ export async function fetchProviderNodePoolForNodePool(
   switch (true) {
     case kind === capav1beta1.AWSMachinePool:
       return capav1beta1.getAWSMachinePool(
+        httpClientFactory(),
+        auth,
+        nodePool.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    case kind === capav1beta2.AWSManagedMachinePool:
+      return capav1beta2.getAWSManagedMachinePool(
         httpClientFactory(),
         auth,
         nodePool.metadata.namespace!,
@@ -624,6 +637,53 @@ export async function fetchControlPlaneNodesForCluster(
       return cpNodes;
     }
 
+    case kind === capav1beta2.AWSManagedCluster &&
+      apiGroup === capav1beta2.ApiGroup: {
+      const [capaCP, machineCP] = await Promise.allSettled([
+        capav1beta2.getAWSManagedControlPlaneList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }),
+        capiv1beta1.getMachineList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capiv1beta1.labelMachineControlPlane]: '',
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }),
+      ]);
+
+      if (capaCP.status === 'rejected' && machineCP.status === 'rejected') {
+        return Promise.reject(capaCP.reason);
+      }
+
+      let cpNodes: ControlPlaneNode[] = [];
+      if (capaCP.status === 'fulfilled' && capaCP.value.items.length > 0) {
+        cpNodes = [
+          ...cpNodes,
+          capaCP.value.items.sort(
+            (a, b) =>
+              new Date(a.metadata.creationTimestamp ?? 0).getTime() -
+              new Date(b.metadata.creationTimestamp ?? 0).getTime()
+          )[0],
+        ];
+      }
+      if (
+        machineCP.status === 'fulfilled' &&
+        machineCP.value.items.length > 0
+      ) {
+        cpNodes = [...cpNodes, ...machineCP.value.items];
+      }
+
+      return cpNodes;
+    }
+
     case kind === capgv1beta1.GCPCluster: {
       const [gcpCP, machineCP] = await Promise.allSettled([
         capgv1beta1.getGCPMachineTemplateList(httpClientFactory(), auth, {
@@ -800,6 +860,17 @@ export function fetchControlPlaneNodesForClusterKey(
         namespace: cluster.metadata.namespace,
       });
 
+    case kind === capav1beta2.AWSManagedCluster &&
+      apiGroup === capav1beta2.ApiGroup:
+      return capav1beta2.getAWSManagedControlPlaneListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelClusterName]: cluster.metadata.name,
+          },
+        },
+        namespace: cluster.metadata.namespace,
+      });
+
     case kind === capgv1beta1.GCPCluster:
       return capgv1beta1.getGCPMachineTemplateListKey({
         labelSelector: {
@@ -872,6 +943,15 @@ export async function fetchProviderClusterForCluster(
         infrastructureRef.name
       );
 
+    case kind === capav1beta2.AWSManagedCluster &&
+      apiGroup === capav1beta2.ApiGroup:
+      return capav1beta2.getAWSManagedCluster(
+        httpClientFactory(),
+        auth,
+        cluster.metadata.namespace!,
+        infrastructureRef.name
+      );
+
     case kind === capgv1beta1.GCPCluster:
       return capgv1beta1.getGCPCluster(
         httpClientFactory(),
@@ -912,6 +992,13 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
   switch (true) {
     case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
       return capav1beta1.getAWSClusterKey(
+        cluster.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    case kind === capav1beta2.AWSManagedCluster &&
+      apiGroup === capav1beta2.ApiGroup:
+      return capav1beta2.getAWSManagedClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
       );
@@ -1050,6 +1137,16 @@ export function getProviderNodePoolMachineTypes(
       return {
         primary: providerNodePool.spec?.awsLaunchTemplate.instanceType ?? '',
       };
+
+    // EKS
+    case capav1beta2.AWSManagedMachinePool:
+      return {
+        primary:
+          providerNodePool.spec?.instanceType ||
+          providerNodePool.spec?.awsLaunchTemplate?.instanceType ||
+          '',
+      };
+
     case capgv1beta1.GCPMachineTemplate:
       return {
         primary: providerNodePool.spec?.template.spec.instanceType ?? '',
@@ -1196,6 +1293,18 @@ interface INodesStatus {
   current: number;
 }
 
+export function getNodePoolReadyReplicas(nodePool: NodePool) {
+  const infrastructureRef = nodePool.spec?.template.spec?.infrastructureRef;
+  if (
+    infrastructureRef &&
+    infrastructureRef.kind === capav1beta2.AWSManagedMachinePool
+  ) {
+    return nodePool.spec?.replicas ?? 0;
+  }
+
+  return nodePool.status?.readyReplicas ?? 0;
+}
+
 export function getNodePoolScaling(
   nodePool: NodePool,
   providerNodePool: ProviderNodePool | null
@@ -1218,6 +1327,21 @@ export function getNodePoolScaling(
         (providerNodePool as capav1beta1.IAWSMachinePool).spec?.minSize ?? -1;
       status.max =
         (providerNodePool as capav1beta1.IAWSMachinePool).spec?.maxSize ?? -1;
+
+      return status;
+    }
+
+    // EKS Imported
+    case kind === capiv1beta1.MachinePool &&
+      providerNodePoolKind === capav1beta2.AWSManagedMachinePool: {
+      status.min =
+        (providerNodePool as capav1beta2.IAWSManagedMachinePool).spec?.scaling
+          ?.minSize ?? -1;
+      status.max =
+        (providerNodePool as capav1beta2.IAWSManagedMachinePool).spec?.scaling
+          ?.maxSize ?? -1;
+      status.desired = nodePool.spec?.replicas ?? -1;
+      status.current = nodePool.spec?.replicas ?? -1;
 
       return status;
     }
@@ -1269,6 +1393,14 @@ export function getNodePoolAvailabilityZones(
           ?.availabilityZones ?? []
       );
 
+    // EKS Imported
+    case kind === capiv1beta1.MachinePool &&
+      providerNodePoolKind === capav1beta2.AWSManagedMachinePool:
+      return (
+        (providerNodePool as capav1beta2.IAWSManagedMachinePool).spec
+          ?.availabilityZones ?? []
+      );
+
     // Azure
     case kind === capiv1beta1.MachinePool:
       return (nodePool as capiv1beta1.IMachinePool).spec?.failureDomains ?? [];
@@ -1315,6 +1447,15 @@ export function getClusterDescription(
 
   const { kind, apiVersion } = infrastructureRef;
   const apiGroup = getApiGroupFromApiVersion(apiVersion);
+
+  if (isResourceImported(cluster)) {
+    switch (true) {
+      case kind === capav1beta2.AWSManagedCluster:
+        return 'Imported EKS cluster';
+      default:
+        return 'Imported cluster';
+    }
+  }
 
   switch (true) {
     case kind === infrav1alpha3.AWSCluster &&
@@ -1366,6 +1507,27 @@ export function getProviderClusterLocation(
 
       return region;
     }
+
+    default:
+      return undefined;
+  }
+}
+
+export function getControlPlaneNodeLocation(
+  controlPlaneNode?: ControlPlaneNode
+): string | undefined {
+  if (typeof controlPlaneNode === 'undefined') {
+    return undefined;
+  }
+
+  const { kind } = controlPlaneNode;
+
+  switch (true) {
+    case kind === capav1beta2.AWSManagedControlPlane:
+      return (
+        (controlPlaneNode as capav1beta2.IAWSManagedControlPlane).spec
+          ?.region ?? ''
+      );
 
     default:
       return undefined;
@@ -1561,7 +1723,7 @@ function isCAPZCluster(cluster: Cluster): boolean {
 }
 
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
-  return hasClusterAppLabel(cluster);
+  return hasClusterAppLabel(cluster) || isResourceImported(cluster);
 }
 
 export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {
@@ -1691,4 +1853,16 @@ export function isResourceManagedByGitOps(
   return labels.some((label) =>
     label.startsWith(Constants.FLUX_LABELS_PREFIX as string)
   );
+}
+
+function getResourceAppName(resource: Cluster | NodePool): string | undefined {
+  return resource.metadata.labels?.[capiv1beta1.labelApp];
+}
+
+/**
+ * Determines whether a resource is imported.
+ * @param resource
+ */
+export function isResourceImported(resource: Cluster | NodePool) {
+  return getResourceAppName(resource) === capiv1beta1.CAPI_IMPORTER_APP_NAME;
 }

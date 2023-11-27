@@ -59,7 +59,7 @@ describe('ClusterDetailWidgetVersions', () => {
       })
     );
 
-    expect(screen.getAllByLabelText('Loading...').length).toEqual(2);
+    expect(screen.getAllByLabelText('Loading...').length).toEqual(1);
   });
 });
 

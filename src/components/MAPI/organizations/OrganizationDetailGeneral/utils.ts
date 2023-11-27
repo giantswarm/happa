@@ -1,5 +1,6 @@
 import {
   fetchControlPlaneNodesK8sVersions,
+  formatK8sVersion,
   hasClusterAppLabel,
 } from 'MAPI/clusters/utils';
 import { IPermissions } from 'MAPI/permissions/types';
@@ -9,6 +10,7 @@ import {
   fetchNodePoolListForCluster,
   fetchProviderNodePoolsForNodePools,
   getMachineTypes,
+  getNodePoolReadyReplicas,
   getProviderNodePoolMachineTypes,
   IMachineType,
 } from 'MAPI/utils';
@@ -215,10 +217,8 @@ function appendNodePoolsStats(
   summary: ui.IOrganizationDetailClustersSummary
 ) {
   for (const nodePool of nodePools) {
-    if (typeof nodePool.status?.readyReplicas !== 'undefined') {
-      summary.workerNodesCount ??= 0;
-      summary.workerNodesCount += nodePool.status.readyReplicas;
-    }
+    summary.workerNodesCount ??= 0;
+    summary.workerNodesCount += getNodePoolReadyReplicas(nodePool);
   }
 }
 
@@ -228,7 +228,7 @@ function appendProviderNodePoolsStats(
   summary: ui.IOrganizationDetailClustersSummary
 ) {
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
-    const readyReplicas = nodePool.status?.readyReplicas;
+    const readyReplicas = getNodePoolReadyReplicas(nodePool);
     if (!readyReplicas || !providerNodePool) continue;
 
     const instanceType =
@@ -428,7 +428,7 @@ export async function fetchVersionsSummary(
 
     if (response.status === 'fulfilled' && response.value.length > 0) {
       for (const version of response.value) {
-        k8sVersions.push(version.slice(1));
+        k8sVersions.push(formatK8sVersion(version));
       }
     }
   }
