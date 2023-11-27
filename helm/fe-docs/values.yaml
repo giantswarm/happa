@@ -11,3 +11,6 @@ hostnames: []
 
 registry:
   domain: quay.io
+
+podSecurityStandards:
+  enforced: false
