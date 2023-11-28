@@ -1678,7 +1678,9 @@ export function getClusterK8sAPIUrl(
     hostname = getClusterBaseUrl(cluster, providerFlavor).host;
   }
 
-  return `https://${hostname}${port ? `:${port}` : ''}`;
+  const url = `${hostname}${port ? `:${port}` : ''}`;
+
+  return url.startsWith('https://') ? url : `https://${url}`;
 }
 
 export function getK8sAPIUrl(providerFlavor: ProviderFlavors): string {
