@@ -118,9 +118,11 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
     },
     formData: (clusterName, organization) => {
       return {
-        metadata: {
-          name: clusterName,
-          organization,
+        global: {
+          metadata: {
+            name: clusterName,
+            organization,
+          },
         },
       };
     },
