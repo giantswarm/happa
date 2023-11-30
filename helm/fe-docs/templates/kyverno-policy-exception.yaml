@@ -1,0 +1,48 @@
+{{ if .Capabilities.APIVersions.Has "kyverno.io/v2alpha1/PolicyException" }}
+apiVersion: kyverno.io/v2alpha1
+kind: PolicyException
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.name }}
+  labels:
+    app: {{ .Values.name }}
+spec:
+  background: true
+  exceptions:
+  - policyName: disallow-host-path
+    ruleNames:
+    - host-path
+    - autogen-host-path
+    - autogen-cronjob-host-path
+  - policyName: require-run-as-nonroot
+    ruleNames:
+    - run-as-non-root
+    - autogen-run-as-non-root
+    - autogen-cronjob-run-as-non-root
+  - policyName: restrict-volume-types
+    ruleNames:
+    - restricted-volumes
+    - autogen-restricted-volumes
+    - autogen-cronjob-restricted-volumes
+  - policyName: disallow-capabilities-strict
+    ruleNames:
+    - require-drop-all
+    - adding-capabilities-strict
+    - autogen-require-drop-all
+    - autogen-cronjob-require-drop-all
+    - autogen-adding-capabilities-strict
+    - autogen-cronjob-adding-capabilities-strict
+  match:
+    any:
+    - resources:
+        kinds:
+        - Deployment
+        - ReplicaSet
+        - Pod
+        names:
+          - "{{ .Values.name }}*"
+          - "fe-docs*"
+        namespaces:
+          - "{{ .Release.Namespace }}"
+{{- end }}
+
