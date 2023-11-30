@@ -49,10 +49,7 @@ interface FormPropsPartial {
 const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
   0: {
     uiSchema: {
-      'ui:order': [
-        'global',
-        '*',
-      ],
+      'ui:order': ['global', '*'],
       global: {
         connectivity: {
           'ui:order': ['sshSsoPublicKey', '*'],
