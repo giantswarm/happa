@@ -49,83 +49,80 @@ interface FormPropsPartial {
 const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
   0: {
     uiSchema: {
-      'ui:order': [
-        'metadata',
-        'providerSpecific',
-        'controlPlane',
-        'connectivity',
-        'nodePools',
-        '*',
-      ],
-      baseDomain: {
-        'ui:widget': 'hidden',
-      },
-      connectivity: {
-        'ui:order': ['sshSsoPublicKey', '*'],
-        bastion: {
+      'ui:order': ['global', '*'],
+      global: {
+        connectivity: {
+          'ui:order': ['sshSsoPublicKey', '*'],
+          baseDomain: {
+            'ui:widget': 'hidden',
+          },
+          bastion: {
+            instanceType: {
+              'ui:widget': InstanceTypeWidget,
+            },
+          },
+        },
+        controlPlane: {
+          'ui:order': [
+            'apiMode',
+            'instanceType',
+            'replicas',
+            'rootVolumeSizeGB',
+            'etcdVolumeSizeGB',
+            'kubeletVolumeSizeGB',
+            'containerdVolumeSizeGB',
+            'oidc',
+            '*',
+          ],
           instanceType: {
             'ui:widget': InstanceTypeWidget,
           },
+          oidc: {
+            'ui:order': ['issuerUrl', 'clientId', '*'],
+          },
         },
-      },
-      controlPlane: {
-        'ui:order': [
-          'apiMode',
-          'instanceType',
-          'replicas',
-          'rootVolumeSizeGB',
-          'etcdVolumeSizeGB',
-          'kubeletVolumeSizeGB',
-          'containerdVolumeSizeGB',
-          'oidc',
-          '*',
-        ],
-        instanceType: {
-          'ui:widget': InstanceTypeWidget,
+        providerSpecific: {
+          'ui:order': [
+            'region',
+            'flatcarAwsAccount',
+            'awsClusterRoleIdentityName',
+            '*',
+          ],
         },
-        oidc: {
-          'ui:order': ['issuerUrl', 'clientId', '*'],
+        managementCluster: {
+          'ui:widget': 'hidden',
         },
-      },
-      'cluster-shared': {
-        'ui:widget': 'hidden',
-      },
-      kubectlImage: {
-        'ui:widget': 'hidden',
-      },
-      managementCluster: {
-        'ui:widget': 'hidden',
-      },
-      metadata: {
-        'ui:order': ['name', 'description', '*'],
-        name: {
-          'ui:widget': ClusterNameWidget,
+        kubectlImage: {
+          'ui:widget': 'hidden',
         },
-      },
-      nodePools: {
-        items: {
-          instanceType: {
-            'ui:widget': InstanceTypeWidget,
+        metadata: {
+          'ui:order': ['name', 'description', '*'],
+          name: {
+            'ui:widget': ClusterNameWidget,
+          },
+        },
+        nodePools: {
+          items: {
+            instanceType: {
+              'ui:widget': InstanceTypeWidget,
+            },
           },
         },
       },
       provider: {
         'ui:widget': 'hidden',
       },
-      providerSpecific: {
-        'ui:order': [
-          'region',
-          'flatcarAwsAccount',
-          'awsClusterRoleIdentityName',
-          '*',
-        ],
+      'cluster-shared': {
+        'ui:widget': 'hidden',
       },
     },
     formData: (clusterName, organization) => {
       return {
-        metadata: {
-          name: clusterName,
-          organization,
+        global: {
+          metadata: {
+            name: clusterName,
+            organization,
+          },
         },
       };
     },
