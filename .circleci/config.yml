@@ -22,9 +22,6 @@ whitelist: &whitelist
     - VERSION
     - ".sentry_release_version"
 
-image_name: &image_name quay.io/giantswarm/happa
-image_name_fe_docs: &image_name_fe_docs quay.io/giantswarm/fe-docs
-
 workflows:
   version: 2
 
@@ -48,28 +45,20 @@ workflows:
           requires:
             - gather-facts
           <<: *job_filters
-      - build-container:
+
+      - architect/push-to-registries:
           context: architect
+          name: push-to-registries
           requires:
             - test
             - lint
             - build
           <<: *job_filters
-
-      - architect/push-to-docker:
-          name: push-happa-to-aliyun
-          context: architect
-          image: "giantswarm-registry.cn-shanghai.cr.aliyuncs.com/giantswarm/happa"
-          username_envar: "ALIYUN_USERNAME"
-          password_envar: "ALIYUN_PASSWORD"
+      
+      - launch-container:
           requires:
-            - build-container
-          # Needed to trigger job only on git tag.
-          filters:
-            branches:
-              only: main
-            tags:
-              only: /^v.*/
+            - push-to-registries
+          <<: *job_filters
 
       - architect/push-to-app-catalog:
           executor: app-build-suite
@@ -80,7 +69,7 @@ workflows:
           chart: "happa"
           persist_chart_archive: true
           requires:
-            - build-container
+            - launch-container
           # Needed to trigger job also on git tag.
           filters:
             tags:
@@ -91,7 +80,6 @@ workflows:
           app_name: "happa"
           app_collection_repo: "aws-app-collection"
           requires:
-            - push-happa-to-aliyun
             - push-happa-to-control-plane-app-catalog
           filters:
             branches:
@@ -194,12 +182,10 @@ workflows:
             tags:
               only: /^v.*/
 
-      - architect/push-to-docker:
-          name: push-fe-docs-to-quay
+      - architect/push-to-registries:
           context: architect
-          image: *image_name_fe_docs
-          username_envar: "QUAY_USERNAME"
-          password_envar: "QUAY_PASSWORD"
+          name: push-fe-docs-to-registries
+          image: giantswarm/fe-docs
           dockerfile: "./Dockerfile.fe-docs"
           requires:
             - build-fe-docs
@@ -219,7 +205,7 @@ workflows:
           persist_chart_archive: true
           explicit_allow_chart_name_mismatch: true
           requires:
-            - push-fe-docs-to-quay
+            - push-fe-docs-to-registries
           filters:
             branches:
               ignore: /.*/
@@ -339,9 +325,8 @@ jobs:
           root: ~/happa
           <<: *whitelist
 
-  build-container:
-    executor: architect/architect
-
+  launch-container:
+    <<: *defaults
     working_directory: ~/happa
     steps:
       - checkout
@@ -352,32 +337,13 @@ jobs:
           at: ~/happa
 
       - run:
-          environment:
-            IMAGE_NAME: *image_name
-          name: Generate container image tag
-          command: |
-            echo -n "${IMAGE_NAME}:$(cat VERSION)" > .docker_image_name
-
-      - architect/push-to-docker:
-          tag-latest-branch: "main"
-          image: "docker.io/giantswarm/happa"
-          username_envar: "DOCKER_USERNAME"
-          password_envar: "DOCKER_PASSWORD"
-
-      - architect/push-to-docker:
-          tag-latest-branch: "main"
-          image: *image_name
-          username_envar: "QUAY_USERNAME"
-          password_envar: "QUAY_PASSWORD"
-
-      - run:
           name: Launch container for tests
           command: |
             set -x
             docker run --name happa-branch \
               -p 8000:8000 \
               -d \
-              "$(cat .docker_image_name)"
+              "quay.io/giantswarm/happa:$(cat VERSION)"
             sleep 10
             CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
             echo "${CURL_OUTPUT}" | grep "Giant Swarm web interface"
