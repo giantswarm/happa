@@ -10,7 +10,7 @@ port: 8080
 hostnames: []
 
 registry:
-  domain: quay.io
+  domain: gsoci.azurecr.io
 
 podSecurityStandards:
   enforced: false
