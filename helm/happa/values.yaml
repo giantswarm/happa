@@ -96,7 +96,7 @@ passage:
   address: ""
 
 registry:
-  domain: quay.io
+  domain: gsoci.azurecr.io
 
 security:
   restrictAccess:
