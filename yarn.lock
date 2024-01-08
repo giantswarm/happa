@@ -4960,10 +4960,10 @@
   dependencies:
     classnames "*"
 
-"@types/color-hash@1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@types/color-hash/-/color-hash-1.0.4.tgz#f96a283fff23f6107515c0b63f8d22c87172adee"
-  integrity sha512-lRHjA675rw+lN4Zf+EXpV42wUA0YPUXdk7ECEhgljovbw5dPiHLrDwCpZmczWSrPDXFpyA78mmkY9I/PXAZDPw==
+"@types/color-hash@1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/color-hash/-/color-hash-1.0.5.tgz#ea3dd3d89a0f5ca2889d5b3e9d8701b4c96434f4"
+  integrity sha512-miV7Z8zvOnRn0ZjbP/D/qb1VWHrWkKOnfC764SJvnCeIziW4pZy3tPK/542seSgccGAXlPQd/seuNyVAS/p5Ug==
 
 "@types/connect-history-api-fallback@^1.3.5":
   version "1.3.5"
