@@ -34,11 +34,28 @@ spec:
               topologyKey: kubernetes.io/hostname
       serviceAccountName: {{ .Values.name }}
       securityContext:
-        runAsUser: {{ .Values.userID }}
-        runAsGroup: {{ .Values.groupID }}
+        fsGroup: 1337
+        {{- if ge (int .Capabilities.KubeVersion.Minor) 19 }}
+        {{- with .Values.podSeccompProfile }}
+        seccompProfile:
+          {{- . | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
       containers:
       - name: happa
         image: "{{ .Values.registry.domain }}/{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+        securityContext:
+          {{- with .Values.containerSecurityContext }}
+          {{- . | toYaml | nindent 10 }}
+          {{- end }}
+          readOnlyRootFilesystem: true
+          runAsUser: 100
+          {{- if ge (int .Capabilities.KubeVersion.Minor) 19 }}
+          {{- with .Values.seccompProfile }}
+          seccompProfile:
+            {{- . | toYaml | nindent 14 }}
+          {{- end }}
+          {{- end }}
         env:
           - name: HAPPA_CONFIG_PATH
             value: "/var/run/{{ .Values.name }}/configmap/config.yaml"
