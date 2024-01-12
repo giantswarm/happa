@@ -65,7 +65,7 @@ kubernetes:
 
 happa:
   address: ""
-  host: ""
+  host: check
   featureFlags:
     mapiAuth: false
     mapiClusters: false
@@ -73,7 +73,7 @@ happa:
 
 happaapi:
   address: ""
-  host: ""
+  host: check
 
 athena:
   address: ""
