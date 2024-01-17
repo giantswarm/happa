@@ -31,7 +31,7 @@ function formatNodesCountLabel(readyCount?: number, totalCount?: number) {
     return undefined;
   }
 
-  if (readyCount < 0 || totalCount < 0) {
+  if (readyCount < 0 || totalCount <= 0) {
     return '';
   }
 
