@@ -15,3 +15,4 @@ export * from './createMachinePool';
 export * from './updateMachinePool';
 export * from './deleteMachinePool';
 export * from './getMachinePoolList';
+export * from './getKubeadmControlPlane';

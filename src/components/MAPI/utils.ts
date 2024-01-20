@@ -21,6 +21,7 @@ import { hasClusterAppLabel } from './clusters/utils';
 import {
   Cluster,
   ClusterList,
+  ControlPlane,
   ControlPlaneNode,
   NodePool,
   NodePoolList,
@@ -571,6 +572,56 @@ export function fetchClusterListKey(
   }
 
   return capiv1beta1.getClusterListKey(getOptions);
+}
+
+export async function fetchControlPlaneForCluster(
+  httpClientFactory: HttpClientFactory,
+  auth: IOAuth2Provider,
+  cluster: capiv1beta1.ICluster
+): Promise<ControlPlane | undefined> {
+  const controlPlaneRef = cluster.spec?.controlPlaneRef;
+  if (!controlPlaneRef) {
+    return undefined;
+  }
+
+  const { kind, apiVersion } = controlPlaneRef;
+
+  switch (true) {
+    case kind === capiv1beta1.KubeadmControlPlane &&
+      apiVersion === capiv1beta1.KubeadmControlPlaneApiVersion: {
+      return capiv1beta1.getKubeadmControlPlane(
+        httpClientFactory(),
+        auth,
+        controlPlaneRef.namespace ?? '',
+        controlPlaneRef.name
+      );
+    }
+
+    default:
+      return undefined;
+  }
+}
+
+export function fetchControlPlaneForClusterKey(cluster: capiv1beta1.ICluster) {
+  const controlPlaneRef = cluster.spec?.controlPlaneRef;
+  if (!controlPlaneRef) {
+    return null;
+  }
+
+  const { kind, apiVersion } = controlPlaneRef;
+
+  switch (true) {
+    case kind === capiv1beta1.KubeadmControlPlane &&
+      apiVersion === capiv1beta1.KubeadmControlPlaneApiVersion: {
+      return capiv1beta1.getKubeadmControlPlaneKey(
+        controlPlaneRef.namespace ?? '',
+        controlPlaneRef.name
+      );
+    }
+
+    default:
+      return null;
+  }
 }
 
 // eslint-disable-next-line complexity

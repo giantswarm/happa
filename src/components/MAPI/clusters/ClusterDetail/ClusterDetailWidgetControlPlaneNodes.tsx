@@ -1,7 +1,14 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Box, Text } from 'grommet';
-import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
 import {
+  Cluster,
+  ControlPlane,
+  ControlPlaneNode,
+  ProviderCluster,
+} from 'MAPI/types';
+import {
+  fetchControlPlaneForCluster,
+  fetchControlPlaneForClusterKey,
   fetchControlPlaneNodesForCluster,
   fetchControlPlaneNodesForClusterKey,
 } from 'MAPI/utils';
@@ -19,6 +26,7 @@ import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
+import { usePermissionsForControlPlanes } from '../permissions/usePermissionsForControlPlanes';
 import { usePermissionsForCPNodes } from '../permissions/usePermissionsForCPNodes';
 import ClusterDetailHACPNodesSwitcher from './ClusterDetailHACPNodesSwitcher';
 import {
@@ -77,6 +85,28 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
 
   const provider = window.config.info.general.provider;
 
+  const { canGet: canGetCP } = usePermissionsForControlPlanes(
+    provider,
+    cluster?.metadata.namespace ?? ''
+  );
+
+  const controlPlaneKey =
+    cluster && canGetCP ? fetchControlPlaneForClusterKey(cluster) : null;
+
+  const {
+    data: controlPlane,
+    error: controlPlaneError,
+    isLoading: controlPlaneIsLoading,
+  } = useSWR<ControlPlane, GenericResponseError>(controlPlaneKey, () =>
+    fetchControlPlaneForCluster(clientFactory, auth, cluster!)
+  );
+
+  useEffect(() => {
+    if (controlPlaneError) {
+      ErrorReporter.getInstance().notify(controlPlaneError);
+    }
+  }, [controlPlaneError]);
+
   const { canList, canUpdate } = usePermissionsForCPNodes(
     provider,
     cluster?.metadata.namespace ?? ''
@@ -95,7 +125,9 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
   );
 
   const isLoading =
-    typeof cluster === 'undefined' || controlPlaneNodesIsLoading;
+    typeof cluster === 'undefined' ||
+    controlPlaneIsLoading ||
+    controlPlaneNodesIsLoading;
 
   useEffect(() => {
     if (controlPlaneNodesError) {
@@ -120,8 +152,8 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
       };
     }
 
-    return computeControlPlaneNodesStats(controlPlaneNodes);
-  }, [canList, controlPlaneNodes, isLoading]);
+    return computeControlPlaneNodesStats(controlPlaneNodes, controlPlane);
+  }, [canList, controlPlane, controlPlaneNodes, isLoading]);
 
   const canSwitchToHA =
     typeof cluster !== 'undefined' &&
