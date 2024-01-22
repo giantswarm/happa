@@ -9,6 +9,8 @@ import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 
+export type ControlPlane = capiv1beta1.IKubeadmControlPlane | undefined;
+
 export type ControlPlaneNode =
   | capav1beta1.IAWSMachineTemplate
   | capav1beta2.IAWSManagedControlPlane

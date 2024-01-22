@@ -6,11 +6,18 @@ import {
   getAllChildApps,
   isAppBundle,
 } from 'MAPI/apps/utils';
-import { Cluster, ControlPlaneNode, NodePoolList } from 'MAPI/types';
+import {
+  Cluster,
+  ControlPlane,
+  ControlPlaneNode,
+  NodePoolList,
+} from 'MAPI/types';
 import {
   extractErrorMessage,
   fetchCluster,
   fetchClusterKey,
+  fetchControlPlaneForCluster,
+  fetchControlPlaneForClusterKey,
   fetchControlPlaneNodesForCluster,
   fetchControlPlaneNodesForClusterKey,
   fetchNodePoolListForCluster,
@@ -39,6 +46,7 @@ import RoutePath from 'utils/routePath';
 
 import { computeControlPlaneNodesStats } from '../ClusterDetail/utils';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
+import { usePermissionsForControlPlanes } from '../permissions/usePermissionsForControlPlanes';
 import { usePermissionsForCPNodes } from '../permissions/usePermissionsForCPNodes';
 import { CLUSTER_CREATION_FORM_MAX_WIDTH } from '.';
 
@@ -84,13 +92,14 @@ function getClusterCreatedStatus(
 
 function getControlPlaneReadyStatus(
   cluster?: Cluster,
+  controlPlane?: ControlPlane,
   controlPlaneNodes: ControlPlaneNode[] = []
 ) {
   if (typeof cluster === 'undefined') {
     return getStatusComponent(ClusterCreationStatus.Waiting);
   }
 
-  const stats = computeControlPlaneNodesStats(controlPlaneNodes);
+  const stats = computeControlPlaneNodesStats(controlPlaneNodes, controlPlane);
 
   if (stats.totalCount > 0 && stats.readyCount === stats.totalCount) {
     return getStatusComponent(ClusterCreationStatus.Ok);
@@ -242,6 +251,21 @@ const CreateClusterAppBundlesStatus: React.FC<
     }
   );
 
+  const { canGet: canGetCP } = usePermissionsForControlPlanes(
+    provider,
+    cluster?.metadata.namespace ?? ''
+  );
+
+  const controlPlaneKey =
+    cluster && canGetCP ? fetchControlPlaneForClusterKey(cluster) : null;
+
+  const { data: controlPlane, error: controlPlaneError } = useSWR<
+    ControlPlane,
+    GenericResponseError
+  >(controlPlaneKey, () =>
+    fetchControlPlaneForCluster(clientFactory, auth, cluster!)
+  );
+
   const { canList } = usePermissionsForCPNodes(
     provider,
     cluster?.metadata.namespace ?? ''
@@ -262,7 +286,7 @@ const CreateClusterAppBundlesStatus: React.FC<
           return REFRESH_INTERVAL;
         }
 
-        const stats = computeControlPlaneNodesStats(latestData);
+        const stats = computeControlPlaneNodesStats(latestData, controlPlane);
 
         return stats.totalCount > 0 && stats.readyCount === stats.totalCount
           ? 0
@@ -365,6 +389,7 @@ const CreateClusterAppBundlesStatus: React.FC<
   const clusterCreated = getClusterCreatedStatus(cluster, clusterApp);
   const controlPlaneReady = getControlPlaneReadyStatus(
     cluster,
+    controlPlane,
     controlPlaneNodes
   );
   const clusterAppDeployed = getClusterAppDeployedStatus(clusterApp);
@@ -384,6 +409,7 @@ const CreateClusterAppBundlesStatus: React.FC<
     const errors = [
       clusterAppError,
       clusterError,
+      controlPlaneError,
       controlPlaneNodesError,
       appListError,
       nodePoolListError,
@@ -398,6 +424,7 @@ const CreateClusterAppBundlesStatus: React.FC<
   }, [
     clusterAppError,
     clusterError,
+    controlPlaneError,
     controlPlaneNodesError,
     appListError,
     nodePoolListError,
