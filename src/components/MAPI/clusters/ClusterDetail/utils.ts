@@ -1,6 +1,7 @@
 import produce from 'immer';
 import {
   Cluster,
+  ControlPlane,
   ControlPlaneNode,
   ProviderCluster,
   ProviderCredential,
@@ -551,7 +552,8 @@ export interface IControlPlaneNodesStats {
 }
 
 export function computeControlPlaneNodesStats(
-  nodes: ControlPlaneNode[]
+  nodes: ControlPlaneNode[],
+  controlPlane?: ControlPlane
 ): IControlPlaneNodesStats {
   const stats: IControlPlaneNodesStats = {
     totalCount: 0,
@@ -605,6 +607,10 @@ export function computeControlPlaneNodesStats(
 
         break;
     }
+  }
+
+  if (controlPlane && controlPlane.spec?.replicas) {
+    stats.totalCount = controlPlane.spec?.replicas;
   }
 
   return stats;
