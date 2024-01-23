@@ -60,7 +60,7 @@ export const randomGCPCluster2: capgv1beta1.IGCPCluster = {
     generation: 2,
     labels: {
       app: 'cluster-gcp',
-      'app.kubernetes.io/version': '0.15.1',
+      'app.kubernetes.io/version': '0.15.2',
       'cluster.x-k8s.io/cluster-name': 'g9h9j',
       'giantswarm.io/cluster': 'g9h9j',
     },
