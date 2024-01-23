@@ -2,6 +2,7 @@ import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
 import { ProviderCluster } from 'MAPI/types';
+import { isResourceImported } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React, { useMemo } from 'react';
@@ -59,6 +60,8 @@ interface IClusterDetailWidgetVersionsProps
 const ClusterDetailWidgetVersions: React.FC<
   IClusterDetailWidgetVersionsProps
 > = ({ cluster, providerCluster, ...props }) => {
+  const isClusterImported = cluster ? isResourceImported(cluster) : undefined;
+
   const clusterAppVersion = cluster
     ? getClusterAppVersion(providerCluster)
     : undefined;
@@ -101,12 +104,12 @@ const ClusterDetailWidgetVersions: React.FC<
 
   return (
     <ClusterDetailWidget
-      title={clusterAppVersion ? 'Versions' : 'Kubernetes'}
+      title={cluster && isClusterImported ? 'Kubernetes' : 'Versions'}
       inline={true}
       {...props}
     >
       <DotSeparatedList>
-        {clusterAppVersion && (
+        {cluster && !isClusterImported && (
           <DotSeparatedListItem>
             <OptionalValue
               value={clusterAppVersion}
