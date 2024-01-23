@@ -20,6 +20,7 @@ import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, ProviderFlavors, Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import {
+  findClusterAppName,
   findDefaultAppName,
   getDefaultAppNameForProvider,
   IApp,
@@ -619,14 +620,20 @@ export function mapReleaseToApps(
 function isUserInstalledApp(
   app: IApp,
   isClusterApp: boolean,
-  defaultAppName?: string
+  defaultAppName?: string,
+  clusterAppName?: string
 ) {
   const managedBy = app.metadata.labels?.[applicationv1alpha1.labelManagedBy];
 
   if (isClusterApp) {
-    const appName = app.metadata.labels?.[applicationv1alpha1.labelAppName];
+    const appName =
+      app.metadata.labels?.[applicationv1alpha1.labelAppName] ?? '';
 
-    return managedBy !== 'cluster-apps-operator' && appName !== defaultAppName;
+    return (
+      managedBy !== 'cluster-apps-operator' &&
+      appName !== defaultAppName &&
+      appName !== clusterAppName
+    );
   }
 
   return managedBy !== 'cluster-operator';
@@ -637,9 +644,15 @@ export function filterUserInstalledApps(
   isClusterApp: boolean
 ): applicationv1alpha1.IApp[] {
   const defaultAppName = findDefaultAppName(apps);
+  const clusterAppName = findClusterAppName(apps);
 
   return apps.filter((app) => {
-    return isUserInstalledApp(app, isClusterApp, defaultAppName);
+    return isUserInstalledApp(
+      app,
+      isClusterApp,
+      defaultAppName,
+      clusterAppName
+    );
   });
 }
 
@@ -648,9 +661,15 @@ export function filterDefaultApps(
   isClusterApp: boolean
 ): applicationv1alpha1.IApp[] {
   const defaultAppName = findDefaultAppName(apps);
+  const clusterAppName = findClusterAppName(apps);
 
   return apps.filter((app) => {
-    return !isUserInstalledApp(app, isClusterApp, defaultAppName);
+    return !isUserInstalledApp(
+      app,
+      isClusterApp,
+      defaultAppName,
+      clusterAppName
+    );
   });
 }
 

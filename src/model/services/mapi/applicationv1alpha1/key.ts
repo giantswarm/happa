@@ -85,6 +85,18 @@ export function findDefaultAppName(apps: IApp[]) {
   return defaultApp.metadata.labels?.[labelAppName];
 }
 
+export function findClusterAppName(apps: IApp[]) {
+  const clusterApp = apps.find((app) =>
+    app.metadata.labels?.[labelAppName]?.startsWith('cluster-')
+  );
+
+  if (typeof clusterApp === 'undefined') {
+    return undefined;
+  }
+
+  return clusterApp.metadata.labels?.[labelAppName];
+}
+
 export function getDefaultAppNameForProvider(
   provider: PropertiesOf<typeof Providers>
 ) {
