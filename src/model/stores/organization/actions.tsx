@@ -135,6 +135,7 @@ export function organizationsLoadMAPI(
             id: securityv1alpha1.getOrganizationName(org),
             name: securityv1alpha1.getOrganizationUIName(org),
             namespace: org.status?.namespace,
+            creationTimestamp: org.metadata.creationTimestamp,
             credentials: [],
             members: [],
           };
@@ -183,6 +184,7 @@ export function organizationsLoadMAPI(
             id: securityv1alpha1.getOrganizationName(org),
             name: securityv1alpha1.getOrganizationUIName(org),
             namespace: org.status?.namespace,
+            creationTimestamp: org.metadata.creationTimestamp,
             credentials: [],
             members: [],
           };

@@ -32,6 +32,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import Route from 'Route';
+import OrganizationCreatedNote from 'UI/Display/Organizations/OrganizationCreatedNote';
 
 import AccountSettings from './AccountSettings/AccountSettings';
 import Apps from './Apps/Apps';
@@ -96,6 +97,10 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
       ? !firstLoadComplete || permissionsIsLoading
       : !firstLoadComplete;
 
+  const selectedOrg = selectedOrganization
+    ? organizations.items[selectedOrganization]
+    : undefined;
+
   return (
     <DocumentTitle>
       <LoadingOverlay loading={isLoading}>
@@ -111,6 +116,9 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
               user={user}
             />
             <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
+              {selectedOrg && (
+                <OrganizationCreatedNote organization={selectedOrg} />
+              )}
               <div className='main' data-testid='main'>
                 <Switch>
                   {supportsClustersViaMapi ? (
