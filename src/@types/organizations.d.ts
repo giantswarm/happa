@@ -29,6 +29,7 @@ interface IOrganization {
   id: string;
   name?: string;
   namespace?: string;
+  creationTimestamp?: string;
 
   // Injected by client-side.
   members?: IOrganizationMember[] | null;

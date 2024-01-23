@@ -1,7 +1,9 @@
+import { usePermissionsKey } from 'MAPI/permissions/usePermissions';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSWRConfig } from 'swr';
 import DropdownMenu, { DropdownTrigger, List } from 'UI/Controls/DropdownMenu';
 import Truncated from 'UI/Util/Truncated';
 import RoutePath from 'utils/routePath';
@@ -143,6 +145,16 @@ const OrganizationDropdown = ({
       .map(({ id }) => id)
       .sort((a, b) => a.localeCompare(b));
   }, [organizations.items, organizations.isFetching]);
+
+  const lastUpdated = organizations.lastUpdated;
+  const lastUpdatedRef = useRef(lastUpdated);
+  const { mutate } = useSWRConfig();
+  useEffect(() => {
+    if (lastUpdatedRef.current !== lastUpdated) {
+      mutate(usePermissionsKey);
+      lastUpdatedRef.current = lastUpdated;
+    }
+  }, [lastUpdated, mutate]);
 
   return (
     <Wrapper>
