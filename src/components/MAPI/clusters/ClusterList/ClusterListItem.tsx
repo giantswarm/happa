@@ -277,6 +277,9 @@ const ClusterListItem: React.FC<
                     {isClusterApp || isImported ? (
                       <ClusterListItemVersionsInfo
                         cluster={cluster}
+                        providerCluster={
+                          providerCluster === null ? undefined : providerCluster
+                        }
                         canListCPNodes={canListCPNodes}
                       />
                     ) : (
