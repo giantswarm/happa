@@ -5,7 +5,10 @@ import { Providers, StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
+import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
+import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
+import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
@@ -56,6 +59,7 @@ describe('ClusterDetailWidgetVersions', () => {
     render(
       getComponent({
         cluster: undefined,
+        providerCluster: undefined,
       })
     );
 
@@ -78,6 +82,7 @@ describe('ClusterDetailWidgetVersions on GCP', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterGCP1,
+        providerCluster: capgv1beta1Mocks.randomGCPCluster1,
       })
     );
 
@@ -90,6 +95,7 @@ describe('ClusterDetailWidgetVersions on GCP', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterGCP1,
+        providerCluster: capgv1beta1Mocks.randomGCPCluster1,
       })
     );
 
@@ -114,6 +120,7 @@ describe('ClusterDetailWidgetVersions on GCP', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterGCP1,
+        providerCluster: capgv1beta1Mocks.randomGCPCluster1,
       })
     );
 
@@ -132,6 +139,7 @@ describe('ClusterDetailWidgetVersions on GCP', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterGCP1,
+        providerCluster: capgv1beta1Mocks.randomGCPCluster1,
       })
     );
 
@@ -158,6 +166,7 @@ describe('ClusterDetailWidgetVersions on CAPA', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterCAPA1,
+        providerCluster: capav1beta1Mocks.randomAWSCluster1,
       })
     );
 
@@ -170,6 +179,7 @@ describe('ClusterDetailWidgetVersions on CAPA', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterCAPA1,
+        providerCluster: capav1beta1Mocks.randomAWSCluster1,
       })
     );
 
@@ -200,6 +210,7 @@ describe('ClusterDetailWidgetVersions on CAPZ', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterCAPZ1,
+        providerCluster: capzv1beta1Mocks.randomAzureClusterCAPZ1,
       })
     );
 
@@ -212,6 +223,7 @@ describe('ClusterDetailWidgetVersions on CAPZ', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterCAPZ1,
+        providerCluster: capzv1beta1Mocks.randomAzureClusterCAPZ1,
       })
     );
 
@@ -236,6 +248,7 @@ describe('ClusterDetailWidgetVersions on CAPZ', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterCAPZ1,
+        providerCluster: capzv1beta1Mocks.randomAzureClusterCAPZ1,
       })
     );
 
