@@ -5,7 +5,7 @@ orbs:
 defaults: &defaults
   working_directory: ~/happa
   docker:
-    - image: cimg/node:16.20
+    - image: cimg/node:20.11
 
 job_filters: &job_filters
   filters:
@@ -221,8 +221,8 @@ jobs:
 
       - restore_cache:
           keys:
-          - v3-npm-deps-{{ checksum "yarn.lock" }}
-          - v3-npm-deps-
+          - v5-npm-deps-{{ checksum "yarn.lock" }}
+          - v5-npm-deps-
 
       - run:
           name: Print version information
