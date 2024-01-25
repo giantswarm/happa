@@ -25,6 +25,7 @@ const esModules = [
   'unist-builder',
   '@rjsf/core/node_modules',
   'vfile',
+  'trim-lines',
 ].join('|');
 
 const config: Config.InitialOptions = {

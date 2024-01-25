@@ -24,7 +24,7 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
           >
             <svg
               aria-label="Calendar"
-              class="StyledIcon-sc-ofa7kd-0 fqIJoZ"
+              class="StyledIcon-sc-ofa7kd-0 cYvCKl"
               viewBox="0 0 24 24"
             >
               <path
@@ -86,7 +86,7 @@ exports[`DateInput renders a disabled input 1`] = `
           >
             <svg
               aria-label="Calendar"
-              class="StyledIcon-sc-ofa7kd-0 kFgwXN"
+              class="StyledIcon-sc-ofa7kd-0 cBAfEZ"
               viewBox="0 0 24 24"
             >
               <path
@@ -136,7 +136,7 @@ exports[`DateInput renders a simple input 1`] = `
           >
             <svg
               aria-label="Calendar"
-              class="StyledIcon-sc-ofa7kd-0 kFgwXN"
+              class="StyledIcon-sc-ofa7kd-0 cBAfEZ"
               viewBox="0 0 24 24"
             >
               <path
@@ -198,7 +198,7 @@ exports[`DateInput renders an input with a help message 1`] = `
           >
             <svg
               aria-label="Calendar"
-              class="StyledIcon-sc-ofa7kd-0 kFgwXN"
+              class="StyledIcon-sc-ofa7kd-0 cBAfEZ"
               viewBox="0 0 24 24"
             >
               <path
@@ -255,7 +255,7 @@ exports[`DateInput renders an input with a label 1`] = `
           >
             <svg
               aria-label="Calendar"
-              class="StyledIcon-sc-ofa7kd-0 kFgwXN"
+              class="StyledIcon-sc-ofa7kd-0 cBAfEZ"
               viewBox="0 0 24 24"
             >
               <path
@@ -312,7 +312,7 @@ exports[`DateInput renders an input with a validation error 1`] = `
           >
             <svg
               aria-label="Calendar"
-              class="StyledIcon-sc-ofa7kd-0 kFgwXN"
+              class="StyledIcon-sc-ofa7kd-0 cBAfEZ"
               viewBox="0 0 24 24"
             >
               <path
@@ -374,7 +374,7 @@ exports[`DateInput renders an input with an info message 1`] = `
           >
             <svg
               aria-label="Calendar"
-              class="StyledIcon-sc-ofa7kd-0 kFgwXN"
+              class="StyledIcon-sc-ofa7kd-0 cBAfEZ"
               viewBox="0 0 24 24"
             >
               <path

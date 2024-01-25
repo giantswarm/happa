@@ -55,7 +55,7 @@ exports[`Select renders a disabled input 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 gwztcJ"
+                class="StyledIcon-sc-ofa7kd-0 dckCqB"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -122,7 +122,7 @@ exports[`Select renders a simple input 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 gwztcJ"
+                class="StyledIcon-sc-ofa7kd-0 dckCqB"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -189,7 +189,7 @@ exports[`Select renders an input inside the dropdown, that can search through th
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 gwztcJ"
+                class="StyledIcon-sc-ofa7kd-0 dckCqB"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -267,7 +267,7 @@ exports[`Select renders an input with a help message 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 gwztcJ"
+                class="StyledIcon-sc-ofa7kd-0 dckCqB"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -340,7 +340,7 @@ exports[`Select renders an input with a label 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 gwztcJ"
+                class="StyledIcon-sc-ofa7kd-0 dckCqB"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -413,7 +413,7 @@ exports[`Select renders an input with a validation error 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 gwztcJ"
+                class="StyledIcon-sc-ofa7kd-0 dckCqB"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -491,7 +491,7 @@ exports[`Select renders an input with an info message 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 gwztcJ"
+                class="StyledIcon-sc-ofa7kd-0 dckCqB"
                 viewBox="0 0 24 24"
               >
                 <path

@@ -3,6 +3,9 @@
   "private": true,
   "src": "src",
   "test": "test",
+  "engines": {
+    "node": "20"
+  },
   "scripts": {
     "lint": "./node_modules/.bin/eslint --ext .js,.ts,.tsx ./src/",
     "lint:fix": "yarn lint --fix",
@@ -247,7 +250,8 @@
     "http-proxy": "1.18.1",
     "node-fetch": "2.6.12",
     "trim": "1.0.1",
-    "underscore": "1.13.6"
+    "underscore": "1.13.6",
+    "string-width": "4.2.3"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
