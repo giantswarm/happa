@@ -1,6 +1,8 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
+import { ProviderCluster } from 'MAPI/types';
+import { isResourceImported } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import React, { useMemo } from 'react';
@@ -23,6 +25,8 @@ import {
   fetchControlPlaneNodesK8sVersions,
   fetchControlPlaneNodesK8sVersionsKey,
   formatK8sVersion,
+  getClusterAppName,
+  getClusterAppVersion,
 } from '../utils';
 
 const StyledLink = styled.a`
@@ -50,23 +54,24 @@ interface IClusterDetailWidgetVersionsProps
     'title'
   > {
   cluster?: capiv1beta1.ICluster;
+  providerCluster?: ProviderCluster;
 }
 
 const ClusterDetailWidgetVersions: React.FC<
   IClusterDetailWidgetVersionsProps
-> = ({ cluster, ...props }) => {
+> = ({ cluster, providerCluster, ...props }) => {
+  const isClusterImported = cluster ? isResourceImported(cluster) : undefined;
+
   const clusterAppVersion = cluster
-    ? capiv1beta1.getClusterAppVersion(cluster)
+    ? getClusterAppVersion(providerCluster)
     : undefined;
 
   const clusterAppReleaseNotesURL = useMemo(() => {
-    if (!cluster) return undefined;
-
-    const clusterAppName = capiv1beta1.getClusterAppName(cluster);
+    const clusterAppName = getClusterAppName(providerCluster);
     if (!clusterAppName || !clusterAppVersion) return '';
 
     return getReleaseNotesURL(clusterAppName, clusterAppVersion);
-  }, [cluster, clusterAppVersion]);
+  }, [providerCluster, clusterAppVersion]);
 
   const provider = window.config.info.general.provider;
   const { canList: canListCPNodes } = usePermissionsForCPNodes(
@@ -99,12 +104,12 @@ const ClusterDetailWidgetVersions: React.FC<
 
   return (
     <ClusterDetailWidget
-      title={clusterAppVersion ? 'Versions' : 'Kubernetes'}
+      title={cluster && isClusterImported ? 'Kubernetes' : 'Versions'}
       inline={true}
       {...props}
     >
       <DotSeparatedList>
-        {clusterAppVersion && (
+        {cluster && !isClusterImported && (
           <DotSeparatedListItem>
             <OptionalValue
               value={clusterAppVersion}

@@ -816,6 +816,18 @@ describe('OrganizationDetailGeneral on GCP', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/gcpclusters/${capiv1beta1Mocks.randomClusterListGCP.items[0].metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capgv1beta1Mocks.randomGCPCluster1);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/gcpclusters/${capiv1beta1Mocks.randomClusterListGCP.items[1].metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capgv1beta1Mocks.randomGCPCluster2);
+
+    nock(window.config.mapiEndpoint)
+      .get(
         `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machines/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterListGCP.items[0].metadata.name}%2Ccluster.x-k8s.io%2Fcontrol-plane%3D`
       )
       .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterGCP1MachineList);
@@ -949,6 +961,19 @@ describe('OrganizationDetailGeneral on CAPA', () => {
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterListCAPA);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsclusters/${capiv1beta1Mocks.randomClusterListCAPA.items[0].metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capav1beta1Mocks.randomAWSCluster1);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsclusters/${capiv1beta1Mocks.randomClusterListCAPA.items[1].metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capav1beta1Mocks.randomAWSCluster2);
+
     nock(window.config.mapiEndpoint)
       .get(
         `/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/machinepools/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3D${capiv1beta1Mocks.randomClusterCAPA1.metadata.name}`
@@ -1037,6 +1062,18 @@ describe('OrganizationDetailGeneral on CAPZ', () => {
     nock(window.config.mapiEndpoint)
       .get('/apis/cluster.x-k8s.io/v1beta1/namespaces/org-org1/clusters/')
       .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterListCAPZ);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azureclusters/${capiv1beta1Mocks.randomClusterListCAPZ.items[0].metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureClusterCAPZ1);
+
+    nock(window.config.mapiEndpoint)
+      .get(
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/azureclusters/${capiv1beta1Mocks.randomClusterListCAPZ.items[1].metadata.name}/`
+      )
+      .reply(StatusCodes.Ok, capzv1beta1Mocks.randomAzureClusterCAPZ2);
 
     // Control plane resources
     nock(window.config.mapiEndpoint)

@@ -1,7 +1,9 @@
 import {
   fetchControlPlaneNodesK8sVersions,
   formatK8sVersion,
+  getClusterAppVersion,
   hasClusterAppLabel,
+  IProviderClusterForCluster,
 } from 'MAPI/clusters/utils';
 import { IPermissions } from 'MAPI/permissions/types';
 import { ControlPlaneNode, NodePool } from 'MAPI/types';
@@ -382,15 +384,15 @@ export function fetchReleasesSummaryKey(
 export async function fetchVersionsSummary(
   httpClientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
-  clusters: capiv1beta1.ICluster[]
+  clustersWithProviderClusters: IProviderClusterForCluster[]
 ): Promise<ui.IOrganizationDetailVersionsSummary> {
   const summary: ui.IOrganizationDetailVersionsSummary = {};
 
   // cluster app versions
   let clusterAppVersions: string[] = [];
-  for (const cluster of clusters) {
-    if (!hasClusterAppLabel(cluster)) continue;
-    const version = capiv1beta1.getClusterAppVersion(cluster);
+  for (const { cluster, providerCluster } of clustersWithProviderClusters) {
+    if (!hasClusterAppLabel(cluster) || providerCluster === null) continue;
+    const version = getClusterAppVersion(providerCluster);
     if (!version) continue;
 
     clusterAppVersions.push(version);
@@ -406,7 +408,7 @@ export async function fetchVersionsSummary(
   // Get all Kubernetes versions of the clusters
   let k8sVersions: string[] = [];
   const responses = await Promise.allSettled(
-    clusters.map((cluster) => {
+    clustersWithProviderClusters.map(({ cluster }) => {
       return fetchControlPlaneNodesK8sVersions(
         httpClientFactory,
         auth,

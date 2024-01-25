@@ -1,13 +1,21 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
 import { usePermissionsForCPNodes } from 'MAPI/clusters/permissions/usePermissionsForCPNodes';
-import { hasClusterAppLabel } from 'MAPI/clusters/utils';
+import {
+  compareClusters,
+  hasClusterAppLabel,
+  IProviderClusterForCluster,
+  mapClustersToProviderClusters,
+} from 'MAPI/clusters/utils';
 import { usePermissionsForReleases } from 'MAPI/releases/permissions/usePermissionsForReleases';
 import { ClusterList } from 'MAPI/types';
 import {
   extractErrorMessage,
   fetchClusterList,
   fetchClusterListKey,
+  fetchProviderClustersForClusters,
+  fetchProviderClustersForClustersKey,
+  IProviderClusterForClusterName,
   isResourceImported,
   supportsReleases,
 } from 'MAPI/utils';
@@ -20,7 +28,7 @@ import { IAsynchronousDispatch } from 'model/stores/asynchronousAction';
 import { organizationsLoadMAPI } from 'model/stores/organization/actions';
 import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useSWR from 'swr';
 import CLIGuidesList from 'UI/Display/MAPI/CLIGuide/CLIGuidesList';
@@ -107,6 +115,54 @@ const OrganizationDetailGeneral: React.FC<
 
     ErrorReporter.getInstance().notify(clusterListError);
   }, [clusterListError]);
+
+  const providerClusterKey = clusterList
+    ? fetchProviderClustersForClustersKey(clusterList.items)
+    : null;
+
+  const {
+    data: providerClusterList,
+    error: providerClusterListError,
+    isLoading: providerClusterListIsLoading,
+  } = useSWR<IProviderClusterForClusterName[], GenericResponseError>(
+    providerClusterKey,
+    () =>
+      fetchProviderClustersForClusters(clientFactory, auth, clusterList!.items)
+  );
+
+  useEffect(() => {
+    if (providerClusterListError) {
+      new FlashMessage(
+        'There was a problem loading the cluster list.',
+        messageType.ERROR,
+        messageTTL.MEDIUM,
+        providerClusterListError.message
+      );
+
+      ErrorReporter.getInstance().notify(providerClusterListError);
+    }
+  }, [providerClusterListError]);
+
+  const clustersRef = useRef<IProviderClusterForCluster[]>();
+  const sortedClustersWithProviderClusters = useMemo(() => {
+    if (clusterListIsLoading || providerClusterListIsLoading) {
+      clustersRef.current = undefined;
+    }
+
+    if (clusterList?.items && providerClusterList) {
+      clustersRef.current = mapClustersToProviderClusters(
+        clusterList.items,
+        providerClusterList
+      ).sort(compareClusters);
+    }
+
+    return clustersRef.current;
+  }, [
+    clusterList?.items,
+    clusterListIsLoading,
+    providerClusterList,
+    providerClusterListIsLoading,
+  ]);
 
   const orgPermissions = usePermissionsForOrganizations(provider, 'default');
 
@@ -200,9 +256,10 @@ const OrganizationDetailGeneral: React.FC<
     ];
   }, [clusterList]);
 
-  const versionsSummaryKey = hasClusterApp
-    ? () => fetchVersionsSummaryKey(clusterList?.items)
-    : null;
+  const versionsSummaryKey =
+    sortedClustersWithProviderClusters && hasClusterApp
+      ? () => fetchVersionsSummaryKey(clusterList?.items)
+      : null;
 
   const {
     data: versionsSummary,
@@ -210,7 +267,12 @@ const OrganizationDetailGeneral: React.FC<
     isLoading: versionsSummaryIsLoading,
   } = useSWR<ui.IOrganizationDetailVersionsSummary, GenericResponseError>(
     versionsSummaryKey,
-    () => fetchVersionsSummary(clientFactory, auth, clusterList!.items)
+    () =>
+      fetchVersionsSummary(
+        clientFactory,
+        auth,
+        sortedClustersWithProviderClusters!
+      )
   );
 
   useEffect(() => {

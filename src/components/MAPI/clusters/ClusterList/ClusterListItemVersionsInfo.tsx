@@ -1,4 +1,5 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
+import { ProviderCluster } from 'MAPI/types';
 import { isResourceImported, isResourceManagedByGitOps } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
@@ -13,18 +14,20 @@ import {
   fetchControlPlaneNodesK8sVersions,
   fetchControlPlaneNodesK8sVersionsKey,
   formatK8sVersion,
+  getClusterAppVersion,
 } from '../utils';
 
 interface IClusterListItemVersionsInfoProps {
   cluster?: capiv1beta1.ICluster;
+  providerCluster?: ProviderCluster;
   canListCPNodes?: boolean;
 }
 
 const ClusterListItemVersionsInfo: React.FC<
   IClusterListItemVersionsInfoProps
-> = ({ cluster, canListCPNodes }) => {
-  const clusterAppVersion = cluster
-    ? capiv1beta1.getClusterAppVersion(cluster)
+> = ({ cluster, providerCluster, canListCPNodes }) => {
+  const clusterAppVersion = providerCluster
+    ? getClusterAppVersion(providerCluster)
     : undefined;
 
   const clientFactory = useHttpClientFactory();
