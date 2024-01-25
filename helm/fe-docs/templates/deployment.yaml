@@ -18,8 +18,13 @@ spec:
         app: {{ .Values.name }}
     spec:
       securityContext:
-        runAsUser: {{ .Values.userID }}
-        runAsGroup: {{ .Values.groupID }}
+        fsGroup: 1337
+        {{- if ge (int .Capabilities.KubeVersion.Minor) 19 }}
+        {{- with .Values.podSeccompProfile }}
+        seccompProfile:
+          {{- . | toYaml | nindent 10 }}
+        {{- end }}
+        {{- end }}
       containers:
         - name: {{ .Values.image.name }}
           image: "{{ .Values.registry.domain }}/{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
@@ -45,6 +50,18 @@ spec:
           volumeMounts:
             - mountPath: /var/cache/nginx
               name: cache-volume
+          securityContext:
+            {{- with .Values.containerSecurityContext }}
+            {{- . | toYaml | nindent 12 }}
+            {{- end }}
+            readOnlyRootFilesystem: true
+            runAsUser: 100
+            {{- if ge (int .Capabilities.KubeVersion.Minor) 19 }}
+            {{- with .Values.seccompProfile }}
+            seccompProfile:
+              {{- . | toYaml | nindent 16 }}
+            {{- end }}
+            {{- end }}
       volumes:
         - name: cache-volume
           emptyDir: {}
