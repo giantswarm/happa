@@ -43,7 +43,7 @@ exports[`CLIGuide renders the contents when open 1`] = `
             >
               <svg
                 aria-label="FormUp"
-                class="StyledIcon-sc-ofa7kd-0 XHhNK"
+                class="StyledIcon-sc-ofa7kd-0 gLGkbm"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -123,7 +123,7 @@ exports[`CLIGuide renders without crashing 1`] = `
             >
               <svg
                 aria-label="FormDown"
-                class="StyledIcon-sc-ofa7kd-0 XHhNK"
+                class="StyledIcon-sc-ofa7kd-0 gLGkbm"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -197,7 +197,7 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
               >
                 <svg
                   aria-label="FormDown"
-                  class="StyledIcon-sc-ofa7kd-0 XHhNK"
+                  class="StyledIcon-sc-ofa7kd-0 gLGkbm"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -269,7 +269,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
             >
               <svg
                 aria-label="FormUp"
-                class="StyledIcon-sc-ofa7kd-0 XHhNK"
+                class="StyledIcon-sc-ofa7kd-0 gLGkbm"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -332,7 +332,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                       >
                         <svg
                           aria-label="FormDown"
-                          class="StyledIcon-sc-ofa7kd-0 XHhNK"
+                          class="StyledIcon-sc-ofa7kd-0 gLGkbm"
                           viewBox="0 0 24 24"
                         >
                           <path
@@ -395,7 +395,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                       >
                         <svg
                           aria-label="FormDown"
-                          class="StyledIcon-sc-ofa7kd-0 XHhNK"
+                          class="StyledIcon-sc-ofa7kd-0 gLGkbm"
                           viewBox="0 0 24 24"
                         >
                           <path
