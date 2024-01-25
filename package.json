@@ -217,7 +217,7 @@
     "jest-environment-jsdom": "29.6.2",
     "json-loader": "0.5.7",
     "json-schema-to-typescript": "13.0.2",
-    "lint-staged": "13.2.3",
+    "lint-staged": "13.3.0",
     "mini-css-extract-plugin": "2.7.6",
     "nock": "13.3.8",
     "node-sass": "9.0.0",
@@ -251,7 +251,8 @@
     "node-fetch": "2.6.12",
     "trim": "1.0.1",
     "underscore": "1.13.6",
-    "string-width": "4.2.3"
+    "string-width": "4.2.3",
+    "wrap-ansi": "7.0.0"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
