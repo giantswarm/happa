@@ -221,8 +221,8 @@ jobs:
 
       - restore_cache:
           keys:
-          - v5-npm-deps-{{ checksum "yarn.lock" }}
-          - v5-npm-deps-
+          - v3-npm-deps-{{ checksum "yarn.lock" }}
+          - v3-npm-deps-
 
       - run:
           name: Print version information
