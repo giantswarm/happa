@@ -113,3 +113,7 @@ containerSecurityContext:
     drop:
       - ALL
   runAsNonRoot: true
+
+global:
+  podSecurityStandards:
+    enforced: false
