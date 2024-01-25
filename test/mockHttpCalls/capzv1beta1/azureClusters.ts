@@ -295,7 +295,7 @@ export const randomAzureClusterCAPZ1: capzv1beta1.IAzureCluster = {
     labels: {
       app: 'cluster-azure',
       'app.kubernetes.io/managed-by': 'Helm',
-      'app.kubernetes.io/version': '',
+      'app.kubernetes.io/version': '0.0.15',
       'application.giantswarm.io/team': 'team',
       'cluster.x-k8s.io/cluster-name': 'test12',
       'giantswarm.io/cluster': 'test12',

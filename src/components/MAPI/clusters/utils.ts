@@ -1111,6 +1111,18 @@ export function hasClusterAppLabel(cluster: capiv1beta1.ICluster): boolean {
   );
 }
 
+export function getClusterAppVersion(providerCluster: ProviderCluster) {
+  if (!providerCluster) return undefined;
+
+  return providerCluster.metadata.labels?.[capiv1beta1.labelAppVersion];
+}
+
+export function getClusterAppName(providerCluster: ProviderCluster) {
+  if (!providerCluster) return undefined;
+
+  return providerCluster.metadata.labels?.[capiv1beta1.labelApp];
+}
+
 /**
  * Determines whether the cluster is read only.
  * @param cluster

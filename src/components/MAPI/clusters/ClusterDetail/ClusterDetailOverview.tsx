@@ -33,7 +33,11 @@ import SetClusterLabelsGuide from '../guides/SetClusterLabelsGuide';
 import UpgradeClusterGuide from '../guides/UpgradeClusterGuide';
 import { usePermissionsForClusters } from '../permissions/usePermissionsForClusters';
 import { usePermissionsForCPNodes } from '../permissions/usePermissionsForCPNodes';
-import { hasClusterAppLabel, isReadOnlyCluster } from '../utils';
+import {
+  getClusterAppVersion,
+  hasClusterAppLabel,
+  isReadOnlyCluster,
+} from '../utils';
 import ClusterDetailWidgetControlPlaneNodes from './ClusterDetailWidgetControlPlaneNodes';
 import ClusterDetailWidgetCreated from './ClusterDetailWidgetCreated';
 import ClusterDetailWidgetKubernetesAPI from './ClusterDetailWidgetKubernetesAPI';
@@ -130,9 +134,9 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
     if (!cluster) return undefined;
 
     return isClusterApp
-      ? capiv1beta1.getClusterAppVersion(cluster)
+      ? getClusterAppVersion(providerCluster)
       : capiv1beta1.getReleaseVersion(cluster);
-  }, [cluster, isClusterApp]);
+  }, [cluster, providerCluster, isClusterApp]);
 
   const [targetReleaseVersion, setTargetReleaseVersion] = useState('');
 
@@ -166,7 +170,11 @@ const ClusterDetailOverview: React.FC<React.PropsWithChildren<{}>> = () => {
       {typeof cluster === 'undefined' ? (
         <ClusterDetailWidgetVersionsLoader basis='100%' />
       ) : isClusterApp || isClusterImported ? (
-        <ClusterDetailWidgetVersions cluster={cluster} basis='100%' />
+        <ClusterDetailWidgetVersions
+          cluster={cluster}
+          providerCluster={providerCluster}
+          basis='100%'
+        />
       ) : (
         <ClusterDetailWidgetRelease
           cluster={cluster}
