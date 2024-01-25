@@ -251,7 +251,8 @@
     "node-fetch": "2.6.12",
     "trim": "1.0.1",
     "underscore": "1.13.6",
-    "string-width": "4.2.3"
+    "string-width": "4.2.3",
+    "wrap-ansi": "7.0.0"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
