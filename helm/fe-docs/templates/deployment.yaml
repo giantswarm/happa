@@ -54,7 +54,8 @@ spec:
             {{- with .Values.containerSecurityContext }}
             {{- . | toYaml | nindent 12 }}
             {{- end }}
-            readOnlyRootFilesystem: true
+            # This is needed for startup and to write configuration files by the app
+            readOnlyRootFilesystem: false
             runAsUser: 100
             {{- if ge (int .Capabilities.KubeVersion.Minor) 19 }}
             {{- with .Values.seccompProfile }}
