@@ -1,8 +1,6 @@
 name: happa
 namespace: giantswarm
 
-registry:
-  domain: gsoci.azurecr.io
 image:
   repository: giantswarm/happa
 
