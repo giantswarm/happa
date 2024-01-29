@@ -48,7 +48,7 @@ spec:
           {{- with .Values.containerSecurityContext }}
           {{- . | toYaml | nindent 10 }}
           {{- end }}
-          readOnlyRootFilesystem: true
+          readOnlyRootFilesystem: false
           runAsUser: 100
           {{- if ge (int .Capabilities.KubeVersion.Minor) 19 }}
           {{- with .Values.seccompProfile }}
