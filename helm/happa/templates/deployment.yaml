@@ -34,7 +34,6 @@ spec:
               topologyKey: kubernetes.io/hostname
       serviceAccountName: {{ .Values.name }}
       securityContext:
-        fsGroup: 1337
         {{- if ge (int .Capabilities.KubeVersion.Minor) 19 }}
         {{- with .Values.podSeccompProfile }}
         seccompProfile:
@@ -48,8 +47,8 @@ spec:
           {{- with .Values.containerSecurityContext }}
           {{- . | toYaml | nindent 10 }}
           {{- end }}
-          readOnlyRootFilesystem: false
-          runAsUser: 100
+          runAsUser: {{ .Values.userID }}
+          runAsGroup: {{ .Values.groupID }}
           {{- if ge (int .Capabilities.KubeVersion.Minor) 19 }}
           {{- with .Values.seccompProfile }}
           seccompProfile:
