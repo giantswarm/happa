@@ -282,12 +282,24 @@ const AppDetail: React.FC<React.PropsWithChildren<IAppDetailPageProps>> = (
                 skipHtml
                 className='markdown'
                 components={{
-                  h1: HeadingRenderer,
-                  h2: HeadingRenderer,
-                  h3: HeadingRenderer,
-                  h4: HeadingRenderer,
-                  h5: HeadingRenderer,
-                  h6: HeadingRenderer,
+                  h1: ({ node, ...rest }) => (
+                    <HeadingRenderer tagName={node?.tagName} {...rest} />
+                  ),
+                  h2: ({ node, ...rest }) => (
+                    <HeadingRenderer tagName={node?.tagName} {...rest} />
+                  ),
+                  h3: ({ node, ...rest }) => (
+                    <HeadingRenderer tagName={node?.tagName} {...rest} />
+                  ),
+                  h4: ({ node, ...rest }) => (
+                    <HeadingRenderer tagName={node?.tagName} {...rest} />
+                  ),
+                  h5: ({ node, ...rest }) => (
+                    <HeadingRenderer tagName={node?.tagName} {...rest} />
+                  ),
+                  h6: ({ node, ...rest }) => (
+                    <HeadingRenderer tagName={node?.tagName} {...rest} />
+                  ),
                   a: (p: IATagProps) => (
                     <a
                       href={urlFor(
