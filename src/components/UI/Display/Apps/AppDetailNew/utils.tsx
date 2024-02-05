@@ -2,7 +2,7 @@ import { Constants } from 'model/constants';
 import React from 'react';
 
 interface IHeadingProps extends React.ComponentPropsWithoutRef<'h1'> {
-  level: number;
+  tagName?: string;
 }
 
 export interface IATagProps extends React.ComponentPropsWithoutRef<'a'> {
@@ -16,7 +16,7 @@ export function HeadingRenderer(headingProps: IHeadingProps) {
   const slug = text.toLowerCase().replace(/\W/g, '-');
 
   return React.createElement(
-    `h${headingProps.level}`,
+    `${headingProps.tagName ?? 'h1'}`,
     { id: slug },
     headingProps.children
   );
