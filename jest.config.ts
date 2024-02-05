@@ -26,6 +26,12 @@ const esModules = [
   '@rjsf/core/node_modules',
   'vfile',
   'trim-lines',
+  'devlop',
+  'hast-util-to-jsx-runtime',
+  'estree-util-is-identifier-name',
+  'html-url-attributes',
+  'zwitch',
+  'longest-streak',
 ].join('|');
 
 const config: Config.InitialOptions = {
