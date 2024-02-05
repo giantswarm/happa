@@ -10,7 +10,10 @@ module.exports = function (api) {
           shippedProposals: true,
           bugfixes: true,
           loose: true,
-          corejs: '3.18.3',
+          corejs: {
+            version: '3.32',
+            proposals: true,
+          },
         },
       ],
       '@babel/preset-react',
