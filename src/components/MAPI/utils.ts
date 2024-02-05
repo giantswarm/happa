@@ -116,8 +116,10 @@ export function compareNodePools(a: NodePool, b: NodePool) {
   ) {
     // Sort by description.
     const descriptionComparison = capiv1beta1
-      .getMachinePoolDescription(a)
-      .localeCompare(capiv1beta1.getMachinePoolDescription(b));
+      .getMachinePoolDescription(a as capiv1beta1.IMachinePool)
+      .localeCompare(
+        capiv1beta1.getMachinePoolDescription(b as capiv1beta1.IMachinePool)
+      );
     if (descriptionComparison !== 0) {
       return descriptionComparison;
     }
@@ -1543,12 +1545,10 @@ export function getProviderClusterLocation(
       return (providerCluster as capav1beta1.IAWSCluster).spec?.region ?? '';
 
     case kind === capgv1beta1.GCPCluster:
-      return (providerCluster as capgv1beta1.IGCPCluster).spec?.region ?? '';
+      return providerCluster.spec?.region ?? '';
 
     case kind === capzv1beta1.AzureCluster:
-      return (
-        (providerCluster as capzv1beta1.IAzureCluster).spec?.location ?? ''
-      );
+      return providerCluster.spec?.location ?? '';
 
     case kind === infrav1alpha3.AWSCluster &&
       apiGroup === infrav1alpha3.ApiGroup: {
@@ -1575,10 +1575,7 @@ export function getControlPlaneNodeLocation(
 
   switch (true) {
     case kind === capav1beta2.AWSManagedControlPlane:
-      return (
-        (controlPlaneNode as capav1beta2.IAWSManagedControlPlane).spec
-          ?.region ?? ''
-      );
+      return controlPlaneNode.spec?.region ?? '';
 
     default:
       return undefined;
