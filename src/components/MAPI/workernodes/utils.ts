@@ -188,7 +188,7 @@ export async function updateNodePoolDescription(
           if (!draft) return;
 
           for (let i = 0; i < draft.length; i++) {
-            if (draft[i]!.nodePoolName === providerNodePool!.metadata.name) {
+            if (draft[i].nodePoolName === providerNodePool!.metadata.name) {
               draft[i] = { ...draft[i], providerNodePool };
             }
           }
@@ -672,7 +672,7 @@ export async function updateNodePoolScaling(
           if (!draft) return;
 
           for (let i = 0; i < draft.length; i++) {
-            if (draft[i]!.nodePoolName === providerNodePool!.metadata.name) {
+            if (draft[i].nodePoolName === providerNodePool!.metadata.name) {
               draft[i] = { ...draft[i], providerNodePool };
             }
           }
