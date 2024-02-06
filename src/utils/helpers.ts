@@ -570,7 +570,7 @@ export function traverseJSONSchemaObject(
       break;
 
     case obj.anyOf !== undefined:
-      for (const [idx, x] of obj.anyOf!.entries()) {
+      for (const [idx, x] of obj.anyOf.entries()) {
         if (typeof x === 'object') {
           traverseJSONSchemaObject(
             x,
@@ -582,7 +582,7 @@ export function traverseJSONSchemaObject(
       break;
 
     case obj.allOf !== undefined:
-      for (const [idx, x] of obj.allOf!.entries()) {
+      for (const [idx, x] of obj.allOf.entries()) {
         if (typeof x === 'object') {
           traverseJSONSchemaObject(
             x,
@@ -594,7 +594,7 @@ export function traverseJSONSchemaObject(
       break;
 
     case obj.oneOf !== undefined:
-      for (const [idx, x] of obj.oneOf!.entries()) {
+      for (const [idx, x] of obj.oneOf.entries()) {
         if (typeof x === 'object') {
           traverseJSONSchemaObject(
             x,

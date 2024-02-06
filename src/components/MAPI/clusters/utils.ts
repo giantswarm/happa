@@ -539,7 +539,7 @@ export async function createCluster(
         providerCluster = await capzv1beta1.createAzureCluster(
           httpClientFactory(),
           auth,
-          config.providerCluster as capzv1beta1.IAzureCluster
+          config.providerCluster
         );
         mutate(
           fetchProviderClusterForClusterKey(config.cluster),
@@ -666,7 +666,7 @@ export async function createCluster(
         providerCluster = await infrav1alpha3.createAWSCluster(
           httpClientFactory(),
           auth,
-          config.providerCluster as infrav1alpha3.IAWSCluster
+          config.providerCluster
         );
         mutate(
           fetchProviderClusterForClusterKey(config.cluster),

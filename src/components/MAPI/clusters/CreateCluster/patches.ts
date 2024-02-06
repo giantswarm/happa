@@ -115,8 +115,7 @@ export function withClusterDescription(newDescription: string): ClusterPatch {
       providerCluster.apiVersion === infrav1alpha3.ApiVersion &&
       providerCluster.spec
     ) {
-      (providerCluster as infrav1alpha3.IAWSCluster).spec!.cluster.description =
-        newDescription;
+      providerCluster.spec.cluster.description = newDescription;
     }
   };
 }
