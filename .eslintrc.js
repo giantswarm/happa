@@ -228,6 +228,7 @@ module.exports = {
     '@typescript-eslint/restrict-template-expressions': 0,
     '@typescript-eslint/no-shadow': 2,
     '@typescript-eslint/no-non-null-assertion': 0,
+    '@typescript-eslint/no-redundant-type-constituents': 0,
   },
   overrides: [
     {

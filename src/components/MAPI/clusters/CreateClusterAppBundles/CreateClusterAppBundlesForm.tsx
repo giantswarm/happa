@@ -16,7 +16,9 @@ import {
   PrototypeSchemas,
 } from './schemaUtils';
 
-const validator = customizeValidator({ AjvClass: Ajv2020 });
+const validator = customizeValidator<RJSFSchema, RJSFSchema>({
+  AjvClass: Ajv2020,
+});
 
 export const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return <Line prompt={false} text={children} />;

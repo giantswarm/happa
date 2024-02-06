@@ -54,7 +54,7 @@ export class SentryErrorNotifier implements IErrorReporterNotifier {
         break;
 
       case typeof error === 'string':
-        Sentry.captureException(new Error(error as string), {
+        Sentry.captureException(new Error(error), {
           extra: extraInfo,
         });
         break;

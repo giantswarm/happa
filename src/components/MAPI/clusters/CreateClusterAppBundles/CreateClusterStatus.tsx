@@ -493,7 +493,9 @@ const CreateClusterAppBundlesStatus: React.FC<
                   </StatusListItem>
                   {nodePool.kind === 'MachinePool' ? (
                     <StatusListItem
-                      status={getNodePoolInfrastructureReadyStatus(nodePool)}
+                      status={getNodePoolInfrastructureReadyStatus(
+                        nodePool as capiv1beta1.IMachinePool
+                      )}
                       info='When done, the infrastructure provider reports this node pool as ready.'
                     >
                       Node pool <code>{nodePool.metadata.name}</code>{' '}
