@@ -116,6 +116,28 @@
         }
       }
     },
+    "containerSecurityContext": {
+        "type": "object",
+        "properties": {
+            "allowPrivilegeEscalation": {
+                "type": "boolean"
+            },
+            "capabilities": {
+                "type": "object",
+                "properties": {
+                    "drop": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "runAsNonRoot": {
+                "type": "boolean"
+            }
+        }
+    },
     "gcp": {
       "type": "object",
       "properties": {
@@ -335,14 +357,6 @@
     },
     "userID": {
       "type": "integer"
-    },
-    "podSecurityStandards": {
-      "type": "object",
-      "properties": {
-        "enforced": {
-          "type": "boolean"
-        }
-      }
     }
   }
 }

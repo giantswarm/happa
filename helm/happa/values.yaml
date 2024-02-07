@@ -1,5 +1,6 @@
 name: happa
 namespace: giantswarm
+
 image:
   repository: giantswarm/happa
 
@@ -65,7 +66,7 @@ kubernetes:
 
 happa:
   address: ""
-  host: ""
+  host: check
   featureFlags:
     mapiAuth: false
     mapiClusters: false
@@ -73,7 +74,7 @@ happa:
 
 happaapi:
   address: ""
-  host: ""
+  host: check
 
 athena:
   address: ""
@@ -107,5 +108,13 @@ security:
       public: ""
       private: ""
 
-podSecurityStandards:
-  enforced: false
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+
+global:
+  podSecurityStandards:
+    enforced: false
