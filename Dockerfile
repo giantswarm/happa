@@ -2,6 +2,9 @@ FROM quay.io/giantswarm/alpine:3.18.4 AS build-nginx
 
 RUN apk add --no-cache gcc libc-dev make openssl-dev pcre-dev zlib-dev linux-headers curl gd-dev geoip-dev libxslt-dev perl-dev lua-dev luajit luajit-dev
 
+ENV LUAJIT_LIB /usr/lib
+ENV LUAJIT_INC /usr/include/luajit-2.1
+
 ENV NGINX_VERSION 1.23.1
 ENV NDK_VERSION 0.3.1
 ENV LUA_MODULE_VERSION 0.10.15
@@ -15,13 +18,6 @@ RUN set -x \
     && ./configure --with-compat --add-dynamic-module=/tmp/ngx_devel_kit-${NDK_VERSION} --add-dynamic-module=/tmp/lua-nginx-module-${LUA_MODULE_VERSION} \
     && make modules || { echo 'Configure or make failed'; exit 1; }
 
-
-RUN cd /tmp/nginx-$NGINX_VERSION \
-    && ./configure \
-        --with-compat \
-        --add-dynamic-module=/tmp/ngx_devel_kit-$NDK_VERSION \
-        --add-dynamic-module=/tmp/lua-nginx-module-$LUA_MODULE_VERSION \
-    && make modules
 FROM quay.io/giantswarm/alpine:3.18.4 AS compress
 
 RUN apk --no-cache add findutils gzip
