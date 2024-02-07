@@ -5,7 +5,7 @@ RUN apk add --no-cache gcc libc-dev make openssl-dev pcre-dev zlib-dev linux-hea
 ARG NGINX_VERSION=1.23.0
 ARG NDK_VERSION=0.3.1
 ARG LUA_NGINX_MODULE_VERSION=0.10.20
-ARG LUAJIT_VERSION=2.0.5
+ARG LUAJIT_VERSION=2.1.0-beta3
 
 RUN wget https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz && \
     tar -zxf nginx-$NGINX_VERSION.tar.gz && \
@@ -21,7 +21,7 @@ RUN wget http://luajit.org/download/LuaJIT-$LUAJIT_VERSION.tar.gz && \
     make install
 
 ENV LUAJIT_LIB=/usr/local/lib
-ENV LUAJIT_INC=/usr/local/include/luajit-2.0.5
+ENV LUAJIT_INC=/usr/local/include/luajit-2.1
 
 RUN cd /nginx-$NGINX_VERSION && \
     ./configure \
