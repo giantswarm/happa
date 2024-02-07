@@ -30,7 +30,8 @@ RUN cd /nginx-$NGINX_VERSION && \
     --add-dynamic-module=../lua-nginx-module-$LUA_NGINX_MODULE_VERSION && \
     make modules
 
-RUN cp /nginx-$NGINX_VERSION/objs/ndk_http_module.so /usr/lib/nginx/modules/ && \
+RUN mkdir -p /usr/lib/nginx/modules/ && \
+    cp /nginx-$NGINX_VERSION/objs/ndk_http_module.so /usr/lib/nginx/modules/ && \
     cp /nginx-$NGINX_VERSION/objs/ngx_http_lua_module.so /usr/lib/nginx/modules/
 
 FROM quay.io/giantswarm/alpine:3.18.3 AS compress
