@@ -1,26 +1,20 @@
 FROM quay.io/giantswarm/alpine:3.18.4 AS build-nginx
 
-RUN apk add --no-cache \
-    gcc \
-    libc-dev \
-    make \
-    openssl-dev \
-    pcre-dev \
-    zlib-dev \
-    linux-headers \
-    curl \
-    gd-dev \
-    geoip-dev \
-    libxslt-dev \
-    perl-dev
+RUN apk add --no-cache gcc libc-dev make openssl-dev pcre-dev zlib-dev linux-headers curl gd-dev geoip-dev libxslt-dev perl-dev
 
 ENV NGINX_VERSION 1.23.1
 ENV NDK_VERSION 0.3.1
 ENV LUA_MODULE_VERSION 0.10.15
 
-RUN curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz | tar zxvf - -C /tmp \
-    && curl -fSL https://github.com/simpl/ngx_devel_kit/archive/v$NDK_VERSION.tar.gz | tar zxvf - -C /tmp \
-    && curl -fSL https://github.com/openresty/lua-nginx-module/archive/v$LUA_MODULE_VERSION.tar.gz | tar zxvf - -C /tmp
+RUN curl -fSL https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz | tar zxvf - -C /tmp \
+    && curl -fSL https://github.com/simpl/ngx_devel_kit/archive/v${NDK_VERSION}.tar.gz | tar zxvf - -C /tmp \
+    && curl -fSL https://github.com/openresty/lua-nginx-module/archive/v${LUA_MODULE_VERSION}.tar.gz | tar zxvf - -C /tmp
+
+RUN set -x \
+    && cd /tmp/nginx-${NGINX_VERSION} \
+    && ./configure --with-compat --add-dynamic-module=/tmp/ngx_devel_kit-${NDK_VERSION} --add-dynamic-module=/tmp/lua-nginx-module-${LUA_MODULE_VERSION} \
+    && make modules || { echo 'Configure or make failed'; exit 1; }
+
 
 RUN cd /tmp/nginx-$NGINX_VERSION \
     && ./configure \
@@ -32,7 +26,6 @@ FROM quay.io/giantswarm/alpine:3.18.4 AS compress
 
 RUN apk --no-cache add findutils gzip
 
-# Copy happa built static files.
 COPY dist /www
 
 RUN find /www \
