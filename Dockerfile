@@ -81,5 +81,9 @@ CMD ["/usr/sbin/nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
 
 EXPOSE 80
 
+USER root
+
 RUN echo 'load_module /usr/lib/nginx/modules/ndk_http_module.so;' >> /etc/nginx/nginx.conf && \
     echo 'load_module /usr/lib/nginx/modules/ngx_http_lua_module.so;' >> /etc/nginx/nginx.conf
+
+USER nginx
