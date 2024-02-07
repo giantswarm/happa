@@ -79,7 +79,7 @@ ENTRYPOINT ["sh", "-c", "scripts/prepare.ts && exec \"$@\"", "sh"]
 
 CMD ["/usr/sbin/nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
 
-EXPOSE 80
+EXPOSE 8000
 
 USER root
 
