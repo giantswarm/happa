@@ -1,3 +1,28 @@
+FROM quay.io/giantswarm/alpine:3.18.4 AS build-nginx
+
+RUN apk add --no-cache gcc libc-dev make openssl-dev pcre-dev zlib-dev linux-headers curl gd-dev geoip-dev libxslt-dev perl-dev
+
+ARG NGINX_VERSION=1.23.0
+ARG NDK_VERSION=0.3.1
+ARG LUA_NGINX_MODULE_VERSION=0.10.20
+
+RUN wget https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz && \
+    tar -zxf nginx-$NGINX_VERSION.tar.gz && \
+    wget https://github.com/simpl/ngx_devel_kit/archive/v$NDK_VERSION.tar.gz && \
+    tar -zxf v$NDK_VERSION.tar.gz && \
+    wget https://github.com/openresty/lua-nginx-module/archive/v$LUA_NGINX_MODULE_VERSION.tar.gz && \
+    tar -zxf v$LUA_NGINX_MODULE_VERSION.tar.gz
+
+RUN cd /nginx-$NGINX_VERSION && \
+    ./configure \
+    --with-compat \
+    --add-dynamic-module=../ngx_devel_kit-$NDK_VERSION \
+    --add-dynamic-module=../lua-nginx-module-$LUA_NGINX_MODULE_VERSION && \
+    make modules
+
+RUN cp /nginx-$NGINX_VERSION/objs/ndk_http_module.so /usr/lib/nginx/modules/ && \
+    cp /nginx-$NGINX_VERSION/objs/ngx_http_lua_module.so /usr/lib/nginx/modules/
+
 FROM quay.io/giantswarm/alpine:3.18.3 AS compress
 
 RUN apk --no-cache add findutils gzip
@@ -29,6 +54,8 @@ RUN npm install -g typescript ts-node ejs @types/ejs tslib @types/node js-yaml @
 RUN cd /scripts && npm link ejs @types/ejs js-yaml @types/js-yaml dotenv
 RUN chown -R nginx:nginx /scripts/
 
+COPY --from=build-nginx /usr/lib/nginx/modules/ /usr/lib/nginx/modules/
+
 RUN chown -R nginx:nginx /var/log/nginx/
 
 RUN chmod u=rwx /www
@@ -40,3 +67,8 @@ USER nginx
 ENTRYPOINT ["sh", "-c", "scripts/prepare.ts && exec \"$@\"", "sh"]
 
 CMD ["/usr/sbin/nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
+
+EXPOSE 80
+
+RUN echo 'load_module /usr/lib/nginx/modules/ndk_http_module.so;' >> /etc/nginx/nginx.conf && \
+    echo 'load_module /usr/lib/nginx/modules/ngx_http_lua_module.so;' >> /etc/nginx/nginx.conf
