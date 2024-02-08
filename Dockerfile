@@ -45,6 +45,8 @@ RUN curl -fSL https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz | tar xz 
     && curl -fSL https://github.com/simpl/ngx_devel_kit/archive/v${NGX_DEVEL_KIT_VERSION}.tar.gz | tar xz -C /tmp \
     && curl -fSL https://github.com/openresty/lua-nginx-module/archive/v${LUA_NGINX_MODULE_VERSION}.tar.gz | tar xz -C /tmp
 
+RUN mkdir -p /usr/lib/nginx/modules
+
 RUN cd /tmp/nginx-${NGINX_VERSION} \
     && ./configure \
         --prefix=/etc/nginx \
