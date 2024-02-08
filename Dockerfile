@@ -1,38 +1,6 @@
 FROM quay.io/giantswarm/alpine:3.18.4 AS build-nginx
 
-RUN apk add --no-cache gcc libc-dev make openssl-dev pcre-dev zlib-dev linux-headers curl gd-dev geoip-dev libxslt-dev perl-dev
-
-ARG NGINX_VERSION=1.23.4
-ARG NDK_VERSION=0.3.1
-ARG LUA_NGINX_MODULE_VERSION=0.10.26
-ARG LUAJIT_VERSION=2.1.0-beta3
-
-RUN wget https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz && \
-    tar -zxf nginx-$NGINX_VERSION.tar.gz && \
-    wget https://github.com/simpl/ngx_devel_kit/archive/v$NDK_VERSION.tar.gz && \
-    tar -zxf v$NDK_VERSION.tar.gz && \
-    wget https://github.com/openresty/lua-nginx-module/archive/v$LUA_NGINX_MODULE_VERSION.tar.gz && \
-    tar -zxf v$LUA_NGINX_MODULE_VERSION.tar.gz
-
-RUN wget http://luajit.org/download/LuaJIT-$LUAJIT_VERSION.tar.gz && \
-    tar -zxf LuaJIT-$LUAJIT_VERSION.tar.gz && \
-    cd LuaJIT-$LUAJIT_VERSION && \
-    make && \
-    make install
-
-ENV LUAJIT_LIB=/usr/local/lib
-ENV LUAJIT_INC=/usr/local/include/luajit-2.1
-
-RUN cd /nginx-$NGINX_VERSION && \
-    ./configure \
-    --with-compat \
-    --add-dynamic-module=../ngx_devel_kit-$NDK_VERSION \
-    --add-dynamic-module=../lua-nginx-module-$LUA_NGINX_MODULE_VERSION && \
-    make modules
-
-RUN mkdir -p /usr/lib/nginx/modules/ && \
-    cp /nginx-$NGINX_VERSION/objs/ndk_http_module.so /usr/lib/nginx/modules/ && \
-    cp /nginx-$NGINX_VERSION/objs/ngx_http_lua_module.so /usr/lib/nginx/modules/
+RUN apk add --no-cache nginx nginx-mod-http-lua
 
 FROM quay.io/giantswarm/alpine:3.18.3 AS compress
 
