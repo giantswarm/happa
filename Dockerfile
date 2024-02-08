@@ -2,7 +2,7 @@ FROM quay.io/giantswarm/alpine:3.18.4 AS build-nginx
 
 RUN apk add --no-cache gcc libc-dev make openssl-dev pcre-dev zlib-dev linux-headers curl gd-dev geoip-dev libxslt-dev perl-dev
 
-ARG NGINX_VERSION=1.23.0
+ARG NGINX_VERSION=1.23.4
 ARG NDK_VERSION=0.3.1
 ARG LUA_NGINX_MODULE_VERSION=0.10.26
 ARG LUAJIT_VERSION=2.1.0-beta3
