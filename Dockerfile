@@ -42,6 +42,7 @@ RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak && \
     echo 'load_module modules/ngx_http_lua_module.so;'; \
     echo 'load_module /usr/lib/nginx/modules/ndk_http_module.so;'; \
     echo 'load_module /usr/lib/nginx/modules/ngx_http_lua_module.so;'; \
+    echo 'pcre_jit on;';\
     cat /etc/nginx/nginx.conf.bak; \
     } > /etc/nginx/nginx.conf
 
