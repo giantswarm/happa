@@ -49,6 +49,7 @@ RUN find /www \
 
 FROM quay.io/giantswarm/nginx:1.23-alpine
 
+ENV LUAJIT_VERSION=2.1.0-beta3
 ENV NODE_VERSION 16.7.0
 
 RUN apk add --no-cache binutils libstdc++
