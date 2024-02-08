@@ -61,7 +61,8 @@ RUN cd /tmp/nginx-${NGINX_VERSION} \
         --add-module=/tmp/ngx_devel_kit-${NGX_DEVEL_KIT_VERSION} \
         --add-module=/tmp/lua-nginx-module-${LUA_NGINX_MODULE_VERSION} \
     && make \
-    && make install
+    && make install \
+    && ls -la /usr/lib/nginx/
 
 FROM quay.io/giantswarm/nginx:1.23-alpine
 
