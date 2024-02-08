@@ -21,6 +21,14 @@ RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/rele
       && ln -s /usr/local/bin/node /usr/local/bin/nodejs;
 
 COPY nginx /etc/nginx/
+RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak && \
+    { \
+    echo 'load_module /usr/lib/nginx/modules/ndk_http_module.so;'; \
+    echo 'load_module /usr/lib/nginx/modules/ngx_http_lua_module.so;'; \
+    cat /etc/nginx/nginx.conf.bak; \
+    } > /etc/nginx/nginx.conf
+
+USER nginx
 COPY --chown=nginx tsconfig.json/ /tsconfig.json
 COPY --chown=nginx scripts/ /scripts
 COPY --from=compress --chown=nginx /www /www
@@ -34,18 +42,6 @@ RUN chown -R nginx:nginx /var/log/nginx/
 RUN chmod u=rwx /www
 RUN touch /etc/nginx/resolvers.conf && chown nginx:nginx /etc/nginx/resolvers.conf
 RUN echo resolver $(awk '/^nameserver/{print $2}' /etc/resolv.conf) ";" > /etc/nginx/resolvers.conf
-
-USER root
-
-RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak && \
-    { \
-    echo 'load_module /usr/lib/nginx/modules/ndk_http_module.so;'; \
-    echo 'load_module /usr/lib/nginx/modules/ngx_http_lua_module.so;'; \
-    echo 'pcre_jit on;';\
-    cat /etc/nginx/nginx.conf.bak; \
-    } > /etc/nginx/nginx.conf
-
-USER nginx
 
 ENTRYPOINT ["sh", "-c", "scripts/prepare.ts && exec \"$@\"", "sh"]
 CMD ["/usr/sbin/nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
