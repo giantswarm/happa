@@ -15,7 +15,7 @@ FROM quay.io/giantswarm/nginx:1.23-alpine
 
 ENV NODE_VERSION 16.7.0
 
-RUN apk add --no-cache binutils libstdc++ build-base pcre pcre-dev nginx-mod-http-lua
+RUN apk add --no-cache binutils libstdc++ build-base pcre pcre-dev nginx-mod-http-lua=1.24.0-r15
 RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz"; \
       tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
       && ln -s /usr/local/bin/node /usr/local/bin/nodejs;
