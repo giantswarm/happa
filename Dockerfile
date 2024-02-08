@@ -11,7 +11,8 @@ FROM alpine:3.18.3 as nginx-builder
 
 ENV NGINX_VERSION=1.23.4 \
     NGX_DEVEL_KIT_VERSION=0.3.2 \
-    LUA_NGINX_MODULE_VERSION=0.10.24
+    LUA_NGINX_MODULE_VERSION=0.10.24 \
+    LUAJIT_VERSION=2.1.0-beta3
 
 RUN apk update && apk add --no-cache \
     gcc \
@@ -29,6 +30,16 @@ RUN apk update && apk add --no-cache \
     luajit-dev \
     luajit \
     lua-resty-core
+
+RUN curl -fSL https://luajit.org/download/LuaJIT-${LUAJIT_VERSION}.tar.gz | tar xz -C /tmp \
+    && cd /tmp/LuaJIT-${LUAJIT_VERSION} \
+    && make \
+    && make install
+
+# Set environment variables so the NGINX `./configure` script can find LuaJIT
+ENV LUAJIT_LIB=/usr/local/lib
+ENV LUAJIT_INC=/usr/local/include/luajit-2.1
+
 
 RUN curl -fSL https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz | tar xz -C /tmp \
     && curl -fSL https://github.com/simpl/ngx_devel_kit/archive/v${NGX_DEVEL_KIT_VERSION}.tar.gz | tar xz -C /tmp \
