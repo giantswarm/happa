@@ -28,7 +28,6 @@ RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak && \
     cat /etc/nginx/nginx.conf.bak; \
     } > /etc/nginx/nginx.conf
 
-USER nginx
 COPY --chown=nginx tsconfig.json/ /tsconfig.json
 COPY --chown=nginx scripts/ /scripts
 COPY --from=compress --chown=nginx /www /www
@@ -42,6 +41,6 @@ RUN chown -R nginx:nginx /var/log/nginx/
 RUN chmod u=rwx /www
 RUN touch /etc/nginx/resolvers.conf && chown nginx:nginx /etc/nginx/resolvers.conf
 RUN echo resolver $(awk '/^nameserver/{print $2}' /etc/resolv.conf) ";" > /etc/nginx/resolvers.conf
-
+USER nginx
 ENTRYPOINT ["sh", "-c", "scripts/prepare.ts && exec \"$@\"", "sh"]
 CMD ["/usr/sbin/nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
