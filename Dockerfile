@@ -49,28 +49,12 @@ RUN find /www \
 
 FROM quay.io/giantswarm/nginx:1.23-alpine
 
-ENV NDK_VERSION=0.3.1
-ENV LUA_NGINX_MODULE_VERSION=0.10.26
-ENV LUAJIT_VERSION=2.1.0-beta3
 ENV NODE_VERSION 16.7.0
 
 RUN apk add --no-cache binutils libstdc++ build-base pcre pcre-dev
 RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz"; \
       tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
       && ln -s /usr/local/bin/node /usr/local/bin/nodejs;
-
-RUN ./configure \
-    --with-compat \
-    --with-pcre \
-    --add-dynamic-module=../ngx_devel_kit-$NDK_VERSION \
-    --add-dynamic-module=../lua-nginx-module-$LUA_NGINX_MODULE_VERSION && \
-    make modules
-
-RUN wget http://luajit.org/download/LuaJIT-$LUAJIT_VERSION.tar.gz && \
-    tar -zxf LuaJIT-$LUAJIT_VERSION.tar.gz && \
-    cd LuaJIT-$LUAJIT_VERSION && \
-    make && \
-    make install
 
 COPY nginx /etc/nginx/
 COPY --chown=nginx tsconfig.json/ /tsconfig.json
@@ -82,6 +66,9 @@ RUN cd /scripts && npm link ejs @types/ejs js-yaml @types/js-yaml dotenv
 RUN chown -R nginx:nginx /scripts/
 
 COPY --from=build-nginx /usr/lib/nginx/modules/ /usr/lib/nginx/modules/
+COPY --from=build-nginx /usr/local/lib/libluajit-5.1.so* /usr/local/lib/
+
+RUN ldconfig
 
 RUN chown -R nginx:nginx /var/log/nginx/
 
