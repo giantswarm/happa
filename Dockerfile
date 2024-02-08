@@ -56,6 +56,12 @@ RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/rele
       tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
       && ln -s /usr/local/bin/node /usr/local/bin/nodejs;
 
+RUN wget http://luajit.org/download/LuaJIT-$LUAJIT_VERSION.tar.gz && \
+    tar -zxf LuaJIT-$LUAJIT_VERSION.tar.gz && \
+    cd LuaJIT-$LUAJIT_VERSION && \
+    make && \
+    make install
+
 COPY nginx /etc/nginx/
 COPY --chown=nginx tsconfig.json/ /tsconfig.json
 COPY --chown=nginx scripts/ /scripts
