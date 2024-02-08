@@ -33,13 +33,6 @@ RUN npm install -g typescript ts-node ejs @types/ejs tslib @types/node js-yaml @
 RUN cd /scripts && npm link ejs @types/ejs js-yaml @types/js-yaml dotenv
 RUN chown -R nginx:nginx /scripts/
 
-COPY --from=build-nginx /usr/lib/nginx/modules/ /usr/lib/nginx/modules/
-COPY --from=build-nginx /usr/local/lib/libluajit-5.1.so* /usr/local/lib/
-
-ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-
-RUN ldconfig /
-
 RUN chown -R nginx:nginx /var/log/nginx/
 
 RUN chmod u=rwx /www
@@ -48,13 +41,13 @@ RUN echo resolver $(awk '/^nameserver/{print $2}' /etc/resolv.conf) ";" > /etc/n
 
 USER root
 
-RUN cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak && \
-    echo 'load_module /usr/lib/nginx/modules/ndk_http_module.so;' > /etc/nginx/nginx.conf && \
-    echo 'load_module /usr/lib/nginx/modules/ngx_http_lua_module.so;' >> /etc/nginx/nginx.conf && \
-    cat /etc/nginx/nginx.conf.bak >> /etc/nginx/nginx.conf
+RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak && \
+    { \
+    echo 'load_module modules/ngx_http_lua_module.so;'; \
+    cat /etc/nginx/nginx.conf.bak; \
+    } > /etc/nginx/nginx.conf
 
 USER nginx
 
 ENTRYPOINT ["sh", "-c", "scripts/prepare.ts && exec \"$@\"", "sh"]
-
 CMD ["/usr/sbin/nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
