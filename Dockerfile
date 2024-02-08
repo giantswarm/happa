@@ -40,7 +40,7 @@ RUN chmod u=rwx /www
 RUN touch /etc/nginx/resolvers.conf && chown nginx:nginx /etc/nginx/resolvers.conf
 RUN echo resolver $(awk '/^nameserver/{print $2}' /etc/resolv.conf) ";" > /etc/nginx/resolvers.conf
 
-COPY --from=build-nginx /usr/local/nginx/modules/ngx_http_lua_module.so /usr/lib/nginx/modules/
+COPY --from=build-nginx /usr/local/nginx/modules/* /usr/lib/nginx/modules/
 COPY --from=build-nginx /usr/local/lib/libluajit* /usr/local/lib/
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
