@@ -1,6 +1,9 @@
 FROM quay.io/giantswarm/alpine:3.18.4 AS build-nginx
 
 RUN apk add --no-cache nginx nginx-mod-http-lua
+RUN rm -r /etc/nginx/conf.d && rm /etc/nginx/nginx.conf
+RUN mkdir -p /run/nginx
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
 FROM quay.io/giantswarm/alpine:3.18.3 AS compress
 
@@ -43,7 +46,7 @@ COPY --from=build-nginx /usr/local/nginx/modules/ngx_http_lua_module.so /usr/lib
 COPY --from=build-nginx /usr/local/lib/libluajit* /usr/local/lib/
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-COPY --from=build-nginx /path/to/your/nginx/conf /etc/nginx/nginx.conf
+COPY --from=build-nginx /etc/nginx/nginx.conf /etc/nginx/nginx.conf
 
 USER root
 
