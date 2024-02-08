@@ -1,9 +1,7 @@
 FROM quay.io/giantswarm/alpine:3.18.4 AS build-nginx
 
 RUN apk add --no-cache nginx nginx-mod-http-lua
-RUN rm -r /etc/nginx/conf.d && rm /etc/nginx/nginx.conf
 RUN mkdir -p /run/nginx
-COPY ./nginx.conf /etc/nginx/nginx.conf
 
 FROM quay.io/giantswarm/alpine:3.18.3 AS compress
 
