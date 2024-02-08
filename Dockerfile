@@ -75,8 +75,10 @@ RUN echo resolver $(awk '/^nameserver/{print $2}' /etc/resolv.conf) ";" > /etc/n
 
 USER root
 
-RUN echo 'load_module /usr/lib/nginx/modules/ndk_http_module.so;' >> /etc/nginx/nginx.conf && \
-    echo 'load_module /usr/lib/nginx/modules/ngx_http_lua_module.so;' >> /etc/nginx/nginx.conf
+RUN cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak && \
+    echo 'load_module /usr/lib/nginx/modules/ndk_http_module.so;' > /etc/nginx/nginx.conf && \
+    echo 'load_module /usr/lib/nginx/modules/ngx_http_lua_module.so;' >> /etc/nginx/nginx.conf && \
+    cat /etc/nginx/nginx.conf.bak >> /etc/nginx/nginx.conf
 
 USER nginx
 
