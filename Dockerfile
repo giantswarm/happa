@@ -68,6 +68,8 @@ RUN chown -R nginx:nginx /scripts/
 COPY --from=build-nginx /usr/lib/nginx/modules/ /usr/lib/nginx/modules/
 COPY --from=build-nginx /usr/local/lib/libluajit-5.1.so* /usr/local/lib/
 
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
 RUN ldconfig
 
 RUN chown -R nginx:nginx /var/log/nginx/
