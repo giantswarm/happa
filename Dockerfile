@@ -83,6 +83,10 @@ COPY --from=nginx-builder /etc/nginx/ /etc/nginx/
 COPY --from=nginx-builder /usr/sbin/nginx /usr/sbin/nginx
 COPY --from=nginx-builder /usr/lib/nginx/modules /usr/lib/nginx/modules
 
+COPY --from=nginx-builder /usr/local/bin/luajit /usr/local/bin/
+COPY --from=nginx-builder /usr/local/lib/libluajit-5.1.so* /usr/local/lib/
+RUN echo '/usr/local/lib' >> /etc/ld.so.conf.d/local.conf && ldconfig /usr/local/lib/
+
 RUN npm install -g typescript ts-node ejs @types/ejs tslib @types/node js-yaml @types/js-yaml dotenv
 RUN cd /scripts && npm link ejs @types/ejs js-yaml @types/js-yaml dotenv
 RUN chown -R nginx:nginx /scripts/
