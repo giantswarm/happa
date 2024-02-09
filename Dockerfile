@@ -7,7 +7,7 @@ RUN find /www \
   -iregex '.*\.(css|csv|html?|js|svg|txt|xml|json|webmanifest|ttf)' \
   -exec gzip -9 -k '{}' \;
 
-FROM alpine:3.18.3 as nginx-builder
+FROM quay.io/giantswarm/alpine:3.18.3 as nginx-builder
 
 ENV NGINX_VERSION=1.23.4 \
     NGX_DEVEL_KIT_VERSION=0.3.2 \
@@ -29,7 +29,8 @@ RUN apk update && apk add --no-cache \
     perl-dev \
     luajit-dev \
     luajit \
-    lua-resty-core
+    lua-resty-core \
+    pcre
 
 RUN curl -fSL https://luajit.org/download/LuaJIT-${LUAJIT_VERSION}.tar.gz | tar xz -C /tmp \
     && cd /tmp/LuaJIT-${LUAJIT_VERSION} \
@@ -66,29 +67,15 @@ RUN cd /tmp/nginx-${NGINX_VERSION} \
     && make install \
     && ls -la /usr/lib/nginx/
 
-FROM quay.io/giantswarm/nginx:1.23-alpine
-
-ENV NODE_VERSION 16.7.0
-ENV LUAJIT_VERSION=2.1.0-beta3
-
-RUN apk add --no-cache binutils libstdc++ pcre build-base
 
 RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz" \
     && tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-RUN curl -fSL https://luajit.org/download/LuaJIT-${LUAJIT_VERSION}.tar.gz | tar xz -C /tmp \
-    && cd /tmp/LuaJIT-${LUAJIT_VERSION} \
-    && make \
-    && make install
-
 COPY nginx /etc/nginx/
 COPY tsconfig.json/ /tsconfig.json
 COPY scripts/ /scripts
 COPY --from=compress /www /www
-COPY --from=nginx-builder /etc/nginx/ /etc/nginx/
-COPY --from=nginx-builder /usr/sbin/nginx /usr/sbin/nginx
-COPY --from=nginx-builder /usr/lib/nginx/modules /usr/lib/nginx/modules
 
 RUN mkdir -p /etc/nginx/logs/
 RUN npm install -g typescript ts-node ejs @types/ejs tslib @types/node js-yaml @types/js-yaml dotenv
