@@ -90,11 +90,13 @@ COPY --from=nginx-builder /etc/nginx/ /etc/nginx/
 COPY --from=nginx-builder /usr/sbin/nginx /usr/sbin/nginx
 COPY --from=nginx-builder /usr/lib/nginx/modules /usr/lib/nginx/modules
 
+RUN mkdir /etc/nginx/logs/
 RUN npm install -g typescript ts-node ejs @types/ejs tslib @types/node js-yaml @types/js-yaml dotenv
 RUN cd /scripts && npm link ejs @types/ejs js-yaml @types/js-yaml dotenv
 RUN chown -R nginx:nginx /scripts/
 RUN chown -R nginx:nginx /var/log/nginx/
 RUN chown -R nginx:nginx /www
+RUN chown -R nginx:nginx /etc/nginx/logs/
 RUN chmod u=rwx /www
 RUN touch /etc/nginx/resolvers.conf && chown nginx:nginx /etc/nginx/resolvers.conf
 RUN echo resolver $(awk '/^nameserver/{print $2}' /etc/resolv.conf) ";" > /etc/nginx/resolvers.conf
