@@ -67,6 +67,7 @@ RUN cd /tmp/nginx-${NGINX_VERSION} \
     && make install \
     && ls -la /usr/lib/nginx/
 
+ENV NODE_VERSION 16.7.0
 
 RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz" \
     && tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
