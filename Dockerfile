@@ -87,6 +87,7 @@ RUN npm install -g typescript ts-node ejs @types/ejs tslib @types/node js-yaml @
 RUN cd /scripts && npm link ejs @types/ejs js-yaml @types/js-yaml dotenv
 RUN chown -R nginx:nginx /scripts/
 RUN chown -R nginx:nginx /var/log/nginx/
+RUN chown -R nginx:nginx /www
 RUN chmod u=rwx /www
 RUN touch /etc/nginx/resolvers.conf && chown nginx:nginx /etc/nginx/resolvers.conf
 RUN echo resolver $(awk '/^nameserver/{print $2}' /etc/resolv.conf) ";" > /etc/nginx/resolvers.conf
