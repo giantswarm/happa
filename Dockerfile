@@ -90,7 +90,7 @@ COPY --from=nginx-builder /etc/nginx/ /etc/nginx/
 COPY --from=nginx-builder /usr/sbin/nginx /usr/sbin/nginx
 COPY --from=nginx-builder /usr/lib/nginx/modules /usr/lib/nginx/modules
 
-RUN mkdir /etc/nginx/logs/
+RUN mkdir -p /etc/nginx/logs/
 RUN npm install -g typescript ts-node ejs @types/ejs tslib @types/node js-yaml @types/js-yaml dotenv
 RUN cd /scripts && npm link ejs @types/ejs js-yaml @types/js-yaml dotenv
 RUN chown -R nginx:nginx /scripts/
