@@ -77,7 +77,7 @@ RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/rele
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 RUN curl -fSL "https://luajit.org/download/LuaJIT-$LUAJIT_VERSION.tar.gz" | tar xz -C /tmp \
-    && cd /tmp/LuaJIT-$LUAJIT_VERSION \
+    && cd "/tmp/LuaJIT-$LUAJIT_VERSION" \
     && make \
     && make install
 
