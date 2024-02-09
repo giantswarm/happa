@@ -68,16 +68,16 @@ RUN cd /tmp/nginx-${NGINX_VERSION} \
 
 FROM quay.io/giantswarm/nginx:1.23-alpine
 
-ENV NODE_VERSION 16.7.0 \
-    LUAJIT_VERSION=2.1.0-beta3
+ENV NODE_VERSION 16.7.0
+ENV LUAJIT_VERSION=2.1.0-beta3
 
 RUN apk add --no-cache binutils libstdc++ pcre
 RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz" \
     && tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-RUN curl -fSL "https://luajit.org/download/LuaJIT-$LUAJIT_VERSION.tar.gz" | tar xz -C /tmp \
-    && cd "/tmp/LuaJIT-$LUAJIT_VERSION" \
+RUN curl -fSL https://luajit.org/download/LuaJIT-${LUAJIT_VERSION}.tar.gz | tar xz -C /tmp \
+    && cd /tmp/LuaJIT-${LUAJIT_VERSION} \
     && make \
     && make install
 
