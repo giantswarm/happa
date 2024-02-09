@@ -1,24 +1,12 @@
-FROM quay.io/giantswarm/alpine:3.18.4 AS compress
+FROM openresty/openresty:alpine AS lua-nginx
 
-RUN apk --no-cache add findutils gzip
-
-# Copy happa built static files.
-COPY dist /www
-
-RUN find /www \
-  -type f -regextype posix-extended \
-  -size +512c \
-  -iregex '.*\.(css|csv|html?|js|svg|txt|xml|json|webmanifest|ttf)' \
-  -exec gzip -9 -k '{}' \;
-
-FROM quay.io/giantswarm/nginx:1.23-alpine
+RUN apk add --no-cache findutils gzip curl binutils libstdc++
 
 ENV NODE_VERSION 16.7.0
 
-RUN apk add --no-cache binutils libstdc++
 RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz"; \
-      tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-      && ln -s /usr/local/bin/node /usr/local/bin/nodejs;
+    tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs;
 
 COPY nginx /etc/nginx/
 COPY --chown=nginx tsconfig.json/ /tsconfig.json
