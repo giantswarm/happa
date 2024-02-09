@@ -71,7 +71,8 @@ FROM quay.io/giantswarm/nginx:1.23-alpine
 ENV NODE_VERSION 16.7.0
 ENV LUAJIT_VERSION=2.1.0-beta3
 
-RUN apk add --no-cache binutils libstdc++ pcre
+RUN apk add --no-cache binutils libstdc++ pcre build-base
+
 RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz" \
     && tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
