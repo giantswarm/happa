@@ -40,6 +40,7 @@ RUN curl -fSL https://luajit.org/download/LuaJIT-${LUAJIT_VERSION}.tar.gz | tar 
 ENV LUAJIT_LIB=/usr/local/lib
 ENV LUAJIT_INC=/usr/local/include/luajit-2.1
 
+RUN cp /usr/local/bin/luajit usr/local/bin/luajit
 
 RUN curl -fSL https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz | tar xz -C /tmp \
     && curl -fSL https://github.com/simpl/ngx_devel_kit/archive/v${NGX_DEVEL_KIT_VERSION}.tar.gz | tar xz -C /tmp \
