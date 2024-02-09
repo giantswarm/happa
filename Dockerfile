@@ -40,7 +40,6 @@ RUN curl -fSL https://luajit.org/download/LuaJIT-${LUAJIT_VERSION}.tar.gz | tar 
 ENV LUAJIT_LIB=/usr/local/lib
 ENV LUAJIT_INC=/usr/local/include/luajit-2.1
 
-RUN cp /usr/local/bin/luajit usr/local/bin/luajit
 
 RUN curl -fSL https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz | tar xz -C /tmp \
     && curl -fSL https://github.com/simpl/ngx_devel_kit/archive/v${NGX_DEVEL_KIT_VERSION}.tar.gz | tar xz -C /tmp \
@@ -69,12 +68,18 @@ RUN cd /tmp/nginx-${NGINX_VERSION} \
 
 FROM quay.io/giantswarm/nginx:1.23-alpine
 
-ENV NODE_VERSION 16.7.0
+ENV NODE_VERSION 16.7.0 \
+    LUAJIT_VERSION=2.1.0-beta3
 
 RUN apk add --no-cache binutils libstdc++ pcre
 RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz" \
     && tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+
+RUN curl -fSL https://luajit.org/download/LuaJIT-${LUAJIT_VERSION}.tar.gz | tar xz -C /tmp \
+    && cd /tmp/LuaJIT-${LUAJIT_VERSION} \
+    && make \
+    && make install
 
 COPY nginx /etc/nginx/
 COPY tsconfig.json/ /tsconfig.json
@@ -83,10 +88,6 @@ COPY --from=compress /www /www
 COPY --from=nginx-builder /etc/nginx/ /etc/nginx/
 COPY --from=nginx-builder /usr/sbin/nginx /usr/sbin/nginx
 COPY --from=nginx-builder /usr/lib/nginx/modules /usr/lib/nginx/modules
-
-COPY --from=nginx-builder /usr/local/bin/luajit /usr/local/bin/
-COPY --from=nginx-builder /usr/local/lib/libluajit* /usr/local/lib/
-RUN echo '/usr/local/lib' >> /etc/ld.so.conf.d/local.conf && ldconfig /usr/local/lib/
 
 RUN npm install -g typescript ts-node ejs @types/ejs tslib @types/node js-yaml @types/js-yaml dotenv
 RUN cd /scripts && npm link ejs @types/ejs js-yaml @types/js-yaml dotenv
