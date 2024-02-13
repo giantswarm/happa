@@ -16,9 +16,14 @@ global:
   podSecurityStandards:
     enforced: false
 
+podSeccompProfile:
+  type: RuntimeDefault
+
 containerSecurityContext:
   allowPrivilegeEscalation: false
   capabilities:
     drop:
       - ALL
   runAsNonRoot: true
+  podSeccompProfile:
+    type: RuntimeDefault
