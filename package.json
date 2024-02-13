@@ -110,6 +110,7 @@
     "redux-thunk": "2.4.2",
     "regenerator-runtime": "0.14.1",
     "remark-gfm": "4.0.0",
+    "remark-gfm3": "npm:remark-gfm@3",
     "reselect": "4.1.8",
     "serialize-javascript": "6.0.2",
     "stacktrace-js": "2.0.2",

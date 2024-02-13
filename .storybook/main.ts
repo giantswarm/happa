@@ -1,6 +1,6 @@
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import path from 'path';
-import remarkGfm from 'remark-gfm';
+import remarkGfm from 'remark-gfm3';
 import type { StorybookConfig } from '@storybook/react-webpack5';
 
 const config: StorybookConfig = {
