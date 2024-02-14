@@ -14,6 +14,9 @@ spec:
   rules:
     {{- $serviceName := .Values.name -}}
     {{- $port := .Values.port -}}
+    {{- if or (not (.Values.hostnames)) (eq (len .Values.hostnames) 0) }}
+      {{- fail "value for .Values.hostnames must not be empty" }}
+    {{- end }}
     {{- range .Values.hostnames }}
     - host: {{ . }}
       http:
