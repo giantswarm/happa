@@ -176,11 +176,7 @@ workflows:
       - build-fe-docs:
           requires:
             - checkout
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
+          <<: *job_filters
 
       - architect/push-to-registries:
           context: architect
