@@ -63,10 +63,10 @@ workflows:
       - architect/push-to-app-catalog:
           executor: app-build-suite
           name: push-happa-to-control-plane-app-catalog
-          app_catalog: "control-plane-catalog"
-          app_catalog_test: "control-plane-test-catalog"
+          app_catalog: control-plane-catalog
+          app_catalog_test: control-plane-test-catalog
           push_to_oci_registry: false
-          chart: "happa"
+          chart: happa
           persist_chart_archive: true
           requires:
             - launch-container
@@ -189,28 +189,20 @@ workflows:
           dockerfile: "./Dockerfile.fe-docs"
           requires:
             - build-fe-docs
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
+          <<: *job_filters
 
       - architect/push-to-app-catalog:
           executor: app-build-suite
           name: push-fe-docs-to-operations-platform-app-catalog
           context: architect
-          app_catalog: "giantswarm-operations-platform-catalog"
-          app_catalog_test: "giantswarm-operations-platform-test-catalog"
-          chart: "fe-docs"
+          app_catalog: giantswarm-operations-platform-catalog
+          app_catalog_test: giantswarm-operations-platform-test-catalog
+          chart: fe-docs
           persist_chart_archive: true
           explicit_allow_chart_name_mismatch: true
           requires:
             - push-fe-docs-to-registries
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
+          <<: *job_filters
 
 jobs:
   checkout:
