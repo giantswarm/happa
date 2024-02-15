@@ -48,8 +48,8 @@ spec:
             periodSeconds: 30
             timeoutSeconds: 2
           volumeMounts:
-            - mountPath: /var/cache/nginx
-              name: cache-volume
+            - mountPath: /tmp
+              name: nginx-tmp
           securityContext:
             {{- with .Values.containerSecurityContext }}
             {{- . | toYaml | nindent 12 }}
@@ -64,7 +64,7 @@ spec:
             {{- end }}
             {{- end }}
       volumes:
-        - name: cache-volume
+        - name: nginx-tmp
           emptyDir: {}
       serviceAccount: {{ .Values.name }}
       serviceAccountName: {{ .Values.name }}
