@@ -2,6 +2,33 @@
   "$schema": "http://json-schema.org/schema#",
   "type": "object",
   "properties": {
+    "containerSecurityContext": {
+      "type": "object",
+      "properties": {
+        "allowPrivilegeEscalation": {
+          "type": "boolean"
+        },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "drop": {
+              "type": "array"
+            }
+          }
+        },
+        "runAsNonRoot": {
+          "type": "boolean"
+        },
+        "podSeccompProfile": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "groupID": {
       "type": "integer"
     },
@@ -44,6 +71,14 @@
     },
     "userID": {
       "type": "integer"
+    },
+    "podSeccompProfile": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        }
+      }
     },
     "podSecurityStandards": {
       "type": "object",

@@ -1,6 +1,10 @@
-FROM quay.io/giantswarm/nginx-unprivileged:1.23-alpine
+FROM gsoci.azurecr.io/giantswarm/nginx-unprivileged:1.25-alpine
 
 USER 0
+
+COPY nginx/headers.conf /etc/nginx/headers.conf
+COPY nginx/fe-docs-nginx.conf /etc/nginx/nginx.conf
+RUN rm /etc/nginx/conf.d/default.conf
 
 COPY storybook-static /usr/share/nginx/html
 
