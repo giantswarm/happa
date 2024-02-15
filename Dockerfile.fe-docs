@@ -2,6 +2,7 @@ FROM quay.io/giantswarm/nginx-unprivileged:1.23-alpine
 
 USER 0
 
+COPY nginx/fe-docs-nginx.conf /etc/nginx/nginx.conf
 COPY storybook-static /usr/share/nginx/html
 
 EXPOSE 8080
