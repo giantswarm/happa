@@ -4,6 +4,8 @@ USER 0
 
 COPY nginx/headers.conf /etc/nginx/headers.conf
 COPY nginx/fe-docs-nginx.conf /etc/nginx/nginx.conf
+RUN rm /etc/nginx/conf.d/default.conf
+
 COPY storybook-static /usr/share/nginx/html
 
 EXPOSE 8080
