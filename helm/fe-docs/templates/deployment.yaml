@@ -41,7 +41,7 @@ spec:
               memory: 100Mi
           livenessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: {{ .Values.port }}
               scheme: HTTP
             initialDelaySeconds: 10
