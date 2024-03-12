@@ -8,4 +8,4 @@ icon: https://s.giantswarm.io/app-icons/giantswarm/1/light.svg
 appVersion: ""
 annotations:
   config.giantswarm.io/version: 1.x.x
-  application.giantswarm.io/team: team-honeybadger
+  application.giantswarm.io/team: honeybadger
