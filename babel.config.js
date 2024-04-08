@@ -26,7 +26,7 @@ module.exports = function (api) {
       ],
     ],
     plugins: [
-      'transform-class-properties',
+      '@babel/plugin-transform-class-properties',
       'styled-components',
       'date-fns',
       [
