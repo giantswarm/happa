@@ -6,8 +6,8 @@ import TextInput from '../TextInput';
 interface ISearchInputProps
   extends React.ComponentPropsWithRef<typeof TextInput> {}
 
-const SearchInput: React.FC<React.PropsWithChildren<ISearchInputProps>> =
-  React.forwardRef<HTMLInputElement, ISearchInputProps>((props, ref) => {
+const SearchInput = React.forwardRef<HTMLInputElement, ISearchInputProps>(
+  (props, ref) => {
     return (
       <Box
         pad={{ horizontal: 'xsmall', vertical: 'small' }}
@@ -22,6 +22,7 @@ const SearchInput: React.FC<React.PropsWithChildren<ISearchInputProps>> =
         />
       </Box>
     );
-  });
+  }
+);
 
 export default SearchInput;
