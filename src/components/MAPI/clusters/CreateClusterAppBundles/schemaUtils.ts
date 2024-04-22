@@ -50,6 +50,9 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
   0: {
     uiSchema: {
       'ui:order': ['global', '*'],
+      baseDomain: {
+        'ui:widget': 'hidden',
+      },
       global: {
         connectivity: {
           'ui:order': ['sshSsoPublicKey', '*'],
@@ -108,6 +111,9 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
             },
           },
         },
+      },
+      managementCluster: {
+        'ui:widget': 'hidden',
       },
       provider: {
         'ui:widget': 'hidden',
