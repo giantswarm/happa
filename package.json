@@ -244,6 +244,7 @@
   "resolutions": {
     "@braintree/sanitize-url": "6.0.4",
     "@types/react": "18.2.79",
+    "formidable": "3.5.1",
     "kind-of": "6.0.3",
     "lodash": "4.17.21",
     "http-proxy": "1.18.1",
