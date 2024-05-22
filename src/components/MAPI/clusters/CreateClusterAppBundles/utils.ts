@@ -11,6 +11,7 @@ import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import * as corev1 from 'model/services/mapi/corev1';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import { compare } from 'utils/semver';
 
 export async function fetchClusterAppACEList(
   client: IHttpClient,
@@ -236,39 +237,23 @@ export async function createClusterAppResources(
   clientFactory: HttpClientFactory,
   auth: IOAuth2Provider,
   clusterAppConfig: IClusterAppConfig
-): Promise<[applicationv1alpha1.IApp, applicationv1alpha1.IApp]> {
+): Promise<
+  | [applicationv1alpha1.IApp]
+  | [applicationv1alpha1.IApp, applicationv1alpha1.IApp]
+> {
   const orgNamespace = getNamespaceFromOrgName(clusterAppConfig.organization);
-
-  const defaultAppsAppName = getDefaultAppsAppNameForCluster(
-    clusterAppConfig.clusterName
-  );
 
   const configMapLabels = getClusterAppConfigMapLabels(
     clusterAppConfig.clusterName
   );
 
-  const [clusterAppUserConfigMap, defaultAppsUserConfigMap] = await Promise.all(
-    [
-      ensureAppUserConfigMap(
-        clientFactory(),
-        auth,
-        orgNamespace,
-        getClusterAppUserConfigMapName(clusterAppConfig.clusterName),
-        clusterAppConfig.configMapContents,
-        configMapLabels
-      ),
-      ensureAppUserConfigMap(
-        clientFactory(),
-        auth,
-        orgNamespace,
-        getClusterAppUserConfigMapName(defaultAppsAppName),
-        templateDefaultAppsConfigMapContents(
-          clusterAppConfig.clusterName,
-          clusterAppConfig.organization
-        ),
-        configMapLabels
-      ),
-    ]
+  const clusterAppUserConfigMap = await ensureAppUserConfigMap(
+    clientFactory(),
+    auth,
+    orgNamespace,
+    getClusterAppUserConfigMapName(clusterAppConfig.clusterName),
+    clusterAppConfig.configMapContents,
+    configMapLabels
   );
 
   const clusterAppCR = templateClusterAppCR(
@@ -278,19 +263,46 @@ export async function createClusterAppResources(
     clusterAppConfig.clusterAppVersion
   );
 
-  const defaultAppsCR = templateDefaultAppsCR(
-    clusterAppConfig.clusterName,
-    orgNamespace,
-    clusterAppConfig.provider,
-    clusterAppConfig.defaultAppsVersion
-  );
-
   if (clusterAppUserConfigMap) {
     clusterAppCR.spec.userConfig!.configMap = {
       name: clusterAppUserConfigMap.metadata.name,
       namespace: clusterAppUserConfigMap.metadata.namespace!,
     };
   }
+
+  if (
+    usesUnifiedClusterApp(
+      clusterAppConfig.provider,
+      clusterAppConfig.clusterAppVersion
+    )
+  ) {
+    return Promise.all([
+      applicationv1alpha1.createApp(clientFactory(), auth, clusterAppCR),
+    ]);
+  }
+
+  const defaultAppsAppName = getDefaultAppsAppNameForCluster(
+    clusterAppConfig.clusterName
+  );
+
+  const defaultAppsUserConfigMap = await ensureAppUserConfigMap(
+    clientFactory(),
+    auth,
+    orgNamespace,
+    getClusterAppUserConfigMapName(defaultAppsAppName),
+    templateDefaultAppsConfigMapContents(
+      clusterAppConfig.clusterName,
+      clusterAppConfig.organization
+    ),
+    configMapLabels
+  );
+
+  const defaultAppsCR = templateDefaultAppsCR(
+    clusterAppConfig.clusterName,
+    orgNamespace,
+    clusterAppConfig.provider,
+    clusterAppConfig.defaultAppsVersion
+  );
 
   if (defaultAppsUserConfigMap) {
     defaultAppsCR.spec.userConfig!.configMap = {
@@ -320,24 +332,38 @@ export function templateClusterCreationManifest(
     config.organization
   );
 
-  const resources = [
-    clusterAppUserConfigMap,
-    defaultAppsUserConfigMap,
-    templateClusterAppCR(
-      config.clusterName,
-      orgNamespace,
-      config.provider,
-      config.clusterAppVersion,
-      clusterAppUserConfigMap
-    ),
-    templateDefaultAppsCR(
-      config.clusterName,
-      orgNamespace,
-      config.provider,
-      config.defaultAppsVersion,
-      defaultAppsUserConfigMap
-    ),
-  ];
+  const resources = usesUnifiedClusterApp(
+    config.provider,
+    config.clusterAppVersion
+  )
+    ? [
+        clusterAppUserConfigMap,
+        templateClusterAppCR(
+          config.clusterName,
+          orgNamespace,
+          config.provider,
+          config.clusterAppVersion,
+          clusterAppUserConfigMap
+        ),
+      ]
+    : [
+        clusterAppUserConfigMap,
+        defaultAppsUserConfigMap,
+        templateClusterAppCR(
+          config.clusterName,
+          orgNamespace,
+          config.provider,
+          config.clusterAppVersion,
+          clusterAppUserConfigMap
+        ),
+        templateDefaultAppsCR(
+          config.clusterName,
+          orgNamespace,
+          config.provider,
+          config.defaultAppsVersion,
+          defaultAppsUserConfigMap
+        ),
+      ];
 
   return `---\n${resources
     .map((r) =>
@@ -348,4 +374,21 @@ export function templateClusterCreationManifest(
       })
     )
     .join('---\n')}`;
+}
+
+export function usesUnifiedClusterApp(
+  provider: string,
+  clusterAppVersion: string
+): boolean {
+  switch (provider) {
+    case Providers.CAPA:
+      return (
+        compare(
+          clusterAppVersion,
+          Constants.UNIFIED_CLUSTER_AWS_APP_MIN_VERSION
+        ) >= 0
+      );
+    default:
+      return false;
+  }
 }

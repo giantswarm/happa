@@ -6,6 +6,7 @@ import {
   getAllChildApps,
   isAppBundle,
 } from 'MAPI/apps/utils';
+import { usesUnifiedClusterApp } from 'MAPI/clusters/CreateClusterAppBundles/utils';
 import {
   Cluster,
   ControlPlane,
@@ -125,13 +126,21 @@ function getClusterAppDeployedStatus(clusterApp?: applicationv1alpha1.IApp) {
   return getStatusComponent(status);
 }
 
-function getDefaultAppsDeployedStatus(appList?: applicationv1alpha1.IAppList) {
-  if (typeof appList === 'undefined') {
+function getDefaultAppsDeployedStatus(
+  clusterApp?: applicationv1alpha1.IApp,
+  appList?: applicationv1alpha1.IAppList
+) {
+  if (typeof clusterApp === 'undefined' || typeof appList === 'undefined') {
     return getStatusComponent(ClusterCreationStatus.Waiting);
   }
 
   const provider = window.config.info.general.provider;
-  const defaultAppsBundle = findDefaultAppsBundle(appList.items, provider);
+  const defaultAppsBundle = usesUnifiedClusterApp(
+    provider,
+    clusterApp.spec.version
+  )
+    ? clusterApp
+    : findDefaultAppsBundle(appList.items, provider);
   if (typeof defaultAppsBundle === 'undefined') {
     return getStatusComponent(ClusterCreationStatus.Waiting);
   }
@@ -393,7 +402,7 @@ const CreateClusterAppBundlesStatus: React.FC<
     controlPlaneNodes
   );
   const clusterAppDeployed = getClusterAppDeployedStatus(clusterApp);
-  const defaultAppsDeployed = getDefaultAppsDeployedStatus(appList);
+  const defaultAppsDeployed = getDefaultAppsDeployedStatus(clusterApp, appList);
   const nodePoolsAvailable = getNodePoolsAvailableStatus(nodePoolList);
 
   const clusterPath = useMemo(() => {

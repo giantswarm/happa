@@ -52,6 +52,8 @@ export const Constants = {
   AWS_NAMESPACED_CLUSTERS_VERSION: '16.0.0',
   AWS_CLIENT_CERTIFICATES_VERSION: '16.0.1',
 
+  UNIFIED_CLUSTER_AWS_APP_MIN_VERSION: '0.76.0-alpha.1',
+
   // UI labels
   CURRENT_NODES_INPOOL_EXPLANATION:
     'Current number of worker nodes in the node pool',

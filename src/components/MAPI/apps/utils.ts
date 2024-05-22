@@ -694,8 +694,20 @@ export function getChildApps(
 ) {
   return apps.filter((app) => {
     const managedBy = app.metadata.labels?.[applicationv1alpha1.labelManagedBy];
+    if (managedBy === parentApp.metadata.name) {
+      return true;
+    }
 
-    return managedBy === parentApp.metadata.name;
+    // Check if app is managed by cluster-aws (or cluster chart)
+    const managedByClusterApp =
+      managedBy === parentApp.spec.name || managedBy === 'cluster';
+
+    // Check if parentApp is cluster app
+    const appClusterName =
+      app.metadata.labels?.[applicationv1alpha1.labelCluster];
+    const parentAppIsClusterApp = appClusterName === parentApp.metadata.name;
+
+    return managedByClusterApp && parentAppIsClusterApp;
   });
 }
 
