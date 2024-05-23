@@ -99,11 +99,8 @@ function transformDefaultValue(defaultValue?: JSONSchemaObjectDefaultValue) {
   return undefined;
 }
 
-function getDefaultValueFromInternals(
-  schema: RJSFSchema,
-  path?: string | null
-) {
-  return path ? get(schema, `properties.internal.${path}.default`) : undefined;
+function getDefaultValueFromInternals(schema: RJSFSchema, path: string[]) {
+  return get(schema, `properties.internal.${path}.default`);
 }
 
 export function preprocessSchema(
@@ -118,7 +115,7 @@ export function preprocessSchema(
     path,
   }: {
     obj: RJSFSchema;
-    path?: string | null;
+    path: string[];
   }) => {
     // If the type is not defined and the schema uses 'anyOf' or 'oneOf',
     // use first not deprecated subschema from the list
@@ -146,7 +143,7 @@ export function preprocessSchema(
     path,
   }: {
     obj: RJSFSchema;
-    path?: string | null;
+    path: string[];
   }) => {
     if (
       obj.type === 'object' &&
@@ -183,7 +180,7 @@ export function preprocessSchema(
     path,
   }: {
     obj: RJSFSchema;
-    path?: string | null;
+    path: string[];
   }) => {
     // Clean out implicit default values from objects and arrays
     if ((obj.type === 'array' || obj.type === 'object') && obj.default) {
