@@ -5,7 +5,7 @@ import isPlainObject from 'lodash/isPlainObject';
 import omit from 'lodash/omit';
 import set from 'lodash/set';
 import { generateUID } from 'MAPI/utils';
-import { traverseJSONSchemaObject } from 'utils/helpers';
+import { traverseJSONSchemaObject } from 'utils/schema';
 
 import { cleanPayload } from './utils';
 

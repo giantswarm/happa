@@ -35,13 +35,10 @@ import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { Cache, mutate } from 'swr';
 import ErrorReporter from 'utils/errors/ErrorReporter';
-import {
-  DeepPartial,
-  isValidURL,
-  traverseJSONSchemaObject,
-} from 'utils/helpers';
+import { DeepPartial, isValidURL } from 'utils/helpers';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
+import { traverseJSONSchemaObject } from 'utils/schema';
 import { compare } from 'utils/semver';
 import { VersionImpl } from 'utils/Version';
 
