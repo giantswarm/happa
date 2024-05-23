@@ -98,6 +98,164 @@ describe('traverseJSONSchemaObject', () => {
     ).toStrictEqual(expected);
   });
 
+  it('performs specified action for object additional properties', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      title: 'object title',
+      additionalProperties: {
+        type: 'object',
+        title: 'additional object title',
+        properties: {
+          firstProp: {
+            type: 'object',
+            title: 'first prop title',
+          },
+          secondProp: {
+            type: 'object',
+            title: 'second prop title',
+            properties: {
+              firstProp: {
+                type: 'object',
+                title: 'first prop title',
+              },
+            },
+          },
+          thirdProp: {
+            type: 'object',
+            title: 'third prop title',
+            additionalProperties: {
+              type: 'object',
+              title: 'additional inner object title',
+            },
+          },
+        },
+      },
+    };
+
+    const expected = {
+      type: 'object',
+      title: 'OBJECT TITLE',
+      additionalProperties: {
+        type: 'object',
+        title: 'ADDITIONAL OBJECT TITLE',
+        properties: {
+          firstProp: {
+            type: 'object',
+            title: 'FIRST PROP TITLE',
+          },
+          secondProp: {
+            type: 'object',
+            title: 'SECOND PROP TITLE',
+            properties: {
+              firstProp: {
+                type: 'object',
+                title: 'FIRST PROP TITLE',
+              },
+            },
+          },
+          thirdProp: {
+            type: 'object',
+            title: 'THIRD PROP TITLE',
+            additionalProperties: {
+              type: 'object',
+              title: 'ADDITIONAL INNER OBJECT TITLE',
+            },
+          },
+        },
+      },
+    };
+
+    expect(
+      traverseJSONSchemaObject(
+        schema,
+        (obj) => (obj.title = obj.title?.toUpperCase())
+      )
+    ).toStrictEqual(expected);
+  });
+
+  it('performs specified action for object pattern properties', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      title: 'object title',
+      patternProperties: {
+        '^[a-z0-9]+$': {
+          type: 'object',
+          title: 'pattern object title',
+          properties: {
+            firstProp: {
+              type: 'object',
+              title: 'first prop title',
+            },
+            secondProp: {
+              type: 'object',
+              title: 'second prop title',
+              properties: {
+                firstProp: {
+                  type: 'object',
+                  title: 'first prop title',
+                },
+              },
+            },
+            thirdProp: {
+              type: 'object',
+              title: 'third prop title',
+              patternProperties: {
+                '^[a-z0-9]+$': {
+                  type: 'object',
+                  title: 'inner pattern object title',
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const expected = {
+      type: 'object',
+      title: 'OBJECT TITLE',
+      patternProperties: {
+        '^[a-z0-9]+$': {
+          type: 'object',
+          title: 'PATTERN OBJECT TITLE',
+          properties: {
+            firstProp: {
+              type: 'object',
+              title: 'FIRST PROP TITLE',
+            },
+            secondProp: {
+              type: 'object',
+              title: 'SECOND PROP TITLE',
+              properties: {
+                firstProp: {
+                  type: 'object',
+                  title: 'FIRST PROP TITLE',
+                },
+              },
+            },
+            thirdProp: {
+              type: 'object',
+              title: 'THIRD PROP TITLE',
+              patternProperties: {
+                '^[a-z0-9]+$': {
+                  type: 'object',
+                  title: 'INNER PATTERN OBJECT TITLE',
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    expect(
+      traverseJSONSchemaObject(
+        schema,
+        (obj) => (obj.title = obj.title?.toUpperCase())
+      )
+    ).toStrictEqual(expected);
+  });
+
   it('performs specified action for an array', () => {
     const schema: RJSFSchema = {
       type: 'array',
@@ -361,6 +519,39 @@ describe('traverseJSONSchemaObject', () => {
           ],
         },
       },
+      additionalProperties: {
+        type: 'object',
+        title: 'object with additional properties title',
+        properties: {
+          firstProp: {
+            type: 'object',
+          },
+          secondProp: {
+            type: 'object',
+            additionalProperties: {
+              type: 'object',
+            },
+          },
+        },
+      },
+      patternProperties: {
+        '^[a-z0-9]+$': {
+          type: 'object',
+          properties: {
+            firstProp: {
+              type: 'object',
+            },
+            secondProp: {
+              type: 'object',
+              patternProperties: {
+                '^[a-z0-9]+$': {
+                  type: 'object',
+                },
+              },
+            },
+          },
+        },
+      },
       type: 'object',
     };
 
@@ -389,6 +580,26 @@ describe('traverseJSONSchemaObject', () => {
       ['properties', 'allOfProp', 'allOf', '1', 'properties', 'secondProp'],
       ['properties', 'allOfProp', 'allOf', '1'],
       ['properties', 'allOfProp'],
+      ['additionalProperties', 'properties', 'firstProp'],
+      [
+        'additionalProperties',
+        'properties',
+        'secondProp',
+        'additionalProperties',
+      ],
+      ['additionalProperties', 'properties', 'secondProp'],
+      ['additionalProperties'],
+      ['patternProperties', '^[a-z0-9]+$', 'properties', 'firstProp'],
+      [
+        'patternProperties',
+        '^[a-z0-9]+$',
+        'properties',
+        'secondProp',
+        'patternProperties',
+        '^[a-z0-9]+$',
+      ],
+      ['patternProperties', '^[a-z0-9]+$', 'properties', 'secondProp'],
+      ['patternProperties', '^[a-z0-9]+$'],
       [],
     ];
 

@@ -40,6 +40,28 @@ export function traverseJSONSchemaObject(
         }
       }
 
+      if (
+        obj.additionalProperties &&
+        typeof obj.additionalProperties === 'object'
+      ) {
+        traverseJSONSchemaObject(
+          obj.additionalProperties as Record<string, unknown>,
+          processFn,
+          [...path, 'additionalProperties']
+        );
+      }
+
+      if (obj.patternProperties && typeof obj.patternProperties === 'object') {
+        const [pattern, subschema] = Object.entries(obj.patternProperties)[0];
+        if (subschema && typeof subschema === 'object') {
+          traverseJSONSchemaObject(
+            subschema as Record<string, unknown>,
+            processFn,
+            [...path, 'patternProperties', pattern]
+          );
+        }
+      }
+
       break;
     }
 
