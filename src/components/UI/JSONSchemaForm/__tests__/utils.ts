@@ -530,7 +530,6 @@ describe('JSONSchemaForm:utils', () => {
             },
           },
           arrayOfTransformedObjects: {
-            $comment: 'transformedProperty',
             type: 'array',
             items: {
               type: 'object',
@@ -541,7 +540,6 @@ describe('JSONSchemaForm:utils', () => {
             },
           },
           arrayOfTransformedObjects2: {
-            $comment: 'transformedProperty',
             type: 'array',
             items: {
               type: 'object',
@@ -556,7 +554,6 @@ describe('JSONSchemaForm:utils', () => {
             type: 'object',
             properties: {
               arrayOfTransformedObjects: {
-                $comment: 'transformedProperty',
                 type: 'array',
                 items: {
                   type: 'object',

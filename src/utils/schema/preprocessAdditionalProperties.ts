@@ -1,38 +1,45 @@
 import { findSchemaDefinition, RJSFSchema } from '@rjsf/utils';
-import get from 'lodash/get';
 import isPlainObject from 'lodash/isPlainObject';
 import set from 'lodash/set';
 import { generateUID } from 'MAPI/utils';
 
+import { getPatternProperty } from './getPatternProperty';
+import { getSubschema } from './getSubschema';
 import { traverseJSONSchemaObject } from './traverseJSONSchemaObject';
+
+type DefaultValue =
+  | string
+  | number
+  | boolean
+  | DefaultValueObject
+  | DefaultValueArray
+  | null;
+
+interface DefaultValueObject {
+  [key: string]: DefaultValue;
+}
+
+interface DefaultValueArray extends Array<DefaultValue> {}
 
 export const TRANSFORMED_PROPERTY_KEY = 'transformedPropertyKey';
 export const TRANSFORMED_PROPERTY_VALUE = 'transformedPropertyValue';
-const TRANSFORMED_PROPERTY_COMMENT = 'transformedProperty';
 
-interface JSONSchemaObjectDefaultValue {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
-
-function transformDefaultValue(defaultValue?: JSONSchemaObjectDefaultValue) {
-  if (typeof defaultValue !== 'undefined' && isPlainObject(defaultValue)) {
-    return Object.entries(defaultValue).map(([key, value]) => {
-      if (isPlainObject(value)) {
-        return {
-          [TRANSFORMED_PROPERTY_KEY]: key,
-          ...value,
-        };
-      }
-
+function transformObjectIntoArray(
+  defaultValue: DefaultValueObject
+): DefaultValueObject[] {
+  return Object.entries(defaultValue).map(([key, value]) => {
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
       return {
-        [TRANSFORMED_PROPERTY_KEY]: key,
-        [TRANSFORMED_PROPERTY_VALUE]: value,
+        [TRANSFORMED_PROPERTY_KEY as string]: key,
+        ...value,
       };
-    });
-  }
+    }
 
-  return undefined;
+    return {
+      [TRANSFORMED_PROPERTY_KEY]: key,
+      [TRANSFORMED_PROPERTY_VALUE]: value,
+    };
+  });
 }
 
 function addKeyProperty(schema: RJSFSchema, pattern?: string): RJSFSchema {
@@ -50,7 +57,7 @@ function addKeyProperty(schema: RJSFSchema, pattern?: string): RJSFSchema {
   };
 }
 
-function transformSubschema(
+function transformSchema(
   schema: RJSFSchema,
   rootSchema?: RJSFSchema,
   pattern?: string
@@ -92,18 +99,91 @@ function transformSubschema(
   };
 }
 
-function getDefaultValueFromInternals(schema: RJSFSchema, path: string[]) {
-  return get(schema, ['properties', 'internal', ...path, 'default']);
+export function transformSchemaDefaultValues(
+  object: DefaultValue,
+  path: string[],
+  rootSchema: RJSFSchema
+): DefaultValue {
+  const objectSchema = getSubschema(rootSchema, path);
+  if (!object || !objectSchema) {
+    return object;
+  }
+
+  if (objectSchema.type === 'array' && Array.isArray(object)) {
+    return object.map((item) => {
+      const itemPath = [...path, 'items'];
+
+      return transformSchemaDefaultValues(item, itemPath, rootSchema);
+    });
+  }
+
+  if (objectSchema.type === 'object' && typeof object === 'object') {
+    const newObject = Object.fromEntries(
+      Object.entries(object).map(([key, value]) => {
+        let itemSchemaPath: string[] = [];
+        const patternProperty = getPatternProperty(objectSchema);
+        if (
+          objectSchema.properties &&
+          isPlainObject(objectSchema.properties) &&
+          objectSchema.properties.hasOwnProperty(key)
+        ) {
+          itemSchemaPath = [...path, 'properties', key];
+        } else if (
+          objectSchema.additionalProperties &&
+          isPlainObject(objectSchema.additionalProperties)
+        ) {
+          itemSchemaPath = [...path, 'additionalProperties'];
+        } else if (patternProperty) {
+          itemSchemaPath = [
+            ...path,
+            'patternProperties',
+            patternProperty.pattern,
+          ];
+        }
+
+        return [
+          key,
+          transformSchemaDefaultValues(value, itemSchemaPath, rootSchema),
+        ];
+      })
+    );
+
+    if (objectSchema.additionalProperties || objectSchema.patternProperties) {
+      return transformObjectIntoArray(newObject);
+    }
+
+    return newObject;
+  }
+
+  return object;
 }
 
-export function isTransformedProperty(schema: RJSFSchema) {
-  return schema.$comment === TRANSFORMED_PROPERTY_COMMENT;
+export function isTransformedSchema(schema: RJSFSchema) {
+  return (
+    schema.type === 'array' &&
+    schema.items &&
+    typeof schema.items === 'object' &&
+    !Array.isArray(schema.items) &&
+    schema.items.properties &&
+    schema.items.properties[TRANSFORMED_PROPERTY_KEY]
+  );
 }
 
-export function preprocessAdditionalProperties(
-  schema: RJSFSchema,
-  originalSchema: RJSFSchema
-): RJSFSchema {
+export function preprocessAdditionalProperties(schema: RJSFSchema): RJSFSchema {
+  const transformAdditionalPropertiesDefaultValues = ({
+    obj,
+    path,
+  }: {
+    obj: RJSFSchema;
+    path?: string[];
+  }) => {
+    if (obj.default) {
+      obj.default = transformSchemaDefaultValues(obj.default, path!, schema);
+    }
+
+    return { obj, path };
+  };
+
   const transformAdditionalProperties = ({
     obj,
     path,
@@ -121,14 +201,7 @@ export function preprocessAdditionalProperties(
         : Object.entries(obj.patternProperties!)[0];
 
       obj.type = 'array';
-      obj.items = transformSubschema(subschema as RJSFSchema, schema, pattern);
-      obj.$comment = TRANSFORMED_PROPERTY_COMMENT;
-
-      const defaultValue =
-        obj.default ?? getDefaultValueFromInternals(originalSchema, path);
-      obj.default = transformDefaultValue(
-        defaultValue as JSONSchemaObjectDefaultValue
-      );
+      obj.items = transformSchema(subschema as RJSFSchema, schema, pattern);
 
       delete obj.additionalProperties;
       delete obj.patternProperties;
@@ -137,7 +210,11 @@ export function preprocessAdditionalProperties(
     return { obj, path };
   };
 
-  const patchedSchema = traverseJSONSchemaObject(schema, (obj, path) =>
+  let patchedSchema = traverseJSONSchemaObject(schema, (obj, path) =>
+    transformAdditionalPropertiesDefaultValues({ obj, path })
+  );
+
+  patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
     transformAdditionalProperties({ obj, path })
   );
 

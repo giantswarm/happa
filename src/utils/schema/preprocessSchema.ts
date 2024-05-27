@@ -1,21 +1,22 @@
 import { RJSFSchema } from '@rjsf/utils';
-import cloneDeep from 'lodash/cloneDeep';
 import omit from 'lodash/omit';
 
 import { preprocessAdditionalProperties } from './preprocessAdditionalProperties';
 import { preprocessAnyOfOneOfProperties } from './preprocessAnyOfOneOfProperties';
 import { preprocessImplicitDefaultValues } from './preprocessImplicitDefaultValues';
+import { preprocessInternalSubschema } from './preprocessInternalSubschema';
 
 export function preprocessSchema(
   schema: RJSFSchema,
-  fieldsToRemove: string[] = ['properties.internal']
+  fieldsToRemove: string[] = []
 ): RJSFSchema {
-  const originalSchema = cloneDeep(schema);
   let patchedSchema = omit(schema, fieldsToRemove);
+
+  patchedSchema = preprocessInternalSubschema(patchedSchema);
 
   patchedSchema = preprocessAnyOfOneOfProperties(patchedSchema);
 
-  patchedSchema = preprocessAdditionalProperties(patchedSchema, originalSchema);
+  patchedSchema = preprocessAdditionalProperties(patchedSchema);
 
   patchedSchema = preprocessImplicitDefaultValues(patchedSchema);
 

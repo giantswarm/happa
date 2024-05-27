@@ -163,7 +163,6 @@ describe('preprocessSchema', () => {
           type: 'object',
           properties: {
             objectOfStrings: {
-              $comment: 'transformedProperty',
               type: 'array',
               items: {
                 type: 'object',
@@ -184,7 +183,6 @@ describe('preprocessSchema', () => {
               },
             },
             objectOfObjects: {
-              $comment: 'transformedProperty',
               type: 'array',
               items: {
                 type: 'object',
@@ -204,7 +202,6 @@ describe('preprocessSchema', () => {
               },
             },
             objectOfStringsWithDefault: {
-              $comment: 'transformedProperty',
               type: 'array',
               default: [
                 {
@@ -235,7 +232,6 @@ describe('preprocessSchema', () => {
               },
             },
             objectOfObjectsWithDefault: {
-              $comment: 'transformedProperty',
               type: 'array',
               default: [
                 {
@@ -284,7 +280,6 @@ describe('preprocessSchema', () => {
           type: 'object',
           properties: {
             objectOfStrings: {
-              $comment: 'transformedProperty',
               type: 'array',
               items: {
                 type: 'object',
@@ -306,7 +301,6 @@ describe('preprocessSchema', () => {
               },
             },
             objectOfObjects: {
-              $comment: 'transformedProperty',
               type: 'array',
               items: {
                 type: 'object',
@@ -327,7 +321,6 @@ describe('preprocessSchema', () => {
               },
             },
             objectOfStringsWithDefault: {
-              $comment: 'transformedProperty',
               type: 'array',
               default: [
                 {
@@ -359,7 +352,6 @@ describe('preprocessSchema', () => {
               },
             },
             objectOfObjectsWithDefault: {
-              $comment: 'transformedProperty',
               type: 'array',
               default: [
                 {
@@ -409,7 +401,6 @@ describe('preprocessSchema', () => {
           type: 'object',
           properties: {
             objectOfStrings: {
-              $comment: 'transformedProperty',
               type: 'array',
               default: [
                 {
@@ -440,7 +431,6 @@ describe('preprocessSchema', () => {
               },
             },
             objectOfObjects: {
-              $comment: 'transformedProperty',
               type: 'array',
               default: [
                 {

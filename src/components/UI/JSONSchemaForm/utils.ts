@@ -13,7 +13,7 @@ import isPlainObject from 'lodash/isPlainObject';
 import transform from 'lodash/transform';
 import { pipe } from 'utils/helpers';
 import {
-  isTransformedProperty,
+  isTransformedSchema,
   TRANSFORMED_PROPERTY_KEY,
   TRANSFORMED_PROPERTY_VALUE,
 } from 'utils/schema/preprocessAdditionalProperties';
@@ -177,7 +177,7 @@ function getDefaultValueFromParent(
     return undefined;
   }
 
-  if (isTransformedProperty(schema)) {
+  if (isTransformedSchema(schema)) {
     const transformedPropertyKey = (value as ITransformedObject)[
       TRANSFORMED_PROPERTY_KEY
     ];
@@ -453,7 +453,7 @@ function shouldCleanInnerDefaultValues(
   valueSchema: RJSFSchema,
   defaultValue: unknown[]
 ) {
-  if (!isTransformedProperty(valueSchema)) {
+  if (!isTransformedSchema(valueSchema)) {
     return false;
   }
 
@@ -489,7 +489,7 @@ export function transformArraysIntoObjects(
       if (Array.isArray(value)) {
         newValue = transformArraysIntoObjects(value, valueSchema, rootSchema);
 
-        if (isTransformedProperty(valueSchema)) {
+        if (isTransformedSchema(valueSchema)) {
           const entries = (newValue as ITransformedObject[]).map((item) => {
             const {
               [TRANSFORMED_PROPERTY_KEY]: itemKey,

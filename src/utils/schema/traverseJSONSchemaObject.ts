@@ -1,6 +1,8 @@
 import { RJSFSchema } from '@rjsf/utils';
 import isPlainObject from 'lodash/isPlainObject';
 
+import { getPatternProperty } from './getPatternProperty';
+
 /**
  * Traverses a JSON schema object recursively
  * @param obj
@@ -52,13 +54,17 @@ export function traverseJSONSchemaObject(
       }
 
       if (obj.patternProperties && typeof obj.patternProperties === 'object') {
-        const [pattern, subschema] = Object.entries(obj.patternProperties)[0];
-        if (subschema && typeof subschema === 'object') {
-          traverseJSONSchemaObject(
-            subschema as Record<string, unknown>,
-            processFn,
-            [...path, 'patternProperties', pattern]
-          );
+        const patternProperty = getPatternProperty(obj);
+        if (
+          patternProperty &&
+          patternProperty.subschema &&
+          typeof patternProperty.subschema === 'object'
+        ) {
+          traverseJSONSchemaObject(patternProperty.subschema, processFn, [
+            ...path,
+            'patternProperties',
+            patternProperty.pattern,
+          ]);
         }
       }
 
