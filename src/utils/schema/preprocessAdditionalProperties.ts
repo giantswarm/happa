@@ -1,20 +1,38 @@
 import { findSchemaDefinition, RJSFSchema } from '@rjsf/utils';
-import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import isPlainObject from 'lodash/isPlainObject';
-import omit from 'lodash/omit';
 import set from 'lodash/set';
 import { generateUID } from 'MAPI/utils';
-import { traverseJSONSchemaObject } from 'utils/schema';
 
-import { cleanPayload } from './utils';
+import { traverseJSONSchemaObject } from './traverseJSONSchemaObject';
 
 export const TRANSFORMED_PROPERTY_KEY = 'transformedPropertyKey';
 export const TRANSFORMED_PROPERTY_VALUE = 'transformedPropertyValue';
 const TRANSFORMED_PROPERTY_COMMENT = 'transformedProperty';
 
-export function isTransformedProperty(schema: RJSFSchema) {
-  return schema.$comment === TRANSFORMED_PROPERTY_COMMENT;
+interface JSONSchemaObjectDefaultValue {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
+
+function transformDefaultValue(defaultValue?: JSONSchemaObjectDefaultValue) {
+  if (typeof defaultValue !== 'undefined' && isPlainObject(defaultValue)) {
+    return Object.entries(defaultValue).map(([key, value]) => {
+      if (isPlainObject(value)) {
+        return {
+          [TRANSFORMED_PROPERTY_KEY]: key,
+          ...value,
+        };
+      }
+
+      return {
+        [TRANSFORMED_PROPERTY_KEY]: key,
+        [TRANSFORMED_PROPERTY_VALUE]: value,
+      };
+    });
+  }
+
+  return undefined;
 }
 
 function addKeyProperty(schema: RJSFSchema, pattern?: string): RJSFSchema {
@@ -74,70 +92,18 @@ function transformSubschema(
   };
 }
 
-interface JSONSchemaObjectDefaultValue {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
-
-function transformDefaultValue(defaultValue?: JSONSchemaObjectDefaultValue) {
-  if (typeof defaultValue !== 'undefined' && isPlainObject(defaultValue)) {
-    return Object.entries(defaultValue).map(([key, value]) => {
-      if (isPlainObject(value)) {
-        return {
-          [TRANSFORMED_PROPERTY_KEY]: key,
-          ...value,
-        };
-      }
-
-      return {
-        [TRANSFORMED_PROPERTY_KEY]: key,
-        [TRANSFORMED_PROPERTY_VALUE]: value,
-      };
-    });
-  }
-
-  return undefined;
-}
-
 function getDefaultValueFromInternals(schema: RJSFSchema, path: string[]) {
   return get(schema, `properties.internal.${path}.default`);
 }
 
-export function preprocessSchema(
+export function isTransformedProperty(schema: RJSFSchema) {
+  return schema.$comment === TRANSFORMED_PROPERTY_COMMENT;
+}
+
+export function preprocessAdditionalProperties(
   schema: RJSFSchema,
-  fieldsToRemove: string[] = ['properties.internal']
+  originalSchema: RJSFSchema
 ): RJSFSchema {
-  const originalSchema = cloneDeep(schema);
-  let patchedSchema = omit(schema, fieldsToRemove);
-
-  const processSubschemas = ({
-    obj,
-    path,
-  }: {
-    obj: RJSFSchema;
-    path: string[];
-  }) => {
-    // If the type is not defined and the schema uses 'anyOf' or 'oneOf',
-    // use first not deprecated subschema from the list
-    if (!obj.type && (obj.anyOf || obj.oneOf)) {
-      const subschemas = (obj.anyOf || obj.oneOf || []).filter(
-        (subschema) =>
-          typeof subschema === 'object' && !(subschema as RJSFSchema).deprecated
-      );
-
-      if (subschemas.length > 0) {
-        Object.entries(subschemas[0]).forEach(([key, value]) => {
-          obj[key] = value;
-        });
-      }
-
-      delete obj.anyOf;
-      delete obj.oneOf;
-    }
-
-    return { obj, path };
-  };
-
   const transformAdditionalProperties = ({
     obj,
     path,
@@ -155,11 +121,7 @@ export function preprocessSchema(
         : Object.entries(obj.patternProperties!)[0];
 
       obj.type = 'array';
-      obj.items = transformSubschema(
-        subschema as RJSFSchema,
-        patchedSchema,
-        pattern
-      );
+      obj.items = transformSubschema(subschema as RJSFSchema, schema, pattern);
       obj.$comment = TRANSFORMED_PROPERTY_COMMENT;
 
       const defaultValue =
@@ -175,34 +137,8 @@ export function preprocessSchema(
     return { obj, path };
   };
 
-  const processDefaultValues = ({
-    obj,
-    path,
-  }: {
-    obj: RJSFSchema;
-    path: string[];
-  }) => {
-    // Clean out implicit default values from objects and arrays
-    if ((obj.type === 'array' || obj.type === 'object') && obj.default) {
-      const { default: defaultValue, ...objSchema } = obj;
-      obj.default = cleanPayload(
-        defaultValue,
-        objSchema,
-        patchedSchema
-      ) as typeof defaultValue;
-    }
-
-    return { obj, path };
-  };
-
-  patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
-    processSubschemas({ obj, path })
-  );
-  patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
+  const patchedSchema = traverseJSONSchemaObject(schema, (obj, path) =>
     transformAdditionalProperties({ obj, path })
-  );
-  patchedSchema = traverseJSONSchemaObject(patchedSchema, (obj, path) =>
-    processDefaultValues({ obj, path })
   );
 
   return patchedSchema;

@@ -12,13 +12,13 @@ import isEqual from 'lodash/isEqual';
 import isPlainObject from 'lodash/isPlainObject';
 import transform from 'lodash/transform';
 import { pipe } from 'utils/helpers';
-
-import { IIdConfigs } from '.';
 import {
   isTransformedProperty,
   TRANSFORMED_PROPERTY_KEY,
   TRANSFORMED_PROPERTY_VALUE,
-} from './schemaUtils';
+} from 'utils/schema/preprocessAdditionalProperties';
+
+import { IIdConfigs } from '.';
 
 function transformRequiredArrayItemError(
   error: RJSFValidationError
