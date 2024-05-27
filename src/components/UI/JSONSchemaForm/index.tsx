@@ -3,6 +3,7 @@ import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import hasIn from 'lodash/hasIn';
 import React, { useCallback, useMemo, useReducer, useRef } from 'react';
 import { preprocessSchema } from 'utils/schema';
+import { transformArraysIntoObjects } from 'utils/schema/transformArraysIntoObjects';
 
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
@@ -18,7 +19,6 @@ import {
   cleanPayload,
   cleanPayloadFromDefaults,
   mapErrorPropertyToField,
-  transformArraysIntoObjects,
   transformErrors,
 } from './utils';
 

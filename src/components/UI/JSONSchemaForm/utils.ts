@@ -1,9 +1,4 @@
-import {
-  findSchemaDefinition,
-  mergeObjects,
-  RJSFSchema,
-  RJSFValidationError,
-} from '@rjsf/utils';
+import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import cleanDeep, { CleanOptions } from 'clean-deep';
 import flatten from 'lodash/flatten';
 import groupBy from 'lodash/groupBy';
@@ -12,11 +7,12 @@ import isEqual from 'lodash/isEqual';
 import isPlainObject from 'lodash/isPlainObject';
 import transform from 'lodash/transform';
 import { pipe } from 'utils/helpers';
+import { getValueSchema } from 'utils/schema/getValueSchema';
 import {
   isTransformedSchema,
   TRANSFORMED_PROPERTY_KEY,
-  TRANSFORMED_PROPERTY_VALUE,
 } from 'utils/schema/preprocessAdditionalProperties';
+import { ITransformedObject } from 'utils/schema/transformArraysIntoObjects';
 
 import { IIdConfigs } from '.';
 
@@ -190,33 +186,6 @@ function getDefaultValueFromParent(
   }
 
   return defaultValues?.[key as keyof typeof defaultValues];
-}
-
-function getValueSchema(
-  key: number,
-  schema: RJSFSchema,
-  rootSchema: RJSFSchema
-) {
-  const valueSchema =
-    schema.type === 'array'
-      ? schema.items && Array.isArray(schema.items)
-        ? schema.items[key]
-        : schema.items
-      : schema.properties
-      ? schema.properties[key]
-      : undefined;
-
-  if (
-    typeof valueSchema !== 'undefined' &&
-    typeof valueSchema !== 'boolean' &&
-    valueSchema.$ref
-  ) {
-    const refSchema = findSchemaDefinition(valueSchema.$ref, rootSchema);
-
-    return mergeObjects(refSchema, valueSchema);
-  }
-
-  return valueSchema;
 }
 
 export interface CleanPayloadOptions extends CleanOptions {
@@ -442,12 +411,6 @@ function isEqualToDefaultValue(
   );
 }
 
-interface ITransformedObject {
-  [TRANSFORMED_PROPERTY_KEY]: string;
-  [TRANSFORMED_PROPERTY_VALUE]?: unknown;
-  [key: string]: unknown;
-}
-
 function shouldCleanInnerDefaultValues(
   value: unknown[],
   valueSchema: RJSFSchema,
@@ -466,51 +429,4 @@ function shouldCleanInnerDefaultValues(
     .sort();
 
   return isEqual(valueKeys, defaultValueKeys);
-}
-
-export function transformArraysIntoObjects(
-  object: unknown,
-  objectSchema: RJSFSchema,
-  rootSchema: RJSFSchema
-): unknown {
-  return transform(
-    object as unknown[],
-    (result: Record<string | number, unknown>, value, key) => {
-      const valueSchema = getValueSchema(key, objectSchema, rootSchema);
-      if (
-        typeof valueSchema === 'undefined' ||
-        typeof valueSchema === 'boolean'
-      ) {
-        return;
-      }
-
-      let newValue = value;
-
-      if (Array.isArray(value)) {
-        newValue = transformArraysIntoObjects(value, valueSchema, rootSchema);
-
-        if (isTransformedSchema(valueSchema)) {
-          const entries = (newValue as ITransformedObject[]).map((item) => {
-            const {
-              [TRANSFORMED_PROPERTY_KEY]: itemKey,
-              [TRANSFORMED_PROPERTY_VALUE]: itemValue,
-              ...restItem
-            } = item;
-
-            return [itemKey, itemValue ?? restItem];
-          });
-
-          newValue = Object.fromEntries(entries);
-        }
-      } else if (isPlainObject(value)) {
-        newValue = transformArraysIntoObjects(value, valueSchema, rootSchema);
-      }
-
-      if (Array.isArray(result)) {
-        result.push(newValue);
-      } else {
-        result[key] = newValue;
-      }
-    }
-  );
 }
