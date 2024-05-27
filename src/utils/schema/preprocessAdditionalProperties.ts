@@ -93,7 +93,7 @@ function transformSubschema(
 }
 
 function getDefaultValueFromInternals(schema: RJSFSchema, path: string[]) {
-  return get(schema, `properties.internal.${path}.default`);
+  return get(schema, ['properties', 'internal', ...path, 'default']);
 }
 
 export function isTransformedProperty(schema: RJSFSchema) {
