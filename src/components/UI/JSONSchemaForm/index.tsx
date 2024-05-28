@@ -2,6 +2,8 @@ import Form, { FormProps, IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import hasIn from 'lodash/hasIn';
 import React, { useCallback, useMemo, useReducer, useRef } from 'react';
+import { preprocessSchema } from 'utils/schema';
+import { transformArraysIntoObjects } from 'utils/schema/transformArraysIntoObjects';
 
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
@@ -12,13 +14,11 @@ import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import MultiSchemaField from './MultiSchemaField';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
-import { preprocessSchema } from './schemaUtils';
 import SelectWidget from './SelectWidget';
 import {
   cleanPayload,
   cleanPayloadFromDefaults,
   mapErrorPropertyToField,
-  transformArraysIntoObjects,
   transformErrors,
 } from './utils';
 
