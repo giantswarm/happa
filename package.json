@@ -197,7 +197,7 @@
     "cors": "2.8.5",
     "css-loader": "6.10.0",
     "css-minimizer-webpack-plugin": "5.0.1",
-    "ejs": "3.1.9",
+    "ejs": "3.1.10",
     "eslint": "8.47.0",
     "eslint-loader": "4.0.2",
     "eslint-plugin-import": "2.28.1",
