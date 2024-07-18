@@ -35,6 +35,7 @@ interface ICreateClusterAppBundlesFormProps {
   provider: PrototypeSchemas;
   organization: string;
   appVersion: string;
+  releaseVersion?: string;
   render: (args: { formDataPreview: React.ReactNode }) => React.ReactNode;
   onSubmit: (
     e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>,
@@ -59,6 +60,7 @@ const CreateClusterAppBundlesForm: React.FC<
   provider,
   organization,
   appVersion,
+  releaseVersion,
   onSubmit,
   onChange,
   children,
@@ -68,14 +70,19 @@ const CreateClusterAppBundlesForm: React.FC<
   const clusterName = useMemo(
     () => props.clusterName || generateUID(5),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [provider, appVersion]
+    [provider, appVersion, releaseVersion]
   );
 
   const [formProps, setFormProps] = useState<
     Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'>
   >({
-    ...getFormProps(provider, appVersion, clusterName, organization),
-    ...(formData && { formData }),
+    ...getFormProps(
+      provider,
+      appVersion,
+      clusterName,
+      organization,
+      releaseVersion
+    ),
   });
 
   const [cleanFormData, setCleanFormData] = useState<RJSFSchema>();

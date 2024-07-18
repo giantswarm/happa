@@ -13,8 +13,7 @@ export function getReleaseHelper(
 ) {
   const mappedReleases = releases.reduce(
     (acc: Record<string, IRelease>, r: releasev1alpha1.IRelease) => {
-      // Remove the `v` prefix.
-      const normalizedVersion = r.metadata.name.slice(1);
+      const normalizedVersion = normalizeReleaseVersion(r.metadata.name);
 
       acc[normalizedVersion] = {
         version: normalizedVersion,
@@ -167,4 +166,13 @@ export function getPreviewReleaseVersions(
   }
 
   return releaseVersions;
+}
+
+export function normalizeReleaseVersion(version: string): string {
+  const normalizedVersion = version.replace(/^(aws-|azure-)/, '');
+  if (normalizedVersion.toLowerCase().startsWith('v')) {
+    return normalizedVersion.substring(1);
+  }
+
+  return normalizedVersion;
 }

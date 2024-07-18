@@ -43,7 +43,11 @@ export function getProviderForPrototypeSchema(
 
 interface FormPropsPartial {
   uiSchema: UiSchema<RJSFSchema>;
-  formData: (clusterName: string, organization: string) => RJSFSchema;
+  formData: (
+    clusterName: string,
+    organization: string,
+    releaseVersion?: string
+  ) => RJSFSchema;
 }
 
 const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
@@ -114,6 +118,121 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
             },
           },
         },
+        release: {
+          version: {
+            'ui:disabled': true,
+          },
+        },
+      },
+      managementCluster: {
+        'ui:widget': 'hidden',
+      },
+      provider: {
+        'ui:widget': 'hidden',
+      },
+      'cluster-shared': {
+        'ui:widget': 'hidden',
+      },
+    },
+    formData: (clusterName, organization, releaseVersion) => {
+      return {
+        global: {
+          metadata: {
+            name: clusterName,
+            organization,
+          },
+          release: {
+            version: releaseVersion,
+          },
+        },
+      };
+    },
+  },
+};
+
+const formPropsProviderCAPZ: Record<string, FormPropsPartial> = {
+  0: {
+    uiSchema: {
+      'ui:order': ['global', '*'],
+      baseDomain: {
+        'ui:widget': 'hidden',
+      },
+      cluster: {
+        'ui:widget': 'hidden',
+      },
+      global: {
+        'ui:order': [
+          'metadata',
+          'providerSpecific',
+          'controlPlane',
+          'connectivity',
+          'nodePools',
+          'machineDeployments',
+          'kubernetesVersion',
+          'includeClusterResourceSet',
+          '*',
+        ],
+        connectivity: {
+          'ui:order': ['sshSSOPublicKey', '*'],
+          bastion: {
+            instanceType: {
+              'ui:widget': InstanceTypeWidget,
+            },
+          },
+          network: {
+            'ui:order': ['hostCidr', 'podCidr', 'serviceCidr', 'mode', '*'],
+          },
+        },
+        controlPlane: {
+          'ui:order': [
+            'instanceType',
+            'replicas',
+            'rootVolumeSizeGB',
+            'etcdVolumeSizeGB',
+            '*',
+          ],
+          instanceType: {
+            'ui:widget': InstanceTypeWidget,
+          },
+          oidc: {
+            'ui:order': ['issuerUrl', 'clientId', '*'],
+          },
+        },
+        machineDeployments: {
+          items: {
+            instanceType: {
+              'ui:widget': InstanceTypeWidget,
+            },
+          },
+        },
+        machinePools: {
+          'ui:widget': 'hidden',
+        },
+        managementCluster: {
+          'ui:widget': 'hidden',
+        },
+        metadata: {
+          'ui:order': ['name', 'description', '*'],
+          name: {
+            'ui:widget': ClusterNameWidget,
+          },
+          organization: {
+            'ui:widget': 'hidden',
+          },
+        },
+        nodePools: {
+          items: {
+            instanceType: {
+              'ui:widget': InstanceTypeWidget,
+            },
+          },
+        },
+        provider: {
+          'ui:widget': 'hidden',
+        },
+        providerSpecific: {
+          'ui:order': ['location', 'subscriptionId', '*'],
+        },
       },
       managementCluster: {
         'ui:widget': 'hidden',
@@ -132,99 +251,6 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
             name: clusterName,
             organization,
           },
-        },
-      };
-    },
-  },
-};
-
-const formPropsProviderCAPZ: Record<string, FormPropsPartial> = {
-  0: {
-    uiSchema: {
-      'ui:order': [
-        'metadata',
-        'providerSpecific',
-        'controlPlane',
-        'connectivity',
-        'nodePools',
-        'machineDeployments',
-        'kubernetesVersion',
-        'includeClusterResourceSet',
-        '*',
-      ],
-      baseDomain: {
-        'ui:widget': 'hidden',
-      },
-      connectivity: {
-        'ui:order': ['sshSSOPublicKey', '*'],
-        bastion: {
-          instanceType: {
-            'ui:widget': InstanceTypeWidget,
-          },
-        },
-        network: {
-          'ui:order': ['hostCidr', 'podCidr', 'serviceCidr', 'mode', '*'],
-        },
-      },
-      controlPlane: {
-        'ui:order': [
-          'instanceType',
-          'replicas',
-          'rootVolumeSizeGB',
-          'etcdVolumeSizeGB',
-          '*',
-        ],
-        instanceType: {
-          'ui:widget': InstanceTypeWidget,
-        },
-        oidc: {
-          'ui:order': ['issuerUrl', 'clientId', '*'],
-        },
-      },
-      'cluster-shared': {
-        'ui:widget': 'hidden',
-      },
-      machineDeployments: {
-        items: {
-          instanceType: {
-            'ui:widget': InstanceTypeWidget,
-          },
-        },
-      },
-      machinePools: {
-        'ui:widget': 'hidden',
-      },
-      managementCluster: {
-        'ui:widget': 'hidden',
-      },
-      metadata: {
-        'ui:order': ['name', 'description', '*'],
-        name: {
-          'ui:widget': ClusterNameWidget,
-        },
-        organization: {
-          'ui:widget': 'hidden',
-        },
-      },
-      nodePools: {
-        items: {
-          instanceType: {
-            'ui:widget': InstanceTypeWidget,
-          },
-        },
-      },
-      provider: {
-        'ui:widget': 'hidden',
-      },
-      providerSpecific: {
-        'ui:order': ['location', 'subscriptionId', '*'],
-      },
-    },
-    formData: (clusterName, organization) => {
-      return {
-        metadata: {
-          name: clusterName,
-          organization,
         },
       };
     },
@@ -369,7 +395,8 @@ export function getFormProps(
   schema: PrototypeSchemas,
   version: string,
   clusterName: string,
-  organization: string
+  organization: string,
+  releaseVersion?: string
 ): Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'> {
   const formPropsByVersions = formPropsByProvider[schema];
 
@@ -381,6 +408,6 @@ export function getFormProps(
 
   return {
     uiSchema: props.uiSchema,
-    formData: props.formData(clusterName, organization),
+    formData: props.formData(clusterName, organization, releaseVersion),
   };
 }

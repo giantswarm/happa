@@ -84,6 +84,7 @@ export interface IClusterAppConfig {
   organization: string;
   provider: PropertiesOf<typeof Providers>;
   clusterAppVersion: string;
+  releaseVersion?: string;
   defaultAppsVersion: string;
   configMapContents: string;
 }
@@ -93,6 +94,7 @@ function templateClusterAppCR(
   orgNamespace: string,
   provider: PropertiesOf<typeof Providers>,
   appVersion: string,
+  releaseVersion?: string,
   clusterAppUserConfigMap?: corev1.IConfigMap,
   appCatalog: string = Constants.CLUSTER_APPS_CATALOG_NAME
 ): applicationv1alpha1.IApp {
@@ -109,7 +111,7 @@ function templateClusterAppCR(
     spec: {
       name: applicationv1alpha1.getClusterAppNameForProvider(provider),
       namespace: orgNamespace,
-      version: appVersion,
+      version: releaseVersion ? '' : appVersion,
       catalog: appCatalog,
       config: {
         configMap: {
@@ -260,7 +262,8 @@ export async function createClusterAppResources(
     clusterAppConfig.clusterName,
     orgNamespace,
     clusterAppConfig.provider,
-    clusterAppConfig.clusterAppVersion
+    clusterAppConfig.clusterAppVersion,
+    clusterAppConfig.releaseVersion
   );
 
   if (clusterAppUserConfigMap) {
@@ -343,6 +346,7 @@ export function templateClusterCreationManifest(
           orgNamespace,
           config.provider,
           config.clusterAppVersion,
+          config.releaseVersion,
           clusterAppUserConfigMap
         ),
       ]
@@ -354,6 +358,7 @@ export function templateClusterCreationManifest(
           orgNamespace,
           config.provider,
           config.clusterAppVersion,
+          config.releaseVersion,
           clusterAppUserConfigMap
         ),
         templateDefaultAppsCR(
