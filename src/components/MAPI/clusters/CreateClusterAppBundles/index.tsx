@@ -491,12 +491,13 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                 <StyledInputGroup
                   label={
                     <Box direction='row' align='baseline' gap='xsmall'>
-                      <Text weight='normal'>Release</Text>
+                      <Text weight='normal'>Release version</Text>
                       <TooltipContainer
                         content={
                           <Tooltip>
-                            The release specifies versions and configurations of
-                            cluster components, e.g. the Kubernetes version.
+                            The release version specifies versions and
+                            configurations of cluster components, e.g. the
+                            Kubernetes version.
                           </Tooltip>
                         }
                       >
