@@ -10,13 +10,20 @@ import {
   fetchAppCatalogEntrySchemaKey,
   normalizeAppVersion,
 } from 'MAPI/apps/utils';
+import * as releasesUtils from 'MAPI/releases/utils';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
 import { getAppCatalogEntryValuesSchemaURL } from 'model/services/mapi/applicationv1alpha1';
+import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
+import {
+  getIsImpersonatingNonAdmin,
+  getUserIsAdmin,
+} from 'model/stores/main/selectors';
 import { selectOrganizations } from 'model/stores/organization/selectors';
+import { isPreRelease } from 'model/stores/releases/utils';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
@@ -30,12 +37,14 @@ import ErrorMessage from 'UI/Display/ErrorMessage';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import InputGroup from 'UI/Inputs/InputGroup';
 import Select from 'UI/Inputs/Select';
+import { getK8sVersionEOLDate } from 'utils/config';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import RoutePath from 'utils/routePath';
 import { compare } from 'utils/semver';
 
+import CreateClusterReleaseSelector from '../CreateCluster/CreateClusterReleaseSelector';
 import CreateClusterAppBundlesForm from './CreateClusterAppBundlesForm';
 import CreateClusterConfigViewer from './CreateClusterConfigViewer';
 import CreateClusterStatus from './CreateClusterStatus';
@@ -96,6 +105,19 @@ function getLatestAppCatalogEntry(
     )[0];
 }
 
+function getLatestRelease(
+  entries: releasev1alpha1.IRelease[]
+): releasev1alpha1.IRelease {
+  return entries
+    .slice()
+    .sort((a, b) =>
+      compare(
+        releasesUtils.normalizeReleaseVersion(b.metadata.name),
+        releasesUtils.normalizeReleaseVersion(a.metadata.name)
+      )
+    )[0];
+}
+
 function formatClusterAppVersionSelectorLabel(
   clusterAppACE: applicationv1alpha1.IAppCatalogEntry,
   latestClusterAppACE: applicationv1alpha1.IAppCatalogEntry
@@ -128,6 +150,17 @@ enum Pages {
 
 const CREATE_CLUSTER_FORM_ID = 'create-cluster-form';
 
+interface IRelease {
+  version: string;
+  state: releasev1alpha1.ReleaseState;
+  timestamp: string;
+  components: IReleaseComponent[];
+  kubernetesVersion?: string;
+  releaseNotesURL?: string;
+  k8sVersionEOLDate?: string;
+  clusterAppVersion?: string;
+}
+
 interface ICreateClusterAppBundlesProps
   extends React.ComponentPropsWithoutRef<typeof Box> {}
 
@@ -146,6 +179,9 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
 
   const provider = window.config.info.general.provider;
 
+  const isAdmin = useSelector(getUserIsAdmin);
+  const isImpersonatingNonAdmin = useSelector(getIsImpersonatingNonAdmin);
+
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
   const dispatch = useDispatch();
@@ -155,6 +191,87 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   );
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [hasErrors, setHasErrors] = useState<boolean>(false);
+
+  const releaseListClient = useRef(clientFactory());
+  const {
+    data: releaseList,
+    error: releaseListError,
+    isLoading: releaseListIsLoading,
+  } = useSWR<releasev1alpha1.IReleaseList, GenericResponseError>(
+    releasev1alpha1.getReleaseListKey(),
+    () => releasev1alpha1.getReleaseList(releaseListClient.current, auth)
+  );
+
+  useEffect(() => {
+    if (releaseListError) {
+      ErrorReporter.getInstance().notify(releaseListError);
+    }
+  }, [releaseListError]);
+
+  const releases = useMemo(() => {
+    if (!releaseList) return {};
+
+    return releaseList.items.reduce(
+      (acc: Record<string, IRelease>, curr: releasev1alpha1.IRelease) => {
+        const isActive = curr.spec.state === 'active';
+        const isPreview = curr.spec.state === 'preview';
+        const normalizedVersion = releasesUtils.normalizeReleaseVersion(
+          curr.metadata.name
+        );
+
+        if (
+          !isPreview &&
+          (!isAdmin || (isAdmin && isImpersonatingNonAdmin)) &&
+          (!isActive || isPreRelease(normalizedVersion))
+        ) {
+          return acc;
+        }
+
+        const components = releasesUtils.reduceReleaseToComponents(curr);
+
+        const k8sVersion = releasev1alpha1.getK8sVersion(curr);
+        const k8sVersionEOLDate = k8sVersion
+          ? getK8sVersionEOLDate(k8sVersion) ?? undefined
+          : undefined;
+
+        const clusterAppVersion = releasev1alpha1.getClusterAppVersion(curr);
+
+        acc[normalizedVersion] = {
+          version: normalizedVersion,
+          state: curr.spec.state,
+          timestamp: curr.metadata.creationTimestamp ?? '',
+          components: Object.values(components),
+          kubernetesVersion: k8sVersion,
+          k8sVersionEOLDate: k8sVersionEOLDate,
+          releaseNotesURL: releasev1alpha1.getReleaseNotesURL(curr),
+          clusterAppVersion,
+        };
+
+        return acc;
+      },
+      {}
+    );
+  }, [isAdmin, isImpersonatingNonAdmin, releaseList]);
+
+  const latestRelease = useMemo(() => {
+    if (!releaseList) return undefined;
+
+    return getLatestRelease(releaseList.items);
+  }, [releaseList]);
+
+  const [selectedRelease, setSelectedRelease] = useState<IRelease | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    if (selectedRelease || !latestRelease) return;
+
+    setSelectedRelease(
+      releases[
+        releasesUtils.normalizeReleaseVersion(latestRelease.metadata.name)
+      ]
+    );
+  }, [latestRelease, releases, selectedRelease]);
 
   const clusterDefaultAppsACEClient = useRef(clientFactory());
   const {
@@ -212,15 +329,34 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
     return getLatestAppCatalogEntry(clusterAppACEList.items);
   }, [clusterAppACEList]);
 
+  const selectedReleaseClusterAppACE = useMemo(() => {
+    if (!clusterAppACEList || !selectedRelease) {
+      return undefined;
+    }
+
+    const selectedReleaseClusterAppVersion = selectedRelease.clusterAppVersion;
+    if (!selectedReleaseClusterAppVersion) {
+      return undefined;
+    }
+
+    return clusterAppACEList.items.find(
+      (item) =>
+        normalizeAppVersion(item.spec.version) ===
+        selectedReleaseClusterAppVersion
+    );
+  }, [clusterAppACEList, selectedRelease]);
+
   const [selectedClusterApp, setSelectedClusterApp] = useState<
     applicationv1alpha1.IAppCatalogEntry | undefined
   >(undefined);
 
   useEffect(() => {
-    if (!latestClusterAppACE) return;
-
-    setSelectedClusterApp(latestClusterAppACE);
-  }, [latestClusterAppACE]);
+    if (selectedReleaseClusterAppACE) {
+      setSelectedClusterApp(selectedReleaseClusterAppACE);
+    } else if (latestClusterAppACE) {
+      setSelectedClusterApp(latestClusterAppACE);
+    }
+  }, [selectedReleaseClusterAppACE, latestClusterAppACE]);
 
   const schemaURL = selectedClusterApp
     ? getAppCatalogEntryValuesSchemaURL(selectedClusterApp)
@@ -284,7 +420,8 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
       await createClusterAppResources(clientFactory, auth, {
         clusterName,
         organization: orgId,
-        clusterAppVersion: latestClusterAppACE!.spec.version,
+        clusterAppVersion: selectedClusterApp?.spec.version ?? '',
+        releaseVersion: selectedRelease?.version,
         defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
         provider,
         configMapContents: yaml.dump(formData),
@@ -320,6 +457,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
   };
 
   const isLoading =
+    releaseListIsLoading ||
     clusterDefaultAppsACEIsLoading ||
     clusterAppACEIsLoading ||
     latestClusterAppACE === undefined ||
@@ -349,59 +487,99 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                   context.
                 </Text>
               </Box>
-              <StyledInputGroup
-                label={
-                  <Box direction='row' align='baseline' gap='xsmall'>
-                    <Text weight='normal'>Cluster app version</Text>
-                    <TooltipContainer
-                      content={
-                        <Tooltip>
-                          The cluster app version specifies versions and
-                          configurations of cluster components, e.g. the
-                          Kubernetes version.
-                        </Tooltip>
-                      }
-                    >
-                      <i
-                        className='fa fa-info'
-                        aria-hidden={true}
-                        role='presentation'
-                      />
-                    </TooltipContainer>
+              {releases && selectedRelease ? (
+                <StyledInputGroup
+                  label={
+                    <Box direction='row' align='baseline' gap='xsmall'>
+                      <Text weight='normal'>Release</Text>
+                      <TooltipContainer
+                        content={
+                          <Tooltip>
+                            The release specifies versions and configurations of
+                            cluster components, e.g. the Kubernetes version.
+                          </Tooltip>
+                        }
+                      >
+                        <i
+                          className='fa fa-info'
+                          aria-hidden={true}
+                          role='presentation'
+                        />
+                      </TooltipContainer>
+                    </Box>
+                  }
+                  contentProps={{ margin: { left: 'medium' } }}
+                >
+                  <Box width={CLUSTER_CREATION_FORM_MAX_WIDTH}>
+                    <CreateClusterReleaseSelector
+                      releases={releases}
+                      isAdmin={isAdmin && !isImpersonatingNonAdmin}
+                      errorMessage={extractErrorMessage(releaseListError)}
+                      isLoading={releaseListIsLoading}
+                      selectRelease={(releaseVersion) => {
+                        setSelectedRelease(releases[releaseVersion]);
+                      }}
+                      selectedRelease={selectedRelease.version}
+                    />
                   </Box>
-                }
-                contentProps={{ margin: { left: 'medium' } }}
-              >
-                <Box width='185px'>
-                  <Select
-                    value={selectedClusterApp}
-                    labelKey={(
-                      currentACE: applicationv1alpha1.IAppCatalogEntry
-                    ) =>
-                      formatClusterAppVersionSelectorLabel(
-                        currentACE,
-                        latestClusterAppACE
-                      )
-                    }
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                    onChange={(e) => setSelectedClusterApp(e.option)}
-                    options={clusterAppACEList!.items.sort((a, b) =>
-                      compare(b.spec.version, a.spec.version)
-                    )}
-                  />
-                </Box>
-                <Text>
-                  Details on all versions are available on{' '}
-                  <StyledLink
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    href={getAppReleasesURL(provider)}
-                  >
-                    GitHub <i className='fa fa-open-in-new' />
-                  </StyledLink>
-                  .
-                </Text>
-              </StyledInputGroup>
+                </StyledInputGroup>
+              ) : null}
+
+              {releases && Object.keys(releases).length === 0 ? (
+                <StyledInputGroup
+                  label={
+                    <Box direction='row' align='baseline' gap='xsmall'>
+                      <Text weight='normal'>Cluster app version</Text>
+                      <TooltipContainer
+                        content={
+                          <Tooltip>
+                            The cluster app version specifies versions and
+                            configurations of cluster components, e.g. the
+                            Kubernetes version.
+                          </Tooltip>
+                        }
+                      >
+                        <i
+                          className='fa fa-info'
+                          aria-hidden={true}
+                          role='presentation'
+                        />
+                      </TooltipContainer>
+                    </Box>
+                  }
+                  contentProps={{ margin: { left: 'medium' } }}
+                >
+                  <Box width='185px'>
+                    <Select
+                      value={selectedClusterApp}
+                      labelKey={(
+                        currentACE: applicationv1alpha1.IAppCatalogEntry
+                      ) =>
+                        formatClusterAppVersionSelectorLabel(
+                          currentACE,
+                          latestClusterAppACE
+                        )
+                      }
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                      onChange={(e) => setSelectedClusterApp(e.option)}
+                      options={clusterAppACEList!.items.sort((a, b) =>
+                        compare(b.spec.version, a.spec.version)
+                      )}
+                    />
+                  </Box>
+                  <Text>
+                    Details on all versions are available on{' '}
+                    <StyledLink
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      href={getAppReleasesURL(provider)}
+                    >
+                      GitHub <i className='fa fa-open-in-new' />
+                    </StyledLink>
+                    .
+                  </Text>
+                </StyledInputGroup>
+              ) : null}
               {appSchemaIsLoading && (
                 <Wrapper>
                   <img className='loader' src={spinner} />
@@ -413,13 +591,14 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                   provider={provider as PrototypeSchemas}
                   organization={organizationID}
                   appVersion={selectedClusterApp.spec.version}
+                  releaseVersion={selectedRelease?.version}
                   onSubmit={handleSubmit}
                   onError={(errors: RJSFValidationError[]) =>
                     setHasErrors(errors.length > 0)
                   }
                   onChange={handleChange}
                   formData={formPayload.formData}
-                  key={`${provider}${selectedClusterApp.spec.version}`}
+                  key={`${provider}-${selectedClusterApp.spec.version}-${selectedRelease?.version}`}
                   clusterName={formPayload.clusterName}
                   id={CREATE_CLUSTER_FORM_ID}
                   render={() => {
@@ -471,6 +650,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
                   clusterName: formPayload.clusterName!,
                   organization: orgId,
                   clusterAppVersion: selectedClusterApp.spec.version,
+                  releaseVersion: selectedRelease?.version,
                   defaultAppsVersion: latestClusterDefaultAppsACE!.spec.version,
                   provider,
                   configMapContents: yaml.dump(formPayload.formData),

@@ -43,7 +43,11 @@ export function getProviderForPrototypeSchema(
 
 interface FormPropsPartial {
   uiSchema: UiSchema<RJSFSchema>;
-  formData: (clusterName: string, organization: string) => RJSFSchema;
+  formData: (
+    clusterName: string,
+    organization: string,
+    releaseVersion?: string
+  ) => RJSFSchema;
 }
 
 const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
@@ -114,6 +118,11 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
             },
           },
         },
+        release: {
+          version: {
+            'ui:disabled': true,
+          },
+        },
       },
       managementCluster: {
         'ui:widget': 'hidden',
@@ -125,12 +134,15 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
         'ui:widget': 'hidden',
       },
     },
-    formData: (clusterName, organization) => {
+    formData: (clusterName, organization, releaseVersion) => {
       return {
         global: {
           metadata: {
             name: clusterName,
             organization,
+          },
+          release: {
+            version: releaseVersion,
           },
         },
       };
@@ -369,7 +381,8 @@ export function getFormProps(
   schema: PrototypeSchemas,
   version: string,
   clusterName: string,
-  organization: string
+  organization: string,
+  releaseVersion?: string
 ): Pick<FormProps<RJSFSchema>, 'uiSchema' | 'formData'> {
   const formPropsByVersions = formPropsByProvider[schema];
 
@@ -381,6 +394,6 @@ export function getFormProps(
 
   return {
     uiSchema: props.uiSchema,
-    formData: props.formData(clusterName, organization),
+    formData: props.formData(clusterName, organization, releaseVersion),
   };
 }
