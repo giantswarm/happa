@@ -153,90 +153,104 @@ const formPropsProviderCAPA: Record<string, FormPropsPartial> = {
 const formPropsProviderCAPZ: Record<string, FormPropsPartial> = {
   0: {
     uiSchema: {
-      'ui:order': [
-        'metadata',
-        'providerSpecific',
-        'controlPlane',
-        'connectivity',
-        'nodePools',
-        'machineDeployments',
-        'kubernetesVersion',
-        'includeClusterResourceSet',
-        '*',
-      ],
+      'ui:order': ['global', '*'],
       baseDomain: {
         'ui:widget': 'hidden',
       },
-      connectivity: {
-        'ui:order': ['sshSSOPublicKey', '*'],
-        bastion: {
-          instanceType: {
-            'ui:widget': InstanceTypeWidget,
-          },
-        },
-        network: {
-          'ui:order': ['hostCidr', 'podCidr', 'serviceCidr', 'mode', '*'],
-        },
+      cluster: {
+        'ui:widget': 'hidden',
       },
-      controlPlane: {
+      global: {
         'ui:order': [
-          'instanceType',
-          'replicas',
-          'rootVolumeSizeGB',
-          'etcdVolumeSizeGB',
+          'metadata',
+          'providerSpecific',
+          'controlPlane',
+          'connectivity',
+          'nodePools',
+          'machineDeployments',
+          'kubernetesVersion',
+          'includeClusterResourceSet',
           '*',
         ],
-        instanceType: {
-          'ui:widget': InstanceTypeWidget,
+        connectivity: {
+          'ui:order': ['sshSSOPublicKey', '*'],
+          bastion: {
+            instanceType: {
+              'ui:widget': InstanceTypeWidget,
+            },
+          },
+          network: {
+            'ui:order': ['hostCidr', 'podCidr', 'serviceCidr', 'mode', '*'],
+          },
         },
-        oidc: {
-          'ui:order': ['issuerUrl', 'clientId', '*'],
-        },
-      },
-      'cluster-shared': {
-        'ui:widget': 'hidden',
-      },
-      machineDeployments: {
-        items: {
+        controlPlane: {
+          'ui:order': [
+            'instanceType',
+            'replicas',
+            'rootVolumeSizeGB',
+            'etcdVolumeSizeGB',
+            '*',
+          ],
           instanceType: {
             'ui:widget': InstanceTypeWidget,
           },
+          oidc: {
+            'ui:order': ['issuerUrl', 'clientId', '*'],
+          },
         },
-      },
-      machinePools: {
-        'ui:widget': 'hidden',
+        machineDeployments: {
+          items: {
+            instanceType: {
+              'ui:widget': InstanceTypeWidget,
+            },
+          },
+        },
+        machinePools: {
+          'ui:widget': 'hidden',
+        },
+        managementCluster: {
+          'ui:widget': 'hidden',
+        },
+        metadata: {
+          'ui:order': ['name', 'description', '*'],
+          name: {
+            'ui:widget': ClusterNameWidget,
+          },
+          organization: {
+            'ui:widget': 'hidden',
+          },
+        },
+        nodePools: {
+          items: {
+            instanceType: {
+              'ui:widget': InstanceTypeWidget,
+            },
+          },
+        },
+        provider: {
+          'ui:widget': 'hidden',
+        },
+        providerSpecific: {
+          'ui:order': ['location', 'subscriptionId', '*'],
+        },
       },
       managementCluster: {
         'ui:widget': 'hidden',
       },
-      metadata: {
-        'ui:order': ['name', 'description', '*'],
-        name: {
-          'ui:widget': ClusterNameWidget,
-        },
-        organization: {
-          'ui:widget': 'hidden',
-        },
-      },
-      nodePools: {
-        items: {
-          instanceType: {
-            'ui:widget': InstanceTypeWidget,
-          },
-        },
-      },
       provider: {
         'ui:widget': 'hidden',
       },
-      providerSpecific: {
-        'ui:order': ['location', 'subscriptionId', '*'],
+      'cluster-shared': {
+        'ui:widget': 'hidden',
       },
     },
     formData: (clusterName, organization) => {
       return {
-        metadata: {
-          name: clusterName,
-          organization,
+        global: {
+          metadata: {
+            name: clusterName,
+            organization,
+          },
         },
       };
     },
