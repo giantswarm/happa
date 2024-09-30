@@ -13,7 +13,7 @@ import nock from 'nock';
 import React from 'react';
 import { useRouteMatch } from 'react-router';
 import { SWRConfig } from 'swr';
-import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
+import * as capav1beta2Mocks from 'test/mockHttpCalls/capav1beta2';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
@@ -447,7 +447,7 @@ describe('ClusterDetail', () => {
         ],
       },
     };
-    const providerCluster = capav1beta1Mocks.randomAWSCluster1;
+    const providerCluster = capav1beta2Mocks.randomAWSCluster1;
 
     (useRouteMatch as jest.Mock).mockReturnValue(
       getRouteMatch(cluster.metadata.name)
@@ -465,7 +465,7 @@ describe('ClusterDetail', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/${
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta2/namespaces/${
           cluster.metadata.namespace
         }/awsclusters/${cluster.spec!.infrastructureRef!.name}/`
       )

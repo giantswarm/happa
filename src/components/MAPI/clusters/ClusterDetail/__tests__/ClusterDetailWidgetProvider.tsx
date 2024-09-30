@@ -18,7 +18,7 @@ import nock from 'nock';
 import React from 'react';
 import { useParams } from 'react-router';
 import { SWRConfig } from 'swr';
-import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
+import * as capav1beta2Mocks from 'test/mockHttpCalls/capav1beta2';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
@@ -166,7 +166,7 @@ async function setupGCP() {
 async function setupCAPA() {
   const utils = setup(
     capiv1beta1Mocks.randomClusterCAPA1,
-    capav1beta1Mocks.randomAWSCluster1
+    capav1beta2Mocks.randomAWSCluster1
   );
 
   if (screen.queryAllByText('Loading...').length > 0) {
@@ -447,9 +447,9 @@ describe('ClusterDetailWidgetProvider when user can get AWSClusterRoleIdentity o
   it('displays cluster region and account ID', async () => {
     nock(window.config.mapiEndpoint)
       .get(
-        '/apis/infrastructure.cluster.x-k8s.io/v1beta1/awsclusterroleidentities/default/'
+        '/apis/infrastructure.cluster.x-k8s.io/v1beta2/awsclusterroleidentities/default/'
       )
-      .reply(StatusCodes.Ok, capav1beta1Mocks.defaultAWSClusterRoleIdentity);
+      .reply(StatusCodes.Ok, capav1beta2Mocks.defaultAWSClusterRoleIdentity);
     await setupCAPA();
     const providerInfo = screen.getByTestId('provider-info');
     expect(within(providerInfo).getByText('AWS region')).toBeInTheDocument();
