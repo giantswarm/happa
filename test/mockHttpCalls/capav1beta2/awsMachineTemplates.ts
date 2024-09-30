@@ -1,16 +1,16 @@
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 
 // AWSMachineTemplateList for randomClusterCAPA1's control plane
-export const randomClusterCAPA1AWSMachineTemplateList: capav1beta1.IAWSMachineTemplateList =
+export const randomClusterCAPA1AWSMachineTemplateList: capav1beta2.IAWSMachineTemplateList =
   {
-    apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+    apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2',
     kind: 'AWSMachineTemplateList',
     metadata: {
       resourceVersion: '16032957',
     },
     items: [
       {
-        apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+        apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2',
         kind: 'AWSMachineTemplate',
         metadata: {
           annotations: {

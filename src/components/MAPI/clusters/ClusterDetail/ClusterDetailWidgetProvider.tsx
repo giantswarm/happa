@@ -8,7 +8,6 @@ import {
 } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
@@ -117,11 +116,11 @@ const ClusterDetailWidgetProvider: React.FC<
       >
         {isLoading ? (
           <ClusterDetailWidgetProviderLoader />
-        ) : kind === capav1beta1.AWSCluster ? (
+        ) : kind === capav1beta2.AWSCluster ? (
           <ClusterDetailWidgetProviderAWS
-            providerCluster={providerCluster as capav1beta1.IAWSCluster}
+            providerCluster={providerCluster as capav1beta2.IAWSCluster}
             providerCredential={
-              providerCredential as capav1beta1.IAWSClusterRoleIdentity
+              providerCredential as capav1beta2.IAWSClusterRoleIdentity
             }
           />
         ) : kind === capav1beta2.AWSManagedCluster ? (

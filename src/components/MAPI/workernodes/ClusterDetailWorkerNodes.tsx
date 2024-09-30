@@ -25,7 +25,7 @@ import {
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { ProviderFlavors, Providers } from 'model/constants';
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
@@ -78,7 +78,7 @@ export function getAdditionalColumns(
   const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta2.AWSCluster && apiGroup === capav1beta2.ApiGroup:
       return [
         {
           title: 'Spot instances',
@@ -86,7 +86,7 @@ export function getAdditionalColumns(
             return (
               <WorkerNodesSpotInstancesCAPA
                 providerNodePool={
-                  providerNodePool as capav1beta1.IAWSMachinePool
+                  providerNodePool as capav1beta2.IAWSMachinePool
                 }
               />
             );

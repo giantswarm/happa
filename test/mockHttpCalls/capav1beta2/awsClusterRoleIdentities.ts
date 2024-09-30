@@ -1,8 +1,8 @@
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 
-export const defaultAWSClusterRoleIdentity: capav1beta1.IAWSClusterRoleIdentity =
+export const defaultAWSClusterRoleIdentity: capav1beta2.IAWSClusterRoleIdentity =
   {
-    apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+    apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2',
     kind: 'AWSClusterRoleIdentity',
     metadata: {
       creationTimestamp: '2022-09-29T09:14:00Z',

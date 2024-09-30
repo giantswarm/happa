@@ -21,7 +21,7 @@ import {
   mapNodePoolsToProviderNodePools,
 } from 'MAPI/workernodes/utils';
 import { GenericResponse } from 'model/clients/GenericResponse';
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
@@ -152,7 +152,7 @@ function appendControlPlaneNodeStats(
 
   for (const cpNode of controlPlaneNodes) {
     switch (cpNode.kind) {
-      case capav1beta1.AWSMachineTemplate:
+      case capav1beta2.AWSMachineTemplate:
       case capgv1beta1.GCPMachineTemplate:
         if (cpNode.spec?.template?.spec.instanceType) {
           instanceTypes.push(cpNode.spec.template.spec.instanceType);

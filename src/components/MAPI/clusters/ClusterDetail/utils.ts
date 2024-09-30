@@ -18,7 +18,6 @@ import {
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { IHttpClient } from 'model/clients/HttpClient';
 import { Constants, Providers } from 'model/constants';
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
@@ -334,16 +333,16 @@ export async function fetchProviderCredential(
     const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
     switch (true) {
-      case kind === capav1beta1.AWSCluster &&
-        apiGroup === capav1beta1.ApiGroup: {
-        const identityRef = (providerCluster as capav1beta1.IAWSCluster).spec
+      case kind === capav1beta2.AWSCluster &&
+        apiGroup === capav1beta2.ApiGroup: {
+        const identityRef = (providerCluster as capav1beta2.IAWSCluster).spec
           ?.identityRef;
 
         if (identityRef?.kind !== 'AWSClusterRoleIdentity') {
           throw new Error('Unsupported AWS cluster role identity reference.');
         }
 
-        return capav1beta1.getAWSClusterRoleIdentity(
+        return capav1beta2.getAWSClusterRoleIdentity(
           httpClientFactory(),
           auth,
           identityRef.name
@@ -427,15 +426,15 @@ export function fetchProviderCredentialKey(
   const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup: {
-      const identityRef = (providerCluster as capav1beta1.IAWSCluster).spec
+    case kind === capav1beta2.AWSCluster && apiGroup === capav1beta2.ApiGroup: {
+      const identityRef = (providerCluster as capav1beta2.IAWSCluster).spec
         ?.identityRef;
 
       if (identityRef?.kind !== 'AWSClusterRoleIdentity') {
         return null;
       }
 
-      return capav1beta1.getAWSClusterRoleIdentityKey(identityRef.name);
+      return capav1beta2.getAWSClusterRoleIdentityKey(identityRef.name);
     }
 
     case kind === capav1beta2.AWSManagedCluster &&
@@ -492,17 +491,16 @@ function getMainCredential(credentials: legacyCredentials.ICredential[]) {
 export function getAWSCredentialAccountID(
   credential?:
     | legacyCredentials.ICredential
-    | capav1beta1.IAWSClusterRoleIdentity
     | capav1beta2.IAWSClusterRoleIdentity
 ) {
   if (!credential) return '';
 
   switch (true) {
     case credential.hasOwnProperty('kind') &&
-      (credential as capav1beta1.IAWSClusterRoleIdentity).kind ===
+      (credential as capav1beta2.IAWSClusterRoleIdentity).kind ===
         'AWSClusterRoleIdentity':
       return extractIDFromARN(
-        (credential as capav1beta1.IAWSClusterRoleIdentity).spec?.roleARN
+        (credential as capav1beta2.IAWSClusterRoleIdentity).spec?.roleARN
       );
     case credential.hasOwnProperty('awsOperatorRole'):
       return (credential as legacyCredentials.ICredential).awsOperatorRole;
