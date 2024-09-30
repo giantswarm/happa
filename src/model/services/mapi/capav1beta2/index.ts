@@ -5,3 +5,8 @@ export * from './getAWSManagedMachinePoolList';
 export * from './getAWSManagedControlPlane';
 export * from './getAWSManagedControlPlaneList';
 export * from './getAWSClusterRoleIdentity';
+export * from './getAWSCluster';
+export * from './getAWSMachinePool';
+export * from './getAWSMachinePoolList';
+export * from './getAWSMachineTemplate';
+export * from './getAWSMachineTemplateList';
