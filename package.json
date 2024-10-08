@@ -80,7 +80,7 @@
     "dotenv": "16.4.1",
     "get-contrast": "3.0.0",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
-    "grommet": "2.34.2",
+    "grommet": "2.40.2",
     "history": "4.10.1",
     "immer": "9.0.21",
     "ip-regex": "5.0.0",
