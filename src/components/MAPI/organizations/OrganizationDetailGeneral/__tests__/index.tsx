@@ -17,7 +17,7 @@ import nock from 'nock';
 import * as React from 'react';
 import { SWRConfig } from 'swr';
 import * as authorizationv1Mocks from 'test/mockHttpCalls/authorizationv1';
-import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
+import * as capav1beta2Mocks from 'test/mockHttpCalls/capav1beta2';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
@@ -964,15 +964,15 @@ describe('OrganizationDetailGeneral on CAPA', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsclusters/${capiv1beta1Mocks.randomClusterListCAPA.items[0].metadata.name}/`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta2/namespaces/org-org1/awsclusters/${capiv1beta1Mocks.randomClusterListCAPA.items[0].metadata.name}/`
       )
-      .reply(StatusCodes.Ok, capav1beta1Mocks.randomAWSCluster1);
+      .reply(StatusCodes.Ok, capav1beta2Mocks.randomAWSCluster1);
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsclusters/${capiv1beta1Mocks.randomClusterListCAPA.items[1].metadata.name}/`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta2/namespaces/org-org1/awsclusters/${capiv1beta1Mocks.randomClusterListCAPA.items[1].metadata.name}/`
       )
-      .reply(StatusCodes.Ok, capav1beta1Mocks.randomAWSCluster2);
+      .reply(StatusCodes.Ok, capav1beta2Mocks.randomAWSCluster2);
 
     nock(window.config.mapiEndpoint)
       .get(
@@ -985,9 +985,9 @@ describe('OrganizationDetailGeneral on CAPA', () => {
 
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsmachinepools/${capiv1beta1Mocks.randomClusterCAPA1MachinePoolList.items[0].spec?.template.spec?.infrastructureRef.name}/`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta2/namespaces/org-org1/awsmachinepools/${capiv1beta1Mocks.randomClusterCAPA1MachinePoolList.items[0].spec?.template.spec?.infrastructureRef.name}/`
       )
-      .reply(StatusCodes.Ok, capav1beta1Mocks.randomClusterCAPA1AWSMachinePool);
+      .reply(StatusCodes.Ok, capav1beta2Mocks.randomClusterCAPA1AWSMachinePool);
 
     render(
       getComponent({

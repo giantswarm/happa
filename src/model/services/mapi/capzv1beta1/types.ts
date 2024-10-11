@@ -15,11 +15,18 @@ export const AzureCluster = 'AzureCluster';
  */
 export interface IAzureCluster {
   /**
-   * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+   * APIVersion defines the versioned schema of this representation of an object.
+   * Servers should convert recognized schemas to the latest internal value, and
+   * may reject unrecognized values.
+   * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
-   * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+   * Kind is a string value representing the REST resource this object represents.
+   * Servers may infer this from the endpoint the client submits requests to.
+   * Cannot be updated.
+   * In CamelCase.
+   * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
   kind: typeof AzureCluster;
   metadata: metav1.IObjectMeta;
@@ -28,13 +35,34 @@ export interface IAzureCluster {
    */
   spec?: {
     /**
-     * AdditionalTags is an optional set of tags to add to Azure resources managed by the Azure provider, in addition to the ones added by default.
+     * AdditionalTags is an optional set of tags to add to Azure resources managed by the Azure provider, in addition to the
+     * ones added by default.
      */
     additionalTags?: {
       [k: string]: string;
     };
     /**
-     * AzureEnvironment is the name of the AzureCloud to be used. The default value that would be used by most users is "AzurePublicCloud", other values are: - ChinaCloud: "AzureChinaCloud" - GermanCloud: "AzureGermanCloud" - PublicCloud: "AzurePublicCloud" - USGovernmentCloud: "AzureUSGovernmentCloud"
+     * AzureEnvironment is the name of the AzureCloud to be used.
+     * The default value that would be used by most users is "AzurePublicCloud", other values are:
+     * - ChinaCloud: "AzureChinaCloud"
+     * - GermanCloud: "AzureGermanCloud"
+     * - PublicCloud: "AzurePublicCloud"
+     * - USGovernmentCloud: "AzureUSGovernmentCloud"
+     *
+     *
+     * Note that values other than the default must also be accompanied by corresponding changes to the
+     * aso-controller-settings Secret to configure ASO to refer to the non-Public cloud. ASO currently does
+     * not support referring to multiple different clouds in a single installation. The following fields must
+     * be defined in the Secret:
+     * - AZURE_AUTHORITY_HOST
+     * - AZURE_RESOURCE_MANAGER_ENDPOINT
+     * - AZURE_RESOURCE_MANAGER_AUDIENCE
+     *
+     *
+     * See the [ASO docs] for more details.
+     *
+     *
+     * [ASO docs]: https://azure.github.io/azure-service-operator/guide/aso-controller-settings-options/
      */
     azureEnvironment?: string;
     /**
@@ -80,7 +108,8 @@ export interface IAzureCluster {
            */
           cidrBlocks?: string[];
           /**
-           * ID is the Azure resource ID of the subnet. READ-ONLY
+           * ID is the Azure resource ID of the subnet.
+           * READ-ONLY
            */
           id?: string;
           /**
@@ -92,7 +121,8 @@ export interface IAzureCluster {
            */
           natGateway?: {
             /**
-             * ID is the Azure resource ID of the NAT gateway. READ-ONLY
+             * ID is the Azure resource ID of the NAT gateway.
+             * READ-ONLY
              */
             id?: string;
             /**
@@ -131,7 +161,9 @@ export interface IAzureCluster {
              */
             location?: string;
             /**
-             * ManualApproval specifies if the connection approval needs to be done manually or not. Set it true when the network admin does not have access to approve connections to the remote resource. Defaults to false.
+             * ManualApproval specifies if the connection approval needs to be done manually or not.
+             * Set it true when the network admin does not have access to approve connections to the remote resource.
+             * Defaults to false.
              */
             manualApproval?: boolean;
             /**
@@ -139,7 +171,8 @@ export interface IAzureCluster {
              */
             name: string;
             /**
-             * PrivateIPAddresses specifies the IP addresses for the network interface associated with the private endpoint. They have to be part of the subnet where the private endpoint is linked.
+             * PrivateIPAddresses specifies the IP addresses for the network interface associated with the private endpoint.
+             * They have to be part of the subnet where the private endpoint is linked.
              */
             privateIPAddresses?: string[];
             /**
@@ -167,13 +200,14 @@ export interface IAzureCluster {
           /**
            * Role defines the subnet role (eg. Node, ControlPlane)
            */
-          role: 'node' | 'control-plane' | 'bastion';
+          role: 'node' | 'control-plane' | 'bastion' | 'cluster';
           /**
            * RouteTable defines the route table that should be attached to this subnet.
            */
           routeTable?: {
             /**
-             * ID is the Azure resource ID of the route table. READ-ONLY
+             * ID is the Azure resource ID of the route table.
+             * READ-ONLY
              */
             id?: string;
             name: string;
@@ -183,7 +217,8 @@ export interface IAzureCluster {
            */
           securityGroup?: {
             /**
-             * ID is the Azure resource ID of the security group. READ-ONLY
+             * ID is the Azure resource ID of the security group.
+             * READ-ONLY
              */
             id?: string;
             name: string;
@@ -231,6 +266,10 @@ export interface IAzureCluster {
                * SourcePorts specifies source port or range. Integer or range between 0 and 65535. Asterix '*' can also be used to match all ports.
                */
               sourcePorts?: string;
+              /**
+               * Sources specifies The CIDR or source IP ranges.
+               */
+              sources?: string[];
             }[];
             /**
              * Tags defines a map of tags.
@@ -250,7 +289,11 @@ export interface IAzureCluster {
       };
     };
     /**
-     * CloudProviderConfigOverrides is an optional set of configuration values that can be overridden in azure cloud provider config. This is only a subset of options that are available in azure cloud provider config. Some values for the cloud provider config are inferred from other parts of cluster api provider azure spec, and may not be available for overrides. See: https://cloud-provider-azure.sigs.k8s.io/install/configs Note: All cloud provider config values can be customized by creating the secret beforehand. CloudProviderConfigOverrides is only used when the secret is managed by the Azure Provider.
+     * CloudProviderConfigOverrides is an optional set of configuration values that can be overridden in azure cloud provider config.
+     * This is only a subset of options that are available in azure cloud provider config.
+     * Some values for the cloud provider config are inferred from other parts of cluster api provider azure spec, and may not be available for overrides.
+     * See: https://cloud-provider-azure.sigs.k8s.io/install/configs
+     * Note: All cloud provider config values can be customized by creating the secret beforehand. CloudProviderConfigOverrides is only used when the secret is managed by the Azure Provider.
      */
     cloudProviderConfigOverrides?: {
       /**
@@ -296,7 +339,8 @@ export interface IAzureCluster {
       }[];
     };
     /**
-     * ControlPlaneEndpoint represents the endpoint used to communicate with the control plane. It is not recommended to set this when creating an AzureCluster as CAPZ will set this for you. However, if it is set, CAPZ will not change it.
+     * ControlPlaneEndpoint represents the endpoint used to communicate with the control plane. It is not recommended to set
+     * this when creating an AzureCluster as CAPZ will set this for you. However, if it is set, CAPZ will not change it.
      */
     controlPlaneEndpoint?: {
       /**
@@ -322,6 +366,30 @@ export interface IAzureCluster {
       type: 'EdgeZone';
     };
     /**
+     * FailureDomains is a list of failure domains in the cluster's region, used to restrict
+     * eligibility to host the control plane. A FailureDomain maps to an availability zone,
+     * which is a separated group of datacenters within a region.
+     * See: https://learn.microsoft.com/azure/reliability/availability-zones-overview
+     */
+    failureDomains?: {
+      /**
+       * FailureDomainSpec is the Schema for Cluster API failure domains.
+       * It allows controllers to understand how many failure domains a cluster can optionally span across.
+       */
+      [k: string]: {
+        /**
+         * Attributes is a free form map of attributes an infrastructure provider might use or require.
+         */
+        attributes?: {
+          [k: string]: string;
+        };
+        /**
+         * ControlPlane determines if this failure domain is suitable for use by control plane machines.
+         */
+        controlPlane?: boolean;
+      };
+    };
+    /**
      * IdentityRef is a reference to an AzureIdentity to be used when reconciling this cluster
      */
     identityRef?: {
@@ -330,27 +398,39 @@ export interface IAzureCluster {
        */
       apiVersion?: string;
       /**
-       * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+       * If referring to a piece of an object instead of an entire object, this string
+       * should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+       * For example, if the object reference is to a container within a pod, this would take on a value like:
+       * "spec.containers{name}" (where "name" refers to the name of the container that triggered
+       * the event) or if no container name is specified "spec.containers[2]" (container with
+       * index 2 in this pod). This syntax is chosen only to have some well-defined way of
+       * referencing a part of an object.
+       * TODO: this design is not final and this field is subject to change in the future.
        */
       fieldPath?: string;
       /**
-       * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+       * Kind of the referent.
+       * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
        */
       kind?: string;
       /**
-       * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+       * Name of the referent.
+       * More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
        */
       name?: string;
       /**
-       * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+       * Namespace of the referent.
+       * More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
        */
       namespace?: string;
       /**
-       * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+       * Specific resourceVersion to which this reference is made, if any.
+       * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
        */
       resourceVersion?: string;
       /**
-       * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+       * UID of the referent.
+       * More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
        */
       uid?: string;
     };
@@ -368,7 +448,8 @@ export interface IAzureCluster {
          */
         backendPool?: {
           /**
-           * Name specifies the name of backend pool for the load balancer. If not specified, the default name will be set, depending on the load balancer role.
+           * Name specifies the name of backend pool for the load balancer. If not specified, the default name will
+           * be set, depending on the load balancer role.
            */
           name?: string;
         };
@@ -398,7 +479,8 @@ export interface IAzureCluster {
          */
         frontendIPsCount?: number;
         /**
-         * ID is the Azure resource ID of the load balancer. READ-ONLY
+         * ID is the Azure resource ID of the load balancer.
+         * READ-ONLY
          */
         id?: string;
         /**
@@ -416,7 +498,8 @@ export interface IAzureCluster {
         type?: string;
       };
       /**
-       * ControlPlaneOutboundLB is the configuration for the control-plane outbound load balancer. This is different from APIServerLB, and is used only in private clusters (optionally) for enabling outbound traffic.
+       * ControlPlaneOutboundLB is the configuration for the control-plane outbound load balancer.
+       * This is different from APIServerLB, and is used only in private clusters (optionally) for enabling outbound traffic.
        */
       controlPlaneOutboundLB?: {
         /**
@@ -424,7 +507,8 @@ export interface IAzureCluster {
          */
         backendPool?: {
           /**
-           * Name specifies the name of backend pool for the load balancer. If not specified, the default name will be set, depending on the load balancer role.
+           * Name specifies the name of backend pool for the load balancer. If not specified, the default name will
+           * be set, depending on the load balancer role.
            */
           name?: string;
         };
@@ -454,7 +538,8 @@ export interface IAzureCluster {
          */
         frontendIPsCount?: number;
         /**
-         * ID is the Azure resource ID of the load balancer. READ-ONLY
+         * ID is the Azure resource ID of the load balancer.
+         * READ-ONLY
          */
         id?: string;
         /**
@@ -480,7 +565,8 @@ export interface IAzureCluster {
          */
         backendPool?: {
           /**
-           * Name specifies the name of backend pool for the load balancer. If not specified, the default name will be set, depending on the load balancer role.
+           * Name specifies the name of backend pool for the load balancer. If not specified, the default name will
+           * be set, depending on the load balancer role.
            */
           name?: string;
         };
@@ -510,7 +596,8 @@ export interface IAzureCluster {
          */
         frontendIPsCount?: number;
         /**
-         * ID is the Azure resource ID of the load balancer. READ-ONLY
+         * ID is the Azure resource ID of the load balancer.
+         * READ-ONLY
          */
         id?: string;
         /**
@@ -540,7 +627,8 @@ export interface IAzureCluster {
          */
         cidrBlocks?: string[];
         /**
-         * ID is the Azure resource ID of the subnet. READ-ONLY
+         * ID is the Azure resource ID of the subnet.
+         * READ-ONLY
          */
         id?: string;
         /**
@@ -552,7 +640,8 @@ export interface IAzureCluster {
          */
         natGateway?: {
           /**
-           * ID is the Azure resource ID of the NAT gateway. READ-ONLY
+           * ID is the Azure resource ID of the NAT gateway.
+           * READ-ONLY
            */
           id?: string;
           /**
@@ -591,7 +680,9 @@ export interface IAzureCluster {
            */
           location?: string;
           /**
-           * ManualApproval specifies if the connection approval needs to be done manually or not. Set it true when the network admin does not have access to approve connections to the remote resource. Defaults to false.
+           * ManualApproval specifies if the connection approval needs to be done manually or not.
+           * Set it true when the network admin does not have access to approve connections to the remote resource.
+           * Defaults to false.
            */
           manualApproval?: boolean;
           /**
@@ -599,7 +690,8 @@ export interface IAzureCluster {
            */
           name: string;
           /**
-           * PrivateIPAddresses specifies the IP addresses for the network interface associated with the private endpoint. They have to be part of the subnet where the private endpoint is linked.
+           * PrivateIPAddresses specifies the IP addresses for the network interface associated with the private endpoint.
+           * They have to be part of the subnet where the private endpoint is linked.
            */
           privateIPAddresses?: string[];
           /**
@@ -627,13 +719,14 @@ export interface IAzureCluster {
         /**
          * Role defines the subnet role (eg. Node, ControlPlane)
          */
-        role: 'node' | 'control-plane' | 'bastion';
+        role: 'node' | 'control-plane' | 'bastion' | 'cluster';
         /**
          * RouteTable defines the route table that should be attached to this subnet.
          */
         routeTable?: {
           /**
-           * ID is the Azure resource ID of the route table. READ-ONLY
+           * ID is the Azure resource ID of the route table.
+           * READ-ONLY
            */
           id?: string;
           name: string;
@@ -643,7 +736,8 @@ export interface IAzureCluster {
          */
         securityGroup?: {
           /**
-           * ID is the Azure resource ID of the security group. READ-ONLY
+           * ID is the Azure resource ID of the security group.
+           * READ-ONLY
            */
           id?: string;
           name: string;
@@ -691,6 +785,10 @@ export interface IAzureCluster {
              * SourcePorts specifies source port or range. Integer or range between 0 and 65535. Asterix '*' can also be used to match all ports.
              */
             sourcePorts?: string;
+            /**
+             * Sources specifies The CIDR or source IP ranges.
+             */
+            sources?: string[];
           }[];
           /**
            * Tags defines a map of tags.
@@ -716,7 +814,8 @@ export interface IAzureCluster {
          */
         cidrBlocks?: string[];
         /**
-         * ID is the Azure resource ID of the virtual network. READ-ONLY
+         * ID is the Azure resource ID of the virtual network.
+         * READ-ONLY
          */
         id?: string;
         /**
@@ -728,23 +827,30 @@ export interface IAzureCluster {
          */
         peerings?: {
           /**
-           * ForwardPeeringProperties specifies VnetPeeringProperties for peering from the cluster's virtual network to the remote virtual network.
+           * ForwardPeeringProperties specifies VnetPeeringProperties for peering from the cluster's virtual network to the
+           * remote virtual network.
            */
           forwardPeeringProperties?: {
             /**
-             * AllowForwardedTraffic specifies whether the forwarded traffic from the VMs in the local virtual network will be allowed/disallowed in remote virtual network.
+             * AllowForwardedTraffic specifies whether the forwarded traffic from the VMs in the local virtual network will be
+             * allowed/disallowed in remote virtual network.
              */
             allowForwardedTraffic?: boolean;
             /**
-             * AllowGatewayTransit specifies if gateway links can be used in remote virtual networking to link to this virtual network.
+             * AllowGatewayTransit specifies if gateway links can be used in remote virtual networking to link to this virtual
+             * network.
              */
             allowGatewayTransit?: boolean;
             /**
-             * AllowVirtualNetworkAccess specifies whether the VMs in the local virtual network space would be able to access the VMs in remote virtual network space.
+             * AllowVirtualNetworkAccess specifies whether the VMs in the local virtual network space would be able to access
+             * the VMs in remote virtual network space.
              */
             allowVirtualNetworkAccess?: boolean;
             /**
-             * UseRemoteGateways specifies if remote gateways can be used on this virtual network. If the flag is set to true, and allowGatewayTransit on remote peering is also set to true, the virtual network will use the gateways of the remote virtual network for transit. Only one peering can have this flag set to true. This flag cannot be set if virtual network already has a gateway.
+             * UseRemoteGateways specifies if remote gateways can be used on this virtual network.
+             * If the flag is set to true, and allowGatewayTransit on remote peering is also set to true, the virtual network
+             * will use the gateways of the remote virtual network for transit. Only one peering can have this flag set to true.
+             * This flag cannot be set if virtual network already has a gateway.
              */
             useRemoteGateways?: boolean;
           };
@@ -757,29 +863,37 @@ export interface IAzureCluster {
            */
           resourceGroup?: string;
           /**
-           * ReversePeeringProperties specifies VnetPeeringProperties for peering from the remote virtual network to the cluster's virtual network.
+           * ReversePeeringProperties specifies VnetPeeringProperties for peering from the remote virtual network to the
+           * cluster's virtual network.
            */
           reversePeeringProperties?: {
             /**
-             * AllowForwardedTraffic specifies whether the forwarded traffic from the VMs in the local virtual network will be allowed/disallowed in remote virtual network.
+             * AllowForwardedTraffic specifies whether the forwarded traffic from the VMs in the local virtual network will be
+             * allowed/disallowed in remote virtual network.
              */
             allowForwardedTraffic?: boolean;
             /**
-             * AllowGatewayTransit specifies if gateway links can be used in remote virtual networking to link to this virtual network.
+             * AllowGatewayTransit specifies if gateway links can be used in remote virtual networking to link to this virtual
+             * network.
              */
             allowGatewayTransit?: boolean;
             /**
-             * AllowVirtualNetworkAccess specifies whether the VMs in the local virtual network space would be able to access the VMs in remote virtual network space.
+             * AllowVirtualNetworkAccess specifies whether the VMs in the local virtual network space would be able to access
+             * the VMs in remote virtual network space.
              */
             allowVirtualNetworkAccess?: boolean;
             /**
-             * UseRemoteGateways specifies if remote gateways can be used on this virtual network. If the flag is set to true, and allowGatewayTransit on remote peering is also set to true, the virtual network will use the gateways of the remote virtual network for transit. Only one peering can have this flag set to true. This flag cannot be set if virtual network already has a gateway.
+             * UseRemoteGateways specifies if remote gateways can be used on this virtual network.
+             * If the flag is set to true, and allowGatewayTransit on remote peering is also set to true, the virtual network
+             * will use the gateways of the remote virtual network for transit. Only one peering can have this flag set to true.
+             * This flag cannot be set if virtual network already has a gateway.
              */
             useRemoteGateways?: boolean;
           };
         }[];
         /**
-         * ResourceGroup is the name of the resource group of the existing virtual network or the resource group where a managed virtual network should be created.
+         * ResourceGroup is the name of the resource group of the existing virtual network
+         * or the resource group where a managed virtual network should be created.
          */
         resourceGroup?: string;
         /**
@@ -802,19 +916,26 @@ export interface IAzureCluster {
      */
     conditions?: {
       /**
-       * Last time the condition transitioned from one status to another. This should be when the underlying condition changed. If that is not known, then using the time when the API field changed is acceptable.
+       * Last time the condition transitioned from one status to another.
+       * This should be when the underlying condition changed. If that is not known, then using the time when
+       * the API field changed is acceptable.
        */
       lastTransitionTime: string;
       /**
-       * A human readable message indicating details about the transition. This field may be empty.
+       * A human readable message indicating details about the transition.
+       * This field may be empty.
        */
       message?: string;
       /**
-       * The reason for the condition's last transition in CamelCase. The specific API may choose whether or not this field is considered a guaranteed API. This field may not be empty.
+       * The reason for the condition's last transition in CamelCase.
+       * The specific API may choose whether or not this field is considered a guaranteed API.
+       * This field may not be empty.
        */
       reason?: string;
       /**
-       * Severity provides an explicit classification of Reason code, so the users or machines can immediately understand the current situation and act accordingly. The Severity field MUST be set only when Status=False.
+       * Severity provides an explicit classification of Reason code, so the users or machines can immediately
+       * understand the current situation and act accordingly.
+       * The Severity field MUST be set only when Status=False.
        */
       severity?: string;
       /**
@@ -822,16 +943,24 @@ export interface IAzureCluster {
        */
       status: string;
       /**
-       * Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.
+       * Type of condition in CamelCase or in foo.example.com/CamelCase.
+       * Many .condition.type values are consistent across resources like Available, but because arbitrary conditions
+       * can be useful (see .node.status.conditions), the ability to deconflict is important.
        */
       type: string;
     }[];
     /**
-     * FailureDomains specifies the list of unique failure domains for the location/region of the cluster. A FailureDomain maps to Availability Zone with an Azure Region (if the region support them). An Availability Zone is a separate data center within a region and they can be used to ensure the cluster is more resilient to failure. See: https://learn.microsoft.com/azure/reliability/availability-zones-overview This list will be used by Cluster API to try and spread the machines across the failure domains.
+     * FailureDomains specifies the list of unique failure domains for the location/region of the cluster.
+     * A FailureDomain maps to Availability Zone with an Azure Region (if the region support them). An
+     * Availability Zone is a separate data center within a region and they can be used to ensure
+     * the cluster is more resilient to failure.
+     * See: https://learn.microsoft.com/azure/reliability/availability-zones-overview
+     * This list will be used by Cluster API to try and spread the machines across the failure domains.
      */
     failureDomains?: {
       /**
-       * FailureDomainSpec is the Schema for Cluster API failure domains. It allows controllers to understand how many failure domains a cluster can optionally span across.
+       * FailureDomainSpec is the Schema for Cluster API failure domains.
+       * It allows controllers to understand how many failure domains a cluster can optionally span across.
        */
       [k: string]: {
         /**
@@ -847,7 +976,8 @@ export interface IAzureCluster {
       };
     };
     /**
-     * LongRunningOperationStates saves the states for Azure long-running operations so they can be continued on the next reconciliation loop.
+     * LongRunningOperationStates saves the states for Azure long-running operations so they can be continued on the
+     * next reconciliation loop.
      */
     longRunningOperationStates?: {
       /**
@@ -855,7 +985,8 @@ export interface IAzureCluster {
        */
       data: string;
       /**
-       * Name is the name of the Azure resource. Together with the service name, this forms the unique identifier for the future.
+       * Name is the name of the Azure resource.
+       * Together with the service name, this forms the unique identifier for the future.
        */
       name: string;
       /**
@@ -863,7 +994,8 @@ export interface IAzureCluster {
        */
       resourceGroup?: string;
       /**
-       * ServiceName is the name of the Azure service. Together with the name of the resource, this forms the unique identifier for the future.
+       * ServiceName is the name of the Azure service.
+       * Together with the name of the resource, this forms the unique identifier for the future.
        */
       serviceName: string;
       /**
@@ -892,11 +1024,18 @@ export const AzureClusterIdentity = 'AzureClusterIdentity';
  */
 export interface IAzureClusterIdentity {
   /**
-   * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+   * APIVersion defines the versioned schema of this representation of an object.
+   * Servers should convert recognized schemas to the latest internal value, and
+   * may reject unrecognized values.
+   * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
-   * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+   * Kind is a string value representing the REST resource this object represents.
+   * Servers may infer this from the endpoint the client submits requests to.
+   * Cannot be updated.
+   * In CamelCase.
+   * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
   kind: typeof AzureClusterIdentity;
   metadata: metav1.IObjectMeta;
@@ -905,7 +1044,11 @@ export interface IAzureClusterIdentity {
    */
   spec?: {
     /**
-     * AllowedNamespaces is used to identify the namespaces the clusters are allowed to use the identity from. Namespaces can be selected either using an array of namespaces or with label selector. An empty allowedNamespaces object indicates that AzureClusters can use this identity from any namespace. If this object is nil, no namespaces will be allowed (default behaviour, if this field is not provided) A namespace should be either in the NamespaceList or match with Selector to use the identity.
+     * AllowedNamespaces is used to identify the namespaces the clusters are allowed to use the identity from.
+     * Namespaces can be selected either using an array of namespaces or with label selector.
+     * An empty allowedNamespaces object indicates that AzureClusters can use this identity from any namespace.
+     * If this object is nil, no namespaces will be allowed (default behaviour, if this field is not provided)
+     * A namespace should be either in the NamespaceList or match with Selector to use the identity.
      */
     allowedNamespaces?: {
       /**
@@ -913,8 +1056,14 @@ export interface IAzureClusterIdentity {
        */
       list?: string[];
       /**
-       * Selector is a selector of namespaces that AzureCluster can use this Identity from. This is a standard Kubernetes LabelSelector, a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed.
-       *  A nil or empty selector indicates that AzureCluster cannot use this AzureClusterIdentity from any namespace.
+       * Selector is a selector of namespaces that AzureCluster can
+       * use this Identity from. This is a standard Kubernetes LabelSelector,
+       * a label query over a set of resources. The result of matchLabels and
+       * matchExpressions are ANDed.
+       *
+       *
+       * A nil or empty selector indicates that AzureCluster cannot use this
+       * AzureClusterIdentity from any namespace.
        */
       selector?: {
         /**
@@ -926,16 +1075,22 @@ export interface IAzureClusterIdentity {
            */
           key: string;
           /**
-           * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+           * operator represents a key's relationship to a set of values.
+           * Valid operators are In, NotIn, Exists and DoesNotExist.
            */
           operator: string;
           /**
-           * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+           * values is an array of string values. If the operator is In or NotIn,
+           * the values array must be non-empty. If the operator is Exists or DoesNotExist,
+           * the values array must be empty. This array is replaced during a strategic
+           * merge patch.
            */
           values?: string[];
         }[];
         /**
-         * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+         * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+         * map is equivalent to an element of matchExpressions, whose key field is "key", the
+         * operator is "In", and the values array contains only "value". The requirements are ANDed.
          */
         matchLabels?: {
           [k: string]: string;
@@ -943,7 +1098,8 @@ export interface IAzureClusterIdentity {
       };
     };
     /**
-     * ClientID is the service principal client ID. Both User Assigned MSI and SP can use this field.
+     * ClientID is the service principal client ID.
+     * Both User Assigned MSI and SP can use this field.
      */
     clientID: string;
     /**
@@ -960,7 +1116,11 @@ export interface IAzureClusterIdentity {
       namespace?: string;
     };
     /**
-     * ResourceID is the Azure resource ID for the User Assigned MSI resource. Only applicable when type is UserAssignedMSI.
+     * ResourceID is the Azure resource ID for the User Assigned MSI resource.
+     * Only applicable when type is UserAssignedMSI.
+     *
+     *
+     * Deprecated: This field no longer has any effect.
      */
     resourceID?: string;
     /**
@@ -968,7 +1128,8 @@ export interface IAzureClusterIdentity {
      */
     tenantID: string;
     /**
-     * Type is the type of Azure Identity used. ServicePrincipal, ServicePrincipalCertificate, UserAssignedMSI, ManualServicePrincipal or WorkloadIdentity.
+     * Type is the type of Azure Identity used.
+     * ServicePrincipal, ServicePrincipalCertificate, UserAssignedMSI, ManualServicePrincipal or WorkloadIdentity.
      */
     type:
       | 'ServicePrincipal'
@@ -986,19 +1147,26 @@ export interface IAzureClusterIdentity {
      */
     conditions?: {
       /**
-       * Last time the condition transitioned from one status to another. This should be when the underlying condition changed. If that is not known, then using the time when the API field changed is acceptable.
+       * Last time the condition transitioned from one status to another.
+       * This should be when the underlying condition changed. If that is not known, then using the time when
+       * the API field changed is acceptable.
        */
       lastTransitionTime: string;
       /**
-       * A human readable message indicating details about the transition. This field may be empty.
+       * A human readable message indicating details about the transition.
+       * This field may be empty.
        */
       message?: string;
       /**
-       * The reason for the condition's last transition in CamelCase. The specific API may choose whether or not this field is considered a guaranteed API. This field may not be empty.
+       * The reason for the condition's last transition in CamelCase.
+       * The specific API may choose whether or not this field is considered a guaranteed API.
+       * This field may not be empty.
        */
       reason?: string;
       /**
-       * Severity provides an explicit classification of Reason code, so the users or machines can immediately understand the current situation and act accordingly. The Severity field MUST be set only when Status=False.
+       * Severity provides an explicit classification of Reason code, so the users or machines can immediately
+       * understand the current situation and act accordingly.
+       * The Severity field MUST be set only when Status=False.
        */
       severity?: string;
       /**
@@ -1006,7 +1174,9 @@ export interface IAzureClusterIdentity {
        */
       status: string;
       /**
-       * Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.
+       * Type of condition in CamelCase or in foo.example.com/CamelCase.
+       * Many .condition.type values are consistent across resources like Available, but because arbitrary conditions
+       * can be useful (see .node.status.conditions), the ability to deconflict is important.
        */
       type: string;
     }[];
@@ -1028,11 +1198,18 @@ export const AzureMachineTemplate = 'AzureMachineTemplate';
  */
 export interface IAzureMachineTemplate {
   /**
-   * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+   * APIVersion defines the versioned schema of this representation of an object.
+   * Servers should convert recognized schemas to the latest internal value, and
+   * may reject unrecognized values.
+   * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
-   * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+   * Kind is a string value representing the REST resource this object represents.
+   * Servers may infer this from the endpoint the client submits requests to.
+   * Cannot be updated.
+   * In CamelCase.
+   * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
   kind: typeof AzureMachineTemplate;
   metadata: metav1.IObjectMeta;
@@ -1045,21 +1222,47 @@ export interface IAzureMachineTemplate {
      */
     template: {
       /**
-       * ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create. This is a copy of customizable fields from metav1.ObjectMeta.
-       *  ObjectMeta is embedded in `Machine.Spec`, `MachineDeployment.Template` and `MachineSet.Template`, which are not top-level Kubernetes objects. Given that metav1.ObjectMeta has lots of special cases and read-only fields which end up in the generated CRD validation, having it as a subset simplifies the API and some issues that can impact user experience.
-       *  During the [upgrade to controller-tools@v2](https://github.com/kubernetes-sigs/cluster-api/pull/1054) for v1alpha2, we noticed a failure would occur running Cluster API test suite against the new CRDs, specifically `spec.metadata.creationTimestamp in body must be of type string: "null"`. The investigation showed that `controller-tools@v2` behaves differently than its previous version when handling types from [metav1](k8s.io/apimachinery/pkg/apis/meta/v1) package.
-       *  In more details, we found that embedded (non-top level) types that embedded `metav1.ObjectMeta` had validation properties, including for `creationTimestamp` (metav1.Time). The `metav1.Time` type specifies a custom json marshaller that, when IsZero() is true, returns `null` which breaks validation because the field isn't marked as nullable.
-       *  In future versions, controller-tools@v2 might allow overriding the type and validation for embedded types. When that happens, this hack should be revisited.
+       * ObjectMeta is metadata that all persisted resources must have, which includes all objects
+       * users must create. This is a copy of customizable fields from metav1.ObjectMeta.
+       *
+       *
+       * ObjectMeta is embedded in `Machine.Spec`, `MachineDeployment.Template` and `MachineSet.Template`,
+       * which are not top-level Kubernetes objects. Given that metav1.ObjectMeta has lots of special cases
+       * and read-only fields which end up in the generated CRD validation, having it as a subset simplifies
+       * the API and some issues that can impact user experience.
+       *
+       *
+       * During the [upgrade to controller-tools@v2](https://github.com/kubernetes-sigs/cluster-api/pull/1054)
+       * for v1alpha2, we noticed a failure would occur running Cluster API test suite against the new CRDs,
+       * specifically `spec.metadata.creationTimestamp in body must be of type string: "null"`.
+       * The investigation showed that `controller-tools@v2` behaves differently than its previous version
+       * when handling types from [metav1](k8s.io/apimachinery/pkg/apis/meta/v1) package.
+       *
+       *
+       * In more details, we found that embedded (non-top level) types that embedded `metav1.ObjectMeta`
+       * had validation properties, including for `creationTimestamp` (metav1.Time).
+       * The `metav1.Time` type specifies a custom json marshaller that, when IsZero() is true, returns `null`
+       * which breaks validation because the field isn't marked as nullable.
+       *
+       *
+       * In future versions, controller-tools@v2 might allow overriding the type and validation for embedded
+       * types. When that happens, this hack should be revisited.
        */
       metadata?: {
         /**
-         * Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations
+         * Annotations is an unstructured key value map stored with a resource that may be
+         * set by external tools to store and retrieve arbitrary metadata. They are not
+         * queryable and should be preserved when modifying objects.
+         * More info: http://kubernetes.io/docs/user-guide/annotations
          */
         annotations?: {
           [k: string]: string;
         };
         /**
-         * Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
+         * Map of string keys and values that can be used to organize and categorize
+         * (scope and select) objects. May match selectors of replication controllers
+         * and services.
+         * More info: http://kubernetes.io/docs/user-guide/labels
          */
         labels?: {
           [k: string]: string;
@@ -1078,12 +1281,16 @@ export interface IAzureMachineTemplate {
          */
         additionalCapabilities?: {
           /**
-           * UltraSSDEnabled enables or disables Azure UltraSSD capability for the virtual machine. Defaults to true if Ultra SSD data disks are specified, otherwise it doesn't set the capability on the VM.
+           * UltraSSDEnabled enables or disables Azure UltraSSD capability for the virtual machine.
+           * Defaults to true if Ultra SSD data disks are specified,
+           * otherwise it doesn't set the capability on the VM.
            */
           ultraSSDEnabled?: boolean;
         };
         /**
-         * AdditionalTags is an optional set of tags to add to an instance, in addition to the ones added by default by the Azure provider. If both the AzureCluster and the AzureMachine specify the same tag name with different values, the AzureMachine's value takes precedence.
+         * AdditionalTags is an optional set of tags to add to an instance, in addition to the ones added by default by the
+         * Azure provider. If both the AzureCluster and the AzureMachine specify the same tag name with different values, the
+         * AzureMachine's value takes precedence.
          */
         additionalTags?: {
           [k: string]: string;
@@ -1092,6 +1299,15 @@ export interface IAzureMachineTemplate {
          * AllocatePublicIP allows the ability to create dynamic public ips for machines where this value is true.
          */
         allocatePublicIP?: boolean;
+        /**
+         * CapacityReservationGroupID specifies the capacity reservation group resource id that should be
+         * used for allocating the virtual machine.
+         * The field size should be greater than 0 and the field input must start with '/'.
+         * The input for capacityReservationGroupID must be similar to '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/capacityReservationGroups/{capacityReservationGroupName}'.
+         * The keys which are used should be among 'subscriptions', 'providers' and 'resourcegroups' followed by valid ID or names respectively.
+         * It is optional but may not be changed once set.
+         */
+        capacityReservationGroupID?: string;
         /**
          * DataDisk specifies the parameters that are used to add one or more data disks to the machine
          */
@@ -1105,7 +1321,8 @@ export interface IAzureMachineTemplate {
            */
           diskSizeGB: number;
           /**
-           * Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM. The value must be between 0 and 63.
+           * Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM.
+           * The value must be between 0 and 63.
            */
           lun?: number;
           /**
@@ -1126,7 +1343,9 @@ export interface IAzureMachineTemplate {
              */
             securityProfile?: {
               /**
-               * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+               * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the
+               * managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and
+               * VMGuest blob.
                */
               diskEncryptionSet?: {
                 /**
@@ -1135,7 +1354,13 @@ export interface IAzureMachineTemplate {
                 id?: string;
               };
               /**
-               * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+               * SecurityEncryptionType specifies the encryption type of the managed disk.
+               * It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState
+               * blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only.
+               * When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled.
+               * When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and
+               * VirtualizedTrustedPlatformModule should be set to Enabled.
+               * It can be set only for Confidential VMs.
                */
               securityEncryptionType?:
                 | 'VMGuestStateOnly'
@@ -1144,20 +1369,26 @@ export interface IAzureMachineTemplate {
             storageAccountType?: string;
           };
           /**
-           * NameSuffix is the suffix to be appended to the machine name to generate the disk name. Each disk name will be in format <machineName>_<nameSuffix>.
+           * NameSuffix is the suffix to be appended to the machine name to generate the disk name.
+           * Each disk name will be in format <machineName>_<nameSuffix>.
            */
           nameSuffix: string;
         }[];
         /**
-         * Diagnostics specifies the diagnostics settings for a virtual machine. If not specified then Boot diagnostics (Managed) will be enabled.
+         * Diagnostics specifies the diagnostics settings for a virtual machine.
+         * If not specified then Boot diagnostics (Managed) will be enabled.
          */
         diagnostics?: {
           /**
-           * Boot configures the boot diagnostics settings for the virtual machine. This allows to configure capturing serial output from the virtual machine on boot. This is useful for debugging software based launch issues. If not specified then Boot diagnostics (Managed) will be enabled.
+           * Boot configures the boot diagnostics settings for the virtual machine.
+           * This allows to configure capturing serial output from the virtual machine on boot.
+           * This is useful for debugging software based launch issues.
+           * If not specified then Boot diagnostics (Managed) will be enabled.
            */
           boot?: {
             /**
-             * StorageAccountType determines if the storage account for storing the diagnostics data should be disabled (Disabled), provisioned by Azure (Managed) or by the user (UserManaged).
+             * StorageAccountType determines if the storage account for storing the diagnostics data
+             * should be disabled (Disabled), provisioned by Azure (Managed) or by the user (UserManaged).
              */
             storageAccountType: 'Managed' | 'UserManaged' | 'Disabled';
             /**
@@ -1165,30 +1396,50 @@ export interface IAzureMachineTemplate {
              */
             userManaged?: {
               /**
-               * StorageAccountURI is the URI of the user-managed storage account. The URI typically will be `https://<mystorageaccountname>.blob.core.windows.net/` but may differ if you are using Azure DNS zone endpoints. You can find the correct endpoint by looking for the Blob Primary Endpoint in the endpoints tab in the Azure console or with the CLI by issuing `az storage account list --query='[].{name: name, "resource group": resourceGroup, "blob endpoint": primaryEndpoints.blob}'`.
+               * StorageAccountURI is the URI of the user-managed storage account.
+               * The URI typically will be `https://<mystorageaccountname>.blob.core.windows.net/`
+               * but may differ if you are using Azure DNS zone endpoints.
+               * You can find the correct endpoint by looking for the Blob Primary Endpoint in the
+               * endpoints tab in the Azure console or with the CLI by issuing
+               * `az storage account list --query='[].{name: name, "resource group": resourceGroup, "blob endpoint": primaryEndpoints.blob}'`.
                */
               storageAccountURI: string;
             };
           };
         };
         /**
+         * DisableExtensionOperations specifies whether extension operations should be disabled on the virtual machine.
+         * Use this setting only if VMExtensions are not supported by your image, as it disables CAPZ bootstrapping extension used for detecting Kubernetes bootstrap failure.
+         * This may only be set to True when no extensions are configured on the virtual machine.
+         */
+        disableExtensionOperations?: boolean;
+        /**
          * DNSServers adds a list of DNS Server IP addresses to the VM NICs.
          */
         dnsServers?: string[];
         /**
-         * EnableIPForwarding enables IP Forwarding in Azure which is required for some CNI's to send traffic from a pods on one machine to another. This is required for IpV6 with Calico in combination with User Defined Routes (set by the Azure Cloud Controller manager). Default is false for disabled.
+         * EnableIPForwarding enables IP Forwarding in Azure which is required for some CNI's to send traffic from a pods on one machine
+         * to another. This is required for IpV6 with Calico in combination with User Defined Routes (set by the Azure Cloud Controller
+         * manager). Default is false for disabled.
          */
         enableIPForwarding?: boolean;
         /**
-         * FailureDomain is the failure domain unique identifier this Machine should be attached to, as defined in Cluster API. This relates to an Azure Availability Zone
+         * FailureDomain is the failure domain unique identifier this Machine should be attached to,
+         * as defined in Cluster API. This relates to an Azure Availability Zone
          */
         failureDomain?: string;
         /**
-         * Identity is the type of identity used for the virtual machine. The type 'SystemAssigned' is an implicitly created identity. The generated identity will be assigned a Subscription contributor role. The type 'UserAssigned' is a standalone Azure resource provided by the user and assigned to the VM
+         * Identity is the type of identity used for the virtual machine.
+         * The type 'SystemAssigned' is an implicitly created identity.
+         * The generated identity will be assigned a Subscription contributor role.
+         * The type 'UserAssigned' is a standalone Azure resource provided by the user
+         * and assigned to the VM
          */
         identity?: 'None' | 'SystemAssigned' | 'UserAssigned';
         /**
-         * Image is used to provide details of an image to use during VM creation. If image details are omitted the image will default the Azure Marketplace "capi" offer, which is based on Ubuntu.
+         * Image is used to provide details of an image to use during VM creation.
+         * If image details are omitted the image will default the Azure Marketplace "capi" offer,
+         * which is based on Ubuntu.
          */
         image?: {
           /**
@@ -1208,7 +1459,8 @@ export interface IAzureMachineTemplate {
              */
             plan?: {
               /**
-               * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer
+               * Offer specifies the name of a group of related images created by the publisher.
+               * For example, UbuntuServer, WindowsServer
                */
               offer: string;
               /**
@@ -1216,7 +1468,8 @@ export interface IAzureMachineTemplate {
                */
               publisher: string;
               /**
-               * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter
+               * SKU specifies an instance of an offer, such as a major release of a distribution.
+               * For example, 18.04-LTS, 2019-Datacenter
                */
               sku: string;
             };
@@ -1229,7 +1482,11 @@ export interface IAzureMachineTemplate {
              */
             subscriptionID?: string;
             /**
-             * Version specifies the version of the marketplace image. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+             * Version specifies the version of the marketplace image. The allowed formats
+             * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+             * Specify 'latest' to use the latest version of an image available at deploy time.
+             * Even if you use 'latest', the VM image will not automatically update after deploy
+             * time even if a new version becomes available.
              */
             version: string;
           };
@@ -1242,7 +1499,8 @@ export interface IAzureMachineTemplate {
            */
           marketplace?: {
             /**
-             * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer
+             * Offer specifies the name of a group of related images created by the publisher.
+             * For example, UbuntuServer, WindowsServer
              */
             offer: string;
             /**
@@ -1250,20 +1508,27 @@ export interface IAzureMachineTemplate {
              */
             publisher: string;
             /**
-             * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter
+             * SKU specifies an instance of an offer, such as a major release of a distribution.
+             * For example, 18.04-LTS, 2019-Datacenter
              */
             sku: string;
             /**
-             * ThirdPartyImage indicates the image is published by a third party publisher and a Plan will be generated for it.
+             * ThirdPartyImage indicates the image is published by a third party publisher and a Plan
+             * will be generated for it.
              */
             thirdPartyImage?: boolean;
             /**
-             * Version specifies the version of an image sku. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+             * Version specifies the version of an image sku. The allowed formats
+             * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+             * Specify 'latest' to use the latest version of an image available at deploy time.
+             * Even if you use 'latest', the VM image will not automatically update after deploy
+             * time even if a new version becomes available.
              */
             version: string;
           };
           /**
-           * SharedGallery specifies an image to use from an Azure Shared Image Gallery Deprecated: use ComputeGallery instead.
+           * SharedGallery specifies an image to use from an Azure Shared Image Gallery
+           * Deprecated: use ComputeGallery instead.
            */
           sharedGallery?: {
             /**
@@ -1275,11 +1540,16 @@ export interface IAzureMachineTemplate {
              */
             name: string;
             /**
-             * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+             * Offer specifies the name of a group of related images created by the publisher.
+             * For example, UbuntuServer, WindowsServer
+             * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+             * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
              */
             offer?: string;
             /**
-             * Publisher is the name of the organization that created the image. This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+             * Publisher is the name of the organization that created the image.
+             * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+             * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
              */
             publisher?: string;
             /**
@@ -1287,7 +1557,10 @@ export interface IAzureMachineTemplate {
              */
             resourceGroup: string;
             /**
-             * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+             * SKU specifies an instance of an offer, such as a major release of a distribution.
+             * For example, 18.04-LTS, 2019-Datacenter
+             * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+             * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
              */
             sku?: string;
             /**
@@ -1295,21 +1568,31 @@ export interface IAzureMachineTemplate {
              */
             subscriptionID: string;
             /**
-             * Version specifies the version of the marketplace image. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+             * Version specifies the version of the marketplace image. The allowed formats
+             * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+             * Specify 'latest' to use the latest version of an image available at deploy time.
+             * Even if you use 'latest', the VM image will not automatically update after deploy
+             * time even if a new version becomes available.
              */
             version: string;
           };
         };
         /**
-         * NetworkInterfaces specifies a list of network interface configurations. If left unspecified, the VM will get a single network interface with a single IPConfig in the subnet specified in the cluster's node subnet field. The primary interface will be the first networkInterface specified (index 0) in the list.
+         * NetworkInterfaces specifies a list of network interface configurations.
+         * If left unspecified, the VM will get a single network interface with a
+         * single IPConfig in the subnet specified in the cluster's node subnet field.
+         * The primary interface will be the first networkInterface specified (index 0) in the list.
          */
         networkInterfaces?: {
           /**
-           * AcceleratedNetworking enables or disables Azure accelerated networking. If omitted, it will be set based on whether the requested VMSize supports accelerated networking. If AcceleratedNetworking is set to true with a VMSize that does not support it, Azure will return an error.
+           * AcceleratedNetworking enables or disables Azure accelerated networking. If omitted, it will be set based on
+           * whether the requested VMSize supports accelerated networking.
+           * If AcceleratedNetworking is set to true with a VMSize that does not support it, Azure will return an error.
            */
           acceleratedNetworking?: boolean;
           /**
-           * PrivateIPConfigs specifies the number of private IP addresses to attach to the interface. Defaults to 1 if not specified.
+           * PrivateIPConfigs specifies the number of private IP addresses to attach to the interface.
+           * Defaults to 1 if not specified.
            */
           privateIPConfigs?: number;
           /**
@@ -1330,12 +1613,18 @@ export interface IAzureMachineTemplate {
            */
           diffDiskSettings?: {
             /**
-             * Option enables ephemeral OS when set to "Local" See https://learn.microsoft.com/azure/virtual-machines/ephemeral-os-disks for full details
+             * Option enables ephemeral OS when set to "Local"
+             * See https://learn.microsoft.com/azure/virtual-machines/ephemeral-os-disks for full details
              */
             option: 'Local';
+            /**
+             * Placement specifies the ephemeral disk placement for operating system disk. If placement is specified, Option must be set to "Local".
+             */
+            placement?: 'CacheDisk' | 'NvmeDisk' | 'ResourceDisk';
           };
           /**
-           * DiskSizeGB is the size in GB to assign to the OS disk. Will have a default of 30GB if not provided
+           * DiskSizeGB is the size in GB to assign to the OS disk.
+           * Will have a default of 30GB if not provided
            */
           diskSizeGB?: number;
           /**
@@ -1356,7 +1645,9 @@ export interface IAzureMachineTemplate {
              */
             securityProfile?: {
               /**
-               * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+               * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the
+               * managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and
+               * VMGuest blob.
                */
               diskEncryptionSet?: {
                 /**
@@ -1365,7 +1656,13 @@ export interface IAzureMachineTemplate {
                 id?: string;
               };
               /**
-               * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+               * SecurityEncryptionType specifies the encryption type of the managed disk.
+               * It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState
+               * blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only.
+               * When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled.
+               * When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and
+               * VirtualizedTrustedPlatformModule should be set to Enabled.
+               * It can be set only for Confidential VMs.
                */
               securityEncryptionType?:
                 | 'VMGuestStateOnly'
@@ -1388,11 +1685,15 @@ export interface IAzureMachineTemplate {
          */
         securityProfile?: {
           /**
-           * This field indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. This should be disabled when SecurityEncryptionType is set to DiskWithVMGuestState. Default is disabled.
+           * This field indicates whether Host Encryption should be enabled
+           * or disabled for a virtual machine or virtual machine scale set.
+           * This should be disabled when SecurityEncryptionType is set to DiskWithVMGuestState.
+           * Default is disabled.
            */
           encryptionAtHost?: boolean;
           /**
-           * SecurityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UefiSettings. The default behavior is: UefiSettings will not be enabled unless this property is set.
+           * SecurityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to
+           * enable UefiSettings. The default behavior is: UefiSettings will not be enabled unless this property is set.
            */
           securityType?: 'ConfidentialVM' | 'TrustedLaunch';
           /**
@@ -1400,11 +1701,17 @@ export interface IAzureMachineTemplate {
            */
           uefiSettings?: {
             /**
-             * SecureBootEnabled specifies whether secure boot should be enabled on the virtual machine. Secure Boot verifies the digital signature of all boot components and halts the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+             * SecureBootEnabled specifies whether secure boot should be enabled on the virtual machine.
+             * Secure Boot verifies the digital signature of all boot components and halts the boot process if signature verification fails.
+             * If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
              */
             secureBootEnabled?: boolean;
             /**
-             * VTpmEnabled specifies whether vTPM should be enabled on the virtual machine. When true it enables the virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to Enabled if SecurityEncryptionType is defined. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+             * VTpmEnabled specifies whether vTPM should be enabled on the virtual machine.
+             * When true it enables the virtualized trusted platform module measurements to create a known good boot integrity policy baseline.
+             * The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed.
+             * This is required to be set to Enabled if SecurityEncryptionType is defined.
+             * If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
              */
             vTpmEnabled?: boolean;
           };
@@ -1423,7 +1730,8 @@ export interface IAzureMachineTemplate {
           maxPrice?: number | string;
         };
         /**
-         * SSHPublicKey is the SSH public key string, base64-encoded to add to a Virtual Machine. Linux only. Refer to documentation on how to set up SSH access on Windows instances.
+         * SSHPublicKey is the SSH public key string, base64-encoded to add to a Virtual Machine. Linux only.
+         * Refer to documentation on how to set up SSH access on Windows instances.
          */
         sshPublicKey?: string;
         /**
@@ -1435,24 +1743,31 @@ export interface IAzureMachineTemplate {
          */
         systemAssignedIdentityRole?: {
           /**
-           * DefinitionID is the ID of the role definition to create for a system assigned identity. It can be an Azure built-in role or a custom role. Refer to built-in roles: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
+           * DefinitionID is the ID of the role definition to create for a system assigned identity. It can be an Azure built-in role or a custom role.
+           * Refer to built-in roles: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
            */
           definitionID?: string;
           /**
-           * Name is the name of the role assignment to create for a system assigned identity. It can be any valid UUID. If not specified, a random UUID will be generated.
+           * Name is the name of the role assignment to create for a system assigned identity. It can be any valid UUID.
+           * If not specified, a random UUID will be generated.
            */
           name?: string;
           /**
-           * Scope is the scope that the role assignment or definition applies to. The scope can be any REST resource instance. If not specified, the scope will be the subscription.
+           * Scope is the scope that the role assignment or definition applies to. The scope can be any REST resource instance.
+           * If not specified, the scope will be the subscription.
            */
           scope?: string;
         };
         /**
-         * UserAssignedIdentities is a list of standalone Azure identities provided by the user The lifecycle of a user-assigned identity is managed separately from the lifecycle of the AzureMachine. See https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
+         * UserAssignedIdentities is a list of standalone Azure identities provided by the user
+         * The lifecycle of a user-assigned identity is managed separately from the lifecycle of
+         * the AzureMachine.
+         * See https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
          */
         userAssignedIdentities?: {
           /**
-           * ProviderID is the identification ID of the user-assigned Identity, the format of an identity is: 'azure:///subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'
+           * ProviderID is the identification ID of the user-assigned Identity, the format of an identity is:
+           * 'azure:///subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'
            */
           providerID: string;
         }[];
@@ -1506,11 +1821,18 @@ export const AzureMachine = 'AzureMachine';
  */
 export interface IAzureMachine {
   /**
-   * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+   * APIVersion defines the versioned schema of this representation of an object.
+   * Servers should convert recognized schemas to the latest internal value, and
+   * may reject unrecognized values.
+   * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
-   * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+   * Kind is a string value representing the REST resource this object represents.
+   * Servers may infer this from the endpoint the client submits requests to.
+   * Cannot be updated.
+   * In CamelCase.
+   * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
   kind: typeof AzureMachine;
   metadata: metav1.IObjectMeta;
@@ -1527,12 +1849,16 @@ export interface IAzureMachine {
      */
     additionalCapabilities?: {
       /**
-       * UltraSSDEnabled enables or disables Azure UltraSSD capability for the virtual machine. Defaults to true if Ultra SSD data disks are specified, otherwise it doesn't set the capability on the VM.
+       * UltraSSDEnabled enables or disables Azure UltraSSD capability for the virtual machine.
+       * Defaults to true if Ultra SSD data disks are specified,
+       * otherwise it doesn't set the capability on the VM.
        */
       ultraSSDEnabled?: boolean;
     };
     /**
-     * AdditionalTags is an optional set of tags to add to an instance, in addition to the ones added by default by the Azure provider. If both the AzureCluster and the AzureMachine specify the same tag name with different values, the AzureMachine's value takes precedence.
+     * AdditionalTags is an optional set of tags to add to an instance, in addition to the ones added by default by the
+     * Azure provider. If both the AzureCluster and the AzureMachine specify the same tag name with different values, the
+     * AzureMachine's value takes precedence.
      */
     additionalTags?: {
       [k: string]: string;
@@ -1541,6 +1867,15 @@ export interface IAzureMachine {
      * AllocatePublicIP allows the ability to create dynamic public ips for machines where this value is true.
      */
     allocatePublicIP?: boolean;
+    /**
+     * CapacityReservationGroupID specifies the capacity reservation group resource id that should be
+     * used for allocating the virtual machine.
+     * The field size should be greater than 0 and the field input must start with '/'.
+     * The input for capacityReservationGroupID must be similar to '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/capacityReservationGroups/{capacityReservationGroupName}'.
+     * The keys which are used should be among 'subscriptions', 'providers' and 'resourcegroups' followed by valid ID or names respectively.
+     * It is optional but may not be changed once set.
+     */
+    capacityReservationGroupID?: string;
     /**
      * DataDisk specifies the parameters that are used to add one or more data disks to the machine
      */
@@ -1554,7 +1889,8 @@ export interface IAzureMachine {
        */
       diskSizeGB: number;
       /**
-       * Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM. The value must be between 0 and 63.
+       * Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM.
+       * The value must be between 0 and 63.
        */
       lun?: number;
       /**
@@ -1575,7 +1911,9 @@ export interface IAzureMachine {
          */
         securityProfile?: {
           /**
-           * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+           * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the
+           * managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and
+           * VMGuest blob.
            */
           diskEncryptionSet?: {
             /**
@@ -1584,27 +1922,39 @@ export interface IAzureMachine {
             id?: string;
           };
           /**
-           * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+           * SecurityEncryptionType specifies the encryption type of the managed disk.
+           * It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState
+           * blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only.
+           * When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled.
+           * When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and
+           * VirtualizedTrustedPlatformModule should be set to Enabled.
+           * It can be set only for Confidential VMs.
            */
           securityEncryptionType?: 'VMGuestStateOnly' | 'DiskWithVMGuestState';
         };
         storageAccountType?: string;
       };
       /**
-       * NameSuffix is the suffix to be appended to the machine name to generate the disk name. Each disk name will be in format <machineName>_<nameSuffix>.
+       * NameSuffix is the suffix to be appended to the machine name to generate the disk name.
+       * Each disk name will be in format <machineName>_<nameSuffix>.
        */
       nameSuffix: string;
     }[];
     /**
-     * Diagnostics specifies the diagnostics settings for a virtual machine. If not specified then Boot diagnostics (Managed) will be enabled.
+     * Diagnostics specifies the diagnostics settings for a virtual machine.
+     * If not specified then Boot diagnostics (Managed) will be enabled.
      */
     diagnostics?: {
       /**
-       * Boot configures the boot diagnostics settings for the virtual machine. This allows to configure capturing serial output from the virtual machine on boot. This is useful for debugging software based launch issues. If not specified then Boot diagnostics (Managed) will be enabled.
+       * Boot configures the boot diagnostics settings for the virtual machine.
+       * This allows to configure capturing serial output from the virtual machine on boot.
+       * This is useful for debugging software based launch issues.
+       * If not specified then Boot diagnostics (Managed) will be enabled.
        */
       boot?: {
         /**
-         * StorageAccountType determines if the storage account for storing the diagnostics data should be disabled (Disabled), provisioned by Azure (Managed) or by the user (UserManaged).
+         * StorageAccountType determines if the storage account for storing the diagnostics data
+         * should be disabled (Disabled), provisioned by Azure (Managed) or by the user (UserManaged).
          */
         storageAccountType: 'Managed' | 'UserManaged' | 'Disabled';
         /**
@@ -1612,30 +1962,50 @@ export interface IAzureMachine {
          */
         userManaged?: {
           /**
-           * StorageAccountURI is the URI of the user-managed storage account. The URI typically will be `https://<mystorageaccountname>.blob.core.windows.net/` but may differ if you are using Azure DNS zone endpoints. You can find the correct endpoint by looking for the Blob Primary Endpoint in the endpoints tab in the Azure console or with the CLI by issuing `az storage account list --query='[].{name: name, "resource group": resourceGroup, "blob endpoint": primaryEndpoints.blob}'`.
+           * StorageAccountURI is the URI of the user-managed storage account.
+           * The URI typically will be `https://<mystorageaccountname>.blob.core.windows.net/`
+           * but may differ if you are using Azure DNS zone endpoints.
+           * You can find the correct endpoint by looking for the Blob Primary Endpoint in the
+           * endpoints tab in the Azure console or with the CLI by issuing
+           * `az storage account list --query='[].{name: name, "resource group": resourceGroup, "blob endpoint": primaryEndpoints.blob}'`.
            */
           storageAccountURI: string;
         };
       };
     };
     /**
+     * DisableExtensionOperations specifies whether extension operations should be disabled on the virtual machine.
+     * Use this setting only if VMExtensions are not supported by your image, as it disables CAPZ bootstrapping extension used for detecting Kubernetes bootstrap failure.
+     * This may only be set to True when no extensions are configured on the virtual machine.
+     */
+    disableExtensionOperations?: boolean;
+    /**
      * DNSServers adds a list of DNS Server IP addresses to the VM NICs.
      */
     dnsServers?: string[];
     /**
-     * EnableIPForwarding enables IP Forwarding in Azure which is required for some CNI's to send traffic from a pods on one machine to another. This is required for IpV6 with Calico in combination with User Defined Routes (set by the Azure Cloud Controller manager). Default is false for disabled.
+     * EnableIPForwarding enables IP Forwarding in Azure which is required for some CNI's to send traffic from a pods on one machine
+     * to another. This is required for IpV6 with Calico in combination with User Defined Routes (set by the Azure Cloud Controller
+     * manager). Default is false for disabled.
      */
     enableIPForwarding?: boolean;
     /**
-     * FailureDomain is the failure domain unique identifier this Machine should be attached to, as defined in Cluster API. This relates to an Azure Availability Zone
+     * FailureDomain is the failure domain unique identifier this Machine should be attached to,
+     * as defined in Cluster API. This relates to an Azure Availability Zone
      */
     failureDomain?: string;
     /**
-     * Identity is the type of identity used for the virtual machine. The type 'SystemAssigned' is an implicitly created identity. The generated identity will be assigned a Subscription contributor role. The type 'UserAssigned' is a standalone Azure resource provided by the user and assigned to the VM
+     * Identity is the type of identity used for the virtual machine.
+     * The type 'SystemAssigned' is an implicitly created identity.
+     * The generated identity will be assigned a Subscription contributor role.
+     * The type 'UserAssigned' is a standalone Azure resource provided by the user
+     * and assigned to the VM
      */
     identity?: 'None' | 'SystemAssigned' | 'UserAssigned';
     /**
-     * Image is used to provide details of an image to use during VM creation. If image details are omitted the image will default the Azure Marketplace "capi" offer, which is based on Ubuntu.
+     * Image is used to provide details of an image to use during VM creation.
+     * If image details are omitted the image will default the Azure Marketplace "capi" offer,
+     * which is based on Ubuntu.
      */
     image?: {
       /**
@@ -1655,7 +2025,8 @@ export interface IAzureMachine {
          */
         plan?: {
           /**
-           * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer
+           * Offer specifies the name of a group of related images created by the publisher.
+           * For example, UbuntuServer, WindowsServer
            */
           offer: string;
           /**
@@ -1663,7 +2034,8 @@ export interface IAzureMachine {
            */
           publisher: string;
           /**
-           * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter
+           * SKU specifies an instance of an offer, such as a major release of a distribution.
+           * For example, 18.04-LTS, 2019-Datacenter
            */
           sku: string;
         };
@@ -1676,7 +2048,11 @@ export interface IAzureMachine {
          */
         subscriptionID?: string;
         /**
-         * Version specifies the version of the marketplace image. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+         * Version specifies the version of the marketplace image. The allowed formats
+         * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+         * Specify 'latest' to use the latest version of an image available at deploy time.
+         * Even if you use 'latest', the VM image will not automatically update after deploy
+         * time even if a new version becomes available.
          */
         version: string;
       };
@@ -1689,7 +2065,8 @@ export interface IAzureMachine {
        */
       marketplace?: {
         /**
-         * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer
+         * Offer specifies the name of a group of related images created by the publisher.
+         * For example, UbuntuServer, WindowsServer
          */
         offer: string;
         /**
@@ -1697,20 +2074,27 @@ export interface IAzureMachine {
          */
         publisher: string;
         /**
-         * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter
+         * SKU specifies an instance of an offer, such as a major release of a distribution.
+         * For example, 18.04-LTS, 2019-Datacenter
          */
         sku: string;
         /**
-         * ThirdPartyImage indicates the image is published by a third party publisher and a Plan will be generated for it.
+         * ThirdPartyImage indicates the image is published by a third party publisher and a Plan
+         * will be generated for it.
          */
         thirdPartyImage?: boolean;
         /**
-         * Version specifies the version of an image sku. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+         * Version specifies the version of an image sku. The allowed formats
+         * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+         * Specify 'latest' to use the latest version of an image available at deploy time.
+         * Even if you use 'latest', the VM image will not automatically update after deploy
+         * time even if a new version becomes available.
          */
         version: string;
       };
       /**
-       * SharedGallery specifies an image to use from an Azure Shared Image Gallery Deprecated: use ComputeGallery instead.
+       * SharedGallery specifies an image to use from an Azure Shared Image Gallery
+       * Deprecated: use ComputeGallery instead.
        */
       sharedGallery?: {
         /**
@@ -1722,11 +2106,16 @@ export interface IAzureMachine {
          */
         name: string;
         /**
-         * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+         * Offer specifies the name of a group of related images created by the publisher.
+         * For example, UbuntuServer, WindowsServer
+         * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+         * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
          */
         offer?: string;
         /**
-         * Publisher is the name of the organization that created the image. This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+         * Publisher is the name of the organization that created the image.
+         * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+         * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
          */
         publisher?: string;
         /**
@@ -1734,7 +2123,10 @@ export interface IAzureMachine {
          */
         resourceGroup: string;
         /**
-         * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+         * SKU specifies an instance of an offer, such as a major release of a distribution.
+         * For example, 18.04-LTS, 2019-Datacenter
+         * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+         * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
          */
         sku?: string;
         /**
@@ -1742,21 +2134,31 @@ export interface IAzureMachine {
          */
         subscriptionID: string;
         /**
-         * Version specifies the version of the marketplace image. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+         * Version specifies the version of the marketplace image. The allowed formats
+         * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+         * Specify 'latest' to use the latest version of an image available at deploy time.
+         * Even if you use 'latest', the VM image will not automatically update after deploy
+         * time even if a new version becomes available.
          */
         version: string;
       };
     };
     /**
-     * NetworkInterfaces specifies a list of network interface configurations. If left unspecified, the VM will get a single network interface with a single IPConfig in the subnet specified in the cluster's node subnet field. The primary interface will be the first networkInterface specified (index 0) in the list.
+     * NetworkInterfaces specifies a list of network interface configurations.
+     * If left unspecified, the VM will get a single network interface with a
+     * single IPConfig in the subnet specified in the cluster's node subnet field.
+     * The primary interface will be the first networkInterface specified (index 0) in the list.
      */
     networkInterfaces?: {
       /**
-       * AcceleratedNetworking enables or disables Azure accelerated networking. If omitted, it will be set based on whether the requested VMSize supports accelerated networking. If AcceleratedNetworking is set to true with a VMSize that does not support it, Azure will return an error.
+       * AcceleratedNetworking enables or disables Azure accelerated networking. If omitted, it will be set based on
+       * whether the requested VMSize supports accelerated networking.
+       * If AcceleratedNetworking is set to true with a VMSize that does not support it, Azure will return an error.
        */
       acceleratedNetworking?: boolean;
       /**
-       * PrivateIPConfigs specifies the number of private IP addresses to attach to the interface. Defaults to 1 if not specified.
+       * PrivateIPConfigs specifies the number of private IP addresses to attach to the interface.
+       * Defaults to 1 if not specified.
        */
       privateIPConfigs?: number;
       /**
@@ -1777,12 +2179,18 @@ export interface IAzureMachine {
        */
       diffDiskSettings?: {
         /**
-         * Option enables ephemeral OS when set to "Local" See https://learn.microsoft.com/azure/virtual-machines/ephemeral-os-disks for full details
+         * Option enables ephemeral OS when set to "Local"
+         * See https://learn.microsoft.com/azure/virtual-machines/ephemeral-os-disks for full details
          */
         option: 'Local';
+        /**
+         * Placement specifies the ephemeral disk placement for operating system disk. If placement is specified, Option must be set to "Local".
+         */
+        placement?: 'CacheDisk' | 'NvmeDisk' | 'ResourceDisk';
       };
       /**
-       * DiskSizeGB is the size in GB to assign to the OS disk. Will have a default of 30GB if not provided
+       * DiskSizeGB is the size in GB to assign to the OS disk.
+       * Will have a default of 30GB if not provided
        */
       diskSizeGB?: number;
       /**
@@ -1803,7 +2211,9 @@ export interface IAzureMachine {
          */
         securityProfile?: {
           /**
-           * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+           * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the
+           * managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and
+           * VMGuest blob.
            */
           diskEncryptionSet?: {
             /**
@@ -1812,7 +2222,13 @@ export interface IAzureMachine {
             id?: string;
           };
           /**
-           * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+           * SecurityEncryptionType specifies the encryption type of the managed disk.
+           * It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState
+           * blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only.
+           * When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled.
+           * When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and
+           * VirtualizedTrustedPlatformModule should be set to Enabled.
+           * It can be set only for Confidential VMs.
            */
           securityEncryptionType?: 'VMGuestStateOnly' | 'DiskWithVMGuestState';
         };
@@ -1833,11 +2249,15 @@ export interface IAzureMachine {
      */
     securityProfile?: {
       /**
-       * This field indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. This should be disabled when SecurityEncryptionType is set to DiskWithVMGuestState. Default is disabled.
+       * This field indicates whether Host Encryption should be enabled
+       * or disabled for a virtual machine or virtual machine scale set.
+       * This should be disabled when SecurityEncryptionType is set to DiskWithVMGuestState.
+       * Default is disabled.
        */
       encryptionAtHost?: boolean;
       /**
-       * SecurityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UefiSettings. The default behavior is: UefiSettings will not be enabled unless this property is set.
+       * SecurityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to
+       * enable UefiSettings. The default behavior is: UefiSettings will not be enabled unless this property is set.
        */
       securityType?: 'ConfidentialVM' | 'TrustedLaunch';
       /**
@@ -1845,11 +2265,17 @@ export interface IAzureMachine {
        */
       uefiSettings?: {
         /**
-         * SecureBootEnabled specifies whether secure boot should be enabled on the virtual machine. Secure Boot verifies the digital signature of all boot components and halts the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+         * SecureBootEnabled specifies whether secure boot should be enabled on the virtual machine.
+         * Secure Boot verifies the digital signature of all boot components and halts the boot process if signature verification fails.
+         * If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
          */
         secureBootEnabled?: boolean;
         /**
-         * VTpmEnabled specifies whether vTPM should be enabled on the virtual machine. When true it enables the virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to Enabled if SecurityEncryptionType is defined. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+         * VTpmEnabled specifies whether vTPM should be enabled on the virtual machine.
+         * When true it enables the virtualized trusted platform module measurements to create a known good boot integrity policy baseline.
+         * The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed.
+         * This is required to be set to Enabled if SecurityEncryptionType is defined.
+         * If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
          */
         vTpmEnabled?: boolean;
       };
@@ -1868,7 +2294,8 @@ export interface IAzureMachine {
       maxPrice?: number | string;
     };
     /**
-     * SSHPublicKey is the SSH public key string, base64-encoded to add to a Virtual Machine. Linux only. Refer to documentation on how to set up SSH access on Windows instances.
+     * SSHPublicKey is the SSH public key string, base64-encoded to add to a Virtual Machine. Linux only.
+     * Refer to documentation on how to set up SSH access on Windows instances.
      */
     sshPublicKey?: string;
     /**
@@ -1880,24 +2307,31 @@ export interface IAzureMachine {
      */
     systemAssignedIdentityRole?: {
       /**
-       * DefinitionID is the ID of the role definition to create for a system assigned identity. It can be an Azure built-in role or a custom role. Refer to built-in roles: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
+       * DefinitionID is the ID of the role definition to create for a system assigned identity. It can be an Azure built-in role or a custom role.
+       * Refer to built-in roles: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
        */
       definitionID?: string;
       /**
-       * Name is the name of the role assignment to create for a system assigned identity. It can be any valid UUID. If not specified, a random UUID will be generated.
+       * Name is the name of the role assignment to create for a system assigned identity. It can be any valid UUID.
+       * If not specified, a random UUID will be generated.
        */
       name?: string;
       /**
-       * Scope is the scope that the role assignment or definition applies to. The scope can be any REST resource instance. If not specified, the scope will be the subscription.
+       * Scope is the scope that the role assignment or definition applies to. The scope can be any REST resource instance.
+       * If not specified, the scope will be the subscription.
        */
       scope?: string;
     };
     /**
-     * UserAssignedIdentities is a list of standalone Azure identities provided by the user The lifecycle of a user-assigned identity is managed separately from the lifecycle of the AzureMachine. See https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
+     * UserAssignedIdentities is a list of standalone Azure identities provided by the user
+     * The lifecycle of a user-assigned identity is managed separately from the lifecycle of
+     * the AzureMachine.
+     * See https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
      */
     userAssignedIdentities?: {
       /**
-       * ProviderID is the identification ID of the user-assigned Identity, the format of an identity is: 'azure:///subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'
+       * ProviderID is the identification ID of the user-assigned Identity, the format of an identity is:
+       * 'azure:///subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'
        */
       providerID: string;
     }[];
@@ -1954,19 +2388,26 @@ export interface IAzureMachine {
      */
     conditions?: {
       /**
-       * Last time the condition transitioned from one status to another. This should be when the underlying condition changed. If that is not known, then using the time when the API field changed is acceptable.
+       * Last time the condition transitioned from one status to another.
+       * This should be when the underlying condition changed. If that is not known, then using the time when
+       * the API field changed is acceptable.
        */
       lastTransitionTime: string;
       /**
-       * A human readable message indicating details about the transition. This field may be empty.
+       * A human readable message indicating details about the transition.
+       * This field may be empty.
        */
       message?: string;
       /**
-       * The reason for the condition's last transition in CamelCase. The specific API may choose whether or not this field is considered a guaranteed API. This field may not be empty.
+       * The reason for the condition's last transition in CamelCase.
+       * The specific API may choose whether or not this field is considered a guaranteed API.
+       * This field may not be empty.
        */
       reason?: string;
       /**
-       * Severity provides an explicit classification of Reason code, so the users or machines can immediately understand the current situation and act accordingly. The Severity field MUST be set only when Status=False.
+       * Severity provides an explicit classification of Reason code, so the users or machines can immediately
+       * understand the current situation and act accordingly.
+       * The Severity field MUST be set only when Status=False.
        */
       severity?: string;
       /**
@@ -1974,24 +2415,57 @@ export interface IAzureMachine {
        */
       status: string;
       /**
-       * Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.
+       * Type of condition in CamelCase or in foo.example.com/CamelCase.
+       * Many .condition.type values are consistent across resources like Available, but because arbitrary conditions
+       * can be useful (see .node.status.conditions), the ability to deconflict is important.
        */
       type: string;
     }[];
     /**
-     * ErrorMessage will be set in the event that there is a terminal problem reconciling the Machine and will contain a more verbose string suitable for logging and human consumption.
-     *  This field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the Machine's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.
-     *  Any transient errors that occur during the reconciliation of Machines can be added as events to the Machine object and/or logged in the controller's output.
+     * ErrorMessage will be set in the event that there is a terminal problem
+     * reconciling the Machine and will contain a more verbose string suitable
+     * for logging and human consumption.
+     *
+     *
+     * This field should not be set for transitive errors that a controller
+     * faces that are expected to be fixed automatically over
+     * time (like service outages), but instead indicate that something is
+     * fundamentally wrong with the Machine's spec or the configuration of
+     * the controller, and that manual intervention is required. Examples
+     * of terminal errors would be invalid combinations of settings in the
+     * spec, values that are unsupported by the controller, or the
+     * responsible controller itself being critically misconfigured.
+     *
+     *
+     * Any transient errors that occur during the reconciliation of Machines
+     * can be added as events to the Machine object and/or logged in the
+     * controller's output.
      */
     failureMessage?: string;
     /**
-     * ErrorReason will be set in the event that there is a terminal problem reconciling the Machine and will contain a succinct value suitable for machine interpretation.
-     *  This field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the Machine's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.
-     *  Any transient errors that occur during the reconciliation of Machines can be added as events to the Machine object and/or logged in the controller's output.
+     * ErrorReason will be set in the event that there is a terminal problem
+     * reconciling the Machine and will contain a succinct value suitable
+     * for machine interpretation.
+     *
+     *
+     * This field should not be set for transitive errors that a controller
+     * faces that are expected to be fixed automatically over
+     * time (like service outages), but instead indicate that something is
+     * fundamentally wrong with the Machine's spec or the configuration of
+     * the controller, and that manual intervention is required. Examples
+     * of terminal errors would be invalid combinations of settings in the
+     * spec, values that are unsupported by the controller, or the
+     * responsible controller itself being critically misconfigured.
+     *
+     *
+     * Any transient errors that occur during the reconciliation of Machines
+     * can be added as events to the Machine object and/or logged in the
+     * controller's output.
      */
     failureReason?: string;
     /**
-     * LongRunningOperationStates saves the states for Azure long-running operations so they can be continued on the next reconciliation loop.
+     * LongRunningOperationStates saves the states for Azure long-running operations so they can be continued on the
+     * next reconciliation loop.
      */
     longRunningOperationStates?: {
       /**
@@ -1999,7 +2473,8 @@ export interface IAzureMachine {
        */
       data: string;
       /**
-       * Name is the name of the Azure resource. Together with the service name, this forms the unique identifier for the future.
+       * Name is the name of the Azure resource.
+       * Together with the service name, this forms the unique identifier for the future.
        */
       name: string;
       /**
@@ -2007,7 +2482,8 @@ export interface IAzureMachine {
        */
       resourceGroup?: string;
       /**
-       * ServiceName is the name of the Azure service. Together with the name of the resource, this forms the unique identifier for the future.
+       * ServiceName is the name of the Azure service.
+       * Together with the name of the resource, this forms the unique identifier for the future.
        */
       serviceName: string;
       /**
@@ -2040,11 +2516,18 @@ export const AzureMachinePool = 'AzureMachinePool';
  */
 export interface IAzureMachinePool {
   /**
-   * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+   * APIVersion defines the versioned schema of this representation of an object.
+   * Servers should convert recognized schemas to the latest internal value, and
+   * may reject unrecognized values.
+   * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
    */
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   /**
-   * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+   * Kind is a string value representing the REST resource this object represents.
+   * Servers may infer this from the endpoint the client submits requests to.
+   * Cannot be updated.
+   * In CamelCase.
+   * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
    */
   kind: typeof AzureMachinePool;
   metadata: metav1.IObjectMeta;
@@ -2053,13 +2536,19 @@ export interface IAzureMachinePool {
    */
   spec?: {
     /**
-     * AdditionalTags is an optional set of tags to add to an instance, in addition to the ones added by default by the Azure provider. If both the AzureCluster and the AzureMachine specify the same tag name with different values, the AzureMachine's value takes precedence.
+     * AdditionalTags is an optional set of tags to add to an instance, in addition to the ones added by default by the
+     * Azure provider. If both the AzureCluster and the AzureMachine specify the same tag name with different values, the
+     * AzureMachine's value takes precedence.
      */
     additionalTags?: {
       [k: string]: string;
     };
     /**
-     * Identity is the type of identity used for the Virtual Machine Scale Set. The type 'SystemAssigned' is an implicitly created identity. The generated identity will be assigned a Subscription contributor role. The type 'UserAssigned' is a standalone Azure resource provided by the user and assigned to the VM
+     * Identity is the type of identity used for the Virtual Machine Scale Set.
+     * The type 'SystemAssigned' is an implicitly created identity.
+     * The generated identity will be assigned a Subscription contributor role.
+     * The type 'UserAssigned' is a standalone Azure resource provided by the user
+     * and assigned to the VM
      */
     identity?: 'None' | 'SystemAssigned' | 'UserAssigned';
     /**
@@ -2067,19 +2556,21 @@ export interface IAzureMachinePool {
      */
     location: string;
     /**
-     * NodeDrainTimeout is the total amount of time that the controller will spend on draining a node. The default value is 0, meaning that the node can be drained without any time limitations. NOTE: NodeDrainTimeout is different from `kubectl drain --timeout`
-     */
-    nodeDrainTimeout?: string;
-    /**
      * OrchestrationMode specifies the orchestration mode for the Virtual Machine Scale Set
      */
     orchestrationMode?: 'Flexible' | 'Uniform';
+    /**
+     * PlatformFaultDomainCount specifies the number of fault domains that the Virtual Machine Scale Set can use.
+     * The count determines the spreading algorithm of the Azure fault domain.
+     */
+    platformFaultDomainCount?: number;
     /**
      * ProviderID is the identification ID of the Virtual Machine Scale Set
      */
     providerID?: string;
     /**
-     * ProviderIDList are the identification IDs of machine instances provided by the provider. This field must match the provider IDs as seen on the node objects corresponding to a machine pool's machine instances.
+     * ProviderIDList are the identification IDs of machine instances provided by the provider.
+     * This field must match the provider IDs as seen on the node objects corresponding to a machine pool's machine instances.
      */
     providerIDList?: string[];
     /**
@@ -2091,19 +2582,45 @@ export interface IAzureMachinePool {
      */
     strategy?: {
       /**
-       * Rolling update config params. Present only if MachineDeploymentStrategyType = RollingUpdate.
+       * Rolling update config params. Present only if
+       * MachineDeploymentStrategyType = RollingUpdate.
        */
       rollingUpdate?: {
         /**
-         * DeletePolicy defines the policy used by the MachineDeployment to identify nodes to delete when downscaling. Valid values are "Random, "Newest", "Oldest" When no value is supplied, the default is Oldest
+         * DeletePolicy defines the policy used by the MachineDeployment to identify nodes to delete when downscaling.
+         * Valid values are "Random, "Newest", "Oldest"
+         * When no value is supplied, the default is Oldest
          */
         deletePolicy?: 'Random' | 'Newest' | 'Oldest';
         /**
-         * The maximum number of machines that can be scheduled above the desired number of machines. Value can be an absolute number (ex: 5) or a percentage of desired machines (ex: 10%). This can not be 0 if MaxUnavailable is 0. Absolute number is calculated from percentage by rounding up. Defaults to 1. Example: when this is set to 30%, the new MachineSet can be scaled up immediately when the rolling update starts, such that the total number of old and new machines do not exceed 130% of desired machines. Once old machines have been killed, new MachineSet can be scaled up further, ensuring that total number of machines running at any time during the update is at most 130% of desired machines.
+         * The maximum number of machines that can be scheduled above the
+         * desired number of machines.
+         * Value can be an absolute number (ex: 5) or a percentage of
+         * desired machines (ex: 10%).
+         * This can not be 0 if MaxUnavailable is 0.
+         * Absolute number is calculated from percentage by rounding up.
+         * Defaults to 1.
+         * Example: when this is set to 30%, the new MachineSet can be scaled
+         * up immediately when the rolling update starts, such that the total
+         * number of old and new machines do not exceed 130% of desired
+         * machines. Once old machines have been killed, new MachineSet can
+         * be scaled up further, ensuring that total number of machines running
+         * at any time during the update is at most 130% of desired machines.
          */
         maxSurge?: number | string;
         /**
-         * The maximum number of machines that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of desired machines (ex: 10%). Absolute number is calculated from percentage by rounding down. This can not be 0 if MaxSurge is 0. Defaults to 0. Example: when this is set to 30%, the old MachineSet can be scaled down to 70% of desired machines immediately when the rolling update starts. Once new machines are ready, old MachineSet can be scaled down further, followed by scaling up the new MachineSet, ensuring that the total number of machines available at all times during the update is at least 70% of desired machines.
+         * The maximum number of machines that can be unavailable during the update.
+         * Value can be an absolute number (ex: 5) or a percentage of desired
+         * machines (ex: 10%).
+         * Absolute number is calculated from percentage by rounding down.
+         * This can not be 0 if MaxSurge is 0.
+         * Defaults to 0.
+         * Example: when this is set to 30%, the old MachineSet can be scaled
+         * down to 70% of desired machines immediately when the rolling update
+         * starts. Once new machines are ready, old MachineSet can be scaled
+         * down further, followed by scaling up the new MachineSet, ensuring
+         * that the total number of machines available at all times
+         * during the update is at least 70% of desired machines.
          */
         maxUnavailable?: number | string;
       };
@@ -2117,15 +2634,18 @@ export interface IAzureMachinePool {
      */
     systemAssignedIdentityRole?: {
       /**
-       * DefinitionID is the ID of the role definition to create for a system assigned identity. It can be an Azure built-in role or a custom role. Refer to built-in roles: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
+       * DefinitionID is the ID of the role definition to create for a system assigned identity. It can be an Azure built-in role or a custom role.
+       * Refer to built-in roles: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
        */
       definitionID?: string;
       /**
-       * Name is the name of the role assignment to create for a system assigned identity. It can be any valid UUID. If not specified, a random UUID will be generated.
+       * Name is the name of the role assignment to create for a system assigned identity. It can be any valid UUID.
+       * If not specified, a random UUID will be generated.
        */
       name?: string;
       /**
-       * Scope is the scope that the role assignment or definition applies to. The scope can be any REST resource instance. If not specified, the scope will be the subscription.
+       * Scope is the scope that the role assignment or definition applies to. The scope can be any REST resource instance.
+       * If not specified, the scope will be the subscription.
        */
       scope?: string;
     };
@@ -2150,7 +2670,8 @@ export interface IAzureMachinePool {
          */
         diskSizeGB: number;
         /**
-         * Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM. The value must be between 0 and 63.
+         * Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM.
+         * The value must be between 0 and 63.
          */
         lun?: number;
         /**
@@ -2171,7 +2692,9 @@ export interface IAzureMachinePool {
            */
           securityProfile?: {
             /**
-             * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+             * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the
+             * managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and
+             * VMGuest blob.
              */
             diskEncryptionSet?: {
               /**
@@ -2180,7 +2703,13 @@ export interface IAzureMachinePool {
               id?: string;
             };
             /**
-             * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+             * SecurityEncryptionType specifies the encryption type of the managed disk.
+             * It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState
+             * blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only.
+             * When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled.
+             * When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and
+             * VirtualizedTrustedPlatformModule should be set to Enabled.
+             * It can be set only for Confidential VMs.
              */
             securityEncryptionType?:
               | 'VMGuestStateOnly'
@@ -2189,20 +2718,26 @@ export interface IAzureMachinePool {
           storageAccountType?: string;
         };
         /**
-         * NameSuffix is the suffix to be appended to the machine name to generate the disk name. Each disk name will be in format <machineName>_<nameSuffix>.
+         * NameSuffix is the suffix to be appended to the machine name to generate the disk name.
+         * Each disk name will be in format <machineName>_<nameSuffix>.
          */
         nameSuffix: string;
       }[];
       /**
-       * Diagnostics specifies the diagnostics settings for a virtual machine. If not specified then Boot diagnostics (Managed) will be enabled.
+       * Diagnostics specifies the diagnostics settings for a virtual machine.
+       * If not specified then Boot diagnostics (Managed) will be enabled.
        */
       diagnostics?: {
         /**
-         * Boot configures the boot diagnostics settings for the virtual machine. This allows to configure capturing serial output from the virtual machine on boot. This is useful for debugging software based launch issues. If not specified then Boot diagnostics (Managed) will be enabled.
+         * Boot configures the boot diagnostics settings for the virtual machine.
+         * This allows to configure capturing serial output from the virtual machine on boot.
+         * This is useful for debugging software based launch issues.
+         * If not specified then Boot diagnostics (Managed) will be enabled.
          */
         boot?: {
           /**
-           * StorageAccountType determines if the storage account for storing the diagnostics data should be disabled (Disabled), provisioned by Azure (Managed) or by the user (UserManaged).
+           * StorageAccountType determines if the storage account for storing the diagnostics data
+           * should be disabled (Disabled), provisioned by Azure (Managed) or by the user (UserManaged).
            */
           storageAccountType: 'Managed' | 'UserManaged' | 'Disabled';
           /**
@@ -2210,14 +2745,21 @@ export interface IAzureMachinePool {
            */
           userManaged?: {
             /**
-             * StorageAccountURI is the URI of the user-managed storage account. The URI typically will be `https://<mystorageaccountname>.blob.core.windows.net/` but may differ if you are using Azure DNS zone endpoints. You can find the correct endpoint by looking for the Blob Primary Endpoint in the endpoints tab in the Azure console or with the CLI by issuing `az storage account list --query='[].{name: name, "resource group": resourceGroup, "blob endpoint": primaryEndpoints.blob}'`.
+             * StorageAccountURI is the URI of the user-managed storage account.
+             * The URI typically will be `https://<mystorageaccountname>.blob.core.windows.net/`
+             * but may differ if you are using Azure DNS zone endpoints.
+             * You can find the correct endpoint by looking for the Blob Primary Endpoint in the
+             * endpoints tab in the Azure console or with the CLI by issuing
+             * `az storage account list --query='[].{name: name, "resource group": resourceGroup, "blob endpoint": primaryEndpoints.blob}'`.
              */
             storageAccountURI: string;
           };
         };
       };
       /**
-       * Image is used to provide details of an image to use during VM creation. If image details are omitted the image will default the Azure Marketplace "capi" offer, which is based on Ubuntu.
+       * Image is used to provide details of an image to use during VM creation.
+       * If image details are omitted the image will default the Azure Marketplace "capi" offer,
+       * which is based on Ubuntu.
        */
       image?: {
         /**
@@ -2237,7 +2779,8 @@ export interface IAzureMachinePool {
            */
           plan?: {
             /**
-             * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer
+             * Offer specifies the name of a group of related images created by the publisher.
+             * For example, UbuntuServer, WindowsServer
              */
             offer: string;
             /**
@@ -2245,7 +2788,8 @@ export interface IAzureMachinePool {
              */
             publisher: string;
             /**
-             * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter
+             * SKU specifies an instance of an offer, such as a major release of a distribution.
+             * For example, 18.04-LTS, 2019-Datacenter
              */
             sku: string;
           };
@@ -2258,7 +2802,11 @@ export interface IAzureMachinePool {
            */
           subscriptionID?: string;
           /**
-           * Version specifies the version of the marketplace image. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+           * Version specifies the version of the marketplace image. The allowed formats
+           * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+           * Specify 'latest' to use the latest version of an image available at deploy time.
+           * Even if you use 'latest', the VM image will not automatically update after deploy
+           * time even if a new version becomes available.
            */
           version: string;
         };
@@ -2271,7 +2819,8 @@ export interface IAzureMachinePool {
          */
         marketplace?: {
           /**
-           * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer
+           * Offer specifies the name of a group of related images created by the publisher.
+           * For example, UbuntuServer, WindowsServer
            */
           offer: string;
           /**
@@ -2279,20 +2828,27 @@ export interface IAzureMachinePool {
            */
           publisher: string;
           /**
-           * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter
+           * SKU specifies an instance of an offer, such as a major release of a distribution.
+           * For example, 18.04-LTS, 2019-Datacenter
            */
           sku: string;
           /**
-           * ThirdPartyImage indicates the image is published by a third party publisher and a Plan will be generated for it.
+           * ThirdPartyImage indicates the image is published by a third party publisher and a Plan
+           * will be generated for it.
            */
           thirdPartyImage?: boolean;
           /**
-           * Version specifies the version of an image sku. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+           * Version specifies the version of an image sku. The allowed formats
+           * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+           * Specify 'latest' to use the latest version of an image available at deploy time.
+           * Even if you use 'latest', the VM image will not automatically update after deploy
+           * time even if a new version becomes available.
            */
           version: string;
         };
         /**
-         * SharedGallery specifies an image to use from an Azure Shared Image Gallery Deprecated: use ComputeGallery instead.
+         * SharedGallery specifies an image to use from an Azure Shared Image Gallery
+         * Deprecated: use ComputeGallery instead.
          */
         sharedGallery?: {
           /**
@@ -2304,11 +2860,16 @@ export interface IAzureMachinePool {
            */
           name: string;
           /**
-           * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+           * Offer specifies the name of a group of related images created by the publisher.
+           * For example, UbuntuServer, WindowsServer
+           * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+           * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
            */
           offer?: string;
           /**
-           * Publisher is the name of the organization that created the image. This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+           * Publisher is the name of the organization that created the image.
+           * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+           * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
            */
           publisher?: string;
           /**
@@ -2316,7 +2877,10 @@ export interface IAzureMachinePool {
            */
           resourceGroup: string;
           /**
-           * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+           * SKU specifies an instance of an offer, such as a major release of a distribution.
+           * For example, 18.04-LTS, 2019-Datacenter
+           * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+           * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
            */
           sku?: string;
           /**
@@ -2324,21 +2888,31 @@ export interface IAzureMachinePool {
            */
           subscriptionID: string;
           /**
-           * Version specifies the version of the marketplace image. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+           * Version specifies the version of the marketplace image. The allowed formats
+           * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+           * Specify 'latest' to use the latest version of an image available at deploy time.
+           * Even if you use 'latest', the VM image will not automatically update after deploy
+           * time even if a new version becomes available.
            */
           version: string;
         };
       };
       /**
-       * NetworkInterfaces specifies a list of network interface configurations. If left unspecified, the VM will get a single network interface with a single IPConfig in the subnet specified in the cluster's node subnet field. The primary interface will be the first networkInterface specified (index 0) in the list.
+       * NetworkInterfaces specifies a list of network interface configurations.
+       * If left unspecified, the VM will get a single network interface with a
+       * single IPConfig in the subnet specified in the cluster's node subnet field.
+       * The primary interface will be the first networkInterface specified (index 0) in the list.
        */
       networkInterfaces?: {
         /**
-         * AcceleratedNetworking enables or disables Azure accelerated networking. If omitted, it will be set based on whether the requested VMSize supports accelerated networking. If AcceleratedNetworking is set to true with a VMSize that does not support it, Azure will return an error.
+         * AcceleratedNetworking enables or disables Azure accelerated networking. If omitted, it will be set based on
+         * whether the requested VMSize supports accelerated networking.
+         * If AcceleratedNetworking is set to true with a VMSize that does not support it, Azure will return an error.
          */
         acceleratedNetworking?: boolean;
         /**
-         * PrivateIPConfigs specifies the number of private IP addresses to attach to the interface. Defaults to 1 if not specified.
+         * PrivateIPConfigs specifies the number of private IP addresses to attach to the interface.
+         * Defaults to 1 if not specified.
          */
         privateIPConfigs?: number;
         /**
@@ -2359,12 +2933,18 @@ export interface IAzureMachinePool {
          */
         diffDiskSettings?: {
           /**
-           * Option enables ephemeral OS when set to "Local" See https://learn.microsoft.com/azure/virtual-machines/ephemeral-os-disks for full details
+           * Option enables ephemeral OS when set to "Local"
+           * See https://learn.microsoft.com/azure/virtual-machines/ephemeral-os-disks for full details
            */
           option: 'Local';
+          /**
+           * Placement specifies the ephemeral disk placement for operating system disk. If placement is specified, Option must be set to "Local".
+           */
+          placement?: 'CacheDisk' | 'NvmeDisk' | 'ResourceDisk';
         };
         /**
-         * DiskSizeGB is the size in GB to assign to the OS disk. Will have a default of 30GB if not provided
+         * DiskSizeGB is the size in GB to assign to the OS disk.
+         * Will have a default of 30GB if not provided
          */
         diskSizeGB?: number;
         /**
@@ -2385,7 +2965,9 @@ export interface IAzureMachinePool {
            */
           securityProfile?: {
             /**
-             * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.
+             * DiskEncryptionSet specifies the customer-managed disk encryption set resource id for the
+             * managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and
+             * VMGuest blob.
              */
             diskEncryptionSet?: {
               /**
@@ -2394,7 +2976,13 @@ export interface IAzureMachinePool {
               id?: string;
             };
             /**
-             * SecurityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled. When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and VirtualizedTrustedPlatformModule should be set to Enabled. It can be set only for Confidential VMs.
+             * SecurityEncryptionType specifies the encryption type of the managed disk.
+             * It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState
+             * blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only.
+             * When set to VMGuestStateOnly, VirtualizedTrustedPlatformModule should be set to Enabled.
+             * When set to DiskWithVMGuestState, EncryptionAtHost should be disabled, SecureBoot and
+             * VirtualizedTrustedPlatformModule should be set to Enabled.
+             * It can be set only for Confidential VMs.
              */
             securityEncryptionType?:
               | 'VMGuestStateOnly'
@@ -2409,11 +2997,15 @@ export interface IAzureMachinePool {
        */
       securityProfile?: {
         /**
-         * This field indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. This should be disabled when SecurityEncryptionType is set to DiskWithVMGuestState. Default is disabled.
+         * This field indicates whether Host Encryption should be enabled
+         * or disabled for a virtual machine or virtual machine scale set.
+         * This should be disabled when SecurityEncryptionType is set to DiskWithVMGuestState.
+         * Default is disabled.
          */
         encryptionAtHost?: boolean;
         /**
-         * SecurityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UefiSettings. The default behavior is: UefiSettings will not be enabled unless this property is set.
+         * SecurityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to
+         * enable UefiSettings. The default behavior is: UefiSettings will not be enabled unless this property is set.
          */
         securityType?: 'ConfidentialVM' | 'TrustedLaunch';
         /**
@@ -2421,11 +3013,17 @@ export interface IAzureMachinePool {
          */
         uefiSettings?: {
           /**
-           * SecureBootEnabled specifies whether secure boot should be enabled on the virtual machine. Secure Boot verifies the digital signature of all boot components and halts the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+           * SecureBootEnabled specifies whether secure boot should be enabled on the virtual machine.
+           * Secure Boot verifies the digital signature of all boot components and halts the boot process if signature verification fails.
+           * If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
            */
           secureBootEnabled?: boolean;
           /**
-           * VTpmEnabled specifies whether vTPM should be enabled on the virtual machine. When true it enables the virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to Enabled if SecurityEncryptionType is defined. If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
+           * VTpmEnabled specifies whether vTPM should be enabled on the virtual machine.
+           * When true it enables the virtualized trusted platform module measurements to create a known good boot integrity policy baseline.
+           * The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed.
+           * This is required to be set to Enabled if SecurityEncryptionType is defined.
+           * If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.
            */
           vTpmEnabled?: boolean;
         };
@@ -2444,7 +3042,8 @@ export interface IAzureMachinePool {
         maxPrice?: number | string;
       };
       /**
-       * SSHPublicKey is the SSH public key string, base64-encoded to add to a Virtual Machine. Linux only. Refer to documentation on how to set up SSH access on Windows instances.
+       * SSHPublicKey is the SSH public key string, base64-encoded to add to a Virtual Machine. Linux only.
+       * Refer to documentation on how to set up SSH access on Windows instances.
        */
       sshPublicKey?: string;
       /**
@@ -2452,7 +3051,8 @@ export interface IAzureMachinePool {
        */
       subnetName?: string;
       /**
-       * TerminateNotificationTimeout enables or disables VMSS scheduled events termination notification with specified timeout allowed values are between 5 and 15 (mins)
+       * TerminateNotificationTimeout enables or disables VMSS scheduled events termination notification with specified timeout
+       * allowed values are between 5 and 15 (mins)
        */
       terminateNotificationTimeout?: number;
       /**
@@ -2485,19 +3085,28 @@ export interface IAzureMachinePool {
         version: string;
       }[];
       /**
-       * VMSize is the size of the Virtual Machine to build. See https://learn.microsoft.com/rest/api/compute/virtualmachines/createorupdate#virtualmachinesizetypes
+       * VMSize is the size of the Virtual Machine to build.
+       * See https://learn.microsoft.com/rest/api/compute/virtualmachines/createorupdate#virtualmachinesizetypes
        */
       vmSize: string;
     };
     /**
-     * UserAssignedIdentities is a list of standalone Azure identities provided by the user The lifecycle of a user-assigned identity is managed separately from the lifecycle of the AzureMachinePool. See https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
+     * UserAssignedIdentities is a list of standalone Azure identities provided by the user
+     * The lifecycle of a user-assigned identity is managed separately from the lifecycle of
+     * the AzureMachinePool.
+     * See https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-cli
      */
     userAssignedIdentities?: {
       /**
-       * ProviderID is the identification ID of the user-assigned Identity, the format of an identity is: 'azure:///subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'
+       * ProviderID is the identification ID of the user-assigned Identity, the format of an identity is:
+       * 'azure:///subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'
        */
       providerID: string;
     }[];
+    /**
+     * ZoneBalane dictates whether to force strictly even Virtual Machine distribution cross x-zones in case there is zone outage.
+     */
+    zoneBalance?: boolean;
   };
   /**
    * AzureMachinePoolStatus defines the observed state of AzureMachinePool.
@@ -2508,19 +3117,26 @@ export interface IAzureMachinePool {
      */
     conditions?: {
       /**
-       * Last time the condition transitioned from one status to another. This should be when the underlying condition changed. If that is not known, then using the time when the API field changed is acceptable.
+       * Last time the condition transitioned from one status to another.
+       * This should be when the underlying condition changed. If that is not known, then using the time when
+       * the API field changed is acceptable.
        */
       lastTransitionTime: string;
       /**
-       * A human readable message indicating details about the transition. This field may be empty.
+       * A human readable message indicating details about the transition.
+       * This field may be empty.
        */
       message?: string;
       /**
-       * The reason for the condition's last transition in CamelCase. The specific API may choose whether or not this field is considered a guaranteed API. This field may not be empty.
+       * The reason for the condition's last transition in CamelCase.
+       * The specific API may choose whether or not this field is considered a guaranteed API.
+       * This field may not be empty.
        */
       reason?: string;
       /**
-       * Severity provides an explicit classification of Reason code, so the users or machines can immediately understand the current situation and act accordingly. The Severity field MUST be set only when Status=False.
+       * Severity provides an explicit classification of Reason code, so the users or machines can immediately
+       * understand the current situation and act accordingly.
+       * The Severity field MUST be set only when Status=False.
        */
       severity?: string;
       /**
@@ -2528,24 +3144,57 @@ export interface IAzureMachinePool {
        */
       status: string;
       /**
-       * Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.
+       * Type of condition in CamelCase or in foo.example.com/CamelCase.
+       * Many .condition.type values are consistent across resources like Available, but because arbitrary conditions
+       * can be useful (see .node.status.conditions), the ability to deconflict is important.
        */
       type: string;
     }[];
     /**
-     * FailureMessage will be set in the event that there is a terminal problem reconciling the MachinePool and will contain a more verbose string suitable for logging and human consumption.
-     *  This field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the MachinePool's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.
-     *  Any transient errors that occur during the reconciliation of MachinePools can be added as events to the MachinePool object and/or logged in the controller's output.
+     * FailureMessage will be set in the event that there is a terminal problem
+     * reconciling the MachinePool and will contain a more verbose string suitable
+     * for logging and human consumption.
+     *
+     *
+     * This field should not be set for transitive errors that a controller
+     * faces that are expected to be fixed automatically over
+     * time (like service outages), but instead indicate that something is
+     * fundamentally wrong with the MachinePool's spec or the configuration of
+     * the controller, and that manual intervention is required. Examples
+     * of terminal errors would be invalid combinations of settings in the
+     * spec, values that are unsupported by the controller, or the
+     * responsible controller itself being critically misconfigured.
+     *
+     *
+     * Any transient errors that occur during the reconciliation of MachinePools
+     * can be added as events to the MachinePool object and/or logged in the
+     * controller's output.
      */
     failureMessage?: string;
     /**
-     * FailureReason will be set in the event that there is a terminal problem reconciling the MachinePool and will contain a succinct value suitable for machine interpretation.
-     *  This field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the MachinePool's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.
-     *  Any transient errors that occur during the reconciliation of MachinePools can be added as events to the MachinePool object and/or logged in the controller's output.
+     * FailureReason will be set in the event that there is a terminal problem
+     * reconciling the MachinePool and will contain a succinct value suitable
+     * for machine interpretation.
+     *
+     *
+     * This field should not be set for transitive errors that a controller
+     * faces that are expected to be fixed automatically over
+     * time (like service outages), but instead indicate that something is
+     * fundamentally wrong with the MachinePool's spec or the configuration of
+     * the controller, and that manual intervention is required. Examples
+     * of terminal errors would be invalid combinations of settings in the
+     * spec, values that are unsupported by the controller, or the
+     * responsible controller itself being critically misconfigured.
+     *
+     *
+     * Any transient errors that occur during the reconciliation of MachinePools
+     * can be added as events to the MachinePool object and/or logged in the
+     * controller's output.
      */
     failureReason?: string;
     /**
-     * Image is the current image used in the AzureMachinePool. When the spec image is nil, this image is populated with the details of the defaulted Azure Marketplace "capi" offer.
+     * Image is the current image used in the AzureMachinePool. When the spec image is nil, this image is populated
+     * with the details of the defaulted Azure Marketplace "capi" offer.
      */
     image?: {
       /**
@@ -2565,7 +3214,8 @@ export interface IAzureMachinePool {
          */
         plan?: {
           /**
-           * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer
+           * Offer specifies the name of a group of related images created by the publisher.
+           * For example, UbuntuServer, WindowsServer
            */
           offer: string;
           /**
@@ -2573,7 +3223,8 @@ export interface IAzureMachinePool {
            */
           publisher: string;
           /**
-           * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter
+           * SKU specifies an instance of an offer, such as a major release of a distribution.
+           * For example, 18.04-LTS, 2019-Datacenter
            */
           sku: string;
         };
@@ -2586,7 +3237,11 @@ export interface IAzureMachinePool {
          */
         subscriptionID?: string;
         /**
-         * Version specifies the version of the marketplace image. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+         * Version specifies the version of the marketplace image. The allowed formats
+         * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+         * Specify 'latest' to use the latest version of an image available at deploy time.
+         * Even if you use 'latest', the VM image will not automatically update after deploy
+         * time even if a new version becomes available.
          */
         version: string;
       };
@@ -2599,7 +3254,8 @@ export interface IAzureMachinePool {
        */
       marketplace?: {
         /**
-         * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer
+         * Offer specifies the name of a group of related images created by the publisher.
+         * For example, UbuntuServer, WindowsServer
          */
         offer: string;
         /**
@@ -2607,20 +3263,27 @@ export interface IAzureMachinePool {
          */
         publisher: string;
         /**
-         * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter
+         * SKU specifies an instance of an offer, such as a major release of a distribution.
+         * For example, 18.04-LTS, 2019-Datacenter
          */
         sku: string;
         /**
-         * ThirdPartyImage indicates the image is published by a third party publisher and a Plan will be generated for it.
+         * ThirdPartyImage indicates the image is published by a third party publisher and a Plan
+         * will be generated for it.
          */
         thirdPartyImage?: boolean;
         /**
-         * Version specifies the version of an image sku. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+         * Version specifies the version of an image sku. The allowed formats
+         * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+         * Specify 'latest' to use the latest version of an image available at deploy time.
+         * Even if you use 'latest', the VM image will not automatically update after deploy
+         * time even if a new version becomes available.
          */
         version: string;
       };
       /**
-       * SharedGallery specifies an image to use from an Azure Shared Image Gallery Deprecated: use ComputeGallery instead.
+       * SharedGallery specifies an image to use from an Azure Shared Image Gallery
+       * Deprecated: use ComputeGallery instead.
        */
       sharedGallery?: {
         /**
@@ -2632,11 +3295,16 @@ export interface IAzureMachinePool {
          */
         name: string;
         /**
-         * Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+         * Offer specifies the name of a group of related images created by the publisher.
+         * For example, UbuntuServer, WindowsServer
+         * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+         * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
          */
         offer?: string;
         /**
-         * Publisher is the name of the organization that created the image. This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+         * Publisher is the name of the organization that created the image.
+         * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+         * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
          */
         publisher?: string;
         /**
@@ -2644,7 +3312,10 @@ export interface IAzureMachinePool {
          */
         resourceGroup: string;
         /**
-         * SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource. This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
+         * SKU specifies an instance of an offer, such as a major release of a distribution.
+         * For example, 18.04-LTS, 2019-Datacenter
+         * This value will be used to add a `Plan` in the API request when creating the VM/VMSS resource.
+         * This is needed when the source image from which this SIG image was built requires the `Plan` to be used.
          */
         sku?: string;
         /**
@@ -2652,11 +3323,19 @@ export interface IAzureMachinePool {
          */
         subscriptionID: string;
         /**
-         * Version specifies the version of the marketplace image. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.
+         * Version specifies the version of the marketplace image. The allowed formats
+         * are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+         * Specify 'latest' to use the latest version of an image available at deploy time.
+         * Even if you use 'latest', the VM image will not automatically update after deploy
+         * time even if a new version becomes available.
          */
         version: string;
       };
     };
+    /**
+     * InfrastructureMachineKind is the kind of the infrastructure resources behind MachinePool Machines.
+     */
+    infrastructureMachineKind?: string;
     /**
      * Instances is the VM instance status for each VM in the VMSS
      */
@@ -2670,7 +3349,9 @@ export interface IAzureMachinePool {
        */
       instanceName?: string;
       /**
-       * LatestModelApplied indicates the instance is running the most up-to-date VMSS model. A VMSS model describes the image version the VM is running. If the instance is not running the latest model, it means the instance may not be running the version of Kubernetes the Machine Pool has specified and needs to be updated.
+       * LatestModelApplied indicates the instance is running the most up-to-date VMSS model. A VMSS model describes
+       * the image version the VM is running. If the instance is not running the latest model, it means the instance
+       * may not be running the version of Kubernetes the Machine Pool has specified and needs to be updated.
        */
       latestModelApplied: boolean;
       /**
@@ -2687,7 +3368,8 @@ export interface IAzureMachinePool {
       version?: string;
     }[];
     /**
-     * LongRunningOperationStates saves the state for Azure long-running operations so they can be continued on the next reconciliation loop.
+     * LongRunningOperationStates saves the state for Azure long-running operations so they can be continued on the
+     * next reconciliation loop.
      */
     longRunningOperationStates?: {
       /**
@@ -2695,7 +3377,8 @@ export interface IAzureMachinePool {
        */
       data: string;
       /**
-       * Name is the name of the Azure resource. Together with the service name, this forms the unique identifier for the future.
+       * Name is the name of the Azure resource.
+       * Together with the service name, this forms the unique identifier for the future.
        */
       name: string;
       /**
@@ -2703,7 +3386,8 @@ export interface IAzureMachinePool {
        */
       resourceGroup?: string;
       /**
-       * ServiceName is the name of the Azure service. Together with the name of the resource, this forms the unique identifier for the future.
+       * ServiceName is the name of the Azure service.
+       * Together with the name of the resource, this forms the unique identifier for the future.
        */
       serviceName: string;
       /**

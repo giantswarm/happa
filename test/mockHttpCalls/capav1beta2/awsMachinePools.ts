@@ -1,7 +1,7 @@
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 
-export const randomClusterCAPA1AWSMachinePool: capav1beta1.IAWSMachinePool = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+export const randomClusterCAPA1AWSMachinePool: capav1beta2.IAWSMachinePool = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2',
   kind: 'AWSMachinePool',
   metadata: {
     annotations: {
@@ -109,9 +109,9 @@ export const randomClusterCAPA1AWSMachinePool: capav1beta1.IAWSMachinePool = {
   },
 };
 
-export const randomClusterCAPA1AWSMachinePoolSpot: capav1beta1.IAWSMachinePool =
+export const randomClusterCAPA1AWSMachinePoolSpot: capav1beta2.IAWSMachinePool =
   {
-    apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+    apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2',
     kind: 'AWSMachinePool',
     metadata: {
       annotations: {

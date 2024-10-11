@@ -56,53 +56,53 @@ export const nodePoolsURL = 'https://docs.giantswarm.io/advanced/node-pools/';
 
 // Organization concept docs.
 export const organizationsExplainedURL =
-  'https://docs.giantswarm.io/platform-overview/organizations/';
+  'https://docs.giantswarm.io/vintage/platform-overview/multi-tenancy/';
 
 export const organizationsNamingConventionsURL =
-  'https://docs.giantswarm.io/platform-overview/organizations/#naming-conventions';
+  'https://docs.giantswarm.io/vintage/platform-overview/multi-tenancy/#naming-conventions';
 
 export const organizationAccessControlWebUI =
-  'https://docs.giantswarm.io/platform-overview/web-interface/organizations/access-control/';
+  'https://docs.giantswarm.io/vintage/platform-overview/web-interface/organizations/access-control/';
 
 export const gsctlCreateKubeconfigURL =
-  'https://docs.giantswarm.io/use-the-api/gsctl/create-kubeconfig/';
+  'https://docs.giantswarm.io/vintage/use-the-api/gsctl/create-kubeconfig/';
 
 export const kubectlGSInstallationURL =
-  'https://docs.giantswarm.io/use-the-api/kubectl-gs/installation/';
+  'https://docs.giantswarm.io/vintage/use-the-api/kubectl-gs/installation/';
 
 export const kubectlGSGetOrganizationsURL =
-  'https://docs.giantswarm.io/use-the-api/kubectl-gs/get-organizations/';
+  'https://docs.giantswarm.io/vintage/use-the-api/kubectl-gs/get-organizations/';
 
 export const kubectlGSLoginURL =
-  'https://docs.giantswarm.io/use-the-api/kubectl-gs/login/';
+  'https://docs.giantswarm.io/vintage/use-the-api/kubectl-gs/login/';
 
 export const kubectlGSGetClustersURL =
-  'https://docs.giantswarm.io/use-the-api/kubectl-gs/get-clusters/';
+  'https://docs.giantswarm.io/vintage/use-the-api/kubectl-gs/get-clusters/';
 
 export const kubectlGSUpdateClusterURL =
-  'https://docs.giantswarm.io/use-the-api/kubectl-gs/update-cluster/';
+  'https://docs.giantswarm.io/vintage/use-the-api/kubectl-gs/update-cluster/';
 
 export const kubectlGSGetCatalogsURL =
-  'https://docs.giantswarm.io/use-the-api/kubectl-gs/get-catalogs/';
+  'https://docs.giantswarm.io/vintage/use-the-api/kubectl-gs/get-catalogs/';
 
 export const kubectlGSTemplateClusterURL =
-  'https://docs.giantswarm.io/use-the-api/kubectl-gs/template-cluster/';
+  'https://docs.giantswarm.io/vintage/use-the-api/kubectl-gs/template-cluster/';
 
 export const kubectlGSTemplateAppURL =
-  'https://docs.giantswarm.io/use-the-api/kubectl-gs/template-app/';
+  'https://docs.giantswarm.io/vintage/use-the-api/kubectl-gs/template-app/';
 
 export const kubectlGSGetNodePoolsURL =
-  'https://docs.giantswarm.io/use-the-api/kubectl-gs/get-nodepools/';
+  'https://docs.giantswarm.io/vintage/use-the-api/kubectl-gs/get-nodepools/';
 
 export const kubectlGSTemplateNodePoolURL =
-  'https://docs.giantswarm.io/use-the-api/kubectl-gs/template-nodepool/';
+  'https://docs.giantswarm.io/vintage/use-the-api/kubectl-gs/template-nodepool/';
 
 export const kubectlGSUpdateAppURL =
-  'https://docs.giantswarm.io/use-the-api/kubectl-gs/update-app/';
+  'https://docs.giantswarm.io/vintage/use-the-api/kubectl-gs/update-app/';
 
 // Management API introduction page
 export const managementAPIIntroduction =
-  'https://docs.giantswarm.io/use-the-api/management-api/';
+  'https://docs.giantswarm.io/vintage/use-the-api/management-api/';
 
 // How to create a RoleBinding
 export const kubectlCreateRoleBindingURL =
@@ -114,11 +114,11 @@ export const kubectlCreateClusterRoleBindingURL =
 
 // How to manage workload cluster labels via the Management API
 export const labellingWorkloadClustersURL =
-  'https://docs.giantswarm.io/advanced/labelling-workload-clusters/';
+  'https://docs.giantswarm.io/vintage/advanced/labelling-workload-clusters/';
 
 // GitOps restrictions in the web UI
 export const gitopsRestrictions =
-  'https://docs.giantswarm.io/advanced/gitops/manage-workload-clusters/#web-ui-restrictions';
+  'https://docs.giantswarm.io/vintage/advanced/gitops/manage-workload-clusters/#web-ui-restrictions';
 
 // CRD names we expect to find a docs schema page for,
 // grouped by publisher domain.
@@ -143,7 +143,8 @@ export const crds = {
 
 // CRD docs URL function
 export function crdSchemaURL(fullName: string) {
-  const baseURL = 'https://docs.giantswarm.io/use-the-api/management-api/crd/';
+  const baseURL =
+    'https://docs.giantswarm.io/vintage/use-the-api/management-api/crd/';
 
   return `${baseURL}${fullName}/`;
 }

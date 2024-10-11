@@ -1,7 +1,6 @@
 import { GenericResponse } from 'model/clients/GenericResponse';
 import { Constants, ProviderFlavors, Providers } from 'model/constants';
 import * as applicationv1alpha1 from 'model/services/mapi/applicationv1alpha1';
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
 import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
@@ -200,7 +199,7 @@ export async function fetchNodePoolListForCluster(
 
       break;
 
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta2.AWSCluster && apiGroup === capav1beta2.ApiGroup:
     case kind === capav1beta2.AWSManagedCluster &&
       apiGroup === capav1beta2.ApiGroup:
     case kind === capzv1beta1.AzureCluster:
@@ -290,7 +289,7 @@ export function fetchNodePoolListForClusterKey(
         namespace,
       });
 
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
+    case kind === capav1beta2.AWSCluster && apiGroup === capav1beta2.ApiGroup:
     case kind === capav1beta2.AWSManagedCluster &&
       apiGroup === capav1beta2.ApiGroup:
     case kind === capzv1beta1.AzureCluster:
@@ -335,8 +334,8 @@ export async function fetchProviderNodePoolForNodePool(
   const kind = infrastructureRef.kind;
 
   switch (true) {
-    case kind === capav1beta1.AWSMachinePool:
-      return capav1beta1.getAWSMachinePool(
+    case kind === capav1beta2.AWSMachinePool:
+      return capav1beta2.getAWSMachinePool(
         httpClientFactory(),
         auth,
         nodePool.metadata.namespace!,
@@ -643,9 +642,9 @@ export async function fetchControlPlaneNodesForCluster(
   const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup: {
+    case kind === capav1beta2.AWSCluster && apiGroup === capav1beta2.ApiGroup: {
       const [capaCP, machineCP] = await Promise.allSettled([
-        capav1beta1.getAWSMachineTemplateList(httpClientFactory(), auth, {
+        capav1beta2.getAWSMachineTemplateList(httpClientFactory(), auth, {
           labelSelector: {
             matchingLabels: {
               [capiv1beta1.labelClusterName]: cluster.metadata.name,
@@ -902,8 +901,8 @@ export function fetchControlPlaneNodesForClusterKey(
   const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
-      return capav1beta1.getAWSMachineTemplateListKey({
+    case kind === capav1beta2.AWSCluster && apiGroup === capav1beta2.ApiGroup:
+      return capav1beta2.getAWSMachineTemplateListKey({
         labelSelector: {
           matchingLabels: {
             [capiv1beta1.labelClusterName]: cluster.metadata.name,
@@ -988,8 +987,8 @@ export async function fetchProviderClusterForCluster(
   const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
-      return capav1beta1.getAWSCluster(
+    case kind === capav1beta2.AWSCluster && apiGroup === capav1beta2.ApiGroup:
+      return capav1beta2.getAWSCluster(
         httpClientFactory(),
         auth,
         cluster.metadata.namespace!,
@@ -1043,8 +1042,8 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
   const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
-      return capav1beta1.getAWSClusterKey(
+    case kind === capav1beta2.AWSCluster && apiGroup === capav1beta2.ApiGroup:
+      return capav1beta2.getAWSClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
       );
@@ -1186,7 +1185,7 @@ export function getProviderNodePoolMachineTypes(
   providerNodePool: ProviderNodePool
 ): NodePoolMachineTypes | undefined {
   switch (providerNodePool?.kind) {
-    case capav1beta1.AWSMachinePool:
+    case capav1beta2.AWSMachinePool:
       return {
         primary: providerNodePool.spec?.awsLaunchTemplate.instanceType ?? '',
       };
@@ -1250,7 +1249,7 @@ export function getProviderNodePoolSpotInstances(
   providerNodePool: ProviderNodePool
 ): NodePoolSpotInstances | undefined {
   switch (providerNodePool?.kind) {
-    case capav1beta1.AWSMachinePool: {
+    case capav1beta2.AWSMachinePool: {
       const onDemandBaseCapacity =
         providerNodePool.spec?.mixedInstancesPolicy?.instancesDistribution
           ?.onDemandBaseCapacity ?? 0;
@@ -1375,11 +1374,11 @@ export function getNodePoolScaling(
   switch (true) {
     // CAPA
     case kind === capiv1beta1.MachinePool &&
-      providerNodePoolKind === capav1beta1.AWSMachinePool: {
+      providerNodePoolKind === capav1beta2.AWSMachinePool: {
       status.min =
-        (providerNodePool as capav1beta1.IAWSMachinePool).spec?.minSize ?? -1;
+        (providerNodePool as capav1beta2.IAWSMachinePool).spec?.minSize ?? -1;
       status.max =
-        (providerNodePool as capav1beta1.IAWSMachinePool).spec?.maxSize ?? -1;
+        (providerNodePool as capav1beta2.IAWSMachinePool).spec?.maxSize ?? -1;
 
       return status;
     }
@@ -1440,9 +1439,9 @@ export function getNodePoolAvailabilityZones(
   switch (true) {
     // CAPA
     case kind === capiv1beta1.MachinePool &&
-      providerNodePoolKind === capav1beta1.AWSMachinePool:
+      providerNodePoolKind === capav1beta2.AWSMachinePool:
       return (
-        (providerNodePool as capav1beta1.IAWSMachinePool).spec
+        (providerNodePool as capav1beta2.IAWSMachinePool).spec
           ?.availabilityZones ?? []
       );
 
@@ -1541,8 +1540,8 @@ export function getProviderClusterLocation(
   const apiGroup = getApiGroupFromApiVersion(apiVersion);
 
   switch (true) {
-    case kind === capav1beta1.AWSCluster && apiGroup === capav1beta1.ApiGroup:
-      return (providerCluster as capav1beta1.IAWSCluster).spec?.region ?? '';
+    case kind === capav1beta2.AWSCluster && apiGroup === capav1beta2.ApiGroup:
+      return (providerCluster as capav1beta2.IAWSCluster).spec?.region ?? '';
 
     case kind === capgv1beta1.GCPCluster:
       return providerCluster.spec?.region ?? '';

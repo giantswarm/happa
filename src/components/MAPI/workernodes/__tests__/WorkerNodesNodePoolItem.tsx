@@ -8,7 +8,7 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
-import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
+import * as capav1beta2Mocks from 'test/mockHttpCalls/capav1beta2';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
@@ -888,7 +888,7 @@ describe('WorkerNodesNodePoolItem on CAPA', () => {
     render(
       getComponent({
         nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
-        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePool,
+        providerNodePool: capav1beta2Mocks.randomClusterCAPA1AWSMachinePool,
       })
     );
 
@@ -911,7 +911,7 @@ describe('WorkerNodesNodePoolItem on CAPA', () => {
     render(
       getComponent({
         nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
-        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePool,
+        providerNodePool: capav1beta2Mocks.randomClusterCAPA1AWSMachinePool,
       })
     );
 
@@ -933,7 +933,7 @@ describe('WorkerNodesNodePoolItem on CAPA', () => {
     render(
       getComponent({
         nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
-        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePool,
+        providerNodePool: capav1beta2Mocks.randomClusterCAPA1AWSMachinePool,
         additionalColumns: getAdditionalColumns(
           capiv1beta1Mocks.randomClusterCAPA1
         ),
@@ -958,7 +958,7 @@ describe('WorkerNodesNodePoolItem on CAPA', () => {
     render(
       getComponent({
         nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
-        providerNodePool: capav1beta1Mocks.randomClusterCAPA1AWSMachinePoolSpot,
+        providerNodePool: capav1beta2Mocks.randomClusterCAPA1AWSMachinePoolSpot,
         additionalColumns: getAdditionalColumns(
           capiv1beta1Mocks.randomClusterCAPA1
         ),

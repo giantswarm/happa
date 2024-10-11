@@ -1,7 +1,7 @@
 import { Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
 import { getProviderClusterLocation } from 'MAPI/utils';
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import React from 'react';
@@ -20,9 +20,9 @@ const StyledLink = styled.a`
 `;
 
 interface IClusterDetailWidgetProviderAWSProps {
-  providerCluster: capav1beta1.IAWSCluster | infrav1alpha3.IAWSCluster;
+  providerCluster: capav1beta2.IAWSCluster | infrav1alpha3.IAWSCluster;
   providerCredential?:
-    | capav1beta1.IAWSClusterRoleIdentity
+    | capav1beta2.IAWSClusterRoleIdentity
     | legacyCredentials.ICredential;
 }
 

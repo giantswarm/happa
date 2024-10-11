@@ -4,8 +4,8 @@ import { Providers, StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import * as capa1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
-import * as capg1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
+import * as capav1beta2Mocks from 'test/mockHttpCalls/capav1beta2';
+import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
 import * as infrav1alpha3Mocks from 'test/mockHttpCalls/infrastructurev1alpha3';
@@ -311,7 +311,7 @@ describe('ClusterDetailWidgetControlPlaneNodes on GCP', () => {
       )
       .reply(
         StatusCodes.Ok,
-        capg1beta1Mocks.randomClusterGCP1GCPMachineTemplateListCP
+        capgv1beta1Mocks.randomClusterGCP1GCPMachineTemplateListCP
       );
 
     render(
@@ -337,7 +337,7 @@ describe('ClusterDetailWidgetControlPlaneNodes on GCP', () => {
       )
       .reply(
         StatusCodes.Ok,
-        capg1beta1Mocks.randomClusterGCP1GCPMachineTemplateListCP
+        capgv1beta1Mocks.randomClusterGCP1GCPMachineTemplateListCP
       );
 
     render(
@@ -375,11 +375,11 @@ describe('ClusterDetailWidgetControlPlaneNodes on CAPA', () => {
       .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterCAPA1MachineList);
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsmachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3Dasdf1%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta2/namespaces/org-org1/awsmachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3Dasdf1%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
       )
       .reply(
         StatusCodes.Ok,
-        capa1beta1Mocks.randomClusterCAPA1AWSMachineTemplateList
+        capav1beta2Mocks.randomClusterCAPA1AWSMachineTemplateList
       );
 
     render(
@@ -401,11 +401,11 @@ describe('ClusterDetailWidgetControlPlaneNodes on CAPA', () => {
       .reply(StatusCodes.Ok, capiv1beta1Mocks.randomClusterCAPA1MachineList);
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsmachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3Dasdf1%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta2/namespaces/org-org1/awsmachinetemplates/?labelSelector=cluster.x-k8s.io%2Fcluster-name%3Dasdf1%2Ccluster.x-k8s.io%2Frole%3Dcontrol-plane`
       )
       .reply(
         StatusCodes.Ok,
-        capa1beta1Mocks.randomClusterCAPA1AWSMachineTemplateList
+        capav1beta2Mocks.randomClusterCAPA1AWSMachineTemplateList
       );
 
     render(

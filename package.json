@@ -27,7 +27,7 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "postinstall": "husky install",
-    "generate-mapi": "./node_modules/.bin/ts-node-esm scripts/generate/index.ts && yarn format:staged \"src/model/services/mapi/**/*.{js,ts,tsx}\" --loglevel error"
+    "generate-mapi": "npx ts-node scripts/generate/index.ts && yarn format:staged \"src/model/services/mapi/**/*.{js,ts,tsx}\" --loglevel error"
   },
   "eslintIgnore": [
     "node_modules",
@@ -206,7 +206,7 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-simple-import-sort": "10.0.0",
     "eslint-plugin-storybook": "0.6.15",
-    "express": "4.19.2",
+    "express": "4.20.0",
     "file-loader": "6.2.0",
     "fstream": "1.0.12",
     "html-webpack-plugin": "5.6.0",
@@ -236,7 +236,7 @@
     "type-fest": "3.13.1",
     "typescript": "5.3.3",
     "url-loader": "4.1.1",
-    "webpack": "5.90.1",
+    "webpack": "5.94.0",
     "webpack-bundle-analyzer": "4.10.1",
     "webpack-cli": "5.1.4",
     "webpack-dev-server": "4.15.1",

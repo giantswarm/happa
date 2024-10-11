@@ -1,7 +1,7 @@
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 
-export const randomAWSCluster1: capav1beta1.IAWSCluster = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+export const randomAWSCluster1: capav1beta2.IAWSCluster = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2',
   kind: 'AWSCluster',
   metadata: {
     annotations: {
@@ -74,8 +74,8 @@ export const randomAWSCluster1: capav1beta1.IAWSCluster = {
   },
 };
 
-export const randomAWSCluster2: capav1beta1.IAWSCluster = {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
+export const randomAWSCluster2: capav1beta2.IAWSCluster = {
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2',
   kind: 'AWSCluster',
   metadata: {
     annotations: {
