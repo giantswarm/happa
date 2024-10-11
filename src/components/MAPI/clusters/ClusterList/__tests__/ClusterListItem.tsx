@@ -11,7 +11,7 @@ import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
 import { withMarkup } from 'test/assertUtils';
-import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
+import * as capav1beta2Mocks from 'test/mockHttpCalls/capav1beta2';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
@@ -745,7 +745,7 @@ describe('ClusterListItem on CAPA', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterCAPA1,
-        providerCluster: capav1beta1Mocks.randomAWSCluster1,
+        providerCluster: capav1beta2Mocks.randomAWSCluster1,
       })
     );
 
@@ -774,7 +774,7 @@ describe('ClusterListItem on CAPA', () => {
             ],
           },
         },
-        providerCluster: capav1beta1Mocks.randomAWSCluster1,
+        providerCluster: capav1beta2Mocks.randomAWSCluster1,
       })
     );
 

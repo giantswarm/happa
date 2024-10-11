@@ -5,7 +5,7 @@ import { Providers, StatusCodes } from 'model/constants';
 import nock from 'nock';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
+import * as capav1beta2Mocks from 'test/mockHttpCalls/capav1beta2';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiv1beta1Mocks from 'test/mockHttpCalls/capiv1beta1';
 import * as capzv1beta1Mocks from 'test/mockHttpCalls/capzv1beta1';
@@ -166,7 +166,7 @@ describe('ClusterDetailWidgetVersions on CAPA', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterCAPA1,
-        providerCluster: capav1beta1Mocks.randomAWSCluster1,
+        providerCluster: capav1beta2Mocks.randomAWSCluster1,
       })
     );
 
@@ -179,7 +179,7 @@ describe('ClusterDetailWidgetVersions on CAPA', () => {
     render(
       getComponent({
         cluster: capiv1beta1Mocks.randomClusterCAPA1,
-        providerCluster: capav1beta1Mocks.randomAWSCluster1,
+        providerCluster: capav1beta2Mocks.randomAWSCluster1,
       })
     );
 

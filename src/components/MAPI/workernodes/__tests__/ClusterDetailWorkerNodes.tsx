@@ -7,7 +7,7 @@ import nock from 'nock';
 import React from 'react';
 import Router from 'react-router';
 import { SWRConfig } from 'swr';
-import * as capav1beta1Mocks from 'test/mockHttpCalls/capav1beta1';
+import * as capav1beta2Mocks from 'test/mockHttpCalls/capav1beta2';
 import * as capgv1beta1Mocks from 'test/mockHttpCalls/capgv1beta1';
 import * as capiexpv1alpha3Mocks from 'test/mockHttpCalls/capiv1alpha3/exp';
 import * as mockCapiv1beta1 from 'test/mockHttpCalls/capiv1beta1';
@@ -467,9 +467,9 @@ describe('ClusterDetailWorkerNodes on CAPA', () => {
       .reply(StatusCodes.Ok, mockCapiv1beta1.randomClusterCAPA1MachinePoolList);
     nock(window.config.mapiEndpoint)
       .get(
-        `/apis/infrastructure.cluster.x-k8s.io/v1beta1/namespaces/org-org1/awsmachinepools/${mockCapiv1beta1.randomClusterCAPA1MachinePoolList.items[0].spec?.template.spec?.infrastructureRef.name}/`
+        `/apis/infrastructure.cluster.x-k8s.io/v1beta2/namespaces/org-org1/awsmachinepools/${mockCapiv1beta1.randomClusterCAPA1MachinePoolList.items[0].spec?.template.spec?.infrastructureRef.name}/`
       )
-      .reply(StatusCodes.Ok, capav1beta1Mocks.randomClusterCAPA1AWSMachinePool);
+      .reply(StatusCodes.Ok, capav1beta2Mocks.randomClusterCAPA1AWSMachinePool);
 
     render(getComponent({}));
 

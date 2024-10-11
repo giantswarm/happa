@@ -3,14 +3,14 @@ import {
   getProviderNodePoolSpotInstances,
   INodePoolSpotInstancesCAPA,
 } from 'MAPI/utils';
-import * as capav1beta1 from 'model/services/mapi/capav1beta1';
+import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import React from 'react';
 import NotAvailable from 'UI/Display/NotAvailable';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 
 interface IWorkerNodesSpotInstancesCAPAProps {
-  providerNodePool?: capav1beta1.IAWSMachinePool;
+  providerNodePool?: capav1beta2.IAWSMachinePool;
 }
 
 const WorkerNodesSpotInstancesCAPA: React.FC<

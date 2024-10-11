@@ -1,32 +1,23 @@
-- apiVersionAlias: capav1beta1
-  apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+- apiVersionAlias: capav1beta2
+  apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
   resources:
   - name: AWSCluster
-    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsclusters.yaml
     verbs:
     - get
-  - name: AWSClusterRoleIdentity
-    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
-    crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsclusterroleidentities.yaml
-    verbs:
-    - get
   - name: AWSMachinePool
-    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsmachinepools.yaml
     verbs:
     - get
     - list
   - name: AWSMachineTemplate
-    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsmachinetemplates.yaml
     verbs:
     - get
     - list
-
-- apiVersionAlias: capav1beta2
-  apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
-  resources:
   - name: AWSManagedCluster
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-aws/main/config/crd/bases/infrastructure.cluster.x-k8s.io_awsmanagedclusters.yaml
