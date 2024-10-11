@@ -11,6 +11,7 @@ import {
   fetchControlPlaneForClusterKey,
   fetchControlPlaneNodesForCluster,
   fetchControlPlaneNodesForClusterKey,
+  supportsAvailabilityZones,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { Providers } from 'model/constants';
@@ -166,6 +167,9 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
       controlPlaneNodes
     );
 
+  const displayAvailabilityZones =
+    cluster && supportsAvailabilityZones(cluster);
+
   const [isSwitchingToHA, setIsSwitchingToHA] = useState(false);
 
   const onSwitchToHAExit = () => {
@@ -205,19 +209,24 @@ const ClusterDetailWidgetControlPlaneNodes: React.FC<
           )
         }
       </OptionalValue>
-      <StyledDot />
-      <Text margin={{ right: 'xsmall' }}>
-        {formatAvailabilityZonesLabel(provider, stats.availabilityZones)}
-      </Text>
-      <OptionalValue
-        value={stats.availabilityZones?.sort()}
-        loaderWidth={100}
-        loaderHeight={26}
-      >
-        {(value) => (
-          <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
-        )}
-      </OptionalValue>
+
+      {displayAvailabilityZones && (
+        <>
+          <StyledDot />
+          <Text margin={{ right: 'xsmall' }}>
+            {formatAvailabilityZonesLabel(provider, stats.availabilityZones)}
+          </Text>
+          <OptionalValue
+            value={stats.availabilityZones?.sort()}
+            loaderWidth={100}
+            loaderHeight={26}
+          >
+            {(value) => (
+              <AvailabilityZonesLabels zones={value} labelsChecked={[]} />
+            )}
+          </OptionalValue>
+        </>
+      )}
 
       {canSwitchToHA && (
         <Box basis='100%' margin={{ top: 'small' }}>

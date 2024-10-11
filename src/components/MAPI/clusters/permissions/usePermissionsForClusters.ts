@@ -317,6 +317,45 @@ export function usePermissionsForClusters(
         );
 
       break;
+
+    case Providers.VSPHERE:
+      computed.canCreate = canCreateClusterApps;
+      computed.canDelete = canDeleteClusterApps;
+      computed.canUpdate = canUpdateClusterApps;
+
+      computed.canGet =
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'cluster.x-k8s.io',
+          'clusters'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'infrastructure.cluster.x-k8s.io',
+          'vsphereclusters'
+        );
+
+      computed.canList =
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'cluster.x-k8s.io',
+          'clusters'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'infrastructure.cluster.x-k8s.io',
+          'vsphereclusters'
+        );
+
+      break;
   }
 
   return computed;

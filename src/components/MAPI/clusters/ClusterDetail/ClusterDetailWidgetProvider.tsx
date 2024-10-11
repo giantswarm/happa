@@ -10,6 +10,7 @@ import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
+import * as capvv1beta1 from 'model/services/mapi/capvv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as legacyCredentials from 'model/services/mapi/legacy/credentials';
 import { selectOrganizations } from 'model/stores/organization/selectors';
@@ -28,6 +29,7 @@ import ClusterDetailWidgetProviderAWSManaged from './ClusterDetailWidgetProvider
 import ClusterDetailWidgetProviderAzure from './ClusterDetailWidgetProviderAzure';
 import ClusterDetailWidgetProviderCAPG from './ClusterDetailWidgetProviderCAPG';
 import ClusterDetailWidgetProviderLoader from './ClusterDetailWidgetProviderLoader';
+import ClusterDetailWidgetProviderVSphere from './ClusterDetailWidgetProviderVSphere';
 import { fetchProviderCredential, fetchProviderCredentialKey } from './utils';
 
 interface IClusterDetailWidgetProviderProps
@@ -144,6 +146,10 @@ const ClusterDetailWidgetProvider: React.FC<
                 | capzv1beta1.IAzureClusterIdentity
                 | legacyCredentials.ICredential
             }
+          />
+        ) : kind === capvv1beta1.VSphereCluster ? (
+          <ClusterDetailWidgetProviderVSphere
+            providerCluster={providerCluster as capvv1beta1.IVSphereCluster}
           />
         ) : null}
       </Grid>

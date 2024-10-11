@@ -151,6 +151,15 @@ export function convertMBtoBytes(mb: number): number {
 }
 
 /**
+ * Convert mebibytes to bytes.
+ * @param mebibytes
+ */
+export function convertMiBtoBytes(mebibytes: number): number {
+  // eslint-disable-next-line no-magic-numbers
+  return mebibytes * 1024 * 1024;
+}
+
+/**
  * Helper method that validates an object based on constraints.
  * @param validatable - The object to validate.
  * @param constraints - The `validate.js` constraints.

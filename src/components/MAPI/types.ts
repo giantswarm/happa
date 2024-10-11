@@ -2,6 +2,7 @@ import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import * as capvv1beta1 from 'model/services/mapi/capvv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as gscorev1alpha1 from 'model/services/mapi/gscorev1alpha1';
@@ -15,6 +16,7 @@ export type ControlPlaneNode =
   | capav1beta2.IAWSManagedControlPlane
   | capgv1beta1.IGCPMachineTemplate
   | capiv1beta1.IMachine
+  | capvv1beta1.IVSphereMachine
   | capzv1beta1.IAzureMachine
   | capzv1beta1.IAzureMachineTemplate
   | infrav1alpha3.IAWSControlPlane
@@ -27,6 +29,7 @@ export type ControlPlaneNodeList =
   | capav1beta2.IAWSMachineTemplateList
   | capav1beta2.IAWSManagedControlPlaneList
   | capgv1beta1.IGCPMachineTemplateList
+  | capvv1beta1.IVSphereMachineTemplateList
   | capiv1beta1.IMachineList;
 
 export type Cluster = capiv1beta1.ICluster;
@@ -39,6 +42,7 @@ export type ProviderCluster =
   | capav1beta2.IAWSCluster
   | capav1beta2.IAWSManagedCluster
   | capgv1beta1.IGCPCluster
+  | capvv1beta1.IVSphereCluster
   | undefined;
 
 export type ProviderClusterList =
@@ -62,6 +66,7 @@ export type ProviderNodePool =
   | capav1beta2.IAWSMachinePool
   | capav1beta2.IAWSManagedMachinePool
   | capgv1beta1.IGCPMachineTemplate
+  | capvv1beta1.IVSphereMachineTemplate
   | capzv1beta1.IAzureMachineTemplate
   | capzexpv1alpha3.IAzureMachinePool
   | capzv1beta1.IAzureMachinePool
@@ -74,7 +79,8 @@ export type ProviderNodePoolList =
   | infrav1alpha3.IAWSMachineDeploymentList
   | capav1beta2.IAWSMachinePoolList
   | capav1beta2.IAWSManagedMachinePoolList
-  | capgv1beta1.IGCPMachineTemplateList;
+  | capgv1beta1.IGCPMachineTemplateList
+  | capvv1beta1.IVSphereMachineTemplateList;
 
 export type ProviderCredential =
   | legacyCredentials.ICredential

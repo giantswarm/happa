@@ -353,6 +353,46 @@ export function usePermissionsForNodePools(
         );
 
       break;
+
+    case Providers.VSPHERE:
+      // Node pools are mutated through the cluster app's ConfigMap
+      computed.canCreate = canUpdateClusterApps;
+      computed.canDelete = canUpdateClusterApps;
+      computed.canUpdate = canUpdateClusterApps;
+
+      computed.canGet =
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'cluster.x-k8s.io',
+          'machinedeployments'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'infrastructure.cluster.x-k8s.io',
+          'vspheremachinetemplates'
+        );
+
+      computed.canList =
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'cluster.x-k8s.io',
+          'machinedeployments'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'infrastructure.cluster.x-k8s.io',
+          'vspheremachinetemplates'
+        );
+
+      break;
   }
 
   return computed;

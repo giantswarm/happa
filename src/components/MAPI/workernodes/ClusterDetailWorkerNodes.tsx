@@ -19,6 +19,8 @@ import {
   isNodePoolMngmtReadOnly,
   isResourceImported,
   isResourceManagedByGitOps,
+  supportsAvailabilityZones,
+  supportsMachineTypes,
   supportsNodePoolAutoscaling,
   supportsNonExpMachinePools,
   supportsReleases,
@@ -27,6 +29,7 @@ import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { ProviderFlavors, Providers } from 'model/constants';
 import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import * as capvv1beta1 from 'model/services/mapi/capvv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
@@ -37,7 +40,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useLocation, useParams } from 'react-router';
 import { TransitionGroup } from 'react-transition-group';
-import { COPYABLE_PADDING } from 'shared/Copyable';
+import Copyable, { COPYABLE_PADDING } from 'shared/Copyable';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import { CODE_CHAR_WIDTH, CODE_PADDING } from 'styles';
@@ -47,8 +50,11 @@ import Button from 'UI/Controls/Button';
 import CLIGuidesList from 'UI/Display/MAPI/CLIGuide/CLIGuidesList';
 import { NodePoolGridRow } from 'UI/Display/MAPI/workernodes/styles';
 import WorkerNodesNodePoolListPlaceholder from 'UI/Display/MAPI/workernodes/WorkerNodesNodePoolListPlaceholder';
+import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
+import Truncated from 'UI/Util/Truncated';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
+import { getTruncationParams } from 'utils/helpers';
 import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import DeleteNodePoolGuide from './guides/DeleteNodePoolGuide';
@@ -68,7 +74,96 @@ const LOADING_COMPONENTS = new Array(4).fill(0);
 export const MAX_NAME_LENGTH = 10;
 export const MAX_NAME_LENGTH_LONG = 20;
 
-export function getAdditionalColumns(
+export function getAdditionalColumns1(
+  cluster: Cluster
+): IWorkerNodesAdditionalColumn[] {
+  const infrastructureRef = cluster?.spec?.infrastructureRef;
+  if (!infrastructureRef) return [];
+
+  const { kind, apiVersion } = infrastructureRef;
+  const apiGroup = getApiGroupFromApiVersion(apiVersion);
+
+  switch (true) {
+    case kind === capvv1beta1.VSphereCluster &&
+      apiGroup === capvv1beta1.ApiGroup:
+      return [
+        {
+          title: 'Resource pool',
+          render: (_, providerNodePool) => {
+            const resourcePool = providerNodePool
+              ? (providerNodePool as capvv1beta1.IVSphereMachineTemplate)?.spec
+                  ?.template.spec.resourcePool ?? ''
+              : undefined;
+
+            return (
+              <OptionalValue value={resourcePool}>
+                {(value) => <Box>{value}</Box>}
+              </OptionalValue>
+            );
+          },
+        },
+        {
+          title: 'Datacenter',
+          render: (_, providerNodePool) => {
+            const datacenter = providerNodePool
+              ? (providerNodePool as capvv1beta1.IVSphereMachineTemplate)?.spec
+                  ?.template.spec.datacenter ?? ''
+              : undefined;
+
+            return (
+              <OptionalValue value={datacenter}>
+                {(value) => <Box>{value}</Box>}
+              </OptionalValue>
+            );
+          },
+        },
+        {
+          title: 'vCenter',
+          render: (_, providerNodePool) => {
+            const vCenter = providerNodePool
+              ? (providerNodePool as capvv1beta1.IVSphereMachineTemplate)?.spec
+                  ?.template.spec.server ?? ''
+              : undefined;
+
+            return (
+              <OptionalValue value={vCenter}>
+                {(value) => (
+                  <Copyable copyText={value}>
+                    <Truncated
+                      aria-label={`vCenter: ${value}`}
+                      {...getTruncationParams(MAX_NAME_LENGTH)}
+                    >
+                      {value}
+                    </Truncated>
+                  </Copyable>
+                )}
+              </OptionalValue>
+            );
+          },
+        },
+        {
+          title: 'Datastore',
+          render: (_, providerNodePool) => {
+            const datastore = providerNodePool
+              ? (providerNodePool as capvv1beta1.IVSphereMachineTemplate).spec
+                  ?.template.spec.datastore ?? ''
+              : undefined;
+
+            return (
+              <OptionalValue value={datastore}>
+                {(value) => <Box>{value}</Box>}
+              </OptionalValue>
+            );
+          },
+        },
+      ];
+
+    default:
+      return [];
+  }
+}
+
+export function getAdditionalColumns2(
   cluster: Cluster
 ): IWorkerNodesAdditionalColumn[] {
   const infrastructureRef = cluster?.spec?.infrastructureRef;
@@ -169,21 +264,30 @@ function getNameColumnWidth(nameLength: number, maxNameLength: number) {
 }
 
 const Header = styled(Box)<{
-  additionalColumnsCount?: number;
+  additionalColumnsCount1?: number;
+  additionalColumnsCount2?: number;
   nameColumnWidth?: number;
   displayDescriptionColumn?: boolean;
+  displayMachineTypeColumn?: boolean;
+  displayAvailabilityZonesColumn?: boolean;
   displayMenuColumn?: boolean;
 }>`
   ${({
-    additionalColumnsCount,
+    additionalColumnsCount1,
+    additionalColumnsCount2,
     nameColumnWidth,
     displayDescriptionColumn,
+    displayMachineTypeColumn,
+    displayAvailabilityZonesColumn,
     displayMenuColumn,
   }) =>
     NodePoolGridRow(
-      additionalColumnsCount,
+      additionalColumnsCount1,
+      additionalColumnsCount2,
       nameColumnWidth,
       displayDescriptionColumn,
+      displayMachineTypeColumn,
+      displayAvailabilityZonesColumn,
       displayMenuColumn
     )}
 
@@ -192,21 +296,30 @@ const Header = styled(Box)<{
 `;
 
 const ColumnInfo = styled(Box)<{
-  additionalColumnsCount?: number;
+  additionalColumnsCount1?: number;
+  additionalColumnsCount2?: number;
   nameColumnWidth?: number;
   displayDescriptionColumn?: boolean;
+  displayMachineTypeColumn?: boolean;
+  displayAvailabilityZonesColumn?: boolean;
   displayMenuColumn?: boolean;
 }>`
   ${({
-    additionalColumnsCount,
+    additionalColumnsCount1,
+    additionalColumnsCount2,
     nameColumnWidth,
     displayDescriptionColumn,
+    displayMachineTypeColumn,
+    displayAvailabilityZonesColumn,
     displayMenuColumn,
   }) =>
     NodePoolGridRow(
-      additionalColumnsCount,
+      additionalColumnsCount1,
+      additionalColumnsCount2,
       nameColumnWidth,
       displayDescriptionColumn,
+      displayMachineTypeColumn,
+      displayAvailabilityZonesColumn,
       displayMenuColumn
     )}
 
@@ -486,10 +599,16 @@ const ClusterDetailWorkerNodes: React.FC<
       maxNameLength
     );
 
-    const additionalColumns = useMemo(() => {
+    const additionalColumns1 = useMemo(() => {
       if (!cluster) return [];
 
-      return getAdditionalColumns(cluster);
+      return getAdditionalColumns1(cluster);
+    }, [cluster]);
+
+    const additionalColumns2 = useMemo(() => {
+      if (!cluster) return [];
+
+      return getAdditionalColumns2(cluster);
     }, [cluster]);
 
     const [isCreateFormOpen, setIsCreateFormOpen] = useState(
@@ -513,6 +632,9 @@ const ClusterDetailWorkerNodes: React.FC<
     }, [cluster]);
 
     const displayCGroupsColumn = providerFlavor === ProviderFlavors.VINTAGE;
+    const displayMachineTypeColumn = cluster && supportsMachineTypes(cluster);
+    const displayAvailabilityZonesColumn =
+      cluster && supportsAvailabilityZones(cluster);
     const hideNodePoolAutoscalingColumns =
       cluster && !supportsNodePoolAutoscaling(cluster);
     const displayMenuColumn = useMemo(() => {
@@ -553,13 +675,18 @@ const ClusterDetailWorkerNodes: React.FC<
             {!hasNoNodePools && cluster && (
               <Box>
                 <ColumnInfo
-                  additionalColumnsCount={
-                    additionalColumns.length +
+                  additionalColumnsCount1={additionalColumns1.length}
+                  additionalColumnsCount2={
+                    additionalColumns2.length +
                     Number(displayCGroupsColumn) +
                     (hideNodePoolAutoscalingColumns ? 0 : 2)
                   }
                   nameColumnWidth={nameColumnWidth}
                   displayDescriptionColumn={displayDescriptionColumn}
+                  displayMachineTypeColumn={displayMachineTypeColumn}
+                  displayAvailabilityZonesColumn={
+                    displayAvailabilityZonesColumn
+                  }
                   displayMenuColumn={displayMenuColumn}
                   margin={{ top: 'xsmall' }}
                 >
@@ -570,10 +697,15 @@ const ClusterDetailWorkerNodes: React.FC<
                   {displayDescriptionColumn && <Box />}
 
                   {/* Machine type column placeholder */}
-                  <Box />
+                  {displayMachineTypeColumn && <Box />}
 
                   {/* Availability zones column placeholder */}
-                  <Box />
+                  {displayAvailabilityZonesColumn && <Box />}
+
+                  {/* Additional columns placeholders */}
+                  {additionalColumns1.map((column) => (
+                    <Box key={column.title} />
+                  ))}
 
                   {/* CGroups column placeholder */}
                   {displayCGroupsColumn && <Box />}
@@ -593,7 +725,7 @@ const ClusterDetailWorkerNodes: React.FC<
                   </NodesInfo>
 
                   {/* Additional columns placeholders */}
-                  {additionalColumns.map((column) => (
+                  {additionalColumns2.map((column) => (
                     <Box key={column.title} />
                   ))}
 
@@ -601,13 +733,18 @@ const ClusterDetailWorkerNodes: React.FC<
                   {displayMenuColumn && <Box />}
                 </ColumnInfo>
                 <Header
-                  additionalColumnsCount={
-                    additionalColumns.length +
+                  additionalColumnsCount1={additionalColumns1.length}
+                  additionalColumnsCount2={
+                    additionalColumns2.length +
                     Number(displayCGroupsColumn) +
                     (hideNodePoolAutoscalingColumns ? 0 : 2)
                   }
                   nameColumnWidth={nameColumnWidth}
                   displayDescriptionColumn={displayDescriptionColumn}
+                  displayMachineTypeColumn={displayMachineTypeColumn}
+                  displayAvailabilityZonesColumn={
+                    displayAvailabilityZonesColumn
+                  }
                   displayMenuColumn={displayMenuColumn}
                   height='xxsmall'
                 >
@@ -622,16 +759,27 @@ const ClusterDetailWorkerNodes: React.FC<
                       <Text size='xsmall'>Description</Text>
                     </Box>
                   )}
-                  <Box align='center'>
-                    <Text size='xsmall'>
-                      {formatMachineTypeColumnTitle(provider)}
-                    </Text>
-                  </Box>
-                  <Box align='center'>
-                    <Text textAlign='center' size='xsmall'>
-                      {formatAZsColumnTitle(provider)}
-                    </Text>
-                  </Box>
+                  {displayMachineTypeColumn && (
+                    <Box align='center'>
+                      <Text size='xsmall'>
+                        {formatMachineTypeColumnTitle(provider)}
+                      </Text>
+                    </Box>
+                  )}
+                  {displayAvailabilityZonesColumn && (
+                    <Box align='center'>
+                      <Text textAlign='center' size='xsmall'>
+                        {formatAZsColumnTitle(provider)}
+                      </Text>
+                    </Box>
+                  )}
+                  {additionalColumns1.map((column) => (
+                    <Box align='center' key={column.title}>
+                      <Text textAlign='center' size='xsmall'>
+                        {column.title}
+                      </Text>
+                    </Box>
+                  ))}
                   {displayCGroupsColumn && (
                     <Box align='center'>
                       <Text size='xsmall'>CGroups</Text>
@@ -654,7 +802,7 @@ const ClusterDetailWorkerNodes: React.FC<
                     <Text size='xsmall'>Current</Text>
                   </Box>
 
-                  {additionalColumns.map((column) => (
+                  {additionalColumns2.map((column) => (
                     <Box align='center' key={column.title}>
                       <Text textAlign='center' size='xsmall'>
                         {column.title}
@@ -670,13 +818,18 @@ const ClusterDetailWorkerNodes: React.FC<
                     LOADING_COMPONENTS.map((_, idx) => (
                       <WorkerNodesNodePoolItem
                         key={idx}
-                        additionalColumns={additionalColumns}
+                        additionalColumns1={additionalColumns1}
+                        additionalColumns2={additionalColumns2}
                         nameColumnWidth={nameColumnWidth}
                         maxNameLength={maxNameLength}
                         margin={{ bottom: 'small' }}
                         readOnly={isReadOnly}
                         displayCGroupsVersion={displayCGroupsColumn}
                         displayDescription={displayDescriptionColumn}
+                        displayMachineType={displayMachineTypeColumn}
+                        displayAvailabilityZones={
+                          displayAvailabilityZonesColumn
+                        }
                         displayMenuColumn={displayMenuColumn}
                         hideNodePoolAutoscaling={hideNodePoolAutoscalingColumns}
                       />
@@ -699,8 +852,13 @@ const ClusterDetailWorkerNodes: React.FC<
                               <WorkerNodesNodePoolItem
                                 nodePool={nodePool}
                                 providerNodePool={providerNodePool}
-                                additionalColumns={additionalColumns}
+                                additionalColumns1={additionalColumns1}
+                                additionalColumns2={additionalColumns2}
                                 displayDescription={displayDescriptionColumn}
+                                displayMachineType={displayMachineTypeColumn}
+                                displayAvailabilityZones={
+                                  displayAvailabilityZonesColumn
+                                }
                                 displayCGroupsVersion={displayCGroupsColumn}
                                 displayMenuColumn={displayMenuColumn}
                                 nameColumnWidth={nameColumnWidth}

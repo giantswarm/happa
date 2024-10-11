@@ -5,6 +5,7 @@ import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiexpv1alpha3 from 'model/services/mapi/capiv1alpha3/exp';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import * as capvv1beta1 from 'model/services/mapi/capvv1beta1';
 import * as capzexpv1alpha3 from 'model/services/mapi/capzv1alpha3/exp';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
@@ -33,7 +34,7 @@ export interface IMachineType {
   memory: number;
 }
 
-export function getMachineTypes(): Record<string, IMachineType> {
+export function getMachineTypes(): Record<string, IMachineType> | undefined {
   const machineTypes: Record<string, IMachineType> = {};
 
   if (window.config.awsCapabilitiesJSON) {
@@ -75,7 +76,7 @@ export function getMachineTypes(): Record<string, IMachineType> {
     }
   }
 
-  return machineTypes;
+  return Object.keys(machineTypes).length > 0 ? machineTypes : undefined;
 }
 
 export function compareNodePools(a: NodePool, b: NodePool) {
@@ -147,6 +148,7 @@ export async function fetchNodePoolListForCluster(
 
   switch (true) {
     case kind === capgv1beta1.GCPCluster:
+    case kind === capvv1beta1.VSphereCluster:
       list = await capiv1beta1.getMachineDeploymentList(
         httpClientFactory(),
         auth,
@@ -255,6 +257,7 @@ export function fetchNodePoolListForClusterKey(
 
   switch (true) {
     case kind === capgv1beta1.GCPCluster:
+    case kind === capvv1beta1.VSphereCluster:
       return capiv1beta1.getMachineDeploymentListKey({
         labelSelector: {
           matchingLabels: {
@@ -350,6 +353,14 @@ export async function fetchProviderNodePoolForNodePool(
 
     case kind === capgv1beta1.GCPMachineTemplate:
       return capgv1beta1.getGCPMachineTemplate(
+        httpClientFactory(),
+        auth,
+        nodePool.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    case kind === capvv1beta1.VSphereMachineTemplate:
+      return capvv1beta1.getVSphereMachineTemplate(
         httpClientFactory(),
         auth,
         nodePool.metadata.namespace!,
@@ -781,6 +792,47 @@ export async function fetchControlPlaneNodesForCluster(
       return cpNodes;
     }
 
+    case kind === capvv1beta1.VSphereCluster &&
+      apiGroup === capvv1beta1.ApiGroup: {
+      const [capvCP, machineCP] = await Promise.allSettled([
+        capvv1beta1.getVSphereMachineList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capiv1beta1.labelMachineControlPlane]: '',
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }),
+        capiv1beta1.getMachineList(httpClientFactory(), auth, {
+          labelSelector: {
+            matchingLabels: {
+              [capiv1beta1.labelClusterName]: cluster.metadata.name,
+              [capiv1beta1.labelMachineControlPlane]: '',
+            },
+          },
+          namespace: cluster.metadata.namespace,
+        }),
+      ]);
+
+      if (capvCP.status === 'rejected' && machineCP.status === 'rejected') {
+        return Promise.reject(capvCP.reason);
+      }
+
+      let cpNodes: ControlPlaneNode[] = [];
+      if (capvCP.status === 'fulfilled' && capvCP.value.items.length > 0) {
+        cpNodes = [...cpNodes, ...capvCP.value.items];
+      }
+      if (
+        machineCP.status === 'fulfilled' &&
+        machineCP.value.items.length > 0
+      ) {
+        cpNodes = [...cpNodes, ...machineCP.value.items];
+      }
+
+      return cpNodes;
+    }
+
     case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster): {
       const [capzCP, machineCP] = await Promise.allSettled([
         capzv1beta1.getAzureMachineTemplateList(httpClientFactory(), auth, {
@@ -932,6 +984,17 @@ export function fetchControlPlaneNodesForClusterKey(
         namespace: cluster.metadata.namespace,
       });
 
+    case kind === capvv1beta1.VSphereCluster &&
+      apiGroup === capvv1beta1.ApiGroup:
+      return capvv1beta1.getVSphereMachineTemplateListKey({
+        labelSelector: {
+          matchingLabels: {
+            [capiv1beta1.labelCluster]: cluster.metadata.name,
+          },
+        },
+        namespace: cluster.metadata.namespace,
+      });
+
     case kind === capzv1beta1.AzureCluster && hasClusterAppLabel(cluster):
       return capzv1beta1.getAzureMachineTemplateListKey({
         labelSelector: {
@@ -1010,6 +1073,15 @@ export async function fetchProviderClusterForCluster(
         infrastructureRef.name
       );
 
+    case kind === capvv1beta1.VSphereCluster &&
+      apiGroup === capvv1beta1.ApiGroup:
+      return capvv1beta1.getVSphereCluster(
+        httpClientFactory(),
+        auth,
+        cluster.metadata.namespace!,
+        infrastructureRef.name
+      );
+
     case kind === capzv1beta1.AzureCluster:
       return capzv1beta1.getAzureCluster(
         httpClientFactory(),
@@ -1055,6 +1127,13 @@ export function fetchProviderClusterForClusterKey(cluster: Cluster) {
 
     case kind === capgv1beta1.GCPCluster:
       return capgv1beta1.getGCPClusterKey(
+        cluster.metadata.namespace!,
+        infrastructureRef.name
+      );
+
+    case kind === capvv1beta1.VSphereCluster &&
+      apiGroup === capvv1beta1.ApiGroup:
+      return capvv1beta1.getVSphereClusterKey(
         cluster.metadata.namespace!,
         infrastructureRef.name
       );
@@ -1769,12 +1848,28 @@ function isCAPZCluster(cluster: Cluster): boolean {
   return cluster.spec?.infrastructureRef?.kind === capzv1beta1.AzureCluster;
 }
 
+function isVSphereCluster(cluster: Cluster): boolean {
+  return cluster.spec?.infrastructureRef?.kind === capvv1beta1.VSphereCluster;
+}
+
 export function isNodePoolMngmtReadOnly(cluster: Cluster): boolean {
   return hasClusterAppLabel(cluster) || isResourceImported(cluster);
 }
 
 export function supportsNodePoolAutoscaling(cluster: Cluster): boolean {
-  return !(isCAPGCluster(cluster) || isCAPZCluster(cluster));
+  return !(
+    isCAPGCluster(cluster) ||
+    isCAPZCluster(cluster) ||
+    isVSphereCluster(cluster)
+  );
+}
+
+export function supportsMachineTypes(cluster: Cluster): boolean {
+  return !isVSphereCluster(cluster);
+}
+
+export function supportsAvailabilityZones(cluster: Cluster): boolean {
+  return !isVSphereCluster(cluster);
 }
 
 export function supportsNonExpMachinePools(cluster: Cluster): boolean {

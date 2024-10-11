@@ -18,7 +18,10 @@ import * as infrav1alpha3Mocks from 'test/mockHttpCalls/infrastructurev1alpha3';
 import { getComponentWithStore } from 'test/renderUtils';
 import TestOAuth2 from 'utils/OAuth2/TestOAuth2';
 
-import { getAdditionalColumns } from '../ClusterDetailWorkerNodes';
+import {
+  getAdditionalColumns1,
+  getAdditionalColumns2,
+} from '../ClusterDetailWorkerNodes';
 import WorkerNodesNodePoolItem from '../WorkerNodesNodePoolItem';
 
 function getComponent(
@@ -201,7 +204,10 @@ describe('WorkerNodesNodePoolItem on Azure', () => {
       getComponent({
         nodePool: capiexpv1alpha3Mocks.randomCluster1MachinePool1,
         providerNodePool: capzexpv1alpha3Mocks.randomCluster1AzureMachinePool1,
-        additionalColumns: getAdditionalColumns(
+        additionalColumns1: getAdditionalColumns1(
+          capiv1beta1Mocks.randomCluster1
+        ),
+        additionalColumns2: getAdditionalColumns2(
           capiv1beta1Mocks.randomCluster1
         ),
       })
@@ -227,7 +233,10 @@ describe('WorkerNodesNodePoolItem on Azure', () => {
             },
           },
         },
-        additionalColumns: getAdditionalColumns(
+        additionalColumns1: getAdditionalColumns1(
+          capiv1beta1Mocks.randomCluster1
+        ),
+        additionalColumns2: getAdditionalColumns2(
           capiv1beta1Mocks.randomCluster1
         ),
       })
@@ -645,7 +654,10 @@ describe('WorkerNodesNodePoolItem on AWS', () => {
         nodePool: capiv1beta1Mocks.randomClusterAWS1MachineDeployment1,
         providerNodePool:
           infrav1alpha3Mocks.randomClusterAWS1AWSMachineDeployment1,
-        additionalColumns: getAdditionalColumns(
+        additionalColumns1: getAdditionalColumns1(
+          capiv1beta1Mocks.randomClusterAWS1
+        ),
+        additionalColumns2: getAdditionalColumns2(
           capiv1beta1Mocks.randomClusterAWS1
         ),
       })
@@ -669,7 +681,10 @@ describe('WorkerNodesNodePoolItem on AWS', () => {
             },
           },
         },
-        additionalColumns: getAdditionalColumns(
+        additionalColumns1: getAdditionalColumns1(
+          capiv1beta1Mocks.randomClusterAWS1
+        ),
+        additionalColumns2: getAdditionalColumns2(
           capiv1beta1Mocks.randomClusterAWS1
         ),
       })
@@ -934,7 +949,10 @@ describe('WorkerNodesNodePoolItem on CAPA', () => {
       getComponent({
         nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
         providerNodePool: capav1beta2Mocks.randomClusterCAPA1AWSMachinePool,
-        additionalColumns: getAdditionalColumns(
+        additionalColumns1: getAdditionalColumns1(
+          capiv1beta1Mocks.randomClusterCAPA1
+        ),
+        additionalColumns2: getAdditionalColumns2(
           capiv1beta1Mocks.randomClusterCAPA1
         ),
       })
@@ -959,7 +977,10 @@ describe('WorkerNodesNodePoolItem on CAPA', () => {
       getComponent({
         nodePool: capiv1beta1Mocks.randomClusterCAPA1MachinePool1,
         providerNodePool: capav1beta2Mocks.randomClusterCAPA1AWSMachinePoolSpot,
-        additionalColumns: getAdditionalColumns(
+        additionalColumns1: getAdditionalColumns1(
+          capiv1beta1Mocks.randomClusterCAPA1
+        ),
+        additionalColumns2: getAdditionalColumns2(
           capiv1beta1Mocks.randomClusterCAPA1
         ),
       })
@@ -1001,7 +1022,10 @@ describe('WorkerNodesNodePoolItem on CAPZ', () => {
         nodePool: capiv1beta1Mocks.randomClusterCAPZ1MachineDeployment1,
         providerNodePool:
           capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate,
-        additionalColumns: getAdditionalColumns(
+        additionalColumns1: getAdditionalColumns1(
+          capiv1beta1Mocks.randomCluster1
+        ),
+        additionalColumns2: getAdditionalColumns2(
           capiv1beta1Mocks.randomCluster1
         ),
       })
@@ -1024,7 +1048,10 @@ describe('WorkerNodesNodePoolItem on CAPZ', () => {
         nodePool: capiv1beta1Mocks.randomClusterCAPZ1MachineDeployment1,
         providerNodePool:
           capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate,
-        additionalColumns: getAdditionalColumns(
+        additionalColumns1: getAdditionalColumns1(
+          capiv1beta1Mocks.randomCluster1
+        ),
+        additionalColumns2: getAdditionalColumns2(
           capiv1beta1Mocks.randomCluster1
         ),
       })
@@ -1044,7 +1071,10 @@ describe('WorkerNodesNodePoolItem on CAPZ', () => {
         nodePool: capiv1beta1Mocks.randomClusterCAPZ1MachineDeployment1,
         providerNodePool:
           capzv1beta1Mocks.randomClusterCAPZ1AzureMachineTemplate,
-        additionalColumns: getAdditionalColumns(
+        additionalColumns1: getAdditionalColumns1(
+          capiv1beta1Mocks.randomCluster1
+        ),
+        additionalColumns2: getAdditionalColumns2(
           capiv1beta1Mocks.randomCluster1
         ),
       })
@@ -1074,7 +1104,10 @@ describe('WorkerNodesNodePoolItem on CAPZ', () => {
             },
           },
         },
-        additionalColumns: getAdditionalColumns(
+        additionalColumns1: getAdditionalColumns1(
+          capiv1beta1Mocks.randomCluster1
+        ),
+        additionalColumns2: getAdditionalColumns2(
           capiv1beta1Mocks.randomCluster1
         ),
       })

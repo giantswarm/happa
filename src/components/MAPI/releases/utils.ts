@@ -169,7 +169,7 @@ export function getPreviewReleaseVersions(
 }
 
 export function normalizeReleaseVersion(version: string): string {
-  const normalizedVersion = version.replace(/^(aws-|azure-)/, '');
+  const normalizedVersion = version.replace(/^(aws-|azure-|vsphere-)/, '');
   if (normalizedVersion.toLowerCase().startsWith('v')) {
     return normalizedVersion.substring(1);
   }
