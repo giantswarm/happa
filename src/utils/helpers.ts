@@ -133,6 +133,24 @@ export function humanFileSize<T extends boolean = true>(
 }
 
 /**
+ * Convert gigabytes to bytes.
+ * @param gigabytes
+ */
+export function convertGBtoBytes(gigabytes: number): number {
+  // eslint-disable-next-line no-magic-numbers
+  return gigabytes * 1e9;
+}
+
+/**
+ * Convert megabytes to bytes.
+ * @param megabytes
+ */
+export function convertMBtoBytes(mb: number): number {
+  // eslint-disable-next-line no-magic-numbers
+  return mb * 1e6;
+}
+
+/**
  * Helper method that validates an object based on constraints.
  * @param validatable - The object to validate.
  * @param constraints - The `validate.js` constraints.
@@ -455,7 +473,7 @@ export type DeepPartial<T> = T extends object
 export function getHumanReadableMemory(size: number, minDecimals: number = 0) {
   const formattedSize = humanFileSize(
     // eslint-disable-next-line no-magic-numbers
-    size * 1000 * 1000 * 1000,
+    size,
     false, // use IEC units
     minDecimals + 1
   );

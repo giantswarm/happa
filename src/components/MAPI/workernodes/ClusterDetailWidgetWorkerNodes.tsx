@@ -228,14 +228,16 @@ const ClusterDetailWidgetWorkerNodes: React.FC<
           <ClusterDetailCounter
             label='CPU'
             pluralize={true}
+            uppercase={false}
             value={formatCPU(workerNodesCPU)}
           />
           <ClusterDetailCounter
             label={
               formattedWorkerNodesMemory
                 ? `${formattedWorkerNodesMemory.unit} RAM`
-                : 'GB RAM'
+                : 'GiB RAM'
             }
+            uppercase={false}
             value={formattedWorkerNodesMemory?.value}
           />
         </>
