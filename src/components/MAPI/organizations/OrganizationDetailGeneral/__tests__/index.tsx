@@ -505,11 +505,11 @@ describe('OrganizationDetailGeneral on Azure', () => {
     await waitFor(() =>
       expect(
         screen.getByLabelText('Memory in control plane nodes')
-      ).toHaveTextContent('52 GB')
+      ).toHaveTextContent('48 GiB')
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
-        '206 GB'
+        '192 GiB'
       )
     );
     await waitFor(() =>
@@ -757,11 +757,11 @@ describe('OrganizationDetailGeneral on AWS', () => {
     await waitFor(() =>
       expect(
         screen.getByLabelText('Memory in control plane nodes')
-      ).toHaveTextContent('64 GB')
+      ).toHaveTextContent('60 GiB')
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
-        '144 GB'
+        '134 GiB'
       )
     );
     await waitFor(() =>
@@ -887,11 +887,11 @@ describe('OrganizationDetailGeneral on GCP', () => {
     await waitFor(() =>
       expect(
         screen.getByLabelText('Memory in control plane nodes')
-      ).toHaveTextContent('49 GB')
+      ).toHaveTextContent('46 GiB')
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
-        '49 GB'
+        '46 GiB'
       )
     );
     await waitFor(() =>
@@ -1005,7 +1005,7 @@ describe('OrganizationDetailGeneral on CAPA', () => {
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
-        '48 GB'
+        '45 GiB'
       )
     );
     await waitFor(() =>
@@ -1145,11 +1145,11 @@ describe('OrganizationDetailGeneral on CAPZ', () => {
     await waitFor(() =>
       expect(
         screen.getByLabelText('Memory in control plane nodes')
-      ).toHaveTextContent('16 GB')
+      ).toHaveTextContent('15 GiB')
     );
     await waitFor(() =>
       expect(screen.getByLabelText('Memory in worker nodes')).toHaveTextContent(
-        '49 GB'
+        '46 GiB'
       )
     );
     await waitFor(() =>
