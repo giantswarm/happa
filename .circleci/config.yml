@@ -12,7 +12,8 @@ job_filters: &job_filters
     tags:
       only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
     branches:
-      only: /.*/
+      ignore:
+        - main
 
 whitelist: &whitelist
   paths:
@@ -72,6 +73,9 @@ workflows:
             - launch-container
           # Needed to trigger job also on git tag.
           filters:
+            branches:
+              ignore:
+                - main
             tags:
               only: /^v.*/
 
