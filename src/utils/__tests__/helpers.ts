@@ -593,27 +593,31 @@ token: can't be blank`)
   });
 
   describe('getHumanReadableMemory', () => {
-    it('formats memory under 1000GB to the nearest integer', () => {
+    it('formats memory under 1024GiB to the nearest integer', () => {
       const attempts = [
         {
-          size: 0.4,
-          result: { value: 400, unit: 'MB' },
+          size: 400 * 1024 * 1024,
+          result: { value: 400, unit: 'MiB' },
         },
         {
-          size: 0.999,
-          result: { value: 999, unit: 'MB' },
+          size: 1023 * 1024 * 1024,
+          result: { value: 1023, unit: 'MiB' },
         },
         {
-          size: 20,
-          result: { value: 20, unit: 'GB' },
+          size: 1024 * 1024 * 1024,
+          result: { value: 1, unit: 'GiB' },
         },
         {
-          size: 20.4,
-          result: { value: 20, unit: 'GB' },
+          size: 20 * 1024 * 1024 * 1024,
+          result: { value: 20, unit: 'GiB' },
         },
         {
-          size: 20.5,
-          result: { value: 21, unit: 'GB' },
+          size: 20.4 * 1024 * 1024 * 1024,
+          result: { value: 20, unit: 'GiB' },
+        },
+        {
+          size: 20.5 * 1024 * 1024 * 1024,
+          result: { value: 21, unit: 'GiB' },
         },
       ];
 
@@ -624,19 +628,19 @@ token: can't be blank`)
       }
     });
 
-    it('formats memory between 1000GB and 10000GB to one decimal place if the decimal is significant', () => {
+    it('formats memory between 1024GiB and 10240GiB to one decimal place if the decimal is significant', () => {
       const attempts = [
         {
-          size: 2001,
-          result: { value: 2, unit: 'TB' },
+          size: 2001 * 1024 * 1024 * 1024,
+          result: { value: 2, unit: 'TiB' },
         },
         {
-          size: 2445,
-          result: { value: 2.4, unit: 'TB' },
+          size: 2445 * 1024 * 1024 * 1024,
+          result: { value: 2.4, unit: 'TiB' },
         },
         {
-          size: 2545,
-          result: { value: 2.5, unit: 'TB' },
+          size: 2545 * 1024 * 1024 * 1024,
+          result: { value: 2.5, unit: 'TiB' },
         },
       ];
 
@@ -647,15 +651,15 @@ token: can't be blank`)
       }
     });
 
-    it('formats memory above 10000GB to the nearest integer', () => {
+    it('formats memory above 10240GiB to the nearest integer', () => {
       const attempts = [
         {
-          size: 20152,
-          result: { value: 20, unit: 'TB' },
+          size: 20152 * 1024 * 1024 * 1024,
+          result: { value: 20, unit: 'TiB' },
         },
         {
-          size: 12678,
-          result: { value: 13, unit: 'TB' },
+          size: 12678 * 1024 * 1024 * 1024,
+          result: { value: 12, unit: 'TiB' },
         },
       ];
 
@@ -669,20 +673,20 @@ token: can't be blank`)
     it('formats memory to a specified number of decimal places regardless of size', () => {
       const attempts = [
         {
-          size: 0.999,
-          result: { value: 999.0, unit: 'MB' },
+          size: 0.999 * 1024 * 1024 * 1024,
+          result: { value: 1023, unit: 'MiB' },
         },
         {
-          size: 20.4,
-          result: { value: 20.4, unit: 'GB' },
+          size: 20.4 * 1024 * 1024 * 1024,
+          result: { value: 20.4, unit: 'GiB' },
         },
         {
-          size: 2445,
-          result: { value: 2.4, unit: 'TB' },
+          size: 2445 * 1024 * 1024 * 1024,
+          result: { value: 2.4, unit: 'TiB' },
         },
         {
-          size: 20152,
-          result: { value: 20.2, unit: 'TB' },
+          size: 20152 * 1024 * 1024 * 1024,
+          result: { value: 19.7, unit: 'TiB' },
         },
       ];
 

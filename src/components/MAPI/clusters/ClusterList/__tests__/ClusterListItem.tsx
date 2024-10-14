@@ -265,7 +265,7 @@ describe('ClusterListItem on Azure', () => {
     expect(await screen.findByText(/2 node pools/)).toBeInTheDocument();
     expect(await screen.findByText('10 worker nodes')).toBeInTheDocument();
     expect(await screen.findByText('80 CPU cores')).toBeInTheDocument();
-    expect(await screen.findByText('171.8 GB RAM')).toBeInTheDocument();
+    expect(await screen.findByText('160 GiB RAM')).toBeInTheDocument();
   });
 
   it('displays cluster labels', () => {
@@ -546,7 +546,7 @@ describe('ClusterListItem on AWS', () => {
     expect(await screen.findByText(/2 node pools/)).toBeInTheDocument();
     expect(await screen.findByText('6 worker nodes')).toBeInTheDocument();
     expect(await screen.findByText('24 CPU cores')).toBeInTheDocument();
-    expect(await screen.findByText('96 GB RAM')).toBeInTheDocument();
+    expect(await screen.findByText('89.4 GiB RAM')).toBeInTheDocument();
   });
 
   it('displays cluster status on AWS', async () => {
@@ -694,7 +694,7 @@ describe('ClusterListItem on GCP', () => {
     expect(await screen.findByText(/1 node pool/)).toBeInTheDocument();
     expect(await screen.findByText('3 worker nodes')).toBeInTheDocument();
     expect(await screen.findByText('12 CPU cores')).toBeInTheDocument();
-    expect(await screen.findByText('49.2 GB RAM')).toBeInTheDocument();
+    expect(await screen.findByText('45.8 GiB RAM')).toBeInTheDocument();
   });
 
   it('displays cluster status', async () => {

@@ -133,6 +133,24 @@ export function humanFileSize<T extends boolean = true>(
 }
 
 /**
+ * Convert gigabytes to bytes.
+ * @param gigabytes
+ */
+export function convertGBtoBytes(gigabytes: number): number {
+  // eslint-disable-next-line no-magic-numbers
+  return gigabytes * 1e9;
+}
+
+/**
+ * Convert megabytes to bytes.
+ * @param megabytes
+ */
+export function convertMBtoBytes(mb: number): number {
+  // eslint-disable-next-line no-magic-numbers
+  return mb * 1e6;
+}
+
+/**
  * Helper method that validates an object based on constraints.
  * @param validatable - The object to validate.
  * @param constraints - The `validate.js` constraints.
@@ -449,14 +467,14 @@ export type DeepPartial<T> = T extends object
   : T;
 
 /**
- * Format memory size in GB to human readable format, to 1 decimal place if the value is between 1TB and 10TB. If mininum decimals is set,
+ * Format memory size in Bytes to human readable format, to 1 decimal place if the value is between 1TiB and 10TiB. If mininum decimals is set,
  * it will always return a string with at least that many decimals.
  */
 export function getHumanReadableMemory(size: number, minDecimals: number = 0) {
   const formattedSize = humanFileSize(
     // eslint-disable-next-line no-magic-numbers
-    size * 1000 * 1000 * 1000,
-    true,
+    size,
+    false, // use IEC units
     minDecimals + 1
   );
 
@@ -464,7 +482,7 @@ export function getHumanReadableMemory(size: number, minDecimals: number = 0) {
     // eslint-disable-next-line no-magic-numbers
     10 **
     // eslint-disable-next-line no-magic-numbers
-    (formattedSize.unit === 'TB' && parseFloat(formattedSize.value) < 10
+    (formattedSize.unit === 'TiB' && parseFloat(formattedSize.value) < 10
       ? Math.max(1, minDecimals)
       : minDecimals);
 

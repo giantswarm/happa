@@ -11,7 +11,7 @@ import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as securityv1alpha1 from 'model/services/mapi/securityv1alpha1';
 import ErrorReporter from 'utils/errors/ErrorReporter';
-import { isIPAddress } from 'utils/helpers';
+import { convertGBtoBytes, convertMBtoBytes, isIPAddress } from 'utils/helpers';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
@@ -44,7 +44,7 @@ export function getMachineTypes(): Record<string, IMachineType> {
     for (const [name, properties] of Object.entries(rawCapabilities)) {
       machineTypes[name] = {
         cpu: properties.cpu_cores,
-        memory: properties.memory_size_gb,
+        memory: convertGBtoBytes(properties.memory_size_gb),
       };
     }
   }
@@ -57,8 +57,7 @@ export function getMachineTypes(): Record<string, IMachineType> {
     for (const [name, properties] of Object.entries(rawCapabilities)) {
       machineTypes[name] = {
         cpu: properties.numberOfCores,
-        // eslint-disable-next-line no-magic-numbers
-        memory: properties.memoryInMb / 1000,
+        memory: convertMBtoBytes(properties.memoryInMb),
       };
     }
   }
@@ -71,8 +70,7 @@ export function getMachineTypes(): Record<string, IMachineType> {
     for (const [name, properties] of Object.entries(rawCapabilities)) {
       machineTypes[name] = {
         cpu: properties.guestCpus,
-        // eslint-disable-next-line no-magic-numbers
-        memory: properties.memoryMb / 1000,
+        memory: convertMBtoBytes(properties.memoryMb),
       };
     }
   }

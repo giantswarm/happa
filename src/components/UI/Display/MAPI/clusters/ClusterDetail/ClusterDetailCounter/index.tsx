@@ -22,11 +22,12 @@ interface IClusterDetailCounterProps
   value?: number;
   pluralize?: boolean;
   color?: string;
+  uppercase?: boolean;
 }
 
 const ClusterDetailCounter: React.FC<
   React.PropsWithChildren<IClusterDetailCounterProps>
-> = ({ label, value, pluralize, color, ...props }) => {
+> = ({ label, value, pluralize, color, uppercase = true, ...props }) => {
   const formattedLabel = pluralize ? pluralizeLabel(value, label) : label;
 
   let a11yLabel = `Loading ${formattedLabel}...`;
@@ -52,9 +53,15 @@ const ClusterDetailCounter: React.FC<
           )}
         </OptionalValue>
       </Box>
-      <Label color='text-weak' size='small'>
-        {formattedLabel}
-      </Label>
+      {uppercase ? (
+        <Label color='text-weak' size='small'>
+          {formattedLabel}
+        </Label>
+      ) : (
+        <Text color='text-weak' size='small'>
+          {formattedLabel}
+        </Text>
+      )}
     </Box>
   );
 };

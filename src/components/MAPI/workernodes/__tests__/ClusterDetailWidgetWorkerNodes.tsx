@@ -149,7 +149,7 @@ describe('ClusterDetailWidgetWorkerNodes on Azure', () => {
     expect(await screen.findByLabelText('2 node pools')).toBeInTheDocument();
     expect(await screen.findByLabelText('10 nodes')).toBeInTheDocument();
     expect(await screen.findByLabelText('80 CPUs')).toBeInTheDocument();
-    expect(await screen.findByLabelText('172 GB RAM')).toBeInTheDocument();
+    expect(await screen.findByLabelText('160 GiB RAM')).toBeInTheDocument();
   });
 
   it('displays stats about node pools with non-experimental MachinePools and AzureMachinePools', async () => {
@@ -173,7 +173,7 @@ describe('ClusterDetailWidgetWorkerNodes on Azure', () => {
     expect(await screen.findByLabelText('1 node pool')).toBeInTheDocument();
     expect(await screen.findByLabelText('2 nodes')).toBeInTheDocument();
     expect(await screen.findByLabelText('16 CPUs')).toBeInTheDocument();
-    expect(await screen.findByLabelText('34 GB RAM')).toBeInTheDocument();
+    expect(await screen.findByLabelText('32 GiB RAM')).toBeInTheDocument();
   });
 
   it('only displays a part of the stats if provider-specific resources fail to load', async () => {
@@ -222,7 +222,7 @@ describe('ClusterDetailWidgetWorkerNodes on Azure', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
-      await screen.findByLabelText('GB RAM not available')
+      await screen.findByLabelText('B RAM not available')
     ).toBeInTheDocument();
   });
 
@@ -275,7 +275,7 @@ describe('ClusterDetailWidgetWorkerNodes on Azure', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
-      await screen.findByLabelText('GB RAM not available')
+      await screen.findByLabelText('B RAM not available')
     ).toBeInTheDocument();
   });
 });
@@ -377,7 +377,7 @@ describe('ClusterDetailWidgetWorkerNodes on AWS', () => {
     expect(await screen.findByLabelText('2 node pools')).toBeInTheDocument();
     expect(await screen.findByLabelText('6 nodes')).toBeInTheDocument();
     expect(await screen.findByLabelText('24 CPUs')).toBeInTheDocument();
-    expect(await screen.findByLabelText('96 GB RAM')).toBeInTheDocument();
+    expect(await screen.findByLabelText('89 GiB RAM')).toBeInTheDocument();
   });
 
   it('only displays a part of the stats if provider-specific resources fail to load', async () => {
@@ -420,7 +420,7 @@ describe('ClusterDetailWidgetWorkerNodes on AWS', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
-      await screen.findByLabelText('GB RAM not available')
+      await screen.findByLabelText('B RAM not available')
     ).toBeInTheDocument();
   });
 
@@ -475,7 +475,7 @@ describe('ClusterDetailWidgetWorkerNodes on AWS', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
-      await screen.findByLabelText('GB RAM not available')
+      await screen.findByLabelText('B RAM not available')
     ).toBeInTheDocument();
   });
 });
@@ -522,7 +522,7 @@ describe('ClusterDetailWidgetWorkerNodes on CAPA', () => {
     expect(await screen.findByLabelText('1 node pool')).toBeInTheDocument();
     expect(await screen.findByLabelText('3 nodes')).toBeInTheDocument();
     expect(await screen.findByLabelText('12 CPUs')).toBeInTheDocument();
-    expect(await screen.findByLabelText('48 GB RAM')).toBeInTheDocument();
+    expect(await screen.findByLabelText('45 GiB RAM')).toBeInTheDocument();
   });
 
   it('only displays a part of the stats if provider-specific resources fail to load', async () => {
@@ -553,7 +553,7 @@ describe('ClusterDetailWidgetWorkerNodes on CAPA', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
-      await screen.findByLabelText('GB RAM not available')
+      await screen.findByLabelText('B RAM not available')
     ).toBeInTheDocument();
   });
 
@@ -601,7 +601,7 @@ describe('ClusterDetailWidgetWorkerNodes on CAPA', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
-      await screen.findAllByLabelText('GB RAM not available')
+      await screen.findAllByLabelText('B RAM not available')
     ).not.toHaveLength(0);
   });
 });
@@ -651,7 +651,7 @@ describe('ClusterDetailWidgetWorkerNodes on CAPZ', () => {
     expect(await screen.findByLabelText('1 node pool')).toBeInTheDocument();
     expect(await screen.findByLabelText('3 nodes')).toBeInTheDocument();
     expect(await screen.findByLabelText('12 CPUs')).toBeInTheDocument();
-    expect(await screen.findByLabelText('49 GB RAM')).toBeInTheDocument();
+    expect(await screen.findByLabelText('46 GiB RAM')).toBeInTheDocument();
   });
 
   it('only displays a part of the stats if provider-specific resources fail to load', async () => {
@@ -682,7 +682,7 @@ describe('ClusterDetailWidgetWorkerNodes on CAPZ', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
-      await screen.findByLabelText('GB RAM not available')
+      await screen.findByLabelText('B RAM not available')
     ).toBeInTheDocument();
   });
 
@@ -728,7 +728,7 @@ describe('ClusterDetailWidgetWorkerNodes on CAPZ', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
-      await screen.findByLabelText('GB RAM not available')
+      await screen.findByLabelText('B RAM not available')
     ).toBeInTheDocument();
   });
 });
@@ -778,7 +778,7 @@ describe('ClusterDetailWidgetWorkerNodes on GCP', () => {
     expect(await screen.findByLabelText('1 node pool')).toBeInTheDocument();
     expect(await screen.findByLabelText('3 nodes')).toBeInTheDocument();
     expect(await screen.findByLabelText('12 CPUs')).toBeInTheDocument();
-    expect(await screen.findByLabelText('49 GB RAM')).toBeInTheDocument();
+    expect(await screen.findByLabelText('46 GiB RAM')).toBeInTheDocument();
   });
 
   it('only displays a part of the stats if provider-specific resources fail to load', async () => {
@@ -809,7 +809,7 @@ describe('ClusterDetailWidgetWorkerNodes on GCP', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
-      await screen.findByLabelText('GB RAM not available')
+      await screen.findByLabelText('B RAM not available')
     ).toBeInTheDocument();
   });
 
@@ -855,7 +855,7 @@ describe('ClusterDetailWidgetWorkerNodes on GCP', () => {
       await screen.findByLabelText('CPUs not available')
     ).toBeInTheDocument();
     expect(
-      await screen.findByLabelText('GB RAM not available')
+      await screen.findByLabelText('B RAM not available')
     ).toBeInTheDocument();
   });
 });
