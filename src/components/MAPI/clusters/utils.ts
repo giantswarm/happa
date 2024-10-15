@@ -25,6 +25,7 @@ import { Constants, Providers } from 'model/constants';
 import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import * as capvv1beta1 from 'model/services/mapi/capvv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as corev1 from 'model/services/mapi/corev1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
@@ -33,7 +34,7 @@ import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import { filterLabels } from 'model/stores/cluster/utils';
 import { mutate } from 'swr';
 import ErrorReporter from 'utils/errors/ErrorReporter';
-import { parseRFC822DateFormat } from 'utils/helpers';
+import { convertMiBtoBytes, parseRFC822DateFormat } from 'utils/helpers';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
@@ -56,21 +57,42 @@ export function getWorkerNodesCPU(
   nodePoolsWithProviderNodePools?: IProviderNodePoolForNodePool[],
   machineTypes?: Record<string, IMachineType>
 ) {
-  if (!nodePoolsWithProviderNodePools || !machineTypes) return undefined;
+  if (!nodePoolsWithProviderNodePools) return undefined;
+
+  if (machineTypes) {
+    let count = 0;
+
+    for (const {
+      nodePool,
+      providerNodePool,
+    } of nodePoolsWithProviderNodePools) {
+      if (!providerNodePool) return -1;
+
+      const instanceType =
+        getProviderNodePoolMachineTypes(providerNodePool)?.primary ?? '';
+      const machineTypeProperties = machineTypes[instanceType];
+      if (!machineTypeProperties) return -1;
+
+      const readyReplicas = getNodePoolReadyReplicas(nodePool);
+
+      count += machineTypeProperties.cpu * readyReplicas;
+    }
+
+    return count;
+  }
 
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
     if (!providerNodePool) return -1;
 
-    const instanceType =
-      getProviderNodePoolMachineTypes(providerNodePool)?.primary ?? '';
-    const machineTypeProperties = machineTypes[instanceType];
-    if (!machineTypeProperties) return -1;
+    if (providerNodePool.kind === capvv1beta1.VSphereMachineTemplate) {
+      const readyReplicas = getNodePoolReadyReplicas(nodePool);
+      const numCPUs = providerNodePool.spec?.template?.spec?.numCPUs;
+      if (typeof numCPUs === 'undefined') return -1;
 
-    const readyReplicas = getNodePoolReadyReplicas(nodePool);
-
-    count += machineTypeProperties.cpu * readyReplicas;
+      count += numCPUs * readyReplicas;
+    }
   }
 
   return count;
@@ -80,21 +102,42 @@ export function getWorkerNodesMemory(
   nodePoolsWithProviderNodePools?: IProviderNodePoolForNodePool[],
   machineTypes?: Record<string, IMachineType>
 ) {
-  if (!nodePoolsWithProviderNodePools || !machineTypes) return undefined;
+  if (!nodePoolsWithProviderNodePools) return undefined;
+
+  if (machineTypes) {
+    let count = 0;
+
+    for (const {
+      nodePool,
+      providerNodePool,
+    } of nodePoolsWithProviderNodePools) {
+      if (!providerNodePool) return -1;
+
+      const instanceType =
+        getProviderNodePoolMachineTypes(providerNodePool)?.primary ?? '';
+      const machineTypeProperties = machineTypes[instanceType];
+      if (!machineTypeProperties) return -1;
+
+      const readyReplicas = getNodePoolReadyReplicas(nodePool);
+
+      count += machineTypeProperties.memory * readyReplicas;
+    }
+
+    return count;
+  }
 
   let count = 0;
 
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
     if (!providerNodePool) return -1;
 
-    const instanceType =
-      getProviderNodePoolMachineTypes(providerNodePool)?.primary ?? '';
-    const machineTypeProperties = machineTypes[instanceType];
-    if (!machineTypeProperties) return -1;
+    if (providerNodePool.kind === capvv1beta1.VSphereMachineTemplate) {
+      const readyReplicas = getNodePoolReadyReplicas(nodePool);
+      const memoryMiB = providerNodePool.spec?.template?.spec?.memoryMiB;
+      if (typeof memoryMiB === 'undefined') return -1;
 
-    const readyReplicas = getNodePoolReadyReplicas(nodePool);
-
-    count += machineTypeProperties.memory * readyReplicas;
+      count += convertMiBtoBytes(memoryMiB) * readyReplicas;
+    }
   }
 
   return count;

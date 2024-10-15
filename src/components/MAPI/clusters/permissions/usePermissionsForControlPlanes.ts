@@ -28,6 +28,7 @@ export function usePermissionsForControlPlanes(
   switch (provider) {
     case Providers.CAPA:
     case Providers.CAPZ:
+    case Providers.VSPHERE:
       computed.canCreate = canCreateClusterApps;
       computed.canDelete = canDeleteClusterApps;
       computed.canUpdate = canUpdateClusterApps;

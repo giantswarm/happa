@@ -58,21 +58,30 @@ function formatAvailabilityZonesLabel(
 }
 
 const Row = styled(Box)<{
-  additionalColumnsCount?: number;
+  additionalColumnsCount1?: number;
+  additionalColumnsCount2?: number;
   nameColumnWidth?: number;
   displayDescriptionColumn?: boolean;
+  displayMachineTypeColumn?: boolean;
+  displayAvailabilityZonesColumn?: boolean;
   displayMenuColumn?: boolean;
 }>`
   ${({
-    additionalColumnsCount,
+    additionalColumnsCount1,
+    additionalColumnsCount2,
     nameColumnWidth,
     displayDescriptionColumn,
+    displayMachineTypeColumn,
+    displayAvailabilityZonesColumn,
     displayMenuColumn,
   }) =>
     NodePoolGridRow(
-      additionalColumnsCount,
+      additionalColumnsCount1,
+      additionalColumnsCount2,
       nameColumnWidth,
       displayDescriptionColumn,
+      displayMachineTypeColumn,
+      displayAvailabilityZonesColumn,
       displayMenuColumn
     )}
 `;
@@ -100,15 +109,19 @@ interface IWorkerNodesNodePoolItemProps
   maxNameLength?: number;
   nodePool?: NodePool;
   providerNodePool?: ProviderNodePool | null;
-  additionalColumns?: IWorkerNodesAdditionalColumn[];
+  additionalColumns1?: IWorkerNodesAdditionalColumn[];
+  additionalColumns2?: IWorkerNodesAdditionalColumn[];
   readOnly?: boolean;
   canUpdateNodePools?: boolean;
   canDeleteNodePools?: boolean;
   nameColumnWidth?: number;
   displayDescription?: boolean;
+  displayMachineType?: boolean;
+  displayAvailabilityZones?: boolean;
   displayCGroupsVersion?: boolean;
   displayMenuColumn?: boolean;
   flatcarContainerLinuxVersion?: string;
+  hideNodePoolMachineType?: boolean;
   hideNodePoolAutoscaling?: boolean;
 }
 
@@ -118,13 +131,16 @@ const WorkerNodesNodePoolItem: React.FC<
 > = ({
   nodePool,
   providerNodePool,
-  additionalColumns,
+  additionalColumns1,
+  additionalColumns2,
   readOnly,
   canUpdateNodePools,
   canDeleteNodePools,
   nameColumnWidth,
   maxNameLength = MAX_NAME_LENGTH,
   displayDescription = true,
+  displayMachineType = true,
+  displayAvailabilityZones = true,
   displayCGroupsVersion = true,
   displayMenuColumn = true,
   flatcarContainerLinuxVersion,
@@ -267,13 +283,16 @@ const WorkerNodesNodePoolItem: React.FC<
       <Row
         background={isDeleting ? 'background-back' : 'background-front'}
         round='xsmall'
-        additionalColumnsCount={
-          (additionalColumns?.length ?? 0) +
+        additionalColumnsCount1={additionalColumns1?.length ?? 0}
+        additionalColumnsCount2={
+          (additionalColumns2?.length ?? 0) +
           Number(displayCGroupsVersion) +
           (hideNodePoolAutoscaling ? 0 : 2)
         }
         nameColumnWidth={nameColumnWidth}
         displayDescriptionColumn={displayDescription}
+        displayMachineTypeColumn={displayMachineType}
+        displayAvailabilityZonesColumn={displayAvailabilityZones}
         displayMenuColumn={displayMenuColumn}
       >
         <Box align='flex-start'>
@@ -333,30 +352,39 @@ const WorkerNodesNodePoolItem: React.FC<
         )}
         {!isDeleting && !isEditingDescription && (
           <>
-            <WorkerNodesNodePoolItemMachineType
-              nodePool={nodePool}
-              providerNodePool={providerNodePool ?? undefined}
-            />
-            <Box align='center'>
-              <OptionalValue value={availabilityZones} loaderHeight={26}>
-                {(value) => (
-                  <Box
-                    direction='row'
-                    aria-label={formatAvailabilityZonesLabel(value, provider)}
-                  >
-                    <AvailabilityZonesLabels
-                      zones={value}
-                      labelsChecked={[]}
-                      variant={
-                        provider === Providers.GCP
-                          ? AvailabilityZonesLabelVariant.Zone
-                          : AvailabilityZonesLabelVariant.AvailabilityZone
-                      }
-                    />
-                  </Box>
-                )}
-              </OptionalValue>
-            </Box>
+            {displayMachineType && (
+              <WorkerNodesNodePoolItemMachineType
+                nodePool={nodePool}
+                providerNodePool={providerNodePool ?? undefined}
+              />
+            )}
+            {displayAvailabilityZones && (
+              <Box align='center'>
+                <OptionalValue value={availabilityZones} loaderHeight={26}>
+                  {(value) => (
+                    <Box
+                      direction='row'
+                      aria-label={formatAvailabilityZonesLabel(value, provider)}
+                    >
+                      <AvailabilityZonesLabels
+                        zones={value}
+                        labelsChecked={[]}
+                        variant={
+                          provider === Providers.GCP
+                            ? AvailabilityZonesLabelVariant.Zone
+                            : AvailabilityZonesLabelVariant.AvailabilityZone
+                        }
+                      />
+                    </Box>
+                  )}
+                </OptionalValue>
+              </Box>
+            )}
+            {additionalColumns1?.map((column) => (
+              <Box key={column.title} align='center'>
+                {column.render(nodePool, providerNodePool ?? undefined)}
+              </Box>
+            ))}
             {displayCGroupsVersion && (
               <Box align='center'>
                 <OptionalValue value={cgroupsVersion} loaderWidth={30}>
@@ -450,7 +478,7 @@ const WorkerNodesNodePoolItem: React.FC<
               </OptionalValue>
             </Box>
 
-            {additionalColumns?.map((column) => (
+            {additionalColumns2?.map((column) => (
               <Box key={column.title} align='center'>
                 {column.render(nodePool, providerNodePool ?? undefined)}
               </Box>

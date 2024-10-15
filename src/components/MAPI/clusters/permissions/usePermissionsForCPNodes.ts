@@ -3,6 +3,7 @@ import { usePermissions } from 'MAPI/permissions/usePermissions';
 import { hasPermission } from 'MAPI/permissions/utils';
 import { Providers } from 'model/constants';
 
+// eslint-disable-next-line complexity
 export function usePermissionsForCPNodes(
   provider: PropertiesOf<typeof Providers>,
   namespace: string
@@ -265,6 +266,45 @@ export function usePermissionsForCPNodes(
           'list',
           'infrastructure.cluster.x-k8s.io',
           'gcpmachinetemplates'
+        );
+
+      break;
+
+    case Providers.VSPHERE:
+      computed.canCreate = canCreateClusterApps;
+      computed.canDelete = canDeleteClusterApps;
+      computed.canUpdate = canUpdateClusterApps;
+
+      computed.canGet =
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'cluster.x-k8s.io',
+          'machines'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'get',
+          'infrastructure.cluster.x-k8s.io',
+          'vspheremachines'
+        );
+
+      computed.canList =
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'cluster.x-k8s.io',
+          'machines'
+        ) &&
+        hasPermission(
+          permissions,
+          namespace,
+          'list',
+          'infrastructure.cluster.x-k8s.io',
+          'vspheremachines'
         );
 
       break;

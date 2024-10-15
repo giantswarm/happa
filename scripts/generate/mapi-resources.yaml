@@ -82,3 +82,23 @@
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-azure/main/config/crd/bases/infrastructure.cluster.x-k8s.io_azuremachinepools.yaml
 
+- apiVersionAlias: capvv1beta1
+  apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+  resources:
+  - name: VSphereCluster
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-vsphere/refs/heads/main/config/default/crd/bases/infrastructure.cluster.x-k8s.io_vsphereclusters.yaml
+    verbs:
+    - get
+  - name: VSphereMachine
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-vsphere/refs/heads/main/config/default/crd/bases/infrastructure.cluster.x-k8s.io_vspheremachines.yaml
+    verbs:
+    - get
+    - list
+  - name: VSphereMachineTemplate
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    crdURL: https://raw.githubusercontent.com/kubernetes-sigs/cluster-api-provider-vsphere/refs/heads/main/config/default/crd/bases/infrastructure.cluster.x-k8s.io_vspheremachinetemplates.yaml
+    verbs:
+    - get
+    - list

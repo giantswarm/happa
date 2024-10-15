@@ -24,12 +24,14 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import * as capav1beta2 from 'model/services/mapi/capav1beta2';
 import * as capgv1beta1 from 'model/services/mapi/capgv1beta1';
 import * as capiv1beta1 from 'model/services/mapi/capiv1beta1';
+import * as capvv1beta1 from 'model/services/mapi/capvv1beta1';
 import * as capzv1beta1 from 'model/services/mapi/capzv1beta1';
 import * as infrav1alpha3 from 'model/services/mapi/infrastructurev1alpha3';
 import * as metav1 from 'model/services/mapi/metav1';
 import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import * as ui from 'UI/Display/Organizations/types';
 import ErrorReporter from 'utils/errors/ErrorReporter';
+import { convertMiBtoBytes } from 'utils/helpers';
 import { HttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { IOAuth2Provider } from 'utils/OAuth2/OAuth2';
 import { compare } from 'utils/semver';
@@ -95,7 +97,7 @@ async function fetchSingleClusterSummary(
         cluster
       );
 
-      appendControlPlaneNodeStats(cpNodes, machineTypes, summary);
+      appendControlPlaneNodeStats(summary, cpNodes, machineTypes);
     } catch (err) {
       ErrorReporter.getInstance().notify(err as Error);
     }
@@ -110,7 +112,7 @@ async function fetchSingleClusterSummary(
         cluster.metadata.namespace
       );
 
-      appendNodePoolsStats(nodePoolList.items, summary);
+      appendNodePoolsStats(summary, nodePoolList.items);
 
       const providerSpecificNodePools =
         await fetchProviderNodePoolsForNodePools(
@@ -125,9 +127,9 @@ async function fetchSingleClusterSummary(
       );
 
       appendProviderNodePoolsStats(
+        summary,
         nodePoolsWithProviderNodePools,
-        machineTypes,
-        summary
+        machineTypes
       );
     } catch (err) {
       ErrorReporter.getInstance().notify(err as Error);
@@ -141,10 +143,11 @@ function fetchSingleClusterSummaryKey(cluster: capiv1beta1.ICluster): string {
   return `fetchSingleClusterSummary/${cluster.metadata.namespace}/${cluster.metadata.name}`;
 }
 
+// eslint-disable-next-line complexity
 function appendControlPlaneNodeStats(
+  summary: ui.IOrganizationDetailClustersSummary,
   controlPlaneNodes: ControlPlaneNode[],
-  machineTypes: Record<string, IMachineType>,
-  summary: ui.IOrganizationDetailClustersSummary
+  machineTypes?: Record<string, IMachineType>
 ) {
   summary.nodesCount = 0;
 
@@ -197,26 +200,43 @@ function appendControlPlaneNodeStats(
         }
     }
   }
+  if (machineTypes) {
+    for (let i = 0; i < summary.nodesCount; i++) {
+      const instanceType = instanceTypes[i] ?? instanceTypes[0];
 
-  for (let i = 0; i < summary.nodesCount; i++) {
-    const instanceType = instanceTypes[i] ?? instanceTypes[0];
+      const machineTypeProperties = machineTypes[instanceType];
+      if (!machineTypeProperties) {
+        throw new Error('Invalid machine type.');
+      }
 
-    const machineTypeProperties = machineTypes[instanceType];
-    if (!machineTypeProperties) {
-      throw new Error('Invalid machine type.');
+      summary.nodesCPU ??= 0;
+      summary.nodesCPU += machineTypeProperties.cpu;
+
+      summary.nodesMemory ??= 0;
+      summary.nodesMemory += machineTypeProperties.memory;
     }
+  } else {
+    for (const cpNode of controlPlaneNodes) {
+      if (cpNode.kind === capvv1beta1.VSphereMachine) {
+        const numCPUs = cpNode.spec?.numCPUs;
+        if (numCPUs) {
+          summary.nodesCPU ??= 0;
+          summary.nodesCPU += numCPUs;
+        }
 
-    summary.nodesCPU ??= 0;
-    summary.nodesCPU += machineTypeProperties.cpu;
-
-    summary.nodesMemory ??= 0;
-    summary.nodesMemory += machineTypeProperties.memory;
+        const memoryMiB = cpNode.spec?.memoryMiB;
+        if (memoryMiB) {
+          summary.nodesMemory ??= 0;
+          summary.nodesMemory += convertMiBtoBytes(memoryMiB);
+        }
+      }
+    }
   }
 }
 
 function appendNodePoolsStats(
-  nodePools: NodePool[],
-  summary: ui.IOrganizationDetailClustersSummary
+  summary: ui.IOrganizationDetailClustersSummary,
+  nodePools: NodePool[]
 ) {
   for (const nodePool of nodePools) {
     summary.workerNodesCount ??= 0;
@@ -225,29 +245,44 @@ function appendNodePoolsStats(
 }
 
 function appendProviderNodePoolsStats(
+  summary: ui.IOrganizationDetailClustersSummary,
   nodePoolsWithProviderNodePools: IProviderNodePoolForNodePool[],
-  machineTypes: Record<string, IMachineType>,
-  summary: ui.IOrganizationDetailClustersSummary
+  machineTypes?: Record<string, IMachineType>
 ) {
   for (const { nodePool, providerNodePool } of nodePoolsWithProviderNodePools) {
     const readyReplicas = getNodePoolReadyReplicas(nodePool);
     if (!readyReplicas || !providerNodePool) continue;
 
-    const instanceType =
-      getProviderNodePoolMachineTypes(providerNodePool)?.primary;
+    if (machineTypes) {
+      const instanceType =
+        getProviderNodePoolMachineTypes(providerNodePool)?.primary;
 
-    const machineTypeProperties = instanceType
-      ? machineTypes[instanceType]
-      : null;
-    if (!machineTypeProperties) {
-      throw new Error('Invalid machine type.');
+      const machineTypeProperties = instanceType
+        ? machineTypes[instanceType]
+        : null;
+      if (!machineTypeProperties) {
+        throw new Error('Invalid machine type.');
+      }
+
+      summary.workerNodesCPU ??= 0;
+      summary.workerNodesCPU += machineTypeProperties.cpu * readyReplicas;
+
+      summary.workerNodesMemory ??= 0;
+      summary.workerNodesMemory += machineTypeProperties.memory * readyReplicas;
+    } else if (providerNodePool.kind === capvv1beta1.VSphereMachineTemplate) {
+      const numCPUs = providerNodePool.spec?.template?.spec?.numCPUs;
+      if (numCPUs) {
+        summary.workerNodesCPU ??= 0;
+        summary.workerNodesCPU += numCPUs * readyReplicas;
+      }
+
+      const memoryMiB = providerNodePool.spec?.template?.spec?.memoryMiB;
+      if (memoryMiB) {
+        summary.workerNodesMemory ??= 0;
+        summary.workerNodesMemory +=
+          convertMiBtoBytes(memoryMiB) * readyReplicas;
+      }
     }
-
-    summary.workerNodesCPU ??= 0;
-    summary.workerNodesCPU += machineTypeProperties.cpu * readyReplicas;
-
-    summary.workerNodesMemory ??= 0;
-    summary.workerNodesMemory += machineTypeProperties.memory * readyReplicas;
   }
 }
 

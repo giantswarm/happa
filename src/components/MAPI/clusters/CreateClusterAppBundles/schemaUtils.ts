@@ -319,19 +319,38 @@ const formPropsProviderGCP: Record<string, FormPropsPartial> = {
 const formPropsProviderVSphere: Record<string, FormPropsPartial> = {
   0: {
     uiSchema: {
-      'ui:order': ['cluster', 'controlPlane', '*'],
+      'ui:order': ['global', '*'],
+      baseDomain: {
+        'ui:widget': 'hidden',
+      },
       cluster: {
-        'ui:order': ['name', 'organization', '*'],
-        name: {
-          'ui:widget': ClusterNameWidget,
+        'ui:widget': 'hidden',
+      },
+      global: {
+        metadata: {
+          'ui:order': ['name', 'description', '*'],
+          name: {
+            'ui:widget': ClusterNameWidget,
+          },
         },
+      },
+      managementCluster: {
+        'ui:widget': 'hidden',
+      },
+      provider: {
+        'ui:widget': 'hidden',
+      },
+      'cluster-shared': {
+        'ui:widget': 'hidden',
       },
     },
     formData: (clusterName, organization) => {
       return {
-        cluster: {
-          name: clusterName,
-          organization,
+        global: {
+          metadata: {
+            name: clusterName,
+            organization,
+          },
         },
       };
     },
