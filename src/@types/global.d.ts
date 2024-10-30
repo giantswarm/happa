@@ -14,7 +14,6 @@ interface IGlobalConfig {
   athenaEndpoint: string;
   mapiAudience: string;
   defaultRequestTimeoutSeconds: number;
-  enableRealUserMonitoring: boolean;
   environment: GlobalEnvironment;
   happaVersion: string;
   ingressBaseDomain: string;
