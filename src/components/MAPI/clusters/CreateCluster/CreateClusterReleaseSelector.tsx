@@ -1,8 +1,6 @@
 import { Accordion, AccordionPanel, Box, Keyboard, Text } from 'grommet';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import { ReleaseState } from 'model/services/mapi/releasev1alpha1';
 import React, { FC, useMemo, useState } from 'react';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
@@ -153,30 +151,22 @@ const CreateClusterReleaseSelector: FC<
       <Accordion activeIndex={collapsed ? -1 : 0} onActive={handleCollapse}>
         <AccordionPanel
           header={
-            <RUMActionTarget
-              name={
-                collapsed
-                  ? RUMActions.ExpandReleases
-                  : RUMActions.CollapseReleases
-              }
+            <Box
+              direction='row'
+              align='center'
+              gap='xsmall'
+              role='button'
+              title='Show/hide available releases'
             >
-              <Box
-                direction='row'
-                align='center'
-                gap='xsmall'
-                role='button'
-                title='Show/hide available releases'
-              >
-                <Icon
-                  className='fa fa-chevron-down'
-                  isActive={!collapsed}
-                  role='presentation'
-                  aria-hidden='true'
-                  size='28px'
-                />
-                <Text>Available releases</Text>
-              </Box>
-            </RUMActionTarget>
+              <Icon
+                className='fa fa-chevron-down'
+                isActive={!collapsed}
+                role='presentation'
+                aria-hidden='true'
+                size='28px'
+              />
+              <Text>Available releases</Text>
+            </Box>
           }
         >
           <Keyboard onEsc={handleKeyDownCancel}>

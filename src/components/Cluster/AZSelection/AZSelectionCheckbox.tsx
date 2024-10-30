@@ -1,8 +1,6 @@
 import { Text } from 'grommet';
 import * as React from 'react';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import RadioInput from 'UI/Inputs/RadioInput';
-import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 
 import { AvailabilityZoneSelection } from './AZSelectionUtils';
 
@@ -34,21 +32,19 @@ const AZSelectionCheckbox: React.FC<
   const id = `${uniqueIdentifier}-${typeName.toLowerCase()}`;
 
   return (
-    <RUMActionTarget name={mergeActionNames(baseActionName!, typeName)}>
-      <RadioInput
-        id={id}
-        name={id}
-        checked={value === type}
-        onChange={() => onChange(type!)}
-        tabIndex={-1}
-        label={
-          <Text weight='normal' color='text'>
-            {label}
-          </Text>
-        }
-        {...rest}
-      />
-    </RUMActionTarget>
+    <RadioInput
+      id={id}
+      name={id}
+      checked={value === type}
+      onChange={() => onChange(type!)}
+      tabIndex={-1}
+      label={
+        <Text weight='normal' color='text'>
+          {label}
+        </Text>
+      }
+      {...rest}
+    />
   );
 };
 

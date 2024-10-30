@@ -1,11 +1,9 @@
 import { logo } from 'images';
 import { CSSBreakpoints } from 'model/constants';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import { MainRoutes } from 'model/constants/routes';
 import React from 'react';
 import { Breadcrumbs } from 'react-breadcrumbs';
 import { Link } from 'react-router-dom';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 import { mq } from 'styles';
 import { BODY_CLASS_MODIFIER } from 'UI/Layout/Modal';
@@ -119,11 +117,9 @@ class Navigation extends React.Component {
     return (
       <OuterNav>
         <div className='main-nav'>
-          <RUMActionTarget name={RUMActions.ClickMainNavLogo}>
-            <Link to={MainRoutes.Home}>
-              <img className='logo' src={logo} width='22' height='22' />
-            </Link>
-          </RUMActionTarget>
+          <Link to={MainRoutes.Home}>
+            <img className='logo' src={logo} width='22' height='22' />
+          </Link>
           <MainMenu
             showApps={this.props.showApps}
             showUsers={this.props.showUsers}

@@ -1,10 +1,8 @@
 import Bowser from 'bowser';
 import { History } from 'history';
 import { GraphQLClientImpl } from 'model/clients/GraphQLClient';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import { AthenaAnalyticsPayload } from 'model/services/athena';
 import * as athena from 'model/services/athena';
-import { mergeActionNames } from 'utils/realUserMonitoringUtils';
 import { v4 as uuid } from 'uuid';
 import { getCLS, getFCP, getFID, getLCP, getTTFB, Metric } from 'web-vitals';
 
@@ -57,10 +55,9 @@ export class RUMService {
   }
 
   protected async submitWebVital(metric: Metric) {
-    const actionName = mergeActionNames(RUMActions.WebVitals, metric.name);
     const payload = { [metric.name.toLowerCase()]: metric.value };
 
-    return this.submitEvent(actionName, 1, payload);
+    return this.submitEvent('none', 1, payload);
   }
 
   protected reportWebVitals() {
@@ -77,7 +74,7 @@ export class RUMService {
     window.clearTimeout(this.resizeTimeout);
     this.resizeTimeout = window.setTimeout(() => {
       const windowSizes = RUMService.getWindowSizes();
-      this.submitEvent(RUMActions.WindowResize, 1, windowSizes);
+      this.submitEvent('none', 1, windowSizes);
     }, RESIZE_DEBOUNCE_RATE);
   }
 
@@ -85,7 +82,7 @@ export class RUMService {
     const windowSizes = RUMService.getWindowSizes();
     const clientInfo = Bowser.parse(window.navigator.userAgent);
 
-    this.submitEvent(RUMActions.WindowLoad, 2, {
+    this.submitEvent('none', 2, {
       sizes: windowSizes,
       client: clientInfo,
     });
@@ -96,7 +93,7 @@ export class RUMService {
       if (this.prevURI === e.pathname) return;
 
       this.prevURI = e.pathname;
-      this.submitEvent(RUMActions.URIChange, 1, { pathname: this.prevURI });
+      this.submitEvent('', 1, { pathname: this.prevURI });
     });
   }
 

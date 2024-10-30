@@ -6,7 +6,6 @@ import produce from 'immer';
 import { CSSBreakpoints } from 'model/constants';
 import { nodePoolsURL } from 'model/constants/docs';
 import * as Providers from 'model/constants/providers';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import * as clusterActions from 'model/stores/cluster/actions';
 import { isClusterCreating } from 'model/stores/cluster/utils';
 import { updateClusterLabels } from 'model/stores/clusterlabels/actions';
@@ -25,7 +24,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { TransitionGroup } from 'react-transition-group';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import { css } from 'styled-components';
 import styled from 'styled-components';
 import { FlexRowWithTwoBlocksOnEdges, mq, Row } from 'styles';
@@ -578,14 +576,12 @@ class V5ClusterDetailTable extends React.Component {
                 actually run workloads.
               </p>
             )}
-            <RUMActionTarget name={RUMActions.AddNodePool}>
-              <Button
-                onClick={this.toggleAddNodePoolForm}
-                icon={<i className='fa fa-add-circle' />}
-              >
-                Add node pool
-              </Button>
-            </RUMActionTarget>
+            <Button
+              onClick={this.toggleAddNodePoolForm}
+              icon={<i className='fa fa-add-circle' />}
+            >
+              Add node pool
+            </Button>
             {nodePools && nodePools.length === 1 && (
               <p>
                 With additional node pools, you can add different types of

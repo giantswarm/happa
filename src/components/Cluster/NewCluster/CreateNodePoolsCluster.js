@@ -7,14 +7,12 @@ import MasterNodes from 'Cluster/NewCluster/MasterNodes';
 import { Box } from 'grommet';
 import produce from 'immer';
 import { Constants } from 'model/constants';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import { batchedClusterCreate } from 'model/stores/batchActions';
 import { BATCHED_CLUSTER_CREATION_REQUEST } from 'model/stores/cluster/constants';
 import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import Button from 'UI/Controls/Button';
@@ -246,7 +244,7 @@ class CreateNodePoolsCluster extends Component {
               <InputGroup label='Master node availability zones'>
                 <AZSelection
                   variant={AZSelectionVariants.Master}
-                  baseActionName={RUMActions.SelectMasterAZSelection}
+                  baseActionName=''
                   value={masterAZMode}
                   provider={provider}
                   onChange={this.setMasterAZMode}
@@ -277,54 +275,46 @@ class CreateNodePoolsCluster extends Component {
                         id={npId}
                         capabilities={capabilities}
                       />
-                      <RUMActionTarget name={RUMActions.RemoveNodePool}>
-                        <i
-                          className='fa fa-close clickable'
-                          title='Remove node pool'
-                          aria-hidden='true'
-                          onClick={() => this.removeNodePoolForm(npId)}
-                        />
-                      </RUMActionTarget>
+                      <i
+                        className='fa fa-close clickable'
+                        title='Remove node pool'
+                        aria-hidden='true'
+                        onClick={() => this.removeNodePoolForm(npId)}
+                      />
                     </AddNodePoolFlexColumnDiv>
                   </AddNodePoolWrapperDiv>
                 </SlideTransition>
               );
             })}
           </NodePoolsTransitionGroup>
-          <RUMActionTarget name={RUMActions.AddNodePool}>
-            <Button
-              onClick={this.addNodePoolForm}
-              icon={<i className='fa fa-add-circle' />}
-            >
-              Add node pool
-            </Button>
-          </RUMActionTarget>
+          <Button
+            onClick={this.addNodePoolForm}
+            icon={<i className='fa fa-add-circle' />}
+          >
+            Add node pool
+          </Button>
           <HorizontalLine />
         </Box>
         <FlexRow>
           <Box gap='small' direction='row'>
-            <RUMActionTarget name={RUMActions.CreateClusterSubmit}>
-              <Button
-                primary={true}
-                disabled={!this.isValid()}
-                loading={isClusterCreating}
-                onClick={this.createCluster}
-                type='button'
-              >
-                Create cluster
-              </Button>
-            </RUMActionTarget>
+            <Button
+              primary={true}
+              disabled={!this.isValid()}
+              loading={isClusterCreating}
+              onClick={this.createCluster}
+              type='button'
+            >
+              Create cluster
+            </Button>
             {/* We want to hide cancel button when the Create NP button has been clicked */}
             {!isClusterCreating && (
-              <RUMActionTarget name={RUMActions.CreateClusterCancel}>
-                <Button
-                  loading={isClusterCreating}
-                  onClick={this.props.closeForm}
-                  type='button'
-                >
-                  Cancel
-                </Button>
-              </RUMActionTarget>
+              <Button
+                loading={isClusterCreating}
+                onClick={this.props.closeForm}
+                type='button'
+              >
+                Cancel
+              </Button>
             )}
           </Box>
         </FlexRow>

@@ -16,7 +16,6 @@ import {
   getSupportedAvailabilityZones,
 } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import InputGroup from 'UI/Inputs/InputGroup';
@@ -147,7 +146,7 @@ const WorkerNodesCreateNodePoolAvailabilityZones: React.FC<
         <AZSelection
           variant={AZSelectionVariants.NodePool}
           uniqueIdentifier={id}
-          baseActionName={RUMActions.SelectAZSelection}
+          baseActionName=''
           value={azSelector}
           provider={provider}
           onChange={handleChange}
