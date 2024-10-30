@@ -70,7 +70,6 @@ const config: webpack.Configuration = merge(common, {
         mapiAuthRedirectURL: 'http://localhost:7000',
         environment: 'development',
         happaVersion: 'development',
-        enableRealUserMonitoring: false,
       },
       proxies: [
         {
