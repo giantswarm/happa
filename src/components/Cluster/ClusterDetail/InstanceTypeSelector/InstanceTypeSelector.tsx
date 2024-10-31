@@ -1,7 +1,5 @@
 import { Keyboard } from 'grommet';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { FC, useState } from 'react';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 import {
   ListToggler,
@@ -94,33 +92,25 @@ const InstanceTypeSelector: FC<IInstanceTypeSelector> = ({
         </SelectedWrapper>
       )}
       <div>
-        <RUMActionTarget
-          name={
-            collapsed
-              ? RUMActions.ExpandInstanceTypes
-              : RUMActions.CollapseInstanceTypes
-          }
+        <ListToggler
+          role='button'
+          id='machine-type-selector__toggler'
+          aria-expanded={!collapsed}
+          aria-labelledby='available-machines-label'
+          tabIndex={0}
+          onClick={() => setCollapsed(!collapsed)}
+          collapsible={true}
+          onKeyDown={handleTabSelect}
+          title={`Show/hide available ${plural}`}
         >
-          <ListToggler
-            role='button'
-            id='machine-type-selector__toggler'
-            aria-expanded={!collapsed}
-            aria-labelledby='available-machines-label'
-            tabIndex={0}
-            onClick={() => setCollapsed(!collapsed)}
-            collapsible={true}
-            onKeyDown={handleTabSelect}
-            title={`Show/hide available ${plural}`}
-          >
-            <i
-              className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`}
-              aria-hidden='true'
-              aria-label='Toggle'
-              role='presentation'
-            />
-            <span id='available-machines-label'>Available {plural}</span>
-          </ListToggler>
-        </RUMActionTarget>
+          <i
+            className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`}
+            aria-hidden='true'
+            aria-label='Toggle'
+            role='presentation'
+          />
+          <span id='available-machines-label'>Available {plural}</span>
+        </ListToggler>
       </div>
       {!collapsed && (
         <Keyboard onEsc={handleKeyDownCancel}>

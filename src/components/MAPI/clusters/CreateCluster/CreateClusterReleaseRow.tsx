@@ -1,8 +1,6 @@
 import { Anchor, Box, Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { FC } from 'react';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
 import Date from 'UI/Display/Date';
@@ -75,21 +73,19 @@ const ReleaseRow: FC<React.PropsWithChildren<IReleaseRow>> = ({
     >
       <TableCell>
         {!isPreviewRelease && (
-          <RUMActionTarget name={RUMActions.SelectRelease}>
-            <RadioInput
-              id={`select-${version}`}
-              title={`Select release ${version}`}
-              checked={isSelected}
-              value={isSelected ? 'true' : 'false'}
-              name={`select-${version}`}
-              onChange={handleSelectRelease}
-              formFieldProps={{
-                margin: 'none',
-                tabIndex: -1,
-              }}
-              tabIndex={-1}
-            />
-          </RUMActionTarget>
+          <RadioInput
+            id={`select-${version}`}
+            title={`Select release ${version}`}
+            checked={isSelected}
+            value={isSelected ? 'true' : 'false'}
+            name={`select-${version}`}
+            onChange={handleSelectRelease}
+            formFieldProps={{
+              margin: 'none',
+              tabIndex: -1,
+            }}
+            tabIndex={-1}
+          />
         )}
       </TableCell>
       <TableCell size='medium'>

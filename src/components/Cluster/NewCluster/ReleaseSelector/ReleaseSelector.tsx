@@ -1,8 +1,6 @@
 import { Box, Keyboard, Text } from 'grommet';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import { isPreRelease } from 'model/stores/releases/utils';
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 import { Dot } from 'styles';
 import { ListToggler } from 'UI/Controls/ExpandableSelector/Selector';
@@ -186,33 +184,27 @@ const ReleaseSelector: FC<React.PropsWithChildren<IReleaseSelectorProps>> = ({
         />
       </Box>
       <div>
-        <RUMActionTarget
-          name={
-            collapsed ? RUMActions.ExpandReleases : RUMActions.CollapseReleases
-          }
+        <ListToggler
+          role='button'
+          id='release-selector__toggler'
+          aria-expanded={!collapsed}
+          aria-labelledby='available-releases-label'
+          tabIndex={0}
+          onClick={handleCollapse}
+          collapsible={collapsible as boolean}
+          onKeyDown={handleTabSelect}
+          title='Show/hide available releases'
         >
-          <ListToggler
-            role='button'
-            id='release-selector__toggler'
-            aria-expanded={!collapsed}
-            aria-labelledby='available-releases-label'
-            tabIndex={0}
-            onClick={handleCollapse}
-            collapsible={collapsible as boolean}
-            onKeyDown={handleTabSelect}
-            title='Show/hide available releases'
-          >
-            {collapsible && (
-              <i
-                className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`}
-                aria-hidden='true'
-                aria-label='Toggle'
-                role='presentation'
-              />
-            )}
-            <span id='available-releases-label'>Available releases</span>
-          </ListToggler>
-        </RUMActionTarget>
+          {collapsible && (
+            <i
+              className={`fa fa-caret-${collapsed ? 'right' : 'bottom'}`}
+              aria-hidden='true'
+              aria-label='Toggle'
+              role='presentation'
+            />
+          )}
+          <span id='available-releases-label'>Available releases</span>
+        </ListToggler>
       </div>
       {!collapsed && (
         <>

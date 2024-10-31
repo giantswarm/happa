@@ -68,7 +68,6 @@ const config: Config.InitialOptions = {
       passageEndpoint: 'http://5.6.7.8',
       environment: 'development',
       ingressBaseDomain: 'k8s.sample.io',
-      enableRealUserMonitoring: false,
       defaultRequestTimeoutSeconds: 10,
       awsCapabilitiesJSON:
         '{"m4.xlarge":{"cpu_cores":4,"description":"M4 General Purpose Extra Large","memory_size_gb":16,"storage_size_gb":0},"m3.large":{"description":"M3 General Purpose Large","memory_size_gb":7.5,"cpu_cores":2,"storage_size_gb":32},"m3.xlarge":{"description":"M3 General Purpose Extra Large","memory_size_gb":15,"cpu_cores":4,"storage_size_gb":80},"m3.2xlarge":{"description":"M3 General Purpose Double Extra Large","memory_size_gb":30,"cpu_cores":8,"storage_size_gb":160}, "m5.xlarge":{"cpu_cores":4,"description":"M5 General Purpose Extra Large","memory_size_gb":16,"storage_size_gb":0}}',

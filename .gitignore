@@ -37,3 +37,6 @@ tsconfig.tsbuildinfo
 
 # app-test-suite
 /ats/test_results*.xml
+
+# Python virtual environments
+/venv

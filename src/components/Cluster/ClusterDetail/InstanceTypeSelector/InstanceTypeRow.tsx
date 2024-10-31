@@ -1,8 +1,6 @@
 import { Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { FC } from 'react';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 import { TableCell, TableRow } from 'UI/Display/Table';
 import RadioInput from 'UI/Inputs/RadioInput';
@@ -66,20 +64,18 @@ const InstanceTypeRow: FC<React.PropsWithChildren<IInstanceTypeRow>> = ({
       aria-label={`${singular} ${name}`}
     >
       <TableCell>
-        <RUMActionTarget name={RUMActions.SelectInstanceType}>
-          <RadioInput
-            id={`select-${name}`}
-            title={`Select ${name}`}
-            checked={isSelected}
-            value={isSelected ? 'true' : 'false'}
-            name={`select-${name}`}
-            onChange={() => selectInstanceType(name)}
-            formFieldProps={{
-              margin: 'none',
-            }}
-            tabIndex={-1}
-          />
-        </RUMActionTarget>
+        <RadioInput
+          id={`select-${name}`}
+          title={`Select ${name}`}
+          checked={isSelected}
+          value={isSelected ? 'true' : 'false'}
+          name={`select-${name}`}
+          onChange={() => selectInstanceType(name)}
+          formFieldProps={{
+            margin: 'none',
+          }}
+          tabIndex={-1}
+        />
       </TableCell>
       <TableCell>
         <Name>{name}</Name>

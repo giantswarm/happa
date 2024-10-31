@@ -1,8 +1,6 @@
 import { Box, Keyboard, Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { FC, useState } from 'react';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import KubernetesVersionLabel from 'UI/Display/Cluster/KubernetesVersionLabel';
@@ -80,21 +78,19 @@ const ReleaseRow: FC<React.PropsWithChildren<IReleaseRow>> = ({
         aria-label={`Release version ${version}`}
       >
         <TableCell>
-          <RUMActionTarget name={RUMActions.SelectRelease}>
-            <RadioInput
-              id={`select-${version}`}
-              title={`Select release ${version}`}
-              checked={isSelected}
-              value={isSelected ? 'true' : 'false'}
-              name={`select-${version}`}
-              onChange={() => selectRelease(version)}
-              formFieldProps={{
-                margin: 'none',
-                tabIndex: -1,
-              }}
-              tabIndex={-1}
-            />
-          </RUMActionTarget>
+          <RadioInput
+            id={`select-${version}`}
+            title={`Select release ${version}`}
+            checked={isSelected}
+            value={isSelected ? 'true' : 'false'}
+            name={`select-${version}`}
+            onChange={() => selectRelease(version)}
+            formFieldProps={{
+              margin: 'none',
+              tabIndex: -1,
+            }}
+            tabIndex={-1}
+          />
         </TableCell>
         <StyledTableCell size='small' active={active}>
           <Text>{version}</Text>
@@ -117,36 +113,25 @@ const ReleaseRow: FC<React.PropsWithChildren<IReleaseRow>> = ({
             e.stopPropagation()
           }
         >
-          <RUMActionTarget
-            name={
-              collapsed
-                ? RUMActions.ShowReleaseDetails
-                : RUMActions.HideReleaseDetails
-            }
-          >
-            <Keyboard
-              onEnter={handleButtonKeyDown}
-              onSpace={handleButtonKeyDown}
+          <Keyboard onEnter={handleButtonKeyDown} onSpace={handleButtonKeyDown}>
+            <Button
+              data-testid={`show-components-${version}`}
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setCollapsed(!collapsed);
+              }}
+              icon={
+                <i
+                  role='presentation'
+                  aria-hidden={true}
+                  className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`}
+                />
+              }
             >
-              <Button
-                data-testid={`show-components-${version}`}
-                onClick={(e: React.MouseEvent) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  setCollapsed(!collapsed);
-                }}
-                icon={
-                  <i
-                    role='presentation'
-                    aria-hidden={true}
-                    className={`fa fa-${collapsed ? 'eye' : 'eye-with-line'}`}
-                  />
-                }
-              >
-                {collapsed ? 'Show' : 'Hide'}
-              </Button>
-            </Keyboard>
-          </RUMActionTarget>
+              {collapsed ? 'Show' : 'Hide'}
+            </Button>
+          </Keyboard>
         </TableCell>
         <TableCell
           align='center'

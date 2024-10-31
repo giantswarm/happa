@@ -8,7 +8,6 @@ import AddNodePoolSpotInstances from 'Cluster/ClusterDetail/AddNodePool/AddNodeP
 import { Box } from 'grommet';
 import produce from 'immer';
 import { Constants, Providers } from 'model/constants';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import NodeCountSelector from 'shared/NodeCountSelector';
@@ -445,7 +444,7 @@ class AddNodePool extends Component {
           <AZSelection
             variant={AZSelectionVariants.NodePool}
             uniqueIdentifier={`np-${id}-az`}
-            baseActionName={RUMActions.SelectAZSelection}
+            baseActionName=''
             value={azSelection}
             provider={provider}
             onChange={this.toggleAZSelector}

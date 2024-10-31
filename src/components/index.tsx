@@ -17,7 +17,6 @@ import ErrorReporter from 'utils/errors/ErrorReporter';
 import { SentryErrorNotifier } from 'utils/errors/SentryErrorNotifier';
 import { makeDefaultConfig } from 'utils/MapiAuth/makeDefaultConfig';
 import MapiAuth from 'utils/MapiAuth/MapiAuth';
-import { RUMService } from 'utils/RUMService';
 
 import App from './App';
 
@@ -44,9 +43,6 @@ if (window.config.environment !== 'development') {
     history,
   });
 }
-
-const rumService = new RUMService(history);
-rumService.initEvents();
 
 // Scroll to the top when we change the URL.
 history.listen(() => {

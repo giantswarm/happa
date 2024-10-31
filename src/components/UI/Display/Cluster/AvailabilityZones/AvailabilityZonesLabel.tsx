@@ -1,7 +1,5 @@
 import { Keyboard } from 'grommet';
-import { RUMActions } from 'model/constants/realUserMonitoring';
 import React, { KeyboardEvent } from 'react';
-import RUMActionTarget from 'RUM/RUMActionTarget';
 import styled from 'styled-components';
 
 const azColors = [
@@ -145,20 +143,18 @@ const AvailabilityZonesLabel: React.FC<IAvailabilityZonesLabelProps> = ({
   };
 
   return (
-    <RUMActionTarget name={RUMActions.ToggleAZ}>
-      <Keyboard onSpace={handleSelectKeyDown} onEnter={handleSelectKeyDown}>
-        <Wrapper
-          className={classNames}
-          title={title}
-          bgColor={color}
-          onClick={toggleChecked}
-          tabIndex={0}
-          aria-label={`${variant} ${value}`}
-        >
-          {label}
-        </Wrapper>
-      </Keyboard>
-    </RUMActionTarget>
+    <Keyboard onSpace={handleSelectKeyDown} onEnter={handleSelectKeyDown}>
+      <Wrapper
+        className={classNames}
+        title={title}
+        bgColor={color}
+        onClick={toggleChecked}
+        tabIndex={0}
+        aria-label={`${variant} ${value}`}
+      >
+        {label}
+      </Wrapper>
+    </Keyboard>
   );
 };
 

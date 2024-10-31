@@ -11,7 +11,6 @@ export interface IConfigurationValues {
   defaultRequestTimeoutSeconds: number;
   environment: string;
   happaVersion: string;
-  enableRealUserMonitoring: boolean;
 
   awsCapabilitiesJSON: string;
   azureCapabilitiesJSON: string;
@@ -80,7 +79,6 @@ export async function getConfigurationValues(
   config.setDefault('mapi-audience', 'http://localhost:8000');
   config.setDefault('passage-endpoint', 'http://localhost:8000');
   config.setDefault('athena-endpoint', 'http://localhost:8000');
-  config.setDefault('enable-rum', true);
   config.setDefault('installation-name', 'development');
   config.setDefault('default-request-timeout-seconds', 10);
   config.setDefault('ingress-base-domain', 'k8s.sample.io');
@@ -119,7 +117,6 @@ export async function getConfigurationValues(
     ),
     environment: config.getString('installation-name'),
     happaVersion: config.getString('version'),
-    enableRealUserMonitoring: config.getBoolean('enable-rum'),
 
     awsCapabilitiesJSON: config.getString('aws-capabilities-json'),
     azureCapabilitiesJSON: config.getString('azure-capabilities-json'),

@@ -46,9 +46,6 @@ data:
     sentry-debug: false
     sentry-sample-rate: 0.5
 
-    # Enables real user monitoring (RUM)
-    enable-rum: true
-
     # Feature flags
     feature-mapi-auth: {{ .Values.happa.featureFlags.mapiAuth }}
     feature-mapi-clusters: {{ .Values.happa.featureFlags.mapiClusters }}
