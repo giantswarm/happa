@@ -75,6 +75,7 @@ happa:
 happaapi:
   address: ""
   host: check
+  allowedOrigins: []
 
 athena:
   address: ""
