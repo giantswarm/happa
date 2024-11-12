@@ -205,6 +205,9 @@
         "address": {
           "type": "string"
         },
+        "allowedOrigins": {
+          "type": "array"
+        },
         "host": {
           "type": "string"
         },
