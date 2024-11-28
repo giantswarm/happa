@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@5.10.1
+  architect: giantswarm/architect@5.11.1
 
 defaults: &defaults
   working_directory: ~/happa
@@ -55,7 +55,7 @@ workflows:
             - lint
             - build
           <<: *job_filters
-      
+
       - launch-container:
           requires:
             - push-to-registries
@@ -66,7 +66,6 @@ workflows:
           name: push-happa-to-control-plane-app-catalog
           app_catalog: control-plane-catalog
           app_catalog_test: control-plane-test-catalog
-          push_to_oci_registry: false
           chart: happa
           persist_chart_archive: true
           requires:
@@ -165,8 +164,6 @@ workflows:
 
       - architect/run-tests-with-ats:
           name: execute chart tests
-          app-test-suite_version: v0.2.9
-          app-test-suite_container_tag: 0.2.9
           filters:
             branches:
               ignore:
@@ -174,7 +171,7 @@ workflows:
           requires:
             - push-happa-to-control-plane-app-catalog
 
-          
+
       # FE Docs
 
       - build-fe-docs:

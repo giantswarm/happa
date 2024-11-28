@@ -8,6 +8,3 @@ pytest-helm-charts = "==1.1.1"
 pytest = "==7.4.3"
 pykube-ng = "==22.9.0"
 pytest-rerunfailures = "==11.1.2"
-
-[requires]
-python_version = "3.9"
