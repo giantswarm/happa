@@ -12,10 +12,6 @@ hostnames: []
 registry:
   domain: gsoci.azurecr.io
 
-global:
-  podSecurityStandards:
-    enforced: false
-
 podSeccompProfile:
   type: RuntimeDefault
 
