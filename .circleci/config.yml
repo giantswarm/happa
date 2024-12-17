@@ -140,9 +140,9 @@ workflows:
               only: /^v.*/
 
       - architect/push-to-app-collection:
-          name: push-to-gcp-app-collection
+          name: push-to-proxmox-app-collection
           app_name: "happa"
-          app_collection_repo: "gcp-app-collection"
+          app_collection_repo: "proxmox-app-collection"
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
