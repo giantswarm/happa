@@ -10,9 +10,7 @@ import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
 import TextInput from 'UI/Inputs/TextInput';
-import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
-import Passage from 'utils/passageClient';
 import { validatePassword } from 'utils/passwordValidation';
 
 import StatusMessage from './StatusMessage';
@@ -101,8 +99,6 @@ const Wrapper = styled('div')`
   }
 `;
 
-const passage = new Passage({ endpoint: window.config.passageEndpoint });
-
 interface MatchParams {
   token: string;
 }
@@ -176,49 +172,6 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
 
   componentDidMount() {
     this.isComponentMounted = true;
-    const token = this.props.match.params.token;
-    const statusMessageChangeTimeout = 800;
-
-    passage
-      .checkInvite({ token })
-      .then((data) => {
-        this.setState({
-          email: data.email,
-          statusMessage: 'verify_completed',
-          // eslint-disable-next-line react/no-unused-state
-          checkInviteStatus: 'completed',
-        });
-
-        setTimeout(() => {
-          if (this.isComponentMounted) {
-            this.setState({
-              statusMessage: 'enter_password',
-            });
-
-            this.advanceForm();
-          }
-        }, statusMessageChangeTimeout);
-      })
-      .catch((error) => {
-        this.setState({
-          // eslint-disable-next-line react/no-unused-state
-          checkInviteStatus: 'failed',
-        });
-
-        let statusMessage = 'verify_failed';
-
-        if (error.message === 'InvalidToken') {
-          statusMessage = 'invalid_token';
-        }
-
-        this.setState({
-          statusMessage: statusMessage,
-        });
-
-        if (error.message !== 'InvalidToken') {
-          ErrorReporter.getInstance().notify(error as Error);
-        }
-      });
   }
 
   componentDidUpdate(prevProps: ISignUpProps) {
@@ -284,33 +237,6 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
         statusMessage: 'create_account_starting',
         submitting: true,
       });
-
-      passage
-        .createAccount({
-          inviteToken: this.props.match.params.token,
-          password: this.state.passwordField.value,
-        })
-        .then((data) => {
-          this.setState({
-            statusMessage: 'create_account_completed',
-          });
-
-          return this.props.actions.giantswarmLogin(
-            data.email,
-            this.state.passwordField.value
-          );
-        })
-        .then(() => {
-          this.accountCreated();
-        })
-        .catch((err) => {
-          this.setState({
-            statusMessage: 'create_account_failed',
-            submitting: false,
-          });
-
-          ErrorReporter.getInstance().notify(err as Error);
-        });
     } else {
       this.advanceForm();
     }

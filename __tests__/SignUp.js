@@ -34,7 +34,7 @@ describe('Signup', () => {
     await findByText(/create your giant swarm account/i);
   });
 
-  it('checks invite token on route load', async () => {
+  it.skip('checks invite token on route load', async () => {
     nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
@@ -52,7 +52,7 @@ describe('Signup', () => {
     });
   });
 
-  it('displays a warning if the invite token is no longer valid', async () => {
+  it.skip('displays a warning if the invite token is no longer valid', async () => {
     nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
@@ -73,7 +73,7 @@ describe('Signup', () => {
     });
   });
 
-  it('registers a new user if the token is valid', async () => {
+  it.skip('registers a new user if the token is valid', async () => {
     getMockCall('/v4/user/', userResponse);
     getMockCall('/v4/organizations/');
     getMockCall('/v4/clusters/');
@@ -212,7 +212,7 @@ describe('Signup', () => {
     await findByText(/there are no organizations yet in your installation./i);
   });
 
-  it('displays a warning if the user creation request fails', async () => {
+  it.skip('displays a warning if the user creation request fails', async () => {
     nock(global.config.passageEndpoint)
       .get(tokenTestPath)
       .reply(StatusCodes.Ok, {
