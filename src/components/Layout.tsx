@@ -116,78 +116,80 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
               user={user}
             />
             <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
-              {selectedOrg && (
-                <OrganizationCreatedNote organization={selectedOrg} />
-              )}
-              <div className='main' data-testid='main'>
-                <Switch>
-                  {supportsClustersViaMapi ? (
-                    <Route component={Clusters} exact path={MainRoutes.Home} />
-                  ) : (
-                    <Route component={Home} exact path={MainRoutes.Home} />
-                  )}
+              <div>
+                {selectedOrg && (
+                  <OrganizationCreatedNote organization={selectedOrg} />
+                )}
+                <div className='main' data-testid='main'>
+                  <Switch>
+                    {supportsClustersViaMapi ? (
+                      <Route component={Clusters} exact path={MainRoutes.Home} />
+                    ) : (
+                      <Route component={Home} exact path={MainRoutes.Home} />
+                    )}
 
-                  {supportsAppsViaMapi ? (
-                    <Route component={AppsMAPI} path={AppsRoutes.Home} />
-                  ) : (
-                    <Route component={Apps} path={AppsRoutes.Home} />
-                  )}
+                    {supportsAppsViaMapi ? (
+                      <Route component={AppsMAPI} path={AppsRoutes.Home} />
+                    ) : (
+                      <Route component={Apps} path={AppsRoutes.Home} />
+                    )}
 
-                  {showUsers && (
-                    <Route component={Users} exact path={UsersRoutes.Home} />
-                  )}
+                    {showUsers && (
+                      <Route component={Users} exact path={UsersRoutes.Home} />
+                    )}
 
-                  {user?.type === LoggedInUserTypes.MAPI ? (
+                    {user?.type === LoggedInUserTypes.MAPI ? (
+                      <Route
+                        component={MAPIOrganizations}
+                        path={OrganizationsRoutes.Home}
+                      />
+                    ) : (
+                      <Route
+                        component={Organizations}
+                        path={OrganizationsRoutes.Home}
+                      />
+                    )}
+
                     <Route
-                      component={MAPIOrganizations}
-                      path={OrganizationsRoutes.Home}
-                    />
-                  ) : (
-                    <Route
-                      component={Organizations}
-                      path={OrganizationsRoutes.Home}
-                    />
-                  )}
-
-                  <Route
-                    component={AccountSettings}
-                    exact
-                    path={AccountSettingsRoutes.Home}
-                  />
-
-                  {user?.type === LoggedInUserTypes.MAPI && (
-                    <Route
-                      component={Permissions}
+                      component={AccountSettings}
                       exact
-                      path={AccountSettingsRoutes.Permissions}
+                      path={AccountSettingsRoutes.Home}
                     />
-                  )}
 
-                  {user?.isAdmin && (
-                    <>
+                    {user?.type === LoggedInUserTypes.MAPI && (
                       <Route
-                        component={Experiments}
+                        component={Permissions}
                         exact
-                        path={AccountSettingsRoutes.Experiments.Home}
+                        path={AccountSettingsRoutes.Permissions}
                       />
-                      <Route
-                        component={ClusterAppSchemaTester}
-                        path={
-                          AccountSettingsRoutes.Experiments
-                            .ClusterAppSchemaTester
-                        }
-                      />
-                    </>
-                  )}
+                    )}
 
-                  <Route
-                    component={ExceptionNotificationTest}
-                    exact
-                    path={ExceptionNotificationTestRoutes.Home}
-                  />
+                    {user?.isAdmin && (
+                      <>
+                        <Route
+                          component={Experiments}
+                          exact
+                          path={AccountSettingsRoutes.Experiments.Home}
+                        />
+                        <Route
+                          component={ClusterAppSchemaTester}
+                          path={
+                            AccountSettingsRoutes.Experiments
+                              .ClusterAppSchemaTester
+                          }
+                        />
+                      </>
+                    )}
 
-                  <Redirect path='*' to={MainRoutes.Home} />
-                </Switch>
+                    <Route
+                      component={ExceptionNotificationTest}
+                      exact
+                      path={ExceptionNotificationTestRoutes.Home}
+                    />
+
+                    <Redirect path='*' to={MainRoutes.Home} />
+                  </Switch>
+                </div>
               </div>
             </Breadcrumb>
           </>

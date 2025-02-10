@@ -3,10 +3,7 @@ import { push } from 'connected-react-router';
 import { Text } from 'grommet';
 import { MainRoutes, UsersRoutes } from 'model/constants/routes';
 import { getLoggedInUser } from 'model/stores/main/selectors';
-import { getOrganizationByID } from 'model/stores/organization/utils';
 import {
-  invitationCreate,
-  invitationsLoad,
   userDelete,
   userRemoveExpiration,
   usersLoad,
@@ -14,24 +11,20 @@ import {
 import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
-import Button from 'UI/Controls/Button';
 import Section from 'UI/Layout/Section';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 
 import DeleteUserModal from './DeleteUserModal';
-import InvitesTable from './InvitesTable';
-import InviteUserModal from './InviteUserModal';
 import UnexpireUserModal from './UnexpireUserModal';
 import UsersTable from './UsersTable';
 
 const UserModalTypes = {
   Unexpire: 'unexpire',
   Delete: 'delete',
-  Invite: 'invite',
 };
 
 function canManageUsers(user, writeAllGroup) {
-  return user.groups.includes(writeAllGroup);
+  return user?.isAdmin && writeAllGroup && user?.groups?.includes(writeAllGroup);
 }
 
 class Users extends React.Component {
@@ -41,19 +34,18 @@ class Users extends React.Component {
       template: '',
       visible: false,
       loading: false,
-      invitationResult: {},
     },
   };
 
   componentDidMount() {
-    if (!this.props.currentUser.isAdmin) {
+    if (!this.props.currentUser?.isAdmin) {
       this.props.dispatch(push(MainRoutes.Home));
+
+      return;
     }
 
     if (canManageUsers(this.props.currentUser, this.props.write_all_group)) {
-      this.props
-        .dispatch(usersLoad())
-        .then(this.props.dispatch(invitationsLoad()));
+      this.props.dispatch(usersLoad());
     }
   }
 
@@ -121,60 +113,6 @@ class Users extends React.Component {
       });
   };
 
-  inviteUser = () => {
-    this.setState({
-      modal: {
-        template: UserModalTypes.Invite,
-        visible: true,
-        loading: false,
-      },
-    });
-  };
-
-  confirmInviteUser = (invitationForm) => {
-    this.setState({
-      modal: {
-        template: UserModalTypes.Invite,
-        visible: true,
-        loading: true,
-      },
-    });
-
-    const organizations = Object.values(this.props.organizations.items);
-
-    const invitationOrgs = invitationForm.organizations.map((id) => {
-      const org = getOrganizationByID(id, organizations);
-
-      return org.name ?? org.id;
-    });
-
-    const invitation = {
-      ...invitationForm,
-      organizations: invitationOrgs,
-    };
-
-    this.props
-      .dispatch(usersLoad()) // Hack to ensure fresh Giant Swarm access token before inviting the user.
-      .then(() => {
-        return this.props.dispatch(invitationCreate(invitation));
-      })
-      .then((result) => {
-        this.setState({
-          modal: {
-            template: UserModalTypes.Invite,
-            invitationResult: result,
-            visible: true,
-            loading: false,
-          },
-        });
-      })
-      .catch((err) => {
-        this.closeModal();
-
-        ErrorReporter.getInstance().notify(err);
-      });
-  };
-
   closeModal = () => {
     this.setState({
       modal: {
@@ -185,87 +123,65 @@ class Users extends React.Component {
   };
 
   renderModalComponent() {
-    let ModalComponent = InviteUserModal;
-
     const { modal, selectedUser } = this.state;
-    const { organizations, initialSelectedOrganizations } = this.props;
     const propsToAdd = {};
+    let ModalComponent = null;
 
     switch (modal.template) {
       case UserModalTypes.Unexpire:
         ModalComponent = UnexpireUserModal;
-
         propsToAdd.forUser = selectedUser;
         propsToAdd.onConfirm = this.confirmRemoveExpiration.bind(
           this,
           selectedUser
         );
-
         break;
 
       case UserModalTypes.Delete:
         ModalComponent = DeleteUserModal;
-
         propsToAdd.forUser = selectedUser;
         propsToAdd.onConfirm = this.confirmDeleteUser.bind(this, selectedUser);
-
         break;
 
       default:
-        propsToAdd.onConfirm = this.confirmInviteUser;
-        propsToAdd.organizations = organizations;
-        propsToAdd.initiallySelectedOrganizations =
-          initialSelectedOrganizations;
-        propsToAdd.invitationResult = modal.invitationResult;
+        return null;
     }
 
-    return (
+    return ModalComponent ? (
       <ModalComponent
         {...propsToAdd}
         show={modal.visible}
         onClose={this.closeModal}
         isLoading={modal.loading}
       />
-    );
+    ) : null;
   }
 
   render() {
     const {
       users,
-      invitations,
       installation_name,
       currentUser,
       write_all_group,
     } = this.props;
+
+    const userItems = users?.items || [];
 
     const installationNameLabel = installation_name || 'unknown installation';
 
     return (
       <Breadcrumb data={{ title: 'USERS', pathname: UsersRoutes.Home }}>
         <DocumentTitle title='Users'>
-          <>
+          <div>
             <h1>Users</h1>
             {canManageUsers(currentUser, write_all_group) ? (
-              <>
-                <Section title='Open invites'>
-                  <>
-                    <InvitesTable invitations={invitations} />
-                    <Button
-                      onClick={this.inviteUser}
-                      icon={<i className='fa fa-add-circle' />}
-                    >
-                      Invite user
-                    </Button>
-                  </>
-                </Section>
-                <Section title='User accounts'>
-                  <UsersTable
-                    users={users}
-                    onRemoveExpiration={this.removeExpiration}
-                    onDelete={this.deleteUser}
-                  />
-                </Section>
-              </>
+              <Section title='User accounts'>
+                <UsersTable
+                  users={userItems}
+                  onRemoveExpiration={this.removeExpiration}
+                  onDelete={this.deleteUser}
+                />
+              </Section>
             ) : (
               <Text>
                 <i className='fa fa-warning' role='presentation' /> In order to
@@ -275,20 +191,20 @@ class Users extends React.Component {
               </Text>
             )}
             <Section title='Additional information'>
-              <>
+              <div>
                 <p>
-                  This page lists the user accounts and account invites for
-                  installation <code>{installationNameLabel}</code>. Only Giant
-                  Swarm staff can access this page.
+                  This page lists the user accounts for installation{' '}
+                  <code>{installationNameLabel}</code>. Only Giant Swarm staff can
+                  access this page.
                 </p>
                 <p>
-                  Giant Swarm staff members normally do not require user
-                  accounts, as they log in via Single Sign-On (SSO).
+                  Giant Swarm staff members normally do not require user accounts,
+                  as they log in via Single Sign-On (SSO).
                 </p>
-              </>
+              </div>
             </Section>
             {this.renderModalComponent()}
-          </>
+          </div>
         </DocumentTitle>
       </Breadcrumb>
     );
@@ -296,17 +212,9 @@ class Users extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const initiallySelectedOrganizations = [];
-  if (state.main.selectedOrganization) {
-    initiallySelectedOrganizations.push(state.main.selectedOrganization);
-  }
-
   return {
     currentUser: getLoggedInUser(state),
     users: state.entities.users,
-    invitations: state.entities.users.invitations,
-    organizations: state.entities.organizations,
-    initialSelectedOrganizations: initiallySelectedOrganizations,
     installation_name: window.config.info.general.installationName,
     write_all_group: window.config.mapiAuthAdminGroups[0],
   };

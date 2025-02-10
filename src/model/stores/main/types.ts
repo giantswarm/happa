@@ -13,10 +13,7 @@ import {
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
-  REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
   SET_IMPERSONATION,
-  SET_NEW_PASSWORD,
-  VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'model/stores/main/constants';
 import { IOAuth2ImpersonationMetadata } from 'utils/OAuth2/OAuth2';
 
@@ -92,18 +89,6 @@ export interface IMainRefreshUserInfoSuccessAction {
   loggedInUser: ILoggedInUser;
 }
 
-export interface IMainRequestPasswordRecoveryTokenAction {
-  type: typeof REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST;
-}
-
-export interface IMainVerifyPasswordRecoveryTokenAction {
-  type: typeof VERIFY_PASSWORD_RECOVERY_TOKEN;
-}
-
-export interface IMainSetNewPasswordAction {
-  type: typeof SET_NEW_PASSWORD;
-}
-
 export interface IMainSetImpersonationAction {
   type: typeof SET_IMPERSONATION;
   impersonation: IOAuth2ImpersonationMetadata;
@@ -127,8 +112,5 @@ export type MainActions =
   | IMainRefreshUserInfoRequestAction
   | IMainRefreshUserInfoErrorAction
   | IMainRefreshUserInfoSuccessAction
-  | IMainRequestPasswordRecoveryTokenAction
-  | IMainVerifyPasswordRecoveryTokenAction
-  | IMainSetNewPasswordAction
   | IMainSetImpersonationAction
   | IMainClearImpersonationAction;

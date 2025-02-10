@@ -78,7 +78,8 @@ const getTableColumnsConfig = (onRemoveExpiration, onDelete) => {
 
 // eslint-disable-next-line react/no-multi-comp
 const UsersTable = ({ onRemoveExpiration, onDelete, users }) => {
-  const hasUsers = users && Object.values(users.items).length;
+  const items = users?.items || [];
+  const hasUsers = Array.isArray(items) ? items.length > 0 : Object.keys(items).length > 0;
 
   if (!users || (users.isFetching && !hasUsers)) {
     return <UsersLoader />;
@@ -86,11 +87,13 @@ const UsersTable = ({ onRemoveExpiration, onDelete, users }) => {
     return <UsersPlaceholder />;
   }
 
+  const data = Array.isArray(items) ? items : Object.values(items);
+
   return (
     <div>
       <DataTable
         columns={getTableColumnsConfig(onRemoveExpiration, onDelete)}
-        data={Object.values(users.items)}
+        data={data}
         sort={{
           property: 'email',
           direction: 'asc',

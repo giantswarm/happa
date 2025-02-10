@@ -19,10 +19,7 @@ import {
   REFRESH_USER_INFO_ERROR,
   REFRESH_USER_INFO_REQUEST,
   REFRESH_USER_INFO_SUCCESS,
-  REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
   SET_IMPERSONATION,
-  SET_NEW_PASSWORD,
-  VERIFY_PASSWORD_RECOVERY_TOKEN,
 } from 'model/stores/main/constants';
 import { getLoggedInUser } from 'model/stores/main/selectors';
 import { MainActions } from 'model/stores/main/types';
@@ -41,7 +38,6 @@ import {
   IOAuth2ImpersonationMetadata,
   IOAuth2Provider,
 } from 'utils/OAuth2/OAuth2';
-
 
 import { LoggedInUserTypes } from './types';
 import { mapOAuth2UserToUser } from './utils';

@@ -1,11 +1,12 @@
 import { push } from 'connected-react-router';
 import { MainRoutes } from 'model/constants/routes';
 import * as mainActions from 'model/stores/main/actions';
+import { IState } from 'model/stores/state';
 import React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import { bindActionCreators } from 'redux';
-import { Dispatch } from 'redux';
+import { AnyAction, bindActionCreators } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import CheckBoxInput from 'UI/Inputs/CheckBoxInput';
@@ -17,7 +18,7 @@ import { validatePassword } from 'utils/passwordValidation';
 import StatusMessage from './StatusMessage';
 import TermsOfService from './TermsOfService';
 
-const Wrapper = styled('div')`
+const Wrapper = styled.div`
   position: relative;
   margin: auto;
   margin-top: 50px;
@@ -106,7 +107,7 @@ interface MatchParams {
 
 interface ISignUpProps extends RouteComponentProps<MatchParams> {
   actions: typeof mainActions;
-  dispatch: Dispatch;
+  dispatch: ThunkDispatch<IState, void, AnyAction>;
 }
 
 interface FieldValue {
@@ -236,7 +237,7 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
     }, transitionDelay);
   }
 
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (this.state.formValid) {
@@ -251,21 +252,21 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
       });
 
       // TODO: Replace with new account creation method
-      this.props.actions.giantswarmLogin(
-        this.state.email ?? '',
-        this.state.passwordField.value
-      )
-      .then(() => {
+      try {
+        const loginAction = this.props.actions.giantswarmLogin(
+          this.state.email ?? '',
+          this.state.passwordField.value
+        );
+        await (this.props.dispatch(loginAction) as unknown as Promise<void>);
         this.accountCreated();
-      })
-      .catch((err) => {
+      } catch (err) {
         this.setState({
           statusMessage: 'create_account_failed',
           submitting: false,
         });
 
         ErrorReporter.getInstance().notify(err as Error);
-      });
+      }
     } else {
       this.advanceForm();
     }
@@ -471,7 +472,7 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
   }
 }
 
-function mapDispatchToProps(dispatch: Dispatch) {
+function mapDispatchToProps(dispatch: ThunkDispatch<IState, void, AnyAction>) {
   return {
     actions: bindActionCreators(mainActions, dispatch),
     dispatch: dispatch,

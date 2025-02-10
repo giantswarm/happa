@@ -16,6 +16,13 @@ import {
   USERS_REMOVE_EXPIRATION_SUCCESS,
 } from 'model/stores/user/constants';
 
+export interface IUser {
+  email: string;
+  created: string;
+  expiry: string;
+  emaildomain?: string;
+}
+
 export interface IUserState {
   lastUpdated: number;
   isFetching: boolean;

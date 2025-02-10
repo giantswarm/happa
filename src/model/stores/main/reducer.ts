@@ -36,58 +36,58 @@ const makeMainReducer = () => {
   return produce(
     (draft: IMainState, action: MainActions | OrganizationActions) => {
       switch (action.type) {
-        case REFRESH_USER_INFO_SUCCESS: {
-          draft.loggedInUser = action.loggedInUser;
-
+        case REFRESH_USER_INFO_SUCCESS:
+          if ('loggedInUser' in action) {
+            draft.loggedInUser = action.loggedInUser;
+          }
           break;
-        }
 
-        case LOGIN_SUCCESS: {
-          draft.loggedInUser = action.userData;
-
+        case LOGIN_SUCCESS:
+          if ('userData' in action) {
+            draft.loggedInUser = action.userData;
+          }
           break;
-        }
 
         case REFRESH_USER_INFO_ERROR:
         case LOGIN_ERROR:
         case LOGOUT_SUCCESS:
         case LOGOUT_ERROR:
           removeUserFromStorage();
-
           draft.loggedInUser = null;
           draft.firstLoadComplete = false;
-
           break;
 
         case GLOBAL_LOAD_ERROR:
         case GLOBAL_LOAD_SUCCESS:
           draft.firstLoadComplete = true;
-
           break;
 
         case ORGANIZATION_SELECT:
-          draft.selectedOrganization = action.orgId;
-
+          if ('orgId' in action) {
+            draft.selectedOrganization = action.orgId;
+          }
           break;
 
         case ORGANIZATION_LOAD_SUCCESS:
-          draft.selectedOrganization = action.selectedOrganization;
-
+          if ('selectedOrganization' in action) {
+            draft.selectedOrganization = action.selectedOrganization;
+          }
           break;
 
         case CLUSTER_SELECT:
-          draft.selectedClusterID = action.clusterID || null;
-
+          if ('clusterID' in action) {
+            draft.selectedClusterID = action.clusterID || null;
+          }
           break;
 
         case SET_IMPERSONATION:
-          draft.impersonation = action.impersonation;
-
+          if ('impersonation' in action) {
+            draft.impersonation = action.impersonation;
+          }
           break;
 
         case CLEAR_IMPERSONATION:
           draft.impersonation = null;
-
           break;
       }
     },
