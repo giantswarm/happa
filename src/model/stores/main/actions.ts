@@ -41,11 +41,7 @@ import {
   IOAuth2ImpersonationMetadata,
   IOAuth2Provider,
 } from 'utils/OAuth2/OAuth2';
-import Passage, {
-  IRequestPasswordRecoveryTokenResponse,
-  ISetNewPasswordResponse,
-  IVerifyPasswordRecoveryTokenResponse,
-} from 'utils/passageClient';
+
 
 import { LoggedInUserTypes } from './types';
 import { mapOAuth2UserToUser } from './utils';
@@ -228,60 +224,7 @@ export function giantswarmLogin(
   };
 }
 
-export function requestPasswordRecoveryToken(
-  email: string
-): ThunkAction<
-  Promise<IRequestPasswordRecoveryTokenResponse>,
-  IState,
-  void,
-  MainActions
-> {
-  return (dispatch) => {
-    dispatch({
-      type: REQUEST_PASSWORD_RECOVERY_TOKEN_REQUEST,
-    });
 
-    const passage = new Passage({ endpoint: window.config.passageEndpoint });
-
-    return passage.requestPasswordRecoveryToken({ email });
-  };
-}
-
-export function verifyPasswordRecoveryToken(
-  email: string,
-  token: string
-): ThunkAction<
-  Promise<IVerifyPasswordRecoveryTokenResponse>,
-  IState,
-  void,
-  MainActions
-> {
-  return (dispatch) => {
-    dispatch({
-      type: VERIFY_PASSWORD_RECOVERY_TOKEN,
-    });
-
-    const passage = new Passage({ endpoint: window.config.passageEndpoint });
-
-    return passage.verifyPasswordRecoveryToken({ email, token });
-  };
-}
-
-export function setNewPassword(
-  email: string,
-  token: string,
-  password: string
-): ThunkAction<Promise<ISetNewPasswordResponse>, IState, void, MainActions> {
-  return (dispatch) => {
-    dispatch({
-      type: SET_NEW_PASSWORD,
-    });
-
-    const passage = new Passage({ endpoint: window.config.passageEndpoint });
-
-    return passage.setNewPassword({ email, token, password });
-  };
-}
 
 export function resumeLogin(
   auth: IOAuth2Provider
