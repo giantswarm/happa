@@ -79,7 +79,9 @@ const getTableColumnsConfig = (onRemoveExpiration, onDelete) => {
 // eslint-disable-next-line react/no-multi-comp
 const UsersTable = ({ onRemoveExpiration, onDelete, users }) => {
   const items = users?.items || [];
-  const hasUsers = Array.isArray(items) ? items.length > 0 : Object.keys(items).length > 0;
+  const hasUsers = Array.isArray(items)
+    ? items.length > 0
+    : Object.keys(items).length > 0;
 
   if (!users || (users.isFetching && !hasUsers)) {
     return <UsersLoader />;

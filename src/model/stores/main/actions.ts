@@ -220,8 +220,6 @@ export function giantswarmLogin(
   };
 }
 
-
-
 export function resumeLogin(
   auth: IOAuth2Provider
 ): ThunkAction<Promise<ILoggedInUser>, IState, void, MainActions> {

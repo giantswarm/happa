@@ -24,7 +24,9 @@ const UserModalTypes = {
 };
 
 function canManageUsers(user, writeAllGroup) {
-  return user?.isAdmin && writeAllGroup && user?.groups?.includes(writeAllGroup);
+  return (
+    user?.isAdmin && writeAllGroup && user?.groups?.includes(writeAllGroup)
+  );
 }
 
 class Users extends React.Component {
@@ -158,12 +160,8 @@ class Users extends React.Component {
   }
 
   render() {
-    const {
-      users,
-      installation_name,
-      currentUser,
-      write_all_group,
-    } = this.props;
+    const { users, installation_name, currentUser, write_all_group } =
+      this.props;
 
     const userItems = users?.items || [];
 
@@ -194,12 +192,12 @@ class Users extends React.Component {
               <div>
                 <p>
                   This page lists the user accounts for installation{' '}
-                  <code>{installationNameLabel}</code>. Only Giant Swarm staff can
-                  access this page.
+                  <code>{installationNameLabel}</code>. Only Giant Swarm staff
+                  can access this page.
                 </p>
                 <p>
-                  Giant Swarm staff members normally do not require user accounts,
-                  as they log in via Single Sign-On (SSO).
+                  Giant Swarm staff members normally do not require user
+                  accounts, as they log in via Single Sign-On (SSO).
                 </p>
               </div>
             </Section>

@@ -22,7 +22,10 @@ export function usersLoad(): ThunkAction<
   void,
   UserActions
 > {
-  return async (dispatch: ThunkDispatch<IState, void, UserActions>, getState: () => IState) => {
+  return async (
+    dispatch: ThunkDispatch<IState, void, UserActions>,
+    getState: () => IState
+  ) => {
     const alreadyFetching = getState().entities.users.isFetching;
     if (alreadyFetching) {
       return Promise.resolve();

@@ -123,7 +123,11 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
                 <div className='main' data-testid='main'>
                   <Switch>
                     {supportsClustersViaMapi ? (
-                      <Route component={Clusters} exact path={MainRoutes.Home} />
+                      <Route
+                        component={Clusters}
+                        exact
+                        path={MainRoutes.Home}
+                      />
                     ) : (
                       <Route component={Home} exact path={MainRoutes.Home} />
                     )}
