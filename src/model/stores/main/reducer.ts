@@ -34,6 +34,7 @@ const initialState = (): IMainState => ({
 
 const makeMainReducer = () => {
   return produce(
+    // eslint-disable-next-line complexity
     (draft: IMainState, action: MainActions | OrganizationActions) => {
       switch (action.type) {
         case REFRESH_USER_INFO_SUCCESS:
