@@ -80,8 +80,6 @@ managementCluster:
 oidc:
   issuerAddress: ""
 
-passage:
-  address: ""
 
 registry:
   domain: quay.io
