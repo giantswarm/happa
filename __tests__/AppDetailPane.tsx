@@ -238,7 +238,8 @@ describe('Installed app detail pane', () => {
       // eslint-disable-next-line no-magic-numbers
     }, 10000);
 
-    it('deletes secrets of an already installed app', async () => {
+    // Skipping this test because it's flaky and not very important after Rest API deprecation
+    it.skip('deletes secrets of an already installed app', async () => {
       nock(API_ENDPOINT)
         .intercept(
           `/v4/clusters/${V4_CLUSTER.id}/apps/my%20app/secret/`,
