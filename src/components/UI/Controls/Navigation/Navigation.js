@@ -120,10 +120,7 @@ class Navigation extends React.Component {
           <Link to={MainRoutes.Home}>
             <img className='logo' src={logo} width='22' height='22' />
           </Link>
-          <MainMenu
-            showApps={this.props.showApps}
-            showUsers={this.props.showUsers}
-          />
+          <MainMenu showApps={this.props.showApps} />
 
           <Actions>
             <OrganizationDropdown

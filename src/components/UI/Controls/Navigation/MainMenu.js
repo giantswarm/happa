@@ -4,7 +4,6 @@ import {
   AppsRoutes,
   MainRoutes,
   OrganizationsRoutes,
-  UsersRoutes,
 } from 'model/constants/routes';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
@@ -91,7 +90,7 @@ const DropdownNavLink = styled(StyledNavLink)`
 
 const DropdownAnchor = DropdownNavLink.withComponent('a');
 
-function MainMenu({ showApps, showUsers }) {
+function MainMenu({ showApps }) {
   return (
     <>
       <NavDiv>
@@ -104,11 +103,6 @@ function MainMenu({ showApps, showUsers }) {
         {showApps && (
           <StyledNavLink activeClassName='active' to={AppsRoutes.Home}>
             Apps
-          </StyledNavLink>
-        )}
-        {showUsers && (
-          <StyledNavLink activeClassName='active' to={UsersRoutes.Home}>
-            Users
           </StyledNavLink>
         )}
         {monitoringURL && (
@@ -172,17 +166,6 @@ function MainMenu({ showApps, showUsers }) {
                       onClick={onClickHandler}
                     >
                       Apps
-                    </DropdownNavLink>
-                  </li>
-                )}
-                {showUsers && (
-                  <li>
-                    <DropdownNavLink
-                      activeClassName='active'
-                      to={UsersRoutes.Home}
-                      onClick={onClickHandler}
-                    >
-                      Users
                     </DropdownNavLink>
                   </li>
                 )}

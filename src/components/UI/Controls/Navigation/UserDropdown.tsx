@@ -1,4 +1,4 @@
-import { AuthorizationTypes, CSSBreakpoints } from 'model/constants';
+import { CSSBreakpoints } from 'model/constants';
 import { AccountSettingsRoutes, MainRoutes } from 'model/constants/routes';
 import { LoggedInUserTypes } from 'model/stores/main/types';
 import React from 'react';
@@ -117,17 +117,6 @@ const UserDropdown: React.FC<React.PropsWithChildren<IUserDropdownProps>> = ({
             </StyledDropdownTrigger>
             {isOpen && (
               <StyledList>
-                {user.auth.scheme === AuthorizationTypes.GS && (
-                  <li role='presentation'>
-                    <MenuItem
-                      href={AccountSettingsRoutes.Home}
-                      to={AccountSettingsRoutes.Home}
-                    >
-                      Account Settings
-                    </MenuItem>
-                  </li>
-                )}
-
                 {user.isAdmin && (
                   <li role='presentation'>
                     <MenuItem

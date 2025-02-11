@@ -12,7 +12,6 @@ import { INodePoolState } from 'model/stores/nodepool/types';
 import { IOrganizationState } from 'model/stores/organization/types';
 import { IReleaseState } from 'model/stores/releases/types';
 import { IRouterState } from 'model/stores/router/types';
-import { IUserState } from 'model/stores/user/types';
 
 export interface IState {
   router: IRouterState;
@@ -27,7 +26,6 @@ export interface IState {
     catalogs: IAppCatalogsState;
     organizations: IOrganizationState;
     nodePools: INodePoolState;
-    users: IUserState;
     clusters: IClusterState;
     releases: IReleaseState;
     clusterLabels: IClusterLabelsState;
