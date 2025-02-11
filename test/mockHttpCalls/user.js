@@ -7,6 +7,8 @@ export const userResponse = {
   email: USER_EMAIL,
   created: '2019-09-19T12:40:16.2231629Z',
   expiry: oneYearFromNow,
+  isAdmin: true,
+  groups: ['giantswarm-admin'],
 };
 
 export const usersResponse = [

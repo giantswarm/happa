@@ -14,7 +14,6 @@ import nodePools from 'model/stores/nodepool/reducer';
 import organizations from 'model/stores/organization/reducer';
 import releases from 'model/stores/releases/reducer';
 import { IState } from 'model/stores/state';
-import users from 'model/stores/user/reducer';
 import { combineReducers, ReducersMapObject } from 'redux';
 
 const entityReducers: ReducersMapObject<IState['entities']> = {
@@ -24,7 +23,6 @@ const entityReducers: ReducersMapObject<IState['entities']> = {
   nodePools,
   organizations,
   releases,
-  users,
 };
 const entities = combineReducers(entityReducers);
 

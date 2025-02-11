@@ -17,7 +17,6 @@ interface IGlobalConfig {
   environment: GlobalEnvironment;
   happaVersion: string;
   ingressBaseDomain: string;
-  passageEndpoint: string;
   mapiAuthRedirectURL: string;
   mapiAuthAdminGroups: string[];
   sentryDsn: string;

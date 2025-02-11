@@ -69,16 +69,6 @@ const state: IState = {
       isFetching: false,
       items: {},
     },
-    users: {
-      lastUpdated: 0,
-      isFetching: false,
-      items: {},
-      invitations: {
-        lastUpdated: 0,
-        isFetching: false,
-        items: {},
-      },
-    },
     nodePools: {
       items: {},
       isFetching: false,

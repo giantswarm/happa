@@ -15,9 +15,7 @@ import {
   ExceptionNotificationTestRoutes,
   MainRoutes,
   OrganizationsRoutes,
-  UsersRoutes,
 } from 'model/constants/routes';
-import * as featureFlags from 'model/featureFlags';
 import { supportsMapiApps, supportsMapiClusters } from 'model/featureSupport';
 import {
   batchedLayout,
@@ -34,7 +32,6 @@ import { Dispatch } from 'redux';
 import Route from 'Route';
 import OrganizationCreatedNote from 'UI/Display/Organizations/OrganizationCreatedNote';
 
-import AccountSettings from './AccountSettings/AccountSettings';
 import Apps from './Apps/Apps';
 import ExceptionNotificationTest from './ExceptionNotificationTest/ExceptionNotificationTest';
 import Home from './Home/Home';
@@ -43,7 +40,6 @@ import Modals from './Modals/Modals';
 import Organizations from './Organizations/Organizations';
 import Navigation from './UI/Controls/Navigation/Navigation';
 import LoadingOverlay from './UI/Display/Loading/LoadingOverlay';
-import Users from './Users/Users';
 
 const ONE_SECOND = 1000;
 
@@ -90,8 +86,6 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
     supportsAppsViaMapi || Object.keys(catalogs.items).length > 0;
   const supportsClustersViaMapi = user && supportsMapiClusters(user, provider);
 
-  const showUsers = !featureFlags.flags.CustomerSSO.enabled && user?.isAdmin;
-
   const isLoading =
     user?.type === LoggedInUserTypes.MAPI
       ? !firstLoadComplete || permissionsIsLoading
@@ -112,82 +106,77 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
               organizations={organizations}
               selectedOrganization={selectedOrganization}
               showApps={showApps}
-              showUsers={showUsers}
               user={user}
             />
             <Breadcrumb data={{ title: 'HOME', pathname: MainRoutes.Home }}>
-              {selectedOrg && (
-                <OrganizationCreatedNote organization={selectedOrg} />
-              )}
-              <div className='main' data-testid='main'>
-                <Switch>
-                  {supportsClustersViaMapi ? (
-                    <Route component={Clusters} exact path={MainRoutes.Home} />
-                  ) : (
-                    <Route component={Home} exact path={MainRoutes.Home} />
-                  )}
-
-                  {supportsAppsViaMapi ? (
-                    <Route component={AppsMAPI} path={AppsRoutes.Home} />
-                  ) : (
-                    <Route component={Apps} path={AppsRoutes.Home} />
-                  )}
-
-                  {showUsers && (
-                    <Route component={Users} exact path={UsersRoutes.Home} />
-                  )}
-
-                  {user?.type === LoggedInUserTypes.MAPI ? (
-                    <Route
-                      component={MAPIOrganizations}
-                      path={OrganizationsRoutes.Home}
-                    />
-                  ) : (
-                    <Route
-                      component={Organizations}
-                      path={OrganizationsRoutes.Home}
-                    />
-                  )}
-
-                  <Route
-                    component={AccountSettings}
-                    exact
-                    path={AccountSettingsRoutes.Home}
-                  />
-
-                  {user?.type === LoggedInUserTypes.MAPI && (
-                    <Route
-                      component={Permissions}
-                      exact
-                      path={AccountSettingsRoutes.Permissions}
-                    />
-                  )}
-
-                  {user?.isAdmin && (
-                    <>
+              <div>
+                {selectedOrg && (
+                  <OrganizationCreatedNote organization={selectedOrg} />
+                )}
+                <div className='main' data-testid='main'>
+                  <Switch>
+                    {supportsClustersViaMapi ? (
                       <Route
-                        component={Experiments}
+                        component={Clusters}
                         exact
-                        path={AccountSettingsRoutes.Experiments.Home}
+                        path={MainRoutes.Home}
                       />
+                    ) : (
+                      <Route component={Home} exact path={MainRoutes.Home} />
+                    )}
+
+                    {supportsAppsViaMapi ? (
+                      <Route component={AppsMAPI} path={AppsRoutes.Home} />
+                    ) : (
+                      <Route component={Apps} path={AppsRoutes.Home} />
+                    )}
+
+                    {user?.type === LoggedInUserTypes.MAPI ? (
                       <Route
-                        component={ClusterAppSchemaTester}
-                        path={
-                          AccountSettingsRoutes.Experiments
-                            .ClusterAppSchemaTester
-                        }
+                        component={MAPIOrganizations}
+                        path={OrganizationsRoutes.Home}
                       />
-                    </>
-                  )}
+                    ) : (
+                      <Route
+                        component={Organizations}
+                        path={OrganizationsRoutes.Home}
+                      />
+                    )}
 
-                  <Route
-                    component={ExceptionNotificationTest}
-                    exact
-                    path={ExceptionNotificationTestRoutes.Home}
-                  />
+                    {user?.type === LoggedInUserTypes.MAPI && (
+                      <Route
+                        component={Permissions}
+                        exact
+                        path={AccountSettingsRoutes.Permissions}
+                      />
+                    )}
 
-                  <Redirect path='*' to={MainRoutes.Home} />
-                </Switch>
+                    {user?.isAdmin && (
+                      <>
+                        <Route
+                          component={Experiments}
+                          exact
+                          path={AccountSettingsRoutes.Experiments.Home}
+                        />
+                        <Route
+                          component={ClusterAppSchemaTester}
+                          path={
+                            AccountSettingsRoutes.Experiments
+                              .ClusterAppSchemaTester
+                          }
+                        />
+                      </>
+                    )}
+
+                    <Route
+                      component={ExceptionNotificationTest}
+                      exact
+                      path={ExceptionNotificationTestRoutes.Home}
+                    />
+
+                    <Redirect path='*' to={MainRoutes.Home} />
+                  </Switch>
+                </div>
               </div>
             </Breadcrumb>
           </>
