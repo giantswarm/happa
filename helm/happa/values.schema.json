@@ -304,14 +304,6 @@
         }
       }
     },
-    "passage": {
-      "type": "object",
-      "properties": {
-        "address": {
-          "type": "string"
-        }
-      }
-    },
     "port": {
       "type": "integer"
     },
