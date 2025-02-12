@@ -6,7 +6,6 @@ export interface IConfigurationValues {
   athenaEndpoint: string;
   audience: string;
   mapiAudience: string;
-  passageEndpoint: string;
   ingressBaseDomain: string;
   defaultRequestTimeoutSeconds: number;
   environment: string;
@@ -77,7 +76,6 @@ export async function getConfigurationValues(
   config.setDefault('mapi-endpoint', 'http://localhost:8000');
   config.setDefault('audience', 'http://localhost:8000');
   config.setDefault('mapi-audience', 'http://localhost:8000');
-  config.setDefault('passage-endpoint', 'http://localhost:8000');
   config.setDefault('athena-endpoint', 'http://localhost:8000');
   config.setDefault('installation-name', 'development');
   config.setDefault('default-request-timeout-seconds', 10);
@@ -110,7 +108,6 @@ export async function getConfigurationValues(
     athenaEndpoint: config.getString('athena-endpoint'),
     audience: config.getString('audience'),
     mapiAudience: config.getString('mapi-audience'),
-    passageEndpoint: config.getString('passage-endpoint'),
     ingressBaseDomain: config.getString('ingress-base-domain'),
     defaultRequestTimeoutSeconds: config.getNumber(
       'default-request-timeout-seconds'

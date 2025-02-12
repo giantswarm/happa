@@ -2,7 +2,7 @@ import { GenericResponse } from 'model/clients/GenericResponse';
 import { StatusCodes } from 'model/constants';
 import nock from 'nock';
 
-export const API_ENDPOINT = 'http://1.2.3.4';
+export const API_ENDPOINT = 'http://1.2.3.4:80';
 export const USER_EMAIL = 'developer@giantswarm.io';
 export const ORGANIZATION = 'acme';
 export const V4_CLUSTER = {

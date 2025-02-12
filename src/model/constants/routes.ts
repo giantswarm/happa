@@ -3,9 +3,6 @@ const MainRoutes = {
   AdminLogin: '/admin-login',
   Login: '/login',
   Logout: '/logout',
-  ForgotPassword: '/forgot_password',
-  SetPassword: '/forgot_password/:token',
-  SignUp: '/signup/:token',
   StyleGuide: '/styleguide',
 };
 
@@ -14,12 +11,7 @@ const AppsRoutes = {
   AppDetail: '/apps/:catalogName/:app/:version',
 };
 
-const UsersRoutes = {
-  Home: '/users',
-};
-
 const AccountSettingsRoutes = {
-  Home: '/account-settings',
   Experiments: {
     Home: '/account-settings/experiments',
     ClusterAppSchemaTester:
@@ -72,6 +64,5 @@ export {
   AppsRoutes,
   OrganizationsRoutes,
   MainRoutes,
-  UsersRoutes,
   ExceptionNotificationTestRoutes,
 };

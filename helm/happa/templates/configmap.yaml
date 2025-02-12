@@ -7,7 +7,6 @@ metadata:
     app: happa
 data:
   config.yaml: |
-    passage-endpoint: {{ .Values.passage.address }}
     api-endpoint: {{ .Values.api.address }}
     audience: {{ .Values.api.address }}
     athena-endpoint: {{ .Values.athena.address }}

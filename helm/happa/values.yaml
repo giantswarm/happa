@@ -94,9 +94,6 @@ oidc:
   giantswarm:
     writeAllGroups: []
 
-passage:
-  address: ""
-
 registry:
   domain: gsoci.azurecr.io
 

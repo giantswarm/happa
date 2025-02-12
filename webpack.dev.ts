@@ -66,7 +66,6 @@ const config: webpack.Configuration = merge(common, {
         mapiEndpoint: 'http://localhost:8888',
         athenaEndpoint: 'http://localhost:7777',
         mapiAudience: 'http://localhost:9999',
-        passageEndpoint: 'http://localhost:5001',
         mapiAuthRedirectURL: 'http://localhost:7000',
         environment: 'development',
         happaVersion: 'development',
@@ -83,10 +82,6 @@ const config: webpack.Configuration = merge(common, {
         {
           port: 7777,
           host: (options) => options.athenaEndpoint,
-        },
-        {
-          port: 5001,
-          host: (options) => options.passageEndpoint,
         },
         {
           port: 9999,
