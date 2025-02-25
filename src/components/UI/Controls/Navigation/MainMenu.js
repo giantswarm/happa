@@ -17,7 +17,7 @@ import Hamburger from './Hamburger';
 // We remove the dev port :8000 in case it's there.
 let monitoringURL = null;
 if (window.featureFlags.FEATURE_MONITORING) {
-  const audienceURL = new URL(window.config.audience);
+  const audienceURL = new URL(window.config.mapiAudience);
   const hostnameParts = audienceURL.host.split('.');
   hostnameParts[0] = 'grafana';
   audienceURL.host = hostnameParts.join('.');
