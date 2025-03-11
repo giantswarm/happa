@@ -62,9 +62,9 @@ const config: Config.InitialOptions = {
     config: {
       apiEndpoint: 'http://1.2.3.4',
       mapiEndpoint: 'http://2.3.4.5',
+      mapiAuthEndpoint: 'http://3.4.5.6',
       athenaEndpoint: 'http://5.5.5.5',
-      audience: 'http://1.2.3.4',
-      mapiAudience: 'http://2.3.4.5',
+      mapiAudience: 'dex.sample.io',
       environment: 'development',
       ingressBaseDomain: 'k8s.sample.io',
       defaultRequestTimeoutSeconds: 10,

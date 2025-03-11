@@ -98,12 +98,12 @@ describe('ClusterDetailWidgetKubernetesAPI on GCP', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
   const providerFlavor = window.config.info.general.providerFlavor;
-  const audience = window.config.audience;
+  const mapiAudience = window.config.mapiAudience;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.GCP;
     window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
-    window.config.audience = 'https://api.test.gigantic.io';
+    window.config.mapiAudience = 'api.test.gigantic.io';
 
     (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
       defaultPermissions
@@ -112,7 +112,7 @@ describe('ClusterDetailWidgetKubernetesAPI on GCP', () => {
   afterAll(() => {
     window.config.info.general.provider = provider;
     window.config.info.general.providerFlavor = providerFlavor;
-    window.config.audience = audience;
+    window.config.mapiAudience = mapiAudience;
   });
 
   it('displays the kubernetes API endpoint URL for the cluster', () => {
@@ -161,12 +161,12 @@ describe('ClusterDetailWidgetKubernetesAPI on CAPZ', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
   const providerFlavor = window.config.info.general.providerFlavor;
-  const audience = window.config.audience;
+  const mapiAudience = window.config.mapiAudience;
 
   beforeAll(() => {
     window.config.info.general.provider = Providers.CAPZ;
     window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
-    window.config.audience = 'https://api.test.gigantic.io';
+    window.config.mapiAudience = 'api.test.gigantic.io';
 
     (usePermissionsForKeyPairs as jest.Mock).mockReturnValue(
       defaultPermissions
@@ -175,7 +175,7 @@ describe('ClusterDetailWidgetKubernetesAPI on CAPZ', () => {
   afterAll(() => {
     window.config.info.general.provider = provider;
     window.config.info.general.providerFlavor = providerFlavor;
-    window.config.audience = audience;
+    window.config.mapiAudience = mapiAudience;
   });
 
   it('displays the kubernetes API endpoint URL for the cluster', () => {

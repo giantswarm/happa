@@ -184,7 +184,7 @@ describe('ClusterDetailIngress on GCP', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
   const providerFlavor = window.config.info.general.providerFlavor;
-  const audience = window.config.audience;
+  const mapiAudience = window.config.mapiAudience;
   const orgId = 'org1';
   const cluster = capiv1beta1Mocks.randomClusterGCP1;
   const clusterId = cluster.metadata.name;
@@ -193,7 +193,7 @@ describe('ClusterDetailIngress on GCP', () => {
   beforeAll(() => {
     window.config.info.general.provider = Providers.GCP;
     window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
-    window.config.audience = 'https://api.test.gigantic.io';
+    window.config.mapiAudience = 'api.test.gigantic.io';
 
     (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
     (useParams as jest.Mock).mockReturnValue({
@@ -205,7 +205,7 @@ describe('ClusterDetailIngress on GCP', () => {
   afterAll(() => {
     window.config.info.general.provider = provider;
     window.config.info.general.providerFlavor = providerFlavor;
-    window.config.audience = audience;
+    window.config.mapiAudience = mapiAudience;
   });
 
   it('displays instructions with correct API endpoints', async () => {
@@ -259,7 +259,7 @@ describe('ClusterDetailIngress on CAPA', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
   const providerFlavor = window.config.info.general.providerFlavor;
-  const audience = window.config.audience;
+  const mapiAudience = window.config.mapiAudience;
   const orgId = 'org1';
   const cluster = capiv1beta1Mocks.randomClusterCAPA1;
   const clusterId = cluster.metadata.name;
@@ -268,7 +268,7 @@ describe('ClusterDetailIngress on CAPA', () => {
   beforeAll(() => {
     window.config.info.general.provider = Providers.CAPA;
     window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
-    window.config.audience = 'https://api.test.gigantic.io';
+    window.config.mapiAudience = 'api.test.gigantic.io';
 
     (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
     (useParams as jest.Mock).mockReturnValue({
@@ -280,7 +280,7 @@ describe('ClusterDetailIngress on CAPA', () => {
   afterAll(() => {
     window.config.info.general.provider = provider;
     window.config.info.general.providerFlavor = providerFlavor;
-    window.config.audience = audience;
+    window.config.mapiAudience = mapiAudience;
   });
 
   it('displays instructions with correct API endpoints', async () => {
@@ -334,7 +334,7 @@ describe('ClusterDetailIngress on CAPZ', () => {
   const provider: PropertiesOf<typeof Providers> =
     window.config.info.general.provider;
   const providerFlavor = window.config.info.general.providerFlavor;
-  const audience = window.config.audience;
+  const mapiAudience = window.config.mapiAudience;
   const cluster = capiv1beta1Mocks.randomClusterCAPZ1;
   const clusterId = cluster.metadata.name;
   const namespace = cluster.metadata.namespace;
@@ -343,7 +343,7 @@ describe('ClusterDetailIngress on CAPZ', () => {
   beforeAll(() => {
     window.config.info.general.provider = Providers.CAPZ;
     window.config.info.general.providerFlavor = ProviderFlavors.CAPI;
-    window.config.audience = 'https://api.test.gigantic.io';
+    window.config.mapiAudience = 'api.test.gigantic.io';
 
     (usePermissionsForApps as jest.Mock).mockReturnValue(defaultPermissions);
     (useParams as jest.Mock).mockReturnValue({
@@ -355,7 +355,7 @@ describe('ClusterDetailIngress on CAPZ', () => {
   afterAll(() => {
     window.config.info.general.provider = provider;
     window.config.info.general.providerFlavor = providerFlavor;
-    window.config.audience = audience;
+    window.config.mapiAudience = mapiAudience;
   });
 
   it('displays instructions with correct API endpoints', async () => {

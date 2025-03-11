@@ -64,8 +64,8 @@ const config: webpack.Configuration = merge(common, {
       overrides: {
         apiEndpoint: 'http://localhost:8000',
         mapiEndpoint: 'http://localhost:8888',
+        mapiAuthEndpoint: 'http://localhost:9999',
         athenaEndpoint: 'http://localhost:7777',
-        mapiAudience: 'http://localhost:9999',
         mapiAuthRedirectURL: 'http://localhost:7000',
         environment: 'development',
         happaVersion: 'development',
@@ -86,11 +86,11 @@ const config: webpack.Configuration = merge(common, {
         {
           port: 9999,
           host: (options) => {
-            if (!/http(s)?:\/\//.test(options.mapiAudience)) {
-              return `https://${options.mapiAudience}`;
+            if (!/http(s)?:\/\//.test(options.mapiAuthEndpoint)) {
+              return `https://${options.mapiAuthEndpoint}`;
             }
 
-            return options.mapiAudience;
+            return options.mapiAuthEndpoint;
           },
         },
       ],
