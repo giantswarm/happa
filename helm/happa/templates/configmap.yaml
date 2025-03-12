@@ -8,7 +8,6 @@ metadata:
 data:
   config.yaml: |
     api-endpoint: {{ .Values.api.address }}
-    audience: {{ .Values.api.address }}
     athena-endpoint: {{ .Values.athena.address }}
     ingress-base-domain: {{ .Values.guestCluster.base }}
     installation-name: {{ .Values.managementCluster.name }}
@@ -34,6 +33,7 @@ data:
     # Giant Swarm Management API
     mapi-audience: {{ .Values.oidc.issuerAddress }}
     mapi-endpoint: {{ .Values.happaapi.address }}
+    mapi-auth-endpoint: {{ .Values.oidc.issuerAddress }}
     mapi-auth-redirect-url: {{ .Values.happa.address }}
     mapi-auth-admin-groups: '{{ .Values.oidc.giantswarm.writeAllGroups | join " " }}'
     

@@ -3,8 +3,8 @@ import { Configuration } from './Configuration';
 export interface IConfigurationValues {
   apiEndpoint: string;
   mapiEndpoint: string;
+  mapiAuthEndpoint: string;
   athenaEndpoint: string;
-  audience: string;
   mapiAudience: string;
   ingressBaseDomain: string;
   defaultRequestTimeoutSeconds: number;
@@ -74,7 +74,7 @@ export async function getConfigurationValues(
 
   config.setDefault('api-endpoint', 'http://localhost:8000');
   config.setDefault('mapi-endpoint', 'http://localhost:8000');
-  config.setDefault('audience', 'http://localhost:8000');
+  config.setDefault('mapi-auth-endpoint', 'http://localhost:8000');
   config.setDefault('mapi-audience', 'http://localhost:8000');
   config.setDefault('athena-endpoint', 'http://localhost:8000');
   config.setDefault('installation-name', 'development');
@@ -105,8 +105,8 @@ export async function getConfigurationValues(
   return {
     apiEndpoint: config.getString('api-endpoint'),
     mapiEndpoint: config.getString('mapi-endpoint'),
+    mapiAuthEndpoint: config.getString('mapi-audience'),
     athenaEndpoint: config.getString('athena-endpoint'),
-    audience: config.getString('audience'),
     mapiAudience: config.getString('mapi-audience'),
     ingressBaseDomain: config.getString('ingress-base-domain'),
     defaultRequestTimeoutSeconds: config.getNumber(

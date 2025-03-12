@@ -1827,7 +1827,7 @@ export function getClusterBaseUrl(
 }
 
 function getInstallationBaseURL(providerFlavor: ProviderFlavors): URL {
-  const audienceURL = new URL(window.config.audience);
+  const audienceURL = new URL(`https://${window.config.mapiAudience}`);
   // Remove all characters until the first `.`.
   audienceURL.host = audienceURL.host.substring(
     audienceURL.host.indexOf('.') + 1

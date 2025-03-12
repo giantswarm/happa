@@ -6,13 +6,13 @@ type GlobalEnvironment = 'development' | 'kubernetes' | 'docker-container';
 
 interface IGlobalConfig {
   apiEndpoint: string;
-  audience: string;
   awsCapabilitiesJSON: string;
   azureCapabilitiesJSON: string;
   gcpCapabilitiesJSON: string;
   mapiEndpoint: string;
   athenaEndpoint: string;
   mapiAudience: string;
+  mapiAuthEndpoint: string;
   defaultRequestTimeoutSeconds: number;
   environment: GlobalEnvironment;
   happaVersion: string;

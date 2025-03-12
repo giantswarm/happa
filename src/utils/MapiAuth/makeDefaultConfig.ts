@@ -1,7 +1,7 @@
 import { IOAuth2Config } from 'utils/OAuth2/OAuth2';
 
 export function makeDefaultConfig(): IOAuth2Config {
-  let authority = window.config.mapiAudience;
+  let authority = window.config.mapiAuthEndpoint;
   if (!/http(s)?:\/\//.test(authority)) {
     authority = `https://${authority}`;
   }
@@ -10,13 +10,7 @@ export function makeDefaultConfig(): IOAuth2Config {
    * OIDC plugin, and it must be the same as the production, non-proxied
    * authentication provider.
    */
-  let issuer = authority;
-  if (issuer.includes('localhost')) {
-    issuer = window.config.audience.replace(
-      /(api-unsupported|gs-api|api)/,
-      'dex'
-    );
-  }
+  const issuer = `https://${window.config.mapiAudience}`;
 
   return {
     authority,
