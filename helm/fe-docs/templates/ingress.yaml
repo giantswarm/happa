@@ -5,19 +5,19 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ .Values.name }}
+  {{- with .Values.ingress.annotations }}
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-giantswarm
-    kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ingressClassName: nginx
   rules:
     {{- $serviceName := .Values.name -}}
     {{- $port := .Values.port -}}
-    {{- if or (not (.Values.hostnames)) (eq (len .Values.hostnames) 0) }}
-      {{- fail "value for .Values.hostnames must not be empty" }}
+    {{- if or (not (.Values.ingress.hostnames)) (eq (len .Values.ingress.hostnames) 0) }}
+      {{- fail "value for .Values.ingress.hostnames must not be empty" }}
     {{- end }}
-    {{- range .Values.hostnames }}
+    {{- range .Values.ingress.hostnames }}
     - host: {{ . }}
       http:
         paths:
@@ -31,7 +31,7 @@ spec:
     {{- end }}
   tls:
     - hosts:
-      {{- range .Values.hostnames }}
+      {{- range .Values.ingress.hostnames }}
       - {{ . }}
       {{- end }}
       secretName: {{ .Values.name }}
