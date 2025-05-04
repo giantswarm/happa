@@ -1,2 +1,3 @@
-hostnames:
-  - test-hostname.example.com
+ingress:
+  hostnames:
+    - test-hostname.example.com

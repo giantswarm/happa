@@ -7,7 +7,13 @@ image:
   repository: giantswarm/fe-docs
 
 port: 8080
-hostnames: []
+
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-giantswarm
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  hostnames: []
 
 registry:
   domain: gsoci.azurecr.io
