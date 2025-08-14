@@ -116,18 +116,6 @@ workflows:
               only: /^v.*/
 
       - architect/push-to-app-collection:
-          name: push-to-gcp-app-collection
-          app_name: "happa"
-          app_collection_repo: "gcp-app-collection"
-          requires:
-            - push-happa-to-control-plane-app-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-
-      - architect/push-to-app-collection:
           name: push-to-capz-app-collection
           app_name: "happa"
           app_collection_repo: "capz-app-collection"
