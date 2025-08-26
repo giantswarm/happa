@@ -82,7 +82,7 @@ oidc:
 
 
 registry:
-  domain: quay.io
+  domain: gsoci.azurecr.io
   pullSecret:
     dockerConfigJSON: "e30="
 
