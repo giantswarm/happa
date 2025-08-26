@@ -1,4 +1,4 @@
-FROM quay.io/giantswarm/alpine:3.18.4 AS compress
+FROM gsoci.azurecr.io/giantswarm/alpine:3.18.4 AS compress
 
 RUN apk --no-cache add findutils gzip
 
@@ -11,7 +11,7 @@ RUN find /www \
   -iregex '.*\.(css|csv|html?|js|svg|txt|xml|json|webmanifest|ttf)' \
   -exec gzip -9 -k '{}' \;
 
-FROM quay.io/giantswarm/nginx:1.23-alpine as builder
+FROM gsoci.azurecr.io/giantswarm/nginx:1.23-alpine as builder
 
 ARG ENABLED_MODULES="ndk lua"
 
@@ -73,14 +73,14 @@ RUN apk update \
     done \
     && echo "BUILT_MODULES=\"$BUILT_MODULES\"" > /tmp/packages/modules.env
 
-FROM quay.io/giantswarm/nginx:1.23-alpine
+FROM gsoci.azurecr.io/giantswarm/nginx:1.23-alpine
 RUN --mount=type=bind,target=/tmp/packages/,source=/tmp/packages/,from=builder \
     . /tmp/packages/modules.env \
     && for module in $BUILT_MODULES; do \
            apk add --no-cache --allow-untrusted /tmp/packages/nginx-module-${module}-${NGINX_VERSION}*.apk; \
        done
 
-ENV NODE_VERSION 16.7.0
+ENV NODE_VERSION=16.7.0
 
 RUN apk add --no-cache binutils libstdc++
 RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz"; \

@@ -297,7 +297,7 @@ jobs:
             docker run --name happa-branch \
               -p 8000:8000 \
               -d \
-              "quay.io/giantswarm/happa:$(cat VERSION)"
+              "gsoci.azurecr.io/giantswarm/happa:$(cat VERSION)"
             sleep 10
             CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
             echo "${CURL_OUTPUT}" | grep "Giant Swarm web interface"
