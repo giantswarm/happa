@@ -22,7 +22,6 @@ if (window.featureFlags.FEATURE_MONITORING) {
   hostnameParts[0] = 'grafana';
   audienceURL.host = hostnameParts.join('.');
   audienceURL.pathname = '/';
-  audienceURL.search = '?orgId=1';
   monitoringURL = audienceURL.toString();
 }
 

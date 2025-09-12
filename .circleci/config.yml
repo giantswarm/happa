@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@5.11.4
+  architect: giantswarm/architect@6.3.2
 
 defaults: &defaults
   working_directory: ~/happa
@@ -80,30 +80,6 @@ workflows:
               only: /^v.*/
 
       - architect/push-to-app-collection:
-          name: push-happa-to-aws-app-collection
-          app_name: "happa"
-          app_collection_repo: "aws-app-collection"
-          requires:
-            - push-happa-to-control-plane-app-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-
-      - architect/push-to-app-collection:
-          name: push-happa-to-azure-app-collection
-          app_name: "happa"
-          app_collection_repo: "azure-app-collection"
-          requires:
-            - push-happa-to-control-plane-app-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-
-      - architect/push-to-app-collection:
           name: push-happa-to-vsphere-app-collection
           app_name: "happa"
           app_collection_repo: "vsphere-app-collection"
@@ -131,18 +107,6 @@ workflows:
           name: push-to-capa-app-collection
           app_name: "happa"
           app_collection_repo: "capa-app-collection"
-          requires:
-            - push-happa-to-control-plane-app-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-
-      - architect/push-to-app-collection:
-          name: push-to-gcp-app-collection
-          app_name: "happa"
-          app_collection_repo: "gcp-app-collection"
           requires:
             - push-happa-to-control-plane-app-catalog
           filters:
@@ -333,7 +297,7 @@ jobs:
             docker run --name happa-branch \
               -p 8000:8000 \
               -d \
-              "quay.io/giantswarm/happa:$(cat VERSION)"
+              "gsoci.azurecr.io/giantswarm/happa:$(cat VERSION)"
             sleep 10
             CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
             echo "${CURL_OUTPUT}" | grep "Giant Swarm web interface"
