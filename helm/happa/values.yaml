@@ -53,10 +53,7 @@ gcp:
 ingress:
   externalDNS: false
   tls:
-    letsencrypt: false
-    clusterIssuer: ""
-    crtPemB64: ""
-    keyPemB64: ""
+    clusterIssuer: "letsencrypt-giantswarm"
 
 guestCluster:
   base: ""
