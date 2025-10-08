@@ -193,9 +193,6 @@
         },
         "host": {
           "type": "string"
-        },
-        "letsencrypt": {
-          "type": "boolean"
         }
       }
     },
@@ -210,9 +207,6 @@
         },
         "host": {
           "type": "string"
-        },
-        "letsencrypt": {
-          "type": "boolean"
         }
       }
     },
@@ -236,10 +230,7 @@
         "tls": {
           "type": "object",
           "properties": {
-            "crtPemB64": {
-              "type": "string"
-            },
-            "keyPemB64": {
+            "clusterIssuer": {
               "type": "string"
             }
           }
