@@ -1,4 +1,4 @@
-FROM gsoci.azurecr.io/giantswarm/alpine:3.18.4 AS compress
+FROM gsoci.azurecr.io/giantswarm/alpine:3.23.0 AS compress
 
 RUN apk --no-cache add findutils gzip
 
