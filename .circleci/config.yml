@@ -145,7 +145,7 @@ workflows:
 
       - architect/push-to-registries:
           context: architect
-          name: push-fe-docs-to-registries
+          name: push-fedocs-to-registries
           image: giantswarm/fe-docs
           dockerfile: "./Dockerfile.fe-docs"
           requires:
@@ -162,7 +162,7 @@ workflows:
           persist_chart_archive: true
           explicit_allow_chart_name_mismatch: true
           requires:
-            - push-fe-docs-to-registries
+            - push-fedocs-to-registries
           <<: *job_filters
 
 jobs:
