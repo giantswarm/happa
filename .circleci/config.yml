@@ -83,7 +83,7 @@ workflows:
           app_name: "happa"
           app_collection_repo: "vsphere-app-collection"
           requires:
-            - push-happa-to-control-plane-app-catalog
+            - push-happa-to-catalog
           filters:
             branches:
               ignore: /.*/
@@ -95,7 +95,7 @@ workflows:
           app_name: "happa"
           app_collection_repo: "cloud-director-app-collection"
           requires:
-            - push-happa-to-control-plane-app-catalog
+            - push-happa-to-catalog
           filters:
             branches:
               ignore: /.*/
@@ -107,7 +107,7 @@ workflows:
           app_name: "happa"
           app_collection_repo: "capa-app-collection"
           requires:
-            - push-happa-to-control-plane-app-catalog
+            - push-happa-to-catalog
           filters:
             branches:
               ignore: /.*/
@@ -119,7 +119,7 @@ workflows:
           app_name: "happa"
           app_collection_repo: "capz-app-collection"
           requires:
-            - push-happa-to-control-plane-app-catalog
+            - push-happa-to-catalog
           filters:
             branches:
               ignore: /.*/
@@ -133,7 +133,7 @@ workflows:
               ignore:
                 - main
           requires:
-            - push-happa-to-control-plane-app-catalog
+            - push-happa-to-catalog
 
 
       # FE Docs
