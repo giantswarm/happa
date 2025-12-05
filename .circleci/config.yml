@@ -63,10 +63,9 @@ workflows:
 
       - architect/push-to-app-catalog:
           executor: app-build-suite
-          name: push-happa-to-control-plane-app-catalog
+          name: push-happa-to-catalog
           app_catalog: control-plane-catalog
           app_catalog_test: control-plane-test-catalog
-          push_to_oci_registry: false
           chart: happa
           persist_chart_archive: true
           requires:
@@ -84,7 +83,7 @@ workflows:
           app_name: "happa"
           app_collection_repo: "vsphere-app-collection"
           requires:
-            - push-happa-to-control-plane-app-catalog
+            - push-happa-to-catalog
           filters:
             branches:
               ignore: /.*/
@@ -96,7 +95,7 @@ workflows:
           app_name: "happa"
           app_collection_repo: "cloud-director-app-collection"
           requires:
-            - push-happa-to-control-plane-app-catalog
+            - push-happa-to-catalog
           filters:
             branches:
               ignore: /.*/
@@ -108,7 +107,7 @@ workflows:
           app_name: "happa"
           app_collection_repo: "capa-app-collection"
           requires:
-            - push-happa-to-control-plane-app-catalog
+            - push-happa-to-catalog
           filters:
             branches:
               ignore: /.*/
@@ -120,7 +119,7 @@ workflows:
           app_name: "happa"
           app_collection_repo: "capz-app-collection"
           requires:
-            - push-happa-to-control-plane-app-catalog
+            - push-happa-to-catalog
           filters:
             branches:
               ignore: /.*/
@@ -134,7 +133,7 @@ workflows:
               ignore:
                 - main
           requires:
-            - push-happa-to-control-plane-app-catalog
+            - push-happa-to-catalog
 
 
       # FE Docs
@@ -155,7 +154,7 @@ workflows:
 
       - architect/push-to-app-catalog:
           executor: app-build-suite
-          name: push-fe-docs-to-operations-platform-app-catalog
+          name: push-fedocs-to-catalog
           context: architect
           app_catalog: giantswarm-operations-platform-catalog
           app_catalog_test: giantswarm-operations-platform-test-catalog
