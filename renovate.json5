@@ -1,105 +1,97 @@
 {
-  "extends": [
-    // Base config - https://github.com/giantswarm/renovate-presets/blob/main/default.json5
-    "github>giantswarm/renovate-presets:default.json5",
-  ],
-  "reviewers": [
-    "gusevda"
-  ],
-  "packageRules": [
+  extends: ["github>giantswarm/renovate-presets:default.json5"],
+  reviewers: ["gusevda"],
+  packageRules: [
     {
-      "matchPackagePrefixes": ["@types/jest", "jest"],
-      "groupName": "jest packages",
-      "schedule": ["every weekend"]
+      groupName: "jest packages",
+      schedule: ["every weekend"],
+      matchPackageNames: ["@types/jest{/,}**", "jest{/,}**"],
     },
     {
-      "matchPackagePrefixes": ["eslint", "@typescript-eslint"],
-      "groupName": "eslint packages",
-      "schedule": ["every weekend"]
+      groupName: "eslint packages",
+      schedule: ["every weekend"],
+      matchPackageNames: ["eslint{/,}**", "@typescript-eslint{/,}**"],
     },
     {
-      "matchPackagePrefixes": ["date-fns"],
-      "groupName": "date-fns packages"
+      groupName: "date-fns packages",
+      matchPackageNames: ["date-fns{/,}**"],
     },
     {
-      "matchPackagePrefixes": ["@storybook"],
-      "groupName": "storybook packages",
-      "schedule": ["every weekend"]
+      groupName: "storybook packages",
+      schedule: ["every weekend"],
+      matchPackageNames: ["@storybook{/,}**"],
     },
     {
-      "matchPackagePrefixes": ["@babel", "babel"],
-      "groupName": "babel packages",
-      "schedule": ["every weekend"]
+      groupName: "babel packages",
+      schedule: ["every weekend"],
+      matchPackageNames: ["@babel{/,}**", "babel{/,}**"],
     },
     {
-      "matchPackagePrefixes": ["@sentry"],
-      "groupName": "sentry packages",
-      "schedule": ["every weekend"]
+      groupName: "sentry packages",
+      schedule: ["every weekend"],
+      matchPackageNames: ["@sentry{/,}**"],
     },
     {
-      "matchPackagePrefixes": ["@testing-library"],
-      "groupName": "testing-library packages"
+      groupName: "testing-library packages",
+      matchPackageNames: ["@testing-library{/,}**"],
     },
     {
-      "matchPackagePrefixes": [
-        "@types/react",
-        "react",
-        "react-refresh"
+      groupName: "react packages",
+      matchPackageNames: [
+        "@types/react{/,}**",
+        "react{/,}**",
+        "react-refresh{/,}**",
       ],
-      "groupName": "react packages"
     },
     {
-      "matchPackagePrefixes": ["@types/react-router", "react-router"],
-      "groupName": "react-router packages"
+      groupName: "react-router packages",
+      matchPackageNames: ["@types/react-router{/,}**", "react-router{/,}**"],
     },
     {
-      "matchPackagePrefixes": [
-        "@webpack",
-        "webpack",
-        "@types/copy-webpack-plugin",
-        "copy-webpack-plugin",
-        "@types/css-minimizer-webpack-plugin",
-        "css-minimizer-webpack-plugin",
-        "@types/mini-css-extract-plugin",
-        "mini-css-extract-plugin",
-        "@types/terser-webpack-plugin",
-        "terser-webpack-plugin",
-        "clean-webpack-plugin",
-        "html-webpack-plugin",
-        "css-loader",
-        "sass-loader",
-        "style-loader",
-        "json-loader",
-        "file-loader",
-        "imports-loader",
-        "webpack-bundle-analyzer",
-        "@types/webpack-bundle-analyzer",
-        "@pmmmwh/react-refresh-webpack-plugin"
+      groupName: "webpack packages",
+      schedule: ["every weekend"],
+      matchPackageNames: [
+        "@webpack{/,}**",
+        "webpack{/,}**",
+        "@types/copy-webpack-plugin{/,}**",
+        "copy-webpack-plugin{/,}**",
+        "@types/css-minimizer-webpack-plugin{/,}**",
+        "css-minimizer-webpack-plugin{/,}**",
+        "@types/mini-css-extract-plugin{/,}**",
+        "mini-css-extract-plugin{/,}**",
+        "@types/terser-webpack-plugin{/,}**",
+        "terser-webpack-plugin{/,}**",
+        "clean-webpack-plugin{/,}**",
+        "html-webpack-plugin{/,}**",
+        "css-loader{/,}**",
+        "sass-loader{/,}**",
+        "style-loader{/,}**",
+        "json-loader{/,}**",
+        "file-loader{/,}**",
+        "imports-loader{/,}**",
+        "webpack-bundle-analyzer{/,}**",
+        "@types/webpack-bundle-analyzer{/,}**",
+        "@pmmmwh/react-refresh-webpack-plugin{/,}**",
       ],
-      "groupName": "webpack packages",
-      "schedule": ["every weekend"]
     },
     {
-      "matchPackagePrefixes": ["@rjsf"],
-      "groupName": "react-jsonschema-form packages"
+      groupName: "react-jsonschema-form packages",
+      matchPackageNames: ["@rjsf{/,}**"],
     },
     {
-      "matchPackagePrefixes": ["@types/node"],
-      "groupName": "node packages",
-      "schedule": ["every weekend"]
+      groupName: "node packages",
+      schedule: ["every weekend"],
+      matchPackageNames: ["@types/node{/,}**"],
     },
     {
-      "matchPackageNames": [
-        "@types/bootstrap",
-        "bootstrap"
-      ],
-      "enabled": false
-    }
+      matchPackageNames: ["@types/bootstrap", "bootstrap"],
+      enabled: false,
+    },
   ],
-  "prConcurrentLimit": 1,
-  "schedule": [
+  prConcurrentLimit: 1,
+  schedule: [
     "every weekend",
     "every weekday after 6pm",
-    "every weekday before 6am"
-  ]
+    "every weekday before 6am",
+  ],
 }
