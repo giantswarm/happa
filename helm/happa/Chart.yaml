@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 name: happa
 description: >-
   Web user interface for Giant Swarm Kubernetes as a Service.
@@ -8,4 +8,4 @@ icon: https://s.giantswarm.io/app-icons/giantswarm/1/light.svg
 appVersion: ""
 annotations:
   config.giantswarm.io/version: 1.x.x
-  application.giantswarm.io/team: honeybadger
+  io.giantswarm.application.team: honeybadger

@@ -25,6 +25,6 @@ application.giantswarm.io/branch: {{ .Values.project.branch | quote }}
 application.giantswarm.io/commit: {{ .Values.project.commit | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-application.giantswarm.io/team: {{ index .Chart.Annotations "application.giantswarm.io/team" | quote }}
+application.giantswarm.io/team: {{ index .Chart.Annotations "io.giantswarm.application.team" | quote }}
 helm.sh/chart: {{ include "chart" . | quote }}
 {{- end -}}
