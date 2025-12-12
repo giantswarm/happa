@@ -408,12 +408,6 @@ describe('ClusterDetailWidgetWorkerNodes on AWS', () => {
       })
     );
 
-    render(
-      getComponent({
-        cluster: capiv1beta1Mocks.randomClusterAWS1,
-      })
-    );
-
     expect(await screen.findByLabelText('2 node pools')).toBeInTheDocument();
     expect(await screen.findByLabelText('6 nodes')).toBeInTheDocument();
     expect(
