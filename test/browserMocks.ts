@@ -1,4 +1,12 @@
 import fetch from 'isomorphic-fetch';
+import { TextEncoder, TextDecoder } from 'util';
+
+// Polyfill TextEncoder and TextDecoder for Jest/jsdom environment
+// Required by @paralleldrive/cuid2 (used by formidable 3.5.3+)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+global.TextEncoder = TextEncoder as any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+global.TextDecoder = TextDecoder as any;
 
 class LocalStorageMock implements Storage {
   private store: Record<string, string> = {};
