@@ -109,3 +109,123 @@ containerSecurityContext:
     drop:
       - ALL
   runAsNonRoot: true
+
+# Gateway API HTTPRoute for happa frontend
+route:
+  # -- Enable Gateway API HTTPRoute for happa
+  enabled: false
+  # -- Set the route kind
+  # Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute
+  kind: HTTPRoute
+  # -- Override the route name (defaults to .Values.name)
+  name: ""
+  # -- Annotations to add to the route
+  annotations: {}
+  # -- Labels to add to the route
+  labels: {}
+  # -- Hostnames for the route (supports templating)
+  # Example: ["{{ .Values.happa.host }}"]
+  hostnames: []
+  # -- Parent gateway references
+  parentRefs: []
+  # - name: giantswarm-default
+  #   namespace: envoy-gateway-system
+  # -- Route matching rules
+  matches:
+    - path:
+        type: PathPrefix
+        value: /
+  # -- Filters define the filters that are applied to requests that match this rule
+  filters: []
+  # -- Additional custom rules that can be added to the route
+  additionalRules: []
+  # -- SecurityPolicy configuration (Envoy Gateway)
+  securityPolicy:
+    enabled: false
+    annotations: {}
+    labels: {}
+    # basicAuth:
+    #   users:
+    #     name: <secret_name>
+    # cors:
+    #   allowOrigins:
+    #     - "*"
+    #   allowMethods:
+    #     - GET
+    #     - POST
+    # jwt:
+    #   providers:
+    #     - name: example
+    #       issuer: https://example.com
+    # oidc:
+    #   provider:
+    #     issuer: https://example.com
+    # extAuth:
+    #   http:
+    #     service:
+    #       name: auth-service
+    #       port: 80
+    # authorization:
+    #   defaultAction: Deny
+    #   rules: []
+
+# Gateway API HTTPRoute for happaapi (kubernetes API proxy)
+happaapiRoute:
+  # -- Enable Gateway API HTTPRoute for happaapi
+  enabled: false
+  # -- Set the route kind
+  # Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute
+  kind: HTTPRoute
+  # -- Override the route name (defaults to "happaapi")
+  name: ""
+  # -- Namespace for the route (defaults to "default" for kubernetes service)
+  namespace: default
+  # -- Annotations to add to the route
+  annotations: {}
+  # -- Labels to add to the route
+  labels: {}
+  # -- Hostnames for the route (supports templating)
+  # Example: ["{{ .Values.happaapi.host }}"]
+  hostnames: []
+  # -- Parent gateway references
+  parentRefs: []
+  # - name: giantswarm-default
+  #   namespace: envoy-gateway-system
+  # -- Backend service configuration
+  backend:
+    name: kubernetes
+    port: 443
+  # -- Route matching rules
+  matches:
+    - path:
+        type: PathPrefix
+        value: /
+  # -- Filters define the filters that are applied to requests that match this rule
+  filters: []
+  # -- Additional custom rules that can be added to the route
+  additionalRules: []
+  # -- SecurityPolicy configuration (Envoy Gateway)
+  securityPolicy:
+    enabled: false
+    annotations: {}
+    labels: {}
+    # cors:
+    #   allowOrigins:
+    #     - "{{ .Values.happa.address }}"
+    #   allowMethods:
+    #     - GET
+    #     - POST
+    #     - PUT
+    #     - DELETE
+    #   allowHeaders:
+    #     - DNT
+    #     - X-CustomHeader
+    #     - Keep-Alive
+    #     - User-Agent
+    #     - X-Requested-With
+    #     - If-Modified-Since
+    #     - Cache-Control
+    #     - Content-Type
+    #     - Authorization
+    #     - Impersonate-User
+    #     - Impersonate-Group
