@@ -170,13 +170,15 @@ describe('Installed app detail pane', () => {
       }) as HTMLButtonElement;
       fireEvent.click(deleteButton);
 
+      // Wait for the success message first (confirms operation completed)
+      await findByText(/has been deleted./i);
+
+      // Then verify the button is gone
       await waitFor(() => {
         expect(
           queryByRole('button', { name: /Delete user level config values/i })
         ).not.toBeInTheDocument();
       });
-
-      await findByText(/has been deleted./i);
       // eslint-disable-next-line no-magic-numbers
     }, 10000);
 
