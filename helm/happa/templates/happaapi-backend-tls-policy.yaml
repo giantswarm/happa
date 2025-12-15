@@ -33,8 +33,10 @@ spec:
     caCertificateRefs:
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- with $tls.validation.hostname }}
-    hostname: {{ . }}
+    {{- if $tls.validation.hostname }}
+    hostname: {{ $tls.validation.hostname }}
+    {{- else if eq ($route.backend.name | default "kubernetes") "kubernetes" }}
+    hostname: kubernetes.default.svc.cluster.local
     {{- end }}
     {{- if hasKey $tls.validation "wellKnownCACerts" }}
     wellKnownCACerts: {{ $tls.validation.wellKnownCACerts }}

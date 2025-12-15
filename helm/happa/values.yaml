@@ -220,8 +220,8 @@ happaapiRoute:
       caCertificateRefs: []
       # -- Hostname to validate against the backend certificate
       # For Kubernetes API server, this is typically the API server hostname
-      # Example: "kubernetes.default.svc.cluster.local"
-      hostname: ""
+      # Defaults to "kubernetes.default.svc.cluster.local" for the kubernetes service
+      hostname: "kubernetes.default.svc.cluster.local"
       # -- Use well-known CA certificates (system trust store)
       # Set to true to use system CA certificates instead of caCertificateRefs
       wellKnownCACerts: false
