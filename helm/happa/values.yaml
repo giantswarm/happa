@@ -195,6 +195,36 @@ happaapiRoute:
   backend:
     name: kubernetes
     port: 443
+    # -- Port name in the Service (optional, defaults to "https" for port 443)
+    portName: ""
+  # -- BackendTLSPolicy configuration for TLS between Gateway and backend
+  # Required when proxying to Kubernetes API server or other TLS backends
+  backendTLS:
+    enabled: false
+    annotations: {}
+    labels: {}
+    # -- TLS validation configuration
+    validation:
+      # -- CA certificate references (ConfigMap or ClusterTrustBundle)
+      # For Kubernetes API server, use ClusterTrustBundle with cluster CA
+      # Example with ConfigMap:
+      # caCertificateRefs:
+      #   - name: kube-root-ca
+      #     group: ""
+      #     kind: ConfigMap
+      # Example with ClusterTrustBundle:
+      # caCertificateRefs:
+      #   - name: kube-root-ca
+      #     group: ""
+      #     kind: ClusterTrustBundle
+      caCertificateRefs: []
+      # -- Hostname to validate against the backend certificate
+      # For Kubernetes API server, this is typically the API server hostname
+      # Example: "kubernetes.default.svc.cluster.local"
+      hostname: ""
+      # -- Use well-known CA certificates (system trust store)
+      # Set to true to use system CA certificates instead of caCertificateRefs
+      wellKnownCACerts: false
   # -- Route matching rules
   matches:
     - path:

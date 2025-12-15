@@ -513,6 +513,57 @@
             },
             "port": {
               "type": "integer"
+            },
+            "portName": {
+              "type": "string",
+              "description": "Port name in the Service"
+            }
+          }
+        },
+        "backendTLS": {
+          "type": "object",
+          "description": "BackendTLSPolicy configuration for TLS between Gateway and backend",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "annotations": {
+              "type": "object"
+            },
+            "labels": {
+              "type": "object"
+            },
+            "validation": {
+              "type": "object",
+              "properties": {
+                "caCertificateRefs": {
+                  "type": "array",
+                  "description": "CA certificate references (ConfigMap or ClusterTrustBundle)",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "group": {
+                        "type": "string"
+                      },
+                      "kind": {
+                        "type": "string",
+                        "enum": ["ConfigMap", "ClusterTrustBundle"]
+                      }
+                    }
+                  }
+                },
+                "hostname": {
+                  "type": "string",
+                  "description": "Hostname to validate against the backend certificate"
+                },
+                "wellKnownCACerts": {
+                  "type": "boolean",
+                  "description": "Use well-known CA certificates (system trust store)"
+                }
+              }
             }
           }
         },
