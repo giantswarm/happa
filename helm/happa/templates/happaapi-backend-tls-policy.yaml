@@ -27,20 +27,20 @@ spec:
       {{- else if eq (toString ($route.backend.port | default 443)) "443" }}
       sectionName: https
       {{- end }}
-  {{- if $tls.validation }}
   validation:
-    {{- with $tls.validation.caCertificateRefs }}
-    caCertificateRefs:
-      {{- toYaml . | nindent 6 }}
-    {{- end }}
     {{- if $tls.validation.hostname }}
     hostname: {{ $tls.validation.hostname }}
     {{- else if eq ($route.backend.name | default "kubernetes") "kubernetes" }}
     hostname: kubernetes.default.svc.cluster.local
+    {{- else }}
+    hostname: {{ $route.backend.name | default "kubernetes" }}.default.svc.cluster.local
+    {{- end }}
+    {{- with $tls.validation.caCertificateRefs }}
+    caCertificateRefs:
+      {{- toYaml . | nindent 6 }}
     {{- end }}
     {{- if hasKey $tls.validation "wellKnownCACerts" }}
     wellKnownCACerts: {{ $tls.validation.wellKnownCACerts }}
     {{- end }}
-  {{- end }}
 {{- end }}
 
