@@ -141,7 +141,6 @@
     "@testing-library/react": "14.2.1",
     "@testing-library/react-hooks": "8.0.1",
     "@types/bootstrap": "4.5.1",
-    "@types/classnames": "2.3.4",
     "@types/color-hash": "1.0.5",
     "@types/copy-webpack-plugin": "8.0.1",
     "@types/cors": "2.8.17",
