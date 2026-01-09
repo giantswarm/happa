@@ -9,6 +9,9 @@ image:
 port: 8080
 hostnames: []
 
+ingress:
+  enabled: true
+
 registry:
   domain: gsoci.azurecr.io
 

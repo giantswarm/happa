@@ -35,6 +35,16 @@
     "hostnames": {
       "type": "array"
     },
+    "ingress": {
+      "type": "object",
+      "description": "Kubernetes Ingress configuration for fe-docs",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable creating an Ingress resource (requires hostnames to be set)"
+        }
+      }
+    },
     "image": {
       "type": "object",
       "properties": {
