@@ -2,20 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ .Values.name }}
+  name: {{ include "fe-docs.name" . }}
   labels:
-    app: {{ .Values.name }}
+    {{- include "commonLabels" . | nindent 4 }}
+    app: {{ include "fe-docs.name" . }}
 spec:
   replicas: 1
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: {{ .Values.name }}
+      app: {{ include "fe-docs.name" . }}
   template:
     metadata:
-      name: {{ .Values.name }}
+      name: {{ include "fe-docs.name" . }}
       labels:
-        app: {{ .Values.name }}
+        {{- include "commonLabels" . | nindent 8 }}
+        app: {{ include "fe-docs.name" . }}
     spec:
       securityContext:
         fsGroup: 1337
@@ -66,5 +68,5 @@ spec:
       volumes:
         - name: nginx-tmp
           emptyDir: {}
-      serviceAccount: {{ .Values.name }}
-      serviceAccountName: {{ .Values.name }}
+      serviceAccount: {{ include "fe-docs.name" . }}
+      serviceAccountName: {{ include "fe-docs.name" . }}

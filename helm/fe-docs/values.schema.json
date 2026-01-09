@@ -87,6 +87,112 @@
           "type": "boolean"
         }
       }
+    },
+    "route": {
+      "type": "object",
+      "description": "Gateway API HTTPRoute configuration for fe-docs",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable Gateway API HTTPRoute for fe-docs"
+        },
+        "kind": {
+          "type": "string",
+          "description": "Route kind (HTTPRoute, GRPCRoute, TCPRoute, TLSRoute, UDPRoute)",
+          "enum": ["GRPCRoute", "HTTPRoute", "TCPRoute", "TLSRoute", "UDPRoute"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Override the route name"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Annotations to add to the route"
+        },
+        "labels": {
+          "type": "object",
+          "description": "Labels to add to the route"
+        },
+        "hostnames": {
+          "type": "array",
+          "description": "Hostnames for the route",
+          "items": {
+            "type": "string"
+          }
+        },
+        "parentRefs": {
+          "type": "array",
+          "description": "Parent gateway references",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "sectionName": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "matches": {
+          "type": "array",
+          "description": "Route matching rules",
+          "items": {
+            "type": "object"
+          }
+        },
+        "filters": {
+          "type": "array",
+          "description": "Filters applied to matching requests",
+          "items": {
+            "type": "object"
+          }
+        },
+        "additionalRules": {
+          "type": "array",
+          "description": "Additional custom rules for the route",
+          "items": {
+            "type": "object"
+          }
+        },
+        "securityPolicy": {
+          "type": "object",
+          "description": "SecurityPolicy configuration (Envoy Gateway)",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "annotations": {
+              "type": "object"
+            },
+            "labels": {
+              "type": "object"
+            },
+            "basicAuth": {
+              "type": "object"
+            },
+            "cors": {
+              "type": "object"
+            },
+            "jwt": {
+              "type": "object"
+            },
+            "oidc": {
+              "type": "object"
+            },
+            "extAuth": {
+              "type": "object"
+            },
+            "authorization": {
+              "type": "object"
+            }
+          }
+        }
+      }
     }
   }
 }
