@@ -3,9 +3,10 @@ apiVersion: kyverno.io/v2
 kind: PolicyException
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ .Values.name }}
+  name: {{ include "fe-docs.name" . }}
   labels:
-    app: {{ .Values.name }}
+    {{- include "commonLabels" . | nindent 4 }}
+    app: {{ include "fe-docs.name" . }}
 spec:
   background: true
   exceptions:
@@ -40,9 +41,8 @@ spec:
         - ReplicaSet
         - Pod
         names:
-          - "{{ .Values.name }}*"
+          - "{{ include "fe-docs.name" . }}*"
           - "fe-docs*"
         namespaces:
           - "{{ .Release.Namespace }}"
 {{- end }}
-

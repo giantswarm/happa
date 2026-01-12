@@ -1,10 +1,12 @@
+{{- if .Values.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Values.name }}
+  name: {{ include "fe-docs.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ .Values.name }}
+    {{- include "commonLabels" . | nindent 4 }}
+    app: {{ include "fe-docs.name" . }}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-giantswarm
     kubernetes.io/tls-acme: "true"
@@ -12,7 +14,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    {{- $serviceName := .Values.name -}}
+    {{- $serviceName := include "fe-docs.name" . -}}
     {{- $port := .Values.port -}}
     {{- if or (not (.Values.hostnames)) (eq (len .Values.hostnames) 0) }}
       {{- fail "value for .Values.hostnames must not be empty" }}
@@ -34,4 +36,5 @@ spec:
       {{- range .Values.hostnames }}
       - {{ . }}
       {{- end }}
-      secretName: {{ .Values.name }}
+      secretName: {{ include "fe-docs.name" . }}
+{{- end }}

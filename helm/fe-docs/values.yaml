@@ -9,6 +9,9 @@ image:
 port: 8080
 hostnames: []
 
+ingress:
+  enabled: true
+
 registry:
   domain: gsoci.azurecr.io
 
@@ -23,3 +26,62 @@ containerSecurityContext:
   runAsNonRoot: true
   podSeccompProfile:
     type: RuntimeDefault
+
+# Gateway API HTTPRoute for fe-docs
+route:
+  # -- Enable Gateway API HTTPRoute for fe-docs
+  enabled: false
+  # -- Set the route kind
+  # Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute
+  kind: HTTPRoute
+  # -- Override the route name (defaults to .Values.name)
+  name: ""
+  # -- Annotations to add to the route
+  annotations: {}
+  # -- Labels to add to the route
+  labels: {}
+  # -- Hostnames for the route (supports templating)
+  # Example: ["{{ .Values.hostnames }}"]
+  hostnames: []
+  # -- Parent gateway references
+  parentRefs: []
+  # - name: giantswarm-default
+  #   namespace: envoy-gateway-system
+  # -- Route matching rules
+  matches:
+    - path:
+        type: PathPrefix
+        value: /
+  # -- Filters define the filters that are applied to requests that match this rule
+  filters: []
+  # -- Additional custom rules that can be added to the route
+  additionalRules: []
+  # -- SecurityPolicy configuration (Envoy Gateway)
+  securityPolicy:
+    enabled: false
+    annotations: {}
+    labels: {}
+    # basicAuth:
+    #   users:
+    #     name: <secret_name>
+    # cors:
+    #   allowOrigins:
+    #     - "*"
+    #   allowMethods:
+    #     - GET
+    #     - POST
+    # jwt:
+    #   providers:
+    #     - name: example
+    #       issuer: https://example.com
+    # oidc:
+    #   provider:
+    #     issuer: https://example.com
+    # extAuth:
+    #   http:
+    #     service:
+    #       name: auth-service
+    #       port: 80
+    # authorization:
+    #   defaultAction: Deny
+    #   rules: []
