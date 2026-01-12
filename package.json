@@ -143,7 +143,7 @@
     "@types/bootstrap": "4.5.1",
     "@types/color-hash": "1.0.5",
     "@types/copy-webpack-plugin": "8.0.1",
-    "@types/cors": "2.8.17",
+    "@types/cors": "2.8.19",
     "@types/css-minimizer-webpack-plugin": "3.2.0",
     "@types/deep-diff": "1.0.5",
     "@types/ejs": "3.1.5",
