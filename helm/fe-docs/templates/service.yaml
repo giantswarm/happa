@@ -2,12 +2,13 @@ kind: Service
 apiVersion: v1
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ .Values.name }}
+  name: {{ include "fe-docs.name" . }}
   labels:
-    app: {{ .Values.name }}
+    {{- include "commonLabels" . | nindent 4 }}
+    app: {{ include "fe-docs.name" . }}
 spec:
   ports:
     - port: {{ .Values.port }}
       targetPort: http
   selector:
-    app: {{ .Values.name }}
+    app: {{ include "fe-docs.name" . }}

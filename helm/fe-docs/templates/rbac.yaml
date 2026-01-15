@@ -2,13 +2,16 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ .Values.name }}
+  name: {{ include "fe-docs.name" . }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+    app: {{ include "fe-docs.name" . }}
 rules:
 - apiGroups:
   - extensions
   resourceNames:
-  - {{ .Values.name }}
+  - {{ include "fe-docs.name" . }}
   resources:
   - podsecuritypolicies
   verbs:
@@ -17,14 +20,17 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ .Values.name }}
+  name: {{ include "fe-docs.name" . }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+    app: {{ include "fe-docs.name" . }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ .Values.name }}
+  name: {{ include "fe-docs.name" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.name }}
+  name: {{ include "fe-docs.name" . }}
   namespace: {{ .Release.Namespace }}
 {{- end }}
