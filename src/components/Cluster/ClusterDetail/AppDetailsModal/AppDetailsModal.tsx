@@ -110,30 +110,52 @@ const AppDetailsModal: React.FC<
   async function deleteAppConfig() {
     try {
       await dispatch(deleteAppConfigAction(appName, clusterId));
-      await dispatch(loadClusterApps({ clusterId: clusterId }));
-      handleClose();
     } catch (err) {
+      // Keep going; the thunk action does its own user-facing error handling.
       ErrorReporter.getInstance().notify(err as Error);
+    }
+
+    try {
+      await dispatch(loadClusterApps({ clusterId: clusterId }));
+    } catch (err) {
+      // Don't keep the modal stuck open just because refreshing failed.
+      ErrorReporter.getInstance().notify(err as Error);
+    } finally {
+      handleClose();
     }
   }
 
   async function deleteAppSecret() {
     try {
       await dispatch(deleteAppSecretAction(appName, clusterId));
-      await dispatch(loadClusterApps({ clusterId: clusterId }));
-      handleClose();
     } catch (err) {
+      // Keep going; the thunk action does its own user-facing error handling.
       ErrorReporter.getInstance().notify(err as Error);
+    }
+
+    try {
+      await dispatch(loadClusterApps({ clusterId: clusterId }));
+    } catch (err) {
+      // Don't keep the modal stuck open just because refreshing failed.
+      ErrorReporter.getInstance().notify(err as Error);
+    } finally {
+      handleClose();
     }
   }
 
   async function deleteApp() {
     try {
       await dispatch(deleteAppAction({ appName, clusterId }));
-      await dispatch(loadClusterApps({ clusterId: clusterId }));
-      handleClose();
     } catch (err) {
       ErrorReporter.getInstance().notify(err as Error);
+    }
+
+    try {
+      await dispatch(loadClusterApps({ clusterId: clusterId }));
+    } catch (err) {
+      ErrorReporter.getInstance().notify(err as Error);
+    } finally {
+      handleClose();
     }
   }
 
