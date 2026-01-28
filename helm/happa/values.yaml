@@ -217,7 +217,10 @@ happaapiRoute:
       #   - name: kube-root-ca
       #     group: ""
       #     kind: ClusterTrustBundle
-      caCertificateRefs: []
+      caCertificateRefs:
+      - name: kube-root-ca.crt
+        group: ""
+        kind: ConfigMap
       # -- Hostname to validate against the backend certificate
       # For Kubernetes API server, this is typically the API server hostname
       # Defaults to "kubernetes.default.svc.cluster.local" for the kubernetes service
