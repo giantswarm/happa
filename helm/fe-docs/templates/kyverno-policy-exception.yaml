@@ -2,7 +2,7 @@
 apiVersion: kyverno.io/v2
 kind: PolicyException
 metadata:
-  namespace: {{ .Release.Namespace }}
+  namespace: policy-exceptions
   name: {{ include "fe-docs.name" . }}
   labels:
     {{- include "commonLabels" . | nindent 4 }}

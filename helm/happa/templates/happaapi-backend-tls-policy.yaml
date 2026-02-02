@@ -2,7 +2,7 @@
 {{- $tls := .Values.happaapiRoute.backendTLS }}
 {{- $route := .Values.happaapiRoute }}
 ---
-apiVersion: gateway.networking.k8s.io/v1alpha3
+apiVersion: gateway.networking.k8s.io/v1
 kind: BackendTLSPolicy
 metadata:
   name: {{ $route.name | default "happaapi" }}-backend-tls
