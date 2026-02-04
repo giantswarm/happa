@@ -79,34 +79,6 @@ workflows:
             tags:
               only: /^v.*/
 
-            - push-happa-to-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-
-            - push-happa-to-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-
-            - push-happa-to-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-
-            - push-happa-to-catalog
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-
       - architect/run-tests-with-ats:
           name: execute chart tests
           filters:
