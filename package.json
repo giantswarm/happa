@@ -175,7 +175,7 @@
     "@types/redux-mock-store": "1.0.6",
     "@types/request": "2.48.12",
     "@types/serialize-javascript": "5.0.4",
-    "@types/styled-components": "5.1.34",
+    "@types/styled-components": "5.1.36",
     "@types/superagent": "8.1.9",
     "@types/terser-webpack-plugin": "5.0.4",
     "@types/underscore": "1.11.15",
