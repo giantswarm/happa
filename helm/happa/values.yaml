@@ -51,6 +51,10 @@ gcp:
     default: ""
 
 ingress:
+  happa:
+    enabled: true
+  happaapi:
+    enabled: true
   externalDNS: false
   tls:
     clusterIssuer: "letsencrypt-giantswarm"
