@@ -150,7 +150,7 @@
     "@types/express": "4.17.21",
     "@types/history": "4.7.11",
     "@types/isomorphic-fetch": "0.0.39",
-    "@types/jest": "29.5.12",
+    "@types/jest": "29.5.14",
     "@types/js-yaml": "4.0.9",
     "@types/lunr": "2.3.7",
     "@types/mermaid": "9.1.0",
