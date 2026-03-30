@@ -113,7 +113,7 @@
     "remark-gfm": "4.0.0",
     "remark-gfm3": "npm:remark-gfm@3",
     "reselect": "4.1.8",
-    "serialize-javascript": "6.0.2",
+    "serialize-javascript": "7.0.5",
     "stacktrace-js": "2.0.2",
     "styled-components": "5.3.11",
     "superagent": "8.1.2",
