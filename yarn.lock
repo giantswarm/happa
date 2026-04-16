@@ -6164,12 +6164,10 @@ browserify-zlib@^0.1.4:
   dependencies:
     pako "~0.2.0"
 
-browserlist@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/browserlist/-/browserlist-1.0.1.tgz#8c52c4fd5ba49c7464b9e0f85d519598b5833ed9"
-  integrity sha512-nYq9jiWv+qXcgrJxQzivfEc7Wo2GvAKkeRViE5L3cUJpq4SZO6NZR710I/8T+OjE5BPECbzpm8rpUkwslE3nTg==
-  dependencies:
-    chalk "^2.4.1"
+browserlist@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/browserlist/-/browserlist-1.0.2.tgz#f9c4f00bbcaaa8dccb672d3a571a0ae409c9098e"
+  integrity sha512-welJSH1jwS/TcyCd/XZ9vj/2ijgDNEbcrS7YCjIB0Tc1sfFnfK9c80xCbTy/kY3oCqWWPHtBNQpVuPu55ErNEw==
 
 browserslist@^4.0.0, browserslist@^4.21.10, browserslist@^4.22.2:
   version "4.22.2"
@@ -6415,7 +6413,7 @@ chalk@5.2.0:
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-5.2.0.tgz#249623b7d66869c673699fb66d65723e54dfcfb3"
   integrity sha512-ree3Gqw/nazQAPuJJEy+avdl7QfZMcUvmHIKgEZkGL+xOBzRvup5Hxo6LHuMceSxOabuJLJm5Yp/92R9eMmMvA==
 
-chalk@^2.4.1, chalk@^2.4.2:
+chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
