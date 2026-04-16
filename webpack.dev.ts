@@ -42,8 +42,9 @@ const config: webpack.Configuration = merge(common, {
       disableDotRule: true,
     },
     // used for app catalogs proxy /catalogs?url=
-    proxy: {
-      '/catalogs': {
+    proxy: [
+      {
+        context: ['/catalogs'],
         target: 'https://cors-anywhere.herokuapp.com/',
         changeOrigin: true,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,7 +56,7 @@ const config: webpack.Configuration = merge(common, {
           proxyReq.setHeader('origin', 'http://localhost:7000');
         },
       },
-    },
+    ],
   },
   plugins: [
     new ConfigurationPlugin({
