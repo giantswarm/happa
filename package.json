@@ -119,7 +119,7 @@
     "superagent": "8.1.2",
     "swr": "2.2.4",
     "underscore": "1.13.8",
-    "uuid": "9.0.1",
+    "uuid": "14.0.0",
     "validate.js": "0.13.1",
     "web-vitals": "3.5.2"
   },
