@@ -170,13 +170,13 @@ describe('Installed app detail pane', () => {
       }) as HTMLButtonElement;
       fireEvent.click(deleteButton);
 
+      await findByText(/has been deleted./i);
+
       await waitFor(() => {
         expect(
           queryByRole('button', { name: /Delete user level config values/i })
         ).not.toBeInTheDocument();
       });
-
-      await findByText(/has been deleted./i);
       // eslint-disable-next-line no-magic-numbers
     }, 10000);
 
