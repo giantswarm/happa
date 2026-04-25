@@ -178,7 +178,7 @@
     "@types/styled-components": "5.1.36",
     "@types/superagent": "8.1.9",
     "@types/terser-webpack-plugin": "5.0.4",
-    "@types/underscore": "1.11.15",
+    "@types/underscore": "1.13.0",
     "@types/uuid": "9.0.8",
     "@types/webpack": "5.28.5",
     "@types/webpack-bundle-analyzer": "4.6.3",
