@@ -153,7 +153,6 @@
     "@types/jest": "29.5.14",
     "@types/js-yaml": "4.0.9",
     "@types/lunr": "2.3.7",
-    "@types/mermaid": "9.2.0",
     "@types/mini-css-extract-plugin": "2.5.0",
     "@types/node": "20.11.16",
     "@types/node-fetch": "2.6.11",
