@@ -78,7 +78,7 @@
     "date-fns": "2.30.0",
     "date-fns-tz": "2.0.1",
     "deep-diff": "1.0.2",
-    "dotenv": "16.4.1",
+    "dotenv": "16.6.1",
     "get-contrast": "3.0.0",
     "giantswarm": "git+https://github.com/giantswarm/giantswarm-js-client.git",
     "grommet": "2.34.2",
