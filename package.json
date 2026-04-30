@@ -74,7 +74,7 @@
     "color-hash": "2.0.2",
     "connected-react-router": "6.9.3",
     "copy-to-clipboard": "3.3.3",
-    "core-js": "3.35.1",
+    "core-js": "3.49.0",
     "date-fns": "2.30.0",
     "date-fns-tz": "2.0.1",
     "deep-diff": "1.0.2",
