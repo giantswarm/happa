@@ -17,7 +17,11 @@ import {
 } from './schemaUtils';
 
 const validator = customizeValidator<RJSFSchema, RJSFSchema>({
-  AjvClass: Ajv2020,
+  // yarn1 leaves duplicate ajv 8.x copies under webpack/schema-utils, so tsc
+  // sees structurally distinct Options types between top-level ajv and the
+  // nested copies. Cast is safe — the versions are semver-compatible.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  AjvClass: Ajv2020 as any,
 });
 
 export const Prompt: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
