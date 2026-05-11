@@ -45,7 +45,7 @@ const ArrayFieldItem: React.FC<ArrayFieldTemplateItemType> = ({
       <ArrayFieldItemActionsWrapper>
         {hasToolbar && (
           <ArrayFieldItemActions
-            disabled={disabled || readonly}
+            disabled={Boolean(disabled || readonly)}
             hasMoveDown={hasMoveDown}
             hasMoveUp={hasMoveUp}
             hasRemove={hasRemove}

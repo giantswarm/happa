@@ -33,11 +33,20 @@ Skipped:
 ## PR 2 — Bump `react-markdown` to latest 9.x
 
 Four call sites; API stable within 9.x. Verifies markdown surfaces (changelogs,
-app detail pages).
+app detail pages). _Shipped in #4744 — also added a `mdast-util-to-hast`
+resolution since the bump alone did not move the transitive._
 
-## PR 3 — Bump `mermaid` to latest 10.x
+## PR 3 — Bump `mermaid`
 
-Single call site (`src/components/UI/Display/Documentation/Mermaid.tsx`).
+**Dropped.** `mermaid@10.9.5` is already the latest 10.x. The reported vuln
+is the `lodash-es` `_.template` code-injection advisory, which has no upstream
+fix in any lodash version. `mermaid@11.x` would swap `lodash-es` for
+`es-toolkit` — but `lodash-es` is also pulled by `@rjsf/*`, `redux@^3`
+(transitive via `connected-react-router`), and `dagre-d3-es`, so the advisory
+would persist anyway. Additionally, `mermaid@11` requires
+`@braintree/sanitize-url ^7.1.1`, which conflicts with the existing
+resolution at `6.0.4`. Revisit as a standalone effort if/when we're ready
+for the major bump.
 
 ## PR 4 — Bump `@rjsf/core`, `@rjsf/utils`, `@rjsf/validator-ajv8` to latest 5.x
 
