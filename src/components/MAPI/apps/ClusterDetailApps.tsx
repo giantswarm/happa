@@ -1,5 +1,4 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { push } from 'connected-react-router';
 import { Box, Paragraph } from 'grommet';
 import ListAppsGuide from 'MAPI/clusters/guides/ListAppsGuide';
 import { extractErrorMessage } from 'MAPI/utils';
@@ -12,6 +11,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
+import { push } from 'redux-first-history';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';

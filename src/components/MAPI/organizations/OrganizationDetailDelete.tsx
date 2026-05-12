@@ -1,9 +1,9 @@
-import { push } from 'connected-react-router';
 import { Box, Text } from 'grommet';
 import { extractErrorMessage } from 'MAPI/utils';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { push } from 'redux-first-history';
 import Button from 'UI/Controls/Button';
 import ConfirmationPrompt from 'UI/Controls/ConfirmationPrompt';
 import ErrorReporter from 'utils/errors/ErrorReporter';

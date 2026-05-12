@@ -1,4 +1,3 @@
-import { push } from 'connected-react-router';
 import differenceInSeconds from 'date-fns/fp/differenceInSeconds';
 import toDate from 'date-fns-tz/toDate';
 import { getClusterLabelsWithDisplayInfo } from 'MAPI/clusters/utils';
@@ -13,6 +12,7 @@ import { getAllReleases } from 'model/stores/releases/selectors';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { push } from 'redux-first-history';
 import ErrorBoundary from 'shared/ErrorBoundary';
 import { css } from 'styled-components';
 import styled from 'styled-components';

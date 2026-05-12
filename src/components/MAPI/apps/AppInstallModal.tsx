@@ -4,7 +4,6 @@ import ClusterPicker, {
 import InstallAppForm from 'Apps/AppDetail/InstallAppModal/InstallAppForm';
 import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { push } from 'connected-react-router';
 import { Box, Text } from 'grommet';
 import yaml from 'js-yaml';
 import { usePermissionsForClusters } from 'MAPI/clusters/permissions/usePermissionsForClusters';
@@ -46,6 +45,7 @@ import React, {
   useState,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'redux-first-history';
 import useSWR, { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';

@@ -1,4 +1,3 @@
-import { push } from 'connected-react-router';
 import differenceInHours from 'date-fns/fp/differenceInHours';
 import toDate from 'date-fns-tz/toDate';
 import { Box, Card, CardBody, ResponsiveContext, Text } from 'grommet';
@@ -12,6 +11,7 @@ import * as releasev1alpha1 from 'model/services/mapi/releasev1alpha1';
 import React, { useContext, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { push } from 'redux-first-history';
 import styled from 'styled-components';
 import Button from 'UI/Controls/Button';
 import ClusterIDLabel, {

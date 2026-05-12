@@ -6,11 +6,10 @@ import 'styles/app.sass';
 
 import * as featureFlags from 'model/featureFlags';
 import configureStore from 'model/stores/configureStore';
-import history from 'model/stores/history';
+import baseHistory from 'model/stores/history';
 import { IState } from 'model/stores/state';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Store } from 'redux';
 import theme from 'styles/theme';
 import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
 import ErrorReporter from 'utils/errors/ErrorReporter';
@@ -28,7 +27,7 @@ const auth = new MapiAuth(authConfig);
 const flashMessagesController = FlashMessagesController.getInstance();
 
 // Configure the redux store.
-const store: Store = configureStore({} as IState, history, auth);
+const { store, history } = configureStore({} as IState, baseHistory, auth);
 
 if (window.config.environment !== 'development') {
   const errorReporter = ErrorReporter.getInstance();

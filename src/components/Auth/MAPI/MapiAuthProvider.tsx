@@ -1,4 +1,3 @@
-import { push } from 'connected-react-router';
 import { MainRoutes } from 'model/constants/routes';
 import { loginSuccess, logoutSuccess } from 'model/stores/main/actions';
 import { mapOAuth2UserToUser } from 'model/stores/main/utils';
@@ -10,6 +9,7 @@ import React, {
   useMemo,
 } from 'react';
 import { useDispatch } from 'react-redux';
+import { push } from 'redux-first-history';
 import { IOAuth2Provider, OAuth2Events } from 'utils/OAuth2/OAuth2';
 import { IOAuth2User } from 'utils/OAuth2/OAuth2User';
 

@@ -1,7 +1,6 @@
 import { render, RenderOptions } from '@testing-library/react';
 import App from 'App';
 import MapiAuthProvider from 'Auth/MAPI/MapiAuthProvider';
-import { ConnectedRouter } from 'connected-react-router';
 import { createMemoryHistory } from 'history';
 import { History } from 'history';
 import { MainRoutes } from 'model/constants/routes';
@@ -10,6 +9,7 @@ import { LoggedInUserTypes } from 'model/stores/main/types';
 import { IState } from 'model/stores/state';
 import React from 'react';
 import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 import theme from 'styles/theme';
 import { SWRConfig } from 'swr';
 import ThemeProvider from 'ThemeProvider';
@@ -53,11 +53,13 @@ export function renderRouteWithStore(
   state: Partial<IState> = {},
   storage: Partial<typeof initialStorage> = initialStorage,
   auth: IOAuth2Provider = new TestOAuth2(),
-  history: History<History.LocationState> = createInitialHistory(initialRoute)
+  baseHistory: History<History.LocationState> = createInitialHistory(
+    initialRoute
+  )
 ) {
   localStorage.replaceWith(storage);
 
-  const store = configureStore(state as IState, history, auth);
+  const { store, history } = configureStore(state as IState, baseHistory, auth);
   const flashMessagesController = FlashMessagesController.getInstance();
 
   const app = render(
@@ -139,18 +141,18 @@ export function getComponentWithStore<C extends React.ComponentType<any>>(
   props: PropsOf<C> = {} as PropsOf<C>,
   state: Partial<IState> = {},
   storage: Partial<typeof initialStorage> = initialStorage,
-  history: History<History.LocationState> = createMemoryHistory(),
-  auth: IOAuth2Provider = new TestOAuth2(history)
+  baseHistory: History<History.LocationState> = createMemoryHistory(),
+  auth: IOAuth2Provider = new TestOAuth2(baseHistory)
 ) {
   localStorage.replaceWith(storage);
 
-  const store = configureStore(state as IState, history, auth);
+  const { store, history } = configureStore(state as IState, baseHistory, auth);
   const flashMessagesController = FlashMessagesController.getInstance();
 
   const app = (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
+        <Router history={history}>
           <MapiAuthProvider auth={auth}>
             <Component {...props} />
           </MapiAuthProvider>
@@ -158,7 +160,7 @@ export function getComponentWithStore<C extends React.ComponentType<any>>(
             controller={flashMessagesController}
             animate={false}
           />
-        </ConnectedRouter>
+        </Router>
       </ThemeProvider>
     </Provider>
   );

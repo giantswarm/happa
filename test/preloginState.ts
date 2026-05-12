@@ -14,7 +14,6 @@ const state: IState = {
       search: '',
       hash: '',
       key: '0fgz24',
-      query: {},
       state: {},
     },
     action: 'POP',

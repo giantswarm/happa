@@ -1,5 +1,4 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import GettingStartedInstallIngress from 'MAPI/clusters/GettingStarted/GettingStartedInstallIngress';
 import { Cluster } from 'MAPI/types';
@@ -12,6 +11,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
 import { Redirect, Switch, useRouteMatch } from 'react-router';
+import { push } from 'redux-first-history';
 import Route from 'Route';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';

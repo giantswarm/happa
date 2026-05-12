@@ -1,5 +1,4 @@
 import { filterFunc } from 'components/Apps/AppsList/utils';
-import { push } from 'connected-react-router';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
 import { StatusCodes } from 'model/constants';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
@@ -50,6 +49,7 @@ import {
 import { loadReleases } from 'model/stores/releases/actions';
 import { IState } from 'model/stores/state';
 import { AnyAction } from 'redux';
+import { push } from 'redux-first-history';
 import { ThunkAction } from 'redux-thunk';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { extractMessageFromError } from 'utils/errorUtils';
