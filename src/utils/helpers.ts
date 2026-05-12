@@ -7,7 +7,7 @@ import toDate from 'date-fns-tz/toDate';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import ipRegex from 'ip-regex';
 import { getOrganizationByID } from 'model/stores/organization/utils';
-import validate from 'validate.js';
+
 /**
  * Format code in a user-friendly way.
  * Note: Newline backticks need to be escaped.
@@ -157,38 +157,6 @@ export function convertMBtoBytes(mb: number): number {
 export function convertMiBtoBytes(mebibytes: number): number {
   // eslint-disable-next-line no-magic-numbers
   return mebibytes * 1024 * 1024;
-}
-
-/**
- * Helper method that validates an object based on constraints.
- * @param validatable - The object to validate.
- * @param constraints - The `validate.js` constraints.
- * @throws {TypeError} Error with a helpful message if the validation fails.
- */
-export function validateOrRaise<T>(
-  validatable: T,
-  constraints: Partial<Record<keyof T, Record<string, unknown>>>
-): void {
-  const validationErrors: Record<string, string[]> = validate(
-    validatable,
-    constraints,
-    {
-      fullMessages: false,
-    }
-  );
-  if (!validationErrors) return;
-
-  /**
-   * If there are validation errors, throw a TypeError that
-   * has readable information about what went wrong.
-   */
-  const messages = Object.entries(validationErrors).map(
-    ([field, errorMessages]) => {
-      return `${field}: ${errorMessages.join(', ')}`;
-    }
-  );
-
-  throw new TypeError(messages.join('\n'));
 }
 
 /**

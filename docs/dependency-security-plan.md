@@ -53,10 +53,13 @@ for the major bump.
 Heavy use in `src/utils/schema/` but a 5.17 → 5.x patch should be drop-in.
 Run schema-related tests deliberately.
 
-## PR 5 — Replace `validate.js`
+## PR 5 — Remove `validate.js`
 
-One file (`src/utils/helpers.ts`). AJV is already a direct dependency and is
-the natural replacement. Removes an unfixable ReDoS in an unmaintained package.
+`validate.js` was used by a single helper, `validateOrRaise`, in
+`src/utils/helpers.ts`. The helper is dead code — defined and exported
+but only consumed by its own unit test. Deleted the helper, its test,
+and the `validate.js` direct dependency outright. No replacement
+needed.
 
 ## PR 6 — Replace `connected-react-router`
 
