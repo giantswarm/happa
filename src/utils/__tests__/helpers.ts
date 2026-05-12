@@ -12,7 +12,6 @@ import {
   makeKubeConfigTextFile,
   toTitleCase,
   truncate,
-  validateOrRaise,
 } from 'utils/helpers';
 
 describe('helpers', () => {
@@ -215,37 +214,6 @@ describe('helpers', () => {
       expect(result).toStrictEqual({ unit: 'PiB', value: '312.570' });
 
       /* eslint-enable no-magic-numbers */
-    });
-  });
-
-  describe('validateOrRaise', () => {
-    it('validates a certain object, with validate.js constraints', () => {
-      const obj: { email: string; token?: string } = {
-        email: '@@google.com',
-      };
-
-      const constraints = {
-        email: {
-          presence: true,
-          email: true,
-          length: {
-            minimum: 15,
-          },
-        },
-        token: { presence: true },
-      };
-
-      expect(() => {
-        validateOrRaise(obj, constraints);
-      }).toThrowError(
-        new Error(`email: is not a valid email, is too short (minimum is 15 characters)
-token: can't be blank`)
-      );
-
-      obj.email = 'test@someemail.com';
-      obj.token = 'some-token';
-
-      validateOrRaise(obj, constraints);
     });
   });
 
