@@ -1,0 +1,23 @@
+name: JS Dependency Audit
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '**/package.json'
+      - '**/package-lock.json'
+      - '**/npm-shrinkwrap.json'
+      - '**/yarn.lock'
+      - '**/.yarnrc'
+      - '**/.yarnrc.yml'
+      - '**/pnpm-lock.yaml'
+      - '**/pnpm-workspace.yaml'
+
+permissions: {}
+
+jobs:
+  audit:
+    uses: giantswarm/github-workflows/.github/workflows/js-dependency-audit.yaml@main
+    permissions:
+      contents: read
+      pull-requests: write
