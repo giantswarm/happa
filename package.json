@@ -251,6 +251,7 @@
     "form-data": "^4.0.4",
     "trim": "1.0.1",
     "underscore": "1.13.8",
+    "ws": "^8.17.1",
     "string-width": "4.2.3",
     "brace-expansion": "^2.0.2",
     "flatted": "^3.3.3",
