@@ -45,9 +45,7 @@ const modalReducer = produce(
         break;
 
       case ROUTER_LOCATION_CHANGE:
-        if (!action.payload.isFirstRendering) {
-          draft.visible = false;
-        }
+        draft.visible = false;
 
         break;
 

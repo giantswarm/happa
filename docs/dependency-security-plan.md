@@ -63,8 +63,16 @@ needed.
 
 ## PR 6 — Replace `connected-react-router`
 
-Migrate to `redux-first-history`. Touches ~20 files; mostly import swaps and
-store-config tweaks. Independent of the others.
+Migrate to `redux-first-history`. `connected-react-router` is unmaintained and
+pulls in old `history@4.x` and `prop-types`. The replacement keeps the same
+Redux action shape (`@@router/LOCATION_CHANGE`, `@@router/CALL_HISTORY_METHOD`)
+and re-exports `push` / `replace`, so call sites only need an import path swap.
+
+Touched ~30 files: `configureStore`, `rootReducer`, `router/types`,
+`main/actions`, `modal/reducer`, `App.tsx`, the entry point, and 22 leaf
+components using `push` / `replace`. Behavior change: the dropped
+`isFirstRendering` flag on `LOCATION_CHANGE` is harmless because the modal
+reducer's initial state is already `visible: false`.
 
 ## PR 7 — Bootstrap 3 → 5
 

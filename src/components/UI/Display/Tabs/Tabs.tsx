@@ -1,8 +1,8 @@
-import { replace } from 'connected-react-router';
 import { Tabs as GromTabs } from 'grommet';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
+import { replace } from 'redux-first-history';
 
 interface ITabsProps extends React.ComponentPropsWithoutRef<typeof GromTabs> {
   useRoutes?: boolean;

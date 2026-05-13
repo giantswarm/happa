@@ -1,11 +1,11 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
-import { push } from 'connected-react-router';
 import { MainRoutes, OrganizationsRoutes } from 'model/constants/routes';
 import { selectClusterById } from 'model/stores/cluster/selectors';
 import React, { useEffect } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Switch, useParams } from 'react-router-dom';
+import { push } from 'redux-first-history';
 import Route from 'Route';
 import styled from 'styled-components';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';

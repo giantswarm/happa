@@ -1,5 +1,4 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { push } from 'connected-react-router';
 import { Box, Heading, Text } from 'grommet';
 import produce from 'immer';
 import { Cluster, ControlPlaneNode, ProviderCluster } from 'MAPI/types';
@@ -21,6 +20,7 @@ import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
+import { push } from 'redux-first-history';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import Button from 'UI/Controls/Button';

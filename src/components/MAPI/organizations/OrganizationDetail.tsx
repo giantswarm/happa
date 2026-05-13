@@ -1,5 +1,4 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { push } from 'connected-react-router';
 import { Box, Heading } from 'grommet';
 import AccessControlPage from 'MAPI/organizations/AccessControl';
 import { extractErrorMessage, isResourceManagedByGitOps } from 'MAPI/utils';
@@ -12,6 +11,7 @@ import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
+import { push } from 'redux-first-history';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR from 'swr';
 import GitOpsManagedNote from 'UI/Display/MAPI/GitOpsManaged/GitOpsManagedNote';

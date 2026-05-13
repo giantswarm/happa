@@ -1,4 +1,3 @@
-import { CallHistoryMethodAction, push, replace } from 'connected-react-router';
 import GiantSwarm from 'giantswarm';
 import { Base64 } from 'js-base64';
 import { AuthorizationTypes, StatusCodes } from 'model/constants';
@@ -24,6 +23,7 @@ import {
 import { getLoggedInUser } from 'model/stores/main/selectors';
 import { MainActions } from 'model/stores/main/types';
 import { IState } from 'model/stores/state';
+import { push, replace, RouterActions } from 'redux-first-history';
 import { ThunkAction } from 'redux-thunk';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { IGSAPIError } from 'utils/errorUtils';
@@ -111,7 +111,7 @@ export function refreshUserInfo(): ThunkAction<
   Promise<void>,
   IState,
   void,
-  MainActions | CallHistoryMethodAction
+  MainActions | RouterActions
 > {
   return async (dispatch, getState) => {
     const loggedInUser = getLoggedInUser(getState());
@@ -178,12 +178,7 @@ export function refreshUserInfo(): ThunkAction<
 export function giantswarmLogin(
   email: string,
   password: string
-): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  MainActions | CallHistoryMethodAction
-> {
+): ThunkAction<Promise<void>, IState, void, MainActions | RouterActions> {
   return async (dispatch) => {
     try {
       dispatch({
@@ -225,11 +220,11 @@ export function resumeLogin(
 ): ThunkAction<Promise<ILoggedInUser>, IState, void, MainActions> {
   return async (dispatch: IAsynchronousDispatch<IState>, getState) => {
     const location = getState().router.location;
-    const urlParams = new URLSearchParams(location.search);
+    const urlParams = new URLSearchParams(location?.search ?? '');
     const isLoginResponse = urlParams.has('code') && urlParams.has('state');
     let user = null;
 
-    if (isLoginResponse) {
+    if (isLoginResponse && location) {
       const mapiUser = await auth.handleLoginResponse(window.location.href);
       // Login callbacks are handled by `OAuth2`.
 
@@ -284,12 +279,7 @@ export function resumeLogin(
 
 export function logout(
   auth: IOAuth2Provider
-): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  MainActions | CallHistoryMethodAction
-> {
+): ThunkAction<Promise<void>, IState, void, MainActions | RouterActions> {
   return async (dispatch, getState) => {
     try {
       dispatch({ type: LOGOUT_REQUEST });
@@ -329,12 +319,7 @@ export function logout(
 export function mapiLogin(
   auth: MapiAuth,
   connector?: MapiAuthConnectorFilters
-): ThunkAction<
-  Promise<void>,
-  IState,
-  void,
-  MainActions | CallHistoryMethodAction
-> {
+): ThunkAction<Promise<void>, IState, void, MainActions | RouterActions> {
   return async (dispatch) => {
     try {
       // Remove other types of users from cache.

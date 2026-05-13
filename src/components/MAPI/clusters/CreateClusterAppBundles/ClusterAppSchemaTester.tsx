@@ -1,6 +1,5 @@
 import { EnumOptionsType, RJSFSchema } from '@rjsf/utils';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { replace } from 'connected-react-router';
 import { Box, Heading, Text } from 'grommet';
 import { spinner } from 'images';
 import {
@@ -20,6 +19,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
+import { replace } from 'redux-first-history';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import useSWR from 'swr';

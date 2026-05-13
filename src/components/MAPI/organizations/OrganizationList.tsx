@@ -1,5 +1,4 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { push } from 'connected-react-router';
 import { Box, Text } from 'grommet';
 import { ClusterList } from 'MAPI/types';
 import { extractErrorMessage } from 'MAPI/utils';
@@ -14,6 +13,7 @@ import { selectOrganizations } from 'model/stores/organization/selectors';
 import { IState } from 'model/stores/state';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'redux-first-history';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR, { useSWRConfig } from 'swr';
 import Button from 'UI/Controls/Button';

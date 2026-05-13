@@ -1,5 +1,4 @@
 import InstallAppModal from 'components/Apps/AppDetail/InstallAppModal/InstallAppModal';
-import { push } from 'connected-react-router';
 import { AppsRoutes } from 'model/constants/routes';
 import { loadAppReadme } from 'model/stores/appcatalog/actions';
 import { CLUSTER_LOAD_APP_README_ERROR } from 'model/stores/appcatalog/constants';
@@ -11,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import { Dispatch } from 'redux';
+import { push } from 'redux-first-history';
 import AppDetailPage from 'UI/Display/Apps/AppDetailNew/AppDetailPage';
 import useError from 'utils/hooks/useError';
 import RoutePath from 'utils/routePath';

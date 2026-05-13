@@ -1,4 +1,3 @@
-import { push } from 'connected-react-router';
 import { AppConstants, Constants } from 'model/constants';
 import { ingressControllerInstallationURL } from 'model/constants/docs';
 import { AppsRoutes } from 'model/constants/routes';
@@ -18,6 +17,7 @@ import { getKubernetesReleaseEOLStatus } from 'model/stores/releases/utils';
 import { IState } from 'model/stores/state';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'redux-first-history';
 import styled from 'styled-components';
 import { FlashMessageType } from 'styles';
 import Button from 'UI/Controls/Button';

@@ -1,6 +1,8 @@
-import { LocationChangeAction, RouterState } from 'connected-react-router';
-import { History } from 'history';
+import {
+  RouterActions as RFHRouterActions,
+  RouterState,
+} from 'redux-first-history';
 
-export interface IRouterState extends RouterState<History.LocationState> {}
+export interface IRouterState extends RouterState {}
 
-export type RouterActions = LocationChangeAction;
+export type RouterActions = RFHRouterActions;

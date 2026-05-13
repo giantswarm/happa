@@ -1,5 +1,4 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
-import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import { Constants, Providers } from 'model/constants';
 import { MainRoutes } from 'model/constants/routes';
@@ -18,6 +17,7 @@ import React, { FC, useMemo, useState } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
+import { push } from 'redux-first-history';
 import Headline from 'UI/Display/Cluster/ClusterCreation/Headline';
 import InputGroup from 'UI/Inputs/InputGroup';
 import TextInput from 'UI/Inputs/TextInput';

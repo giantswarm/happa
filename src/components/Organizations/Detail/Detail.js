@@ -1,5 +1,4 @@
 import Cluster from 'Cluster/Cluster';
-import { push } from 'connected-react-router';
 import { OrganizationsRoutes } from 'model/constants/routes';
 import { selectLoadingFlagByAction } from 'model/stores/loading/selectors';
 import { ORGANIZATION_CREDENTIALS_LOAD_REQUEST } from 'model/stores/organization/constants';
@@ -9,6 +8,7 @@ import React from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { connect } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
+import { push } from 'redux-first-history';
 import Route from 'Route';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 

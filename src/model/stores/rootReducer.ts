@@ -1,5 +1,3 @@
-import { connectRouter } from 'connected-react-router';
-import { History } from 'history';
 import catalogs from 'model/stores/appcatalog/reducer';
 import clusters from 'model/stores/cluster/reducer';
 import clusterLabels from 'model/stores/clusterlabels/reducer';
@@ -13,8 +11,9 @@ import modal from 'model/stores/modal/reducer';
 import nodePools from 'model/stores/nodepool/reducer';
 import organizations from 'model/stores/organization/reducer';
 import releases from 'model/stores/releases/reducer';
+import { IRouterState } from 'model/stores/router/types';
 import { IState } from 'model/stores/state';
-import { combineReducers, ReducersMapObject } from 'redux';
+import { combineReducers, Reducer, ReducersMapObject } from 'redux';
 
 const entityReducers: ReducersMapObject<IState['entities']> = {
   catalogs,
@@ -26,9 +25,9 @@ const entityReducers: ReducersMapObject<IState['entities']> = {
 };
 const entities = combineReducers(entityReducers);
 
-const rootReducer = (history: History<History.LocationState>) =>
+const rootReducer = (routerReducer: Reducer<IRouterState>) =>
   combineReducers<IState>({
-    router: connectRouter(history),
+    router: routerReducer,
     main: makeMainReducer(),
     metadata,
     entities,

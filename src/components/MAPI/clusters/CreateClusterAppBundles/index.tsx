@@ -1,6 +1,5 @@
 import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { push } from 'connected-react-router';
 import { Box, Heading, Text } from 'grommet';
 import { normalizeColor } from 'grommet/utils';
 import { spinner } from 'images';
@@ -29,6 +28,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
+import { push } from 'redux-first-history';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';
 import useSWR from 'swr';

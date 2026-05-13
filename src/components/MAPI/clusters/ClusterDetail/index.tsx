@@ -1,5 +1,4 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { push } from 'connected-react-router';
 import { Box, Heading } from 'grommet';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
@@ -30,6 +29,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Breadcrumb } from 'react-breadcrumbs';
 import { useDispatch } from 'react-redux';
 import { Switch, useRouteMatch } from 'react-router';
+import { push } from 'redux-first-history';
 import Route from 'Route';
 import DocumentTitle from 'shared/DocumentTitle';
 import styled from 'styled-components';

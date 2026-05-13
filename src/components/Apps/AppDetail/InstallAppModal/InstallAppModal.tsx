@@ -1,5 +1,4 @@
 import { validateAppName } from 'Apps/AppDetail/InstallAppModal/utils';
-import { push } from 'connected-react-router';
 import { Box } from 'grommet';
 import yaml from 'js-yaml';
 import lunr from 'lunr';
@@ -15,6 +14,7 @@ import {
 import { IState } from 'model/stores/state';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'redux-first-history';
 import Button from 'UI/Controls/Button';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';

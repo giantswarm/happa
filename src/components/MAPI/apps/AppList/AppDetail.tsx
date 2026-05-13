@@ -1,5 +1,4 @@
 import { useAuthProvider } from 'Auth/MAPI/MapiAuthProvider';
-import { push, replace } from 'connected-react-router';
 import AppInstallModal from 'MAPI/apps/AppInstallModal';
 import { extractErrorMessage } from 'MAPI/utils';
 import { GenericResponseError } from 'model/clients/GenericResponseError';
@@ -14,6 +13,7 @@ import { Breadcrumb } from 'react-breadcrumbs';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
+import { push, replace } from 'redux-first-history';
 import DocumentTitle from 'shared/DocumentTitle';
 import useSWR, { useSWRConfig } from 'swr';
 import { IVersion } from 'UI/Controls/VersionPicker/VersionPickerUtils';

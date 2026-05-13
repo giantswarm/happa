@@ -1,10 +1,10 @@
 import MapiAuthProvider from 'Auth/MAPI/MapiAuthProvider';
-import { ConnectedRouter } from 'connected-react-router';
 import Footer from 'Footer/Footer';
 import { Box, Heading, Text } from 'grommet';
 import { History } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 import { Store } from 'redux';
 import ErrorBoundary from 'shared/ErrorBoundary';
 import { DefaultTheme } from 'styled-components';
@@ -53,7 +53,7 @@ const App: React.FC<React.PropsWithChildren<IAppProps>> = ({
   >
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
+        <Router history={history}>
           <MapiAuthProvider auth={auth}>
             <main>
               <Routes />
@@ -61,7 +61,7 @@ const App: React.FC<React.PropsWithChildren<IAppProps>> = ({
           </MapiAuthProvider>
           <FlashMessagesProvider controller={flashMessagesController} />
           <Footer />
-        </ConnectedRouter>
+        </Router>
       </ThemeProvider>
     </Provider>
   </ErrorBoundary>

@@ -1,5 +1,4 @@
 import DocumentTitle from 'components/shared/DocumentTitle';
-import { push } from 'connected-react-router';
 import ClusterDetailApps from 'MAPI/apps/ClusterDetailApps';
 import ClusterDetailIngress from 'MAPI/apps/ClusterDetailIngress';
 import { Providers } from 'model/constants';
@@ -31,6 +30,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReactTimeout from 'react-timeout';
 import { bindActionCreators } from 'redux';
+import { push } from 'redux-first-history';
 import styled from 'styled-components';
 import SlideTransition from 'styles/transitions/SlideTransition';
 import ClusterIDLabel from 'UI/Display/Cluster/ClusterIDLabel';
