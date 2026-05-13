@@ -1,5 +1,5 @@
 {
-  "//bootstrap": "bootstrap is pinned to 3.4.1. Advisories CVE-2024-6485 and CVE-2025-1647 are against the JS plugins (button data-loading-text, Popover, Tooltip), which are not imported anywhere — we only load bootstrap/dist/css/bootstrap.min.css. Upgrading drops .well and .caret which are still in use, so see docs/dependency-security-plan.md before bumping. Renovate updates for bootstrap are disabled in renovate.json5.",
+  "//bootstrap": "bootstrap is pinned to 3.4.1. Advisories CVE-2024-6485 and CVE-2025-1647 are against the JS plugins (button data-loading-text, Popover, Tooltip), which are not imported anywhere — we only load bootstrap/dist/css/bootstrap.min.css, so neither advisory is reachable at runtime. v4+ also removes the .well and .caret classes that are still in use, so an upgrade is not a drop-in swap. Renovate updates for bootstrap are disabled in renovate.json5.",
   "name": "happa",
   "private": true,
   "src": "src",
