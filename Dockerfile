@@ -11,7 +11,7 @@ RUN find /www \
   -iregex '.*\.(css|csv|html?|js|svg|txt|xml|json|webmanifest|ttf)' \
   -exec gzip -9 -k '{}' \;
 
-FROM gsoci.azurecr.io/giantswarm/nginx:1.30-alpine
+FROM gsoci.azurecr.io/giantswarm/nginx:1.31-alpine
 
 ENV NODE_VERSION=16.7.0
 
