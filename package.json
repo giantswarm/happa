@@ -232,7 +232,7 @@
     "terser-webpack-plugin": "5.3.10",
     "ts-node": "10.9.2",
     "type-fest": "3.13.1",
-    "typescript": "5.3.3",
+    "typescript": "5.9.3",
     "url-loader": "4.1.1",
     "webpack": "5.104.1",
     "webpack-bundle-analyzer": "4.10.1",
