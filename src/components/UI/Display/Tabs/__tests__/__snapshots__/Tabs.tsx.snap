@@ -8,24 +8,24 @@ exports[`Tabs renders a basic tab layout 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 uHeKH StyledTabs-sc-a4fwxl-2 iugeVe"
+      class="StyledBox-sc-13pk1d4-0 joDsrC StyledTabs-sc-a4fwxl-2 iugeVe"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 lppYRG"
-        role="tablist"
+        class="StyledBox-sc-13pk1d4-0 bWXTJX"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 jbbmpk StyledTabs__StyledTabsHeader-sc-a4fwxl-0 dVbqrN"
+          class="StyledBox-sc-13pk1d4-0 bxXXDd StyledTabs__StyledTabsHeader-sc-a4fwxl-0 dVbqrN"
+          role="tablist"
         >
           <button
             aria-expanded="true"
             aria-selected="true"
-            class="StyledButtonKind-sc-1vhfpnt-0 tWawK"
+            class="StyledButtonKind-sc-1vhfpnt-0 igvXgu"
             role="tab"
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 iSCYLQ StyledTab-sc-1nnwnsb-0 ijZuvt"
+              class="StyledBox-sc-13pk1d4-0 bfuuOp StyledTab-sc-1nnwnsb-0 ijZuvt"
             >
               <span
                 class="StyledText-sc-1sadyjn-0 dPfreg"
@@ -37,12 +37,12 @@ exports[`Tabs renders a basic tab layout 1`] = `
           <button
             aria-expanded="false"
             aria-selected="false"
-            class="StyledButtonKind-sc-1vhfpnt-0 tWawK"
+            class="StyledButtonKind-sc-1vhfpnt-0 igvXgu"
             role="tab"
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 hgRbKE StyledTab-sc-1nnwnsb-0 ijZuvt"
+              class="StyledBox-sc-13pk1d4-0 ixGFuF StyledTab-sc-1nnwnsb-0 ijZuvt"
             >
               <span
                 class="StyledText-sc-1sadyjn-0 julYLc"
@@ -54,12 +54,12 @@ exports[`Tabs renders a basic tab layout 1`] = `
           <button
             aria-expanded="false"
             aria-selected="false"
-            class="StyledButtonKind-sc-1vhfpnt-0 tWawK"
+            class="StyledButtonKind-sc-1vhfpnt-0 igvXgu"
             role="tab"
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 hgRbKE StyledTab-sc-1nnwnsb-0 ijZuvt"
+              class="StyledBox-sc-13pk1d4-0 ixGFuF StyledTab-sc-1nnwnsb-0 ijZuvt"
             >
               <span
                 class="StyledText-sc-1sadyjn-0 julYLc"

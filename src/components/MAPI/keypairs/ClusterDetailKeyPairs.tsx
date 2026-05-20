@@ -217,7 +217,7 @@ const ClusterDetailKeyPairs: React.FC<
                 command or directly via CertConfig resources.
               </Text>
             </Box>
-            <Table width='100%' margin={{ top: 'medium' }}>
+            <Table style={{ width: '100%' }} margin={{ top: 'medium' }}>
               <TableHeader>
                 <TableRow>
                   <TableCell>Common Name (CN)</TableCell>

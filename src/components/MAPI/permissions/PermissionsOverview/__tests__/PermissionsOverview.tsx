@@ -164,7 +164,7 @@ describe('PermissionsOverview', () => {
       ).getByText('Yes')
     ).toBeInTheDocument();
     // Toggle use case category
-    fireEvent.click(screen.getByLabelText('access control'));
+    fireEvent.click(screen.getByRole('button', { name: 'access control' }));
     expect(await screen.findByText('Inspect namespaces')).toBeInTheDocument();
     expect(
       within(
@@ -179,7 +179,7 @@ describe('PermissionsOverview', () => {
       )
     ).toBeInTheDocument();
     // Toggle use case category
-    fireEvent.click(screen.getByLabelText('app catalogs'));
+    fireEvent.click(screen.getByRole('button', { name: 'app catalogs' }));
     expect(
       await screen.findByText('Inspect shared app catalogs')
     ).toBeInTheDocument();
@@ -381,7 +381,7 @@ describe('PermissionsOverview', () => {
     fireEvent.click(screen.getByRole('tab', { name: 'For organizations' }));
 
     // Toggle app catalogs category
-    fireEvent.click(screen.getByLabelText('app catalogs'));
+    fireEvent.click(screen.getByRole('button', { name: 'app catalogs' }));
     expect(await screen.findByText('Inspect app catalogs')).toBeInTheDocument();
     expect(
       within(
@@ -399,7 +399,7 @@ describe('PermissionsOverview', () => {
     ).toBeInTheDocument();
 
     // Toggle apps category
-    fireEvent.click(screen.getByLabelText('apps'));
+    fireEvent.click(screen.getByRole('button', { name: 'apps' }));
     expect(await screen.findByText('Inspect apps')).toBeInTheDocument();
     expect(
       within(
@@ -816,7 +816,7 @@ describe('PermissionsOverview on Azure', () => {
     expect(await screen.findByText('workload clusters')).toBeInTheDocument();
 
     // Toggle clusters category
-    fireEvent.click(screen.getByLabelText('workload clusters'));
+    fireEvent.click(screen.getByRole('button', { name: 'workload clusters' }));
     expect(await screen.findByText('Inspect clusters')).toBeInTheDocument();
     expect(
       within(
@@ -889,7 +889,7 @@ describe('PermissionsOverview on AWS', () => {
     expect(await screen.findByText('workload clusters')).toBeInTheDocument();
 
     // Toggle clusters category
-    fireEvent.click(screen.getByLabelText('workload clusters'));
+    fireEvent.click(screen.getByRole('button', { name: 'workload clusters' }));
     expect(await screen.findByText('Inspect clusters')).toBeInTheDocument();
     expect(
       within(
@@ -957,7 +957,7 @@ describe('PermissionsOverview on GCP', () => {
     expect(await screen.findByText('workload clusters')).toBeInTheDocument();
 
     // Toggle clusters category
-    fireEvent.click(screen.getByLabelText('workload clusters'));
+    fireEvent.click(screen.getByRole('button', { name: 'workload clusters' }));
     expect(await screen.findByText('Inspect clusters')).toBeInTheDocument();
     expect(
       within(
@@ -1077,7 +1077,7 @@ describe('PermissionsOverview on CAPA', () => {
     expect(await screen.findByText('workload clusters')).toBeInTheDocument();
 
     // Toggle clusters category
-    fireEvent.click(screen.getByLabelText('workload clusters'));
+    fireEvent.click(screen.getByRole('button', { name: 'workload clusters' }));
     expect(await screen.findByText('Inspect clusters')).toBeInTheDocument();
     expect(
       within(
@@ -1134,7 +1134,9 @@ describe('PermissionsOverview on CAPA', () => {
 
     // Toggle category
     expect(await screen.findByText('provider credentials')).toBeInTheDocument();
-    fireEvent.click(screen.getByLabelText('provider credentials'));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'provider credentials' })
+    );
     expect(
       screen.getByText('Inspect provider credentials')
     ).toBeInTheDocument();
@@ -1198,7 +1200,7 @@ describe('PermissionsOverview on CAPZ', () => {
     expect(await screen.findByText('workload clusters')).toBeInTheDocument();
 
     // Toggle clusters category
-    fireEvent.click(screen.getByLabelText('workload clusters'));
+    fireEvent.click(screen.getByRole('button', { name: 'workload clusters' }));
     expect(await screen.findByText('Inspect clusters')).toBeInTheDocument();
     expect(
       within(
@@ -1260,7 +1262,9 @@ describe('PermissionsOverview on CAPZ', () => {
 
     // Toggle provider credentials category
     expect(await screen.findByText('provider credentials')).toBeInTheDocument();
-    fireEvent.click(screen.getByLabelText('provider credentials'));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'provider credentials' })
+    );
     expect(
       screen.getByText('Inspect provider credentials')
     ).toBeInTheDocument();
