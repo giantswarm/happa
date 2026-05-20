@@ -11,7 +11,7 @@ exports[`Table renders a simple table 1`] = `
       class="StyledTable-sc-1m3u5g-6 igUmOR"
     >
       <caption
-        class="StyledTable__StyledTableDataCaption-sc-1m3u5g-1 jObxoK"
+        class="StyledTable__StyledTableDataCaption-sc-1m3u5g-1 dPllae"
       >
         Expenses
       </caption>
@@ -25,7 +25,7 @@ exports[`Table renders a simple table 1`] = `
             class="StyledTable__StyledTableCell-sc-1m3u5g-0 isJxHt"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 uHeKH"
+              class="StyledBox-sc-13pk1d4-0 joDsrC"
             >
               Name
             </div>
@@ -34,7 +34,7 @@ exports[`Table renders a simple table 1`] = `
             class="StyledTable__StyledTableCell-sc-1m3u5g-0 isJxHt"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 uHeKH"
+              class="StyledBox-sc-13pk1d4-0 joDsrC"
             >
               Location
             </div>
@@ -43,7 +43,7 @@ exports[`Table renders a simple table 1`] = `
             class="StyledTable__StyledTableCell-sc-1m3u5g-0 isJxHt"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 uHeKH"
+              class="StyledBox-sc-13pk1d4-0 joDsrC"
             >
               Amount
             </div>

@@ -8,19 +8,19 @@ exports[`DateInput renders a button that triggers the calendar 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 dHuYZL FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eUUQwi FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <button
           aria-label="Open Drop"
-          class="StyledButtonKind-sc-1vhfpnt-0 SENuz"
+          class="StyledButtonKind-sc-1vhfpnt-0 ePXDmz"
           id="dob"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 fAiRlv"
+            class="StyledBox-sc-13pk1d4-0 jUSHzC"
           >
             <svg
               aria-label="Calendar"
@@ -54,26 +54,27 @@ exports[`DateInput renders a disabled input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <label
         class="StyledText-sc-1sadyjn-0 julVzF"
         for="dob"
+        id="grommet-dob__label"
       >
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 gGtqur FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 fWxvAi FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 bTQOKB"
+          class="StyledBox-sc-13pk1d4-0 bPIgOQ DateInput__StyledDateInputContainer-sc-1jfta23-0 cgHwOo"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 eLOSUT"
           >
             <input
               autocomplete="off"
-              class="StyledMaskedInput-sc-99vkfa-0 gqOgpz"
+              class="StyledMaskedInput-sc-99vkfa-0 IQgnH"
               disabled=""
               id="dob"
               placeholder="yyyy-mm-dd"
@@ -81,7 +82,7 @@ exports[`DateInput renders a disabled input 1`] = `
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 hodpWF"
+            class="StyledButtonKind-sc-1vhfpnt-0 jxqXMh"
             type="button"
           >
             <svg
@@ -112,26 +113,26 @@ exports[`DateInput renders a simple input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 dHuYZL FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eUUQwi FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 bTQOKB"
+          class="StyledBox-sc-13pk1d4-0 bPIgOQ DateInput__StyledDateInputContainer-sc-1jfta23-0 cgHwOo"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 eLOSUT"
           >
             <input
               autocomplete="off"
-              class="StyledMaskedInput-sc-99vkfa-0 hxmkDm"
+              class="StyledMaskedInput-sc-99vkfa-0 bedpqa"
               placeholder="yyyy-mm-dd"
               value=""
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 hodpWF"
+            class="StyledButtonKind-sc-1vhfpnt-0 jxqXMh"
             type="button"
           >
             <svg
@@ -162,11 +163,12 @@ exports[`DateInput renders an input with a help message 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <label
         class="StyledText-sc-1sadyjn-0 julVzF"
         for="dob"
+        id="grommet-dob__label"
       >
         Date of birth
       </label>
@@ -176,24 +178,24 @@ exports[`DateInput renders an input with a help message 1`] = `
         This is a very cool input
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 dHuYZL FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eUUQwi FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 bTQOKB"
+          class="StyledBox-sc-13pk1d4-0 bPIgOQ DateInput__StyledDateInputContainer-sc-1jfta23-0 cgHwOo"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 eLOSUT"
           >
             <input
               autocomplete="off"
-              class="StyledMaskedInput-sc-99vkfa-0 hxmkDm"
+              class="StyledMaskedInput-sc-99vkfa-0 bedpqa"
               id="dob"
               placeholder="yyyy-mm-dd"
               value=""
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 hodpWF"
+            class="StyledButtonKind-sc-1vhfpnt-0 jxqXMh"
             type="button"
           >
             <svg
@@ -224,33 +226,34 @@ exports[`DateInput renders an input with a label 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <label
         class="StyledText-sc-1sadyjn-0 julVzF"
         for="dob"
+        id="grommet-dob__label"
       >
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 dHuYZL FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eUUQwi FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 bTQOKB"
+          class="StyledBox-sc-13pk1d4-0 bPIgOQ DateInput__StyledDateInputContainer-sc-1jfta23-0 cgHwOo"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 eLOSUT"
           >
             <input
               autocomplete="off"
-              class="StyledMaskedInput-sc-99vkfa-0 hxmkDm"
+              class="StyledMaskedInput-sc-99vkfa-0 bedpqa"
               id="dob"
               placeholder="yyyy-mm-dd"
               value=""
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 hodpWF"
+            class="StyledButtonKind-sc-1vhfpnt-0 jxqXMh"
             type="button"
           >
             <svg
@@ -281,33 +284,34 @@ exports[`DateInput renders an input with a validation error 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <label
         class="StyledText-sc-1sadyjn-0 julVzF"
         for="dob"
+        id="grommet-dob__label"
       >
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 csVFdv FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 vPsBe FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 bTQOKB"
+          class="StyledBox-sc-13pk1d4-0 bPIgOQ DateInput__StyledDateInputContainer-sc-1jfta23-0 cgHwOo"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 eLOSUT"
           >
             <input
               autocomplete="off"
-              class="StyledMaskedInput-sc-99vkfa-0 hxmkDm"
+              class="StyledMaskedInput-sc-99vkfa-0 bedpqa"
               id="dob"
               placeholder="yyyy-mm-dd"
               value=""
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 hodpWF"
+            class="StyledButtonKind-sc-1vhfpnt-0 jxqXMh"
             type="button"
           >
             <svg
@@ -343,33 +347,34 @@ exports[`DateInput renders an input with an info message 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <label
         class="StyledText-sc-1sadyjn-0 julVzF"
         for="dob"
+        id="grommet-dob__label"
       >
         Date of birth
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 dHuYZL FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eUUQwi FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 bTQOKB"
+          class="StyledBox-sc-13pk1d4-0 bPIgOQ DateInput__StyledDateInputContainer-sc-1jfta23-0 cgHwOo"
         >
           <div
             class="StyledMaskedInput__StyledMaskedInputContainer-sc-99vkfa-1 eLOSUT"
           >
             <input
               autocomplete="off"
-              class="StyledMaskedInput-sc-99vkfa-0 hxmkDm"
+              class="StyledMaskedInput-sc-99vkfa-0 bedpqa"
               id="dob"
               placeholder="yyyy-mm-dd"
               value=""
             />
           </div>
           <button
-            class="StyledButtonKind-sc-1vhfpnt-0 hodpWF"
+            class="StyledButtonKind-sc-1vhfpnt-0 jxqXMh"
             type="button"
           >
             <svg

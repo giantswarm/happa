@@ -8,17 +8,17 @@ exports[`FileInput renders a disabled input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 gGtqur FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 fWxvAi FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 esbWVR"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 sGmPi"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 glVOJA"
+            class="StyledTextInput-sc-1x30a0s-0 haBftr"
             disabled=""
             type="file"
             value=""
@@ -38,17 +38,17 @@ exports[`FileInput renders a simple input 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 dHuYZL FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eUUQwi FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 esbWVR"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 sGmPi"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 jNAHyt"
+            class="StyledTextInput-sc-1x30a0s-0 fCTTu"
             type="file"
             value=""
           />
@@ -67,7 +67,7 @@ exports[`FileInput renders an input with a help message 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <span
         class="StyledText-sc-1sadyjn-0 dkbpSN"
@@ -75,14 +75,14 @@ exports[`FileInput renders an input with a help message 1`] = `
         This is a very cool input
       </span>
       <div
-        class="StyledBox-sc-13pk1d4-0 dHuYZL FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eUUQwi FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 esbWVR"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 sGmPi"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 jNAHyt"
+            class="StyledTextInput-sc-1x30a0s-0 fCTTu"
             type="file"
             value=""
           />
@@ -101,23 +101,24 @@ exports[`FileInput renders an input with a label 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <label
         class="StyledText-sc-1sadyjn-0 julVzF"
         for="input"
+        id="grommet-input__label"
       >
         Some input
       </label>
       <div
-        class="StyledBox-sc-13pk1d4-0 dHuYZL FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eUUQwi FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 esbWVR"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 sGmPi"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 jNAHyt"
+            class="StyledTextInput-sc-1x30a0s-0 fCTTu"
             id="input"
             type="file"
             value=""
@@ -137,17 +138,17 @@ exports[`FileInput renders an input with a validation error 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 csVFdv FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 vPsBe FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 esbWVR"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 sGmPi"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 jNAHyt"
+            class="StyledTextInput-sc-1x30a0s-0 fCTTu"
             type="file"
             value=""
           />
@@ -171,17 +172,17 @@ exports[`FileInput renders an input with an info message 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 dHuYZL FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 eUUQwi FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 esbWVR"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 sGmPi"
         >
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 jNAHyt"
+            class="StyledTextInput-sc-1x30a0s-0 fCTTu"
             type="file"
             value=""
           />

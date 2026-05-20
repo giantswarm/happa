@@ -8,21 +8,22 @@ exports[`CLIGuide renders the contents when open 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ljkxXp CLIGuide__StyledAccordion-sc-1q6mc5x-0 hTUAzi"
+      class="StyledBox-sc-13pk1d4-0 fyUsrE CLIGuide__StyledAccordion-sc-1q6mc5x-0 hTUAzi"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 dxLTUa"
+        class="StyledBox-sc-13pk1d4-0 govBuj"
       >
         <button
           aria-expanded="true"
-          class="StyledButtonKind-sc-1vhfpnt-0 tWawK"
+          class="StyledButtonKind-sc-1vhfpnt-0 igvXgu"
+          id=":r1:"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kEUDyz"
+            class="StyledBox-sc-13pk1d4-0 hOTfeO"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 dfYTAc"
+              class="StyledBox-sc-13pk1d4-0 fIXMcZ"
             >
               <span
                 aria-hidden="true"
@@ -39,7 +40,7 @@ exports[`CLIGuide renders the contents when open 1`] = `
               </span>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 gHlpEJ"
+              class="StyledBox-sc-13pk1d4-0 kXndEI"
             >
               <svg
                 aria-label="FormUp"
@@ -57,18 +58,19 @@ exports[`CLIGuide renders the contents when open 1`] = `
           </div>
         </button>
         <div
-          class="StyledBox-sc-13pk1d4-0 uHeKH"
+          aria-labelledby=":r1:"
+          class="StyledBox-sc-13pk1d4-0 joDsrC"
           role="region"
           style=""
         >
           <div
             aria-hidden="false"
-            class="StyledBox-sc-13pk1d4-0 uHeKH Collapsible__AnimatedBox-sc-15kniua-0 czoCTd"
+            class="StyledBox-sc-13pk1d4-0 joDsrC Collapsible__AnimatedBox-sc-15kniua-0 czoCTd"
             open=""
             style="max-height: 0;"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 fMLcNm"
+              class="StyledBox-sc-13pk1d4-0 bJoqTv"
             >
               Just some content
             </div>
@@ -88,21 +90,22 @@ exports[`CLIGuide renders without crashing 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 ljkxXp CLIGuide__StyledAccordion-sc-1q6mc5x-0 hTUAzi"
+      class="StyledBox-sc-13pk1d4-0 fyUsrE CLIGuide__StyledAccordion-sc-1q6mc5x-0 hTUAzi"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 dxLTUa"
+        class="StyledBox-sc-13pk1d4-0 govBuj"
       >
         <button
           aria-expanded="false"
-          class="StyledButtonKind-sc-1vhfpnt-0 tWawK"
+          class="StyledButtonKind-sc-1vhfpnt-0 igvXgu"
+          id=":r0:"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kEUDyz"
+            class="StyledBox-sc-13pk1d4-0 hOTfeO"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 dfYTAc"
+              class="StyledBox-sc-13pk1d4-0 fIXMcZ"
             >
               <span
                 aria-hidden="true"
@@ -119,7 +122,7 @@ exports[`CLIGuide renders without crashing 1`] = `
               </span>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 gHlpEJ"
+              class="StyledBox-sc-13pk1d4-0 kXndEI"
             >
               <svg
                 aria-label="FormDown"
@@ -137,12 +140,13 @@ exports[`CLIGuide renders without crashing 1`] = `
           </div>
         </button>
         <div
-          class="StyledBox-sc-13pk1d4-0 uHeKH"
+          aria-labelledby=":r0:"
+          class="StyledBox-sc-13pk1d4-0 joDsrC"
           role="region"
         >
           <div
             aria-hidden="true"
-            class="StyledBox-sc-13pk1d4-0 uHeKH Collapsible__AnimatedBox-sc-15kniua-0 iPDbNQ"
+            class="StyledBox-sc-13pk1d4-0 joDsrC Collapsible__AnimatedBox-sc-15kniua-0 iPDbNQ"
           />
         </div>
       </div>
@@ -159,24 +163,25 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 uHeKH"
+      class="StyledBox-sc-13pk1d4-0 joDsrC"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 ljkxXp CLIGuide__StyledAccordion-sc-1q6mc5x-0 hTUAzi"
+        class="StyledBox-sc-13pk1d4-0 fyUsrE CLIGuide__StyledAccordion-sc-1q6mc5x-0 hTUAzi"
       >
         <div
-          class="StyledBox-sc-13pk1d4-0 dxLTUa"
+          class="StyledBox-sc-13pk1d4-0 govBuj"
         >
           <button
             aria-expanded="false"
-            class="StyledButtonKind-sc-1vhfpnt-0 tWawK"
+            class="StyledButtonKind-sc-1vhfpnt-0 igvXgu"
+            id=":r5:"
             type="button"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 kEUDyz"
+              class="StyledBox-sc-13pk1d4-0 hOTfeO"
             >
               <div
-                class="StyledBox-sc-13pk1d4-0 dfYTAc"
+                class="StyledBox-sc-13pk1d4-0 fIXMcZ"
               >
                 <span
                   aria-hidden="true"
@@ -193,7 +198,7 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
                 </span>
               </div>
               <div
-                class="StyledBox-sc-13pk1d4-0 gHlpEJ"
+                class="StyledBox-sc-13pk1d4-0 kXndEI"
               >
                 <svg
                   aria-label="FormDown"
@@ -211,12 +216,13 @@ exports[`CLIGuidesList renders the children as-is if there is only one 1`] = `
             </div>
           </button>
           <div
-            class="StyledBox-sc-13pk1d4-0 uHeKH"
+            aria-labelledby=":r5:"
+            class="StyledBox-sc-13pk1d4-0 joDsrC"
             role="region"
           >
             <div
               aria-hidden="true"
-              class="StyledBox-sc-13pk1d4-0 uHeKH Collapsible__AnimatedBox-sc-15kniua-0 iPDbNQ"
+              class="StyledBox-sc-13pk1d4-0 joDsrC Collapsible__AnimatedBox-sc-15kniua-0 iPDbNQ"
             />
           </div>
         </div>
@@ -234,21 +240,22 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 bVXAXu"
+      class="StyledBox-sc-13pk1d4-0 fkxojv"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 dxLTUa"
+        class="StyledBox-sc-13pk1d4-0 govBuj"
       >
         <button
           aria-expanded="true"
-          class="StyledButtonKind-sc-1vhfpnt-0 tWawK"
+          class="StyledButtonKind-sc-1vhfpnt-0 igvXgu"
+          id=":r2:"
           type="button"
         >
           <div
-            class="StyledBox-sc-13pk1d4-0 kEUDyz"
+            class="StyledBox-sc-13pk1d4-0 hOTfeO"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 bqhqDO"
+              class="StyledBox-sc-13pk1d4-0 hvuEMv"
             >
               <span
                 aria-hidden="true"
@@ -265,7 +272,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
               </span>
             </div>
             <div
-              class="StyledBox-sc-13pk1d4-0 gHlpEJ"
+              class="StyledBox-sc-13pk1d4-0 kXndEI"
             >
               <svg
                 aria-label="FormUp"
@@ -283,35 +290,37 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
           </div>
         </button>
         <div
-          class="StyledBox-sc-13pk1d4-0 uHeKH"
+          aria-labelledby=":r2:"
+          class="StyledBox-sc-13pk1d4-0 joDsrC"
           role="region"
           style=""
         >
           <div
             aria-hidden="false"
-            class="StyledBox-sc-13pk1d4-0 uHeKH Collapsible__AnimatedBox-sc-15kniua-0 czoCTd"
+            class="StyledBox-sc-13pk1d4-0 joDsrC Collapsible__AnimatedBox-sc-15kniua-0 czoCTd"
             open=""
             style="max-height: 0;"
           >
             <div
-              class="StyledBox-sc-13pk1d4-0 dNxRJm"
+              class="StyledBox-sc-13pk1d4-0 jValqj"
             >
               <div
-                class="StyledBox-sc-13pk1d4-0 ljkxXp CLIGuide__StyledAccordion-sc-1q6mc5x-0 hTUAzi"
+                class="StyledBox-sc-13pk1d4-0 fyUsrE CLIGuide__StyledAccordion-sc-1q6mc5x-0 hTUAzi"
               >
                 <div
-                  class="StyledBox-sc-13pk1d4-0 dxLTUa"
+                  class="StyledBox-sc-13pk1d4-0 govBuj"
                 >
                   <button
                     aria-expanded="false"
-                    class="StyledButtonKind-sc-1vhfpnt-0 tWawK"
+                    class="StyledButtonKind-sc-1vhfpnt-0 igvXgu"
+                    id=":r3:"
                     type="button"
                   >
                     <div
-                      class="StyledBox-sc-13pk1d4-0 kEUDyz"
+                      class="StyledBox-sc-13pk1d4-0 hOTfeO"
                     >
                       <div
-                        class="StyledBox-sc-13pk1d4-0 dfYTAc"
+                        class="StyledBox-sc-13pk1d4-0 fIXMcZ"
                       >
                         <span
                           aria-hidden="true"
@@ -328,7 +337,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                         </span>
                       </div>
                       <div
-                        class="StyledBox-sc-13pk1d4-0 gHlpEJ"
+                        class="StyledBox-sc-13pk1d4-0 kXndEI"
                       >
                         <svg
                           aria-label="FormDown"
@@ -346,12 +355,13 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                     </div>
                   </button>
                   <div
-                    class="StyledBox-sc-13pk1d4-0 uHeKH"
+                    aria-labelledby=":r3:"
+                    class="StyledBox-sc-13pk1d4-0 joDsrC"
                     role="region"
                   >
                     <div
                       aria-hidden="true"
-                      class="StyledBox-sc-13pk1d4-0 uHeKH Collapsible__AnimatedBox-sc-15kniua-0 iPDbNQ"
+                      class="StyledBox-sc-13pk1d4-0 joDsrC Collapsible__AnimatedBox-sc-15kniua-0 iPDbNQ"
                     />
                   </div>
                 </div>
@@ -360,21 +370,22 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                 class="StyledBox__StyledBoxGap-sc-13pk1d4-1 iptgRM"
               />
               <div
-                class="StyledBox-sc-13pk1d4-0 ljkxXp CLIGuide__StyledAccordion-sc-1q6mc5x-0 hTUAzi"
+                class="StyledBox-sc-13pk1d4-0 fyUsrE CLIGuide__StyledAccordion-sc-1q6mc5x-0 hTUAzi"
               >
                 <div
-                  class="StyledBox-sc-13pk1d4-0 dxLTUa"
+                  class="StyledBox-sc-13pk1d4-0 govBuj"
                 >
                   <button
                     aria-expanded="false"
-                    class="StyledButtonKind-sc-1vhfpnt-0 tWawK"
+                    class="StyledButtonKind-sc-1vhfpnt-0 igvXgu"
+                    id=":r4:"
                     type="button"
                   >
                     <div
-                      class="StyledBox-sc-13pk1d4-0 kEUDyz"
+                      class="StyledBox-sc-13pk1d4-0 hOTfeO"
                     >
                       <div
-                        class="StyledBox-sc-13pk1d4-0 dfYTAc"
+                        class="StyledBox-sc-13pk1d4-0 fIXMcZ"
                       >
                         <span
                           aria-hidden="true"
@@ -391,7 +402,7 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                         </span>
                       </div>
                       <div
-                        class="StyledBox-sc-13pk1d4-0 gHlpEJ"
+                        class="StyledBox-sc-13pk1d4-0 kXndEI"
                       >
                         <svg
                           aria-label="FormDown"
@@ -409,12 +420,13 @@ exports[`CLIGuidesList renders the contents when open 1`] = `
                     </div>
                   </button>
                   <div
-                    class="StyledBox-sc-13pk1d4-0 uHeKH"
+                    aria-labelledby=":r4:"
+                    class="StyledBox-sc-13pk1d4-0 joDsrC"
                     role="region"
                   >
                     <div
                       aria-hidden="true"
-                      class="StyledBox-sc-13pk1d4-0 uHeKH Collapsible__AnimatedBox-sc-15kniua-0 iPDbNQ"
+                      class="StyledBox-sc-13pk1d4-0 joDsrC Collapsible__AnimatedBox-sc-15kniua-0 iPDbNQ"
                     />
                   </div>
                 </div>
@@ -436,7 +448,7 @@ exports[`CLIGuidesList renders without crashing 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 uHeKH"
+      class="StyledBox-sc-13pk1d4-0 joDsrC"
     />
   </div>
 </div>

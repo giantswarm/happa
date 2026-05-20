@@ -8,13 +8,13 @@ exports[`CurrencyInput renders without crashing 1`] = `
     class="ThemeProvider__AppWrapper-sc-12xd2cf-0 eKUXDU"
   >
     <div
-      class="StyledBox-sc-13pk1d4-0 dWhfdE FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
+      class="StyledBox-sc-13pk1d4-0 kEzHLx FormField__FormFieldBox-sc-m9hood-0 iLyaEy"
     >
       <div
-        class="StyledBox-sc-13pk1d4-0 lmnuvp FormField__FormFieldContentBox-sc-m9hood-1"
+        class="StyledBox-sc-13pk1d4-0 flLono FormField__FormFieldContentBox-sc-m9hood-1 iGlnDK"
       >
         <div
-          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 esbWVR"
+          class="StyledTextInput__StyledTextInputContainer-sc-1x30a0s-1 sGmPi"
         >
           <div
             class="StyledTextInput__StyledIcon-sc-1x30a0s-3 hfkrnZ"
@@ -27,7 +27,7 @@ exports[`CurrencyInput renders without crashing 1`] = `
           </div>
           <input
             autocomplete="off"
-            class="StyledTextInput-sc-1x30a0s-0 iAFsor"
+            class="StyledTextInput-sc-1x30a0s-0 iRnFcQ"
             step="1"
             type="number"
             value="0"
