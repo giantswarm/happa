@@ -147,7 +147,7 @@ describe('Footer', () => {
     const originalLocation = window.location;
     // @ts-expect-error
     delete window.location;
-    window.location = {
+    (window as unknown as { location: Location }).location = {
       reload: jest.fn(),
     } as unknown as Location;
 
@@ -181,6 +181,6 @@ describe('Footer', () => {
 
     expect(window.location.reload).toBeCalled();
 
-    window.location = originalLocation;
+    (window as unknown as { location: Location }).location = originalLocation;
   });
 });
