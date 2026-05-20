@@ -49,7 +49,6 @@
         "webpack{/,}**",
         "@types/copy-webpack-plugin{/,}**",
         "copy-webpack-plugin{/,}**",
-        "@types/css-minimizer-webpack-plugin{/,}**",
         "css-minimizer-webpack-plugin{/,}**",
         "@types/mini-css-extract-plugin{/,}**",
         "mini-css-extract-plugin{/,}**",
