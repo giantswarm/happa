@@ -53,7 +53,7 @@ export function dedent(str: string): string {
     result = lines.join('\n');
   } else if (minIndent !== null) {
     result = lines
-      .map((l) => (l.startsWith(' ') ? l.slice(minIndent as number) : l))
+      .map((l) => (l.startsWith(' ') ? l.slice(minIndent) : l))
       .join('\n');
   }
 
