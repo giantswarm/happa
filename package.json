@@ -240,7 +240,7 @@
     "webpack-merge": "5.10.0"
   },
   "resolutions": {
-    "@braintree/sanitize-url": "6.0.4",
+    "@braintree/sanitize-url": "7.1.2",
     "@types/react": "18.3.28",
     "formidable": "3.5.4",
     "kind-of": "6.0.3",
