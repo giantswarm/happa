@@ -190,7 +190,7 @@
     "babel-plugin-transform-react-jsx": "6.24.1",
     "browserlist": "1.0.2",
     "clean-webpack-plugin": "4.0.0",
-    "command-line-args": "5.2.1",
+    "command-line-args": "6.0.2",
     "copy-webpack-plugin": "11.0.0",
     "cors": "2.8.6",
     "css-loader": "6.11.0",
