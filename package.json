@@ -228,7 +228,7 @@
     "sass-loader": "13.3.3",
     "storybook": "7.6.24",
     "style-loader": "3.3.4",
-    "terser-webpack-plugin": "5.5.0",
+    "terser-webpack-plugin": "5.6.0",
     "ts-node": "10.9.2",
     "type-fest": "3.13.1",
     "typescript": "5.9.3",
