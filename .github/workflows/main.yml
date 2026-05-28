@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Assign Author
-        uses: technote-space/assign-author@v1.6.2
+        uses: technote-space/assign-author@9558557c5c4816f38bd06176fbc324ba14bb3160 # v1.6.2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Validate PR Title
-        uses: deepakputhraya/action-pr-title@v1.0.2
+        uses: deepakputhraya/action-pr-title@3864bebc79c5f829d25dd42d3c6579d040b0ef16 # v1.0.2
         with:
           regex: '([ a-zA-Z0-9])+'
           prefix_case_sensitive: false
