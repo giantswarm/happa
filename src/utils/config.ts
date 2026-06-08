@@ -1,3 +1,12 @@
+/**
+ * Whether data may be sent to external reporting services (Sentry error
+ * reporting, TelemetryDeck analytics). Disabled in development so local
+ * traffic never reaches those services.
+ */
+export function isExternalReportingEnabled(): boolean {
+  return window.config.environment !== 'development';
+}
+
 export function getK8sVersionEOLDate(version: string) {
   if (!version) return null;
 
