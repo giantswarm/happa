@@ -12,6 +12,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import theme from 'styles/theme';
 import { FlashMessagesController } from 'UI/Util/FlashMessages/FlashMessagesController';
+import { isExternalReportingEnabled } from 'utils/config';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { SentryErrorNotifier } from 'utils/errors/SentryErrorNotifier';
 import { makeDefaultConfig } from 'utils/MapiAuth/makeDefaultConfig';
@@ -29,7 +30,7 @@ const flashMessagesController = FlashMessagesController.getInstance();
 // Configure the redux store.
 const { store, history } = configureStore({} as IState, baseHistory, auth);
 
-if (window.config.environment !== 'development') {
+if (isExternalReportingEnabled()) {
   const errorReporter = ErrorReporter.getInstance();
   errorReporter.notifier = new SentryErrorNotifier({
     projectName: 'happa',

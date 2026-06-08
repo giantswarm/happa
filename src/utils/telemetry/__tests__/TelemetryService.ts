@@ -32,7 +32,7 @@ afterEach(() => {
 
 describe('TelemetryService', () => {
   it('is a singleton', () => {
-    expect(new TelemetryService()).toEqual(TelemetryService.getInstance());
+    expect(TelemetryService.getInstance()).toBe(TelemetryService.getInstance());
   });
 
   it('does not track in development', () => {

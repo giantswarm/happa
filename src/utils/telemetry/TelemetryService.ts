@@ -1,19 +1,11 @@
 import TelemetryDeck from '@telemetrydeck/sdk';
+import { isExternalReportingEnabled } from 'utils/config';
 
 /**
  * TelemetryDeck application ID. Not a secret; it only identifies the analytics
  * app to send signals to.
  */
 const TELEMETRY_APP_ID = '746BB2DF-C3C7-4DE8-82A7-9848CEEE9585';
-
-/**
- * Whether analytics should be sent. Disabled in development so local traffic
- * never pollutes the dashboard (mirrors the Sentry gate in
- * `src/components/index.tsx`).
- */
-function isTrackingEnabled(): boolean {
-  return window.config.environment !== 'development';
-}
 
 /**
  * A singleton wrapper around the TelemetryDeck SDK for sending pageview
@@ -38,7 +30,7 @@ class TelemetryService {
    * `clientUser` in sync. The SDK hashes `clientUser` before sending.
    */
   private getClient(clientUser: string): TelemetryDeck | null {
-    if (!isTrackingEnabled()) {
+    if (!isExternalReportingEnabled()) {
       return null;
     }
 
