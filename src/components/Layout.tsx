@@ -31,6 +31,7 @@ import { Redirect, Switch } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import Route from 'Route';
 import OrganizationCreatedNote from 'UI/Display/Organizations/OrganizationCreatedNote';
+import { usePageViewTracking } from 'utils/telemetry/usePageViewTracking';
 
 import Apps from './Apps/Apps';
 import ExceptionNotificationTest from './ExceptionNotificationTest/ExceptionNotificationTest';
@@ -52,6 +53,10 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = () => {
   const dispatch: Dispatch<any> = useDispatch();
 
   const authProvider = useAuthProvider();
+
+  // Track pageviews, but only for authenticated navigation (this component is
+  // the authenticated root), so bot probes and login pages are never counted.
+  usePageViewTracking();
 
   useEffect(() => {
     dispatch(batchedLayout(authProvider));
