@@ -22,7 +22,7 @@ beforeEach(() => {
   MockedTelemetryDeck.mockReset();
   signal.mockClear();
   MockedTelemetryDeck.mockImplementation(
-    () => ({ clientUser: '', signal } as unknown as TelemetryDeck)
+    () => ({ clientUser: '', signal }) as unknown as TelemetryDeck
   );
 });
 

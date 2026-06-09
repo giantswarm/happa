@@ -1,8 +1,9 @@
 import { FormField, Text } from 'grommet';
 import * as React from 'react';
 
-interface IInputGroupProps
-  extends React.ComponentPropsWithoutRef<typeof FormField> {}
+interface IInputGroupProps extends React.ComponentPropsWithoutRef<
+  typeof FormField
+> {}
 
 const InputGroup = React.forwardRef<HTMLDivElement, IInputGroupProps>(
   ({ label, contentProps, ...props }, ref) => {

@@ -184,8 +184,9 @@ const reducer: React.Reducer<IClusterState, ClusterAction> = produce(
   }
 );
 
-interface ICreateClusterProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface ICreateClusterProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
   props
@@ -277,12 +278,10 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
       dispatch({ type: 'endCreation' });
 
       new FlashMessage(
-        (
-          <>
-            Cluster <code>{state.cluster.metadata.name}</code> created
-            successfully
-          </>
-        ),
+        <>
+          Cluster <code>{state.cluster.metadata.name}</code> created
+          successfully
+        </>,
         messageType.SUCCESS,
         messageTTL.LONG,
         `Create your first node pool by clicking the "Add node pool" button.`
@@ -303,12 +302,10 @@ const CreateCluster: React.FC<React.PropsWithChildren<ICreateClusterProps>> = (
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        (
-          <>
-            Could not create cluster <code>{state.cluster.metadata.name}</code>:{' '}
-            {errorMessage}
-          </>
-        ),
+        <>
+          Could not create cluster <code>{state.cluster.metadata.name}</code>:{' '}
+          {errorMessage}
+        </>,
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again or contact support: support@giantswarm.io'

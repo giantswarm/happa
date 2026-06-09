@@ -44,11 +44,10 @@ const StyledLink = styled(Link)`
   color: ${({ theme }) => normalizeColor('input-highlight', theme)};
 `;
 
-interface IClusterDetailWidgetWorkerNodesProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-    'title'
-  > {
+interface IClusterDetailWidgetWorkerNodesProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+  'title'
+> {
   cluster?: capiv1beta1.ICluster;
 }
 

@@ -44,7 +44,8 @@ function getToggleLabel(providerNodePool: ProviderNodePool): string {
 }
 
 interface IWorkerNodesCreateNodePoolSpotInstancesProps
-  extends INodePoolPropertyProps,
+  extends
+    INodePoolPropertyProps,
     Omit<
       React.ComponentPropsWithoutRef<typeof AddNodePoolMachineType>,
       'onChange' | 'id'

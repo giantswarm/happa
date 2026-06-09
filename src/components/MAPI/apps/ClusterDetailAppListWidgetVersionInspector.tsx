@@ -27,11 +27,10 @@ import { compare } from 'utils/semver';
 import { IAppsPermissions } from './permissions/types';
 import { normalizeAppVersion, updateAppVersion } from './utils';
 
-interface IClusterDetailAppListWidgetVersionInspectorProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
-    'title'
-  > {
+interface IClusterDetailAppListWidgetVersionInspectorProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
+  'title'
+> {
   app?: applicationv1alpha1.IApp;
   appsPermissions?: IAppsPermissions;
   currentVersion?: string;
@@ -148,10 +147,10 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
 
   const currentCreationDate = isLoading
     ? undefined
-    : currentEntry?.spec.dateCreated ?? '';
+    : (currentEntry?.spec.dateCreated ?? '');
   const currentUpstreamVersion = isLoading
     ? undefined
-    : currentEntry?.spec.appVersion ?? '';
+    : (currentEntry?.spec.appVersion ?? '');
 
   const options = useMemo(() => {
     if (!appCatalogEntryList) return [];
@@ -233,13 +232,11 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
       const updateAction = isUpgrading ? 'upgraded' : 'downgraded';
 
       new FlashMessage(
-        (
-          <>
-            <code>{app.metadata.name}</code> on cluster{' '}
-            <code>{app.metadata.namespace}</code> will be {updateAction} to
-            version <code>{truncatedVersion}</code>.
-          </>
-        ),
+        <>
+          <code>{app.metadata.name}</code> on cluster{' '}
+          <code>{app.metadata.namespace}</code> will be {updateAction} to
+          version <code>{truncatedVersion}</code>.
+        </>,
         messageType.SUCCESS,
         messageTTL.LONG
       );
@@ -249,13 +246,11 @@ const ClusterDetailAppListWidgetVersionInspector: React.FC<
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        (
-          <>
-            Something went wrong while trying to update{' '}
-            <code>{app.metadata.name}</code> on{' '}
-            <code>{app.metadata.namespace}</code>.
-          </>
-        ),
+        <>
+          Something went wrong while trying to update{' '}
+          <code>{app.metadata.name}</code> on{' '}
+          <code>{app.metadata.namespace}</code>.
+        </>,
         messageType.ERROR,
         messageTTL.LONG,
         errorMessage

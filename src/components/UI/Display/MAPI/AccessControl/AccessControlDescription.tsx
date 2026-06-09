@@ -2,8 +2,9 @@ import { Anchor, Box, Text } from 'grommet';
 import * as docs from 'model/constants/docs';
 import * as React from 'react';
 
-interface IAccessControlRoleDescriptionProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface IAccessControlRoleDescriptionProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const AccessControlRoleDescription: React.FC<
   React.PropsWithChildren<IAccessControlRoleDescriptionProps>

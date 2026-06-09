@@ -9,8 +9,9 @@ import ConfirmationPrompt from 'UI/Controls/ConfirmationPrompt';
 import ErrorReporter from 'utils/errors/ErrorReporter';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
-interface IOrganizationDetailDeleteProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IOrganizationDetailDeleteProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   organizationName: string;
   organizationNamespace: string;
   onDelete: () => Promise<void>;

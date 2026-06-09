@@ -27,8 +27,10 @@ function filterServicePriorityLabel(labels: IClusterLabelMap) {
     );
 }
 
-interface ICreateClusterGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+interface ICreateClusterGuideProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof CLIGuide>,
+  'title'
+> {
   provider: PropertiesOf<typeof Providers>;
   clusterName: string;
   organizationName: string;

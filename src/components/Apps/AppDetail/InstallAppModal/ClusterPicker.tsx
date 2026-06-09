@@ -56,8 +56,10 @@ function getNameColumnWidth(nameLength: number) {
   return charCount * NAME_CHAR_WIDTH;
 }
 
-interface IClusterPickerCluster
-  extends Pick<IBaseCluster, 'id' | 'name' | 'owner'> {
+interface IClusterPickerCluster extends Pick<
+  IBaseCluster,
+  'id' | 'name' | 'owner'
+> {
   isAvailable: boolean;
 }
 

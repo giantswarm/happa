@@ -52,8 +52,8 @@ const StatusesForCategory: React.FC<IUseCasesForCategoryProps> = ({
       statusesByNamespace[namespace] = values.every((v) => v === true)
         ? true
         : values.every((v) => v === false)
-        ? false
-        : undefined;
+          ? false
+          : undefined;
     });
 
     return statusesByNamespace;

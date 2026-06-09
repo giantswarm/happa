@@ -53,7 +53,7 @@ export const selectApp =
   ): [
     IAppCatalogAppVersion | null,
     IAppCatalog | null,
-    IAppCatalogAppVersion[]
+    IAppCatalogAppVersion[],
   ] => {
     const catalog = state.entities.catalogs.items[catalogName];
 

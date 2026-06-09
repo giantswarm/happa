@@ -4,11 +4,10 @@ import React from 'react';
 import ClusterDetailAppListWidget from 'UI/Display/MAPI/apps/ClusterDetailAppListWidget';
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 
-interface IClusterDetailAppListWidgetInstalledAsProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
-    'title'
-  > {
+interface IClusterDetailAppListWidgetInstalledAsProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
+  'title'
+> {
   app?: applicationv1alpha1.IApp;
 }
 

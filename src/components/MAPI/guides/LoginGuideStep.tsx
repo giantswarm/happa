@@ -7,11 +7,10 @@ import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 
-interface ILoginGuideStepProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof CLIGuideStep>,
-    'title' | 'command'
-  > {}
+interface ILoginGuideStepProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof CLIGuideStep>,
+  'title' | 'command'
+> {}
 
 const LoginGuideStep: React.FC<
   React.PropsWithChildren<ILoginGuideStepProps>

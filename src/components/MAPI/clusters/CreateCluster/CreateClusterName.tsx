@@ -7,7 +7,8 @@ import ClusterIDLabel, {
 import { IClusterPropertyProps } from './patches';
 
 interface ICreateClusterNameProps
-  extends IClusterPropertyProps,
+  extends
+    IClusterPropertyProps,
     Omit<React.ComponentPropsWithoutRef<typeof Box>, 'onChange' | 'id'> {}
 
 const CreateClusterName: React.FC<

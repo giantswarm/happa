@@ -19,8 +19,10 @@ const StyledPanelCollapse = styled(Box)`
   margin-bottom: ${({ theme }) => theme.spacingPx * 7}px;
 `;
 
-interface IAZSelectionProps
-  extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
+interface IAZSelectionProps extends Omit<
+  React.ComponentPropsWithoutRef<'div'>,
+  'onChange'
+> {
   // Common.
   onChange: (newAZSelection: AvailabilityZoneSelection) => void;
   onUpdateZones: AZSelectionZonesUpdater;

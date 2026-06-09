@@ -143,8 +143,9 @@ function getPathForProvider(provider: PrototypeSchemas): string {
   }
 }
 
-interface IClusterAppSchemaTesterProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface IClusterAppSchemaTesterProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
   props
@@ -175,8 +176,8 @@ const ClusterAppSchemaTester: React.FC<IClusterAppSchemaTesterProps> = (
     branch
       ? decodeURIComponent(branch)
       : selectedProvider
-      ? getDefaultRepoBranch(prototypeProviders[0])
-      : undefined
+        ? getDefaultRepoBranch(prototypeProviders[0])
+        : undefined
   );
 
   const dispatch = useDispatch();

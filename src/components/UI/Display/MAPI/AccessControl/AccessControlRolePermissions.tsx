@@ -66,7 +66,8 @@ function formatResources(resources: string[]): ReactNode {
 }
 
 interface IAccessControlRolePermissionsProps
-  extends Pick<IAccessControlRoleItem, 'permissions'>,
+  extends
+    Pick<IAccessControlRoleItem, 'permissions'>,
     React.ComponentPropsWithoutRef<typeof Table> {}
 
 const AccessControlRolePermissions: React.FC<

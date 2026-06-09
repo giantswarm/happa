@@ -9,8 +9,10 @@ import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalI
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-interface IUpdateAppGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+interface IUpdateAppGuideProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof CLIGuide>,
+  'title'
+> {
   appName: string;
   namespace: string;
   newVersion: string;
@@ -74,11 +76,11 @@ const UpdateAppGuide: React.FC<
           kubectl --context ${context} \\
             get appcatalogentries \\
             --selector application.giantswarm.io/catalog=${catalogName},app.kubernetes.io/name=${appCatalogEntryName}${
-            catalogNamespace
-              ? ` \\
+              catalogNamespace
+                ? ` \\
             --namespace ${catalogNamespace}`
-              : ''
-          }
+                : ''
+            }
           `}
         >
           <Text />

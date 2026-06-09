@@ -3,8 +3,9 @@ import React from 'react';
 import Button from 'UI/Controls/Button';
 import ConfirmationPrompt from 'UI/Controls/ConfirmationPrompt';
 
-interface IWorkerNodesNodePoolItemDeleteProps
-  extends React.ComponentPropsWithoutRef<typeof ConfirmationPrompt> {
+interface IWorkerNodesNodePoolItemDeleteProps extends React.ComponentPropsWithoutRef<
+  typeof ConfirmationPrompt
+> {
   nodePoolName: string;
   isLoading?: boolean;
 }

@@ -229,8 +229,8 @@ const EditLabelTooltip: FC<React.PropsWithChildren<IEditLabelTooltip>> = ({
                   {unauthorized
                     ? 'For editing labels, you need additional permissions.'
                     : canClusterLabelBeEdited(label.key)
-                    ? 'Click to edit label'
-                    : 'This label cannot be edited'}
+                      ? 'Click to edit label'
+                      : 'This label cannot be edited'}
                 </StyledTooltip>
               }
               show={!readOnly}

@@ -34,7 +34,9 @@ const StyledCard = styled(Card)`
       ? `0 0 0 1px ${normalizeColor('text', props.theme)}`
       : 'none'};
   outline: ${(props) => props['aria-selected'] && 'none'};
-  transition: opacity 0.1s ease-out, box-shadow 0.1s ease-in-out;
+  transition:
+    opacity 0.1s ease-out,
+    box-shadow 0.1s ease-in-out;
 
   :hover,
   :focus {
@@ -51,8 +53,7 @@ const StyledHeading = styled(Heading)`
 `;
 
 interface IAccessControlRoleListItemProps
-  extends IAccessControlRoleItem,
-    React.ComponentPropsWithoutRef<typeof Card> {
+  extends IAccessControlRoleItem, React.ComponentPropsWithoutRef<typeof Card> {
   active?: boolean;
 }
 

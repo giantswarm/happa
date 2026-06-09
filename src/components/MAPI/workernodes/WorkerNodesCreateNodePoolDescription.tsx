@@ -19,7 +19,8 @@ function validateValue(newValue: string, newValueLabel: string): string {
 }
 
 interface IWorkerNodesCreateNodePoolDescriptionProps
-  extends INodePoolPropertyProps,
+  extends
+    INodePoolPropertyProps,
     Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange' | 'id'> {
   autoFocus?: boolean;
 }

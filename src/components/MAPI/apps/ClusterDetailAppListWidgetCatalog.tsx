@@ -17,11 +17,10 @@ function formatAppCatalogTitle(title: string): string {
   return toTitleCase(title.replaceAll('-', ' '));
 }
 
-interface IClusterDetailAppListWidgetCatalogProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
-    'title'
-  > {
+interface IClusterDetailAppListWidgetCatalogProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
+  'title'
+> {
   app?: applicationv1alpha1.IApp;
   catalog?: applicationv1alpha1.ICatalog;
 }

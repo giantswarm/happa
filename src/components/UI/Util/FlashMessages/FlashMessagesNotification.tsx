@@ -49,8 +49,10 @@ const CloseButtonText = styled(Text)`
   line-height: normal;
 `;
 
-interface IFlashMessagesNotificationProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof Box>, 'title'> {
+interface IFlashMessagesNotificationProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof Box>,
+  'title'
+> {
   title: React.ReactNode;
   type: PropertiesOf<typeof messageType>;
   onClose?: () => void;

@@ -6,7 +6,8 @@ import InputGroup from 'UI/Inputs/InputGroup';
 import { INodePoolPropertyProps, withNodePoolScaling } from './patches';
 
 interface IWorkerNodesCreateNodePoolScaleProps
-  extends INodePoolPropertyProps,
+  extends
+    INodePoolPropertyProps,
     Omit<
       React.ComponentPropsWithoutRef<typeof InputGroup>,
       'onChange' | 'id'

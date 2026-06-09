@@ -17,11 +17,10 @@ const CapitalizedText = styled.div`
   }
 `;
 
-interface IClusterDetailWidgetCreatedProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-    'title'
-  > {
+interface IClusterDetailWidgetCreatedProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+  'title'
+> {
   cluster?: capiv1beta1.ICluster;
 }
 

@@ -263,13 +263,11 @@ export function updateAppConfig(
       });
 
       new FlashMessage(
-        (
-          <>
-            The ConfigMap containing the user level config values of{' '}
-            <code>{appName}</code> on <code>{clusterID}</code> has successfully
-            been updated.
-          </>
-        ),
+        <>
+          The ConfigMap containing the user level config values of{' '}
+          <code>{appName}</code> on <code>{clusterID}</code> has successfully
+          been updated.
+        </>,
         messageType.SUCCESS,
         messageTTL.LONG
       );
@@ -282,13 +280,11 @@ export function updateAppConfig(
 
       if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
-          (
-            <>
-              Could not find an app or ConfigMap containing user level config
-              values to update for <code>{appName}</code> on cluster{' '}
-              <code>{clusterID}</code>
-            </>
-          ),
+          <>
+            Could not find an app or ConfigMap containing user level config
+            values to update for <code>{appName}</code> on cluster{' '}
+            <code>{clusterID}</code>
+          </>,
           messageType.ERROR,
           messageTTL.LONG
         );
@@ -350,13 +346,11 @@ export function createAppConfig(
       });
 
       new FlashMessage(
-        (
-          <>
-            A ConfigMap containing user level config values for{' '}
-            <code>{appName}</code> on <code>{clusterID}</code> has successfully
-            been created.
-          </>
-        ),
+        <>
+          A ConfigMap containing user level config values for{' '}
+          <code>{appName}</code> on <code>{clusterID}</code> has successfully
+          been created.
+        </>,
         messageType.SUCCESS,
         messageTTL.LONG
       );
@@ -369,12 +363,10 @@ export function createAppConfig(
 
       if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
-          (
-            <>
-              Could not find app <code>{appName}</code> on cluster{' '}
-              <code>{clusterID}</code>
-            </>
-          ),
+          <>
+            Could not find app <code>{appName}</code> on cluster{' '}
+            <code>{clusterID}</code>
+          </>,
           messageType.ERROR,
           messageTTL.LONG
         );
@@ -428,12 +420,10 @@ export function deleteAppConfig(
       });
 
       new FlashMessage(
-        (
-          <>
-            The ConfigMap containing user level config values for{' '}
-            <code>{appName}</code> on <code>{clusterID}</code> has been deleted.
-          </>
-        ),
+        <>
+          The ConfigMap containing user level config values for{' '}
+          <code>{appName}</code> on <code>{clusterID}</code> has been deleted.
+        </>,
         messageType.SUCCESS,
         messageTTL.MEDIUM
       );
@@ -446,13 +436,11 @@ export function deleteAppConfig(
 
       if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
-          (
-            <>
-              Could not find the ConfigMap containing user level config values
-              for the app called <code>{appName}</code> on cluster{' '}
-              <code>{clusterID}</code>
-            </>
-          ),
+          <>
+            Could not find the ConfigMap containing user level config values for
+            the app called <code>{appName}</code> on cluster{' '}
+            <code>{clusterID}</code>
+          </>,
           messageType.ERROR,
           messageTTL.LONG
         );
@@ -509,13 +497,11 @@ export function updateAppSecret(
       });
 
       new FlashMessage(
-        (
-          <>
-            The Secret containing user level secret values of{' '}
-            <code>{appName}</code> on <code>{clusterID}</code> has successfully
-            been updated.
-          </>
-        ),
+        <>
+          The Secret containing user level secret values of{' '}
+          <code>{appName}</code> on <code>{clusterID}</code> has successfully
+          been updated.
+        </>,
         messageType.SUCCESS,
         messageTTL.LONG
       );
@@ -528,13 +514,11 @@ export function updateAppSecret(
 
       if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
-          (
-            <>
-              Could not find an app or Secret containing user level secret
-              values to update for <code>{appName}</code> on cluster{' '}
-              <code>{clusterID}</code>
-            </>
-          ),
+          <>
+            Could not find an app or Secret containing user level secret values
+            to update for <code>{appName}</code> on cluster{' '}
+            <code>{clusterID}</code>
+          </>,
           messageType.ERROR,
           messageTTL.LONG
         );
@@ -594,13 +578,11 @@ export function createAppSecret(
       });
 
       new FlashMessage(
-        (
-          <>
-            A Secret containing user level secret values for{' '}
-            <code>{appName}</code> on <code>{clusterID}</code> has successfully
-            been created.
-          </>
-        ),
+        <>
+          A Secret containing user level secret values for{' '}
+          <code>{appName}</code> on <code>{clusterID}</code> has successfully
+          been created.
+        </>,
         messageType.SUCCESS,
         messageTTL.LONG
       );
@@ -613,12 +595,10 @@ export function createAppSecret(
 
       if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
-          (
-            <>
-              Could not find <code>{appName}</code> on cluster{' '}
-              <code>{clusterID}</code>
-            </>
-          ),
+          <>
+            Could not find <code>{appName}</code> on cluster{' '}
+            <code>{clusterID}</code>
+          </>,
           messageType.ERROR,
           messageTTL.LONG
         );
@@ -672,12 +652,10 @@ export function deleteAppSecret(
       });
 
       new FlashMessage(
-        (
-          <>
-            The Secret containing user level secret values for{' '}
-            <code>{appName}</code> on <code>{clusterID}</code> has been deleted.
-          </>
-        ),
+        <>
+          The Secret containing user level secret values for{' '}
+          <code>{appName}</code> on <code>{clusterID}</code> has been deleted.
+        </>,
         messageType.SUCCESS,
         messageTTL.MEDIUM
       );
@@ -690,13 +668,11 @@ export function deleteAppSecret(
 
       if ((err as IGSAPIError).status === StatusCodes.NotFound) {
         new FlashMessage(
-          (
-            <>
-              Could not find the Secret containing user level secret values for
-              an app called <code>{appName}</code> on cluster{' '}
-              <code>{clusterID}</code>
-            </>
-          ),
+          <>
+            Could not find the Secret containing user level secret values for an
+            app called <code>{appName}</code> on cluster{' '}
+            <code>{clusterID}</code>
+          </>,
           messageType.ERROR,
           messageTTL.LONG
         );
@@ -745,12 +721,10 @@ export const updateClusterApp = createAsynchronousAction<
       await modifyApp(clusterId, appName, { body: { spec: { version } } });
 
       new FlashMessage(
-        (
-          <>
-            App <code>{appName}</code> on <code>{clusterId}</code> has been
-            updated. Changes might take some time to take effect.
-          </>
-        ),
+        <>
+          App <code>{appName}</code> on <code>{clusterId}</code> has been
+          updated. Changes might take some time to take effect.
+        </>,
         messageType.SUCCESS,
         messageTTL.LONG
       );
@@ -798,12 +772,10 @@ export const deleteClusterApp = createAsynchronousAction<
       await deleteApp(clusterId, appName);
 
       new FlashMessage(
-        (
-          <>
-            App <code>{appName}</code> was scheduled for deletion on{' '}
-            <code>{clusterId}</code>. This may take a couple of minutes.
-          </>
-        ),
+        <>
+          App <code>{appName}</code> was scheduled for deletion on{' '}
+          <code>{clusterId}</code>. This may take a couple of minutes.
+        </>,
         messageType.SUCCESS,
         messageTTL.LONG
       );
@@ -924,12 +896,10 @@ export const installApp = createAsynchronousAction<
     } catch (error) {
       if ((error as IGSAPIError).status === StatusCodes.Conflict) {
         new FlashMessage(
-          (
-            <>
-              An app called <code>{name}</code> already exists on cluster{' '}
-              <code>{clusterId}</code>
-            </>
-          ),
+          <>
+            An app called <code>{name}</code> already exists on cluster{' '}
+            <code>{clusterId}</code>
+          </>,
           messageType.ERROR,
           messageTTL.LONG
         );
@@ -959,12 +929,10 @@ export const installApp = createAsynchronousAction<
     }
 
     new FlashMessage(
-      (
-        <>
-          Your app <code>{name}</code> is being installed on{' '}
-          <code>{clusterId}</code>
-        </>
-      ),
+      <>
+        Your app <code>{name}</code> is being installed on{' '}
+        <code>{clusterId}</code>
+      </>,
       messageType.SUCCESS,
       messageTTL.MEDIUM
     );

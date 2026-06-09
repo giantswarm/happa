@@ -35,10 +35,13 @@ function tryGetListResource<T extends IList<{}>>(
       }
 
       return new Promise((resolve) => {
-        setTimeout(() => {
-          const list = tryGetListResource<T>(client, auth, url, attempt + 1);
-          resolve(list);
-        }, Math.min(attempt * SECOND, MAX_RETRY_DELAY));
+        setTimeout(
+          () => {
+            const list = tryGetListResource<T>(client, auth, url, attempt + 1);
+            resolve(list);
+          },
+          Math.min(attempt * SECOND, MAX_RETRY_DELAY)
+        );
       });
     }
 

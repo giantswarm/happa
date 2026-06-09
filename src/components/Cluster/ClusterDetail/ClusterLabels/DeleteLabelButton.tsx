@@ -41,8 +41,9 @@ const StyledTooltip = styled(Tooltip)`
   z-index: 1069 !important;
 `;
 
-interface IDeleteLabelButtonProps
-  extends ComponentPropsWithoutRef<typeof Button> {
+interface IDeleteLabelButtonProps extends ComponentPropsWithoutRef<
+  typeof Button
+> {
   onDelete(): void;
   onOpen(isOpen: boolean): void;
 

@@ -32,11 +32,10 @@ import ClusterDetailWidgetProviderLoader from './ClusterDetailWidgetProviderLoad
 import ClusterDetailWidgetProviderVSphere from './ClusterDetailWidgetProviderVSphere';
 import { fetchProviderCredential, fetchProviderCredentialKey } from './utils';
 
-interface IClusterDetailWidgetProviderProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-    'title'
-  > {
+interface IClusterDetailWidgetProviderProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+  'title'
+> {
   cluster?: Cluster;
   providerCluster?: ProviderCluster;
   controlPlaneNodes?: ControlPlaneNode[];

@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import { Tooltip, TooltipContainer } from 'UI/Display/Tooltip';
 import { truncate } from 'utils/helpers';
 
-interface ITruncatedProps
-  extends React.ComponentPropsWithoutRef<React.ElementType> {
+interface ITruncatedProps extends React.ComponentPropsWithoutRef<React.ElementType> {
   children: string | number;
   as?: React.ElementType;
   labelProps?: React.ComponentPropsWithoutRef<'span'>;

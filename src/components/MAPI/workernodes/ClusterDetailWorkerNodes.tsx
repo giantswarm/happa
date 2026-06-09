@@ -91,8 +91,8 @@ export function getAdditionalColumns1(
           title: 'Resource pool',
           render: (_, providerNodePool) => {
             const resourcePool = providerNodePool
-              ? (providerNodePool as capvv1beta1.IVSphereMachineTemplate)?.spec
-                  ?.template.spec.resourcePool ?? ''
+              ? ((providerNodePool as capvv1beta1.IVSphereMachineTemplate)?.spec
+                  ?.template.spec.resourcePool ?? '')
               : undefined;
 
             return (
@@ -106,8 +106,8 @@ export function getAdditionalColumns1(
           title: 'Datacenter',
           render: (_, providerNodePool) => {
             const datacenter = providerNodePool
-              ? (providerNodePool as capvv1beta1.IVSphereMachineTemplate)?.spec
-                  ?.template.spec.datacenter ?? ''
+              ? ((providerNodePool as capvv1beta1.IVSphereMachineTemplate)?.spec
+                  ?.template.spec.datacenter ?? '')
               : undefined;
 
             return (
@@ -121,8 +121,8 @@ export function getAdditionalColumns1(
           title: 'vCenter',
           render: (_, providerNodePool) => {
             const vCenter = providerNodePool
-              ? (providerNodePool as capvv1beta1.IVSphereMachineTemplate)?.spec
-                  ?.template.spec.server ?? ''
+              ? ((providerNodePool as capvv1beta1.IVSphereMachineTemplate)?.spec
+                  ?.template.spec.server ?? '')
               : undefined;
 
             return (
@@ -145,8 +145,8 @@ export function getAdditionalColumns1(
           title: 'Datastore',
           render: (_, providerNodePool) => {
             const datastore = providerNodePool
-              ? (providerNodePool as capvv1beta1.IVSphereMachineTemplate).spec
-                  ?.template.spec.datastore ?? ''
+              ? ((providerNodePool as capvv1beta1.IVSphereMachineTemplate).spec
+                  ?.template.spec.datastore ?? '')
               : undefined;
 
             return (

@@ -4,8 +4,9 @@ import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder
 
 import NotAvailable from '../NotAvailable';
 
-interface IOrganizationDetailStatisticProps
-  extends React.ComponentPropsWithoutRef<typeof Text> {
+interface IOrganizationDetailStatisticProps extends React.ComponentPropsWithoutRef<
+  typeof Text
+> {
   isLoading?: boolean;
 }
 

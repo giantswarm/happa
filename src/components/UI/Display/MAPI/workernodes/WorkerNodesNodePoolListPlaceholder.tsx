@@ -2,8 +2,9 @@ import { Box, Text } from 'grommet';
 import React from 'react';
 import Button from 'UI/Controls/Button';
 
-interface IWorkerNodesNodePoolListPlaceholderProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IWorkerNodesNodePoolListPlaceholderProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   onCreateButtonClick?: () => void;
   readOnly?: boolean;
   canCreateNodePools?: boolean;

@@ -1323,8 +1323,7 @@ export interface IVSphereMachineTemplate {
 
 export const VSphereMachineTemplateList = 'VSphereMachineTemplateList';
 
-export interface IVSphereMachineTemplateList
-  extends metav1.IList<IVSphereMachineTemplate> {
+export interface IVSphereMachineTemplateList extends metav1.IList<IVSphereMachineTemplate> {
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof VSphereMachineTemplateList;
 }

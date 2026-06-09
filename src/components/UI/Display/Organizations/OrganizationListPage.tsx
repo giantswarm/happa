@@ -24,8 +24,9 @@ export interface IOrganization {
   clusterCount?: number;
 }
 
-interface IOrganizationIndexPageProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IOrganizationIndexPageProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   organizations: IOrganization[];
   onClickRow: (name: string) => void;
 }

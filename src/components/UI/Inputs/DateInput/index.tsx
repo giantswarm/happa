@@ -48,17 +48,15 @@ const customTheme: ThemeType = {
   },
 };
 
-interface IBaseProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof Input>,
-    'inputProps' | 'size' | 'onBlur'
-  > {
+interface IBaseProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof Input>,
+  'inputProps' | 'size' | 'onBlur'
+> {
   value: string | string[];
 }
 
 interface IDateInputProps
-  extends IBaseProps,
-    Omit<MaskedInputType, keyof IBaseProps> {
+  extends IBaseProps, Omit<MaskedInputType, keyof IBaseProps> {
   /**
    * The description text displayed above the input.
    */

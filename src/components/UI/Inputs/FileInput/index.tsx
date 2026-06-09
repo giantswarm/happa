@@ -2,8 +2,10 @@ import { FormField, FormFieldProps, TextInput as Input } from 'grommet';
 import React, { useRef } from 'react';
 import { setMultipleRefs } from 'utils/componentUtils';
 
-interface IFileInputProps
-  extends Omit<React.ComponentPropsWithRef<typeof Input>, 'type' | 'value'> {
+interface IFileInputProps extends Omit<
+  React.ComponentPropsWithRef<typeof Input>,
+  'type' | 'value'
+> {
   /**
    * The description text displayed above the input.
    */

@@ -14,8 +14,9 @@ const StyledDot = styled(Dot)`
   padding: 0;
 `;
 
-interface IAppVersionInspectorOptionProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IAppVersionInspectorOptionProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   version?: string;
   creationDate?: string | null;
   upstreamVersion?: string;

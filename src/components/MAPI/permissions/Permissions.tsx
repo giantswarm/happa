@@ -89,10 +89,10 @@ const Permissions: React.FC<IPermissionsProps> = () => {
                 subjectType === SubjectTypes.Group
                   ? subjectGroupName
                   : subjectType === SubjectTypes.User
-                  ? subjectUserName
-                  : subjectType === SubjectTypes.ServiceAccount
-                  ? subjectServiceAccountName
-                  : ''
+                    ? subjectUserName
+                    : subjectType === SubjectTypes.ServiceAccount
+                      ? subjectServiceAccountName
+                      : ''
               }
             />
           </>

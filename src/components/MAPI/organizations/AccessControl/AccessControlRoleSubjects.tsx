@@ -161,10 +161,8 @@ const formatSubjectNames = (subjectNames: string[]): React.ReactNode => {
 };
 
 interface IAccessControlRoleSubjectsProps
-  extends Pick<
-      ui.IAccessControlRoleItem,
-      'groups' | 'users' | 'serviceAccounts'
-    >,
+  extends
+    Pick<ui.IAccessControlRoleItem, 'groups' | 'users' | 'serviceAccounts'>,
     React.ComponentPropsWithoutRef<typeof Box> {
   roleName: string;
   namespace: string;

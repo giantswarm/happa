@@ -5,7 +5,8 @@ import TextInput from 'UI/Inputs/TextInput';
 import { INodePoolPropertyProps } from './patches';
 
 interface IWorkerNodesCreateNodePoolNameProps
-  extends INodePoolPropertyProps,
+  extends
+    INodePoolPropertyProps,
     Omit<
       React.ComponentPropsWithoutRef<typeof InputGroup>,
       'onChange' | 'id'

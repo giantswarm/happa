@@ -1,8 +1,9 @@
 import { Card, CardBody, Heading, Text } from 'grommet';
 import * as React from 'react';
 
-interface IAccessControlRoleSearchPlaceholderProps
-  extends React.ComponentPropsWithoutRef<typeof Card> {}
+interface IAccessControlRoleSearchPlaceholderProps extends React.ComponentPropsWithoutRef<
+  typeof Card
+> {}
 
 const AccessControlRoleSearchPlaceholder: React.FC<
   React.PropsWithChildren<IAccessControlRoleSearchPlaceholderProps>

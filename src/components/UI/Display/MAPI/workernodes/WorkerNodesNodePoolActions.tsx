@@ -25,8 +25,7 @@ const UnauthorizedLink = styled(Link)`
   }
 `;
 
-interface IWorkerNodesNodePoolActionsProps
-  extends React.ComponentPropsWithoutRef<'div'> {
+interface IWorkerNodesNodePoolActionsProps extends React.ComponentPropsWithoutRef<'div'> {
   onDeleteClick?: () => void;
   onScaleClick?: () => void;
   disabled?: boolean;

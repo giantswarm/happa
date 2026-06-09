@@ -11,8 +11,9 @@ const StyledValueLabel = styled(ValueLabel)`
   font-size: 13px;
 `;
 
-interface IClusterDashboardLabelsV5Props
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterDashboardLabelsV5Props extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   labels?: IClusterLabelWithDisplayInfo[];
 }
 

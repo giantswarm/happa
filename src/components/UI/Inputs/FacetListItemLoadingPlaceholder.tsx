@@ -4,8 +4,9 @@ import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
 
-interface IFacetListItemLoadingPlaceholderProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface IFacetListItemLoadingPlaceholderProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const FacetListItemLoadingPlaceholder: React.FC<
   React.PropsWithChildren<IFacetListItemLoadingPlaceholderProps>

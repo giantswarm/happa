@@ -117,7 +117,8 @@ function makeVerbMap(from: AccessControlRoleItemVerb[]): IVerbMap {
 }
 
 interface IAccessControlRoleVerbsProps
-  extends Pick<IAccessControlRoleItemPermission, 'verbs'>,
+  extends
+    Pick<IAccessControlRoleItemPermission, 'verbs'>,
     React.ComponentPropsWithoutRef<typeof Box> {}
 
 const AccessControlRoleVerbs: React.FC<

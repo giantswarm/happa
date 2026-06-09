@@ -11,8 +11,9 @@ const StyledValueLabel = styled(ValueLabel)`
   font-size: 13px;
 `;
 
-interface IClusterListItemLabelsProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterListItemLabelsProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   labels?: IClusterLabelWithDisplayInfo[];
 }
 

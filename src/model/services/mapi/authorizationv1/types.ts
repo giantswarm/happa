@@ -118,8 +118,7 @@ export interface ISelfSubjectAccessReviewStatus {
   evaluationError: string;
 }
 
-export interface ILocalSubjectAccessReviewStatus
-  extends ISelfSubjectAccessReviewStatus {}
+export interface ILocalSubjectAccessReviewStatus extends ISelfSubjectAccessReviewStatus {}
 
 export interface ILocalSubjectAccessReview {
   apiVersion: string;

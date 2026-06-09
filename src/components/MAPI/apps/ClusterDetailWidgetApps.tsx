@@ -34,11 +34,10 @@ const StyledLink = styled(Link)`
   color: ${({ theme }) => normalizeColor('input-highlight', theme)};
 `;
 
-interface IClusterDetailWidgetAppsProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-    'title'
-  > {
+interface IClusterDetailWidgetAppsProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+  'title'
+> {
   isClusterApp: boolean;
 }
 
@@ -236,8 +235,8 @@ const ClusterDetailWidgetApps: React.FC<
               appCounters.notDeployed === -1
                 ? 'text'
                 : appCounters.notDeployed === 0
-                ? 'text-success'
-                : 'text-warning'
+                  ? 'text-success'
+                  : 'text-warning'
             }
           />
           <ClusterDetailCounter
@@ -251,8 +250,8 @@ const ClusterDetailWidgetApps: React.FC<
               upgradableAppsCount === -1
                 ? 'text'
                 : upgradableAppsCount === 0
-                ? 'text-success'
-                : 'text-warning'
+                  ? 'text-success'
+                  : 'text-warning'
             }
           />
         </>

@@ -17,8 +17,9 @@ import ClusterDetailDeleteAction, {
   ClusterDetailDeleteActionNameVariant,
 } from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailDeleteAction';
 
-interface IClusterActionsProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface IClusterActionsProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const ClusterActions: React.FC<
   React.PropsWithChildren<IClusterActionsProps>

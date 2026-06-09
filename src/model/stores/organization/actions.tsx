@@ -327,11 +327,9 @@ export function organizationDeleteConfirmed(
       await organizationsApi.deleteOrganization(orgId);
 
       new FlashMessage(
-        (
-          <>
-            Organization <code>{orgId}</code> deleted
-          </>
-        ),
+        <>
+          Organization <code>{orgId}</code> deleted
+        </>,
         messageType.INFO,
         messageTTL.SHORT
       );
@@ -342,11 +340,9 @@ export function organizationDeleteConfirmed(
       return true;
     } catch (err) {
       new FlashMessage(
-        (
-          <>
-            Could not delete organization <code>{orgId}</code>.
-          </>
-        ),
+        <>
+          Could not delete organization <code>{orgId}</code>.
+        </>,
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again or contact support at support@giantswarm.io.'
@@ -399,11 +395,9 @@ export function organizationCreateConfirmed(
       } as V4Organization);
 
       new FlashMessage(
-        (
-          <>
-            Organization <code>{orgId}</code> has been created
-          </>
-        ),
+        <>
+          Organization <code>{orgId}</code> has been created
+        </>,
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -414,11 +408,9 @@ export function organizationCreateConfirmed(
       await dispatch(organizationsLoad());
     } catch (err) {
       new FlashMessage(
-        (
-          <>
-            Could not create organization <code>{orgId}</code>
-          </>
-        ),
+        <>
+          Could not create organization <code>{orgId}</code>
+        </>,
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again in a moment or contact support at support@giantswarm.io'
@@ -477,11 +469,9 @@ export function organizationAddMemberConfirmed(
       await organizationsApi.modifyOrganization(orgId, { members });
 
       new FlashMessage(
-        (
-          <>
-            Added <code>{email}</code> to organization <code>{orgId}</code>
-          </>
-        ),
+        <>
+          Added <code>{email}</code> to organization <code>{orgId}</code>
+        </>,
         messageType.SUCCESS,
         messageTTL.MEDIUM
       );
@@ -521,11 +511,9 @@ export function organizationRemoveMemberConfirmed(
       await organizationsApi.modifyOrganization(orgId, { members });
 
       new FlashMessage(
-        (
-          <>
-            Removed <code>{email}</code> from organization <code>{orgId}</code>
-          </>
-        ),
+        <>
+          Removed <code>{email}</code> from organization <code>{orgId}</code>
+        </>,
         messageType.INFO,
         messageTTL.MEDIUM
       );
@@ -533,12 +521,10 @@ export function organizationRemoveMemberConfirmed(
       await dispatch(organizationsLoad());
     } catch (err) {
       new FlashMessage(
-        (
-          <>
-            Error removing <code>{email}</code> from organization{' '}
-            <code>{orgId}</code>
-          </>
-        ),
+        <>
+          Error removing <code>{email}</code> from organization{' '}
+          <code>{orgId}</code>
+        </>,
         messageType.ERROR,
         messageTTL.LONG
       );
@@ -582,11 +568,9 @@ export function organizationCredentialsLoad(
       });
     } catch (err) {
       new FlashMessage(
-        (
-          <>
-            Could not load credentials for <code>{orgId}</code>.
-          </>
-        ),
+        <>
+          Could not load credentials for <code>{orgId}</code>.
+        </>,
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again in a moment or contact support at support@giantswarm.io.'
@@ -676,11 +660,9 @@ export function organizationCredentialsSetConfirmed(
       await dispatch(organizationCredentialsLoad(orgId));
     } catch (err) {
       new FlashMessage(
-        (
-          <>
-            Could not set credentials for organization <code>{orgId}</code>.
-          </>
-        ),
+        <>
+          Could not set credentials for organization <code>{orgId}</code>.
+        </>,
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again in a moment or contact support at support@giantswarm.io.'

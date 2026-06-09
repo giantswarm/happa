@@ -28,8 +28,9 @@ import {
   getRoleItemsKey,
 } from './utils';
 
-interface IAccessControlProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IAccessControlProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   organizationName: string;
   organizationNamespace: string;
 }

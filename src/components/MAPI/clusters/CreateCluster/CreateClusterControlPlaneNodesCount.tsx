@@ -10,7 +10,8 @@ import {
 } from './patches';
 
 interface ICreateClusterControlPlaneNodesCountProps
-  extends IClusterPropertyProps,
+  extends
+    IClusterPropertyProps,
     Omit<
       React.ComponentPropsWithoutRef<typeof InputGroup>,
       'onChange' | 'id'

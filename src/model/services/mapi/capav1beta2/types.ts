@@ -2673,8 +2673,7 @@ export interface IAWSMachineTemplate {
 
 export const AWSMachineTemplateList = 'AWSMachineTemplateList';
 
-export interface IAWSMachineTemplateList
-  extends metav1.IList<IAWSMachineTemplate> {
+export interface IAWSMachineTemplateList extends metav1.IList<IAWSMachineTemplate> {
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2';
   kind: typeof AWSMachineTemplateList;
 }
@@ -2753,8 +2752,7 @@ export interface IAWSManagedCluster {
 
 export const AWSManagedClusterList = 'AWSManagedClusterList';
 
-export interface IAWSManagedClusterList
-  extends metav1.IList<IAWSManagedCluster> {
+export interface IAWSManagedClusterList extends metav1.IList<IAWSManagedCluster> {
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2';
   kind: typeof AWSManagedClusterList;
 }
@@ -3277,8 +3275,7 @@ export interface IAWSManagedMachinePool {
 
 export const AWSManagedMachinePoolList = 'AWSManagedMachinePoolList';
 
-export interface IAWSManagedMachinePoolList
-  extends metav1.IList<IAWSManagedMachinePool> {
+export interface IAWSManagedMachinePoolList extends metav1.IList<IAWSManagedMachinePool> {
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2';
   kind: typeof AWSManagedMachinePoolList;
 }
@@ -4917,8 +4914,7 @@ export interface IAWSManagedControlPlane {
 
 export const AWSManagedControlPlaneList = 'AWSManagedControlPlaneList';
 
-export interface IAWSManagedControlPlaneList
-  extends metav1.IList<IAWSManagedControlPlane> {
+export interface IAWSManagedControlPlaneList extends metav1.IList<IAWSManagedControlPlane> {
   apiVersion: 'controlplane.cluster.x-k8s.io/v1beta2';
   kind: typeof AWSManagedControlPlaneList;
 }
@@ -5054,8 +5050,7 @@ export interface IAWSClusterRoleIdentity {
 
 export const AWSClusterRoleIdentityList = 'AWSClusterRoleIdentityList';
 
-export interface IAWSClusterRoleIdentityList
-  extends metav1.IList<IAWSClusterRoleIdentity> {
+export interface IAWSClusterRoleIdentityList extends metav1.IList<IAWSClusterRoleIdentity> {
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta2';
   kind: typeof AWSClusterRoleIdentityList;
 }

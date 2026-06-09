@@ -10,8 +10,10 @@ import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalI
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-interface IModifyNodePoolGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+interface IModifyNodePoolGuideProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof CLIGuide>,
+  'title'
+> {
   clusterNamespace: string;
   provider: PropertiesOf<typeof Providers>;
   canUpdateNodePools?: boolean;

@@ -9,8 +9,10 @@ import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalI
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-interface IUninstallAppGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+interface IUninstallAppGuideProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof CLIGuide>,
+  'title'
+> {
   appName: string;
   namespace: string;
   canUninstallApps?: boolean;

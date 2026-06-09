@@ -4,8 +4,9 @@ import React, { useRef, useState } from 'react';
 import Button from 'UI/Controls/Button';
 import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 
-interface IYAMLFileUploadProps
-  extends React.ComponentPropsWithoutRef<typeof Button> {
+interface IYAMLFileUploadProps extends React.ComponentPropsWithoutRef<
+  typeof Button
+> {
   buttonText: string;
   onInputChange: (values: string, done: () => void) => void;
 }

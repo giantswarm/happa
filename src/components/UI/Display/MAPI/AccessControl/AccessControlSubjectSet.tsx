@@ -14,8 +14,9 @@ function gatherSubjectUsage(acc: Record<string, number>, currValue: string) {
   return acc;
 }
 
-export interface IAccessControlSubjectSetRenderer
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+export interface IAccessControlSubjectSetRenderer extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   name: string;
   isEditable: boolean;
   isLoading: boolean;
@@ -30,8 +31,9 @@ export interface IAccessControlSubjectSetItem {
   isLoading: boolean;
 }
 
-interface IAccessControlSubjectSetProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IAccessControlSubjectSetProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   items: IAccessControlSubjectSetItem[];
   permissions: IAccessControlSubjectPermissions;
   renderItem: (params: IAccessControlSubjectSetRenderer) => React.ReactNode;

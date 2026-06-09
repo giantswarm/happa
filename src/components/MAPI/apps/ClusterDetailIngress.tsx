@@ -36,8 +36,7 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
   }
 `;
 
-interface IClusterDetailIngressProps
-  extends React.ComponentPropsWithoutRef<'div'> {
+interface IClusterDetailIngressProps extends React.ComponentPropsWithoutRef<'div'> {
   provider?: PropertiesOf<typeof Providers>;
   cluster?: capiv1beta1.ICluster;
   isClusterApp?: boolean;
@@ -71,8 +70,8 @@ const ClusterDetailIngress: React.FC<
     typeof isClusterApp === 'undefined'
       ? undefined
       : isClusterApp
-      ? organizations[orgId]?.namespace
-      : clusterId;
+        ? organizations[orgId]?.namespace
+        : clusterId;
 
   const auth = useAuthProvider();
 
@@ -86,15 +85,15 @@ const ClusterDetailIngress: React.FC<
     typeof isClusterApp === 'undefined'
       ? undefined
       : isClusterApp
-      ? {
-          namespace: appsNamespace,
-          labelSelector: {
-            matchingLabels: {
-              [applicationv1alpha1.labelCluster]: clusterId,
+        ? {
+            namespace: appsNamespace,
+            labelSelector: {
+              matchingLabels: {
+                [applicationv1alpha1.labelCluster]: clusterId,
+              },
             },
-          },
-        }
-      : { namespace: appsNamespace };
+          }
+        : { namespace: appsNamespace };
 
   const appListKey = appsPermissions.canList
     ? applicationv1alpha1.getAppListKey(appListGetOptions)

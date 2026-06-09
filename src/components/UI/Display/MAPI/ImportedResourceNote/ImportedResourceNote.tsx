@@ -46,8 +46,9 @@ function getProviderInfo(res: Cluster | NodePool): {
   }
 }
 
-interface IImportedResourceNoteProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IImportedResourceNoteProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   res: Cluster | NodePool;
   displayNote?: boolean;
 }

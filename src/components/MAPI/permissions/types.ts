@@ -13,8 +13,10 @@ export type PermissionVerb =
   | '*'
   | string;
 
-export interface INamespacePermissions
-  extends Record<string, PermissionVerb[]> {}
+export interface INamespacePermissions extends Record<
+  string,
+  PermissionVerb[]
+> {}
 
 export interface IPermissionMap extends Record<string, INamespacePermissions> {}
 
@@ -53,23 +55,26 @@ export type PermissionsUseCaseStatuses = Record<
   Record<string, boolean>
 >;
 
-export interface IRolesForNamespaces
-  extends Record<
-    string,
-    | Omit<rbacv1.IClusterRole, 'apiVersion' | 'kind'>[]
-    | Omit<rbacv1.IRole, 'apiVersion' | 'kind'>[]
-  > {}
+export interface IRolesForNamespaces extends Record<
+  string,
+  | Omit<rbacv1.IClusterRole, 'apiVersion' | 'kind'>[]
+  | Omit<rbacv1.IRole, 'apiVersion' | 'kind'>[]
+> {}
 
-export interface INamespaceResourceRules
-  extends Record<string, authorizationv1.IResourceRule[]> {}
+export interface INamespaceResourceRules extends Record<
+  string,
+  authorizationv1.IResourceRule[]
+> {}
 
 export interface IRulesMaps {
   rolesRulesMap: INamespaceResourceRules;
   clusterRolesRulesMap: INamespaceResourceRules;
 }
 
-export interface IResourceRuleMap
-  extends Record<string, INamespaceResourceRules> {}
+export interface IResourceRuleMap extends Record<
+  string,
+  INamespaceResourceRules
+> {}
 
 export type Bindings =
   | Omit<rbacv1.IRoleBinding, 'apiVersion' | 'kind'>[]

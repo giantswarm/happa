@@ -85,8 +85,8 @@ function getClusterCreatedStatus(
   const status = cluster
     ? ClusterCreationStatus.Ok
     : clusterApp
-    ? ClusterCreationStatus.InProgress
-    : ClusterCreationStatus.Waiting;
+      ? ClusterCreationStatus.InProgress
+      : ClusterCreationStatus.Waiting;
 
   return getStatusComponent(status);
 }
@@ -120,8 +120,8 @@ function getClusterAppDeployedStatus(clusterApp?: applicationv1alpha1.IApp) {
     appStatus === applicationv1alpha1.statusDeployed
       ? ClusterCreationStatus.Ok
       : appStatus === applicationv1alpha1.statusFailed
-      ? ClusterCreationStatus.Failed
-      : ClusterCreationStatus.InProgress;
+        ? ClusterCreationStatus.Failed
+        : ClusterCreationStatus.InProgress;
 
   return getStatusComponent(status);
 }

@@ -16,8 +16,10 @@ import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalI
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-interface IUpgradeClusterGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+interface IUpgradeClusterGuideProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof CLIGuide>,
+  'title'
+> {
   provider: PropertiesOf<typeof Providers>;
   clusterName: string;
   clusterNamespace: string;

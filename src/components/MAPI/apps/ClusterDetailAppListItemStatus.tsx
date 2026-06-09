@@ -17,8 +17,9 @@ import {
   normalizeAppVersion,
 } from './utils';
 
-interface IClusterDetailAppListItemStatusProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterDetailAppListItemStatusProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   app: applicationv1alpha1.IApp;
   catalogNamespace?: string | null;
   canListAppCatalogEntries?: boolean;

@@ -49,8 +49,10 @@ const NoLabelsEditLabelTooltip = styled(EditLabelTooltip)`
   margin-left: ${({ theme }) => theme.global.edgeSize.medium};
 `;
 
-interface IClusterLabelsProps
-  extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+interface IClusterLabelsProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'onChange'
+> {
   onChange: (patch: ILabelChange) => void;
   labels?: IClusterLabelMap;
   isLoading?: boolean;

@@ -104,8 +104,9 @@ const StyledDescriptionWrapper = styled(Box)<{ full?: boolean }>`
   ${({ full }) => (full ? 'grid-column: 2 / fit-content' : undefined)}
 `;
 
-interface IWorkerNodesNodePoolItemProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IWorkerNodesNodePoolItemProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   maxNameLength?: number;
   nodePool?: NodePool;
   providerNodePool?: ProviderNodePool | null;
@@ -232,11 +233,9 @@ const WorkerNodesNodePoolItem: React.FC<
       }, 200);
 
       new FlashMessage(
-        (
-          <>
-            Node pool <code>{nodePool.metadata.name}</code> deleted successfully
-          </>
-        ),
+        <>
+          Node pool <code>{nodePool.metadata.name}</code> deleted successfully
+        </>,
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -246,11 +245,9 @@ const WorkerNodesNodePoolItem: React.FC<
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        (
-          <>
-            Could not delete node pool <code>{nodePool.metadata.name}</code>
-          </>
-        ),
+        <>
+          Could not delete node pool <code>{nodePool.metadata.name}</code>
+        </>,
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage

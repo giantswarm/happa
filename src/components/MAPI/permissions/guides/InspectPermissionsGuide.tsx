@@ -11,8 +11,10 @@ import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
 import { SubjectTypes } from '../types';
 
-interface IInspectPermissionsGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+interface IInspectPermissionsGuideProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof CLIGuide>,
+  'title'
+> {
   forOrganizations: boolean;
   subjectName?: string;
   subjectType?: SubjectTypes;
@@ -31,10 +33,10 @@ const InspectPermissionsGuide: React.FC<IInspectPermissionsGuideProps> = ({
     subjectType === SubjectTypes.User
       ? 'USER'
       : subjectType === SubjectTypes.Group
-      ? 'customer:GROUP'
-      : subjectType === SubjectTypes.ServiceAccount
-      ? `${Constants.SERVICE_ACCOUNTS_PREFIX}SERVICE_ACCOUNT`
-      : '';
+        ? 'customer:GROUP'
+        : subjectType === SubjectTypes.ServiceAccount
+          ? `${Constants.SERVICE_ACCOUNTS_PREFIX}SERVICE_ACCOUNT`
+          : '';
 
   const displayedSubjectName = subjectName || subjectNamePlaceholder;
 
@@ -42,10 +44,10 @@ const InspectPermissionsGuide: React.FC<IInspectPermissionsGuideProps> = ({
     subjectType === SubjectTypes.User
       ? 'for a user'
       : subjectType === SubjectTypes.Group
-      ? 'for a group'
-      : subjectType === SubjectTypes.ServiceAccount
-      ? 'for a service account'
-      : '';
+        ? 'for a group'
+        : subjectType === SubjectTypes.ServiceAccount
+          ? 'for a service account'
+          : '';
 
   const currentSubjectPossessive =
     subjectType === SubjectTypes.User ? (
@@ -69,8 +71,8 @@ const InspectPermissionsGuide: React.FC<IInspectPermissionsGuideProps> = ({
     subjectType === SubjectTypes.ServiceAccount
       ? ` \\\n  --as ${displayedSubjectName}`
       : subjectType === SubjectTypes.Group
-      ? ` \\\n  --as example@acme.org --as-group ${displayedSubjectName}`
-      : '';
+        ? ` \\\n  --as example@acme.org --as-group ${displayedSubjectName}`
+        : '';
 
   return (
     <CLIGuide

@@ -3,8 +3,9 @@ import * as React from 'react';
 
 import TextInput from '../TextInput';
 
-interface ISearchInputProps
-  extends React.ComponentPropsWithRef<typeof TextInput> {}
+interface ISearchInputProps extends React.ComponentPropsWithRef<
+  typeof TextInput
+> {}
 
 const SearchInput = React.forwardRef<HTMLInputElement, ISearchInputProps>(
   (props, ref) => {

@@ -4,8 +4,9 @@ import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
 
-interface IAccessControlRoleDetailLoadingPlaceholderProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface IAccessControlRoleDetailLoadingPlaceholderProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const AccessControlRoleDetailLoadingPlaceholder: React.FC<
   React.PropsWithChildren<IAccessControlRoleDetailLoadingPlaceholderProps>

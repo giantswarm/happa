@@ -14,11 +14,10 @@ import AppValueConfigurator, {
 import { IAppsPermissions } from './permissions/types';
 import { ensureConfigMapForApp, ensureSecretForApp } from './utils';
 
-interface IClusterDetailAppListWidgetConfigurationProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
-    'title'
-  > {
+interface IClusterDetailAppListWidgetConfigurationProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
+  'title'
+> {
   app?: applicationv1alpha1.IApp;
   appsPermissions?: IAppsPermissions;
   isClusterApp?: boolean;
@@ -52,27 +51,21 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
 
       if (typeof app.spec.userConfig?.configMap === 'undefined') {
         new FlashMessage(
-          (
-            <>
-              A ConfigMap containing user level config values for{' '}
-              <code>{app.metadata.name}</code> on{' '}
-              <code>{app.metadata.namespace}</code> has successfully been
-              created.
-            </>
-          ),
+          <>
+            A ConfigMap containing user level config values for{' '}
+            <code>{app.metadata.name}</code> on{' '}
+            <code>{app.metadata.namespace}</code> has successfully been created.
+          </>,
           messageType.SUCCESS,
           messageTTL.LONG
         );
       } else {
         new FlashMessage(
-          (
-            <>
-              The ConfigMap containing user level config values for{' '}
-              <code>{app.metadata.name}</code> on{' '}
-              <code>{app.metadata.namespace}</code> has successfully been
-              updated.
-            </>
-          ),
+          <>
+            The ConfigMap containing user level config values for{' '}
+            <code>{app.metadata.name}</code> on{' '}
+            <code>{app.metadata.namespace}</code> has successfully been updated.
+          </>,
           messageType.SUCCESS,
           messageTTL.LONG
         );
@@ -122,27 +115,23 @@ const ClusterDetailAppListWidgetConfiguration: React.FC<
 
       if (typeof app.spec.userConfig?.secret === 'undefined') {
         new FlashMessage(
-          (
-            <>
-              A Secret containing user level secret values for{' '}
-              <code>{app.metadata.name}</code> on{' '}
-              <code>{app.metadata.namespace!}</code> has successfully been
-              created.
-            </>
-          ),
+          <>
+            A Secret containing user level secret values for{' '}
+            <code>{app.metadata.name}</code> on{' '}
+            <code>{app.metadata.namespace!}</code> has successfully been
+            created.
+          </>,
           messageType.SUCCESS,
           messageTTL.LONG
         );
       } else {
         new FlashMessage(
-          (
-            <>
-              The Secret containing user level secret values for{' '}
-              <code>{app.metadata.name}</code> on{' '}
-              <code>{app.metadata.namespace!}</code> has successfully been
-              updated.
-            </>
-          ),
+          <>
+            The Secret containing user level secret values for{' '}
+            <code>{app.metadata.name}</code> on{' '}
+            <code>{app.metadata.namespace!}</code> has successfully been
+            updated.
+          </>,
           messageType.SUCCESS,
           messageTTL.LONG
         );

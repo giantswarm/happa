@@ -17,8 +17,9 @@ const StyledLink = styled.a`
   color: ${({ theme }) => normalizeColor('input-highlight', theme)};
 `;
 
-interface IGitOpsManagedNoteProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IGitOpsManagedNoteProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   displayNote?: boolean;
 }
 

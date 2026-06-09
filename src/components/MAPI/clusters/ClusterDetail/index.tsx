@@ -143,12 +143,10 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
 
       const errorMessage = extractErrorMessage(orgError);
       new FlashMessage(
-        (
-          <>
-            There was a problem loading cluster <code>{clusterId}</code> for{' '}
-            <code>{orgId}</code>
-          </>
-        ),
+        <>
+          There was a problem loading cluster <code>{clusterId}</code> for{' '}
+          <code>{orgId}</code>
+        </>,
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -191,11 +189,9 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
       )
     ) {
       new FlashMessage(
-        (
-          <>
-            Cluster <code>{clusterId}</code> not found
-          </>
-        ),
+        <>
+          Cluster <code>{clusterId}</code> not found
+        </>,
         messageType.ERROR,
         messageTTL.FOREVER,
         'Please make sure the Cluster ID is correct and that you have access to it.'
@@ -205,11 +201,9 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     } else if (clusterError) {
       const errorMessage = extractErrorMessage(clusterError);
       new FlashMessage(
-        (
-          <>
-            There was a problem loading cluster <code>{clusterId}</code>
-          </>
-        ),
+        <>
+          There was a problem loading cluster <code>{clusterId}</code>
+        </>,
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -224,12 +218,10 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   useEffect(() => {
     if (typeof cluster?.metadata.deletionTimestamp !== 'undefined') {
       new FlashMessage(
-        (
-          <>
-            Cluster <code>{cluster.metadata.name}</code> is currently being
-            deleted
-          </>
-        ),
+        <>
+          Cluster <code>{cluster.metadata.name}</code> is currently being
+          deleted
+        </>,
         messageType.INFO,
         messageTTL.MEDIUM
       );
@@ -282,12 +274,10 @@ const ClusterDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   useEffect(() => {
     if (cluster && isPreviewRelease) {
       new FlashMessage(
-        (
-          <>
-            Cluster <code>{cluster.metadata.name}</code> uses a preview release.
-            Cluster details are not available at this time.
-          </>
-        ),
+        <>
+          Cluster <code>{cluster.metadata.name}</code> uses a preview release.
+          Cluster details are not available at this time.
+        </>,
         messageType.INFO,
         messageTTL.LONG
       );

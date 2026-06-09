@@ -8,8 +8,10 @@ import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalI
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-interface IListAppCatalogsAndAppsGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {}
+interface IListAppCatalogsAndAppsGuideProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof CLIGuide>,
+  'title'
+> {}
 
 const ListAppCatalogsAndAppsGuide: React.FC<
   React.PropsWithChildren<IListAppCatalogsAndAppsGuideProps>

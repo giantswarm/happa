@@ -8,8 +8,10 @@ const StyledCardHeader = styled(CardHeader)`
   }
 `;
 
-interface IClusterDetailWidgetProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof Card>, 'title'> {
+interface IClusterDetailWidgetProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof Card>,
+  'title'
+> {
   title: React.ReactNode;
   inline?: boolean;
   contentProps?: React.ComponentPropsWithoutRef<typeof CardBody>;

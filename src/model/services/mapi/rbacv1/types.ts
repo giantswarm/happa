@@ -55,8 +55,7 @@ export interface IClusterRoleBinding {
 
 export const ClusterRoleBindingList = 'ClusterRoleBindingList';
 
-export interface IClusterRoleBindingList
-  extends metav1.IList<IClusterRoleBinding> {
+export interface IClusterRoleBindingList extends metav1.IList<IClusterRoleBinding> {
   apiVersion: 'rbac.authorization.k8s.io/v1';
   kind: typeof ClusterRoleBindingList;
 }

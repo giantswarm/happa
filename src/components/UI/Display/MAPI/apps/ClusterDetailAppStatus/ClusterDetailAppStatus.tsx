@@ -34,8 +34,9 @@ function formatStatus(status: string) {
   return status.replace(/-/g, ' ');
 }
 
-interface IClusterDetailAppStatusProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterDetailAppStatusProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   status: string;
 }
 

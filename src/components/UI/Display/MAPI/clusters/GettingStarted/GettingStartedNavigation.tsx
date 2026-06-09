@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 import Button from 'UI/Controls/Button';
 import GettingStartedBottomNav from 'UI/Display/Documentation/GettingStartedBottomNav';
 
-interface IGettingStartedNavigationProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface IGettingStartedNavigationProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const GettingStartedNavigation: React.FC<
   React.PropsWithChildren<IGettingStartedNavigationProps>

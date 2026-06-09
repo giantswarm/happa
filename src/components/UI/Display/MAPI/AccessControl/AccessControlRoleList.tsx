@@ -29,8 +29,9 @@ const RoleListWrapper = styled(Box)`
   ${VerticalScroll}
 `;
 
-interface IAccessControlRoleListProps
-  extends React.ComponentPropsWithoutRef<typeof Sidebar> {
+interface IAccessControlRoleListProps extends React.ComponentPropsWithoutRef<
+  typeof Sidebar
+> {
   activeRoleName: string;
   setActiveRoleName: (newName: string) => void;
   roles?: IAccessControlRoleItem[];

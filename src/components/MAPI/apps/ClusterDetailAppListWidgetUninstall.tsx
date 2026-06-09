@@ -17,11 +17,10 @@ import { useHttpClient } from 'utils/hooks/useHttpClient';
 import { IAppsPermissions } from './permissions/types';
 import { deleteAppWithName } from './utils';
 
-interface IClusterDetailAppListWidgetUninstallProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
-    'title'
-  > {
+interface IClusterDetailAppListWidgetUninstallProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
+  'title'
+> {
   app?: applicationv1alpha1.IApp;
   appsPermissions?: IAppsPermissions;
   isClusterApp?: boolean;
@@ -76,12 +75,10 @@ const ClusterDetailAppListWidgetUninstall: React.FC<
       if (onAppUninstalled) onAppUninstalled();
 
       new FlashMessage(
-        (
-          <>
-            App <code>{app.metadata.name}</code> will be uninstalled from
-            cluster <code>{app.metadata.namespace}</code>.
-          </>
-        ),
+        <>
+          App <code>{app.metadata.name}</code> will be uninstalled from cluster{' '}
+          <code>{app.metadata.namespace}</code>.
+        </>,
         messageType.SUCCESS,
         messageTTL.SHORT
       );

@@ -12,8 +12,9 @@ const StyledTab = styled(Tab)`
   }
 `;
 
-interface IGettingStartedPlatformTabsProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IGettingStartedPlatformTabsProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   linuxContent?: React.ReactNode;
   macOSContent?: React.ReactNode;
   windowsContent?: React.ReactNode;

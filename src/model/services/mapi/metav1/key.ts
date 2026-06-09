@@ -17,7 +17,7 @@ export function isStatus(obj: unknown): obj is IK8sStatus {
  * @param reason
  */
 export function isStatusError<
-  T extends K8sStatusErrorReasons = K8sStatusErrorReasons.Unknown
+  T extends K8sStatusErrorReasons = K8sStatusErrorReasons.Unknown,
 >(obj: unknown, reason: T): obj is IK8sStatusError<T> {
   if (!isStatus(obj)) return false;
 

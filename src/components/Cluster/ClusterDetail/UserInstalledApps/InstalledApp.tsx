@@ -24,8 +24,9 @@ const AppIcon = styled.img`
   height: 36px;
 `;
 
-interface IInstalledAppProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IInstalledAppProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   name: string;
   version: string;
   onIconError: React.ReactEventHandler<HTMLImageElement>;

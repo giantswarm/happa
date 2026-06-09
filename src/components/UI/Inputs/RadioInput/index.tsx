@@ -19,8 +19,9 @@ const StyledFormField = styled(FormField)`
   }
 `;
 
-interface IRadioInputProps
-  extends React.ComponentPropsWithoutRef<typeof Input> {
+interface IRadioInputProps extends React.ComponentPropsWithoutRef<
+  typeof Input
+> {
   /**
    * The description text displayed on the side of the check box.
    */

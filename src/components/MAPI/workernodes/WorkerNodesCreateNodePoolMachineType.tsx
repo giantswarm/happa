@@ -16,7 +16,8 @@ import {
 } from './patches';
 
 interface IWorkerNodesCreateNodePoolMachineTypeProps
-  extends INodePoolPropertyProps,
+  extends
+    INodePoolPropertyProps,
     Omit<
       React.ComponentPropsWithoutRef<typeof AddNodePoolMachineType>,
       'onChange' | 'id'

@@ -16,8 +16,9 @@ const Label = styled(Text)`
   text-transform: uppercase;
 `;
 
-interface IClusterDetailCounterProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterDetailCounterProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   label: string;
   value?: number;
   pluralize?: boolean;

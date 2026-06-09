@@ -349,8 +349,7 @@ export interface IMachineDeployment {
 
 export const MachineDeploymentList = 'MachineDeploymentList';
 
-export interface IMachineDeploymentList
-  extends metav1.IList<IMachineDeployment> {
+export interface IMachineDeploymentList extends metav1.IList<IMachineDeployment> {
   apiVersion: typeof ApiVersion;
   kind: typeof MachineDeploymentList;
 }
@@ -1860,8 +1859,7 @@ export interface IKubeadmControlPlane {
 
 export const KubeadmControlPlaneList = 'KubeadmControlPlaneList';
 
-export interface IKubeadmControlPlaneList
-  extends metav1.IList<IKubeadmControlPlane> {
+export interface IKubeadmControlPlaneList extends metav1.IList<IKubeadmControlPlane> {
   apiVersion: 'controlplane.cluster.x-k8s.io/v1beta1';
   kind: typeof KubeadmControlPlaneList;
 }

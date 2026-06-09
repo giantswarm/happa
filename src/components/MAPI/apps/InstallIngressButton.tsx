@@ -47,8 +47,7 @@ const StyledLink = styled(Link)`
   text-decoration: underline;
 `;
 
-interface IInstallIngressButtonProps
-  extends React.ComponentPropsWithoutRef<'div'> {
+interface IInstallIngressButtonProps extends React.ComponentPropsWithoutRef<'div'> {
   clusterID: string;
   appsNamespace: string;
   isClusterApp: boolean;

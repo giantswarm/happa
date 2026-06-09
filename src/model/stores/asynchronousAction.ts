@@ -2,8 +2,11 @@ import { IState } from 'model/stores/state';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-export interface IAsynchronousDispatch<S>
-  extends ThunkDispatch<S, void, AnyAction> {
+export interface IAsynchronousDispatch<S> extends ThunkDispatch<
+  S,
+  void,
+  AnyAction
+> {
   <R>(action: IAsynchronousAction<S, R>): Promise<R>;
 }
 

@@ -4,8 +4,9 @@ import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
 
-interface IOrganizationDetailStatisticPlaceholderProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface IOrganizationDetailStatisticPlaceholderProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const OrganizationDetailStatisticPlaceholder: React.FC<
   React.PropsWithChildren<IOrganizationDetailStatisticPlaceholderProps>
