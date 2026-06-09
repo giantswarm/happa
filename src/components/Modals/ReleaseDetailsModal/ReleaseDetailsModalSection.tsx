@@ -5,8 +5,7 @@ const Wrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacingPx * 9}px;
 `;
 
-interface IReleaseDetailsModalSectionProps
-  extends React.ComponentPropsWithoutRef<'div'> {
+interface IReleaseDetailsModalSectionProps extends React.ComponentPropsWithoutRef<'div'> {
   title?: string;
 }
 

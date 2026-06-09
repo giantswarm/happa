@@ -22,7 +22,8 @@ import CreateClusterReleaseSelector, {
 import { IClusterPropertyProps, withClusterReleaseVersion } from './patches';
 
 interface ICreateClusterReleaseProps
-  extends IClusterPropertyProps,
+  extends
+    IClusterPropertyProps,
     Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange' | 'id'> {
   orgNamespace: string;
 }
@@ -72,7 +73,7 @@ const CreateClusterRelease: React.FC<
 
         const k8sVersion = releasev1alpha1.getK8sVersion(curr);
         const k8sVersionEOLDate = k8sVersion
-          ? getK8sVersionEOLDate(k8sVersion) ?? undefined
+          ? (getK8sVersionEOLDate(k8sVersion) ?? undefined)
           : undefined;
 
         acc[normalizedVersion] = {

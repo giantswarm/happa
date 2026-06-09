@@ -12,11 +12,10 @@ import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterD
 import OptionalValue from 'UI/Display/OptionalValue/OptionalValue';
 import RoutePath from 'utils/routePath';
 
-interface IClusterDetailWidgetKubernetesAPIProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-    'title'
-  > {
+interface IClusterDetailWidgetKubernetesAPIProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+  'title'
+> {
   cluster?: capiv1beta1.ICluster;
 }
 

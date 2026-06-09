@@ -172,20 +172,20 @@ const ClusterList: React.FC<React.PropsWithChildren<IClusterListProps>> = (
   const key = isLoading
     ? `${orgID}-is-loading`
     : hasNoClusters
-    ? `${orgID}-no-clusters`
-    : orgID;
+      ? `${orgID}-no-clusters`
+      : orgID;
 
   const timeout = {
     enter: isLoading
       ? PRELOADER_TIMEOUT + PRELOADER_DELAY
       : hasNoClusters
-      ? EMPTY_PLACEHOLDER_TIMEOUT
-      : itemsEnterTimeout,
+        ? EMPTY_PLACEHOLDER_TIMEOUT
+        : itemsEnterTimeout,
     exit: isLoading
       ? 0
       : hasNoClusters
-      ? EMPTY_PLACEHOLDER_TIMEOUT
-      : ITEM_TIMEOUT,
+        ? EMPTY_PLACEHOLDER_TIMEOUT
+        : ITEM_TIMEOUT,
   };
 
   const nameLengths = clustersWithProviderClusters?.map(

@@ -433,22 +433,18 @@ export function clusterDelete(
       });
 
       new FlashMessage(
-        (
-          <>
-            Cluster <code>{cluster.id}</code> will be deleted
-          </>
-        ),
+        <>
+          Cluster <code>{cluster.id}</code> will be deleted
+        </>,
         messageType.INFO,
         messageTTL.SHORT
       );
     } catch (err) {
       new FlashMessage(
-        (
-          <>
-            An error occurred when trying to delete cluster{' '}
-            <code>{cluster.id}</code>.
-          </>
-        ),
+        <>
+          An error occurred when trying to delete cluster{' '}
+          <code>{cluster.id}</code>.
+        </>,
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again later or contact support: support@giantswarm.io'

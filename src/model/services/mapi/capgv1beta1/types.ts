@@ -712,8 +712,7 @@ export interface IGCPMachineTemplate {
 
 export const GCPMachineTemplateList = 'GCPMachineTemplateList';
 
-export interface IGCPMachineTemplateList
-  extends metav1.IList<IGCPMachineTemplate> {
+export interface IGCPMachineTemplateList extends metav1.IList<IGCPMachineTemplate> {
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof GCPMachineTemplateList;
 }

@@ -10,8 +10,7 @@ const BetaLabel = styled.span`
   font-size: 0.8rem;
 `;
 
-interface IReleaseDetailsModalUpgradeOptionsBetaLabelProps
-  extends React.ComponentPropsWithoutRef<'span'> {}
+interface IReleaseDetailsModalUpgradeOptionsBetaLabelProps extends React.ComponentPropsWithoutRef<'span'> {}
 
 const ReleaseDetailsModalUpgradeOptionsBetaLabel: React.FC<
   React.PropsWithChildren<IReleaseDetailsModalUpgradeOptionsBetaLabelProps>

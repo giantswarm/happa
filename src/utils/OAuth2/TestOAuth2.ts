@@ -79,14 +79,14 @@ class TestOAuth2 implements IOAuth2Provider {
 
   public addEventListener<
     T extends OAuth2Events,
-    U extends IOAuth2EventCallbacks[T]
+    U extends IOAuth2EventCallbacks[T],
   >(event: T, cb: U) {
     this.callbacks[event].push(cb);
   }
 
   public removeEventListener<
     T extends OAuth2Events,
-    U extends IOAuth2EventCallbacks[T]
+    U extends IOAuth2EventCallbacks[T],
   >(event: T, fn: U) {
     this.callbacks[event].filter((cb) => !Object.is(cb, fn));
   }

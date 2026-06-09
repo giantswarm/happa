@@ -71,11 +71,10 @@ const StyledLink = styled.a`
   }
 `;
 
-interface IClusterDetailWidgetReleaseProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-    'title'
-  > {
+interface IClusterDetailWidgetReleaseProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+  'title'
+> {
   cluster?: capiv1beta1.ICluster;
   providerCluster?: ProviderCluster;
   canUpdateCluster?: boolean;
@@ -338,12 +337,10 @@ const ClusterDetailWidgetRelease: React.FC<
         'Cluster upgrade initiated.',
         messageType.INFO,
         messageTTL.MEDIUM,
-        (
-          <>
-            Keep an eye on <code>kubectl get nodes</code> to follow the upgrade
-            progress.
-          </>
-        )
+        <>
+          Keep an eye on <code>kubectl get nodes</code> to follow the upgrade
+          progress.
+        </>
       );
 
       handleUpgradeModalClose();

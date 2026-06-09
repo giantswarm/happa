@@ -11,8 +11,8 @@ export function getValueSchema(
         ? schema.items[key]
         : schema.items
       : schema.properties
-      ? schema.properties[key]
-      : undefined;
+        ? schema.properties[key]
+        : undefined;
 
   if (
     typeof valueSchema !== 'undefined' &&

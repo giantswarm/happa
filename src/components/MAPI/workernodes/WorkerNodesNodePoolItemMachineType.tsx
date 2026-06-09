@@ -42,8 +42,9 @@ function formatMachineTypeLabel(providerNodePool?: ProviderNodePool) {
   }
 }
 
-interface IWorkerNodesNodePoolItemMachineTypeProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IWorkerNodesNodePoolItemMachineTypeProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   nodePool?: NodePool;
   providerNodePool?: ProviderNodePool;
 }

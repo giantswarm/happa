@@ -30,8 +30,9 @@ export enum ClusterDetailDeleteActionNameVariant {
   Name = 'name',
 }
 
-interface IClusterDetailDeleteActionProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterDetailDeleteActionProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   name: string;
   description: string;
   creationDate: string;

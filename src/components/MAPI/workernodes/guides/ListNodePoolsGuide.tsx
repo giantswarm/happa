@@ -21,8 +21,10 @@ function getProviderNodePoolResourceName(
       return 'MachinePool';
   }
 }
-interface IListNodePoolsGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+interface IListNodePoolsGuideProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof CLIGuide>,
+  'title'
+> {
   clusterName: string;
   clusterNamespace: string;
   provider: PropertiesOf<typeof Providers>;
@@ -73,12 +75,12 @@ const ListNodePoolsGuide: React.FC<
                 --selector cluster.x-k8s.io/cluster-name=${clusterName} \\
                 --namespace ${clusterNamespace}`
               : provider === Providers.CAPZ || provider === Providers.GCP
-              ? `
+                ? `
               kubectl --context ${context} \\
                 get machinedeployments.cluster.x-k8s.io \\
                 --selector cluster.x-k8s.io/cluster-name=${clusterName},cluster.x-k8s.io/role!=bastion \\
                 --namespace ${clusterNamespace}`
-              : `
+                : `
               kubectl gs --context ${context} \\
                 get nodepools \\
                 --cluster-name ${clusterName} \\

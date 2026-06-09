@@ -20,8 +20,10 @@ const customTheme: ThemeType = {
   },
 };
 
-interface ICLIGuidesListProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof Accordion>, 'title'> {
+interface ICLIGuidesListProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof Accordion>,
+  'title'
+> {
   title?: string;
 }
 

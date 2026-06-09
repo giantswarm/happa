@@ -16,7 +16,8 @@ import {
 } from './patches';
 
 interface ICreateClusterControlPlaneNodeAZsProps
-  extends IClusterPropertyProps,
+  extends
+    IClusterPropertyProps,
     Omit<
       React.ComponentPropsWithoutRef<typeof InputGroup>,
       'onChange' | 'id'

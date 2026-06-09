@@ -53,8 +53,10 @@ function getProviderCRDLinks(provider: PropertiesOf<typeof Providers>) {
   }
 }
 
-interface IInspectClusterGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+interface IInspectClusterGuideProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof CLIGuide>,
+  'title'
+> {
   provider: PropertiesOf<typeof Providers>;
   clusterName: string;
   clusterNamespace: string;

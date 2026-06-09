@@ -19,8 +19,9 @@ export enum ClusterListItemMainInfoVariant {
   ClusterApp = 'ClusterApp',
 }
 
-interface IClusterListItemMainInfoProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterListItemMainInfoProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   variant: ClusterListItemMainInfoVariant;
   releaseVersion?: string;
   isPreviewRelease?: boolean;

@@ -109,8 +109,10 @@ const IncrementDecrementButton = styled.div`
   }
 `;
 
-interface INumberPickerProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof TextInput>, 'onChange'> {
+interface INumberPickerProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof TextInput>,
+  'onChange'
+> {
   value?: number;
   min?: number;
   max?: number;

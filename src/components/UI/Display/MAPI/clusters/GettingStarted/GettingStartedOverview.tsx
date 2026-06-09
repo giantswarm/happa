@@ -20,7 +20,9 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledCard = styled(Card)`
-  transition: opacity 0.1s ease-out, box-shadow 0.1s ease-in-out;
+  transition:
+    opacity 0.1s ease-out,
+    box-shadow 0.1s ease-in-out;
 
   :hover,
   :focus {

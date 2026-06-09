@@ -43,8 +43,9 @@ function getPermissionsWarning(
   }
 }
 
-interface IAccessControlRoleDetailProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IAccessControlRoleDetailProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   namespace: string;
   permissions: IAccessControlPermissions;
   onAdd: (

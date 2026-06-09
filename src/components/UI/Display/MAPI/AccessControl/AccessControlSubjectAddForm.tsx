@@ -31,8 +31,9 @@ const StyledLoadingIndicator = styled(LoadingIndicator)`
   }
 `;
 
-interface IAccessControlSubjectAddFormProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IAccessControlSubjectAddFormProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   onAdd: (newValue: string[]) => void;
   onToggleAdding: () => void;
   onClearError: () => void;

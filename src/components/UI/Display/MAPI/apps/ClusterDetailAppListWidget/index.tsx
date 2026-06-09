@@ -8,8 +8,9 @@ const Title = styled(Text)`
   text-transform: uppercase;
 `;
 
-interface IClusterDetailAppListWidgetProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterDetailAppListWidgetProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   title: string;
   titleColor?: string;
   contentProps?: React.ComponentPropsWithoutRef<typeof Box>;

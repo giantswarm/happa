@@ -13,11 +13,10 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 import { isReadOnlyCluster } from '../utils';
 import { updateClusterLabels } from './utils';
 
-interface IClusterDetailWidgetLabelsProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-    'title'
-  > {
+interface IClusterDetailWidgetLabelsProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+  'title'
+> {
   cluster?: capiv1beta1.ICluster;
   canUpdateCluster?: boolean;
 }

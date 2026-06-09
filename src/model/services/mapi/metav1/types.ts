@@ -199,7 +199,7 @@ export interface IK8sStatus {
 
 export interface IK8sStatusError<
   R extends K8sStatusErrorReasons,
-  C extends number = IK8sStatusErrorCodeMapping[R]
+  C extends number = IK8sStatusErrorCodeMapping[R],
 > extends IK8sStatus {
   status: K8sStatuses.Failure;
   reason: R;

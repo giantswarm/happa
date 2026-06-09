@@ -40,9 +40,7 @@ interface IDispatchProps extends DispatchProp {
 }
 
 interface ILoginProps
-  extends IStateProps,
-    IDispatchProps,
-    IPropsWithAuthProvider {}
+  extends IStateProps, IDispatchProps, IPropsWithAuthProvider {}
 
 interface ILoginState {
   mapiAuthenticating: boolean;

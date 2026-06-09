@@ -60,8 +60,8 @@ const ClusterDetailApps: React.FC<
     typeof isClusterApp === 'undefined'
       ? undefined
       : isClusterApp
-      ? organizations[orgId]?.namespace
-      : clusterId;
+        ? organizations[orgId]?.namespace
+        : clusterId;
 
   const clientFactory = useHttpClientFactory();
   const auth = useAuthProvider();
@@ -76,15 +76,15 @@ const ClusterDetailApps: React.FC<
     typeof isClusterApp === 'undefined'
       ? undefined
       : isClusterApp
-      ? {
-          namespace: appsNamespace,
-          labelSelector: {
-            matchingLabels: {
-              [applicationv1alpha1.labelCluster]: clusterId,
+        ? {
+            namespace: appsNamespace,
+            labelSelector: {
+              matchingLabels: {
+                [applicationv1alpha1.labelCluster]: clusterId,
+              },
             },
-          },
-        }
-      : { namespace: appsNamespace };
+          }
+        : { namespace: appsNamespace };
 
   const appListKey =
     appsPermissions.canList && typeof appListGetOptions !== 'undefined'

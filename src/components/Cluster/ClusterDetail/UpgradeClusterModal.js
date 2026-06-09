@@ -257,12 +257,10 @@ class UpgradeClusterModal extends React.Component {
               'Cluster upgrade initiated.',
               messageType.INFO,
               messageTTL.MEDIUM,
-              (
-                <>
-                  Keep an eye on <code>kubectl get nodes</code> to follow the
-                  upgrade progress.
-                </>
-              )
+              <>
+                Keep an eye on <code>kubectl get nodes</code> to follow the
+                upgrade progress.
+              </>
             );
 
             this.close();

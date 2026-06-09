@@ -1,8 +1,9 @@
 import { Box, Text } from 'grommet';
 import * as React from 'react';
 
-interface IAccessControlRoleTypeProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IAccessControlRoleTypeProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   namespace?: string;
 }
 

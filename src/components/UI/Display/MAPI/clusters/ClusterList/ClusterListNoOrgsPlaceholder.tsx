@@ -3,8 +3,9 @@ import { OrganizationsRoutes } from 'model/constants/routes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-interface IClusterListNoOrgsPlaceholderProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface IClusterListNoOrgsPlaceholderProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const ClusterListNoOrgsPlaceholder: React.FC<
   React.PropsWithChildren<IClusterListNoOrgsPlaceholderProps>

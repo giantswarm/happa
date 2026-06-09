@@ -4,11 +4,10 @@ import RadioInput from 'UI/Inputs/RadioInput';
 
 import { AvailabilityZoneSelection } from './AZSelectionUtils';
 
-interface IAZSelectionCheckboxProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof RadioInput>,
-    'onChange' | 'value' | 'id' | 'type' | 'name'
-  > {
+interface IAZSelectionCheckboxProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof RadioInput>,
+  'onChange' | 'value' | 'id' | 'type' | 'name'
+> {
   onChange: (newAZSelection: AvailabilityZoneSelection) => void;
   type?: AvailabilityZoneSelection;
   value?: AvailabilityZoneSelection;

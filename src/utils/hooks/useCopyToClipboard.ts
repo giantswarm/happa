@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
  */
 function useCopyToClipboard(): [
   hasContentInClipboard: boolean,
-  setClipboardContent: (text: string | null) => void
+  setClipboardContent: (text: string | null) => void,
 ] {
   const [copiedText, copyToClipboard] = useState<string | null>(null);
 

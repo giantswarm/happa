@@ -193,10 +193,10 @@ const OrganizationDetailPage: React.FC<
   const { oldestReleaseK8sVersion, newestReleaseK8sVersion } =
     releasesSummary ?? {};
   const oldestReleaseK8sVersionEOLDate = oldestReleaseK8sVersion
-    ? getK8sVersionEOLDate(oldestReleaseK8sVersion) ?? undefined
+    ? (getK8sVersionEOLDate(oldestReleaseK8sVersion) ?? undefined)
     : undefined;
   const newestReleaseK8sVersionEOLDate = newestReleaseK8sVersion
-    ? getK8sVersionEOLDate(newestReleaseK8sVersion) ?? undefined
+    ? (getK8sVersionEOLDate(newestReleaseK8sVersion) ?? undefined)
     : undefined;
 
   return (

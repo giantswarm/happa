@@ -15,8 +15,7 @@ const Version = styled.span`
   }
 `;
 
-interface IReleaseDetailsModalUpgradeOptionsVersionProps
-  extends React.ComponentPropsWithoutRef<'span'> {
+interface IReleaseDetailsModalUpgradeOptionsVersionProps extends React.ComponentPropsWithoutRef<'span'> {
   version: string;
   isBeta: boolean;
   unauthorized?: boolean;

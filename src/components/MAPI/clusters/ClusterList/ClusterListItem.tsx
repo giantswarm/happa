@@ -59,8 +59,9 @@ const StyledLink = styled(Link)`
   }
 `;
 
-interface IClusterListItemProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterListItemProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   cluster?: capiv1beta1.ICluster;
   providerCluster?: ProviderCluster | null;
   releases?: releasev1alpha1.IRelease[];

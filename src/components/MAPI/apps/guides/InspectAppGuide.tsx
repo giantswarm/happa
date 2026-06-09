@@ -8,8 +8,10 @@ import CLIGuideAdditionalInfo from 'UI/Display/MAPI/CLIGuide/CLIGuideAdditionalI
 import CLIGuideStep from 'UI/Display/MAPI/CLIGuide/CLIGuideStep';
 import CLIGuideStepList from 'UI/Display/MAPI/CLIGuide/CLIGuideStepList';
 
-interface IInspectAppGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof CLIGuide>, 'title'> {
+interface IInspectAppGuideProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof CLIGuide>,
+  'title'
+> {
   appName: string;
   catalogName: string;
   catalogNamespace?: string;
@@ -50,11 +52,11 @@ const InspectAppGuide: React.FC<
           kubectl --context ${context} \\
             get appcatalogentries \\
             --selector application.giantswarm.io/catalog=${catalogName},app.kubernetes.io/name=${appName}${
-            catalogNamespace
-              ? ` \\
+              catalogNamespace
+                ? ` \\
             --namespace ${catalogNamespace}`
-              : ''
-          }
+                : ''
+            }
           `}
         >
           <Text>
@@ -74,11 +76,11 @@ const InspectAppGuide: React.FC<
           kubectl --context ${context} \\
             describe appcatalogentries \\
             ${catalogName}-${appName}-${selectedVersion}${
-            catalogNamespace
-              ? ` \\
+              catalogNamespace
+                ? ` \\
             --namespace ${catalogNamespace}`
-              : ''
-          }
+                : ''
+            }
           `}
         >
           <Text>

@@ -1,8 +1,9 @@
 import { Box } from 'grommet';
 import React from 'react';
 
-interface ICLIGuideStepListProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface ICLIGuideStepListProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const CLIGuideStepList: React.FC<
   React.PropsWithChildren<ICLIGuideStepListProps>

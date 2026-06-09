@@ -25,8 +25,7 @@ interface ISupportedUpgradeRelease {
   isBeta: boolean;
 }
 
-interface IReleaseDetailsModalUpgradeOptionsProps
-  extends React.ComponentPropsWithoutRef<'div'> {
+interface IReleaseDetailsModalUpgradeOptionsProps extends React.ComponentPropsWithoutRef<'div'> {
   isAdmin: boolean;
   releases: IReleases;
   provider: PropertiesOf<typeof Providers>;

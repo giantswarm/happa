@@ -48,11 +48,10 @@ function getReleaseNotesURL(
   return `https://github.com/giantswarm/${clusterAppName}/releases/tag/v${clusterAppVersion}`;
 }
 
-interface IClusterDetailWidgetVersionsProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-    'title'
-  > {
+interface IClusterDetailWidgetVersionsProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+  'title'
+> {
   cluster?: capiv1beta1.ICluster;
   providerCluster?: ProviderCluster;
 }

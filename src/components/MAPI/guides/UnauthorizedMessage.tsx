@@ -1,8 +1,9 @@
 import { Box } from 'grommet';
 import React from 'react';
 
-interface IUnauthorizedMessageProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface IUnauthorizedMessageProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const UnauthorizedMessage: React.FC<
   React.PropsWithChildren<IUnauthorizedMessageProps>

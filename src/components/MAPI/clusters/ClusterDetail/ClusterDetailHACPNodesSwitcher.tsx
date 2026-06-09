@@ -10,8 +10,9 @@ import { useHttpClientFactory } from 'utils/hooks/useHttpClientFactory';
 
 import { switchClusterToHACPNodes } from './utils';
 
-interface IClusterDetailHACPNodesSwitcherProps
-  extends React.ComponentPropsWithoutRef<typeof Collapsible> {
+interface IClusterDetailHACPNodesSwitcherProps extends React.ComponentPropsWithoutRef<
+  typeof Collapsible
+> {
   cluster?: Cluster;
   onSubmit?: () => void;
   onCancel?: () => void;

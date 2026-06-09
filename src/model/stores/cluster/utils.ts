@@ -15,12 +15,15 @@ import { compare } from 'utils/semver';
 export const clustersCountGroupedByOwner = (
   clusters: Cluster[]
 ): Record<string, number> => {
-  return clusters.reduce((r, a) => {
-    r[a.owner] ??= 0;
-    r[a.owner]++;
+  return clusters.reduce(
+    (r, a) => {
+      r[a.owner] ??= 0;
+      r[a.owner]++;
 
-    return r;
-  }, {} as Record<string, number>);
+      return r;
+    },
+    {} as Record<string, number>
+  );
 };
 
 /**

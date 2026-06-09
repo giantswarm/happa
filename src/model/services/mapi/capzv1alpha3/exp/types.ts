@@ -35,14 +35,18 @@ export interface IAzureMachinePoolStatus {
 
 export const AzureMachinePool = 'AzureMachinePool';
 
-export interface IAzureMachinePool
-  extends Omit<capzv1beta1.IAzureMachinePool, 'apiVersion'> {
+export interface IAzureMachinePool extends Omit<
+  capzv1beta1.IAzureMachinePool,
+  'apiVersion'
+> {
   apiVersion: typeof ApiVersion;
 }
 export const AzureMachinePoolList = 'AzureMachinePoolList';
 
-export interface IAzureMachinePoolList
-  extends Omit<capzv1beta1.IAzureMachinePoolList, 'apiVersion' | 'items'> {
+export interface IAzureMachinePoolList extends Omit<
+  capzv1beta1.IAzureMachinePoolList,
+  'apiVersion' | 'items'
+> {
   apiVersion: typeof ApiVersion;
   items: IAzureMachinePool[];
 }

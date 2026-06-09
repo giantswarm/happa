@@ -8,7 +8,8 @@ import { toTitleCase } from 'utils/helpers';
 import { IClusterPropertyProps, withClusterServicePriority } from './patches';
 
 interface ICreateClusterServicePriorityProps
-  extends IClusterPropertyProps,
+  extends
+    IClusterPropertyProps,
     Omit<
       React.ComponentPropsWithoutRef<typeof InputGroup>,
       'onChange' | 'id'

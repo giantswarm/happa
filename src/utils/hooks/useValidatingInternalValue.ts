@@ -16,7 +16,7 @@ function useValidatingInternalValue(
   validationFunction: IValidationFunction
 ): [
   reducerState: IReducerState,
-  setInternalValue: (newInternalValue: string) => void
+  setInternalValue: (newInternalValue: string) => void,
 ] {
   const initialReducerValue = {
     internalValue: initialValue,

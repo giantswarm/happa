@@ -22,8 +22,10 @@ const Content = styled(Box)`
 
 export const BODY_CLASS_MODIFIER = 'modal-open';
 
-interface IModalProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof Layer>, 'title'> {
+interface IModalProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof Layer>,
+  'title'
+> {
   title: React.ReactNode;
   onClose: () => void;
   visible?: boolean;

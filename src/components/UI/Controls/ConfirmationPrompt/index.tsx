@@ -3,8 +3,10 @@ import React, { useEffect, useRef } from 'react';
 
 import Button from '../Button';
 
-interface IConfirmationPromptProps
-  extends Omit<React.ComponentPropsWithRef<typeof Collapsible>, 'title'> {
+interface IConfirmationPromptProps extends Omit<
+  React.ComponentPropsWithRef<typeof Collapsible>,
+  'title'
+> {
   title?: React.ReactNode;
   confirmButton?: React.ReactNode;
   cancelButton?: React.ReactNode;

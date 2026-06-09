@@ -15,8 +15,7 @@ interface ICLIGuideAdditionalInfoLink {
   external?: boolean;
 }
 
-interface ICLIGuideAdditionalInfoProps
-  extends React.ComponentPropsWithoutRef<'div'> {
+interface ICLIGuideAdditionalInfoProps extends React.ComponentPropsWithoutRef<'div'> {
   links?: ICLIGuideAdditionalInfoLink[];
 }
 

@@ -116,8 +116,8 @@ const AvailabilityZonesLabel: React.FC<IAvailabilityZonesLabelProps> = ({
     onToggleChecked && isMaxReached && !isChecked && !isRadioButtons
       ? 'pointer-disabled'
       : onToggleChecked
-      ? 'pointer'
-      : '';
+        ? 'pointer'
+        : '';
 
   const isMaxReachedClass =
     isMaxReached && !isRadioButtons ? 'is-max-reached' : '';

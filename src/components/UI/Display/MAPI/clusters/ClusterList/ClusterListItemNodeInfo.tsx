@@ -43,8 +43,9 @@ const StyledDot = styled(Dot)`
   padding: 0;
 `;
 
-interface IClusterListItemNodeInfoProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterListItemNodeInfoProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   workerNodePoolsCount?: number;
   workerNodesCPU?: number;
   workerNodesCount?: number;

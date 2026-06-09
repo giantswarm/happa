@@ -4,8 +4,10 @@ import TextInput from 'UI/Inputs/TextInput';
 
 import { ClusterDetailDeleteActionNameVariant } from './ClusterDetailDeleteAction';
 
-interface IClusterDetailDeleteActionClusterNameProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof Box>, 'onChange'> {
+interface IClusterDetailDeleteActionClusterNameProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof Box>,
+  'onChange'
+> {
   variant: ClusterDetailDeleteActionNameVariant;
   value: string;
   onChange: (newValue: string) => void;

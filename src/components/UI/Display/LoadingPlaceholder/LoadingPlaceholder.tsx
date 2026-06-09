@@ -4,8 +4,10 @@ import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
 
-interface ILoadingPlaceholderProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof Box>, 'height' | 'width'> {
+interface ILoadingPlaceholderProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof Box>,
+  'height' | 'width'
+> {
   height?: number;
   width?: number;
 }

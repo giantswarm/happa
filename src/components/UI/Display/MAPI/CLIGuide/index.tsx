@@ -49,8 +49,10 @@ function formatTitle(title: string, inList: boolean): string {
     : `${title} via the Management API`;
 }
 
-interface ICLIGuideProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof Accordion>, 'title'> {
+interface ICLIGuideProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof Accordion>,
+  'title'
+> {
   title: React.ReactNode;
   footer?: React.ReactNode;
   inList?: boolean;

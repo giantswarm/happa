@@ -8,8 +8,9 @@ import {
   IClusterUpdateSchedule,
 } from '../utils';
 
-interface IClusterStatusProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterStatusProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   status: ClusterStatusType;
   clusterCreationDuration?: string;
   clusterUpdateSchedule?: IClusterUpdateSchedule;

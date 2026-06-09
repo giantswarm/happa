@@ -220,8 +220,7 @@ export interface IAWSMachineDeployment {
 
 export const AWSMachineDeploymentList = 'AWSMachineDeploymentList';
 
-export interface IAWSMachineDeploymentList
-  extends metav1.IList<IAWSMachineDeployment> {
+export interface IAWSMachineDeploymentList extends metav1.IList<IAWSMachineDeployment> {
   apiVersion: typeof ApiVersion;
   kind: typeof AWSMachineDeploymentList;
 }

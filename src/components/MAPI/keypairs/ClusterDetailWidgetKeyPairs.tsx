@@ -22,11 +22,10 @@ const StyledLink = styled.a`
   color: ${({ theme }) => normalizeColor('input-highlight', theme)};
 `;
 
-interface IClusterDetailWidgetKeyPairsProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-    'title'
-  > {}
+interface IClusterDetailWidgetKeyPairsProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+  'title'
+> {}
 
 const ClusterDetailWidgetKeyPairs: React.FC<
   React.PropsWithChildren<IClusterDetailWidgetKeyPairsProps>

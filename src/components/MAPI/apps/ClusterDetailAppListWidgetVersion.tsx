@@ -18,11 +18,10 @@ import {
   normalizeAppVersion,
 } from './utils';
 
-interface IClusterDetailAppListWidgetVersionProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
-    'title'
-  > {
+interface IClusterDetailAppListWidgetVersionProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
+  'title'
+> {
   app?: applicationv1alpha1.IApp;
   catalogNamespace?: string | null;
   canListAppCatalogEntries?: boolean;

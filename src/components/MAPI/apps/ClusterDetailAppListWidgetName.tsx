@@ -10,11 +10,10 @@ import RoutePath from 'utils/routePath';
 
 import { normalizeAppVersion } from './utils';
 
-interface IClusterDetailAppListWidgetNameProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
-    'title'
-  > {
+interface IClusterDetailAppListWidgetNameProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailAppListWidget>,
+  'title'
+> {
   app?: applicationv1alpha1.IApp;
   canListAppCatalogEntries?: boolean;
 }

@@ -12,8 +12,9 @@ import { IAppsPermissions } from './permissions/types';
 
 const LOADING_COMPONENTS = new Array(3).fill(0);
 
-interface IClusterDetailAppListProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterDetailAppListProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   apps: applicationv1alpha1.IApp[];
   appList?: applicationv1alpha1.IAppList;
   appsPermissions?: IAppsPermissions;

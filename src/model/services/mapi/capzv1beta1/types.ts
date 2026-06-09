@@ -1185,8 +1185,7 @@ export interface IAzureClusterIdentity {
 
 export const AzureClusterIdentityList = 'AzureClusterIdentityList';
 
-export interface IAzureClusterIdentityList
-  extends metav1.IList<IAzureClusterIdentity> {
+export interface IAzureClusterIdentityList extends metav1.IList<IAzureClusterIdentity> {
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof AzureClusterIdentityList;
 }
@@ -1808,8 +1807,7 @@ export interface IAzureMachineTemplate {
 
 export const AzureMachineTemplateList = 'AzureMachineTemplateList';
 
-export interface IAzureMachineTemplateList
-  extends metav1.IList<IAzureMachineTemplate> {
+export interface IAzureMachineTemplateList extends metav1.IList<IAzureMachineTemplate> {
   apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1';
   kind: typeof AzureMachineTemplateList;
 }

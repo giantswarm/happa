@@ -197,8 +197,9 @@ function getAzureOperatorVersion(
   );
 }
 
-interface IWorkerNodesCreateNodePoolProps
-  extends React.ComponentPropsWithoutRef<typeof Collapsible> {
+interface IWorkerNodesCreateNodePoolProps extends React.ComponentPropsWithoutRef<
+  typeof Collapsible
+> {
   cluster: Cluster;
   providerCluster: ProviderCluster;
   id: string;
@@ -299,12 +300,10 @@ const WorkerNodesCreateNodePool: React.FC<
       }, 200);
 
       new FlashMessage(
-        (
-          <>
-            Node pool <code>{state.nodePool.metadata.name}</code> created
-            successfully
-          </>
-        ),
+        <>
+          Node pool <code>{state.nodePool.metadata.name}</code> created
+          successfully
+        </>,
         messageType.SUCCESS,
         messageTTL.SHORT
       );
@@ -314,12 +313,10 @@ const WorkerNodesCreateNodePool: React.FC<
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        (
-          <>
-            Could not create node pool{' '}
-            <code>{state.nodePool.metadata.name}</code>: {errorMessage}
-          </>
-        ),
+        <>
+          Could not create node pool <code>{state.nodePool.metadata.name}</code>
+          : {errorMessage}
+        </>,
         messageType.ERROR,
         messageTTL.LONG,
         'Please try again or contact support: support@giantswarm.io'

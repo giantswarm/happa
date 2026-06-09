@@ -3,11 +3,10 @@ import React from 'react';
 import LoadingPlaceholder from 'UI/Display/LoadingPlaceholder/LoadingPlaceholder';
 import ClusterDetailWidget from 'UI/Display/MAPI/clusters/ClusterDetail/ClusterDetailWidget';
 
-interface IClusterDetailWidgetAppsLoaderProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-    'title'
-  > {}
+interface IClusterDetailWidgetAppsLoaderProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+  'title'
+> {}
 
 const ClusterDetailWidgetAppsLoader: React.FC<
   IClusterDetailWidgetAppsLoaderProps

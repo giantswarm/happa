@@ -8,8 +8,9 @@ const StyledContentLoader = styled(ContentLoader)`
   width: 100%;
 `;
 
-interface IAppListAppLoadingPlacholderProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface IAppListAppLoadingPlacholderProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const AppListAppLoadingPlacholder: React.FC<
   React.PropsWithChildren<IAppListAppLoadingPlacholderProps>

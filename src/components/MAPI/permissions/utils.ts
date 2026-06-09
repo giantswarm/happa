@@ -33,7 +33,7 @@ import {
 export function computePermissions(
   ruleReviews: readonly [
     namespace: string,
-    review: authorizationv1.ISelfSubjectRulesReview
+    review: authorizationv1.ISelfSubjectRulesReview,
   ][]
 ): IPermissionMap {
   const permissions: IPermissionMap = {};
@@ -276,7 +276,7 @@ export async function fetchPermissions(
   const reviewRequests = await Promise.allSettled(requests);
   const reviews: [
     namespace: string,
-    review: authorizationv1.ISelfSubjectRulesReview
+    review: authorizationv1.ISelfSubjectRulesReview,
   ][] = [];
   for (const reviewRequest of reviewRequests) {
     if (reviewRequest.status === 'fulfilled') {
@@ -386,7 +386,7 @@ export async function fetchPermissionsForSubject(
 
   const reviews: [
     namespace: string,
-    review: authorizationv1.ISelfSubjectRulesReview
+    review: authorizationv1.ISelfSubjectRulesReview,
   ][] = [];
 
   for (const namespace of namespaces) {
@@ -711,8 +711,8 @@ export function getStatusesForUseCases(
       useCase.scope.cluster === true
         ? [{ id: '', namespace: '' }]
         : useCase.scope.namespaces?.[0] === '*'
-        ? organizations
-        : useCase.scope.namespaces?.map((ns) => ({ id: '', namespace: ns }));
+          ? organizations
+          : useCase.scope.namespaces?.map((ns) => ({ id: '', namespace: ns }));
 
     orgs?.forEach((org) => {
       const permissionsValues = useCasePermissions.map((p) => {

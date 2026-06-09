@@ -90,8 +90,8 @@ const GettingStartedInstallIngress: React.FC<
     typeof isClusterApp === 'undefined'
       ? undefined
       : isClusterApp
-      ? namespace
-      : clusterId;
+        ? namespace
+        : clusterId;
 
   const hasError =
     typeof orgError !== 'undefined' || typeof clusterError !== 'undefined';

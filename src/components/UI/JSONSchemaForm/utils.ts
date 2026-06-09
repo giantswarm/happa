@@ -124,9 +124,9 @@ export const DEFAULT_OBJECT_VALUE = {};
 function isNumericSchema(schema: RJSFSchema) {
   return Boolean(
     schema.type === 'integer' ||
-      schema.type?.includes('integer') ||
-      schema.type === 'number' ||
-      schema.type?.includes('number')
+    schema.type?.includes('integer') ||
+    schema.type === 'number' ||
+    schema.type?.includes('number')
   );
 }
 

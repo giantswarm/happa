@@ -14,11 +14,10 @@ function formatNumberWithPrecision(num: number, precision: number): number {
   return Math.round(num * precisionFactor) / precisionFactor;
 }
 
-interface ICurrencyInputProps
-  extends Omit<
-    React.ComponentPropsWithRef<typeof TextInput>,
-    'type' | 'onChange' | 'step'
-  > {
+interface ICurrencyInputProps extends Omit<
+  React.ComponentPropsWithRef<typeof TextInput>,
+  'type' | 'onChange' | 'step'
+> {
   /**
    * Define a currency to be displayed in the
    * left side of the input.

@@ -9,11 +9,10 @@ function getIDFromOption(option: string): string {
   return option.toLowerCase().replace(/\s/, '-');
 }
 
-interface IMultiSelectProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof Select>,
-    'multiple' | 'value' | 'selected'
-  > {
+interface IMultiSelectProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof Select>,
+  'multiple' | 'value' | 'selected'
+> {
   /**
    * The values that can be chosen from the dropdown.
    */

@@ -58,14 +58,14 @@ export interface IOAuth2Provider {
 
   addEventListener: <
     T extends OAuth2Events,
-    U extends IOAuth2EventCallbacks[T]
+    U extends IOAuth2EventCallbacks[T],
   >(
     event: T,
     cb: U
   ) => void;
   removeEventListener: <
     T extends OAuth2Events,
-    U extends IOAuth2EventCallbacks[T]
+    U extends IOAuth2EventCallbacks[T],
   >(
     event: T,
     fn: U
@@ -198,14 +198,14 @@ class OAuth2 implements IOAuth2Provider {
 
   public addEventListener<
     T extends OAuth2Events,
-    U extends IOAuth2EventCallbacks[T]
+    U extends IOAuth2EventCallbacks[T],
   >(event: T, cb: U) {
     this.eventEmitter.addEventListener(event, cb as EventListener, false);
   }
 
   public removeEventListener<
     T extends OAuth2Events,
-    U extends IOAuth2EventCallbacks[T]
+    U extends IOAuth2EventCallbacks[T],
   >(event: T, fn: U) {
     this.eventEmitter.removeEventListener(event, fn as EventListener, false);
   }

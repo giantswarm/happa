@@ -7,8 +7,9 @@ const StyledHeading = styled(Heading)`
   max-width: none;
 `;
 
-interface IMasterNodeConverterProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IMasterNodeConverterProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   onApply?: () => void;
   onCancel?: () => void;
   isLoading?: boolean;

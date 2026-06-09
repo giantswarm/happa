@@ -13,8 +13,7 @@ const Text = styled.div`
   line-height: 1.4;
 `;
 
-interface IReleaseDetailsModalUpgradeOptionsBetaDisclaimerProps
-  extends React.ComponentPropsWithoutRef<'div'> {}
+interface IReleaseDetailsModalUpgradeOptionsBetaDisclaimerProps extends React.ComponentPropsWithoutRef<'div'> {}
 
 const ReleaseDetailsModalUpgradeOptionsBetaDisclaimer: React.FC<
   React.PropsWithChildren<IReleaseDetailsModalUpgradeOptionsBetaDisclaimerProps>

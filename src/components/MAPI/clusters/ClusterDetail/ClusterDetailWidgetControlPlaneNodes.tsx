@@ -69,11 +69,10 @@ const StyledDot = styled(Dot)`
   padding: 0;
 `;
 
-interface IClusterDetailWidgetControlPlaneNodesProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
-    'title'
-  > {
+interface IClusterDetailWidgetControlPlaneNodesProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof ClusterDetailWidget>,
+  'title'
+> {
   cluster?: Cluster;
   providerCluster?: ProviderCluster;
 }

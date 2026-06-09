@@ -533,12 +533,10 @@ const AppInstallModal: React.FC<
       dispatch(push(clusterDetailPath));
 
       new FlashMessage(
-        (
-          <>
-            Your app <code>{name}</code> is being installed on{' '}
-            <code>{selectedClusterID}</code>
-          </>
-        ),
+        <>
+          Your app <code>{name}</code> is being installed on{' '}
+          <code>{selectedClusterID}</code>
+        </>,
         messageType.SUCCESS,
         messageTTL.SHORT
       );

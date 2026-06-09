@@ -14,8 +14,9 @@ const AppWrapper = styled.div`
   padding: 0px 10px;
 `;
 
-interface IThemeProviderProps
-  extends React.ComponentPropsWithoutRef<typeof Grommet> {}
+interface IThemeProviderProps extends React.ComponentPropsWithoutRef<
+  typeof Grommet
+> {}
 
 const ThemeProvider: React.FC<React.PropsWithChildren<IThemeProviderProps>> = ({
   children,

@@ -63,8 +63,9 @@ function mapActionNameLabelToClusterIDLabelType(
   }
 }
 
-interface IClusterDetailDeleteActionClusterDetailsProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterDetailDeleteActionClusterDetailsProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   variant: ClusterDetailDeleteActionNameVariant;
   name: string;
   description: string;

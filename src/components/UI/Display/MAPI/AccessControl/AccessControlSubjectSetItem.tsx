@@ -39,7 +39,8 @@ const StyledDrop = styled(Drop)`
 `;
 
 interface IAccessControlSubjectSetItemProps
-  extends Omit<IAccessControlSubjectSetRenderer, 'name'>,
+  extends
+    Omit<IAccessControlSubjectSetRenderer, 'name'>,
     React.ComponentPropsWithoutRef<typeof Box> {
   name: React.ReactNode;
   deleteTooltipMessage?: string;

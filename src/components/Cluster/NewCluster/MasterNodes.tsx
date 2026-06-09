@@ -3,8 +3,10 @@ import React from 'react';
 import InputGroup from 'UI/Inputs/InputGroup';
 import RadioInput from 'UI/Inputs/RadioInput';
 
-interface IMasterNodesProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange'> {
+interface IMasterNodesProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof InputGroup>,
+  'onChange'
+> {
   isHighAvailability?: boolean;
   onChange?: (isHA: boolean) => void;
 }

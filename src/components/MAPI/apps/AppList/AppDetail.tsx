@@ -169,12 +169,10 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
   useEffect(() => {
     if (appCatalogEntryList && !selectedEntry) {
       new FlashMessage(
-        (
-          <>
-            Couldn&apos;t find version <code>{version}</code> for{' '}
-            <code>{app}</code>
-          </>
-        ),
+        <>
+          Couldn&apos;t find version <code>{version}</code> for{' '}
+          <code>{app}</code>
+        </>,
         messageType.ERROR,
         messageTTL.FOREVER
       );
@@ -257,16 +255,16 @@ const AppDetail: React.FC<React.PropsWithChildren<{}>> = () => {
     }
   }, [catalogError, dispatch]);
 
-  const catalogIcon = catalog ? catalog.spec.logoURL ?? '' : undefined;
+  const catalogIcon = catalog ? (catalog.spec.logoURL ?? '') : undefined;
 
   const appIconURL = selectedEntry
     ? getAppCatalogEntryLogoURL(selectedEntry)
     : undefined;
   const chartDescription = selectedEntry
-    ? selectedEntry.spec.chart.description ?? ''
+    ? (selectedEntry.spec.chart.description ?? '')
     : undefined;
   const chartWebsite = selectedEntry
-    ? selectedEntry.spec.chart.home ?? ''
+    ? (selectedEntry.spec.chart.home ?? '')
     : undefined;
 
   const chartVersion = selectedEntry

@@ -111,8 +111,9 @@ function getButtonIcon(
   return 'fa fa-settings';
 }
 
-interface IAppValueConfiguratorProps
-  extends React.ComponentPropsWithoutRef<typeof Card> {
+interface IAppValueConfiguratorProps extends React.ComponentPropsWithoutRef<
+  typeof Card
+> {
   configName: string;
   configNamespace: string;
   variant?: AppValueConfiguratorVariant;

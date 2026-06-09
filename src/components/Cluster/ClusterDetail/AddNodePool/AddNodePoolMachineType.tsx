@@ -5,8 +5,10 @@ import { useInstanceTypeSelectionLabels } from 'utils/hooks/useInstanceTypeSelec
 
 type ChangeHandler = (machineType: string) => void;
 
-interface IAddNodePoolMachineTypeProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange'> {
+interface IAddNodePoolMachineTypeProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof InputGroup>,
+  'onChange'
+> {
   machineType?: string;
   onChange?: ChangeHandler;
 }

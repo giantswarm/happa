@@ -115,7 +115,7 @@ export class FlashMessagesController {
 
   public addEventListener<
     T extends FlashMessageEvents,
-    U extends FlashMessageEventCallbacks[T]
+    U extends FlashMessageEventCallbacks[T],
   >(event: T, cb: U) {
     this.eventEmitter.addEventListener(
       event,
@@ -126,7 +126,7 @@ export class FlashMessagesController {
 
   public removeEventListener<
     T extends FlashMessageEvents,
-    U extends FlashMessageEventCallbacks[T]
+    U extends FlashMessageEventCallbacks[T],
   >(event: T, fn: U) {
     this.eventEmitter.removeEventListener(
       event,
@@ -137,7 +137,7 @@ export class FlashMessagesController {
 
   protected dispatchEvent<
     T extends FlashMessageEvents,
-    P extends IFlashMessageEventPayloads[T]
+    P extends IFlashMessageEventPayloads[T],
   >(type: T, payload: P) {
     const event = new CustomEvent(type, {
       detail: payload,

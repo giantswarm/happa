@@ -28,7 +28,8 @@ import {
 } from './patches';
 
 interface IWorkerNodesCreateNodePoolAvailabilityZonesProps
-  extends INodePoolPropertyProps,
+  extends
+    INodePoolPropertyProps,
     Omit<React.ComponentPropsWithoutRef<typeof InputGroup>, 'onChange' | 'id'> {
   cluster: Cluster;
 }

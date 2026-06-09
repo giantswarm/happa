@@ -34,8 +34,9 @@ import { usePermissionsForClusters } from '../permissions/usePermissionsForClust
 import { getWorkerNodesCount, hasClusterAppLabel } from '../utils';
 import { deleteClusterResources } from './utils';
 
-interface IClusterDetailActionsProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface IClusterDetailActionsProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 const ClusterDetailActions: React.FC<
   React.PropsWithChildren<IClusterDetailActionsProps>
@@ -128,12 +129,10 @@ const ClusterDetailActions: React.FC<
 
       const errorMessage = extractErrorMessage(nodePoolListError);
       new FlashMessage(
-        (
-          <>
-            There was a problem loading node pools for cluster{' '}
-            <code>{clusterId}</code>.
-          </>
-        ),
+        <>
+          There was a problem loading node pools for cluster{' '}
+          <code>{clusterId}</code>.
+        </>,
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -147,8 +146,8 @@ const ClusterDetailActions: React.FC<
     typeof isClusterApp === 'undefined'
       ? undefined
       : isClusterApp
-      ? namespace
-      : clusterId;
+        ? namespace
+        : clusterId;
 
   const { canList: canListApps } = usePermissionsForApps(
     provider,
@@ -160,15 +159,15 @@ const ClusterDetailActions: React.FC<
     typeof isClusterApp === 'undefined'
       ? undefined
       : isClusterApp
-      ? {
-          namespace: appsNamespace,
-          labelSelector: {
-            matchingLabels: {
-              [applicationv1alpha1.labelCluster]: clusterId,
+        ? {
+            namespace: appsNamespace,
+            labelSelector: {
+              matchingLabels: {
+                [applicationv1alpha1.labelCluster]: clusterId,
+              },
             },
-          },
-        }
-      : { namespace: appsNamespace };
+          }
+        : { namespace: appsNamespace };
 
   const appListKey = canListApps
     ? applicationv1alpha1.getAppListKey(appListGetOptions)
@@ -194,12 +193,9 @@ const ClusterDetailActions: React.FC<
 
       const errorMessage = extractErrorMessage(appListError);
       new FlashMessage(
-        (
-          <>
-            There was a problem loading apps for cluster{' '}
-            <code>{clusterId}</code>.
-          </>
-        ),
+        <>
+          There was a problem loading apps for cluster <code>{clusterId}</code>.
+        </>,
         messageType.ERROR,
         messageTTL.FOREVER,
         errorMessage
@@ -245,11 +241,9 @@ const ClusterDetailActions: React.FC<
       const errorMessage = extractErrorMessage(err);
 
       new FlashMessage(
-        (
-          <>
-            Could not delete cluster <code>{cluster.metadata.name}</code>:
-          </>
-        ),
+        <>
+          Could not delete cluster <code>{cluster.metadata.name}</code>:
+        </>,
         messageType.ERROR,
         messageTTL.LONG,
         errorMessage

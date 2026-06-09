@@ -1042,7 +1042,7 @@ export function getClusterLabelsWithDisplayInfo(
   filterHiddenLabels: boolean = true
 ): IClusterLabelWithDisplayInfo[] {
   const filteredLabels = filterHiddenLabels
-    ? filterLabels(labels) ?? {}
+    ? (filterLabels(labels) ?? {})
     : labels;
 
   const labelsWithDisplayInfo = Object.entries(filteredLabels).map(

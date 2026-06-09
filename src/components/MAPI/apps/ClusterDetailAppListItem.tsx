@@ -63,8 +63,9 @@ const Header = styled(Box)`
   }
 `;
 
-interface IClusterDetailAppListItemProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterDetailAppListItemProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   app?: applicationv1alpha1.IApp;
   appsPermissions?: IAppsPermissions;
   isActive?: boolean;

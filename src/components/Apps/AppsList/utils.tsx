@@ -55,7 +55,7 @@ const sortFunc = (
 function computeShortTitle([key, catalog]: [string, IAppCatalog]): [
   key: string,
   catalog: IAppCatalog,
-  shortTitle: string
+  shortTitle: string,
 ] {
   let shortTitle = catalog.spec.title;
 

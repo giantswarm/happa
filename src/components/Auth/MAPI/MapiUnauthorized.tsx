@@ -19,8 +19,9 @@ const StyledBox = styled(Box)`
   position: relative;
 `;
 
-interface IMapiUnauthorizedProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IMapiUnauthorizedProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   user: ILoggedInUser | null;
 }
 

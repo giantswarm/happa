@@ -1,8 +1,9 @@
 import { Box, Heading, Paragraph } from 'grommet';
 import * as React from 'react';
 
-interface IClusterListErrorPlaceholderProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {
+interface IClusterListErrorPlaceholderProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {
   organizationName: string;
 }
 

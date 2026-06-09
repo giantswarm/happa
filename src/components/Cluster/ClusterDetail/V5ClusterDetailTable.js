@@ -59,7 +59,9 @@ const NodePoolsWrapper = styled.div`
   .np-enter.np-enter-active {
     opacity: 1;
     transform: translateX(0px);
-    transition: opacity 0.2s, transform 0.3s;
+    transition:
+      opacity 0.2s,
+      transform 0.3s;
     transition-timing-function: ease-out, ease-out;
     transition-delay: 0.1s, 0.1s;
   }

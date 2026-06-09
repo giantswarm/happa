@@ -161,8 +161,9 @@ interface IRelease {
   clusterAppVersion?: string;
 }
 
-interface ICreateClusterAppBundlesProps
-  extends React.ComponentPropsWithoutRef<typeof Box> {}
+interface ICreateClusterAppBundlesProps extends React.ComponentPropsWithoutRef<
+  typeof Box
+> {}
 
 // eslint-disable-next-line complexity
 const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
@@ -231,7 +232,7 @@ const CreateClusterAppBundles: React.FC<ICreateClusterAppBundlesProps> = (
 
         const k8sVersion = releasev1alpha1.getK8sVersion(curr);
         const k8sVersionEOLDate = k8sVersion
-          ? getK8sVersionEOLDate(k8sVersion) ?? undefined
+          ? (getK8sVersionEOLDate(k8sVersion) ?? undefined)
           : undefined;
 
         const clusterAppVersion = releasev1alpha1.getClusterAppVersion(curr);
