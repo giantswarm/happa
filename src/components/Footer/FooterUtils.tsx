@@ -5,7 +5,7 @@ import { FlashMessage, messageTTL, messageType } from 'utils/flashMessage';
 import { VersionImpl } from 'utils/Version';
 
 export function formatVersion(version: string): string {
-  if (version.length < 1) return 'VERSION';
+  if (!version || version.length < 1) return 'VERSION';
 
   try {
     const semverVersion = new VersionImpl(version);

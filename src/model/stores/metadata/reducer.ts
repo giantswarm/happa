@@ -27,7 +27,7 @@ const metadataReducer = produce(
 
       case actions.setInitialVersion().types
         .success as typeof METADATA_UPDATE_SET_VERSION_SUCCESS:
-        draft.version.current = action.response;
+        draft.version.current = action.response ?? '';
 
         break;
 
