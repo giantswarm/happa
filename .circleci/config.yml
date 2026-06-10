@@ -50,6 +50,10 @@ workflows:
       - architect/push-to-registries:
           context: architect
           name: push-to-registries
+          # The happa Dockerfile is not arm64-ready (npm is unavailable in the
+          # arm64 nginx stage), so pin the pre-architect-v9 single-platform
+          # build until the Dockerfile supports multi-arch.
+          platforms: linux/amd64
           requires:
             - test
             - lint
