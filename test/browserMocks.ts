@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch';
 import { TextEncoder, TextDecoder } from 'util';
 
 // Polyfill TextEncoder and TextDecoder for Jest/jsdom environment
@@ -56,9 +55,5 @@ Object.defineProperty(window, 'console', {
   },
 });
 /* eslint-enable no-console */
-
-Object.defineProperty(window, 'fetch', {
-  value: fetch,
-});
 
 export {};

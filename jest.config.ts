@@ -35,7 +35,7 @@ const esModules = [
 ].join('|');
 
 const config: Config.InitialOptions = {
-  testEnvironment: 'jest-environment-jsdom', // or jest-environment-node
+  testEnvironment: path.resolve(`${__dirname}/test/jsdomEnvironment.js`),
   testEnvironmentOptions: {
     url: 'http://localhost',
   },
@@ -44,6 +44,7 @@ const config: Config.InitialOptions = {
     path.resolve(`${__dirname}/test/modelMocks.ts`),
   ],
   setupFilesAfterEnv: [path.resolve(`${__dirname}/test/setupTests.ts`)],
+  resolver: path.resolve(`${__dirname}/test/jestResolver.js`),
   moduleDirectories: [
     'node_modules',
     path.resolve(`${__dirname}/src`),
