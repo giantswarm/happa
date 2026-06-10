@@ -79,6 +79,19 @@
       matchPackageNames: ["@types/bootstrap", "bootstrap"],
       enabled: false,
     },
+    {
+      // brace-expansion v5 is ESM-only and breaks the CJS `require(...).default`
+      // interop used by Storybook's bundled minimatch, failing the build-fe-docs
+      // job. Stay on the ReDoS-patched v2 line until our toolchain supports v5.
+      matchPackageNames: ["brace-expansion"],
+      allowedVersions: "<3",
+    },
+    {
+      // pytest 9 conflicts with pytest-helm-charts (<9). Hold pytest on the 8.x
+      // line until pytest-helm-charts allows pytest 9.
+      matchPackageNames: ["pytest"],
+      allowedVersions: "<9",
+    },
   ],
   prConcurrentLimit: 5,
 }
