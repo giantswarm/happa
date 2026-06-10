@@ -175,7 +175,7 @@
     "@types/request": "2.48.13",
     "@types/serialize-javascript": "5.0.4",
     "@types/styled-components": "5.1.36",
-    "@types/superagent": "8.1.9",
+    "@types/superagent": "8.1.10",
     "@types/terser-webpack-plugin": "5.2.0",
     "@types/underscore": "1.13.0",
     "@types/webpack": "5.28.5",
