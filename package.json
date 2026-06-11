@@ -241,6 +241,7 @@
     "webpack-merge": "5.10.0"
   },
   "resolutions": {
+    "browserslist": "4.28.2",
     "@braintree/sanitize-url": "7.1.2",
     "@types/react": "18.3.29",
     "formidable": "3.5.4",
