@@ -92,6 +92,20 @@
       matchPackageNames: ["pytest"],
       allowedVersions: "<9",
     },
+    {
+      // lint-staged majors >13 require newer Node/tooling and repeatedly fail
+      // CI without benefit -- it's a dev-only pre-commit helper. Hold on 13.x.
+      matchPackageNames: ["lint-staged"],
+      allowedVersions: "<14",
+    },
+    {
+      // nock v14 switches to native fetch interception, which conflicts with
+      // our jsdom test setup (~13 suites left with timing/isolation races
+      // after the core fix). Dev-only test mock; hold on 13.x until the test
+      // suite is migrated.
+      matchPackageNames: ["nock"],
+      allowedVersions: "<14",
+    },
   ],
   prConcurrentLimit: 5,
 }
