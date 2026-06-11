@@ -679,8 +679,7 @@ export function filterPermissionsUseCases(
 
 export function isGlobalUseCase(useCase: IPermissionsUseCase): boolean {
   return (
-    (typeof useCase.scope.namespaces !== undefined &&
-      useCase.scope.namespaces?.[0] === 'default') ||
+    useCase.scope.namespaces?.[0] === 'default' ||
     useCase.scope.cluster === true
   );
 }

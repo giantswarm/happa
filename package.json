@@ -9,7 +9,7 @@
   },
   "license": "Apache-2.0",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint --ext .js,.ts,.tsx ./src/",
+    "lint": "./node_modules/.bin/eslint ./src/",
     "lint:fix": "yarn lint --fix",
     "lint:staged": "./node_modules/.bin/eslint --fix",
     "start": "./node_modules/.bin/webpack serve --open --progress --config ./webpack.dev.ts",
@@ -130,6 +130,7 @@
     "@babel/preset-env": "7.29.7",
     "@babel/preset-react": "7.29.7",
     "@babel/preset-typescript": "7.29.7",
+    "@eslint/js": "10.0.1",
     "@pmmmwh/react-refresh-webpack-plugin": "0.6.2",
     "@sentry/webpack-plugin": "1.21.0",
     "@storybook/addon-actions": "7.6.24",

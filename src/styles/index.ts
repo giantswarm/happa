@@ -1,6 +1,6 @@
 import { CSSBreakpoints } from 'model/constants';
-import { css } from 'styled-components';
 import styled from 'styled-components';
+import { css } from 'styled-components';
 
 import theme from './theme';
 
