@@ -17,6 +17,8 @@
     "noEmit": true,
     "jsx": "react",
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "types": ["node", "jest", "@testing-library/jest-dom"],
     "paths": {
       "*": ["src/components/*", "src/*"],
       "test/*": ["test/*"],

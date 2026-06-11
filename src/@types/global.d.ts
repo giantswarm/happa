@@ -1,4 +1,6 @@
 declare module '*.md';
+declare module '*.css';
+declare module '*.sass';
 
 type PropertiesOf<T> = T[keyof T];
 
