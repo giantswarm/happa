@@ -106,6 +106,32 @@
       matchPackageNames: ["nock"],
       allowedVersions: "<14",
     },
+    {
+      // eslint v9 requires the eslintrc -> flat-config migration plus plugin
+      // compatibility updates, and the grouped major PR also trips the
+      // security/snyk gate. Dev-only linting tooling, no production benefit.
+      // Hold on the 8.x line until the flat-config migration is scheduled
+      // (giantswarm/happa#4839). @typescript-eslint is held together because
+      // its major bump is coupled to that migration.
+      matchPackageNames: ["eslint", "@typescript-eslint{/,}**"],
+      allowedVersions: "<9",
+    },
+    {
+      // jest v30 changes jsdom/transform/config behaviour and the test suite
+      // fails under it (giantswarm/happa#4828). Dev-only test runner, no
+      // production benefit. Hold on the 29.x line until the migration is
+      // scheduled (giantswarm/happa#4839).
+      matchPackageNames: ["jest", "jest-environment-jsdom", "@types/jest"],
+      allowedVersions: "<30",
+    },
+    {
+      // storybook v10 needs the CSF3 / Vite-builder migration; the major bump
+      // fails build-fe-docs, build, and test (giantswarm/happa#4835).
+      // Dev-only component docs, no production benefit. Hold on the 7.x line
+      // until the migration is scheduled (giantswarm/happa#4839).
+      matchPackageNames: ["storybook", "@storybook{/,}**"],
+      allowedVersions: "<8",
+    },
   ],
   prConcurrentLimit: 5,
 }
