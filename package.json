@@ -5,7 +5,7 @@
   "src": "src",
   "test": "test",
   "engines": {
-    "node": "20"
+    "node": "24"
   },
   "license": "Apache-2.0",
   "scripts": {
