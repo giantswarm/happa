@@ -1,6 +1,6 @@
 # NOTE: this image is currently built for linux/amd64 only (see .circleci/config.yml);
 # the final nginx stage lacks npm on arm64 -- tracked in #4815.
-FROM gsoci.azurecr.io/giantswarm/alpine:3.24.0 AS compress
+FROM gsoci.azurecr.io/giantswarm/alpine:3.24.1 AS compress
 
 RUN apk --no-cache add findutils gzip
 
