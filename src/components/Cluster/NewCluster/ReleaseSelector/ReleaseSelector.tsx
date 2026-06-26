@@ -191,7 +191,7 @@ const ReleaseSelector: FC<React.PropsWithChildren<IReleaseSelectorProps>> = ({
           aria-labelledby='available-releases-label'
           tabIndex={0}
           onClick={handleCollapse}
-          collapsible={collapsible as boolean}
+          collapsible={collapsible}
           onKeyDown={handleTabSelect}
           title='Show/hide available releases'
         >

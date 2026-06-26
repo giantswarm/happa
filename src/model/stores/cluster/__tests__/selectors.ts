@@ -45,7 +45,7 @@ describe('cluster::selectors', () => {
       const initialState = createInitialState({});
       const releaseVersion = selectTargetRelease(
         initialState,
-        v5ClusterResponse as unknown as V5.ICluster
+        v5ClusterResponse
       );
       expect(releaseVersion).toBeNull();
     });

@@ -112,7 +112,7 @@ export function humanFileSize<T extends boolean = true>(
   if (Math.abs(newBytes) < thresh) {
     return {
       value: newBytes.toFixed(decimals),
-      unit: 'B' as FileSizeUnit<T>,
+      unit: 'B',
     };
   }
 

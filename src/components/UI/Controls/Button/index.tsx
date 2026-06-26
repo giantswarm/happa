@@ -184,7 +184,7 @@ const Button = React.forwardRef<
             disabled={disabled || loading || unauthorized}
             unauthorized={unauthorized}
             {...props}
-            ref={ref as never}
+            ref={ref}
           />
           <StyledLoadingIndicator
             loading={loading}

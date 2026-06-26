@@ -229,6 +229,20 @@ module.exports = {
     '@typescript-eslint/no-shadow': 2,
     '@typescript-eslint/no-non-null-assertion': 0,
     '@typescript-eslint/no-redundant-type-constituents': 0,
+    // typescript-eslint v8 replaced `no-empty-interface` and `ban-types`
+    // (both disabled above) with the rules below. Keep them disabled to
+    // preserve the project's existing intent.
+    '@typescript-eslint/no-empty-object-type': 0,
+    '@typescript-eslint/no-unsafe-function-type': 0,
+    '@typescript-eslint/no-wrapper-object-types': 0,
+    // Rules newly enforced by typescript-eslint v8's type-checked config that
+    // clash with established patterns in this codebase (re-propagating a
+    // rejection reason, throwing/rejecting response objects, stringifying
+    // broadly-typed values that are primitives at runtime). Disabled here to
+    // keep this dependency bump contained; cleaning these up is follow-up work.
+    '@typescript-eslint/prefer-promise-reject-errors': 0,
+    '@typescript-eslint/only-throw-error': 0,
+    '@typescript-eslint/no-base-to-string': 0,
   },
   overrides: [
     {
@@ -239,6 +253,16 @@ module.exports = {
         '@typescript-eslint/restrict-template-expressions': 0,
         '@typescript-eslint/restrict-plus-operands': 0,
         '@typescript-eslint/no-unsafe-argument': 0,
+      },
+    },
+    {
+      // Test fixtures build intentionally-partial mock state through type
+      // assertions (e.g. `{ ... } as IState`). typescript-eslint v8's
+      // no-unnecessary-type-assertion misidentifies these as unnecessary and
+      // its autofix produces non-compiling code, so keep it off for tests.
+      files: ['**/__tests__/**/*.{ts,tsx}', '**/*.test.{ts,tsx}'],
+      rules: {
+        '@typescript-eslint/no-unnecessary-type-assertion': 0,
       },
     },
   ],

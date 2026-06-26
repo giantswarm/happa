@@ -1993,7 +1993,7 @@ export function isResourceManagedByGitOps(
   const labels = Object.keys(resource.metadata.labels ?? {});
 
   return labels.some((label) =>
-    label.startsWith(Constants.FLUX_LABELS_PREFIX as string)
+    label.startsWith(Constants.FLUX_LABELS_PREFIX)
   );
 }
 

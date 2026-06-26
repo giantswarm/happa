@@ -27,9 +27,9 @@ describe('ClusterStatus', () => {
         ],
       },
       {
-        [nodePoolRelease.version]: nodePoolRelease as IRelease,
+        [nodePoolRelease.version]: nodePoolRelease,
         [nodePoolWithFlatcarRelease.version]:
-          nodePoolWithFlatcarRelease as IRelease,
+          nodePoolWithFlatcarRelease,
       }
     );
     const onClickMockFn = jest.fn();
@@ -68,7 +68,7 @@ describe('ClusterStatus', () => {
         ],
       },
       {
-        [nodePoolRelease.version]: nodePoolRelease as IRelease,
+        [nodePoolRelease.version]: nodePoolRelease,
       }
     );
     const onClickMockFn = jest.fn();
@@ -107,7 +107,7 @@ describe('ClusterStatus', () => {
         ],
       },
       {
-        [nodePoolRelease.version]: nodePoolRelease as IRelease,
+        [nodePoolRelease.version]: nodePoolRelease,
       }
     );
     const onClickMockFn = jest.fn();
@@ -146,7 +146,7 @@ describe('ClusterStatus', () => {
         ],
       },
       {
-        [nodePoolRelease.version]: nodePoolRelease as IRelease,
+        [nodePoolRelease.version]: nodePoolRelease,
       }
     );
     state.entities.clusters.idsAwaitingUpgrade.as129 = true;
@@ -186,7 +186,7 @@ describe('ClusterStatus', () => {
         ],
       },
       {
-        [nodePoolRelease.version]: nodePoolRelease as IRelease,
+        [nodePoolRelease.version]: nodePoolRelease,
       }
     );
     renderWithStore(ClusterStatus, { clusterId: 'as129' }, state);
@@ -201,7 +201,7 @@ describe('ClusterStatus', () => {
         delete_date: new Date('2021-02-10T16:39:27Z'),
       },
       {
-        [nodePoolRelease.version]: nodePoolRelease as IRelease,
+        [nodePoolRelease.version]: nodePoolRelease,
       }
     );
     renderWithStore(ClusterStatus, { clusterId: 'as129' }, state);
@@ -215,7 +215,7 @@ describe('ClusterStatus', () => {
         release_version: nodePoolRelease.version,
       },
       {
-        [nodePoolRelease.version]: nodePoolRelease as IRelease,
+        [nodePoolRelease.version]: nodePoolRelease,
       }
     );
     renderWithStore(ClusterStatus, { clusterId: 'd01sa' }, state);
@@ -235,7 +235,7 @@ describe('ClusterStatus', () => {
         ],
       },
       {
-        [nodePoolRelease.version]: nodePoolRelease as IRelease,
+        [nodePoolRelease.version]: nodePoolRelease,
       }
     );
     renderWithStore(

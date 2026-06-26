@@ -41,7 +41,7 @@ export function getQuantitySuffix(quantity: Quantity): string {
   return ix === -1 ? '' : quantity.substring(ix + 1);
 }
 
-export function quantityToScalar(quantity: Quantity): number | BigInt {
+export function quantityToScalar(quantity: Quantity): number | bigint {
   if (!quantity) {
     return 0;
   }

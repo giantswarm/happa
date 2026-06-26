@@ -134,6 +134,10 @@ class CustomError extends Error implements ICustomError {
       stackFrames = stackFrames.map((frame) => {
         return this.resolver.pinpoint(frame);
       });
+      // `pinpoint()` returns Promises, so this `Promise.all` is required at
+      // runtime. The loose `IStackFrame` type masks that from the checker, so
+      // typescript-eslint v8's await-thenable rule reports a false positive.
+      // eslint-disable-next-line @typescript-eslint/await-thenable
       stackFrames = await Promise.all(stackFrames);
 
       stack = CustomError.stringifyStack(this.name, this.message, stackFrames);

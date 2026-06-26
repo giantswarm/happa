@@ -73,7 +73,7 @@ describe('releases::utils', () => {
             newVersion: '2766.0.0',
           },
         ],
-      } as ui.IReleaseComponentsDiff);
+      });
     });
 
     it('finds removed components', () => {
@@ -121,7 +121,7 @@ describe('releases::utils', () => {
             oldVersion: '3.4.14',
           },
         ],
-      } as ui.IReleaseComponentsDiff);
+      });
     });
 
     it('finds added components', () => {
@@ -169,7 +169,7 @@ describe('releases::utils', () => {
             newVersion: '3.4.14',
           },
         ],
-      } as ui.IReleaseComponentsDiff);
+      });
     });
 
     it('gets a full blown diff between 2 releases', () => {
@@ -252,7 +252,7 @@ describe('releases::utils', () => {
             oldVersion: '1.9.2',
           },
         ],
-      } as ui.IReleaseComponentsDiff);
+      });
     });
   });
 });

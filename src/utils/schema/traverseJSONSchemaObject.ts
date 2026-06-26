@@ -47,7 +47,7 @@ export function traverseJSONSchemaObject(
         typeof obj.additionalProperties === 'object'
       ) {
         traverseJSONSchemaObject(
-          obj.additionalProperties as Record<string, unknown>,
+          obj.additionalProperties,
           processFn,
           [...path, 'additionalProperties']
         );
