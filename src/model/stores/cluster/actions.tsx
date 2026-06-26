@@ -259,7 +259,7 @@ export function clusterLoadDetails(
         isV5Cluster,
       });
 
-      return cluster as unknown as Cluster;
+      return cluster;
     } catch (error) {
       if ((error as IGSAPIError).response?.status === StatusCodes.NotFound) {
         // Delete the cluster in the store.

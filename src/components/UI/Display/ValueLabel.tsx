@@ -1,7 +1,7 @@
 import { normalizeColor } from 'grommet/utils';
 import React, { ReactNode } from 'react';
-import { css } from 'styled-components';
 import styled from 'styled-components';
+import { css } from 'styled-components';
 
 const radius = '5px';
 

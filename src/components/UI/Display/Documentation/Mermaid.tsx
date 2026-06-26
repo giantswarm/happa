@@ -12,7 +12,7 @@ const DEFAULT_CONFIG: MermaidConfig = {
     htmlLabels: false,
     useMaxWidth: true,
   },
-} as MermaidConfig;
+};
 
 interface IMermaidProps extends React.ComponentPropsWithoutRef<'div'> {
   chart: string;

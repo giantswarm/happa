@@ -774,7 +774,7 @@ describe('cluster::utils', () => {
     describe('supportsHAMasters', () => {
       describe('on azure', () => {
         it('is false for Azure at any version', () => {
-          const capabilities = computeCapabilities(preloginState as never)(
+          const capabilities = computeCapabilities(preloginState)(
             '8.1.0',
             'azure'
           );
@@ -784,7 +784,7 @@ describe('cluster::utils', () => {
 
       describe('on aws', () => {
         it('is false for AWS below 9.0.0', () => {
-          const capabilities = computeCapabilities(preloginState as never)(
+          const capabilities = computeCapabilities(preloginState)(
             '9.0.0',
             'aws'
           );
@@ -792,7 +792,7 @@ describe('cluster::utils', () => {
         });
 
         it('is true for AWS at 11.4.0', () => {
-          const capabilities = computeCapabilities(preloginState as never)(
+          const capabilities = computeCapabilities(preloginState)(
             '11.4.0',
             'aws'
           );
@@ -800,7 +800,7 @@ describe('cluster::utils', () => {
         });
 
         it('is true for AWS above 13.0.0', () => {
-          const capabilities = computeCapabilities(preloginState as never)(
+          const capabilities = computeCapabilities(preloginState)(
             '13.0.0',
             'aws'
           );
@@ -810,7 +810,7 @@ describe('cluster::utils', () => {
 
       describe('on kvm', () => {
         it('is false for KVM at any version', () => {
-          const capabilities = computeCapabilities(preloginState as never)(
+          const capabilities = computeCapabilities(preloginState)(
             '8.0.0',
             'kvm'
           );
@@ -870,7 +870,7 @@ describe('cluster::utils', () => {
             condition: 'Creating',
           },
         ],
-      }) as unknown as V5.ICluster;
+      });
       expect(isClusterCreating(cluster)).toBeTruthy();
     });
 
@@ -913,7 +913,7 @@ describe('cluster::utils', () => {
             condition: 'Updating',
           },
         ],
-      }) as unknown as V5.ICluster;
+      });
       expect(isClusterUpdating(cluster)).toBeTruthy();
     });
 
@@ -956,7 +956,7 @@ describe('cluster::utils', () => {
             condition: 'Deleting',
           },
         ],
-      }) as unknown as V5.ICluster;
+      });
       expect(isClusterDeleting(cluster)).toBeTruthy();
     });
 

@@ -219,5 +219,5 @@ function createRelease(version: string, active: boolean): IRelease {
     changelog: [{ component: 'dummy', description: 'dummy' }],
     kubernetesVersion: '1.16.3',
     releaseNotesURL: 'dummy',
-  } as IRelease;
+  };
 }

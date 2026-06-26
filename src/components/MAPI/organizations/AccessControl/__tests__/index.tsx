@@ -93,7 +93,7 @@ describe('AccessControl', () => {
           canList: true,
         },
       },
-    } as ui.IAccessControlPermissions);
+    });
   });
 
   it('fetches, formats and renders a cluster role', async () => {
