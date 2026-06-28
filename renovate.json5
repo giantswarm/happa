@@ -1,137 +1,17 @@
 {
   extends: ["github>giantswarm/renovate-presets:default.json5"],
   reviewers: ["teemow"],
+  // happa is deprecated (being replaced by backstage). To avoid wasting effort
+  // rescuing dependency bumps the repo will never benefit from, routine updates
+  // are disabled and only security/vulnerability remediation is kept. Do not
+  // re-enable routine updates without removing the deprecation.
   packageRules: [
     {
-      groupName: "jest packages",
-      matchPackageNames: ["@types/jest{/,}**", "jest{/,}**"],
-    },
-    {
-      groupName: "eslint packages",
-      matchPackageNames: ["eslint{/,}**", "@typescript-eslint{/,}**"],
-    },
-    {
-      groupName: "date-fns packages",
-      matchPackageNames: ["date-fns{/,}**"],
-    },
-    {
-      groupName: "storybook packages",
-      matchPackageNames: ["@storybook{/,}**"],
-    },
-    {
-      groupName: "babel packages",
-      matchPackageNames: ["@babel{/,}**", "babel{/,}**"],
-    },
-    {
-      groupName: "sentry packages",
-      matchPackageNames: ["@sentry{/,}**"],
-    },
-    {
-      groupName: "testing-library packages",
-      matchPackageNames: ["@testing-library{/,}**"],
-    },
-    {
-      groupName: "react packages",
-      matchPackageNames: [
-        "@types/react{/,}**",
-        "react{/,}**",
-        "react-refresh{/,}**",
-      ],
-    },
-    {
-      groupName: "react-router packages",
-      matchPackageNames: ["@types/react-router{/,}**", "react-router{/,}**"],
-    },
-    {
-      groupName: "webpack packages",
-      matchPackageNames: [
-        "@webpack{/,}**",
-        "webpack{/,}**",
-        "@types/copy-webpack-plugin{/,}**",
-        "copy-webpack-plugin{/,}**",
-        "css-minimizer-webpack-plugin{/,}**",
-        "@types/mini-css-extract-plugin{/,}**",
-        "mini-css-extract-plugin{/,}**",
-        "@types/terser-webpack-plugin{/,}**",
-        "terser-webpack-plugin{/,}**",
-        "clean-webpack-plugin{/,}**",
-        "html-webpack-plugin{/,}**",
-        "css-loader{/,}**",
-        "sass-loader{/,}**",
-        "style-loader{/,}**",
-        "json-loader{/,}**",
-        "file-loader{/,}**",
-        "imports-loader{/,}**",
-        "webpack-bundle-analyzer{/,}**",
-        "@types/webpack-bundle-analyzer{/,}**",
-        "@pmmmwh/react-refresh-webpack-plugin{/,}**",
-      ],
-    },
-    {
-      groupName: "react-jsonschema-form packages",
-      matchPackageNames: ["@rjsf{/,}**"],
-    },
-    {
-      groupName: "node packages",
-      matchPackageNames: ["@types/node{/,}**"],
-    },
-    {
-      matchPackageNames: ["@types/bootstrap", "bootstrap"],
+      matchUpdateTypes: ["major", "minor", "patch", "pin", "digest", "bump"],
       enabled: false,
     },
-    {
-      // brace-expansion v5 is ESM-only and breaks the CJS `require(...).default`
-      // interop used by Storybook's bundled minimatch, failing the build-fe-docs
-      // job. Stay on the ReDoS-patched v2 line until our toolchain supports v5.
-      matchPackageNames: ["brace-expansion"],
-      allowedVersions: "<3",
-    },
-    {
-      // pytest 9 conflicts with pytest-helm-charts (<9). Hold pytest on the 8.x
-      // line until pytest-helm-charts allows pytest 9.
-      matchPackageNames: ["pytest"],
-      allowedVersions: "<9",
-    },
-    {
-      // lint-staged majors >13 require newer Node/tooling and repeatedly fail
-      // CI without benefit -- it's a dev-only pre-commit helper. Hold on 13.x.
-      matchPackageNames: ["lint-staged"],
-      allowedVersions: "<14",
-    },
-    {
-      // nock v14 switches to native fetch interception, which conflicts with
-      // our jsdom test setup (~13 suites left with timing/isolation races
-      // after the core fix). Dev-only test mock; hold on 13.x until the test
-      // suite is migrated.
-      matchPackageNames: ["nock"],
-      allowedVersions: "<14",
-    },
-    {
-      // eslint v9 requires the eslintrc -> flat-config migration plus plugin
-      // compatibility updates, and the grouped major PR also trips the
-      // security/snyk gate. Dev-only linting tooling, no production benefit.
-      // Hold on the 8.x line until the flat-config migration is scheduled
-      // (giantswarm/happa#4839). @typescript-eslint is held together because
-      // its major bump is coupled to that migration.
-      matchPackageNames: ["eslint", "@typescript-eslint{/,}**"],
-      allowedVersions: "<9",
-    },
-    {
-      // jest v30 changes jsdom/transform/config behaviour and the test suite
-      // fails under it (giantswarm/happa#4828). Dev-only test runner, no
-      // production benefit. Hold on the 29.x line until the migration is
-      // scheduled (giantswarm/happa#4839).
-      matchPackageNames: ["jest", "jest-environment-jsdom", "@types/jest"],
-      allowedVersions: "<30",
-    },
-    {
-      // storybook v10 needs the CSF3 / Vite-builder migration; the major bump
-      // fails build-fe-docs, build, and test (giantswarm/happa#4835).
-      // Dev-only component docs, no production benefit. Hold on the 7.x line
-      // until the migration is scheduled (giantswarm/happa#4839).
-      matchPackageNames: ["storybook", "@storybook{/,}**"],
-      allowedVersions: "<8",
-    },
   ],
-  prConcurrentLimit: 5,
+  vulnerabilityAlerts: {
+    enabled: true,
+  },
 }
