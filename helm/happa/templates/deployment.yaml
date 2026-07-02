@@ -63,6 +63,18 @@ spec:
             value: "/var/run/{{ .Values.name }}/configmap/config.yaml"
           - name: HAPPA_VERSION
             value: "{{ .Chart.AppVersion }}"
+        # The startup does CPU-bound work (config templating + gzip) before nginx
+        # binds :8000. On busy/overcommitted nodes this can exceed the liveness
+        # window, so a startupProbe gates liveness/readiness until nginx is up
+        # (up to failureThreshold * periodSeconds = 150s) and prevents crashloops.
+        startupProbe:
+          httpGet:
+            path: /
+            port: 8000
+            scheme: HTTP
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 30
         livenessProbe:
           httpGet:
             path: /
@@ -82,7 +94,7 @@ spec:
             cpu: 100m
             memory: 20Mi
           limits:
-            cpu: 250m
+            cpu: 500m
             memory: 250Mi
         volumeMounts:
         - mountPath: /tmp
