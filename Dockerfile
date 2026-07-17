@@ -27,7 +27,20 @@ COPY --chown=nginx tsconfig.json/ /tsconfig.json
 COPY --chown=nginx scripts/ /scripts
 COPY --from=compress --chown=nginx /www /www
 
-RUN npm install -g typescript ts-node ejs @types/ejs tslib @types/node js-yaml @types/js-yaml dotenv
+# Pin these to the versions happa itself declares (see package.json). Leaving
+# them unpinned lets `npm install -g` float to `latest`, which broke the image
+# when TypeScript 7 was published: ts-node 10.9.2 is incompatible with it, so
+# scripts/prepare.ts crashed on startup and the container never served.
+RUN npm install -g \
+      typescript@6.0.3 \
+      ts-node@10.9.2 \
+      ejs@6.0.1 \
+      @types/ejs@3.1.5 \
+      tslib@2.8.1 \
+      @types/node@24.13.2 \
+      js-yaml@4.2.0 \
+      @types/js-yaml@4.0.9 \
+      dotenv@16.6.1
 RUN cd /scripts && npm link ejs @types/ejs js-yaml @types/js-yaml dotenv
 RUN chown -R nginx:nginx /scripts/
 
