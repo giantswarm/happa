@@ -260,7 +260,9 @@ jobs:
             # relying on a fixed sleep to avoid flaky "connection refused" fails.
             CURL_OUTPUT=""
             for attempt in $(seq 1 30); do
-              CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
+              # `|| true` keeps a not-yet-ready container (curl exit 7) from
+              # aborting the step under `set -e` before we can retry.
+              CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000") || true
               if echo "${CURL_OUTPUT}" | grep -q "Giant Swarm web interface"; then
                 echo "Container is serving (attempt ${attempt})."
                 break
