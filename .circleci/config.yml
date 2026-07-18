@@ -254,8 +254,23 @@ jobs:
               -p 8000:8000 \
               -d \
               "gsoci.azurecr.io/giantswarm/happa:$(cat VERSION)"
-            sleep 10
-            CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000")
+
+            # The container runs scripts/prepare.ts (via ts-node) before nginx
+            # starts serving, so it can take a while to come up. Poll instead of
+            # relying on a fixed sleep to avoid flaky "connection refused" fails.
+            CURL_OUTPUT=""
+            for attempt in $(seq 1 30); do
+              # `|| true` keeps a not-yet-ready container (curl exit 7) from
+              # aborting the step under `set -e` before we can retry.
+              CURL_OUTPUT=$(ssh remote-docker "curl -s http://localhost:8000") || true
+              if echo "${CURL_OUTPUT}" | grep -q "Giant Swarm web interface"; then
+                echo "Container is serving (attempt ${attempt})."
+                break
+              fi
+              echo "Waiting for container to serve (attempt ${attempt})..."
+              sleep 2
+            done
+
             echo "${CURL_OUTPUT}" | grep "Giant Swarm web interface"
 
   build-fe-docs:
