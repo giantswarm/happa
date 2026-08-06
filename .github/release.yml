@@ -6,7 +6,6 @@
 changelog:
   exclude:
     labels:
-      - dependencies
       - kind/dev-change
       - kind/refactor
   categories:
