@@ -7,6 +7,11 @@ RUN apk --no-cache add findutils gzip
 # Copy happa built static files.
 COPY dist /www
 
+# Drop the source maps: CI has already uploaded them to Sentry by this point
+# (see the `build` job), so nothing needs them at runtime and serving them
+# publicly exposes build-time inlined values (giantswarm/giantswarm#37469).
+RUN find /www -name '*.map' -delete
+
 RUN find /www \
   -type f -regextype posix-extended \
   -size +512c \
