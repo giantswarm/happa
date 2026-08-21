@@ -54,10 +54,28 @@ workflows:
           # arm64 nginx stage), so pin the pre-architect-v9 single-platform
           # build until the Dockerfile supports multi-arch.
           platforms: linux/amd64
+          # Push only to gsoci/gsociprivate here; the Aliyun copy happens in
+          # sync-china-registry below. Pushing to Aliyun from this buildx step
+          # hung for 20 minutes and timed out the job on every release from
+          # v1.72.6 to v1.72.9 -- which blocked launch-container and therefore
+          # push-happa-to-catalog, leaving the newest chart in the catalog at
+          # 1.72.4 while five releases (including the js-yaml and mermaid CVE
+          # bumps) never reached any installation.
+          split-china-push: true
           requires:
             - test
             - lint
             - build
+          <<: *job_filters
+
+      # Mirror gsoci -> Aliyun from the in-China galaxy-runner. Nothing requires
+      # this job: an Aliyun mirror failure must never stop a happa release from
+      # reaching the app catalog.
+      - architect/sync-china-registry:
+          context: architect
+          name: sync-china-registry
+          requires:
+            - push-to-registries
           <<: *job_filters
 
       - launch-container:
