@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@9.5.5
+  architect: giantswarm/architect@10.10.0
 
 defaults: &defaults
   working_directory: ~/happa
@@ -136,6 +136,13 @@ workflows:
           chart: fe-docs
           persist_chart_archive: true
           explicit_allow_chart_name_mismatch: true
+          # app-build-suite renders the chart with `helm template` before packaging
+          # it, and the fe-docs ingress refuses to render without hostnames, so the
+          # validator gets the values chart-testing already lints the chart with.
+          pre-steps:
+            - run:
+                name: Render the fe-docs chart with its ci values
+                command: echo 'export ABS_HELM_TEMPLATE_EXTRA_VALUES=helm/fe-docs/ci/ci-values.yaml' >> "$BASH_ENV"
           requires:
             - push-fe-docs-to-registries
           <<: *job_filters
