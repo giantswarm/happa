@@ -61,8 +61,7 @@ For details see [Release.md](docs/Release.md)
 
 ## User interface components
 
-We are maintaining a [Storybook](https://storybook.js.org/) showcasing more and more of our UI components.
-Run it locally with `yarn storybook` and open http://localhost:6006.
+Run the component Storybook locally with `yarn storybook` (http://localhost:6006).
 
 ## Configuration
 
