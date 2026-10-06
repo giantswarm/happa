@@ -18,7 +18,6 @@ job_filters: &job_filters
 whitelist: &whitelist
   paths:
     - dist/*
-    - storybook-static/*
     - node_modules/*
     - VERSION
     - ".sentry_release_version"
@@ -109,43 +108,6 @@ workflows:
                 - main
           requires:
             - push-happa-to-catalog
-
-
-      # FE Docs
-
-      - build-fe-docs:
-          requires:
-            - checkout
-          <<: *job_filters
-
-      - architect/push-to-registries:
-          context: architect
-          name: push-fe-docs-to-registries
-          image: giantswarm/fe-docs
-          dockerfile: "./Dockerfile.fe-docs"
-          requires:
-            - build-fe-docs
-          <<: *job_filters
-
-      - architect/push-to-app-catalog:
-          executor: app-build-suite
-          name: push-fedocs-to-catalog
-          context: architect
-          app_catalog: giantswarm-operations-platform-catalog
-          app_catalog_test: giantswarm-operations-platform-test-catalog
-          chart: fe-docs
-          persist_chart_archive: true
-          explicit_allow_chart_name_mismatch: true
-          # app-build-suite renders the chart with `helm template` before packaging
-          # it, and the fe-docs ingress refuses to render without hostnames, so the
-          # validator gets the values chart-testing already lints the chart with.
-          pre-steps:
-            - run:
-                name: Render the fe-docs chart with its ci values
-                command: echo 'export ABS_HELM_TEMPLATE_EXTRA_VALUES=helm/fe-docs/ci/ci-values.yaml' >> "$BASH_ENV"
-          requires:
-            - push-fe-docs-to-registries
-          <<: *job_filters
 
 jobs:
   checkout:
@@ -297,21 +259,3 @@ jobs:
             done
 
             echo "${CURL_OUTPUT}" | grep "Giant Swarm web interface"
-
-  build-fe-docs:
-    <<: *defaults
-    resource_class: large
-
-    steps:
-      - checkout
-
-      - attach_workspace:
-          at: ~/happa
-
-      - run:
-          name: Build FE Docs static assets
-          command: NODE_ENV=production yarn run storybook:build
-
-      - persist_to_workspace:
-          root: ~/happa
-          <<: *whitelist
