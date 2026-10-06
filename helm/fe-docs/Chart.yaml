@@ -1,9 +1,0 @@
-apiVersion: v2
-name: fe-docs
-description: The Giant Swarm front end documentation.
-home: https://github.com/giantswarm/happa
-icon: https://s.giantswarm.io/app-icons/giantswarm/1/light.svg
-version: ""
-appVersion: ""
-annotations:
-  io.giantswarm.application.team: honeybadger

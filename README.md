@@ -61,7 +61,7 @@ For details see [Release.md](docs/Release.md)
 
 ## User interface components
 
-We are maintaining a [Storybook](https://fe-docs.giantswarm.io/) showcasing more and more of our UI components.
+Run the component Storybook locally with `yarn storybook` (http://localhost:6006).
 
 ## Configuration
 
