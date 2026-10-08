@@ -26,7 +26,7 @@ To run happa locally, you need:
 
 - [NodeJS 20](https://nodejs.org/)
 - [`yarn`](https://yarnpkg.com/)
-- [`kubectl`](https://github.com/giantswarm/kubectl) - Necessary to use happa against a Giant Swarm installation.
+- [`kubectl`](https://kubernetes.io/docs/tasks/tools/) - Necessary to use happa against a Giant Swarm installation.
 
 ### Quick start
 
