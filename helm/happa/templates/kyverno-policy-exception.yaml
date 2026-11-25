@@ -1,11 +1,12 @@
-{{ if .Capabilities.APIVersions.Has "kyverno.io/v2/PolicyException" }}
+{{ if and .Values.kyvernoPolicyExceptions.enabled .Values.kyvernoPolicyExceptions.legacy.enabled (.Capabilities.APIVersions.Has "kyverno.io/v2/PolicyException") }}
 apiVersion: kyverno.io/v2
 kind: PolicyException
 metadata:
   name: happa
-  namespace: giantswarm
+  namespace: kube-system
   labels:
     app: happa
+    policy.giantswarm.io/migrated-to-cel: "true"
 spec:
   background: true
   exceptions:
