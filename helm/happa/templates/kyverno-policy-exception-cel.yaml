@@ -1,0 +1,47 @@
+{{ if .Values.kyvernoPolicyExceptions.enabled }}
+apiVersion: policies.kyverno.io/v1
+kind: PolicyException
+metadata:
+  name: happa
+  namespace: kube-system
+  labels:
+    app: happa
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+spec:
+  policyRefs:
+  - name: disallow-host-path
+    kind: ValidatingPolicy
+  - name: require-run-as-nonroot
+    kind: ValidatingPolicy
+  - name: restrict-volume-types
+    kind: ValidatingPolicy
+  - name: disallow-capabilities-strict
+    kind: ValidatingPolicy
+  - name: disallow-privilege-escalation
+    kind: ValidatingPolicy
+  - name: restrict-seccomp-strict
+    kind: ValidatingPolicy
+  # check-resources-request-and-limits-ratio is a supplemental policy and
+  # usually not enabled. It is excepted because the happa Deployment fails it
+  # when the policy is enforced.
+  - name: check-resources-request-and-limits-ratio
+    kind: ValidatingPolicy
+  # require-ro-rootfs is a supplemental policy and usually not enabled. It is
+  # excepted because the happa Deployment fails it when the policy is enforced.
+  - name: require-ro-rootfs
+    kind: ValidatingPolicy
+  # restrict-sa-automount-sa-token is a supplemental policy and usually not
+  # enabled. It is excepted because the happa ServiceAccount fails it when the
+  # policy is enforced.
+  - name: restrict-sa-automount-sa-token
+    kind: ValidatingPolicy
+  matchConditions:
+  - name: happa-workloads
+    # ServiceAccount is matched for restrict-sa-automount-sa-token.
+    expression: >-
+      request.kind.kind in ['Deployment', 'ReplicaSet', 'Pod', 'ServiceAccount'] &&
+      request.namespace == 'giantswarm' &&
+      has(object.metadata.name) &&
+      (object.metadata.name == 'happa' || object.metadata.name.startsWith('happa-'))
+{{- end }}
